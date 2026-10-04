@@ -1,0 +1,47 @@
+# Análises de ordens de serviço — 0.11.0
+
+Sete seções novas, disponíveis em Personalizar. Começam recolhidas para preservar a leitura da tela única. Seguem os filtros principais e adicionais; a busca da tabela de atendimentos permanece restrita àquela tabela. Todas usam serviços realizados (Concluída/Pago). Cancelada não gera custo ou atendimento realizado. Consumo e conciliação entre planilhas ficam para etapa futura.
+
+## Custo por cliente
+
+Agrupamento pela Razão Social, preservando a definição atual de cliente. Cards e ranking de custo total lançado; tabela com realizados, chamados distintos e valores válidos de Custo Total, Técnico, Km e Valor a cobrar por Cobrança. Contratual Cliente e Contratual Addlog mantêm as definições anteriores. Custo total em cobranças Addlog soma Custo Total dessas linhas: é uma medida distinta do valor contratual absorvido. Não calcula receita recebida nem lucro. Valores ausentes não viram zero, e os cards expõem seus denominadores.
+
+## Composição do custo
+
+Cliente, cidade ou código do técnico. Código identifica o técnico; diferentes nomes são apresentados juntos no mesmo código. Barras empilhadas somam Técnico + Km apenas nas linhas com ambos válidos. Participação de deslocamento nos componentes = Km / (Técnico + Km), no mesmo conjunto de linhas. Soma zero não gera percentual. Total lançado aparece separadamente e mantém sua autoridade; divergências existentes continuam na revisão. Grupos com componentes agregados negativos ficam na tabela, fora das barras empilhadas. Tabela informa quantidade de pares válidos.
+
+## Reincidência por veículo
+
+Critério confirmado: identificação exata por cliente + placa; todas as linhas realizadas do mesmo dia formam uma visita. Cliente/placa ausentes impedem agrupamento; datas ausentes impedem intervalos, mantendo contagem das linhas com identificação. Não normaliza ou corrige identificadores.
+
+O histórico completo identifica visitas consecutivas antes dos filtros. Um intervalo entra apenas quando ambas as visitas possuem pelo menos um serviço selecionado. Filtrar uma visita intermediária não cria uma ligação artificial entre visitas distantes. Linha do tempo apresenta visitas selecionadas e números de linha de origem.
+
+Retornos até 30, 60 e 90 dias são cumulativos: um intervalo de 20 dias entra nas três medidas. Contam intervalos observados, não veículos distintos, e incluem exatamente os limites. Mediana usa somente esses intervalos elegíveis. Mesma data não cria retorno de zero dias. Nova intervenção não comprova defeito, retrabalho ou responsabilidade do técnico.
+
+## Chamados com vários serviços
+
+OS é o chamado. Soma de linhas realizadas por chamado, custo total lançado válido e média por custo válido. Cards de chamados com realizados, chamados com mais de um realizado e média de linhas por chamado. Distribuição conta cada chamado uma vez, por número de realizados. Linhas no mesmo dia continuam serviços individuais. Canceladas e agenda ficam fora.
+
+## Perfil das intervenções por cliente
+
+Matriz e gráfico selecionável de Implementações e Assistências Técnicas (Tipo de Serviço), retiradas de rastreador (motivos explícitos de desinstalação já aprovados), eventos de troca de rastreador, trocas de coletora e RFID (regras existentes). Categorias sobrepostas: uma assistência pode conter troca; evento de troca de rastreador corresponde a duas linhas. Não somar colunas como total de atendimentos. Retiradas não abrangem motivos desconhecidos automaticamente. Trocas de rastreador são atribuídas ao cliente da instalação; pares entre clientes distintos precisam de conferência. Não classifica manutenção sem troca.
+
+## Tempo observado dos rastreadores
+
+Reutiliza os ciclos existentes por serial + placa, iniciados por Implementação. Agrupamento por Modelo ou Razão Social da instalação. Mediana de dias até retirada somente para ciclos encerrados. Períodos sem retirada aparecem separados e não entram nessa mediana ou distribuição. Amostra por grupo e tipos de serviço da retirada são exibidos para distinguir contextos como cancelamento. Grupos sem ciclo encerrado não recebem mediana zero.
+
+Distribuição: até 30, 31–90, 91–180, 181–365 e mais de 365 dias. Não representa previsão de vida útil ou taxa de falha; uma retirada pode ser motivada por cancelamento. A referência temporal escolhida continua afetando apenas períodos sem retirada. Filtros de serviço podem excluir uma das pontas e tornar um ciclo inelegível conforme a regra existente.
+
+## Evolução dos custos
+
+Mês derivado de Data de atendimento válida, em ordem temporal. Selector de gráfico de linhas: realizados, custo total lançado, custo médio válido e participação Km/Custo Total. Tabela apresenta todas as medidas juntas. Ausências de data contabilizadas, sem preencher meses ou custos automaticamente.
+
+Média = soma dos custos totais válidos / quantidade de custos totais válidos, inclusive zeros. Participação Km/Custo Total usa somente linhas com ambos válidos; denominador zero gera indisponível. Um total divergente pode gerar participação acima de 100%; não limita ou corrige o resultado. Não confundir esse percentual com participação nos componentes da seção Composição.
+
+## Conferência, exportação e implementação
+
+Tabelas ordenáveis, acesso às linhas originais, CSV com arquivo/filtros/origem e impressão/PDF por seção. Rankings podem mostrar 10, 20 ou todos; tabela e totais completos. Referência temporal do ciclo consta na impressão pelo contexto existente. Gráfico de composição é impresso junto da seção; números dos componentes estão na tabela.
+
+`src/insights.js` mantém as agregações; `src/AdvancedInsights.jsx` apresenta as análises. Nenhuma regra de importação, financeiro, trocas ou vínculo de ciclos foi substituída. Cobertura de testes: exclusões e total divergente, agrupamento de técnicos, chamados, visitas do mesmo dia, intervalos cumulativos e filtros sem atalhos, sobreposição de categorias, mediana sem ciclos abertos, bases compatíveis nos percentuais mensais.
+
+Conferência com o arquivo original desta entrega: 59 grupos de cliente; custo agregado de R$ 154.723,41, igual ao financeiro existente; 490 chamados com realizados, dos quais 252 com vários serviços; 89 eventos de troca de rastreador; 28 ciclos encerrados e 337 sem retirada registrada na referência 04/10/2026. Mediana global dos encerrados: 136,5 dias. Esses valores são uma conferência dessa versão do arquivo, não expectativas fixas para novas importações.

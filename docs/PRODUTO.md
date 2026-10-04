@@ -198,3 +198,7 @@ Usar registro mais antigo preenche a data inicial com a menor data válida de to
 ## Módulo de consumo — 0.10.0
 
 Nova página Linhas - Controle de Consumo, independente das ordens de serviço. Regras, importação e indicadores descritos em [CONSUMO-DE-LINHAS.md](CONSUMO-DE-LINHAS.md). Planilha de OS, filtros, ciclos, financeiro e interpretações aprovadas mantidos. Dados das duas páginas permanecem na memória ao alternar; não são persistidos no navegador.
+
+## Análises de OS — 0.11.0
+
+Implementadas sete análises descritas em [ANALISES-DE-OS.md](ANALISES-DE-OS.md). Abrem pelos títulos das novas seções e podem ser ocultadas em Personalizar. Reincidência confirmada por cliente + placa, serviços do mesmo dia agrupados como visita, retornos cumulativos em 30/60/90 dias. Custos seguem total lançado e realizados; ciclos abertos ficam fora da mediana de retiradas. Consumo e cruzamento com a planilha de mensalidades continuam para etapa futura.

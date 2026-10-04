@@ -1,5 +1,17 @@
 # Histórico de versões
 
+## 0.11.0 — 04/10/2026
+
+- Custo por cliente com cards, ranking, medidas contratuais e custo lançado em cobranças Addlog.
+- Composição técnico/deslocamento em barras empilhadas por cliente, cidade ou código técnico.
+- Visitas por cliente/placa, linha do tempo, mediana de intervalo e retornos cumulativos 30/60/90 dias.
+- Chamados com vários realizados: cards, distribuição e custos acumulados.
+- Matriz e gráfico de intervenções por cliente, com categorias sobrepostas explicitadas.
+- Mediana e distribuição de ciclos encerrados por modelo/cliente; períodos sem retirada separados.
+- Evolução mensal de volume, custo, média e participação do deslocamento com bases compatíveis.
+- Tabelas com origem, ordenação, CSV e impressão/PDF; sete seções recolhidas e personalizáveis.
+- Consumo e conciliação entre planilhas mantidos para fase futura.
+
 ## Preparação para GitHub — 04/10/2026
 
 - Git local inicializado na branch main.

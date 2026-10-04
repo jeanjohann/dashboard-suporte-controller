@@ -16,6 +16,7 @@ import { sectionLabels, cleanPreferences } from './preferences.js';
 import {SummaryCards} from './SummaryCards.jsx';
 import {Navigation} from './Navigation.jsx';
 import {LinesPage} from './LinesPage.jsx';
+import {AdvancedInsights} from './AdvancedInsights.jsx';
 import './style.css';
 
 function App({onPage}) {
@@ -73,6 +74,7 @@ function App({onPage}) {
       <MonthlyBreakdown data={selected}/>
       </Section>
       <Technicians data={selected} visible={visible.technicians}/>
+      <AdvancedInsights original={data} data={selected} devices={devices} lifecycle={lifecycle} visibility={visible} filename={filename} filters={filters}/>
       <Explorers key={filename} visibility={visible} data={selected} filename={filename} filters={filters} onRestoreFilters={saved=>{setFilters(saved);setExtraColumns(Object.keys(saved).filter(key=>key.startsWith('column:')).map(key=>Number(key.slice(7))));setPage(0);setSearch('');}}/>
       <Section title={sectionLabels.lifecycle} visible={visible.lifecycle}>
       <section className="panel chart-panel"><h2>Tempo observado em campo</h2><label>Referência para períodos sem retirada <input type="date" value={referenceDate} onChange={event=>setReferenceDate(event.target.value)}/></label><button style={{marginLeft:12}} onClick={()=>setReferenceDate(todaySaoPaulo())}>Usar data atual</button><p className="scope">Mesmo serial e placa, instalação anterior à retirada. Vínculos analisados no arquivo completo; ambos os registros precisam atender aos filtros. Várias instalações sem retirada intermediária vão para Revisão. Início somente por Implementação. Sem retirada registrada: duração até a referência, sem confirmar atividade ou ausência de problemas. A referência afeta apenas ciclos sem retirada; ciclos encerrados mantêm suas datas reais. Dias corridos, sem estimativa de vida útil completa.</p>{lifecycle.unavailable?<p>Indisponível: faltam colunas.</p>:lifecycle.invalidReference?<p role="alert">Escolha uma data de referência válida.</p>:<><p>{lifecycle.periods.length} períodos identificados.</p><div className="table-scroll"><SortableTable><thead><tr><th>Placa</th><th>Serial</th><th>Instalação</th><th>Retirada / referência</th><th>Situação</th><th>Dias</th><th>Linhas Excel</th></tr></thead><tbody>{lifecycle.periods.map(period=><tr key={period.installationRow}><td>{period.plate}</td><td>{period.serial}</td><td>{period.start}</td><td>{period.end}</td><td>{period.state}</td><td>{period.days}</td><td>{period.installationRow} → {period.removalRow ?? 'sem retirada'}</td></tr>)}</tbody></SortableTable></div></>}</section>

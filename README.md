@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.10.0 — indicadores, relatórios personalizados e histórico de equipamentos.
+**Versão:** 0.11.0 — indicadores, relatórios personalizados e histórico de equipamentos.
 
 ## Documentação do projeto
 
@@ -35,3 +35,7 @@ Somente colunas com cabeçalho não vazio são exibidas, em sua posição origin
 ## Linhas — Controle de Consumo
 
 Página independente no menu lateral para importação manual de CSV consolidado, filtros, cards, ranking, resumo ordenável, exportação e revisão. Consulte [o guia do módulo](docs/CONSUMO-DE-LINHAS.md). Importações de OS e consumo permanecem em memória ao alternar páginas e são independentes.
+
+## Análises de OS
+
+Sete novas seções recolhíveis com custo por cliente, composição, reincidência por veículo, chamados com vários serviços, perfil de intervenções, duração observada e evolução de custos. Critérios e exclusões no [guia de análises](docs/ANALISES-DE-OS.md).
