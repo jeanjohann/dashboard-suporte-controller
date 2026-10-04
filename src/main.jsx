@@ -10,7 +10,7 @@ import { MultiFilter } from './MultiFilter.jsx';
 import { equipment } from './equipment.js';
 import { Explorers } from './Explorers.jsx';
 import { observedPeriods, todaySaoPaulo } from './lifecycle.js';
-import { Section,PrintContext } from './Section.jsx';
+import { Section,PrintContext,ExpansionContext } from './Section.jsx';
 import {Technicians} from './Technicians.jsx';
 import { sectionLabels, cleanPreferences } from './preferences.js';
 import {SummaryCards} from './SummaryCards.jsx';
@@ -22,6 +22,7 @@ import './style.css';
 
 function App({onPage}) {
   const input = useRef();
+  const [expansion,setExpansion]=useState(null);
   const [recordSort,setRecordSort]=useState(null);
   const [visible,setVisible]=useState(()=>{try{return cleanPreferences(JSON.parse(localStorage.getItem('suporte-layout-v1')||'{}'));}catch{return cleanPreferences({});}});
   const [layoutMessage,setLayoutMessage]=useState('');
@@ -58,11 +59,12 @@ function App({onPage}) {
   const lifecycle = selected ? observedPeriods(data,selected,referenceDate) : null;
   const review = selected ? [...selected.issues, ...(financial?.issues ?? []), ...(devices?.issues ?? []), ...(lifecycle?.review ?? [])] : [];
   const currency = cents => (cents/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  return <PrintContext.Provider value={{filename,filters,referenceDate}}><div className="app">
+  return <ExpansionContext.Provider value={expansion}><PrintContext.Provider value={{filename,filters,referenceDate}}><div className="app">
     <Navigation page="orders" onPage={onPage}/>
     <main><header><div><div className="eyebrow">CONTROLE DE SERVIÇOS</div><h1>Ordens de serviço</h1><p>Importe sua planilha e confira os atendimentos antes de analisar.</p></div><button onClick={() => input.current.click()} disabled={busy}>{busy ? 'Lendo arquivo…' : '↑ Importar planilha'}</button><input ref={input} type="file" accept=".xlsx,.xls" hidden onChange={load}/></header>
     {error && <div role="alert" className="error">{error}{data && ' A importação anterior continua disponível.'}</div>}
     {!data ? <section className="empty"><div className="file-icon">▤</div><h2>Sua operação começa pela planilha</h2><p>Selecione o Excel que contém a aba <strong>OS 2025</strong>.<br/>A ordem dos registros e das colunas será preservada.</p><button onClick={() => input.current.click()} disabled={busy}>Selecionar arquivo Excel</button><div className="principles"><span>✓ Uma linha = um atendimento</span><span>✓ Chamados podem se repetir</span><span>✓ Sem correções automáticas</span></div></section> : <>
+      <div className="report-downloads" aria-label="Abertura dos relatórios"><button onClick={()=>setExpansion({open:true})}>Abrir todos os relatórios</button><button onClick={()=>setExpansion({open:false})}>Recolher todos os relatórios</button></div>
       <details className="panel personalization"><summary>Personalizar o que aparece na tela</summary><div className="preference-grid">{Object.entries(sectionLabels).map(([key,label])=><label key={key}><input type="checkbox" checked={visible[key]} onChange={event=>setVisibility({...visible,[key]:event.target.checked})}/>{label}</label>)}</div><button onClick={()=>setVisibility(cleanPreferences({}))}>Mostrar todas as seções</button><p className="scope">Ocultar não altera cálculos nem filtros. As seleções ativas permanecem no resumo abaixo. {layoutMessage}</p></details>
       <div className="active-filters"><strong>{selected.rows.length} de {data.rows.length} registros</strong><span>{Object.entries(filters).filter(([,value])=>Array.isArray(value)?value.length:value).map(([key,value])=>{const col=key.startsWith('column:')?data.columns.find(col=>col.index===Number(key.slice(7))):null;return (col?col.letter+' · '+col.label:key==='start'?'De':key==='end'?'Até':key)+': '+(Array.isArray(value)?value.map(item=>item||'Sem dados').join(', '):value);}).join(' | ')||'Sem filtros ativos'}</span><button onClick={()=>{setFilters({});setSearch('');setPage(0);}}>Limpar filtros</button></div>
       <div className="source"><span className="dot"/> <strong>{filename}</strong><span>Aba OS 2025</span><span>Somente leitura</span></div>
@@ -104,7 +106,7 @@ function App({onPage}) {
       {view==='records' ? <><div className="table-scroll"><table><thead><tr><th><button className="sort-heading" onClick={()=>{setRecordSort(previous=>previous?.index===-1?previous.direction==='asc'?{index:-1,direction:'desc'}:null:{index:-1,direction:'asc'});setPage(0);}}>Linha Excel {recordSort?.index===-1?recordSort.direction==='asc'?'↑':'↓':'↕'}</button></th>{data.columns.map(col=><th key={col.index} aria-sort={recordSort?.index===data.columns.indexOf(col)?recordSort.direction==='asc'?'ascending':'descending':'none'}><button className="sort-heading" onClick={()=>{const index=data.columns.indexOf(col);setRecordSort(previous=>previous?.index===index?previous.direction==='asc'?{index,direction:'desc'}:null:{index,direction:'asc'});setPage(0);}}><small>{col.letter}</small>{col.label} {recordSort?.index===data.columns.indexOf(col)?recordSort.direction==='asc'?'↑':'↓':'↕'}</button></th>)}</tr></thead><tbody>{orderedRecords.slice(page*50,(page+1)*50).map(row=><tr key={row.sourceRow}><td className="row-number">{row.sourceRow}</td>{row.cells.map((cell,i)=><td key={i} className={cell.issue?'invalid':''} title={cell.issue?`Conteúdo original: ${cell.raw}. Revisar na planilha.`:String(cell.display)}>{cell.display}</td>)}</tr>)}</tbody></table></div><footer><span>{filtered.length.toLocaleString('pt-BR')} atendimentos · ordem original da planilha</span><div><button disabled={page===0} onClick={()=>setPage(page-1)}>Anterior</button><span>{page+1} / {pageCount}</span><button disabled={page+1>=pageCount} onClick={()=>setPage(page+1)}>Próxima</button><button disabled={page+1>=pageCount} onClick={()=>setPage(pageCount-1)}>Última</button></div></footer></> : <div className="table-scroll"><SortableTable><thead><tr><th>Célula</th><th>Coluna</th><th>Conteúdo original</th><th>Motivo para revisão</th></tr></thead><tbody>{review.map((issue,index)=><tr key={issue.address+index}><td>{issue.address}</td><td>{issue.column}</td><td>{issue.value}</td><td>{issue.reason}</td></tr>)}</tbody></SortableTable>{!review.length && <p className="review-empty">Nenhum erro do Excel ou valor incompatível com formato de data foi detectado. Isso não valida as regras de negócio.</p>}</div>}
       </section><p className="scope">Conferência estrutural: erros do Excel e formatos de data inválidos. Divergências de custo dos serviços realizados também são sinalizadas. Outras validações serão definidas com você.</p>
       </Section>
-    </>}</main></div></PrintContext.Provider>;
+    </>}</main></div></PrintContext.Provider></ExpansionContext.Provider>;
 }
 function Workspace(){const [page,setPage]=useState('orders');return <><div hidden={page!=='orders'}><App onPage={setPage}/></div><div hidden={page!=='lines'}><LinesPage onPage={setPage}/></div></>;}
 createRoot(document.getElementById('root')).render(<Workspace/>);

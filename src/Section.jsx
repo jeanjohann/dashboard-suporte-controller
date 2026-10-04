@@ -1,8 +1,11 @@
-import React,{createContext,useContext,useRef} from 'react';
+import React,{createContext,useContext,useRef,useEffect} from 'react';
 export const PrintContext=createContext({});
+export const ExpansionContext=createContext(null);
 export function Section({title,visible,children,defaultOpen}){
   const section=useRef(),context=useContext(PrintContext);
+  const expansion=useContext(ExpansionContext);
   const [expanded,setExpanded]=React.useState(defaultOpen ?? !['Histórico de equipamentos','Dados e revisão','Configurações de relatório','Exportações','Filtros adicionais','Detalhamento de chamados','Tempo observado em campo','Indicadores financeiros','Indicadores operacionais'].includes(title));
+  useEffect(()=>{if(expansion)setExpanded(expansion.open);},[expansion]);
   function print(){
     const frame=document.createElement('iframe');frame.title='Impressão da seção';frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px';document.body.append(frame);
     const doc=frame.contentDocument;const heading=doc.createElement('h1');heading.textContent=title;

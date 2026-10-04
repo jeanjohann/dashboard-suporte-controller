@@ -211,3 +211,7 @@ Resumo em uma linha por grupo/indicador com quantitativos, percentuais, bases e 
 Mapa aprovado: 162 → MXT-162; 144 → MXT-130v2; 130 ou 137 → MXT-130v1; 141, 142 ou 143 → MXT-141. A classificação usa o prefixo do ID Rastreador da Implementação e não altera ID ou Modelo originais. IDs desconhecidos, ausentes ou incompatíveis ficam no grupo Modelo não identificado pelo ID; os ciclos continuam contados e elegíveis para as mesmas medidas de duração. Um card quantifica esses ciclos.
 
 Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/trackerModels.js para extensão futura.
+
+## Abrir e recolher relatórios — 0.12.2
+
+No topo da página de OS, após a importação, Abrir todos os relatórios e Recolher todos os relatórios controlam todas as seções principais. Não mudam filtros, cálculos ou quais seções foram escolhidas em Personalizar. A abertura continua podendo ser alterada individualmente pelo título. Painéis internos (filtros, detalhes e tabelas) conservam seu estado. O comando não é persistido entre sessões.

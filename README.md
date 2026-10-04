@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.12.1 — indicadores, relatórios personalizados e histórico de equipamentos.
+**Versão:** 0.12.2 — indicadores, relatórios personalizados e histórico de equipamentos.
 
 ## Documentação do projeto
 

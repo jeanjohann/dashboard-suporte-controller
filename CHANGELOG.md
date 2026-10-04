@@ -1,5 +1,10 @@
 # Histórico de versões
 
+## 0.12.2 — 04/10/2026
+
+- Botões no topo das OS para abrir ou recolher todas as seções principais de relatórios.
+- Personalização de visibilidade, filtros e controles individuais preservados.
+
 ## 0.12.1 — 04/10/2026
 
 - Modelos de rastreador classificados pelos sete prefixos de ID aprovados.
