@@ -1,5 +1,12 @@
 # Histórico de versões
 
+## 0.12.1 — 04/10/2026
+
+- Modelos de rastreador classificados pelos sete prefixos de ID aprovados.
+- Tempo observado compara por classificação como padrão, preservando comparação pelo Modelo original e cliente.
+- Ciclos com prefixo não reconhecido em grupo separado e card, mantendo contagens e durações.
+- Relatório descritivo XLSX/CSV atualizado para o mesmo agrupamento; ID e Modelo de origem preservados.
+
 ## 0.12.0 — 04/10/2026
 
 - Relatório descritivo selecionável entre as sete análises de OS, seguindo os filtros.

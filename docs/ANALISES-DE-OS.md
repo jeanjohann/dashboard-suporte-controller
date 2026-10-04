@@ -28,7 +28,7 @@ Matriz e gráfico selecionável de Implementações e Assistências Técnicas (T
 
 ## Tempo observado dos rastreadores
 
-Reutiliza os ciclos existentes por serial + placa, iniciados por Implementação. Agrupamento por Modelo ou Razão Social da instalação. Mediana de dias até retirada somente para ciclos encerrados. Períodos sem retirada aparecem separados e não entram nessa mediana ou distribuição. Amostra por grupo e tipos de serviço da retirada são exibidos para distinguir contextos como cancelamento. Grupos sem ciclo encerrado não recebem mediana zero.
+Reutiliza os ciclos existentes por serial + placa, iniciados por Implementação. Agrupamento por modelo identificado pelo prefixo do ID, Modelo original ou Razão Social da instalação. Mediana de dias até retirada somente para ciclos encerrados. Períodos sem retirada aparecem separados e não entram nessa mediana ou distribuição. Amostra por grupo e tipos de serviço da retirada são exibidos para distinguir contextos como cancelamento. Grupos sem ciclo encerrado não recebem mediana zero.
 
 Distribuição: até 30, 31–90, 91–180, 181–365 e mais de 365 dias. Não representa previsão de vida útil ou taxa de falha; uma retirada pode ser motivada por cancelamento. A referência temporal escolhida continua afetando apenas períodos sem retirada. Filtros de serviço podem excluir uma das pontas e tornar um ciclo inelegível conforme a regra existente.
 
@@ -45,3 +45,9 @@ Tabelas ordenáveis, acesso às linhas originais, CSV com arquivo/filtros/origem
 `src/insights.js` mantém as agregações; `src/AdvancedInsights.jsx` apresenta as análises. Nenhuma regra de importação, financeiro, trocas ou vínculo de ciclos foi substituída. Cobertura de testes: exclusões e total divergente, agrupamento de técnicos, chamados, visitas do mesmo dia, intervalos cumulativos e filtros sem atalhos, sobreposição de categorias, mediana sem ciclos abertos, bases compatíveis nos percentuais mensais.
 
 Conferência com o arquivo original desta entrega: 59 grupos de cliente; custo agregado de R$ 154.723,41, igual ao financeiro existente; 490 chamados com realizados, dos quais 252 com vários serviços; 89 eventos de troca de rastreador; 28 ciclos encerrados e 337 sem retirada registrada na referência 04/10/2026. Mediana global dos encerrados: 136,5 dias. Esses valores são uma conferência dessa versão do arquivo, não expectativas fixas para novas importações.
+
+## Modelos pelo ID — 0.12.1
+
+Mapa aprovado: 162 → MXT-162; 144 → MXT-130v2; 130 ou 137 → MXT-130v1; 141, 142 ou 143 → MXT-141. A classificação usa o prefixo do ID Rastreador da Implementação e não altera ID ou Modelo originais. IDs desconhecidos, ausentes ou incompatíveis ficam no grupo Modelo não identificado pelo ID; os ciclos continuam contados e elegíveis para as mesmas medidas de duração. Um card quantifica esses ciclos.
+
+Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/trackerModels.js para extensão futura.

@@ -206,3 +206,9 @@ Implementadas sete análises descritas em [ANALISES-DE-OS.md](ANALISES-DE-OS.md)
 ## Relatório descritivo — 0.12.0
 
 Resumo em uma linha por grupo/indicador com quantitativos, percentuais, bases e descrição, mais atendimentos originais filtrados. Usuário confirmou exportar ambos. XLSX com três abas e CSVs separados. Critérios, precisão e populações em [RELATORIO-DESCRITIVO.md](RELATORIO-DESCRITIVO.md).
+
+## Modelos pelo ID — 0.12.1
+
+Mapa aprovado: 162 → MXT-162; 144 → MXT-130v2; 130 ou 137 → MXT-130v1; 141, 142 ou 143 → MXT-141. A classificação usa o prefixo do ID Rastreador da Implementação e não altera ID ou Modelo originais. IDs desconhecidos, ausentes ou incompatíveis ficam no grupo Modelo não identificado pelo ID; os ciclos continuam contados e elegíveis para as mesmas medidas de duração. Um card quantifica esses ciclos.
+
+Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/trackerModels.js para extensão futura.

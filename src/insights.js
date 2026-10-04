@@ -1,6 +1,7 @@
 import {field,attendanceDate} from './filters.js';
 import {money} from './analysis.js';
 import {trackerMotives} from './equipment.js';
+import {trackerModel} from './trackerModels.js';
 export const done=(data,row)=>['Pago','Concluída'].includes(field(data,row,'Status')?.raw);
 const value=(data,row,label)=>{if(!row)return null;const cell=field(data,row,label);return cell?.issue||cell?.raw==null||cell.raw===''?null:String(cell.raw);};
 export const median=values=>{if(!values.length)return null;const sorted=[...values].sort((a,b)=>a-b),middle=Math.floor(sorted.length/2);return sorted.length%2?sorted[middle]:(sorted[middle-1]+sorted[middle])/2;};
@@ -50,13 +51,14 @@ export function interventionProfiles(data,devices){
   for(const [category,key] of [['Coletora','collector'],['RFID','rfid']])for(const id of devices?.accessoryRows?.[category]||[]){const row=source.get(id);if(row)get(row)[key]++;}
   return [...groups.values()];
 }
-export function durationInsights(data,lifecycle,groupBy='Modelo'){
+export function durationInsights(data,lifecycle,groupBy='ID Rastreador'){
   if(lifecycle?.unavailable||lifecycle?.invalidReference||!data.columns.some(col=>col.label===groupBy))return null;
   const source=new Map(data.rows.map(row=>[row.sourceRow,row])),groups=new Map(),closed=[],bins=[{label:'Até 30 dias',value:0},{label:'31 a 90 dias',value:0},{label:'91 a 180 dias',value:0},{label:'181 a 365 dias',value:0},{label:'Mais de 365 dias',value:0}];
-  for(const period of lifecycle.periods){const row=source.get(period.installationRow),label=value(data,row,groupBy)||'Sem dados';if(!groups.has(label))groups.set(label,{label,closed:[],open:[],motives:new Set(),rows:[]});const group=groups.get(label);group.rows.push(period.installationRow);if(period.removalRow!=null)group.rows.push(period.removalRow);
+  let unknownModels=0;
+  for(const period of lifecycle.periods){const row=source.get(period.installationRow),model=row?trackerModel(field(data,row,'ID Rastreador')):null;if(!model)unknownModels++;const label=groupBy==='ID Rastreador'?(model||'Modelo não identificado pelo ID'):(value(data,row,groupBy)||'Sem dados');if(!groups.has(label))groups.set(label,{label,closed:[],open:[],motives:new Set(),rows:[]});const group=groups.get(label);group.rows.push(period.installationRow);if(period.removalRow!=null)group.rows.push(period.removalRow);
     if(period.state==='Encerrado'){group.closed.push(period);closed.push(period);group.motives.add(value(data,source.get(period.removalRow),'Tipo de Serviço')||'Sem dados');bins[period.days<=30?0:period.days<=90?1:period.days<=180?2:period.days<=365?3:4].value++;}else group.open.push(period);
   }
-  return {items:[...groups.values()].map(group=>({...group,median:median(group.closed.map(period=>period.days))})),median:median(closed.map(period=>period.days)),closedCount:closed.length,openCount:lifecycle.periods.length-closed.length,bins};
+  return {items:[...groups.values()].map(group=>({...group,median:median(group.closed.map(period=>period.days))})),median:median(closed.map(period=>period.days)),closedCount:closed.length,openCount:lifecycle.periods.length-closed.length,unknownModels,bins};
 }
 export function monthlyCosts(data){
   if(['Status','Data de atendimento'].some(label=>!data.columns.some(col=>col.label===label)))return null;
