@@ -1,5 +1,13 @@
 # Histórico de versões
 
+## 0.12.0 — 04/10/2026
+
+- Relatório descritivo selecionável entre as sete análises de OS, seguindo os filtros.
+- Uma linha por grupo/indicador, valores, unidades, bases, percentuais e descrição.
+- XLSX com números e percentuais tipados: Relatório, Critérios e Atendimentos originais filtrados.
+- CSVs separados do resumo e originais; contexto de arquivo/filtros/referência no resumo.
+- Prévia de 200 linhas, exportações completas; regras de percentuais não aditivos e ausências explícitas.
+
 ## 0.11.0 — 04/10/2026
 
 - Custo por cliente com cards, ranking, medidas contratuais e custo lançado em cobranças Addlog.

@@ -17,6 +17,7 @@ import {SummaryCards} from './SummaryCards.jsx';
 import {Navigation} from './Navigation.jsx';
 import {LinesPage} from './LinesPage.jsx';
 import {AdvancedInsights} from './AdvancedInsights.jsx';
+import {DescriptiveReport} from './DescriptiveReport.jsx';
 import './style.css';
 
 function App({onPage}) {
@@ -74,6 +75,7 @@ function App({onPage}) {
       <MonthlyBreakdown data={selected}/>
       </Section>
       <Technicians data={selected} visible={visible.technicians}/>
+      <DescriptiveReport original={data} data={selected} devices={devices} lifecycle={lifecycle} filename={filename} filters={filters} referenceDate={referenceDate} visible={visible.descriptive}/>
       <AdvancedInsights original={data} data={selected} devices={devices} lifecycle={lifecycle} visibility={visible} filename={filename} filters={filters}/>
       <Explorers key={filename} visibility={visible} data={selected} filename={filename} filters={filters} onRestoreFilters={saved=>{setFilters(saved);setExtraColumns(Object.keys(saved).filter(key=>key.startsWith('column:')).map(key=>Number(key.slice(7))));setPage(0);setSearch('');}}/>
       <Section title={sectionLabels.lifecycle} visible={visible.lifecycle}>

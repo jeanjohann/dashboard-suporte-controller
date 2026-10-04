@@ -201,3 +201,7 @@ Nova página Linhas - Controle de Consumo, independente das ordens de serviço. 
 ## Análises de OS — 0.11.0
 
 Implementadas sete análises descritas em [ANALISES-DE-OS.md](ANALISES-DE-OS.md). Abrem pelos títulos das novas seções e podem ser ocultadas em Personalizar. Reincidência confirmada por cliente + placa, serviços do mesmo dia agrupados como visita, retornos cumulativos em 30/60/90 dias. Custos seguem total lançado e realizados; ciclos abertos ficam fora da mediana de retiradas. Consumo e cruzamento com a planilha de mensalidades continuam para etapa futura.
+
+## Relatório descritivo — 0.12.0
+
+Resumo em uma linha por grupo/indicador com quantitativos, percentuais, bases e descrição, mais atendimentos originais filtrados. Usuário confirmou exportar ambos. XLSX com três abas e CSVs separados. Critérios, precisão e populações em [RELATORIO-DESCRITIVO.md](RELATORIO-DESCRITIVO.md).

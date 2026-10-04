@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.11.0 — indicadores, relatórios personalizados e histórico de equipamentos.
+**Versão:** 0.12.0 — indicadores, relatórios personalizados e histórico de equipamentos.
 
 ## Documentação do projeto
 
@@ -39,3 +39,7 @@ Página independente no menu lateral para importação manual de CSV consolidado
 ## Análises de OS
 
 Sete novas seções recolhíveis com custo por cliente, composição, reincidência por veículo, chamados com vários serviços, perfil de intervenções, duração observada e evolução de custos. Critérios e exclusões no [guia de análises](docs/ANALISES-DE-OS.md).
+
+## Relatório descritivo
+
+Exportação de quantitativos, percentuais e critérios em XLSX (resumo, originais e critérios) ou CSVs separados, seguindo os filtros. Consulte [o guia do relatório](docs/RELATORIO-DESCRITIVO.md).
