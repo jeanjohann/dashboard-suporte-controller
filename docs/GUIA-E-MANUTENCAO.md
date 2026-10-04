@@ -215,3 +215,7 @@ Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID 
 ## Abrir e recolher relatórios — 0.12.2
 
 No topo da página de OS, após a importação, Abrir todos os relatórios e Recolher todos os relatórios controlam todas as seções principais. Não mudam filtros, cálculos ou quais seções foram escolhidas em Personalizar. A abertura continua podendo ser alterada individualmente pelo título. Painéis internos (filtros, detalhes e tabelas) conservam seu estado. O comando não é persistido entre sessões.
+
+## Operacional — 0.13.0
+
+Importe a aba Equipamentos na página Operacional — Importação e Revisão. Confira os pontos e exporte o CSV para ajustar a planilha de origem. Importe as OS em sua página e abra Operacional × OS — Análises. Ambos os arquivos permanecem em memória durante a navegação. Não interpretar ausência nas OS como erro. Leia [regras e manutenção do módulo](OPERACIONAL.md) antes de alterar os vínculos. Código: src/operational.js, src/OperationalPage.jsx e src/operational.test.js.

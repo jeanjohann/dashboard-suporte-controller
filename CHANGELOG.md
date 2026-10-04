@@ -1,5 +1,14 @@
 # Histórico de versões
 
+## 0.13.0 — 04/10/2026
+
+- Duas páginas: importação/revisão operacional e análises Operacional × OS, com dados em memória compartilhados.
+- Leitura da aba Equipamentos limitada à tabela A:BY; originais e fórmulas inspecionáveis.
+- Revisão de formatos, ausências, cancelamento sem data e repetições; exportação CSV e impressão por seção.
+- Vínculo serial + placa com cobertura explícita e exportação; ausência na OS não constitui divergência por limitação histórica.
+- Cards de cobertura, gráficos por cliente/modelo/plano/situação e somas de valores mensais lançados, sem cálculo de faturamento.
+- Navegação acessível em telas estreitas, quatro testes de regras operacionais e documentação específica.
+
 ## 0.12.2 — 04/10/2026
 
 - Botões no topo das OS para abrir ou recolher todas as seções principais de relatórios.

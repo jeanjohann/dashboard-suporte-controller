@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.12.2 — indicadores, relatórios personalizados e histórico de equipamentos.
+**Versão:** 0.13.0 — operacional, revisão e cobertura do histórico de OS.
 
 ## Documentação do projeto
 
@@ -8,6 +8,7 @@
 - [Guia de uso e manutenção](docs/GUIA-E-MANUTENCAO.md)
 - [Histórico de versões](CHANGELOG.md)
 - [Versionamento e uso em outros computadores](docs/VERSIONAMENTO.md)
+- [Operacional e cruzamento com OS](docs/OPERACIONAL.md)
 
 As contagens operacionais e os totais financeiros de serviços realizados estão implementados. O gráfico mensal está implementado; relatórios personalizados e histórico por placa/serial estão implementados. Consulte os documentos antes de futuras alterações.
 

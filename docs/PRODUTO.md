@@ -216,3 +216,7 @@ Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID 
 ## Abrir e recolher relatórios — 0.12.2
 
 No topo da página de OS, após a importação, Abrir todos os relatórios e Recolher todos os relatórios controlam todas as seções principais. Não mudam filtros, cálculos ou quais seções foram escolhidas em Personalizar. A abertura continua podendo ser alterada individualmente pelo título. Painéis internos (filtros, detalhes e tabelas) conservam seu estado. O comando não é persistido entre sessões.
+
+## Operacional — 0.13.0
+
+Duas páginas independentes para revisão e análises, com vínculo serial + placa. Equipamentos sem OS não são divergências: a operacional é mais antiga que o histórico de atendimentos. Regras, limites e pendências em [Operacional](OPERACIONAL.md). Cancelado exige data válida para confirmar interrupção da mensalidade; faturamento e pró-rata ainda não calculados.

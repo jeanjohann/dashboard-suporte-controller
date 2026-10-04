@@ -9,7 +9,10 @@
 .summary-period{background:#edf4f1;border-left:4px solid #176b5c;padding:14px 18px;border-radius:6px;margin-bottom:16px}.summary-period .scope{margin-bottom:0}.filter-grid .oldest-date{font-size:12px;padding:8px 10px;margin-top:8px;background:#edf4f1;color:#176b5c}.filter-grid label>small{display:block;font-size:11px;line-height:1.5;margin-top:6px;color:#5d7185}
 
 .side-navigation{display:flex;flex-direction:column;gap:10px;margin-top:45px}.side-navigation button{background:transparent;text-align:left;padding:14px 12px;color:#c6d9df;font-size:13px;line-height:1.5}.side-navigation button.active{background:#274553;color:#fff}.consumption-search{display:flex;flex-direction:column;gap:8px;margin:18px 0}.consumption-search input{padding:10px;border:1px solid #dce3ea;border-radius:7px;max-width:560px}.lines-page .summary-card strong{font-size:22px;white-space:normal;overflow-wrap:anywhere}.side-navigation button:focus-visible{outline:2px solid #a8c5ce}
+@media(max-width:650px){.app{flex-direction:column}aside{display:block;width:100%;padding:14px 18px}.logo,.aside-note{display:none}.side-navigation{margin-top:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.side-navigation button{padding:9px;font-size:12px}}
 
 .stack-track{display:flex;height:20px;background:#edf2f4;border-radius:4px;overflow:hidden;print-color-adjust:exact}.stack-track span{display:block;height:100%;print-color-adjust:exact}.visit-timeline{list-style:none;padding-left:18px;border-left:3px solid #176b5c;margin:22px 0}.visit-timeline li{display:flex;flex-direction:column;gap:8px;margin:20px 0;padding:12px;background:#f7faf9;border-radius:8px}.visit-timeline small{color:#53677d}
 
 .report-downloads{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+
+.operational-page td{white-space:normal;overflow-wrap:anywhere}.operational-page .cards strong{font-size:24px;overflow-wrap:anywhere}.operational-page .filters input{display:block;padding:10px;border:1px solid #dce3ea;border-radius:7px;width:100%;max-width:560px;margin-top:8px}.operational-page footer{gap:10px;flex-wrap:wrap}

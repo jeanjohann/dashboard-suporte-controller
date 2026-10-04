@@ -18,9 +18,10 @@ import {Navigation} from './Navigation.jsx';
 import {LinesPage} from './LinesPage.jsx';
 import {AdvancedInsights} from './AdvancedInsights.jsx';
 import {DescriptiveReport} from './DescriptiveReport.jsx';
+import {OperationalPage} from './OperationalPage.jsx';
 import './style.css';
 
-function App({onPage}) {
+function App({onPage,onImport}) {
   const input = useRef();
   const [expansion,setExpansion]=useState(null);
   const [recordSort,setRecordSort]=useState(null);
@@ -42,6 +43,7 @@ function App({onPage}) {
     try {
       const result = importWorkbook(await file.arrayBuffer());
       setData(result); setFilename(file.name); setPage(0); setSearch(''); setView('records');
+      onImport({data:result,filename:file.name});
       setFilters({});
       setExtraColumns([]);setRecordSort(null);
     } catch (e) { setError(e.message || 'Não foi possível ler o arquivo.'); }
@@ -108,5 +110,5 @@ function App({onPage}) {
       </Section>
     </>}</main></div></PrintContext.Provider></ExpansionContext.Provider>;
 }
-function Workspace(){const [page,setPage]=useState('orders');return <><div hidden={page!=='orders'}><App onPage={setPage}/></div><div hidden={page!=='lines'}><LinesPage onPage={setPage}/></div></>;}
+function Workspace(){const [page,setPage]=useState('orders'),[orders,setOrders]=useState(null),[operational,setOperational]=useState(null);return <><div hidden={page!=='orders'}><App onPage={setPage} onImport={setOrders}/></div><div hidden={page!=='lines'}><LinesPage onPage={setPage}/></div><div hidden={!['operational','operational-analysis'].includes(page)}><OperationalPage page={page} onPage={setPage} orders={orders} source={operational} setSource={setOperational}/></div></>;}
 createRoot(document.getElementById('root')).render(<Workspace/>);
