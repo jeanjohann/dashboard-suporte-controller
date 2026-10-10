@@ -8,5 +8,5 @@ export function RecordDetails({data,rows,title}){
 export function MonthlyBreakdown({data}){
   const [month,setMonth]=useState(null),result=report(data,'Mês','attendances');
   const item=result.items.find(item=>item.label===month);
-  return <><div className="table-scroll"><SortableTable><thead><tr><th>Mês</th><th>Realizados</th><th>Detalhamento</th></tr></thead><tbody>{result.items.map(item=><tr key={item.label}><td>{item.label}</td><td>{item.value}</td><td><button onClick={()=>setMonth(month===item.label?null:item.label)}>Conferir {item.rows.length} linhas</button></td></tr>)}</tbody></SortableTable></div>{item&&<RecordDetails data={data} rows={item.rows} title={`Atendimentos de ${item.label}`}/>}</>;
+  return <><div className="table-scroll"><SortableTable><thead><tr><th>Mês</th><th>Realizados</th><th>Detalhamento</th></tr></thead><tbody>{result.items.map(item=><tr key={item.label}><td>{item.label}</td><td>{item.value}</td><td className="table-action-cell"><button type="button" className="table-record-action" onClick={()=>setMonth(month===item.label?null:item.label)}>Conferir {item.rows.length} {item.rows.length===1?'linha':'linhas'}</button></td></tr>)}</tbody></SortableTable></div>{item&&<RecordDetails data={data} rows={item.rows} title={`Atendimentos de ${item.label}`}/>}</>;
 }

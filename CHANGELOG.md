@@ -8,6 +8,8 @@
 
 ## Em desenvolvimento — aparência e temas
 
+- Correção das colunas de origem: botões de conferência em uma linha, linhas compactas e rolagem restrita às tabelas.
+- Exportações e abertura da tabela de técnicos com espaçamento próprio; seleção de veículo organizada e linha do tempo com eventos neutros e datas em destaque.
 - Logo oficial incorporada ao cabeçalho e navegação na ordem Ordens de Serviço, Operacional, Controle de Consumo M2M e OS x OP.
 - Temas claro e escuro em todas as páginas, com chave acessível e preferência salva no navegador.
 - Cores, tipografia, botões, espaçamentos e alinhamentos harmonizados; layouts conferidos de 320 a 1440 px com dados reais.
