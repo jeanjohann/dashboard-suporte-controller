@@ -5,19 +5,21 @@ export function field(data, row, label) {
   const index = data.columns.findIndex(col => col.label === label);
   return index < 0 ? null : row.cells[index];
 }
-export function attendanceDate(data, row) {
-  const cell = field(data,row,'Data de atendimento');
+export function attendanceDate(data, row, dateField='Data de atendimento') {
+  const cell = field(data,row,dateField);
   if (!cell || cell.issue || typeof cell.raw !== 'number') return null;
   const parsed = XLSX.SSF.parse_date_code(cell.raw, {date1904: data.date1904});
   if (!parsed || parsed.y < 1900 || (parsed.y === 1900 && parsed.m === 2 && parsed.d === 29)) return null;
-  return `${String(parsed.y).padStart(4,'0')}-${String(parsed.m).padStart(2,'0')}-${String(parsed.d).padStart(2,'0')}`;
+  const date=`${String(parsed.y).padStart(4,'0')}-${String(parsed.m).padStart(2,'0')}-${String(parsed.d).padStart(2,'0')}`;
+  const instant=new Date(date+'T00:00:00Z');
+  return Number.isFinite(instant.getTime())&&instant.toISOString().slice(0,10)===date?date:null;
 }
 export function attendanceExtent(data) {
   let start=null,end=null,missing=0;
   for(const row of data.rows){const date=attendanceDate(data,row);if(!date){missing++;continue;}if(!start||date<start)start=date;if(!end||date>end)end=date;}
   return {start,end,missing};
 }
-export function applyFilters(data, filters) {
+export function applyFilters(data, filters, dateField='Data de atendimento') {
   let missingDates = 0;
   const invalidPeriod = Boolean(filters.start && filters.end && filters.start > filters.end);
   const rows = data.rows.filter(row => {
@@ -30,7 +32,7 @@ export function applyFilters(data, filters) {
       if (Array.isArray(values) && values.length && !values.includes(String(row.cells[data.columns.indexOf(col)]?.display ?? ''))) return false;
     }
     if (filters.start || filters.end) {
-      const date = attendanceDate(data,row);
+      const date = attendanceDate(data,row,dateField);
       if (!date) { missingDates++; return false; }
       if (invalidPeriod || (filters.start && date < filters.start) || (filters.end && date > filters.end)) return false;
     }

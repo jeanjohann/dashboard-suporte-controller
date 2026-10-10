@@ -1,12 +1,12 @@
 # Operacional — importação, revisão e cobertura histórica
 
-Entrega inicial 0.13.0. Duas páginas compartilham a importação em memória: **Operacional — Importação e Revisão** e **Operacional × OS — Análises**. A OS é importada em sua própria página. Reimportar uma fonte atualiza os vínculos sem aplicar os filtros da página de OS. Consumo permanece independente.
+Entrega inicial 0.13.0. Duas páginas compartilham a importação em memória: **Operacional — Importação e Revisão** e **Operacional × OS — Análises**. A OS é importada em sua própria página. Reimportar uma fonte atualiza os vínculos sem aplicar os filtros da página de OS. Consumo mantém filtros próprios e consulta a referência operacional para confirmar ICCID + MSISDN.
 
 ## Importação e rastreabilidade
 
 Arquivo Excel, aba `Equipamentos`, cabeçalhos na linha 1. Tabela limitada a A:BY (77 colunas); resumos auxiliares à direita não viram equipamentos. O layout de A/Nº, BH/Equipamentos, BF/Placa instalada e AU/Situação é validado antes de aceitar o arquivo. Linhas sem Nº não são importadas e são contabilizadas se houver conteúdo em A:BY. Nº pode repetir, portanto a linha Excel identifica o registro.
 
-Originais, cabeçalhos e fórmulas são preservados para inspeção das 77 colunas. Cabeçalhos repetidos são distinguidos pela letra. Não há edição nem correção automática. Fórmulas usam valores armazenados no arquivo: não há recálculo ou garantia de atualização. Arquivos e dados não são persistidos no navegador, enviados ao GitHub ou alterados. Importação que falha mantém a anterior.
+Originais, cabeçalhos e fórmulas são preservados para inspeção das 77 colunas. Cabeçalhos repetidos são distinguidos pela letra. Não há edição nem correção automática. Fórmulas usam valores armazenados no arquivo: não há recálculo ou garantia de atualização. A importação desta página permanece na sessão. No módulo de consumo, é possível guardar a referência operacional no histórico local e no backup; a importação do operacional pela página de consumo já a guarda. Fontes não são alteradas nem enviadas ao GitHub. Importação que falha mantém a anterior.
 
 Mapa principal: C cliente; S/T ciclo lançado; AK plano; AS mensalidade; AT cobrança monetária; AU situação; AV cancelamento; BC implementação; BF placa; BH serial; BJ modelo original; BM telefone da linha; BN ICCID. O significado de BB/Contrato e do ciclo permanece pendente; não usar como identificador único ou vigência contratual.
 
@@ -34,7 +34,7 @@ Cards de cobertura e gráficos por cliente/modelo original/plano/situação cont
 
 Uma linha corresponde a um equipamento contratado vinculado a um veículo, faturado mensalmente. Aguardando Reinstalação, Devolução para Cancelamento e Backup no Cliente continuam gerando mensalidade. Interrupção somente quando situação Cancelado e data de cancelamento válida estiverem presentes. Cancelado sem data exige conferência; não inventar data ou interrupção. O efeito do cancelamento sobre um mês e pró-rata precisa de confirmação antes de calcular faturamento.
 
-Próximas análises: manutenção por cliente/contrato, custos por equipamento e reincidência relativa ao parque, com critérios temporais e de cliente definidos antes de atribuir custos. A entrega atual prepara o vínculo e mostra cobertura, sem atribuir todo o histórico de um serial a um contrato atual. Integração com consumo e inferência de modelo por nova coluna continuam fora desta entrega.
+Próximas análises: manutenção por cliente/contrato, custos por equipamento e reincidência relativa ao parque, com critérios temporais e de cliente definidos antes de atribuir custos. A entrega atual prepara o vínculo e mostra cobertura, sem atribuir todo o histórico de um serial a um contrato atual. A integração atual com consumo exige ICCID + MSISDN únicos no mesmo registro e não presume alocação histórica. Veja [o guia de consumo](CONSUMO-DE-LINHAS.md). Inferência de modelo por nova coluna continua fora desta entrega.
 
 ## Validação
 

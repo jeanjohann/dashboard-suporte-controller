@@ -27,7 +27,7 @@ Instale as dependências com `npm install` e execute `npm run dev`. Abra o ender
 - Status `Pago` indica pagamento ao técnico.
 - `Km` contém o valor em reais do deslocamento de ida e volta informado pelo técnico, não a distância.
 - Gráficos mensais usarão `Data de atendimento`, com registros sem data excluídos do gráfico e contabilizados separadamente.
-- Planilha original não é alterada. Importação fica na memória da sessão.
+- Planilha original não é alterada. A importação de OS fica na memória da sessão; o consumo possui histórico local com backup.
 
 ## Limites desta etapa
 
@@ -35,12 +35,18 @@ Somente colunas com cabeçalho não vazio são exibidas, em sua posição origin
 
 ## Linhas — Controle de Consumo
 
-Página independente no menu lateral para importação manual de CSV consolidado, filtros, cards, ranking, resumo ordenável, exportação e revisão. Consulte [o guia do módulo](docs/CONSUMO-DE-LINHAS.md). Importações de OS e consumo permanecem em memória ao alternar páginas e são independentes.
+Importação de CSVs Arqia/Kore, cards, filtros, investigação acima da média, vínculos por ICCID + MSISDN com o operacional e linha do tempo por chip com anotações. Histórico salvo neste navegador, com versões dos arquivos e backup JSON exportável/restaurável. Períodos originais preservados, com comparação também em MB por dia. Consulte [o guia do módulo](docs/CONSUMO-DE-LINHAS.md). OS e consumo mantêm filtros independentes.
 
 ## Análises de OS
 
 Sete novas seções recolhíveis com custo por cliente, composição, reincidência por veículo, chamados com vários serviços, perfil de intervenções, duração observada e evolução de custos. Critérios e exclusões no [guia de análises](docs/ANALISES-DE-OS.md).
 
+Na categoria Regiões, a distribuição geográfica reúne o total de atendimentos e as manutenções em um gráfico comparativo por UF ou cidade. Inclui participação da manutenção, comparação por custo/deslocamento, conferência dos registros e exportação. A manutenção já está incluída no total.
+
 ## Relatório descritivo
 
 Exportação de quantitativos, percentuais e critérios em XLSX (resumo, originais e critérios) ou CSVs separados, seguindo os filtros. Consulte [o guia do relatório](docs/RELATORIO-DESCRITIVO.md).
+
+## Vida em campo dos equipamentos
+
+Na categoria Equipamentos, a seção Vida em campo até primeira troca mostra média, mediana, amostra, observações sem troca, cancelamentos e vínculos para revisão. Rastreadores usam pares confirmados de retirada/entrada; acessórios usam troca explícita por categoria. É possível analisar instalação inicial ou o ciclo iniciado numa troca anterior, com conferência das linhas e CSV. Consulte os [critérios de vida em campo](docs/VIDA-EM-CAMPO.md).

@@ -1,4 +1,67 @@
+## Análises complementares do suporte
+- Motivos de manutenção, serviços absorvidos pela Addlog e distribuição por UF/cidade.
+- Visitas repetidas por cliente/placa, contexto financeiro da rede de técnicos e cobertura dos vínculos com o parque.
+- Comparação por volume, custo e deslocamento com acesso às linhas de origem.
+- Estoque e novas análises de contratos fora do escopo; indicadores por equipamento aguardam validação dos vínculos.
+
 # Histórico de versões
+
+## Em desenvolvimento — histórico e investigação de consumo
+
+- Consolidados Arqia/Kore reconhecidos pelos cabeçalhos; dados, SMS e frete separados, com conversão KB para MB e períodos inclusivos preservados.
+- Categorias Visão geral, Investigação, Clientes e equipamentos e Histórico e arquivos; filtros no topo, cards, gráficos, tabela paginada e CSV completo.
+- Referência ajustável de consumo acima da média da operadora/apuração, incluindo zeros e calculada antes dos filtros.
+- Vínculos confirmados por ICCID e MSISDN únicos no mesmo registro operacional; ambiguidades/conflitos acessíveis para revisão.
+- Histórico em IndexedDB, versões arquiváveis, reimportação idempotente, backup JSON validado e referência operacional guardada.
+- Linha do tempo por chip com MB por dia e anotações; custos de dados/SMS separados de outras despesas. Contratos e saldo de franquia fora do escopo.
+- Testes de domínio e conferência no navegador com os arquivos reais, recarga, backup/restauração, exportações e layout móvel.
+
+## Em desenvolvimento — comparação geográfica
+
+- Gráfico único por UF ou cidade, com total de atendimentos e manutenções na mesma escala, respeitando período e filtros.
+- Quantidade total, manutenções e participação da manutenção no recorte; comparação também por custo total e despesa de deslocamento.
+- Cada barra permite conferir suas linhas de origem. Ranking, tabela completa, CSV, SVG com as duas cores e impressão preservados.
+- Manutenções (Assistência Técnica Concluída/Pago) estão incluídas no total; as séries não são somadas. Valores ausentes não viram zero.
+
+## Em desenvolvimento — vida em campo até primeira troca
+
+- Painel por rastreador, coletora/teclado/terminal e RFID com médias, medianas, amostras, distribuição, comparação e acompanhamento pelo mês de instalação.
+- Pares de rastreador exigem mesmo chamado, cliente, placa e data, Assistência Técnica realizada e seriais diferentes; reinstalação com par entra como troca.
+- Acessórios exigem troca/trocar explícito; instalação inicial precisa de evidência própria.
+- Cancelamentos, observações sem troca, ciclos incertos e trocas sem início conhecido ficam separados das estatísticas.
+- Seleção por instalação ou retirada/troca consulta o histórico completo; limite padrão na última data realizada do arquivo.
+- Ciclos iniciados em uma troca anterior analisados separadamente. CSV, impressão e registros de origem com critérios e limite da análise.
+- Datas impossíveis, inclusive serial Excel zero no calendário 1900, são excluídas dos vínculos temporais.
+
+## Em desenvolvimento — organização do dashboard
+
+- Cards de clientes e perfil ampliados: concentração dos cinco primeiros, custos/médias de manutenção, destaque e resumo selecionável por cliente.
+- Perfil por tipo com quantidade, participação, custo/média e variação contra período anterior; tipos exclusivos do anterior aparecem com zero atual.
+- Conferência das linhas por cliente/tipo; clientes não identificados, custos ausentes e bases das médias explicitados. Cancelamento realizado preservado.
+
+- Composição dos custos ampliada com total/médias dos componentes e valores contratuais de Cliente/Addlog, separados pela coluna Cobrança.
+- Contratos usam Valor a cobrar e Concluída/Pago; zeros válidos mantidos, ausências/classificações inválidas explicitadas, médias com bases próprias e conferência das linhas.
+
+- Identidade de central de gestão: fundo #F5F4F1, cards claros, laranja em seleção e ações, azul/verde petróleo nos gráficos.
+- Tipografia, alturas, espaçamentos e alinhamentos uniformizados em botões, filtros, tabelas e cards; versão móvel revisada.
+- Controles de exportação recolhidos na visão geral; composição de custos adicionada com base de pares válidos explícita.
+
+- Identidade visual aproximada do site Addlog: Inter local, laranja #F59136, coral #F16435, cinza #23303b e superfícies #F3F1ED.
+- Navegação clara, marca em texto, gráficos com paleta consistente e cores secundárias para distinguir séries.
+
+- Visão geral integrada: cards de gestão, agenda registrada, colunas empilhadas mensais, equipe em barras agrupadas, manutenção por cliente e rosca de tipos de serviço.
+- Comparação de intervalos inclusivos de mesma duração, imediatamente consecutivos, preservando filtros de categoria; base anterior zero não gera percentual.
+- Parque operacional integrado como fotografia integral da importação, explicitamente separado do período e dos filtros de OS.
+- Sem metas, SLA ou inferência de parque ativo histórico.
+
+- Personalização no topo de todas as categorias de OS e páginas de linhas/operacional, com os filtros de cada fonte reunidos.
+- Controles de expandir/recolher com ícones, descrição ao passar o mouse e nomes acessíveis.
+
+- Navegação superior e relatórios de OS separados por categoria; visão geral abre inicialmente.
+- Execuções por Resp. Execução, contando linhas Concluída/Pago nos filtros de atendimento.
+- Ranking de manutenção por cliente: Assistência Técnica realizada.
+- Agendamentos por Resp. Agendamento: linhas Concluída/Pago com nome válido; período por Agendamento, separado da Data de atendimento das execuções.
+
 
 ## 0.13.0 — 04/10/2026
 

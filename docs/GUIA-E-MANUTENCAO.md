@@ -110,7 +110,7 @@ O sistema não altera o arquivo nem recalcula suas fórmulas. Quando necessário
 
 Desde a versão 0.2.0, os cartões mostram realizados, cancelados, chamados com cancelamento e demais status. Abra Detalhamento dos chamados para ver as quantidades de cada chamado. Essas contagens usam toda a importação; a busca filtra somente a tabela de atendimentos. Indicadores financeiros ainda estão pendentes de definição.
 
-Dados ficam na memória do navegador; atualizar ou fechar a página perde a importação. Um novo arquivo válido substitui a importação anterior. Se falhar, os dados anteriores permanecem. A aplicação não envia a planilha a uma API e não possui banco de dados ou persistência implementados.
+Dados ficam na memória do navegador; atualizar ou fechar a página perde a importação. Um novo arquivo válido substitui a importação anterior. Se falhar, os dados anteriores permanecem. A aplicação não envia a planilha a uma API. O módulo de consumo possui persistência local em IndexedDB e backup; as importações de OS continuam somente na sessão.
 
 ## Execução e verificações
 
@@ -196,11 +196,11 @@ Usar registro mais antigo preenche a data inicial com a menor data válida de to
 
 ## Módulo de consumo — 0.10.0
 
-Nova página Linhas - Controle de Consumo, independente das ordens de serviço. Regras, importação e indicadores descritos em [CONSUMO-DE-LINHAS.md](CONSUMO-DE-LINHAS.md). Planilha de OS, filtros, ciclos, financeiro e interpretações aprovadas mantidos. Dados das duas páginas permanecem na memória ao alternar; não são persistidos no navegador.
+Nova página Linhas - Controle de Consumo, independente das ordens de serviço. Regras, importação e indicadores descritos em [CONSUMO-DE-LINHAS.md](CONSUMO-DE-LINHAS.md). Planilha de OS, filtros, ciclos, financeiro e interpretações aprovadas mantidos. As OS permanecem na sessão. Na evolução atual, consumo Arqia/Kore, referência operacional guardada e anotações têm histórico local com backup JSON. Consulte o guia do módulo para os critérios de vínculos e comparação.
 
 ## Análises de OS — 0.11.0
 
-Implementadas sete análises descritas em [ANALISES-DE-OS.md](ANALISES-DE-OS.md). Abrem pelos títulos das novas seções e podem ser ocultadas em Personalizar. Reincidência confirmada por cliente + placa, serviços do mesmo dia agrupados como visita, retornos cumulativos em 30/60/90 dias. Custos seguem total lançado e realizados; ciclos abertos ficam fora da mediana de retiradas. Consumo e cruzamento com a planilha de mensalidades continuam para etapa futura.
+Implementadas sete análises descritas em [ANALISES-DE-OS.md](ANALISES-DE-OS.md). Abrem pelos títulos das novas seções e podem ser ocultadas em Personalizar. Reincidência confirmada por cliente + placa, serviços do mesmo dia agrupados como visita, retornos cumulativos em 30/60/90 dias. Custos seguem total lançado e realizados; ciclos abertos ficam fora da mediana de retiradas. Consumo possui módulo próprio; a comparação com contratos permanece fora desta etapa.
 
 ## Relatório descritivo — 0.12.0
 

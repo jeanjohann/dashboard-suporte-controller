@@ -1,44 +1,57 @@
 # Linhas — Controle de Consumo
 
-Implementado na versão 0.10.0. O módulo não usa status, valores financeiros ou regras de equipamentos das ordens de serviço.
+Módulo de acompanhamento da Arqia e da Kore, integrado à identidade Addlog. O foco é encontrar consumo acima da referência, revisar vínculos com o operacional e acompanhar ações em novos períodos. Contratos, estoque e saldo de franquia ficam fora desta etapa.
 
 ## Uso
 
-1. Abra Linhas - Controle de Consumo pelo menu lateral.
-2. Importe um CSV consolidado. Uma importação bem-sucedida substitui apenas os dados de consumo. Falhas preservam a importação anterior.
-3. Selecione períodos completos, planos, contratos, tecnologias ou empresas. Seleções usam OU dentro de um campo e E entre campos. A busca por MSISDN, ICCID, plano, contrato ou empresa também afeta toda a análise de consumo.
-4. Consulte cards, ranking de 10/20/todos e resumo. Clique nos cabeçalhos para ordenar e em Conferir para ver os campos originais e números de linha física do CSV.
-5. Exporte o resumo CSV, o gráfico SVG ou use Imprimir / Salvar PDF por seção.
+1. Abra **Linhas - Controle de Consumo** e clique em **Importar extratos**. Pode selecionar os dois arquivos CSV juntos.
+2. Confira a operadora, as datas e a separação entre dados, SMS e outros serviços. Clique em **Salvar no histórico**. Uma importação inválida preserva os dados guardados.
+3. Importe o operacional XLSX para conferir ICCID + MSISDN e mostrar cliente, ID do equipamento, modelo e placa. A importação pela página de linhas guarda essa referência. Se importar pela página Operacional, use **Guardar operacional atual no histórico** para incluí-la no backup.
+4. Os filtros ficam em **Personalizar o que aparece na tela**, abaixo do menu de categorias. Selecione uma apuração por operadora; a mais recente vem selecionada inicialmente. Filtros múltiplos usam OU dentro do campo e E entre os campos.
+5. Em **Investigação**, consulte maiores consumos, destaques ou zeros. **Conferir e acompanhar** abre a linha CSV original e seleciona o chip na linha do tempo. Registre data, situação e anotação da ação.
+6. Em **Histórico e arquivos**, baixe o backup JSON. No outro navegador/computador, importe e confira esse backup antes de restaurar. A restauração substitui o histórico local; o cancelamento e arquivos incompatíveis preservam o histórico anterior.
 
-Ao voltar a Ordens de serviço, a planilha e filtros anteriores continuam disponíveis. Recarregar ou fechar a página encerra os dados das duas importações; nenhuma delas é salva no navegador.
+A OS continua carregada apenas na sessão e seus filtros são independentes. O consumo é salvo em IndexedDB, local ao navegador e ao endereço do dashboard, inclusive à porta utilizada. O backup leva os CSVs originais, suas versões, a referência operacional importada, anotações e o limite de investigação. Não há sincronização entre computadores. Trocar o endereço/navegador ou limpar seus dados exige restaurar o backup. A leitura ou gravação que falha é informada.
 
-## Colunas e representação
+## Formatos e precisão
 
-Obrigatórias: ICCID, MSISDN (também aceita MSISN), Período Início, Período Término, Consumo (MB). O cabeçalho fica na primeira linha. Delimitadores: ponto e vírgula, vírgula ou tabulação; campos entre aspas podem conter delimitadores, aspas escapadas e novas linhas. Cabeçalhos repetidos, aspas inválidas e linhas com quantidade incorreta de campos impedem a importação.
+- Arqia: ICCID, MSISDN/MSISN, Período Início, Período Término, Consumo (MB), Plano; os demais campos são preservados.
+- Kore: ICCID, MSISDN/MSISN, Data Início, Data Fim, Serviço, Consumo Total, Produto e campos financeiros. A operadora é reconhecida pelos cabeçalhos, não pelo nome do arquivo.
+- Dados móveis, SMS e frete são registros diferentes. Apenas Serviço = dados entra no volume e nas contagens de tráfego. SMS não duplica o chip; frete não recebe rateio por linha.
+- KB / 1024 = MB; GB × 1024 = MB. O arquivo deve usar formato brasileiro até seis casas decimais. A soma usa inteiros em unidades de 1/1.024.000.000 MB para preservar a conversão de KB sem arredondar cada linha. A exibição usa até seis casas decimais.
+- Zero é válido. Ausências, valores negativos/incompatíveis, datas impossíveis/invertidas e identificadores ausentes, não numéricos ou apenas zeros ficam sinalizados. Não são substituídos por zero.
+- Datas DD/MM/AAAA, com dias inclusivos. MB por dia = volume do período / quantidade de dias; não representa medição de cada dia nem uma projeção de mês fechado.
+- Identificadores continuam textos, com zeros iniciais. Originais e número de linha física do CSV ficam disponíveis para conferência.
+- Cabeçalhos repetidos, campos em quantidade incompatível e aspas inválidas impedem a importação. UTF-8 é usado primeiro, com alternativa Windows-1252 para erro de decodificação.
 
-Identificadores são textos, sem conversão numérica ou perda de zeros iniciais. MB aceita formato brasileiro, até seis casas decimais, inclusive zero. Ausências, negativos, datas impossíveis, períodos invertidos e identificadores ausentes/não numéricos são sinalizados e excluídos dos totais. Datas seguem DD/MM/AAAA. UTF-8 é usado primeiro; texto com erro de decodificação é relido em Windows-1252.
+## Indicadores e investigação
 
-Plano, Nome Fantasia e CPF/CNPJ são preservados. Tecnologia e Contrato são campos separados opcionais. São aceitos cabeçalhos Tecnologia / Tecnologia (2G/4G) e Contrato / Número do contrato / Contrato vinculado. Sem esses campos, exibe Não informado. Não infere 2G/4G por IMSI, ICCID ou descrições do plano, nem trata Plano como Contrato. O arquivo de exemplo não informa tecnologia ou contrato.
+Chips no recorte conta identificadores ICCID válidos distintos por operadora, inclusive os que exigem revisão de consumo. Linhas com tráfego e consumo zero usam apenas registros de dados elegíveis. Consumo total, médias, mediana, maior consumo e faixas usam a mesma base elegível; o número de registros excluídos é informado. A média geral inclui zeros; a média com tráfego usa apenas positivos. Os cards reunidos somam as apurações selecionadas, que podem ter durações diferentes; o comparativo por operadora mostra as datas e MB por dia.
 
-## Indicadores e repetições
+O destaque inicial é consumo **acima de 2× a média de sua operadora na apuração**, incluindo zeros. O fator é ajustável de 1 a 100 e salvo no histórico. A referência é calculada no extrato completo antes dos filtros de cliente, modelo, busca e consumo. O destaque indica necessidade de investigação, sem concluir falha, bloqueio, excedente faturado ou equipamento parado.
 
-- Chave da linha: par ICCID + MSISDN. Linhas na seleção conta pares distintos, incluindo grupos em revisão.
-- O arquivo é consolidado e não deve repetir pares. Todas as ocorrências de um par repetido são excluídas dos totais e sinalizadas. A validação acontece no arquivo completo; filtrar uma ocorrência não resolve a duplicidade.
-- Consumo total: soma dos MB válidos e elegíveis. Usa inteiros em milionésimos de MB para evitar arredondamento por registro. Totais que excedam a precisão inteira suportada são rejeitados.
-- Média por linha: total dividido pelos pares com consumo válido; inclui zero e exclui ausências/grupos repetidos.
-- Maior consumo: maior total válido por par. O card indica número e quantidade de empates; o ranking completo apresenta todos os participantes.
-- Linhas com zero: somente grupos com valor válido igual a zero. Não indica inatividade do equipamento.
-- Exclusões: quantidade de registros da seleção fora dos totais; os valores originais continuam disponíveis.
-- Período: abrangência das datas válidas selecionadas e quantidade de períodos distintos. Não presume continuidade, não faz rateio diário ou projeção mensal.
+A franquia é compartilhada dentro dos contratos, inclusive o plano descrito como 1GB Individual. Como há vários contratos por fornecedor e sua vinculação ficou fora do escopo, não calculamos saldo global por operadora, linhas bloqueadas ou cobrança extra com base no consumo.
 
-Filtros são independentes das OS. O ranking e o CSV derivam da mesma seleção e elegibilidade dos cards. Comparações entre períodos com durações diferentes refletem consumo absoluto. O relatório preserva a unidade MB da plataforma, sem inferir conversão em GB ou franquia, preços e excedentes.
+A tabela mostra 100 registros por página; a ordenação considera o recorte inteiro. O CSV exporta todas as linhas filtradas, critérios, datas, unidade, referência e origem. Impressão/PDF mostra a página da tabela e os gráficos exibidos; o CSV contém o conjunto completo. Gráficos de ranking permitem 10, 20 ou todos e exportação SVG.
 
-## Manutenção
+## Duplicidades e versões
 
-`src/consumption.js` contém parser, validações e agregações; `src/LinesPage.jsx` contém a página; `src/Navigation.jsx` contém o menu comum. Componentes visuais existentes são reutilizados, sem misturar os dados dos módulos. Configurações do layout de OS continuam pertencendo somente às OS. CSV exportado inclui arquivo, filtros, unidade, exclusões e linhas de origem; textos potencialmente interpretados como fórmulas recebem proteção na exportação.
+Repetições de ICCID + serviço + período dentro do mesmo extrato deixam todas as ocorrências fora da soma. Filtrar uma das ocorrências não resolve a duplicidade. O mesmo chip em dados e SMS, ou em meses diferentes, é legítimo.
 
-Testar identificadores longos, casas decimais, zero/ausência, aspas e linhas físicas, duplicidade antes dos filtros, datas, colunas opcionais e reconciliação dos cards com o resumo. Definição de contrato e origem de tecnologia ainda dependem da disponibilidade de campos na exportação.
+Reimportar conteúdo idêntico não duplica arquivos. Uma versão diferente da mesma operadora e conjunto de períodos arquiva a versão anterior, mantendo o original no backup. É possível arquivar e reativar versões; só uma versão da apuração fica em uso. Arquivos com conjuntos de períodos parcialmente coincidentes exigem revisão/arquivamento antes da importação ou reativação. Backups com apurações ativas repetidas são rejeitados.
 
-## Validação da primeira entrega
+## Vínculos e linha do tempo
 
-Arquivo de exemplo: 905 registros e pares distintos; apuração de 01/09/2026 a 28/09/2026. Total de 15.991,9154 MB, média de 17,670625 MB exibida, maior consumo de 78,4043 MB, 194 linhas com zero, nenhuma exclusão. Total reconciliado por soma decimal independente. Navegação conferida com as duas importações carregadas: OS e busca de consumo permaneceram ao alternar páginas. Testes automatizados incluem também as regras existentes de OS.
+Vínculo confirmado exige ICCID e MSISDN exatos, únicos, no mesmo registro do operacional. Correspondência por apenas um campo, registros repetidos, conflito entre os campos e ausência ficam separados para revisão. Células com erro ou identificadores numéricos de precisão insegura não confirmam vínculos. ID de equipamento ausente/incompatível continua não informado.
+
+Cliente/equipamento refletem a fotografia operacional importada. Não comprovam onde o chip estava em meses anteriores. A linha do tempo acompanha **operadora + ICCID**, usa todas as apurações em uso daquele chip e mostra volume, dias, MB por dia, arquivo e linha. Períodos semanais e mensais sobrepostos são observações separadas e não são somados. Anotações guardam a referência de cliente/ID exibida quando a ação foi registrada. Consumo sozinho não comprova que uma intervenção resolveu um defeito.
+
+## Mensalidades
+
+Valor Faturado, Valor Multa e Valor Total da Kore aparecem separados por dados, SMS e outros serviços, com quantidade de valores totais válidos. Não confirmam pagamento. Os registros de dados e SMS acompanham os chips filtrados; frete/outros serviços mostram o extrato completo da operadora selecionada, sem rateio. Arqia não informa preços nesse formato e exibe não informado, não zero.
+
+## Manutenção e validação
+
+`src/consumption.js`: parser CSV e funções básicas; `src/lineConsumption.js`: formatos, unidades, elegibilidade, vínculos, referência, versões e linha do tempo; `src/consumptionHistory.js`: IndexedDB e validação do backup; `src/LinesPage.jsx`: tela; `src/LineRecordsTable.jsx`: ordenação e paginação.
+
+Testes cobrem conversão exata, zero/ausência, identificadores, serviços separados, duplicidades antes dos filtros, vínculos ambíguos, média de referência, versões, períodos e backups incompatíveis. Conferência no navegador com os arquivos reais cobre importação, totais por soma inteira independente, vínculo operacional, recarga, CSV completo, anotações, reimportação idêntica, backup/restauração, novos períodos e telas desktop/móvel. Os arquivos de origem não são modificados.
