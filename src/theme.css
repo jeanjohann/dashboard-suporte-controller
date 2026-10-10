@@ -138,9 +138,9 @@ h1, h2, h3 { overflow-wrap: anywhere; }
 .sort-heading { min-height: 0; }
 
 /* Ações de origem reservam sua largura, sem esticar as linhas da tabela. */
-.table-scroll .table-action-cell { width: 1%; min-width: 140px; overflow: visible; white-space: nowrap; }
-button.table-record-action { min-width: max-content; max-width: none; min-height: 32px; padding: 6px 10px; font-size: 11px; line-height: 1.5; white-space: nowrap; overflow-wrap: normal; background: var(--ui-soft); color: var(--ui-link); border: 1px solid var(--ui-border); }
-button.table-record-action:hover:not(:disabled) { background: var(--ui-accent-soft); color: var(--ui-accent-ink); border-color: var(--ui-accent-border); }
+.table-scroll td:has(> button:not(.table-label-action)) { width: 1%; min-width: 140px; overflow: visible; white-space: nowrap; }
+.table-scroll td > button:not(.table-label-action) { min-width: max-content; max-width: none; min-height: 32px; padding: 6px 10px; font-size: 11px; line-height: 1.5; white-space: nowrap; overflow-wrap: normal; background: var(--ui-soft); color: var(--ui-link); border: 1px solid var(--ui-border); }
+.table-scroll td > button:not(.table-label-action):hover:not(:disabled) { background: var(--ui-accent-soft); color: var(--ui-accent-ink); border-color: var(--ui-accent-border); }
 .insight-table { margin: 16px 0; min-width: 0; }
 button.report-download { display: flex; width: fit-content; min-height: 32px; margin: 16px 0 12px; padding: 6px 11px; font-size: 11px; background: var(--ui-soft); color: var(--ui-ink); border: 1px solid var(--ui-border); }
 button.report-download:hover:not(:disabled) { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
@@ -161,12 +161,63 @@ button.report-download:hover:not(:disabled) { background: var(--ui-accent-soft);
 .visit-timeline li > span { grid-column: 2; font-size: 12px; overflow-wrap: anywhere; }
 .visit-timeline li > small { grid-column: 2; font-size: 11px; line-height: 1.5; color: var(--ui-muted); }
 @media (max-width: 600px) {
-  button.table-record-action { min-height: 38px; }
+  .table-scroll td > button:not(.table-label-action) { min-height: 38px; }
   .report-details > .table-scroll { margin: 8px; }
   .visit-timeline { padding-left: 16px; }
   .visit-timeline li { grid-template-columns: minmax(0, 1fr); padding: 12px; gap: 6px; }
   .visit-timeline li::before { left: -22px; }
   .visit-timeline li > strong, .visit-timeline li > span, .visit-timeline li > small { grid-column: 1; grid-row: auto; }
+}
+
+/* Cards e configurações salvas preservam o espaço das ações. */
+.cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cards article { min-width: 0; }
+.cards span, .cards strong { overflow-wrap: anywhere; }
+.cards strong { white-space: normal; }
+.saved-report-config { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; padding: 12px; border: 1px solid var(--ui-border); border-radius: 8px; background: var(--ui-soft); min-width: 0; }
+.saved-report-config > span { flex: 1 1 240px; min-width: 0; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.saved-report-config > button { flex: 0 0 auto; white-space: nowrap; overflow-wrap: normal; font-size: 12px; }
+@media (max-width: 900px) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .cards.financial-cards { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Acabamento comum de tabelas e controles de todas as páginas. */
+.table-scroll { margin: 12px 0; border: 1px solid var(--ui-border); border-radius: 8px; }
+.table-scroll .table-label-action { display: block; min-height: 32px; min-width: 80px; max-width: 300px; padding: 4px 6px; text-align: left; white-space: normal; overflow-wrap: normal; background: transparent; color: var(--ui-link); border: 0; font-size: 12px; font-weight: 500; }
+.table-scroll .table-label-action:hover:not(:disabled) { background: var(--ui-soft); color: var(--ui-accent-ink); }
+.table-cell-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-width: 160px; max-width: 280px; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; }
+.section-content { min-width: 0; }
+.section-content > button:not(.summary-card) { margin: 12px 8px 12px 0; }
+.section-content > label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 16px 12px 0; font-size: 12px; color: var(--ui-muted); max-width: 100%; }
+.section-content > label > select { min-width: 0; max-width: 100%; font-size: 12px; }
+.section-content > .report-selection, .section-content > .line-tracked-select { display: flex; align-items: stretch; margin: 18px 0; }
+.report-details > summary, .life-details > summary { padding: 11px 14px; background: var(--ui-soft); border-radius: 8px; cursor: pointer; font-size: 12px; line-height: 1.5; font-weight: 550; }
+.life-details { margin: 14px 0; padding: 0; border: 1px solid var(--ui-border); border-radius: 8px; }
+.life-details > .scope { margin: 12px 14px; }
+.life-details > .table-scroll { margin: 12px; }
+.life-details > button { margin-left: 14px; }
+.line-actions { gap: 8px; }
+.line-actions > button { line-height: 1.5; }
+.line-actions > button:not(:first-child):hover:not(:disabled) { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+footer button:hover:not(:disabled) { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+.line-records > .line-actions { justify-content: flex-end; }
+.line-records > .line-actions > .scope { margin: 0; font-size: 11px; }
+.line-import-preview, .line-source { min-width: 0; }
+.line-source h2 { font-size: 16px; line-height: 1.5; overflow-wrap: anywhere; }
+.lines-page .line-note-form { padding: 16px; background: var(--ui-soft); border: 1px solid var(--ui-border); border-radius: 8px; grid-template-columns: minmax(0, 170px) minmax(0, 1fr); }
+.timeline-entry { grid-column: 2; display: grid; gap: 6px; min-width: 0; }
+.timeline-entry > .timeline-status { width: fit-content; padding: 2px 8px; border: 1px solid var(--ui-border); border-radius: 5px; font-size: 10px; font-weight: 550; background: var(--ui-surface); }
+.timeline-entry > .timeline-text { font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+.timeline-entry > small { font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; color: var(--ui-muted); }
+@media (max-width: 600px) {
+  .section-content > label { width: 100%; margin-right: 0; }
+  .life-details > .table-scroll { margin: 8px; }
+  .lines-page .line-note-form { grid-template-columns: minmax(0, 1fr); padding: 12px; }
+  .timeline-entry { grid-column: 1; }
+  .line-records > .line-actions { justify-content: space-between; gap: 8px; }
 }
 
 /* Limpar e expandir/recolher compartilham a mesma faixa nas OS. */

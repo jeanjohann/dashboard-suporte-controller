@@ -8,6 +8,9 @@
 
 ## Em desenvolvimento — aparência e temas
 
+- Revisão geral de todas as páginas e categorias: regra compartilhada para ações de tabela, filtros, exportações e detalhes; inclui Consumo M2M, histórico, Operacional e equipamentos.
+- Consumo com textos longos resumidos em duas linhas e conteúdo completo acessível; anotações com data, situação e texto separados.
+- Cards financeiros ajustados ao celular e configurações salvas com ações que se reorganizam sem quebrar palavras.
 - Correção das colunas de origem: botões de conferência em uma linha, linhas compactas e rolagem restrita às tabelas.
 - Exportações e abertura da tabela de técnicos com espaçamento próprio; seleção de veículo organizada e linha do tempo com eventos neutros e datas em destaque.
 - Logo oficial incorporada ao cabeçalho e navegação na ordem Ordens de Serviço, Operacional, Controle de Consumo M2M e OS x OP.

@@ -18,5 +18,5 @@ export function Section({title,visible,children,defaultOpen}){
     frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});
     setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},200);
   }
-  return <div hidden={!visible||hiddenSections.includes(title)}><details className="workspace-section" open={expanded} onToggle={event=>setExpanded(event.currentTarget.open)}><summary>{title}</summary><div className="section-body"><div className="section-actions"><button onClick={print}>Imprimir / Salvar PDF</button></div><div ref={section}>{children}</div></div></details></div>;
+  return <div hidden={!visible||hiddenSections.includes(title)}><details className="workspace-section" open={expanded} onToggle={event=>setExpanded(event.currentTarget.open)}><summary>{title}</summary><div className="section-body"><div className="section-actions"><button onClick={print}>Imprimir / Salvar PDF</button></div><div className="section-content" ref={section}>{children}</div></div></details></div>;
 }
