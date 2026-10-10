@@ -18,6 +18,12 @@ Primeira versão: importação manual e conferência da aba `OS 2025`.
 
 Instale as dependências com `npm install` e execute `npm run dev`. Abra o endereço informado no terminal. Para gerar a versão de produção: `npm run build`.
 
+## Navegação e aparência
+
+O menu segue a ordem **Ordens de Serviço**, **Operacional**, **Controle de Consumo M2M** e **OS x OP**. A chave no cabeçalho alterna entre tema claro e escuro; a escolha fica salva neste navegador e vale para todas as páginas. A logo oficial acompanha o contraste do tema.
+
+Nas OS, **Limpar filtros** e os ícones de abrir/recolher relatórios compartilham a mesma faixa. As barras estão mais compactas: rótulos longos têm resumo visual, com identificação completa ao passar o cursor, na conferência dos registros e nas exportações. No celular, navegação, filtros e gráficos se ajustam à largura; tabelas mantêm rolagem própria para preservar as colunas.
+
 ## Regras aprovadas
 
 - React com importação manual do Excel.

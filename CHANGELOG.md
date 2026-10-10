@@ -6,6 +6,15 @@
 
 # Histórico de versões
 
+## Em desenvolvimento — aparência e temas
+
+- Logo oficial incorporada ao cabeçalho e navegação na ordem Ordens de Serviço, Operacional, Controle de Consumo M2M e OS x OP.
+- Temas claro e escuro em todas as páginas, com chave acessível e preferência salva no navegador.
+- Cores, tipografia, botões, espaçamentos e alinhamentos harmonizados; layouts conferidos de 320 a 1440 px com dados reais.
+- Barras menores e rótulos discretos; consumo mostra operadora/número e cliente, mantendo ICCID completo nos detalhes e exportações.
+- Limpar filtros e ícones de abrir/recolher relatórios na mesma faixa das OS.
+- Cálculos preservados; conferência de navegação, persistência, registros de origem, SVG e impressão.
+
 ## Em desenvolvimento — histórico e investigação de consumo
 
 - Consolidados Arqia/Kore reconhecidos pelos cabeçalhos; dados, SMS e frete separados, com conversão KB para MB e períodos inclusivos preservados.

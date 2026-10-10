@@ -23,6 +23,8 @@ import {DescriptiveReport} from './DescriptiveReport.jsx';
 import {OperationalPage} from './OperationalPage.jsx';
 import './style.css';
 import './identity.css';
+import './theme.css';
+import {ThemeProvider} from './Theme.jsx';
 import {ReportControls} from './ReportControls.jsx';
 import {DashboardOverview} from './DashboardOverview.jsx';
 import {dashboardCategories,categoryVisibility} from './dashboardCategories.js';
@@ -80,8 +82,8 @@ const [layoutMessage,setLayoutMessage]=useState('');
 
       <section className="panel filters"><h2>Filtros adicionais da planilha</h2><label>Adicionar coluna <select value="" onChange={event=>{if(event.target.value!=='')setExtraColumns(previous=>[...previous,Number(event.target.value)]);}}><option value="">Escolha uma coluna…</option>{data.columns.filter(col=>!filterFields.includes(col.label)&&!extraColumns.includes(col.index)).map(col=><option key={col.index} value={col.index}>{col.letter} · {col.label}</option>)}</select></label><p className="scope">Seleção exata pelo conteúdo exibido. Datas e valores adicionais não são intervalos. Inclui opção Sem dados. Remover uma coluna também limpa sua seleção. Estes filtros afetam toda a análise.</p><div className="filter-grid">{extraColumns.map(index=>{const position=data.columns.findIndex(col=>col.index===index);const col=data.columns[position];if(!col)return null;const key=`column:${index}`;const options=[...new Set(data.rows.map(row=>String(row.cells[position]?.display??'')))].sort((a,b)=>a.localeCompare(b,'pt-BR'));return <div key={index}><MultiFilter label={`${col.letter} · ${col.label}`} options={options} values={filters[key]||[]} onChange={values=>changeFilter(key,values)}/><button style={{marginTop:8,padding:8}} onClick={()=>{setExtraColumns(previous=>previous.filter(value=>value!==index));changeFilter(key,[]);}}>Remover filtro</button></div>;})}</div></section>
       <h3>Relatórios visíveis</h3><div className="preference-grid">{Object.entries(sectionLabels).filter(([key])=>!['filters','extras'].includes(key)).map(([key,label])=><label key={key}><input type="checkbox" checked={preferences[key]} onChange={event=>setVisibility({...preferences,[key]:event.target.checked})}/>{label}</label>)}</div><button onClick={()=>setVisibility(cleanPreferences({}))}>Mostrar todas as seções</button><p className="scope">Ocultar não altera cálculos nem filtros. As seleções ativas permanecem no resumo abaixo. {layoutMessage}</p></details>
-<ReportControls onExpand={setExpansion}/>
-      <div className="active-filters"><strong>{selected.rows.length} de {data.rows.length} registros</strong><span>{Object.entries(filters).filter(([,value])=>Array.isArray(value)?value.length:value).map(([key,value])=>{const col=key.startsWith('column:')?data.columns.find(col=>col.index===Number(key.slice(7))):null;return (col?col.letter+' · '+col.label:key==='start'?'De':key==='end'?'Até':key)+': '+(Array.isArray(value)?value.map(item=>item||'Sem dados').join(', '):value);}).join(' | ')||'Sem filtros ativos'}</span><button onClick={()=>{setFilters({});setSearch('');setPage(0);}}>Limpar filtros</button></div>
+
+      <div className="active-filters"><strong>{selected.rows.length} de {data.rows.length} registros</strong><span>{Object.entries(filters).filter(([,value])=>Array.isArray(value)?value.length:value).map(([key,value])=>{const col=key.startsWith('column:')?data.columns.find(col=>col.index===Number(key.slice(7))):null;return (col?col.letter+' · '+col.label:key==='start'?'De':key==='end'?'Até':key)+': '+(Array.isArray(value)?value.map(item=>item||'Sem dados').join(', '):value);}).join(' | ')||'Sem filtros ativos'}</span><div className="active-filter-actions"><button onClick={()=>{setFilters({});setSearch('');setPage(0);}}>Limpar filtros</button><ReportControls onExpand={setExpansion}/></div></div>
       <div className="source"><span className="dot"/> <strong>{filename}</strong><span>Aba OS 2025</span><span>Somente leitura</span></div>
 
       {category==='overview'&&<DashboardOverview original={data} filters={filters} operational={operational} onPage={onPage}/>}
@@ -123,4 +125,4 @@ const [layoutMessage,setLayoutMessage]=useState('');
     </>}</main></div></PrintContext.Provider></ExpansionContext.Provider>;
 }
 function Workspace(){const [page,setPage]=useState('orders'),[orders,setOrders]=useState(null),[operational,setOperational]=useState(null);return <><div hidden={page!=='orders'}><App onPage={setPage} onImport={setOrders} operational={operational}/></div><div hidden={page!=='lines'}><LinesPage onPage={setPage} operational={operational} onOperationalChange={setOperational}/></div><div hidden={!['operational','operational-analysis'].includes(page)}><OperationalPage page={page} onPage={setPage} orders={orders} source={operational} setSource={setOperational}/></div></>;}
-createRoot(document.getElementById('root')).render(<Workspace/>);
+createRoot(document.getElementById('root')).render(<ThemeProvider><Workspace/></ThemeProvider>);

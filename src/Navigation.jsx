@@ -1,4 +1,6 @@
 import React from 'react';
+import {ThemeToggle} from './Theme.jsx';
+const pages=[['orders','Ordens de Serviço'],['operational','Operacional'],['lines','Controle de Consumo M2M'],['operational-analysis','OS x OP']];
 export function Navigation({page,onPage}){
-  return <aside><div className="logo" aria-label="Addlog Suporte Controller"><div className="brand-name">ADD<em>LOG</em></div><div className="brand-caption">SUPORTE CONTROLLER</div></div><nav className="side-navigation" aria-label="Páginas do sistema">{[['orders','Ordens de serviço'],['lines','Linhas - Controle de Consumo'],['operational','Operacional — Importação e Revisão'],['operational-analysis','Operacional × OS — Análises']].map(([key,label])=><button key={key} className={page===key?'active':''} aria-current={page===key?'page':undefined} onClick={()=>onPage(key)}>{label}</button>)}</nav><div className="aside-note">Seu espaço de análise<br/><strong>Dados, relatórios e equipamentos</strong><p>OS nesta sessão · consumo com histórico local e backup.</p></div></aside>;
+  return <aside className="app-navigation"><div className="logo" aria-label="Addlog Suporte Controller"><span className="brand-image" role="img" aria-label="Addlog"/><div className="brand-caption">SUPORTE CONTROLLER</div></div><nav className="side-navigation" aria-label="Páginas do sistema">{pages.map(([key,label])=><button type="button" key={key} className={page===key?'active':''} aria-current={page===key?'page':undefined} onClick={()=>onPage(key)}>{label}</button>)}</nav><ThemeToggle/></aside>;
 }
