@@ -87,3 +87,8 @@ button.info-trigger:hover{background:var(--ui-soft);color:var(--ui-accent-ink)}
 .report-heading-actions>.info-note{position:absolute;top:14px;right:16px;margin:0}
 .navigation-icon svg,.navigation-chevron svg,.info-trigger svg{display:block;flex-shrink:0}
 @media(max-width:760px){.report-heading{padding-right:50px}.report-heading-actions>.info-note{top:10px;right:10px}}
+/* Cabeçalhos dos blocos internos: ajuda no mesmo canto superior direito. */
+.inline-help-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;min-width:0}
+.inline-help-heading>h2,.inline-help-heading>h3,.inline-help-heading>h4{margin:0;min-width:0;padding-top:3px}
+.inline-help-heading>.info-note{flex-shrink:0;margin:0 0 0 auto}
+.inline-help-heading .info-trigger{align-self:flex-start}

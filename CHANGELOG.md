@@ -6,6 +6,11 @@
 
 # Histórico de versões
 
+## 0.15.4 — 11/10/2026
+
+- Ajuda alinhada à direita dos títulos também nos blocos internos, incluindo Valores de contrato, widgets e comparação de duração.
+- Cabeçalho compartilhado com espaço entre título e ícone, preservando explicações, valores e impressão.
+
 ## 0.15.3 — 11/10/2026
 
 - Ajuda dos relatórios principais posicionada no canto superior direito do cabeçalho, com espaço reservado para não sobrepor título e impressão.

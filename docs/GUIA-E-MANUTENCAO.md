@@ -237,3 +237,6 @@ Implementação compartilhada em src/InfoNote.jsx; adicionar uma explicação es
 
 ### Posição e ícones (0.15.3)
 A ajuda agrupada dos relatórios principais fica no canto superior direito do cabeçalho. Os cards mantêm sua ajuda no canto superior direito. O espaço do cabeçalho é reservado para evitar sobreposição com o título ou a impressão. Os ícones do menu e da ajuda são SVGs compartilhados em src/Icon.jsx, com cor herdada do tema e rótulos acessíveis nos botões. As explicações específicas de ferramentas permanecem junto ao seu contexto.
+
+### Blocos internos (0.15.4)
+Cabeçalhos internos com explicação usam inline-help-heading: título à esquerda e InfoNote à direita, alinhados ao topo. Esse padrão inclui Valores de contrato e widgets de gráficos, com espaçamento reservado para evitar sobreposição. O balão e a cópia impressa mantêm seu conteúdo e comportamento.
