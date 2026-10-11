@@ -66,3 +66,7 @@ Validação inclui testes automatizados, compilação, leitura de XLSX gerado em
 ## Pendências preservadas
 
 Revisão das situações legítimas, significado de Contrato/ciclo, cancelamento financeiro, titularidade histórica e atribuição de custos serão definidos posteriormente com o usuário. Não inferir essas regras a partir dos novos indicadores.
+
+## Menus por categoria — 0.14.1
+
+Operacional: Visão geral, Registros e Revisão. OS x OP: Visão geral, Parque, Manutenção, Valores mensais, Vínculos e Relatórios. A seleção é independente por página e não limpa filtros ou dados. Visão geral concentra os cards de cobertura; cada categoria mostra seus relatórios, respeitando as escolhas de visibilidade. Agrupamento do relatório fica na categoria Relatórios, com período informado e atalho para Manutenção. Seções recolhíveis continuam disponíveis. O painel de checkboxes integrado ao menu e os blocos abertos são propostas para revisão futura, ainda não implementadas.

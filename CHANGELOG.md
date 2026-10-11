@@ -6,6 +6,15 @@
 
 # Histórico de versões
 
+## 0.14.1 — 11/10/2026
+
+- Menus por categoria no Operacional (Visão geral, Registros, Revisão) e OS x OP (Visão geral, Parque, Manutenção, Valores mensais, Vínculos, Relatórios).
+- Categoria selecionada independente em cada página; filtros e escolhas de visibilidade preservados.
+- Cards de cobertura na Visão geral, com relatórios exibidos somente na categoria correspondente.
+- Relatórios com agrupamento acessível e atalho para ajustar período na categoria Manutenção.
+- Formato recolhível preservado; substituição por blocos abertos e painel de checkboxes ainda em discussão.
+
+
 ## 0.14.0 — 11/10/2026
 
 - Indicadores de assistência e intervenções por 100 registros vinculáveis, com cobertura e limitações históricas explícitas.

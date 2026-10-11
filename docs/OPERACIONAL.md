@@ -43,3 +43,7 @@ Testes sintéticos verificam limite A:BY, preservação de identificadores, zero
 ## Manutenção do parque — 0.14.0
 
 Indicadores exploratórios sobre a base operacional vinculável, filtros múltiplos e relatório XLSX/CSV com seleção de colunas implementados. Regras financeiras e de titularidade histórica continuam pendentes. Consulte [Manutenção do parque e relatórios](PARQUE-E-MANUTENCAO.md).
+
+## Menus por categoria — 0.14.1
+
+Operacional: Visão geral, Registros e Revisão. OS x OP: Visão geral, Parque, Manutenção, Valores mensais, Vínculos e Relatórios. A seleção é independente por página e não limpa filtros ou dados. Visão geral concentra os cards de cobertura; cada categoria mostra seus relatórios, respeitando as escolhas de visibilidade. Agrupamento do relatório fica na categoria Relatórios, com período informado e atalho para Manutenção. Seções recolhíveis continuam disponíveis. O painel de checkboxes integrado ao menu e os blocos abertos são propostas para revisão futura, ainda não implementadas.
