@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.14.1 — operacional, revisão e cobertura do histórico de OS.
+**Versão:** 0.15.0 — operacional, revisão e cobertura do histórico de OS.
 
 ## Documentação do projeto
+
+- [Importação conjunta e navegação](docs/IMPORTACAO.md)
 
 - [Produto e regras aprovadas](docs/PRODUTO.md)
 - [Guia de uso e manutenção](docs/GUIA-E-MANUTENCAO.md)

@@ -1,13 +1,10 @@
-import React,{createContext,useContext,useRef,useEffect} from 'react';
+import React,{createContext,useContext,useRef} from 'react';
 export const PrintContext=createContext({});
 export const HiddenSectionsContext=createContext([]);
 export const ExpansionContext=createContext(null);
-export function Section({title,visible,children,defaultOpen}){
+export function Section({title,visible=true,children}){
   const section=useRef(),context=useContext(PrintContext);
   const hiddenSections=useContext(HiddenSectionsContext);
-  const expansion=useContext(ExpansionContext);
-  const [expanded,setExpanded]=React.useState(defaultOpen ?? !['Histórico de equipamentos','Dados e revisão','Configurações de relatório','Exportações','Filtros adicionais','Detalhamento de chamados','Tempo observado em campo','Indicadores financeiros','Indicadores operacionais'].includes(title));
-  useEffect(()=>{if(expansion)setExpanded(expansion.open);},[expansion]);
   function print(){
     const frame=document.createElement('iframe');frame.title='Impressão da seção';frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px';document.body.append(frame);
     const doc=frame.contentDocument;const heading=doc.createElement('h1');heading.textContent=title;
@@ -18,5 +15,5 @@ export function Section({title,visible,children,defaultOpen}){
     frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});
     setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},200);
   }
-  return <div hidden={!visible||hiddenSections.includes(title)}><details className="workspace-section" open={expanded} onToggle={event=>setExpanded(event.currentTarget.open)}><summary>{title}</summary><div className="section-body"><div className="section-actions"><button onClick={print}>Imprimir / Salvar PDF</button></div><div className="section-content" ref={section}>{children}</div></div></details></div>;
+  return <section hidden={!visible||hiddenSections.includes(title)} className="workspace-section report-block"><header className="report-heading"><h2>{title}</h2><button onClick={print}>Imprimir / Salvar PDF</button></header><div className="section-body"><div className="section-content" ref={section}>{children}</div></div></section>;
 }

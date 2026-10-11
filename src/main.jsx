@@ -2,7 +2,7 @@ import {FieldLifePanel} from './FieldLifePanel.jsx';
 import {ExtendedInsights} from './ExtendedInsights.jsx';
 import {SortableTable,compareValues} from './SortableTable.jsx';
 import {RecordDetails,MonthlyBreakdown} from './RecordDetails.jsx';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { importWorkbook } from './import.js';
 import { summarize, finance } from './analysis.js';
@@ -24,12 +24,17 @@ import {OperationalPage} from './OperationalPage.jsx';
 import './style.css';
 import './identity.css';
 import './theme.css';
+import './sidebar.css';
 import {ThemeProvider} from './Theme.jsx';
 import {ReportControls} from './ReportControls.jsx';
 import {DashboardOverview} from './DashboardOverview.jsx';
 import {dashboardCategories,categoryVisibility} from './dashboardCategories.js';
+import {SidePanelProvider,SidebarContent} from './SidePanel.jsx';
+import {ImportPage} from './ImportPage.jsx';
+import {readConsumptionHistory,writeConsumptionHistory} from './consumptionHistory.js';
+import {mergeBulkHistory} from './bulkImport.js';
 
-function App({onPage,onImport,operational}) {
+function App({onPage,onImport,operational,source}) {
   const input = useRef();
   const [expansion,setExpansion]=useState(null);
 const [category,setCategory]=useState('overview');
@@ -38,7 +43,7 @@ const [category,setCategory]=useState('overview');
   const visible=categoryVisibility(preferences,category);
 const [layoutMessage,setLayoutMessage]=useState('');
   function setVisibility(next){setVisible(next);try{localStorage.setItem('suporte-layout-v1',JSON.stringify(next));setLayoutMessage('Preferência salva neste navegador.');}catch{setLayoutMessage('Preferência aplicada só nesta sessão; não foi possível salvar.');}}
-  const [data, setData] = useState(null), [filename, setFilename] = useState('');
+  const data=source?.data||null,filename=source?.filename||'';
   const [error, setError] = useState(''), [busy, setBusy] = useState(false);
   const [search, setSearch] = useState(''), [page, setPage] = useState(0), [view, setView] = useState('records');
   const [filters, setFilters] = useState({});
@@ -51,13 +56,14 @@ const [layoutMessage,setLayoutMessage]=useState('');
     setBusy(true); setError('');
     try {
       const result = importWorkbook(await file.arrayBuffer());
-      setData(result); setFilename(file.name); setPage(0); setSearch(''); setView('records');
+      setPage(0); setSearch(''); setView('records');
       onImport({data:result,filename:file.name});
       setFilters({});
       setExtraColumns([]);setRecordSort(null);
     } catch (e) { setError(e.message || 'Não foi possível ler o arquivo.'); }
     finally { setBusy(false); event.target.value = ''; }
   }
+  useEffect(()=>{setFilters({});setExtraColumns([]);setRecordSort(null);setPage(0);setSearch('');setView('records');},[source]);
   const importedPeriod = data ? attendanceExtent(data) : null;
   const selected = data ? applyFilters(data,filters) : null;
   const filtered = selected?.rows.filter(row => !search || row.cells.some(cell => String(cell.display).toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')))) ?? [];
@@ -70,18 +76,18 @@ const [layoutMessage,setLayoutMessage]=useState('');
   const lifecycle = selected ? observedPeriods(data,selected,referenceDate) : null;
   const review = selected ? [...selected.issues, ...(financial?.issues ?? []), ...(devices?.issues ?? []), ...(lifecycle?.review ?? [])] : [];
   const currency = cents => (cents/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  return <ExpansionContext.Provider value={expansion}><PrintContext.Provider value={{filename,filters,referenceDate}}><div className="app">
+  return <SidePanelProvider><ExpansionContext.Provider value={expansion}><PrintContext.Provider value={{filename,filters,referenceDate}}><div className="app">
     <Navigation page="orders" onPage={onPage}/>
     <main><header><div><div className="eyebrow">CONTROLE DE SERVIÇOS</div><h1>Ordens de serviço</h1><p>Importe sua planilha e confira os atendimentos antes de analisar.</p></div><button onClick={() => input.current.click()} disabled={busy}>{busy ? 'Lendo arquivo…' : '↑ Importar planilha'}</button><input ref={input} type="file" accept=".xlsx,.xls" hidden onChange={load}/></header>
     {error && <div role="alert" className="error">{error}{data && ' A importação anterior continua disponível.'}</div>}
     {!data ? <section className="empty"><div className="file-icon">▤</div><h2>Sua operação começa pela planilha</h2><p>Selecione o Excel que contém a aba <strong>OS 2025</strong>.<br/>A ordem dos registros e das colunas será preservada.</p><button onClick={() => input.current.click()} disabled={busy}>Selecionar arquivo Excel</button><div className="principles"><span>✓ Uma linha = um atendimento</span><span>✓ Chamados podem se repetir</span><span>✓ Sem correções automáticas</span></div></section> : <>
-      <nav className="category-navigation" aria-label="Categorias de análise">{dashboardCategories.map(item=><button key={item.key} aria-current={category===item.key?'page':undefined} className={category===item.key?'active':''} onClick={()=>{setCategory(item.key);setExpansion(null);}}>{item.label}</button>)}</nav>
+      <SidebarContent><nav className="category-navigation" aria-label="Categorias de análise">{dashboardCategories.map(item=><button key={item.key} aria-current={category===item.key?'page':undefined} className={category===item.key?'active':''} onClick={()=>{setCategory(item.key);setExpansion(null);}}>{item.label}</button>)}</nav></SidebarContent>
 
-      <details className="panel personalization"><summary>Personalizar o que aparece na tela</summary>
+      <details className="panel personalization"><summary>Filtros da página</summary>
       <section className="panel filters"><h2>Filtros da análise</h2><div className="filter-grid"><label>Período a partir de<input type="date" value={filters.start || ''} onChange={event=>changeFilter('start',event.target.value)}/><button type="button" className="oldest-date" disabled={!importedPeriod.start} onClick={()=>changeFilter('start',importedPeriod.start)}>Usar registro mais antigo</button><small>{importedPeriod.start?'Primeira data válida da planilha: '+importedPeriod.start.split('-').reverse().join('/'):'Planilha sem datas de atendimento válidas'}</small></label><label>Período até<input type="date" value={filters.end || ''} onChange={event=>changeFilter('end',event.target.value)}/></label>{filterFields.map(label=>{const index=data.columns.findIndex(col=>col.label===label);const options=index<0?[]:[...new Set(data.rows.map(row=>String(row.cells[index]?.raw??'')).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));return <MultiFilter key={label} label={label==='Razão Social'?'Cliente · razão social':label} options={options} disabled={index<0} values={filters[label]||[]} onChange={values=>changeFilter(label,values)}/>;})}</div><button onClick={()=>{setFilters({});setSearch('');setPage(0);}}>Limpar filtros e busca</button><p className="scope">{selected.rows.length} de {data.rows.length} registros na seleção. Filtros combinados aplicados aos indicadores, gráficos, chamados e revisão. Agendamentos por responsável usam Agendamento; os demais indicadores de OS usam Data de atendimento. A busca textual filtra somente a tabela. Na vida em campo, os filtros selecionam instalações ou eventos de troca conforme o modo escolhido na seção.</p>{selected.missingDates>0 && <p className="scope">{selected.missingDates} registros que atendem aos filtros de categoria foram excluídos do período por data ausente ou inválida.</p>}{selected.invalidPeriod && <div role="alert" className="error">A data inicial deve ser anterior ou igual à data final.</div>}</section>
 
       <section className="panel filters"><h2>Filtros adicionais da planilha</h2><label>Adicionar coluna <select value="" onChange={event=>{if(event.target.value!=='')setExtraColumns(previous=>[...previous,Number(event.target.value)]);}}><option value="">Escolha uma coluna…</option>{data.columns.filter(col=>!filterFields.includes(col.label)&&!extraColumns.includes(col.index)).map(col=><option key={col.index} value={col.index}>{col.letter} · {col.label}</option>)}</select></label><p className="scope">Seleção exata pelo conteúdo exibido. Datas e valores adicionais não são intervalos. Inclui opção Sem dados. Remover uma coluna também limpa sua seleção. Estes filtros afetam toda a análise.</p><div className="filter-grid">{extraColumns.map(index=>{const position=data.columns.findIndex(col=>col.index===index);const col=data.columns[position];if(!col)return null;const key=`column:${index}`;const options=[...new Set(data.rows.map(row=>String(row.cells[position]?.display??'')))].sort((a,b)=>a.localeCompare(b,'pt-BR'));return <div key={index}><MultiFilter label={`${col.letter} · ${col.label}`} options={options} values={filters[key]||[]} onChange={values=>changeFilter(key,values)}/><button style={{marginTop:8,padding:8}} onClick={()=>{setExtraColumns(previous=>previous.filter(value=>value!==index));changeFilter(key,[]);}}>Remover filtro</button></div>;})}</div></section>
-      <h3>Relatórios visíveis</h3><div className="preference-grid">{Object.entries(sectionLabels).filter(([key])=>!['filters','extras'].includes(key)).map(([key,label])=><label key={key}><input type="checkbox" checked={preferences[key]} onChange={event=>setVisibility({...preferences,[key]:event.target.checked})}/>{label}</label>)}</div><button onClick={()=>setVisibility(cleanPreferences({}))}>Mostrar todas as seções</button><p className="scope">Ocultar não altera cálculos nem filtros. As seleções ativas permanecem no resumo abaixo. {layoutMessage}</p></details>
+      <SidebarContent><section className="sidebar-reports" aria-label="Relatórios exibidos"><h3>Relatórios exibidos</h3><div className="preference-grid">{Object.entries(sectionLabels).filter(([key])=>category!=='overview'&&!['filters','extras'].includes(key)&&categoryVisibility(cleanPreferences({}),category)[key]).map(([key,label])=><label key={key}><input type="checkbox" checked={preferences[key]} onChange={event=>setVisibility({...preferences,[key]:event.target.checked})}/>{label}</label>)}</div><button onClick={()=>setVisibility(cleanPreferences({}))}>Mostrar todas as seções</button><p className="scope">Ocultar não altera cálculos nem filtros. As seleções ativas permanecem no resumo abaixo. {layoutMessage}</p>{category==="overview"&&<p className="scope">Selecione uma categoria para escolher os relatórios exibidos.</p>}</section></SidebarContent></details>
 
       <div className="active-filters"><strong>{selected.rows.length} de {data.rows.length} registros</strong><span>{Object.entries(filters).filter(([,value])=>Array.isArray(value)?value.length:value).map(([key,value])=>{const col=key.startsWith('column:')?data.columns.find(col=>col.index===Number(key.slice(7))):null;return (col?col.letter+' · '+col.label:key==='start'?'De':key==='end'?'Até':key)+': '+(Array.isArray(value)?value.map(item=>item||'Sem dados').join(', '):value);}).join(' | ')||'Sem filtros ativos'}</span><div className="active-filter-actions"><button onClick={()=>{setFilters({});setSearch('');setPage(0);}}>Limpar filtros</button><ReportControls onExpand={setExpansion}/></div></div>
       <div className="source"><span className="dot"/> <strong>{filename}</strong><span>Aba OS 2025</span><span>Somente leitura</span></div>
@@ -122,7 +128,15 @@ const [layoutMessage,setLayoutMessage]=useState('');
       {view==='records' ? <><div className="table-scroll"><table><thead><tr><th><button className="sort-heading" onClick={()=>{setRecordSort(previous=>previous?.index===-1?previous.direction==='asc'?{index:-1,direction:'desc'}:null:{index:-1,direction:'asc'});setPage(0);}}>Linha Excel {recordSort?.index===-1?recordSort.direction==='asc'?'↑':'↓':'↕'}</button></th>{data.columns.map(col=><th key={col.index} aria-sort={recordSort?.index===data.columns.indexOf(col)?recordSort.direction==='asc'?'ascending':'descending':'none'}><button className="sort-heading" onClick={()=>{const index=data.columns.indexOf(col);setRecordSort(previous=>previous?.index===index?previous.direction==='asc'?{index,direction:'desc'}:null:{index,direction:'asc'});setPage(0);}}><small>{col.letter}</small>{col.label} {recordSort?.index===data.columns.indexOf(col)?recordSort.direction==='asc'?'↑':'↓':'↕'}</button></th>)}</tr></thead><tbody>{orderedRecords.slice(page*50,(page+1)*50).map(row=><tr key={row.sourceRow}><td className="row-number">{row.sourceRow}</td>{row.cells.map((cell,i)=><td key={i} className={cell.issue?'invalid':''} title={cell.issue?`Conteúdo original: ${cell.raw}. Revisar na planilha.`:String(cell.display)}>{cell.display}</td>)}</tr>)}</tbody></table></div><footer><span>{filtered.length.toLocaleString('pt-BR')} atendimentos · ordem original da planilha</span><div><button disabled={page===0} onClick={()=>setPage(page-1)}>Anterior</button><span>{page+1} / {pageCount}</span><button disabled={page+1>=pageCount} onClick={()=>setPage(page+1)}>Próxima</button><button disabled={page+1>=pageCount} onClick={()=>setPage(pageCount-1)}>Última</button></div></footer></> : <div className="table-scroll"><SortableTable><thead><tr><th>Célula</th><th>Coluna</th><th>Conteúdo original</th><th>Motivo para revisão</th></tr></thead><tbody>{review.map((issue,index)=><tr key={issue.address+index}><td>{issue.address}</td><td>{issue.column}</td><td>{issue.value}</td><td>{issue.reason}</td></tr>)}</tbody></SortableTable>{!review.length && <p className="review-empty">Nenhum erro do Excel ou valor incompatível com formato de data foi detectado. Isso não valida as regras de negócio.</p>}</div>}
       </section><p className="scope">Conferência estrutural: erros do Excel e formatos de data inválidos. Divergências de custo dos serviços realizados também são sinalizadas. Outras validações serão definidas com você.</p>
       </Section>
-    </>}</main></div></PrintContext.Provider></ExpansionContext.Provider>;
+    </>}</main></div></PrintContext.Provider></ExpansionContext.Provider></SidePanelProvider>;
 }
-function Workspace(){const [page,setPage]=useState('orders'),[orders,setOrders]=useState(null),[operational,setOperational]=useState(null);return <><div hidden={page!=='orders'}><App onPage={setPage} onImport={setOrders} operational={operational}/></div><div hidden={page!=='lines'}><LinesPage onPage={setPage} operational={operational} onOperationalChange={setOperational}/></div><div hidden={!['operational','operational-analysis'].includes(page)}><OperationalPage page={page} onPage={setPage} orders={orders} source={operational} setSource={setOperational}/></div></>;}
+function Workspace(){
+  const [page,setPage]=useState('orders'),[orders,setOrders]=useState(null),[operational,setOperational]=useState(null),[consumptionRevision,setConsumptionRevision]=useState(0);
+  async function applyBatch(batch){
+    if(batch.consumption.length){const archive=await readConsumptionHistory();await writeConsumptionHistory(mergeBulkHistory(archive,batch));setConsumptionRevision(value=>value+1);}
+    if(batch.orders)setOrders(batch.orders);
+    if(batch.operational)setOperational(batch.operational);
+  }
+  return <><div hidden={page!=='imports'}><ImportPage onPage={setPage} onApply={applyBatch} orders={orders} operational={operational}/></div><div hidden={page!=='orders'}><App onPage={setPage} onImport={setOrders} operational={operational} source={orders}/></div><div hidden={page!=='lines'}><LinesPage onPage={setPage} operational={operational} onOperationalChange={setOperational} reloadToken={consumptionRevision}/></div><div hidden={!['operational','operational-analysis'].includes(page)}><OperationalPage page={page} onPage={setPage} orders={orders} source={operational} setSource={setOperational}/></div></>;
+}
 createRoot(document.getElementById('root')).render(<ThemeProvider><Workspace/></ThemeProvider>);

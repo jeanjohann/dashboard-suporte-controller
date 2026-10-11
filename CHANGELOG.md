@@ -6,6 +6,14 @@
 
 # Histórico de versões
 
+## 0.15.0 — 11/10/2026
+
+- Importação conjunta de OS, operacional e CSVs de consumo, com prévia, seleção e validação do lote.
+- Menu lateral recolhível; categorias e relatórios aninhados na página selecionada.
+- Relatórios principais em blocos abertos e controle de visibilidade por checkboxes.
+- Nome Parque e Manutenção, tema por ícone no rodapé e seleção sem sombra.
+- Documentação em docs/IMPORTACAO.md e testes de importação em lote.
+
 ## 0.14.1 — 11/10/2026
 
 - Menus por categoria no Operacional (Visão geral, Registros, Revisão) e OS x OP (Visão geral, Parque, Manutenção, Valores mensais, Vínculos, Relatórios).
