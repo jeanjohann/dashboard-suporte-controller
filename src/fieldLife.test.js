@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {fieldLife,lifeStats,validLifeDate} from './fieldLife.js';
+import {fieldLife,lifeStats,lifeGroups,validLifeDate} from './fieldLife.js';
 const labels=['Status','Tipo de Serviço','Motivo','Razão Social','Placa','ID Rastreador','Data de atendimento','Instruções','Modelo'];
 const serialDate=date=>date==null?null:(Date.parse(date+'T00:00:00Z')-Date.UTC(1899,11,30))/86400000;
 function fixture(values){return {columns:labels.map((label,i)=>({label,letter:String.fromCharCode(65+i)})),rows:values.map((v,i)=>({sourceRow:i+2,os:v.os||'#'+i,cells:labels.map(label=>({raw:label==='Data de atendimento'?serialDate(v.date):v[label]??'',display:String(v[label]??'')}))}))};}
@@ -31,3 +31,5 @@ test('calendário 1904 preserva datas e duração, célula de serial com erro im
 test('seleção por evento usa a retirada, não uma instalação anterior presente nas evidências de revisão',()=>{const d=fixture([initial(),initial('2025-01-10'),remove(),incoming()]);const selected={...d,rows:[d.rows[0]]};assert.equal(fieldLife(d,selected,{scope:'event'}).periods.length,0);});
 
 test('serial Excel zero no calendário 1900 é data inválida e não produz duração NaN',()=>{const d=fixture([initial(),remove(),incoming()]);d.rows[0].cells[6].raw=0;const r=fieldLife(d,d);assert.equal(trackers(r)[0].state,'review');assert.equal(lifeStats(trackers(r)).mean,null);assert.equal(r.unmeasured.length,1);});
+
+test('média e extremos por modelo usam a mesma amostra completa sem incluir observações ou cancelamentos',()=>{const groups=lifeGroups([{model:'MXT-162',state:'replaced',days:10},{model:'MXT-162',state:'replaced',days:20},{model:'MXT-162',state:'replaced',days:100},{model:'MXT-162',state:'observed',days:900},{model:'MXT-162',state:'canceled',days:1},{model:'Coletora',state:'replaced',days:50},{model:'RFID',state:'review',days:null}]);const m=groups.find(g=>g.label==='MXT-162');assert.equal(m.complete,3);assert.equal(m.mean,130/3);assert.equal(m.min,10);assert.equal(m.max,100);assert.equal(m.median,20);const c=groups.find(g=>g.label==='Coletora');assert.equal(c.mean,50);assert.equal(c.min,50);assert.equal(c.max,50);const empty=groups.find(g=>g.label==='RFID');assert.equal(empty.mean,null);assert.equal(empty.min,null);assert.equal(empty.max,null);});

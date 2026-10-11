@@ -6,6 +6,13 @@
 
 # Histórico de versões
 
+## 0.15.5 — 11/10/2026
+
+- Vida em campo até primeira troca: comparação principal pela média, com cards de mínimo e máximo.
+- Tabela visível por modelo/tipo ou cliente com média, extremos, amostra e acesso aos ciclos completos de origem.
+- Mediana preservada como informação complementar na ajuda e tabela detalhada; sem mudança nos critérios de vínculo.
+- Teste de médias e extremos por grupo, incluindo amostra unitária, observações excluídas e grupos sem troca.
+
 ## 0.15.4 — 11/10/2026
 
 - Ajuda alinhada à direita dos títulos também nos blocos internos, incluindo Valores de contrato, widgets e comparação de duração.

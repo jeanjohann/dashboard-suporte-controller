@@ -92,3 +92,8 @@ button.info-trigger:hover{background:var(--ui-soft);color:var(--ui-accent-ink)}
 .inline-help-heading>h2,.inline-help-heading>h3,.inline-help-heading>h4{margin:0;min-width:0;padding-top:3px}
 .inline-help-heading>.info-note{flex-shrink:0;margin:0 0 0 auto}
 .inline-help-heading .info-trigger{align-self:flex-start}
+.life-panel .life-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+.life-group-summary{margin:20px 0;min-width:0}
+.life-group-summary .table-scroll{max-height:420px}
+@media(max-width:650px){.life-panel .life-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:380px){.life-panel .life-cards{grid-template-columns:1fr}}
