@@ -6,6 +6,12 @@
 
 # Histórico de versões
 
+## 0.15.7 — 11/10/2026
+
+- Preparação para Cloudflare Pages: Node 22, cabeçalhos básicos, HTML sem cache persistente e solicitação de não indexação.
+- Plano documentado de Cloudflare Access por e-mails autorizados, com proteção de produção e prévias.
+- Deploy e autenticação dependem da criação/conexão da conta; ainda não publicados ou validados.
+
 ## 0.15.6 — 11/10/2026
 
 - Padronização compartilhada dos controles de gráficos, com tamanho, altura e alinhamento consistentes para agrupamento e participantes.
