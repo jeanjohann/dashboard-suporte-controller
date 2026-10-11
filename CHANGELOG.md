@@ -6,6 +6,12 @@
 
 # Histórico de versões
 
+## 0.15.3 — 11/10/2026
+
+- Ajuda dos relatórios principais posicionada no canto superior direito do cabeçalho, com espaço reservado para não sobrepor título e impressão.
+- Ícones vetoriais SVG próprios para informação, menu, recolhimento, expansão e fechamento; sem dependência de símbolos da fonte.
+- Rótulos acessíveis, interação e textos impressos preservados.
+
 ## 0.15.2 — 11/10/2026
 
 - Explicações fixas de cálculo e regras disponíveis em ícones de informação, nos títulos de relatórios e junto às ferramentas.

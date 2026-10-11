@@ -1,3 +1,4 @@
+import {Icon} from './Icon.jsx';
 import React,{useEffect,useId,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 /** Explicação sob demanda; o texto também permanece disponível na impressão. */
@@ -14,5 +15,5 @@ export function InfoNote({children,label='Como este resultado é calculado'}){
     document.addEventListener('pointerdown',outside);document.addEventListener('keydown',escape);window.addEventListener('resize',close);window.addEventListener('scroll',close,true);
     return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',escape);window.removeEventListener('resize',close);window.removeEventListener('scroll',close,true);};
   },[open]);
-  return <span className="info-note"><button ref={trigger} type="button" className="info-trigger" aria-label={label} aria-expanded={open} aria-controls={open?id:undefined} onClick={()=>setOpen(value=>!value)}>ⓘ</button><span className="info-print">{children}</span>{open&&createPortal(<div ref={bubble} id={id} className="info-popover" role="region" aria-label={label} style={position}><div className="info-popover-heading"><strong>{label}</strong><button type="button" aria-label="Fechar explicação" onClick={()=>{setOpen(false);trigger.current?.focus();}}>×</button></div><div>{children}</div></div>,document.body)}</span>;
+  return <span className="info-note"><button ref={trigger} type="button" className="info-trigger" aria-label={label} aria-expanded={open} aria-controls={open?id:undefined} onClick={()=>setOpen(value=>!value)}><Icon name="info" size={17}/></button><span className="info-print">{children}</span>{open&&createPortal(<div ref={bubble} id={id} className="info-popover" role="region" aria-label={label} style={position}><div className="info-popover-heading"><strong>{label}</strong><button type="button" aria-label="Fechar explicação" onClick={()=>{setOpen(false);trigger.current?.focus();}}><Icon name="close" size={16}/></button></div><div>{children}</div></div>,document.body)}</span>;
 }

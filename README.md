@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.15.2 — operacional, revisão e cobertura do histórico de OS.
+**Versão:** 0.15.3 — operacional, revisão e cobertura do histórico de OS.
 
 ## Documentação do projeto
 
