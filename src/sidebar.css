@@ -64,3 +64,20 @@
 .app>aside.sidebar-collapsed .navigation-label,.sidebar-collapsed .navigation-chevron{display:none}
 .app>aside.sidebar-collapsed .side-navigation button{padding:9px 6px}
 @media(max-width:760px){.app>aside.sidebar-collapsed{width:100%;min-width:0;flex-direction:column;align-items:stretch}.app>aside.sidebar-collapsed .sidebar-brand-row{width:64px}.app>aside.sidebar-collapsed .side-navigation{justify-content:flex-start}.app>aside.sidebar-collapsed button.theme-toggle{align-self:flex-start}}
+/* Explicações sob demanda, com texto preservado na impressão. */
+.info-note{display:inline-flex;align-items:center;vertical-align:middle;margin:4px 0}
+button.info-trigger{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;min-height:26px;min-width:26px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--ui-muted);font-size:16px;font-weight:400;box-shadow:none}
+button.info-trigger:hover{background:var(--ui-soft);color:var(--ui-accent-ink)}
+.info-print{display:none}
+.info-popover{position:fixed;z-index:10000;overflow-y:auto;padding:14px 16px;background:var(--ui-surface);color:var(--ui-ink);border:1px solid var(--ui-border);border-radius:10px;box-shadow:0 6px 24px #0002;font-size:12px;line-height:1.65;overflow-wrap:anywhere}
+.info-popover-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.info-popover-heading strong{font-size:12px}
+.info-popover-heading button{background:transparent;color:var(--ui-muted);min-height:28px;width:28px;padding:0;font-size:20px}
+@media print{.info-trigger,.info-popover{display:none!important}.info-print{display:block!important}}
+.report-title{display:flex;align-items:center;gap:7px;min-width:0}
+.report-title .info-note{margin:0}
+.info-popover p{margin:0 0 10px}
+.info-popover p:last-child{margin-bottom:0}
+.summary-card-item{position:relative;min-width:0}
+.summary-card-item>.summary-card{width:100%;height:100%;padding-right:34px}
+.summary-card-item>.info-note{position:absolute;right:7px;top:7px;margin:0;z-index:1}

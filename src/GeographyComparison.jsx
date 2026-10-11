@@ -1,3 +1,4 @@
+import {InfoNote} from './InfoNote.jsx';
 import React,{useContext,useState} from 'react';
 import {PrintContext} from './Section.jsx';
 import {RecordDetails} from './RecordDetails.jsx';
@@ -43,7 +44,7 @@ export function GeographyComparison({data,column}){
   ]),'text/csv;charset=utf-8','distribuicao-geografica.csv');
  }
  return <div className="geography-comparison">
-  <p className="scope">Serviços Concluída/Pago no período e filtros selecionados. Manutenções são os atendimentos de Assistência Técnica e já estão incluídas no total.</p>
+  <InfoNote>Serviços Concluída/Pago no período e filtros selecionados. Manutenções são os atendimentos de Assistência Técnica e já estão incluídas no total.</InfoNote>
   <div className="geography-summary">
    <div><span>Total de atendimentos</span><strong>{count(total)}</strong></div>
    <div><span>Manutenções</span><strong>{count(maintenanceTotal)}</strong></div>
@@ -55,7 +56,7 @@ export function GeographyComparison({data,column}){
   </div>
   <ul className="chart-legend geography-legend">{series.map(item=><li key={item.key}><span style={{background:item.color}}/>{item.label}</li>)}</ul>
   <p className="scope">{shown.length} de {groups.length} regiões, ordenadas pelo total de {metrics[measure].toLocaleLowerCase('pt-BR')}. Clique em uma barra para conferir os atendimentos. As duas barras usam a mesma escala.{signed?' Valores negativos aparecem à esquerda do centro.':''}</p>
-  <details className="chart-tools"><summary>Detalhes e exportação</summary><p className="scope">A tabela e o CSV incluem todas as regiões, mesmo quando o gráfico mostra apenas as maiores. Regiões sem identificação permanecem como “Sem dados”.</p><div className="report-downloads"><button className="chart-export" onClick={exportChart}>Baixar este gráfico SVG</button><button className="chart-export" onClick={exportTable}>Baixar comparação CSV</button></div></details>
+  <details className="chart-tools"><summary>Detalhes e exportação</summary><InfoNote>A tabela e o CSV incluem todas as regiões, mesmo quando o gráfico mostra apenas as maiores. Regiões sem identificação permanecem como “Sem dados”.</InfoNote><div className="report-downloads"><button className="chart-export" onClick={exportChart}>Baixar este gráfico SVG</button><button className="chart-export" onClick={exportTable}>Baixar comparação CSV</button></div></details>
   <div className="readable-bars geography-bars" aria-label={`Comparação por ${column}: ${metrics[measure]}`}>
    {shown.map(group=><div className="geography-row" key={group.label}>
     <button className="geography-region bar-select" onClick={()=>setSelection({label:group.label,series:'all'})} aria-label={`Conferir todos os atendimentos de ${group.label}`}>{group.label}</button>
@@ -67,12 +68,12 @@ export function GeographyComparison({data,column}){
     })}</div>
    </div>)}
   </div>
-  <p className="scope">Compare as barras; não some total e manutenção. Custos usam Custo Total e deslocamento usa Km como despesa. Valores ausentes são excluídos das médias; zeros são mantidos.</p>
+  <InfoNote>Compare as barras; não some total e manutenção. Custos usam Custo Total e deslocamento usa Km como despesa. Valores ausentes são excluídos das médias; zeros são mantidos.</InfoNote>
   <details className="report-details"><summary>Comparação completa e bases de cálculo</summary><div className="table-scroll"><SortableTable><thead><tr>{[column,'Total de atendimentos','Manutenções','Manutenções / total','Custo total','Custo das manutenções','Média do custo total','Média do custo das manutenções','Custos válidos no total','Custos válidos nas manutenções','Deslocamento total','Deslocamento das manutenções','Contrato absorvido total','Contrato absorvido nas manutenções'].map(label=><th key={label}>{label}</th>)}</tr></thead><tbody>{groups.map(group=><tr key={group.label}>
    <td><button type="button" className="table-label-action" title={group.label} onClick={()=>setSelection({label:group.label,series:'all'})}>{group.label}</button></td><td>{group.all.rows.length}</td><td><button disabled={!group.maintenance} onClick={()=>setSelection({label:group.label,series:'maintenance'})}>{group.maintenance?.rows.length||0}</button></td><td data-sort={(group.maintenance?.rows.length||0)/group.all.rows.length}>{percent((group.maintenance?.rows.length||0)/group.all.rows.length)}</td>
    <td data-sort={amount(group.all,'cost')}>{monetary(group.all,'cost')}</td><td data-sort={amount(group.maintenance,'cost')}>{monetary(group.maintenance,'cost')}</td><td data-sort={group.all.cost.count?group.all.cost.sum/group.all.cost.count:null}>{average(group.all)}</td><td data-sort={group.maintenance?.cost.count?group.maintenance.cost.sum/group.maintenance.cost.count:null}>{average(group.maintenance)}</td><td>{group.all.cost.count}</td><td>{group.maintenance?.cost.count||0}</td><td data-sort={amount(group.all,'travel')}>{monetary(group.all,'travel')}</td><td data-sort={amount(group.maintenance,'travel')}>{monetary(group.maintenance,'travel')}</td><td data-sort={amount(group.all,'absorbed')}>{monetary(group.all,'absorbed')}</td><td data-sort={amount(group.maintenance,'absorbed')}>{monetary(group.maintenance,'absorbed')}</td>
   </tr>)}</tbody></SortableTable></div></details>
-  <p className="scope">Valor contratual absorvido usa Valor a cobrar e Cobrança = Addlog; não indica recebimento ou lucro.</p>
+  <InfoNote>Valor contratual absorvido usa Valor a cobrar e Cobrança = Addlog; não indica recebimento ou lucro.</InfoNote>
   {selectedGroup&&<><button onClick={()=>setSelection(null)}>Fechar atendimentos selecionados</button><RecordDetails data={data} rows={selectedGroup.rows} title={`${column} · ${selection.label} · ${series.find(item=>item.key===selection.series).label}`}/></>}
  </div>;
 }

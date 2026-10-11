@@ -1,9 +1,10 @@
+import {InfoNote} from './InfoNote.jsx';
 import React,{useState} from 'react';
 import {SortableTable} from './SortableTable.jsx';
 import {report} from './reports.js';
 export function RecordDetails({data,rows,title}){
   const wanted=new Set(rows),records=data.rows.filter(row=>wanted.has(row.sourceRow));
-  return <section className="record-details"><h3>{title} · {records.length} registros</h3><p className="scope">Registros que compõem este resultado; linha original preservada. Clique no cabeçalho para ordenar.</p><div className="table-scroll"><SortableTable><thead><tr><th>Linha Excel</th>{data.columns.map(col=><th key={col.index}>{col.letter} · {col.label}</th>)}</tr></thead><tbody>{records.map(row=><tr key={row.sourceRow}><td>{row.sourceRow}</td>{row.cells.map((cell,i)=><td key={i} data-sort={cell.issue?null:cell.raw} title={String(cell.display)}>{cell.display}</td>)}</tr>)}</tbody></SortableTable></div></section>;
+  return <section className="record-details"><h3>{title} · {records.length} registros</h3><InfoNote>Registros que compõem este resultado; linha original preservada. Clique no cabeçalho para ordenar.</InfoNote><div className="table-scroll"><SortableTable><thead><tr><th>Linha Excel</th>{data.columns.map(col=><th key={col.index}>{col.letter} · {col.label}</th>)}</tr></thead><tbody>{records.map(row=><tr key={row.sourceRow}><td>{row.sourceRow}</td>{row.cells.map((cell,i)=><td key={i} data-sort={cell.issue?null:cell.raw} title={String(cell.display)}>{cell.display}</td>)}</tr>)}</tbody></SortableTable></div></section>;
 }
 export function MonthlyBreakdown({data}){
   const [month,setMonth]=useState(null),result=report(data,'Mês','attendances');

@@ -6,6 +6,14 @@
 
 # Histórico de versões
 
+## 0.15.2 — 11/10/2026
+
+- Explicações fixas de cálculo e regras disponíveis em ícones de informação, nos títulos de relatórios e junto às ferramentas.
+- Ajuda individual nos oito cards do resumo numérico, sem botões aninhados.
+- Balões acionados por clique/teclado, fechamento por clique externo, Escape ou botão e adaptação à área disponível.
+- Períodos, bases numéricas, exclusões e avisos dinâmicos mantidos visíveis. Textos de ajuda preservados na impressão/PDF.
+- 115 testes aprovados, um ignorado, compilação e conferência da renderização dos componentes.
+
 ## 0.15.1 — 11/10/2026
 
 - Logo completa no menu aberto e somente símbolo no menu compacto, sem legenda Suporte Controller.

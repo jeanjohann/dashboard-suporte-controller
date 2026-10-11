@@ -230,3 +230,7 @@ Operacional: Visão geral, Registros e Revisão. OS x OP: Visão geral, Parque, 
 
 ## Navegação e importação conjunta (0.15.0)
 Consulte [Importação e navegação](IMPORTACAO.md) para o menu lateral compacto, categorias aninhadas, seleção de relatórios e carregamento em lote. A antiga página OS x OP agora se chama Parque e Manutenção.
+
+## Explicações dos indicadores (0.15.2)
+Clique no pequeno ícone ⓘ para consultar critérios e regras. Nos relatórios principais, explicações diretas são agrupadas ao lado do título; ferramentas e cards têm ajuda própria. O balão fecha ao clicar novamente, fora dele, no botão Fechar ou com Escape. Escape e Fechar devolvem o foco ao ícone. Rolagem externa e mudança de tamanho da janela fecham o balão para não deslocar sua referência. Período, filtros, valores válidos/excluídos e avisos dinâmicos permanecem visíveis. Explicações continuam incluídas na impressão/PDF de cada seção.
+Implementação compartilhada em src/InfoNote.jsx; adicionar uma explicação estática com InfoNote. Não envolver contagens de revisão ou alertas nesse componente. Section agrupa filhos diretos InfoNote no título e mantém o texto na cópia impressa. Nenhuma regra de cálculo foi alterada.
