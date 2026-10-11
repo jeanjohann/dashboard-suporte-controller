@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.17.3 — 11/10/2026
+
+- Cliente e placa da referência operacional atual no seletor e cabeçalho do histórico da linha.
+- Sem vínculo confirmado, exibe Linha não identificada; vínculo parcial mantém os campos conhecidos e sinaliza ausências.
+- Placa incluída no contexto dos relatórios XLSX e CSV, sem inferir vínculos históricos.
+
 ## 0.17.2 — 11/10/2026
 
 - Histórico individual de consumo exportável em XLSX e CSV, com contexto, apurações e observações/marcações salvas.

@@ -1059,7 +1059,10 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                         .sort((a, b) => a.number.localeCompare(b.number))
                         .map((row) => (
                           <option key={chipKey(row)} value={chipKey(row)}>
-                            {row.operator} · {row.number} · {row.iccid}
+                            {row.operator} · {row.number} · {row.iccid} ·{' '}
+                            {row.link
+                              ? `${row.link.client || 'Cliente não informado'} · ${row.link.plate || 'Placa não informada'}`
+                              : 'Linha não identificada'}
                           </option>
                         ))}
                     </select>
@@ -1069,9 +1072,11 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                       <p className="scope">
                         {trackedRow.operator} · MSISDN {trackedRow.number} · ICCID{' '}
                         {trackedRow.iccid} · referência atual:{' '}
-                        {trackedRow.link?.client || 'Não vinculado'} / ID{' '}
-                        {trackedRow.link?.serial || 'Não informado'}. A linha do tempo usa todas as
-                        apurações em uso desse chip, além do período selecionado no topo.
+                        {trackedRow.link
+                          ? `${trackedRow.link.client || 'Cliente não informado'} · Placa ${trackedRow.link.plate || 'não informada'}`
+                          : 'Linha não identificada'}{' '}
+                        / ID {trackedRow.link?.serial || 'Não informado'}. A linha do tempo usa
+                        todas as apurações em uso desse chip, além do período selecionado no topo.
                       </p>
                       <div className="line-actions" data-no-print>
                         <PermissionButton action="export" onClick={() => exportLineHistory('xlsx')}>
