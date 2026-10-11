@@ -1,5 +1,7 @@
 # Usuários e permissões
 
+Na versão 0.17.0, Monitoramento de Frota é uma página adicional, em preparação e com demonstração opt-in. Usuários comuns precisam de concessão explícita; a página não libera importações de outras bases. Exportação mantém a regra separada existente. Nenhum dado de frota foi adicionado ao D1.
+
 ## Comportamento
 
 A autenticação continua no Cloudflare Access. A versão 0.16.0 acrescenta um cadastro interno em D1, contendo apenas e-mail, perfil, páginas liberadas, acesso ativo, permissão de importar/exportar e metadados de atualização. **Nenhuma planilha, registro operacional ou relatório é recebido pela API.**

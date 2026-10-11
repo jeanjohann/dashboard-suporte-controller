@@ -27,6 +27,7 @@ src/
       components/          Relatórios dos cruzamentos
       domain/              Indicadores, exportações e testes
     users/components/      Administração de usuários
+    monitoring/            Monitoramento em preparação, demonstração, domínio e relatórios
     imports/               Importação conjunta
       components/          Seleção e conferência do lote
       domain/              Reconhecimento, montagem e testes
@@ -47,6 +48,8 @@ import/                    Planilhas e CSVs locais; fora do Git
 As pastas `node_modules`, `dist`, `.wrangler` e `.worker-build` são geradas por ferramentas. Não editar arquivos nelas para mudar o comportamento do sistema. `layout-review/` contém imagens locais de revisões anteriores; `layout-review.mjs` é um roteiro histórico dependente de arquivos e ferramentas locais, não faz parte da execução ou dos testes oficiais.
 
 ## Fluxo dos dados
+
+Monitoramento possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONITORAMENTO-DE-FROTA.md). Nesta etapa seus dados fictícios ficam isolados, sem API, agendamento ou armazenamento no servidor.
 
 1. `src/main.jsx` aplica o tema e a verificação de acesso antes de montar `app/Workspace.jsx`.
 2. O Workspace mantém OS e operacional na memória da sessão e coordena as páginas autorizadas. As páginas permitidas continuam montadas, mas ocultas durante a navegação, preservando seus filtros. Uma página sem permissão não é montada.

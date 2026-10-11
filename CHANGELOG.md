@@ -7,6 +7,16 @@
 
 # Histórico de versões
 
+## 0.17.0 — 11/10/2026
+
+- Página Monitoramento de Frota em preparação, iniciando sem dados e com demonstração opt-in claramente identificada.
+- Visão analítica, seleção de múltiplas bases, limites provisórios, situação técnica, cards, gráficos e fila de acompanhamento paginada.
+- Qualidade da coleta, ausência de posição, datas incompatíveis e identidade duplicada tratadas separadamente de alertas.
+- Rascunhos de acompanhamento apenas na sessão, sem alterar situação técnica; relatórios CSV/XLSX com referência, filtros e identificação DEMO.
+- Nova permissão de página, sem liberação automática para usuários comuns e sem mudança no esquema D1.
+- Integração, coleta agendada, dados de consumo, histórico real e notificações permanecem pendentes das definições da API.
+- Guia do módulo e testes de limites, coleta, datas, duplicidade e exportação.
+
 ## 0.16.1 — 11/10/2026
 
 - Código organizado em aplicação, componentes compartilhados, módulos, utilitários e estilos; testes mantidos junto das regras.

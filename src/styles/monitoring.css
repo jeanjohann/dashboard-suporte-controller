@@ -1,0 +1,87 @@
+/* Organização do módulo em preparação; cores herdadas do tema do sistema. */
+.monitoring-menu {
+  display: grid;
+  gap: 6px;
+}
+.monitoring-menu button {
+  text-align: left;
+}
+.monitoring-menu button.active {
+  background: var(--ui-accent-ink);
+  color: var(--ui-button-text);
+}
+.monitoring-filters {
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: start;
+  margin: 18px 0;
+}
+.monitoring-filters label,
+.monitoring-fields label {
+  display: grid;
+  gap: 7px;
+}
+.monitoring-filters .scope {
+  flex-basis: 100%;
+  margin: 0;
+}
+.monitoring-cards {
+  margin: 20px 0;
+}
+.monitoring-cards small {
+  display: block;
+  margin-top: 7px;
+}
+.monitoring-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.monitoring-charts > * {
+  min-width: 0;
+}
+.monitoring-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+.monitoring-cell-note {
+  display: block;
+  margin-top: 5px;
+}
+.monitoring-detail {
+  border-top: 1px solid var(--ui-border);
+  padding-top: 12px;
+}
+.monitoring-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.monitoring-fields label:last-child {
+  grid-column: 1/-1;
+}
+.monitoring-fields textarea {
+  font: inherit;
+  color: var(--ui-ink);
+  background: var(--ui-background);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  padding: 10px;
+  min-height: 90px;
+  width: 100%;
+}
+@media (max-width: 1000px) {
+  .monitoring-charts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 550px) {
+  .monitoring-fields {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.16.1 — organização por módulos, código documentado e formatação padronizada.
+**Versão:** 0.17.0 — primeira etapa do Monitoramento de Frota, com demonstração isolada.
 
 ## Documentação do projeto
+
+- [Monitoramento de Frota — demonstração e próximos passos](docs/MONITORAMENTO-DE-FROTA.md)
 
 - [Arquitetura, estrutura de pastas e roteiro de manutenção](docs/ARQUITETURA.md)
 

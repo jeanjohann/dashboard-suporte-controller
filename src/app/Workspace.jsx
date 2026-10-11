@@ -16,6 +16,7 @@ import {
 } from '../modules/consumption/data/consumptionHistory.js';
 import { mergeBulkHistory } from '../modules/imports/domain/bulkImport.js';
 import { OrdersPage } from '../modules/orders/components/OrdersPage.jsx';
+import { MonitoringPage } from '../modules/monitoring/components/MonitoringPage.jsx';
 /** Mantém as bases da sessão e coordena páginas autorizadas e importações conjuntas. */
 export function Workspace() {
   const { user } = useAccess();
@@ -41,7 +42,15 @@ export function Workspace() {
   }
   const current = allowed(page)
     ? page
-    : ['orders', 'operational', 'lines', 'operational-analysis', 'users', 'imports'].find(allowed);
+    : [
+        'orders',
+        'operational',
+        'lines',
+        'operational-analysis',
+        'monitoring',
+        'users',
+        'imports',
+      ].find(allowed);
   if (!current)
     return (
       <main className="access-status">
@@ -52,6 +61,9 @@ export function Workspace() {
   return (
     <>
       {current === 'users' && <UsersPage onPage={setPage} />}
+      <div hidden={current !== 'monitoring'}>
+        {allowed('monitoring') && <MonitoringPage onPage={setPage} />}
+      </div>
       <div hidden={current !== 'imports'}>
         {allowed('imports') && (
           <ImportPage

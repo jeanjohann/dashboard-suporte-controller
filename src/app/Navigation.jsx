@@ -13,6 +13,7 @@ const pages = [
   ['operational', 'Operacional'],
   ['lines', 'Controle de Consumo M2M'],
   ['operational-analysis', 'Parque e Manutenção'],
+  ['monitoring', 'Monitoramento de Frota'],
   ['imports', 'Importação'],
 ];
 /** Exibe somente as páginas autorizadas e mantém expansão, recolhimento e ferramentas da página ativa. */

@@ -10,6 +10,9 @@ test('permissões recusam páginas, ações e bases não concedidas', () => {
   assert.equal(allowsPage(user, 'orders'), true);
   assert.equal(allowsPage(user, 'users'), false);
   assert.equal(allowsPage(user, 'lines'), false);
+  assert.equal(allowsPage(user, 'monitoring'), false);
+  assert.equal(allowsPage({ ...user, pages: ['monitoring'] }, 'monitoring'), true);
+  assert.equal(allowsSource({ ...user, pages: ['monitoring'] }, 'orders'), false);
   assert.equal(allowsPage(user, 'imports'), true);
   assert.equal(allowsSource(user, 'operational'), false);
   assert.equal(allowsSource(user, 'orders'), true);

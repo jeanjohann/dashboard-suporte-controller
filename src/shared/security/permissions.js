@@ -7,6 +7,7 @@ export const moduleLabels = {
   operational: 'Operacional',
   lines: 'Consumo M2M',
   'operational-analysis': 'Parque e Manutenção',
+  monitoring: 'Monitoramento de Frota',
 };
 export const moduleKeys = Object.keys(moduleLabels);
 /** Padroniza o endereço para comparação; não cria nem autentica uma identidade. */

@@ -4,6 +4,12 @@
  */
 import React from 'react';
 const paths = {
+  monitoring: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M4 12h4l2-4 4 8 2-4h4" />
+    </>
+  ),
   users: (
     <>
       <circle cx="9" cy="8" r="3" />
