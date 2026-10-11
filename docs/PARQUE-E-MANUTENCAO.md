@@ -25,16 +25,16 @@ As quatro seções novas participam da personalização e dos controles de abrir
 
 ## Indicadores
 
-| Indicador | Cálculo |
-| --- | --- |
-| Com atendimento realizado | Registros vinculáveis com ao menos uma linha Concluída/Pago na seleção |
-| Com assistência | Registros vinculáveis com ao menos uma Assistência Técnica realizada |
-| Percentual com assistência | Registros com assistência / base vinculável |
-| Assistências por 100 registros | Linhas de assistência / base vinculável × 100 |
-| Trocas de rastreador | Eventos confirmados pelo mecanismo atual de OS; um par conta uma vez |
-| Coletora / RFID | Linhas classificadas pelo mecanismo atual de acessórios, sem ampliar suas regras |
-| Veículos com várias visitas | Grupos cliente + placa da OS com duas ou mais datas distintas |
-| Retornos em 30/60/90 dias | Intervalos entre visitas consecutivas na seleção, cumulativos |
+| Indicador                      | Cálculo                                                                          |
+| ------------------------------ | -------------------------------------------------------------------------------- |
+| Com atendimento realizado      | Registros vinculáveis com ao menos uma linha Concluída/Pago na seleção           |
+| Com assistência                | Registros vinculáveis com ao menos uma Assistência Técnica realizada             |
+| Percentual com assistência     | Registros com assistência / base vinculável                                      |
+| Assistências por 100 registros | Linhas de assistência / base vinculável × 100                                    |
+| Trocas de rastreador           | Eventos confirmados pelo mecanismo atual de OS; um par conta uma vez             |
+| Coletora / RFID                | Linhas classificadas pelo mecanismo atual de acessórios, sem ampliar suas regras |
+| Veículos com várias visitas    | Grupos cliente + placa da OS com duas ou mais datas distintas                    |
+| Retornos em 30/60/90 dias      | Intervalos entre visitas consecutivas na seleção, cumulativos                    |
 
 Taxa por 100 pode ultrapassar 100 quando há várias assistências por equipamento; não é percentual de falha. Base vazia deixa taxa e percentual indisponíveis. Pizza/rosca representam apenas contagens aditivas. Taxas e percentuais de bases diferentes precisam de barras.
 
@@ -56,10 +56,10 @@ Critérios registram arquivos, seleções operacionais, período, agrupamento, c
 
 ## Código e validação
 
-- `src/parkAnalysis.js`: base, seleção temporal, contagens, taxas, visitas, categorias, pares e tabelas de exportação.
-- `src/ParkInsights.jsx`: controles de análise, cards, gráficos, tabelas e exportações.
-- `src/OperationalPage.jsx`: filtros múltiplos operacionais e integração com a personalização existente.
-- `src/parkAnalysis.test.js`: denominadores, canceladas, datas ausentes, limites, ambiguidade global, taxa acima de 100, evento único, contraparte, formato XLSX e seleção de colunas.
+- `src/modules/park/domain/parkAnalysis.js`: base, seleção temporal, contagens, taxas, visitas, categorias, pares e tabelas de exportação.
+- `src/modules/park/components/ParkInsights.jsx`: controles de análise, cards, gráficos, tabelas e exportações.
+- `src/modules/operational/components/OperationalPage.jsx`: filtros múltiplos operacionais e integração com a personalização existente.
+- `src/modules/park/domain/parkAnalysis.test.js`: denominadores, canceladas, datas ausentes, limites, ambiguidade global, taxa acima de 100, evento único, contraparte, formato XLSX e seleção de colunas.
 
 Validação inclui testes automatizados, compilação, leitura de XLSX gerado em memória, cálculos com arquivos locais e renderização React no servidor. Isso não equivale à validação visual interativa ou à abertura manual no Excel.
 

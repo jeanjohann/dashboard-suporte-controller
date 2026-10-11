@@ -3,6 +3,7 @@ dist/
 *.log
 
 # Dados operacionais e relatórios importados permanecem locais.
+/import/
 *.xlsx
 *.xls
 *.xlsm

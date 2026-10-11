@@ -1,0 +1,453 @@
+/**
+ * Interface dos cruzamentos entre o parque operacional e o histórico de Ordens de Serviço.
+ * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
+ */
+import { PermissionButton } from '../../../shared/security/Access.jsx';
+import { InfoNote } from '../../../components/InfoNote.jsx';
+import React, { useMemo, useState } from 'react';
+import { Section, PrintContext } from '../../../components/Section.jsx';
+import { SortableTable } from '../../../components/SortableTable.jsx';
+import { Chart } from '../../../components/Chart.jsx';
+import { download, csv } from '../../../shared/export/exports.js';
+import {
+  parkAnalysis,
+  parkReportTables,
+  parkReportCsv,
+  parkReportWorkbook,
+  parkSections,
+  parkColumns,
+} from '../domain/parkAnalysis.js';
+const number = (value) =>
+  value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+const percent = (value) =>
+  value == null ? '—' : (value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
+
+/** Apresenta indicadores e relatórios do parque vinculado ao histórico, com bases percentuais explícitas. */
+export function ParkInsights({
+  rows,
+  operational,
+  orders,
+  operationalFilename,
+  ordersFilename,
+  filters,
+  onConfigurePeriod,
+}) {
+  const [columns, setColumns] = useState(Object.keys(parkColumns));
+  const [start, setStart] = useState(''),
+    [end, setEnd] = useState(''),
+    [group, setGroup] = useState('client'),
+    [measure, setMeasure] = useState('assistance'),
+    [type, setType] = useState('bars'),
+    [includeOriginal, setIncludeOriginal] = useState(true),
+    [message, setMessage] = useState('');
+  const result = useMemo(
+    () => parkAnalysis(rows, orders, { start, end, group }),
+    [rows, orders, start, end, group],
+  );
+  const context = { operationalFilename, ordersFilename, filters, start, end, columns };
+  function tables() {
+    return parkReportTables(result, operational, orders, context);
+  }
+  function exportReport(format) {
+    try {
+      const report = tables();
+      if (format === 'xlsx')
+        download(
+          parkReportWorkbook(report, operational, orders, { includeOriginal }),
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'parque-manutencao.xlsx',
+        );
+      else download(parkReportCsv(report), 'text/csv;charset=utf-8', 'parque-manutencao.csv');
+      setMessage('Relatório gerado com os filtros e período atuais.');
+    } catch (error) {
+      setMessage('Não foi possível gerar: ' + error.message);
+    }
+  }
+  const cards = [
+    ['Base vinculável', result.base, 'Registros com serial + placa válidos e sem ambiguidade'],
+    [
+      'Com atendimento realizado',
+      result.withServices,
+      'Um ou mais serviços no período selecionado',
+    ],
+    [
+      'Com assistência técnica',
+      result.withAssistance,
+      percent(result.share) + ' da base vinculável',
+    ],
+    ['Assistências realizadas', result.assistance, 'Concluída ou Pago · tipo Assistência Técnica'],
+    [
+      'Assistências por 100 registros',
+      result.rate,
+      'Assistências ÷ base vinculável × 100; pode superar 100',
+    ],
+    [
+      'Veículos com várias visitas',
+      result.recurringVehicles,
+      'Cliente + placa da OS · datas distintas na seleção',
+    ],
+    [
+      'Trocas de rastreador',
+      result.devices?.trackerAvailable ? result.swaps.length : null,
+      'Par completo no período; ao menos um serial vinculado',
+    ],
+    [
+      'Coletora / RFID trocados',
+      result.devices?.accessoryAvailable
+        ? `${result.devices.accessories.Coletora} / ${result.devices.accessories.RFID}`
+        : '—',
+      'Mesmos critérios atuais das OS; não inclui categorias ambíguas',
+    ],
+  ];
+  const items = result.items
+    .map((item) => ({ label: item.label, value: item[measure] }))
+    .filter((item) => item.value != null)
+    .sort((a, b) => b.value - a.value);
+  const circular = ['pie', 'donut'].includes(type),
+    nonAdditive = ['rate', 'share'].includes(measure);
+  return (
+    <PrintContext.Provider
+      value={{
+        filename: `${operationalFilename} | OS: ${ordersFilename || 'não importada'}`,
+        filters: {
+          ...filters,
+          atendimentoDe: start,
+          atendimentoAte: end,
+          agrupamento: group,
+          indicador: measure,
+        },
+      }}
+    >
+      <Section visible title={parkSections[0]}>
+        <section className="panel filters">
+          <h2>Período dos atendimentos vinculados</h2>
+          <div className="filter-grid">
+            <label>
+              Atendimento a partir de
+              <input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
+            </label>
+            <label>
+              Atendimento até
+              <input type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
+            </label>
+          </div>
+          <button
+            onClick={() => {
+              setStart('');
+              setEnd('');
+            }}
+          >
+            Usar todo o histórico disponível
+          </button>
+          <InfoNote>
+            Estas datas afetam apenas as novas análises de manutenção, sem alterar a base
+            operacional ou os filtros da página de OS.
+          </InfoNote>
+        </section>
+        {result.unavailable ? (
+          <p className="notice">
+            Importe a OS com Status, ID Rastreador, Placa, Tipo de Serviço, Motivo e Data de
+            atendimento para habilitar estes indicadores.
+          </p>
+        ) : result.invalidPeriod ? (
+          <p className="error" role="alert">
+            A data inicial deve ser anterior ou igual à final.
+          </p>
+        ) : (
+          <>
+            <p className="notice">
+              {result.base} de {result.total} registros operacionais selecionados podem ser
+              vinculados. Os demais ficam fora desta base. Registros sem atendimento disponível
+              permanecem no denominador; isso não comprova ausência de manutenção. A taxa compara os
+              serviços observados à fotografia importada do parque, não mede probabilidade de falha
+              ou disponibilidade.
+            </p>
+            <p className="scope">
+              Período solicitado: {start || 'sem limite inicial'} até {end || 'sem limite final'}.
+              Datas dos serviços incluídos: {result.period?.start || '—'} a{' '}
+              {result.period?.end || '—'}. {result.missingDates} realizados excluídos por data
+              ausente/inválida com período ativo; {result.undated} incluídos sem data quando não há
+              limite de período.
+            </p>
+            <div className="summary-grid">
+              {cards.map(([label, value, note]) => (
+                <article className="summary-card" key={label}>
+                  <span>{label}</span>
+                  <strong>
+                    {value == null ? '—' : typeof value === 'number' ? number(value) : value}
+                  </strong>
+                  <small>{note}</small>
+                </article>
+              ))}
+            </div>
+            <p className="scope">
+              Retornos cumulativos: até 30 dias{' '}
+              {result.recurringAvailable ? result.returns[30] : '—'}, até 60 dias{' '}
+              {result.recurringAvailable ? result.returns[60] : '—'}, até 90 dias{' '}
+              {result.recurringAvailable ? result.returns[90] : '—'}; base:{' '}
+              {result.recurringAvailable ? result.intervals : '—'} intervalos entre visitas
+              consecutivas dentro da seleção. Serviços no mesmo dia formam uma visita. Nova
+              intervenção não confirma falha. {result.devices?.excludedAccessories ?? 0} manutenções
+              de acessório sem troca/categoria confirmada ficaram fora da contagem de substituições.
+            </p>
+          </>
+        )}
+      </Section>
+      {!result.unavailable && !result.invalidPeriod && (
+        <>
+          <Section visible title={parkSections[1]}>
+            <div className="filter-grid">
+              <label>
+                Agrupar por
+                <select value={group} onChange={(e) => setGroup(e.target.value)}>
+                  {[
+                    ['client', 'Cliente operacional'],
+                    ['model', 'Modelo operacional'],
+                    ['plan', 'Plano operacional'],
+                    ['status', 'Situação operacional'],
+                  ].map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Indicador
+                <select value={measure} onChange={(e) => setMeasure(e.target.value)}>
+                  {[
+                    ['assistance', 'Assistências realizadas'],
+                    ['withAssistance', 'Registros com assistência'],
+                    ['rate', 'Assistências por 100 registros'],
+                    ['share', 'Percentual com assistência'],
+                  ].map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Gráfico
+                <select value={type} onChange={(e) => setType(e.target.value)}>
+                  <option value="bars">Barras</option>
+                  <option value="pie">Pizza</option>
+                  <option value="donut">Rosca</option>
+                </select>
+              </label>
+            </div>
+            <InfoNote>
+              Cliente, modelo e plano são os lançados no operacional atual; não confirmam a
+              titularidade ou o contrato à época do serviço. Nenhum custo é atribuído ao contrato
+              atual.
+            </InfoNote>
+            {circular && nonAdditive ? (
+              <p className="notice">
+                Taxas e percentuais de bases diferentes não formam uma composição. Use barras para
+                comparar este indicador.
+              </p>
+            ) : (
+              <Chart
+                title="Manutenção no histórico vinculado"
+                items={items}
+                type={type}
+                ranking
+                format={measure === 'share' ? percent : number}
+                exportNote="Base vinculável da fotografia operacional; OS com histórico limitado. Não representa taxa de falhas."
+              />
+            )}
+            <div className="table-scroll">
+              <SortableTable>
+                <thead>
+                  <tr>
+                    <th>Grupo</th>
+                    <th>Base vinculável</th>
+                    <th>Com atendimento</th>
+                    <th>Com assistência</th>
+                    <th>Assistências</th>
+                    <th>Por 100 registros</th>
+                    <th>% com assistência</th>
+                    <th>Linhas operacional</th>
+                    <th>Linhas OS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.items.map((item) => (
+                    <tr key={item.label}>
+                      <td>{item.label}</td>
+                      <td>{item.base}</td>
+                      <td>{item.withServices}</td>
+                      <td>{item.withAssistance}</td>
+                      <td>{item.assistance}</td>
+                      <td data-sort={item.rate}>{number(item.rate)}</td>
+                      <td data-sort={item.share}>{percent(item.share)}</td>
+                      <td>{item.operationalRows.join(', ')}</td>
+                      <td>{item.serviceRows.join(', ')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </SortableTable>
+            </div>
+          </Section>
+          <Section visible title={parkSections[2]} defaultOpen={false}>
+            <Chart
+              title="Tipos de serviço realizados"
+              items={result.categories}
+              type="bars"
+              ranking
+              exportNote="Somente Concluída/Pago vinculados ao parque selecionado."
+            />
+            <div className="table-scroll">
+              <SortableTable>
+                <thead>
+                  <tr>
+                    <th>Tipo de serviço</th>
+                    <th>Quantidade</th>
+                    <th>Participação nos realizados</th>
+                    <th>Linhas OS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.categories.map((item) => (
+                    <tr key={item.label}>
+                      <td>{item.label}</td>
+                      <td>{item.value}</td>
+                      <td>
+                        {percent(
+                          result.services.length ? item.value / result.services.length : null,
+                        )}
+                      </td>
+                      <td>{item.rows.join(', ')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </SortableTable>
+            </div>
+            <details>
+              <summary>Conferir trocas de rastreador ({result.swaps.length})</summary>
+              <div className="table-scroll">
+                <SortableTable>
+                  <thead>
+                    <tr>
+                      <th>Chamado</th>
+                      <th>Placa</th>
+                      <th>Retirado</th>
+                      <th>Instalado</th>
+                      <th>Data</th>
+                      <th>Linhas OS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.swaps.map((pair) => (
+                      <tr key={pair.rows.join('-')}>
+                        <td>{pair.os}</td>
+                        <td>{pair.plate}</td>
+                        <td>{pair.oldSerial}</td>
+                        <td>{pair.newSerial}</td>
+                        <td>{pair.date}</td>
+                        <td>{pair.rows.join(', ')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+            </details>
+            <InfoNote>
+              Trocas são subconjuntos dos tipos de serviço, não categorias adicionais para somar.
+              Uma troca de rastreador conta um evento mesmo quando seus dois seriais estão no
+              parque.
+            </InfoNote>
+          </Section>
+          <Section visible title={parkSections[3]} defaultOpen={false}>
+            <p className="scope">
+              Período dos atendimentos: {start || 'sem limite inicial'} a{' '}
+              {end || 'sem limite final'}.
+            </p>
+            {onConfigurePeriod && (
+              <button onClick={onConfigurePeriod}>Ajustar período em Manutenção</button>
+            )}
+            <label>
+              Agrupamento do relatório
+              <select value={group} onChange={(e) => setGroup(e.target.value)}>
+                {[
+                  ['client', 'Cliente operacional'],
+                  ['model', 'Modelo operacional'],
+                  ['plan', 'Plano operacional'],
+                  ['status', 'Situação operacional'],
+                ].map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="inline-help-heading">
+              <h3>Colunas do resumo</h3>
+              <InfoNote>
+                Grupo e base vinculável permanecem para interpretar os resultados. Escolha as demais
+                colunas do resumo exportado.
+              </InfoNote>
+            </div>
+            <div className="preference-grid">
+              {Object.entries(parkColumns).map(([key, label]) => (
+                <label key={key}>
+                  <input
+                    type="checkbox"
+                    checked={columns.includes(key)}
+                    onChange={(e) =>
+                      setColumns((previous) =>
+                        e.target.checked
+                          ? [...previous, key]
+                          : previous.filter((value) => value !== key),
+                      )
+                    }
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+            <label>
+              <input
+                type="checkbox"
+                checked={includeOriginal}
+                onChange={(e) => setIncludeOriginal(e.target.checked)}
+              />{' '}
+              Incluir originais operacionais e OS no XLSX
+            </label>
+            <div className="report-downloads">
+              <PermissionButton action="export" onClick={() => exportReport('xlsx')}>
+                Exportar relatório XLSX
+              </PermissionButton>
+              <PermissionButton action="export" onClick={() => exportReport('csv')}>
+                Exportar resumo CSV
+              </PermissionButton>
+              <button
+                onClick={() =>
+                  download(csv(tables().original), 'text/csv;charset=utf-8', 'parque-original.csv')
+                }
+              >
+                Operacional original CSV
+              </button>
+              <button
+                onClick={() =>
+                  download(csv(tables().serviceRows), 'text/csv;charset=utf-8', 'os-vinculadas.csv')
+                }
+              >
+                OS e contexto de trocas CSV
+              </button>
+            </div>
+            <p role="status" className="scope">
+              {message}
+            </p>
+            <InfoNote>
+              Resumo por grupo, indicadores e critérios sempre incluídos. Valores e percentuais
+              numéricos no XLSX; originais selecionados opcionais, incluindo a contraparte das
+              trocas para conferência. Sem planilhas ou registros salvos no navegador. CSV mantém o
+              contexto dos filtros e arquivos.
+            </InfoNote>
+          </Section>
+        </>
+      )}
+    </PrintContext.Provider>
+  );
+}

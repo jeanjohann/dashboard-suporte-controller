@@ -1,0 +1,44 @@
+/**
+ * Testes de regressão: Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
+ * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
+ */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { contractualSummary } from './contracts.js';
+test('contrato separa cobrança, preserva zero e exclui ausências, erros e canceladas', () => {
+  const columns = ['Status', 'Cobrança', 'Valor a cobrar'].map((label) => ({ label }));
+  const values = [
+    ['Pago', 'Cliente', 200],
+    ['Concluída', 'Cliente', 0],
+    ['Concluída', 'Addlog', 300],
+    ['Pago', 'Addlog', null],
+    ['Cancelada', 'Cliente', 900],
+    ['Agendado', 'Addlog', 500],
+    ['Pago', 'Outro', 50],
+    ['Pago', 'Cliente', 100],
+  ];
+  const rows = values.map((v, i) => ({
+    sourceRow: i + 2,
+    cells: v.map((raw, j) => ({ raw, issue: i === 7 && j === 2 })),
+  }));
+  const summary = contractualSummary({ columns, rows });
+  assert.equal(summary.groups.Cliente.total, 20000);
+  assert.equal(summary.groups.Cliente.average, 10000);
+  assert.equal(summary.groups.Cliente.count, 2);
+  assert.equal(summary.groups.Cliente.missing, 1);
+  assert.equal(summary.groups.Addlog.total, 30000);
+  assert.equal(summary.groups.Addlog.missing, 1);
+  assert.equal(summary.total, 50000);
+  assert.equal(summary.average, 50000 / 3);
+  assert.equal(summary.unclassified, 1);
+});
+test('ausência de base não fabrica totais e cabeçalhos ausentes são explícitos', () => {
+  assert.equal(contractualSummary({ columns: [], rows: [] }), null);
+  const summary = contractualSummary({
+    columns: ['Status', 'Cobrança', 'Valor a cobrar'].map((label) => ({ label })),
+    rows: [],
+  });
+  assert.equal(summary.total, null);
+  assert.equal(summary.average, null);
+  assert.equal(summary.groups.Addlog.total, null);
+});

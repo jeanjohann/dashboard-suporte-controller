@@ -1,12 +1,16 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "test": "node --test"
+    "test": "node --test",
+    "check:imports": "node scripts/check-imports.mjs",
+    "format": "prettier --write src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc .prettierrc.json",
+    "format:check": "prettier --check src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc .prettierrc.json",
+    "check": "npm run check:imports && npm run format:check && npm test && npm run build"
   },
   "dependencies": {
     "jose": "^6.2.12",
@@ -16,6 +20,7 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
+    "prettier": "3.9.10",
     "vite": "^6.0.0",
     "wrangler": "^4.149.0"
   }

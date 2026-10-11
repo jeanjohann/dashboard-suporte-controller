@@ -38,6 +38,7 @@ APIs administrativas verificam perfil, origem da requisição, formato/campos ac
 Testes: JWT falso, expirado e de outra aplicação; usuário comum; identidade não cadastrada; CSRF; campos extras; suspensão; conflito de versão; proteção do administrador; páginas e bases; amostras de renderização sem botões de exportação. SQLite real em memória nos testes de API. Build React e empacotamento Wrangler em dry-run. A verificação autenticada na hospedagem ainda depende de publicar e testar o novo menu.
 
 Referências:
+
 - https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/
 - https://developers.cloudflare.com/workers/configuration/cloudflare-access/#ctxaccess-limitations
 - https://developers.cloudflare.com/workers/static-assets/routing/worker-script/

@@ -20,19 +20,19 @@ Layout aprovado: tela única com seções bem definidas, todas visíveis por pad
 
 Tipos de gráfico: barras, linhas, pizza/rosca e tabela nos relatórios. Pizza/rosca exigem valores aditivos não negativos com total positivo; chamados distintos por grupos são bloqueados. Não agrupar automaticamente categorias em Outros. Exibir avisos e manter rastreabilidade e exclusões. Recharts fornece interação; exportação SVG disponível.
 
-| Recurso | Situação |
-| --- | --- |
-| React e importação manual de Excel | Implementado |
-| Leitura da aba OS 2025, preservando a ordem | Implementado |
-| Contagem de linhas e chamados distintos | Implementado |
-| Busca, paginação e revisão estrutural de células | Implementado |
-| Contagens por status e detalhamento por chamado | Implementado na versão 0.2.0 |
-| Custos e valores contratuais de serviços realizados | Implementado na versão 0.2.0 |
-| Filtros combinados e gráfico mensal de realizados | Implementado na versão 0.3.0 |
-| Relatórios personalizados e histórico por placa/serial | Implementado na versão 0.5.0 |
-| Exportação CSV e gráfico SVG | Implementado na versão 0.6.0 |
+| Recurso                                                     | Situação                     |
+| ----------------------------------------------------------- | ---------------------------- |
+| React e importação manual de Excel                          | Implementado                 |
+| Leitura da aba OS 2025, preservando a ordem                 | Implementado                 |
+| Contagem de linhas e chamados distintos                     | Implementado                 |
+| Busca, paginação e revisão estrutural de células            | Implementado                 |
+| Contagens por status e detalhamento por chamado             | Implementado na versão 0.2.0 |
+| Custos e valores contratuais de serviços realizados         | Implementado na versão 0.2.0 |
+| Filtros combinados e gráfico mensal de realizados           | Implementado na versão 0.3.0 |
+| Relatórios personalizados e histórico por placa/serial      | Implementado na versão 0.5.0 |
+| Exportação CSV e gráfico SVG                                | Implementado na versão 0.6.0 |
 | Configurações salvas e ciclos encerrados de tempo observado | Implementado na versão 0.6.0 |
-| Tempo sem retirada registrada com referência selecionável | Implementado na versão 0.6.1 |
+| Tempo sem retirada registrada com referência selecionável   | Implementado na versão 0.6.1 |
 
 ## Conceitos e contagens aprovadas
 
@@ -48,38 +48,38 @@ Na versão 0.2.0, contagens e detalhamento usam toda a importação e não são 
 
 **Atendimento:** cada linha individual vinculada a um chamado. Importação não significa execução: a linha pode estar realizada, pendente ou cancelada.
 
-| Indicador | Regra |
-| --- | --- |
-| Linhas importadas | Cada linha com número de OS conta uma vez |
-| Chamados distintos | Cada número de OS conta uma vez no conjunto analisado |
-| Atendimentos realizados | Linhas com status Concluída ou Pago |
-| Atendimentos cancelados | Linhas com status Cancelada |
+| Indicador                 | Regra                                                 |
+| ------------------------- | ----------------------------------------------------- |
+| Linhas importadas         | Cada linha com número de OS conta uma vez             |
+| Chamados distintos        | Cada número de OS conta uma vez no conjunto analisado |
+| Atendimentos realizados   | Linhas com status Concluída ou Pago                   |
+| Atendimentos cancelados   | Linhas com status Cancelada                           |
 | Chamados com cancelamento | Chamados distintos com pelo menos uma linha Cancelada |
 
 O detalhamento por chamado deve mostrar as quantidades realizadas, canceladas e pendentes. Um chamado com situações diferentes não é automaticamente cancelado por inteiro. A regra para declarar um chamado totalmente concluído ainda precisa ser definida.
 
 ## Status e tipos de serviço
 
-| Campo e valor | Significado aprovado |
-| --- | --- |
-| Status = Concluída | Serviço executado e finalizado |
-| Status = Pago | Serviço executado e finalizado; técnico já pago |
-| Status = Cancelada | Cliente cancelou o serviço; não houve atendimento |
+| Campo e valor                  | Significado aprovado                                                     |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| Status = Concluída             | Serviço executado e finalizado                                           |
+| Status = Pago                  | Serviço executado e finalizado; técnico já pago                          |
+| Status = Cancelada             | Cliente cancelou o serviço; não houve atendimento                        |
 | Tipo de Serviço = Cancelamento | Retirada do equipamento motivada por cancelamento, associada à devolução |
 
 O tipo Cancelamento distingue essa retirada de uma retirada para reinstalação. Não significa cancelamento do atendimento e, sozinho, não comprova devolução efetiva do equipamento. Agendar e Agendado existem na base; suas regras para previsões financeiras ainda precisam de aprovação.
 
 ## Regras financeiras aprovadas
 
-| Campo | Definição |
-| --- | --- |
-| Cobrança = Cliente | Serviço cobrado do cliente |
-| Cobrança = Addlog | A Addlog absorve o custo do serviço |
-| Valor a cobrar | Valor contratual individual de cada linha, cobrado do cliente ou absorvido pela Addlog; não é total de chamado repetido |
-| Técnico | Valor em reais do serviço técnico, separado do deslocamento |
-| Km | Valor em reais do deslocamento de ida e volta informado pelo técnico; não é distância |
-| Custo Total | Total lançado para serviço técnico e deslocamento; fonte oficial para cálculo de custos |
-| Pago em | Data registrada de pagamento ao técnico; não representa recebimento do cliente |
+| Campo              | Definição                                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| Cobrança = Cliente | Serviço cobrado do cliente                                                                                              |
+| Cobrança = Addlog  | A Addlog absorve o custo do serviço                                                                                     |
+| Valor a cobrar     | Valor contratual individual de cada linha, cobrado do cliente ou absorvido pela Addlog; não é total de chamado repetido |
+| Técnico            | Valor em reais do serviço técnico, separado do deslocamento                                                             |
+| Km                 | Valor em reais do deslocamento de ida e volta informado pelo técnico; não é distância                                   |
+| Custo Total        | Total lançado para serviço técnico e deslocamento; fonte oficial para cálculo de custos                                 |
+| Pago em            | Data registrada de pagamento ao técnico; não representa recebimento do cliente                                          |
 
 **Divergência:** a relação esperada é `Custo Total = Técnico + Km`. Quando divergir, sinalizar para conferência manual e continuar usando Custo Total. Não substituir nem recalcular o total lançado. A tolerância monetária da comparação está pendente.
 
@@ -143,14 +143,14 @@ Para acessórios, basta a palavra-chave sem exigir troca por padrão. Ignoram-se
 
 Pendências: vínculo da instalação anterior ao serial retirado, múltiplos ciclos, data de referência dos ativos e validação de sequência temporal. Nenhuma vida útil ou causa de falha é inferida automaticamente.
 
-| Área | Cruzamentos |
-| --- | --- |
-| Operação | Data × cliente × tipo × motivo × status |
-| Técnicos | Técnico × período × serviço × região × custos |
-| Financeiro | Cobrança × cliente × valor contratual × custo total × pagamento |
-| Deslocamento | Técnico × localidade × cliente × valor de Km |
-| Equipamentos | ID rastreador × datas × motivos × custos × chamados |
-| Chamados | Número da OS × quantidade de linhas × situações |
+| Área         | Cruzamentos                                                     |
+| ------------ | --------------------------------------------------------------- |
+| Operação     | Data × cliente × tipo × motivo × status                         |
+| Técnicos     | Técnico × período × serviço × região × custos                   |
+| Financeiro   | Cobrança × cliente × valor contratual × custo total × pagamento |
+| Deslocamento | Técnico × localidade × cliente × valor de Km                    |
+| Equipamentos | ID rastreador × datas × motivos × custos × chamados             |
+| Chamados     | Número da OS × quantidade de linhas × situações                 |
 
 O gerador de relatórios proposto permitirá escolher unidade de análise, filtros, agrupamentos, medidas e visualização. Fórmulas, denominadores e exclusões deverão ser aprovados. Resultados devem informar registros considerados/excluídos e permitir rastreabilidade até a linha do Excel. Ainda não implementado.
 
@@ -211,7 +211,7 @@ Resumo em uma linha por grupo/indicador com quantitativos, percentuais, bases e 
 
 Mapa aprovado: 162 → MXT-162; 144 → MXT-130v2; 130 ou 137 → MXT-130v1; 141, 142 ou 143 → MXT-141. A classificação usa o prefixo do ID Rastreador da Implementação e não altera ID ou Modelo originais. IDs desconhecidos, ausentes ou incompatíveis ficam no grupo Modelo não identificado pelo ID; os ciclos continuam contados e elegíveis para as mesmas medidas de duração. Um card quantifica esses ciclos.
 
-Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/trackerModels.js para extensão futura.
+Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/modules/orders/domain/trackerModels.js para extensão futura.
 
 ## Abrir e recolher relatórios — 0.12.2
 

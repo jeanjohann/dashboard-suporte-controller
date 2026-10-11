@@ -31,10 +31,10 @@ Composição usa cliente e duração usa modelo pelo prefixo do ID nesta versão
 
 ## Manutenção e verificação
 
-`src/descriptive.js`: relatório, formato tabular e geração de XLSX com SheetJS já usada pelo importador. `src/DescriptiveReport.jsx`: seleção, prévia e downloads. Testes validam denominadores, canceladas, ausência/zero, números/percentuais no XLSX, preservação de identificadores e textos, cabeçalhos CSV e análises indisponíveis.
+`src/modules/orders/domain/descriptive.js`: relatório, formato tabular e geração de XLSX com SheetJS já usada pelo importador. `src/modules/orders/components/DescriptiveReport.jsx`: seleção, prévia e downloads. Testes validam denominadores, canceladas, ausência/zero, números/percentuais no XLSX, preservação de identificadores e textos, cabeçalhos CSV e análises indisponíveis.
 
 ## Modelos pelo ID — 0.12.1
 
 Mapa aprovado: 162 → MXT-162; 144 → MXT-130v2; 130 ou 137 → MXT-130v1; 141, 142 ou 143 → MXT-141. A classificação usa o prefixo do ID Rastreador da Implementação e não altera ID ou Modelo originais. IDs desconhecidos, ausentes ou incompatíveis ficam no grupo Modelo não identificado pelo ID; os ciclos continuam contados e elegíveis para as mesmas medidas de duração. Um card quantifica esses ciclos.
 
-Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/trackerModels.js para extensão futura.
+Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/modules/orders/domain/trackerModels.js para extensão futura.

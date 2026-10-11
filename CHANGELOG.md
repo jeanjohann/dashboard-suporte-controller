@@ -1,10 +1,22 @@
 ## Análises complementares do suporte
+
 - Motivos de manutenção, serviços absorvidos pela Addlog e distribuição por UF/cidade.
 - Visitas repetidas por cliente/placa, contexto financeiro da rede de técnicos e cobertura dos vínculos com o parque.
 - Comparação por volume, custo e deslocamento com acesso às linhas de origem.
 - Estoque e novas análises de contratos fora do escopo; indicadores por equipamento aguardam validação dos vínculos.
 
 # Histórico de versões
+
+## 0.16.1 — 11/10/2026
+
+- Código organizado em aplicação, componentes compartilhados, módulos, utilitários e estilos; testes mantidos junto das regras.
+- Página de OS extraída de main.jsx; Workspace separado para coordenar navegação e bases da sessão.
+- Caminhos de importação do navegador, Worker e documentação atualizados.
+- Comentários em português nas responsabilidades dos arquivos, funções públicas e decisões sensíveis de cálculo e segurança.
+- Prettier e EditorConfig para indentação e formatação consistentes, com comandos de manutenção e verificação de caminhos.
+- Novo guia de arquitetura, mapa das funcionalidades e roteiro de estudo e atualização.
+- Regras de negócio, identificadores de páginas, armazenamento local e estrutura D1 preservados.
+- Validação: 281 caminhos locais, 123 testes aprovados e um opcional ignorado, compilação, renderização inicial das páginas e empacotamento Wrangler sem publicação. Comparação estrutural de 60 arquivos JavaScript confirmou equivalência lógica após a reorganização.
 
 ## 0.16.0 — 11/10/2026
 
@@ -76,7 +88,6 @@
 - Relatórios com agrupamento acessível e atalho para ajustar período na categoria Manutenção.
 - Formato recolhível preservado; substituição por blocos abertos e painel de checkboxes ainda em discussão.
 
-
 ## 0.14.0 — 11/10/2026
 
 - Indicadores de assistência e intervenções por 100 registros vinculáveis, com cobertura e limitações históricas explícitas.
@@ -85,7 +96,6 @@
 - Relatório XLSX/CSV com seleção das colunas do resumo, critérios e fontes opcionais; contrapartes de trocas rastreáveis.
 - Novas seções integradas à personalização, abertura/recolhimento, tabelas ordenáveis e impressão/PDF.
 - Documentação e testes de base, filtros, eventos, originais e formatos de exportação.
-
 
 ## Em desenvolvimento — aparência e temas
 
@@ -156,7 +166,6 @@
 - Execuções por Resp. Execução, contando linhas Concluída/Pago nos filtros de atendimento.
 - Ranking de manutenção por cliente: Assistência Técnica realizada.
 - Agendamentos por Resp. Agendamento: linhas Concluída/Pago com nome válido; período por Agendamento, separado da Data de atendimento das execuções.
-
 
 ## 0.13.0 — 04/10/2026
 

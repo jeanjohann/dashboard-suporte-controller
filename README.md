@@ -1,12 +1,14 @@
 # Dashboard de suporte
 
-**Versão:** 0.16.0 — operacional, revisão e cobertura do histórico de OS.
+**Versão:** 0.16.1 — organização por módulos, código documentado e formatação padronizada.
 
 ## Documentação do projeto
 
+- [Arquitetura, estrutura de pastas e roteiro de manutenção](docs/ARQUITETURA.md)
+
 - [Usuários e permissões](docs/USUARIOS-E-PERMISSOES.md)
 
-- [Hospedagem e acesso Cloudflare (configuração pendente)](docs/HOSPEDAGEM.md)
+- [Hospedagem e acesso Cloudflare](docs/HOSPEDAGEM.md)
 
 - [Importação conjunta e navegação](docs/IMPORTACAO.md)
 
@@ -22,11 +24,13 @@ Primeira versão: importação manual e conferência da aba `OS 2025`.
 
 ## Executar
 
-Instale as dependências com `npm install` e execute `npm run dev`. Abra o endereço informado no terminal. Para gerar a versão de produção: `npm run build`.
+Instale as dependências com `npm ci` e execute `npm run dev`. Abra o endereço informado no terminal. Para gerar a versão de produção: `npm run build`.
+
+Para estudar o código, comece por [Arquitetura](docs/ARQUITETURA.md). As regras ficam em `domain/`, as telas em `components/` dos respectivos módulos e os testes junto das regras. Use `npm run format` para padronizar a edição e `npm run check` para conferir caminhos, formatação, testes e compilação antes de publicar.
 
 ## Navegação e aparência
 
-O menu segue a ordem **Ordens de Serviço**, **Operacional**, **Controle de Consumo M2M** e **OS x OP**. A chave no cabeçalho alterna entre tema claro e escuro; a escolha fica salva neste navegador e vale para todas as páginas. A logo oficial acompanha o contraste do tema.
+O menu apresenta **Ordens de Serviço**, **Operacional**, **Consumo M2M**, **Parque e Manutenção**, **Usuários** para administradores e **Importação** por último, conforme as permissões de acesso. O controle discreto na parte inferior alterna entre tema claro e escuro; a escolha fica salva neste navegador e vale para todas as páginas. A logo oficial acompanha o contraste do tema.
 
 Nas OS, **Limpar filtros** e os ícones de abrir/recolher relatórios compartilham a mesma faixa. As barras estão mais compactas: rótulos longos têm resumo visual, com identificação completa ao passar o cursor, na conferência dos registros e nas exportações. No celular, navegação, filtros e gráficos se ajustam à largura; tabelas mantêm rolagem própria para preservar as colunas.
 

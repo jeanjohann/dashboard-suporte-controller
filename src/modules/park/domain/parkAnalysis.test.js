@@ -1,0 +1,202 @@
+/**
+ * Testes de regressão: Cruzamentos entre operacional e OS, com vínculo conservador, denominadores explícitos e linhas de origem.
+ * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
+ */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import XLSX from 'xlsx';
+import {
+  parkAnalysis,
+  parkReportTables,
+  parkReportWorkbook,
+  parkReportCsv,
+} from './parkAnalysis.js';
+import { linkOperational } from '../../operational/domain/operational.js';
+import { attendanceDate } from '../../../shared/data/filters.js';
+const names = [
+  'Status',
+  'ID Rastreador',
+  'Placa',
+  'Tipo de Serviço',
+  'Motivo',
+  'Data de atendimento',
+  'Razão Social',
+  'Instruções',
+];
+function source(records) {
+  return {
+    columns: names.map((label, index) => ({ label, index, letter: XLSX.utils.encode_col(index) })),
+    rows: records.map((values, index) => ({
+      sourceRow: index + 2,
+      os: '10',
+      cells: names.map((label) => ({
+        raw: values[label] ?? null,
+        display: String(values[label] ?? ''),
+        issue: false,
+      })),
+    })),
+    date1904: false,
+    issues: [],
+  };
+}
+const service = (
+  serial = '162001',
+  date = 46000,
+  status = 'Pago',
+  type = 'Assistência Técnica',
+) => ({
+  Status: status,
+  'ID Rastreador': serial,
+  Placa: 'ABC1D23',
+  'Tipo de Serviço': type,
+  Motivo: 'Revisão da Instalação',
+  'Data de atendimento': date,
+  'Razão Social': 'Cliente OS',
+});
+const operational = {
+  columns: [{ label: 'Cliente', letter: 'C' }],
+  rows: [
+    {
+      sourceRow: 2,
+      client: 'Cliente atual',
+      serial: '162001',
+      plate: 'ABC1D23',
+      model: 'MXT-162',
+      cells: [{ raw: 'Cliente atual', display: 'Cliente atual' }],
+    },
+    {
+      sourceRow: 3,
+      client: 'Cliente atual',
+      serial: '144002',
+      plate: 'DEF4G56',
+      model: 'MXT-144',
+      cells: [{ raw: 'Cliente atual', display: 'Cliente atual' }],
+    },
+  ],
+};
+test('taxa usa toda base vinculável, mantém ausência histórica, exclui cancelada e agrupa visitas', () => {
+  const orders = source([
+    service(),
+    service('162001', 46000),
+    service('162001', 46020),
+    service('162001', 46030, 'Cancelada'),
+  ]);
+  const result = parkAnalysis(linkOperational(operational, orders), orders);
+  assert.equal(result.base, 2);
+  assert.equal(result.withAssistance, 1);
+  assert.equal(result.assistance, 3);
+  assert.equal(result.rate, 150);
+  assert.equal(result.share, 0.5);
+  assert.equal(result.recurringVehicles, 1);
+  assert.equal(result.intervals, 1);
+  assert.deepEqual(result.returns, { 30: 1, 60: 1, 90: 1 });
+  assert.equal(result.items[0].serviceRows.length, 3);
+});
+test('período exclui ausentes, preserva denominador e não salta visita intermediária da seleção', () => {
+  const orders = source([
+    service(),
+    service('162001', null),
+    service('162001', 46020),
+    service('162001', 46040),
+  ]);
+  const linked = linkOperational(operational, orders);
+  let result = parkAnalysis(linked, orders);
+  assert.equal(result.services.length, 4);
+  assert.equal(result.undated, 1);
+  const start = attendanceDate(orders, orders.rows[2]);
+  result = parkAnalysis(linked, orders, { start });
+  assert.equal(result.services.length, 2);
+  assert.equal(result.missingDates, 1);
+  assert.equal(result.base, 2);
+  assert.equal(result.intervals, 1);
+  assert.equal(result.returns[30], 1);
+  assert.equal(
+    parkAnalysis(linked, orders, { start: '2026-02-01', end: '2026-01-01' }).invalidPeriod,
+    true,
+  );
+});
+test('duplicidade global não desaparece ao filtrar operacional e base zero não fabrica taxa', () => {
+  const orders = source([service()]);
+  const duplicate = {
+    ...operational,
+    rows: [operational.rows[0], { ...operational.rows[0], sourceRow: 4 }],
+  };
+  const linked = linkOperational(duplicate, orders);
+  const result = parkAnalysis(linked.slice(0, 1), orders);
+  assert.equal(result.base, 0);
+  assert.equal(result.rate, null);
+  assert.equal(result.share, null);
+  assert.equal(parkAnalysis(linkOperational(operational, null), null).unavailable, true);
+});
+test('troca de rastreador conta um evento com somente novo serial no parque e exige ambas as datas', () => {
+  const out = { ...service('162999'), Motivo: 'Desinstalação Business 2.0' },
+    incoming = { ...service(), Motivo: 'Instalação Business 2.0' };
+  const orders = source([out, incoming]);
+  const result = parkAnalysis(linkOperational(operational, orders), orders);
+  assert.equal(result.swaps.length, 1);
+  assert.deepEqual(result.swaps[0].rows, [2, 3]);
+  assert.equal(result.services.length, 1);
+});
+test('relatório XLSX mantém fração numérica e identificadores de texto; opcional sem originais', () => {
+  const orders = source([service()]);
+  const result = parkAnalysis(linkOperational(operational, orders), orders);
+  const tables = parkReportTables(result, operational, orders, {
+    operationalFilename: 'op.xlsx',
+    ordersFilename: 'os.xlsx',
+    filters: { model: ['MXT-162'] },
+  });
+  let book = XLSX.read(parkReportWorkbook(tables, operational, orders), { type: 'array' });
+  assert.equal(book.Sheets.Resumo.H2.v, 0.5);
+  assert.equal(book.Sheets.Resumo.H2.t, 'n');
+  assert.equal(book.Sheets['OS realizadas'].C2.v, '162001');
+  assert.equal(book.Sheets['OS realizadas'].C2.t, 's');
+  assert.ok(parkReportCsv(tables).includes('op.xlsx'));
+  assert.ok(parkReportCsv(tables).includes('histórico limitado'));
+  book = XLSX.read(parkReportWorkbook(tables, operational, orders, { includeOriginal: false }), {
+    type: 'array',
+  });
+  assert.deepEqual(book.SheetNames, ['Resumo', 'Indicadores', 'Critérios']);
+});
+
+test('personalização das colunas mantém denominador e formato percentual na posição escolhida', () => {
+  const orders = source([service()]);
+  const result = parkAnalysis(linkOperational(operational, orders), orders);
+  const tables = parkReportTables(result, operational, orders, {
+    columns: ['share', 'assistance'],
+  });
+  assert.deepEqual(tables.summary[0], [
+    'Cliente operacional',
+    'Base vinculável',
+    'Assistências',
+    'Fração com assistência',
+  ]);
+  const book = XLSX.read(
+    parkReportWorkbook(tables, operational, orders, { includeOriginal: false }),
+    { type: 'array', cellNF: true },
+  );
+  assert.equal(book.Sheets.Resumo.D2.v, 0.5);
+  assert.equal(book.Sheets.Resumo.D2.z, '0.00%');
+});
+test('originais incluem contraparte da troca sem duplicar serviços e base rejeita placa provisória', () => {
+  const orders = source([
+    { ...service('162999'), Motivo: 'Desinstalação Business 2.0' },
+    { ...service(), Motivo: 'Instalação Business 2.0' },
+  ]);
+  const result = parkAnalysis(linkOperational(operational, orders), orders);
+  const tables = parkReportTables(result, operational, orders);
+  assert.equal(result.services.length, 1);
+  assert.equal(tables.serviceRows.length, 3);
+  const invalid = parkAnalysis(
+    [
+      {
+        ...operational.rows[0],
+        plate: 'sem placa',
+        state: 'Sem atendimento no histórico disponível',
+        services: [],
+      },
+    ],
+    orders,
+  );
+  assert.equal(invalid.base, 0);
+  assert.equal(invalid.rate, null);
+});

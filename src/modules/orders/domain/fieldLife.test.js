@@ -1,0 +1,282 @@
+/**
+ * Testes de regressão: Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
+ * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
+ */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { fieldLife, lifeStats, lifeGroups, validLifeDate } from './fieldLife.js';
+const labels = [
+  'Status',
+  'Tipo de Serviço',
+  'Motivo',
+  'Razão Social',
+  'Placa',
+  'ID Rastreador',
+  'Data de atendimento',
+  'Instruções',
+  'Modelo',
+];
+const serialDate = (date) =>
+  date == null ? null : (Date.parse(date + 'T00:00:00Z') - Date.UTC(1899, 11, 30)) / 86400000;
+function fixture(values) {
+  return {
+    columns: labels.map((label, i) => ({ label, letter: String.fromCharCode(65 + i) })),
+    rows: values.map((v, i) => ({
+      sourceRow: i + 2,
+      os: v.os || '#' + i,
+      cells: labels.map((label) => ({
+        raw: label === 'Data de atendimento' ? serialDate(v.date) : (v[label] ?? ''),
+        display: String(v[label] ?? ''),
+      })),
+    })),
+  };
+}
+const base = {
+  Status: 'Pago',
+  'Razão Social': 'Cliente A',
+  Placa: 'ABC1D23',
+  'ID Rastreador': '144000001',
+  'Tipo de Serviço': 'Assistência Técnica',
+};
+const initial = (date = '2025-01-01', changes = {}) => ({
+  ...base,
+  'Tipo de Serviço': 'Implementação',
+  Motivo: 'Instalação Business 2.1',
+  date,
+  ...changes,
+});
+const remove = (date = '2025-02-01', changes = {}) => ({
+  ...base,
+  Motivo: 'Desinstalação Business 2.1',
+  date,
+  os: '#troca',
+  ...changes,
+});
+const incoming = (date = '2025-02-01', changes = {}) => ({
+  ...base,
+  Motivo: 'Reinstalação Business 2.1',
+  'ID Rastreador': '162000002',
+  date,
+  os: '#troca',
+  ...changes,
+});
+const accessory = (date, instruction, motive = 'Manutenção de Acessório', changes = {}) => ({
+  ...base,
+  Motivo: motive,
+  Instruções: instruction,
+  date,
+  ...changes,
+});
+const trackers = (result) => result.periods.filter((p) => p.category === 'Rastreador');
+
+test('primeira troca exige par e serial antigo e mede a instalação original, incluindo reinstalação', () => {
+  const d = fixture([initial(), remove(), incoming()]);
+  const r = fieldLife(d, d),
+    p = trackers(r)[0];
+  assert.equal(p.state, 'replaced');
+  assert.equal(p.days, 31);
+  assert.deepEqual(p.rows, [2, 3, 4]);
+  assert.equal(p.model, 'MXT-130v2');
+  assert.equal(r.unmeasured.length, 0);
+});
+test('cancelamento e retirada sem par não entram na média e não são saltados até uma troca posterior', () => {
+  for (const extra of [{ 'Tipo de Serviço': 'Cancelamento' }, {}]) {
+    const d = fixture([initial(), remove('2025-01-10', extra), remove('2025-02-01'), incoming()]);
+    const p = trackers(fieldLife(d, d))[0];
+    assert.equal(p.state, extra['Tipo de Serviço'] ? 'canceled' : 'review');
+    assert.equal(lifeStats([p]).mean, null);
+  }
+});
+test('mesmo serial, data ou cliente diferente não comprovam troca', () => {
+  for (const change of [
+    { 'ID Rastreador': '144000001' },
+    { date: '2025-02-02' },
+    { 'Razão Social': 'Outro cliente' },
+    { Status: 'Cancelada' },
+  ]) {
+    const d = fixture([initial(), remove(), incoming('2025-02-01', change)]);
+    assert.notEqual(trackers(fieldLife(d, d))[0].state, 'replaced');
+  }
+});
+test('instalações duplicadas mantêm ambiguidade mesmo quando apenas a mais recente é selecionada', () => {
+  const d = fixture([initial(), initial('2025-01-05'), remove(), incoming()]);
+  const r = fieldLife(d, { ...d, rows: [d.rows[1]] });
+  assert.equal(trackers(r)[0].state, 'review');
+  assert.equal(lifeStats(trackers(r)).complete, 0);
+});
+test('vários pares na mesma data e troca no dia da instalação exigem revisão', () => {
+  for (const values of [
+    [initial(), remove(), incoming(), incoming()],
+    [initial('2025-02-01'), remove(), incoming()],
+  ]) {
+    const d = fixture(values);
+    assert.equal(trackers(fieldLife(d, d))[0].state, 'review');
+  }
+});
+test('troca sem instalação é contada sem fabricar duração', () => {
+  const d = fixture([remove(), incoming()]);
+  const r = fieldLife(d, d);
+  assert.equal(r.periods.length, 0);
+  assert.equal(r.unmeasured.length, 1);
+  assert.match(r.unmeasured[0].reason, /Instalação inicial/);
+  assert.equal(lifeStats(r.periods).median, null);
+});
+test('filtro de instalação ou evento consulta pontas fora da seleção sem mudar o histórico', () => {
+  const d = fixture([initial(), remove(), incoming()]);
+  const startOnly = { ...d, rows: [d.rows[0]] },
+    endOnly = { ...d, rows: [d.rows[1]] };
+  assert.equal(trackers(fieldLife(d, startOnly))[0].days, 31);
+  assert.equal(trackers(fieldLife(d, endOnly)).length, 0);
+  assert.equal(trackers(fieldLife(d, endOnly, { scope: 'event' }))[0].days, 31);
+});
+test('referência é limitada ao arquivo, corte anterior à troca produz observação e data impossível é inválida', () => {
+  const d = fixture([initial(), remove(), incoming()]);
+  const r = fieldLife(d, d, { referenceDate: '2026-01-01' });
+  assert.equal(r.reference, '2025-02-01');
+  assert.equal(r.referenceCapped, true);
+  const cut = trackers(fieldLife(d, d, { referenceDate: '2025-01-20' }))[0];
+  assert.equal(cut.state, 'observed');
+  assert.equal(cut.days, 19);
+  assert.equal(lifeStats([cut]).median, null);
+  assert.equal(fieldLife(d, d, { referenceDate: '2025-02-30' }).invalidReference, true);
+  assert.equal(validLifeDate('2024-02-29'), true);
+});
+test('acessório usa instalação explícita, ignora verificações e não presume acessórios da Implementação', () => {
+  const d = fixture([
+    initial('2025-01-01', { Instruções: 'Rastreador + teclado' }),
+    accessory('2025-01-02', 'Instalação de Coletora', 'Instalação de Acessório'),
+    accessory('2025-01-10', 'Teclado travado'),
+    accessory('2025-01-20', 'Trocar terminal'),
+  ]);
+  const r = fieldLife(d, d),
+    p = r.periods.find((p) => p.category === 'Coletora');
+  assert.equal(p.state, 'replaced');
+  assert.equal(p.days, 18);
+  assert.deepEqual(p.rows, [3, 5]);
+  assert.equal(r.periods.filter((p) => p.category === 'Coletora').length, 1);
+});
+test('troca de acessório sem instalação não inventa vida útil e categorias ambíguas exigem revisão', () => {
+  const d = fixture([
+    accessory('2025-01-10', 'Troca RFID'),
+    accessory('2025-01-20', 'Troca coletora e RFID'),
+  ]);
+  const r = fieldLife(d, d);
+  assert.equal(r.periods.length, 0);
+  assert.equal(r.unmeasured.length, 1);
+  assert.ok(r.review.some((p) => p.category === 'Acessório não identificado'));
+});
+test('categoria acessório e cliente/placa não se misturam, serial não é usado', () => {
+  const d = fixture([
+    accessory('2025-01-01', 'Instalação RFID', 'Instalação de Acessório', {
+      'ID Rastreador': null,
+    }),
+    accessory('2025-01-05', 'Troca coletora'),
+    accessory('2025-01-10', 'Troca RFID', 'Manutenção de Acessório', { 'Razão Social': 'Outro' }),
+    accessory('2025-01-20', 'Trocar RFID', 'Manutenção de Acessório', { 'ID Rastreador': '999' }),
+  ]);
+  const p = fieldLife(d, d).periods.find((p) => p.category === 'RFID');
+  assert.equal(p.state, 'replaced');
+  assert.equal(p.days, 19);
+});
+test('ciclo iniciado em troca anterior é separado da instalação inicial', () => {
+  const d = fixture([
+    initial(),
+    remove(),
+    incoming(),
+    remove('2025-03-01', { 'ID Rastreador': '162000002', os: '#2' }),
+    incoming('2025-03-01', { 'ID Rastreador': '130000003', os: '#2' }),
+  ]);
+  const first = trackers(fieldLife(d, d))[0];
+  assert.equal(first.days, 31);
+  const next = trackers(fieldLife(d, d, { basis: 'replacement' })).find(
+    (p) => p.installationRow === 4,
+  );
+  assert.equal(next.days, 28);
+  assert.equal(next.basis, 'replacement');
+});
+test('eventos relevantes sem data, seriais transferidos e placa sem identificação impedem duração automática', () => {
+  const examples = [
+    [initial(), remove(null), remove(), incoming()],
+    [initial(), initial('2025-01-10', { Placa: 'XYZ2A34' }), remove(), incoming()],
+    [initial('2025-01-01', { Placa: 'Sem Placa' }), remove(), incoming()],
+  ];
+  for (const values of examples) {
+    const d = fixture(values);
+    assert.equal(trackers(fieldLife(d, d))[0].state, 'review');
+  }
+});
+test('média, mediana e distribuição usam só ciclos completos; amostra vazia permanece indisponível', () => {
+  const r = lifeStats([
+    { state: 'replaced', days: 10 },
+    { state: 'replaced', days: 20 },
+    { state: 'replaced', days: 100 },
+    { state: 'observed', days: 500 },
+    { state: 'canceled', days: 3 },
+    { state: 'review', days: null },
+  ]);
+  assert.equal(r.complete, 3);
+  assert.equal(r.mean, 130 / 3);
+  assert.equal(r.median, 20);
+  assert.equal(
+    r.bins.reduce((s, b) => s + b.value, 0),
+    3,
+  );
+  assert.equal(r.total, r.complete + r.observed + r.canceled + r.review);
+  assert.equal(lifeStats([]).mean, null);
+});
+test('sem colunas ou datas não há resultado saudável fabricado', () => {
+  assert.equal(fieldLife({ columns: [], rows: [] }, { rows: [] }).unavailable, true);
+  const d = fixture([initial(null)]);
+  assert.equal(fieldLife(d, d).unavailable, true);
+});
+
+test('calendário 1904 preserva datas e duração, célula de serial com erro impede confirmação', () => {
+  const d = fixture([initial(), remove(), incoming()]);
+  d.date1904 = true;
+  for (const row of d.rows) row.cells[6].raw -= 1462;
+  const p = trackers(fieldLife(d, d))[0];
+  assert.equal(p.start, '2025-01-01');
+  assert.equal(p.days, 31);
+  d.rows[1].cells[5].issue = true;
+  assert.notEqual(trackers(fieldLife(d, d))[0].state, 'replaced');
+});
+test('seleção por evento usa a retirada, não uma instalação anterior presente nas evidências de revisão', () => {
+  const d = fixture([initial(), initial('2025-01-10'), remove(), incoming()]);
+  const selected = { ...d, rows: [d.rows[0]] };
+  assert.equal(fieldLife(d, selected, { scope: 'event' }).periods.length, 0);
+});
+
+test('serial Excel zero no calendário 1900 é data inválida e não produz duração NaN', () => {
+  const d = fixture([initial(), remove(), incoming()]);
+  d.rows[0].cells[6].raw = 0;
+  const r = fieldLife(d, d);
+  assert.equal(trackers(r)[0].state, 'review');
+  assert.equal(lifeStats(trackers(r)).mean, null);
+  assert.equal(r.unmeasured.length, 1);
+});
+
+test('média e extremos por modelo usam a mesma amostra completa sem incluir observações ou cancelamentos', () => {
+  const groups = lifeGroups([
+    { model: 'MXT-162', state: 'replaced', days: 10 },
+    { model: 'MXT-162', state: 'replaced', days: 20 },
+    { model: 'MXT-162', state: 'replaced', days: 100 },
+    { model: 'MXT-162', state: 'observed', days: 900 },
+    { model: 'MXT-162', state: 'canceled', days: 1 },
+    { model: 'Coletora', state: 'replaced', days: 50 },
+    { model: 'RFID', state: 'review', days: null },
+  ]);
+  const m = groups.find((g) => g.label === 'MXT-162');
+  assert.equal(m.complete, 3);
+  assert.equal(m.mean, 130 / 3);
+  assert.equal(m.min, 10);
+  assert.equal(m.max, 100);
+  assert.equal(m.median, 20);
+  const c = groups.find((g) => g.label === 'Coletora');
+  assert.equal(c.mean, 50);
+  assert.equal(c.min, 50);
+  assert.equal(c.max, 50);
+  const empty = groups.find((g) => g.label === 'RFID');
+  assert.equal(empty.mean, null);
+  assert.equal(empty.min, null);
+  assert.equal(empty.max, null);
+});

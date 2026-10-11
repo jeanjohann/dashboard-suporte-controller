@@ -1,0 +1,124 @@
+# Arquitetura e organização do código
+
+Este guia é o ponto de partida para estudar o sistema e localizar o código antes de fazer alterações. A versão 0.16.1 organiza arquivos por responsabilidade; os critérios de cálculo, nomes dos campos e formatos das bases permanecem os mesmos.
+
+## Estrutura do projeto
+
+```text
+src/
+  main.jsx                 Entrada do navegador e ordem dos estilos
+  app/                     Workspace, navegação, tema e painel lateral
+  components/              Gráficos, tabelas, filtros, ajuda e impressão compartilhados
+  modules/
+    orders/                Ordens de Serviço
+      components/          Página, cards e relatórios
+      domain/              Cálculos, equipamentos, histórico e testes
+      data/                Importador Excel e testes
+      config/              Categorias e preferências de exibição
+    operational/           Cadastro operacional, revisão e vínculos
+      components/          Página operacional e acesso aos cruzamentos
+      domain/              Leitura, revisão, vínculos e testes
+      config/              Categorias do menu
+    consumption/           Consumo M2M
+      components/          Tela e tabela de registros
+      domain/              Parsers, cálculos, vínculos e testes
+      data/                Histórico IndexedDB, backups e testes
+    park/                  Parque e Manutenção
+      components/          Relatórios dos cruzamentos
+      domain/              Indicadores, exportações e testes
+    users/components/      Administração de usuários
+    imports/               Importação conjunta
+      components/          Seleção e conferência do lote
+      domain/              Reconhecimento, montagem e testes
+  shared/
+    data/                  Filtros, datas e ordenação
+    charts/                Regras de disponibilidade e ranking
+    export/                CSV, SVG e download local
+    security/              Sessão, API e regras compartilhadas de permissões
+  styles/                  CSS carregado pela entrada do aplicativo
+server/                    Worker, validação de identidade e API de permissões
+migrations/                Estrutura SQL do banco de usuários
+scripts/                   Verificações de manutenção
+docs/                      Guias de uso, critérios e manutenção
+public/                    Recursos estáticos, como imagens de identidade
+import/                    Planilhas e CSVs locais; fora do Git
+```
+
+As pastas `node_modules`, `dist`, `.wrangler` e `.worker-build` são geradas por ferramentas. Não editar arquivos nelas para mudar o comportamento do sistema. `layout-review/` contém imagens locais de revisões anteriores; `layout-review.mjs` é um roteiro histórico dependente de arquivos e ferramentas locais, não faz parte da execução ou dos testes oficiais.
+
+## Fluxo dos dados
+
+1. `src/main.jsx` aplica o tema e a verificação de acesso antes de montar `app/Workspace.jsx`.
+2. O Workspace mantém OS e operacional na memória da sessão e coordena as páginas autorizadas. As páginas permitidas continuam montadas, mas ocultas durante a navegação, preservando seus filtros. Uma página sem permissão não é montada.
+3. Os importadores transformam Excel/CSV em estruturas analisáveis, preservando células e referências da origem. Os problemas são apontados para revisão; a planilha não é corrigida.
+4. As funções em `domain/` calculam os indicadores. Quando um vínculo exige contexto completo, como uma troca de equipamento, usam a base original antes de aplicar o recorte.
+5. Os componentes apresentam o resultado, as exclusões e as linhas de origem. Exportação e impressão usam os fluxos locais com verificação de permissão.
+6. O histórico de consumo fica no IndexedDB do navegador. O servidor recebe somente consultas de sessão e cadastros de usuários; não recebe planilhas nem relatórios.
+
+## Onde alterar cada assunto
+
+| Assunto                                       | Arquivo principal                                                      | Guia de regras             |
+| --------------------------------------------- | ---------------------------------------------------------------------- | -------------------------- |
+| Entrada e ordem do CSS                        | `src/main.jsx`                                                         | Este guia                  |
+| Navegação entre páginas e bases da sessão     | `src/app/Workspace.jsx`                                                | `IMPORTACAO.md`            |
+| Menu, tema e painel lateral                   | `src/app/Navigation.jsx`, `Theme.jsx`, `SidePanel.jsx`                 | `GUIA-E-MANUTENCAO.md`     |
+| Leitura da aba OS                             | `src/modules/orders/data/import.js`                                    | `PRODUTO.md`               |
+| Financeiro e contagem de chamados             | `src/modules/orders/domain/analysis.js`                                | `PRODUTO.md`               |
+| Filtros, período e seleção múltipla           | `src/shared/data/filters.js`                                           | `GUIA-E-MANUTENCAO.md`     |
+| Custos, reincidência e perfil de intervenções | `src/modules/orders/domain/insights.js`                                | `ANALISES-DE-OS.md`        |
+| Trocas e modelos de rastreador                | `src/modules/orders/domain/trackerReplacements.js`, `trackerModels.js` | `VIDA-EM-CAMPO.md`         |
+| Média, mínimo e máximo até primeira troca     | `src/modules/orders/domain/fieldLife.js`                               | `VIDA-EM-CAMPO.md`         |
+| Relatório descritivo XLSX/CSV                 | `src/modules/orders/domain/descriptive.js`                             | `RELATORIO-DESCRITIVO.md`  |
+| Leitura operacional e vínculos com OS         | `src/modules/operational/domain/operational.js`                        | `OPERACIONAL.md`           |
+| Indicadores de Parque e Manutenção            | `src/modules/park/domain/parkAnalysis.js`                              | `PARQUE-E-MANUTENCAO.md`   |
+| CSV, unidades, períodos e vínculos de consumo | `src/modules/consumption/domain/lineConsumption.js`                    | `CONSUMO-DE-LINHAS.md`     |
+| Histórico de consumo e backup local           | `src/modules/consumption/data/consumptionHistory.js`                   | `CONSUMO-DE-LINHAS.md`     |
+| Importação de várias bases                    | `src/modules/imports/domain/bulkImport.js`                             | `IMPORTACAO.md`            |
+| Ajuda e impressão de seção                    | `src/components/InfoNote.jsx`, `Section.jsx`                           | `GUIA-E-MANUTENCAO.md`     |
+| Páginas e ações autorizadas                   | `src/shared/security/permissions.js`                                   | `USUARIOS-E-PERMISSOES.md` |
+| Identidade e gravação de usuários             | `server/worker.js`                                                     | `USUARIOS-E-PERMISSOES.md` |
+
+Quando uma tabela indicar vários nomes na mesma célula, eles pertencem à mesma pasta do primeiro caminho.
+
+## Dependências e limites
+
+- `components/` contém elementos reaproveitados; o cálculo específico deve ficar no domínio correspondente. Existem dependências históricas de componentes para contexto de aplicação e configurações de OS; esta organização não tenta eliminar todas elas de uma vez.
+- Funções de domínio recebem dados e devolvem resultados. Os domínios de análise não dependem de componentes React. Funções de exportação podem compor as tabelas/XLSX usando os utilitários compartilhados.
+- Cruzamentos entre módulos são explícitos: operacional usa regras de OS para vínculos; consumo consulta campos operacionais; parque combina as duas bases; importação conjunta conhece os importadores das três bases.
+- `shared/security/permissions.js` é utilizado tanto no navegador quanto no Worker. Ele não pode depender de React, DOM, localStorage ou IndexedDB.
+- `server/schema.js` espelha a migração SQL inicial. Mudanças de esquema devem manter os dois arquivos consistentes e planejar a migração do banco existente.
+- Caminhos de arquivos podem mudar; chaves de localStorage/IndexedDB, IDs de páginas e nomes de campos não devem mudar sem um plano de compatibilidade.
+- Restrições de importação/exportação controlam os fluxos do aplicativo. Elas não impedem cópia de dados que a pessoa já possui ou visualiza. Consulte o guia de permissões antes de alterar esse limite.
+
+## Padrão para novos arquivos
+
+Use a pasta do módulo responsável e mantenha testes `*.test.js` junto da regra que verificam. Uma função realmente reutilizada por vários módulos pode ir para `shared/`; uma interface reaproveitável, para `components/`. Evite mover regras específicas para uma pasta genérica apenas para encurtar um import.
+
+Cada arquivo de código possui uma descrição de sua responsabilidade. As funções públicas principais têm comentários em português que explicam propósito e critérios. Em trechos delicados, o comentário deve explicar o motivo da decisão: por exemplo, por que usar o total lançado ou por que exigir o par completo de uma troca. Não repetir em comentário aquilo que uma atribuição simples já mostra.
+
+Use nomes claros, indentação de dois espaços e a formatação automática configurada em `.prettierrc.json`. `.editorconfig` orienta editores compatíveis. Não modificar uma regra de negócio apenas para facilitar a formatação ou a mudança de pasta.
+
+## Verificação antes de publicar
+
+```sh
+npm ci
+npm run format
+npm run check
+npx wrangler deploy --dry-run --outdir .worker-build
+```
+
+- `format` aplica o padrão em código, configurações e documentação.
+- `format:check` confere o padrão sem alterar arquivos.
+- `check:imports` confere se os caminhos locais existem, inclusive entre navegador e servidor.
+- `test` executa os testes de regressão das regras e da API, sem precisar das planilhas reais para a suíte principal.
+- `build` verifica a compilação de produção e as dependências dos componentes.
+- `check` reúne caminhos, formatação, testes e compilação; interrompe ao encontrar uma falha.
+- O dry-run do Wrangler verifica o empacotamento do Worker e seus bindings sem publicar.
+
+Há um teste opcional com um arquivo Excel real, ignorado quando o arquivo esperado não está disponível. A suíte não deve exigir dados de clientes no repositório. A compilação também pode avisar sobre o tamanho do pacote: esse aviso já existe e a divisão de carregamento por página fica para uma evolução própria.
+
+Depois das verificações automáticas, confira no navegador os fluxos afetados: navegação, importação, filtros, relatórios e, quando aplicável, login e permissões. Uma compilação bem-sucedida não substitui essa conferência visual.
+
+## Atualização da documentação
+
+Registre a alteração no `CHANGELOG.md`, atualize o guia do módulo e mantenha esta tabela coerente quando mover arquivos. O `README.md` é a entrada do projeto; documentos de produto explicam as regras, e este guia explica onde implementá-las. Algumas seções dos guias registram etapas históricas: para saber o comportamento atual, confira a seção mais recente e os testes correspondentes.

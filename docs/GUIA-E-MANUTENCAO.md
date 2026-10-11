@@ -1,5 +1,11 @@
 # Guia de uso e manutenção
 
+## Organização atual — versão 0.16.1
+
+Para estudar ou alterar o código, comece pelo [guia de arquitetura](ARQUITETURA.md). Ele descreve as pastas por módulo, o fluxo dos dados, os arquivos responsáveis por cada indicador e as verificações necessárias antes de publicar. Os caminhos citados neste guia foram atualizados para a nova estrutura. As seções abaixo também registram a evolução histórica das funcionalidades.
+
+Use `npm run format` após editar e `npm run check` antes de registrar a alteração. Novas regras devem ter comentários sobre seu propósito e critérios; os testes ficam junto do módulo correspondente. Atualize também o guia específico e o histórico de versões.
+
 ## Detalhes, ordenação, impressão e técnicos — versão 0.8.0
 
 Conferir linhas abre abaixo uma tabela com todos os registros do mês ou grupo do relatório. A seleção respeita filtros e exclusões da medida. Cabeçalhos alternam crescente, decrescente e ordem padrão; linha Excel permanece como referência. Na tabela principal a ordenação vale para todos os resultados, antes das páginas.
@@ -8,7 +14,7 @@ Imprimir / Salvar PDF abre o diálogo do navegador para a seção. Escolha impre
 
 Ranking de técnicos é seção personalizável com código, nomes, realizados, chamados, custos, médias e exclusões. Custo técnico e deslocamento separados; média total usa Custo Total lançado. Há média do deslocamento em todos os valores válidos (inclui zero) e quando cobrado (somente positivos). CSV inicial do ranking inclui código, nome, volume, custo total e linhas de origem. Sem dado válido para média aparece —.
 
-Módulos: src/RecordDetails.jsx, src/SortableTable.jsx, src/sorting.js, src/technicians.js e src/Technicians.jsx. Section.jsx gera cópia isolada para impressão. Nenhuma alteração na planilha.
+Módulos: src/modules/orders/components/RecordDetails.jsx, src/components/SortableTable.jsx, src/shared/data/sorting.js, src/modules/orders/domain/technicians.js e src/modules/orders/components/Technicians.jsx. Section.jsx gera cópia isolada para impressão. Nenhuma alteração na planilha.
 
 ## Cidade e paginação — versão 0.7.1
 
@@ -24,7 +30,7 @@ Gráficos possuem barras, linhas, pizza e rosca, com detalhes ao passar o cursor
 
 Baixar este gráfico SVG exporta a visualização selecionada. O arquivo contém título, mas filtros e exclusões completos ficam no CSV. Baixar barras SVG na seção Exportações mantém a exportação anterior com metadados. A legenda de pizza está na tela; detalhes completos dos grupos permanecem na tabela/CSV.
 
-Módulos: src/Section.jsx, src/preferences.js, src/Chart.jsx e src/chartRules.js. Recharts consta no arquivo de dependências. Ocultação de seções preserva estados das consultas; nenhum dado da planilha é salvo junto da preferência visual.
+Módulos: src/components/Section.jsx, src/modules/orders/config/preferences.js, src/components/Chart.jsx e src/shared/charts/chartRules.js. Recharts consta no arquivo de dependências. Ocultação de seções preserva estados das consultas; nenhum dado da planilha é salvo junto da preferência visual.
 
 ## Data de referência — versão 0.6.1
 
@@ -36,13 +42,13 @@ Referência vazia impede o cálculo. Data anterior à instalação, várias inst
 
 Escolha relatório e filtros, dê um nome e use Salvar configuração atual. Aplicar recupera as escolhas sobre a importação atual. Excluir remove a configuração. O armazenamento é local ao navegador/origem; outra porta ou navegador pode ter lista diferente. Planilhas e registros não são persistidos, mas nomes/identificadores presentes nos filtros são. Mudança de estrutura das colunas exige nova configuração. Falha de armazenamento é informada.
 
-Tempo observado em campo mostra somente ciclos encerrados com instalação e retirada do mesmo serial/placa. Vínculos incompletos/ambíguos ficam para revisão. São dias corridos entre datas; não há cálculo de equipamentos sem retirada e nem inferência de vida útil completa. Módulos: src/lifecycle.js e src/lifecycle.test.js.
+Tempo observado em campo mostra somente ciclos encerrados com instalação e retirada do mesmo serial/placa. Vínculos incompletos/ambíguos ficam para revisão. São dias corridos entre datas; não há cálculo de equipamentos sem retirada e nem inferência de vida útil completa. Módulos: src/modules/orders/domain/lifecycle.js e src/modules/orders/domain/lifecycle.test.js.
 
 ## Exportação — versão 0.6.0
 
 Selecione agrupamento, medida e filtros e use Baixar relatório CSV ou Baixar gráfico SVG. CSV inclui arquivo de origem, filtros, regras, exclusões e linhas Excel. Valores monetários são exportados em reais, com vírgula decimal. Separador ponto e vírgula e UTF-8 com marcador de codificação facilitam abertura no Excel. Textos que poderiam ser interpretados como fórmulas recebem prefixo de proteção apenas na exportação.
 
-SVG é imagem vetorial do gráfico personalizado, incluindo arquivo, elegíveis e exclusões. Os filtros detalhados acompanham o CSV. Baixar histórico CSV fica disponível após uma consulta com registros. Nenhum arquivo de origem é alterado. Módulos: src/exports.js e src/exports.test.js.
+SVG é imagem vetorial do gráfico personalizado, incluindo arquivo, elegíveis e exclusões. Os filtros detalhados acompanham o CSV. Baixar histórico CSV fica disponível após uma consulta com registros. Nenhum arquivo de origem é alterado. Módulos: src/shared/export/exports.js e src/shared/export/exports.test.js.
 
 ## Filtros adicionais — versão 0.5.1
 
@@ -56,7 +62,7 @@ Em Relatório personalizado, escolha agrupamento, medida e visualização. Os fi
 
 Em Histórico de equipamentos, escolha Placa ou ID Rastreador e digite/escolha o valor exato. O histórico está limitado pelos filtros atuais; limpe-os para consultar toda a importação. Registros aparecem por data, com os sem data no final. Cancelada permanece visível quando incluída na seleção, sem ser considerada execução. A consulta não mede tempo em campo nesta versão.
 
-Módulos: src/reports.js (agregação e histórico), src/reports.test.js e src/Explorers.jsx (interface). Não há exportação nem persistência das configurações nesta etapa.
+Módulos: src/modules/orders/domain/reports.js (agregação e histórico), src/modules/orders/domain/reports.test.js e src/modules/orders/components/Explorers.jsx (interface). Não há exportação nem persistência das configurações nesta etapa.
 
 ## Equipamentos — versão 0.4.0
 
@@ -64,13 +70,13 @@ A seção Trocas de equipamentos mostra acessórios por categoria, rastreadores 
 
 Revisão inclui reinstalações, vínculos ambíguos, seriais ausentes/iguais e instruções sem categoria ou com categorias conflitantes. Esses registros continuam nos demais indicadores. Para acessórios, ative Exigir a palavra troca para testar uma condição mais restrita; a opção começa desativada em uma nova sessão.
 
-Módulos: src/equipment.js e src/equipment.test.js. Mapeamento explícito dos motivos em trackerMotives. Tempo observado em campo ainda não é calculado.
+Módulos: src/modules/orders/domain/equipment.js e src/modules/orders/domain/equipment.test.js. Mapeamento explícito dos motivos em trackerMotives. Tempo observado em campo ainda não é calculado.
 
 ## Seleção múltipla — versão 0.3.1
 
 Abra o filtro e marque quantos itens desejar. Use a busca de opções para localizar nomes; buscar opções não altera a seleção. Os itens selecionados aparecem abaixo do campo e podem ser removidos individualmente. Limpar seleção retorna o campo a Todos.
 
-Exemplo: UF = SP ou PR, junto com Status = Pago ou Concluída. Dentro do campo vale qualquer item selecionado; entre campos, todas as condições precisam ser atendidas. Período continua sendo um intervalo de datas. As seleções afetam indicadores, gráficos e tabelas. Módulo visual: src/MultiFilter.jsx.
+Exemplo: UF = SP ou PR, junto com Status = Pago ou Concluída. Dentro do campo vale qualquer item selecionado; entre campos, todas as condições precisam ser atendidas. Período continua sendo um intervalo de datas. As seleções afetam indicadores, gráficos e tabelas. Módulo visual: src/components/MultiFilter.jsx.
 
 ## Filtros e gráfico — versão 0.3.0
 
@@ -82,7 +88,7 @@ O período usa Data de atendimento, com limites inclusivos. Sem período, datas 
 
 O gráfico mensal conta somente Concluída/Pago e informa realizados excluídos por data. Meses sem registros não são exibidos. Datas devem ser valores numéricos do Excel; texto de data permanece sem conversão automática. O calendário 1904 é respeitado. A análise depende dos cabeçalhos necessários.
 
-Módulos adicionados: src/filters.js (datas, seleção e agregação mensal), src/filters.test.js (verificações) e src/BarChart.jsx (visualização de barras).
+Módulos adicionados: src/shared/data/filters.js (datas, seleção e agregação mensal), src/shared/data/filters.test.js (verificações) e src/components/BarChart.jsx (visualização de barras).
 
 Esta seção substitui as orientações da versão anterior sobre totais referentes a toda a importação.
 
@@ -132,16 +138,18 @@ A compilação gera `dist`. A compilação não substitui conferência visual.
 
 ## Estrutura técnica
 
-| Arquivo | Responsabilidade |
-| --- | --- |
-| src/import.js | Leitura, cabeçalhos, registros e revisão estrutural |
-| src/analysis.js | Classificação operacional e agrupamento por chamado |
-| src/analysis.test.js | Casos de chamados mistos e cabeçalho ausente |
-| src/main.jsx | Interface, estado de sessão, busca e paginação |
-| src/style.css | Aparência e adaptação de tela |
-| src/import.test.js | Testes de importação |
-| package.json / package-lock.json | Scripts e dependências |
-| index.html | Entrada da aplicação |
+| Arquivo                                      | Responsabilidade                                    |
+| -------------------------------------------- | --------------------------------------------------- |
+| src/modules/orders/data/import.js            | Leitura, cabeçalhos, registros e revisão estrutural |
+| src/modules/orders/domain/analysis.js        | Classificação operacional e agrupamento por chamado |
+| src/modules/orders/domain/analysis.test.js   | Casos de chamados mistos e cabeçalho ausente        |
+| src/main.jsx                                 | Entrada do aplicativo, tema e autenticação          |
+| src/app/Workspace.jsx                        | Navegação e bases da sessão                         |
+| src/modules/orders/components/OrdersPage.jsx | Interface de OS, filtros, busca e paginação         |
+| src/styles/style.css                         | Aparência e adaptação de tela                       |
+| src/modules/orders/data/import.test.js       | Testes de importação                                |
+| package.json / package-lock.json             | Scripts e dependências                              |
+| index.html                                   | Entrada da aplicação                                |
 
 React executa no navegador; Vite serve e compila. SheetJS lê o Excel e é obtido da distribuição oficial 0.20.3 indicada em package.json. Usar package-lock.json para instalações reproduzíveis.
 
@@ -149,14 +157,14 @@ React executa no navegador; Vite serve e compila. SheetJS lê o Excel e é obtid
 
 `importWorkbook(buffer)` retorna:
 
-| Propriedade | Conteúdo |
-| --- | --- |
-| columns | index (base zero), letter e label |
-| rows | sourceRow (linha Excel base um), os e cells |
-| cells | display, raw e issue |
-| issues | address, row, column, value e reason |
-| skipped | Linhas com dados nas colunas reconhecidas, mas sem OS |
-| calls | Quantidade de números de OS distintos |
+| Propriedade | Conteúdo                                              |
+| ----------- | ----------------------------------------------------- |
+| columns     | index (base zero), letter e label                     |
+| rows        | sourceRow (linha Excel base um), os e cells           |
+| cells       | display, raw e issue                                  |
+| issues      | address, row, column, value e reason                  |
+| skipped     | Linhas com dados nas colunas reconhecidas, mas sem OS |
+| calls       | Quantidade de números de OS distintos                 |
 
 raw preserva o valor lido; display usa a representação disponível da célula. Erros podem ter códigos internos em raw. Não há avaliação de fórmulas. Datas numéricas não são automaticamente convertidas em objetos Date; a futura análise deverá interpretá-las explicitamente.
 
@@ -210,7 +218,7 @@ Resumo em uma linha por grupo/indicador com quantitativos, percentuais, bases e 
 
 Mapa aprovado: 162 → MXT-162; 144 → MXT-130v2; 130 ou 137 → MXT-130v1; 141, 142 ou 143 → MXT-141. A classificação usa o prefixo do ID Rastreador da Implementação e não altera ID ou Modelo originais. IDs desconhecidos, ausentes ou incompatíveis ficam no grupo Modelo não identificado pelo ID; os ciclos continuam contados e elegíveis para as mesmas medidas de duração. Um card quantifica esses ciclos.
 
-Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/trackerModels.js para extensão futura.
+Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/modules/orders/domain/trackerModels.js para extensão futura.
 
 ## Abrir e recolher relatórios — 0.12.2
 
@@ -218,7 +226,7 @@ No topo da página de OS, após a importação, Abrir todos os relatórios e Rec
 
 ## Operacional — 0.13.0
 
-Importe a aba Equipamentos na página Operacional — Importação e Revisão. Confira os pontos e exporte o CSV para ajustar a planilha de origem. Importe as OS em sua página e abra Operacional × OS — Análises. Ambos os arquivos permanecem em memória durante a navegação. Não interpretar ausência nas OS como erro. Leia [regras e manutenção do módulo](OPERACIONAL.md) antes de alterar os vínculos. Código: src/operational.js, src/OperationalPage.jsx e src/operational.test.js.
+Importe a aba Equipamentos na página Operacional — Importação e Revisão. Confira os pontos e exporte o CSV para ajustar a planilha de origem. Importe as OS em sua página e abra Operacional × OS — Análises. Ambos os arquivos permanecem em memória durante a navegação. Não interpretar ausência nas OS como erro. Leia [regras e manutenção do módulo](OPERACIONAL.md) antes de alterar os vínculos. Código: src/modules/operational/domain/operational.js, src/modules/operational/components/OperationalPage.jsx e src/modules/operational/domain/operational.test.js.
 
 ## Manutenção do parque — 0.14.0
 
@@ -229,20 +237,26 @@ Indicadores exploratórios sobre a base operacional vinculável, filtros múltip
 Operacional: Visão geral, Registros e Revisão. OS x OP: Visão geral, Parque, Manutenção, Valores mensais, Vínculos e Relatórios. A seleção é independente por página e não limpa filtros ou dados. Visão geral concentra os cards de cobertura; cada categoria mostra seus relatórios, respeitando as escolhas de visibilidade. Agrupamento do relatório fica na categoria Relatórios, com período informado e atalho para Manutenção. Seções recolhíveis continuam disponíveis. O painel de checkboxes integrado ao menu e os blocos abertos são propostas para revisão futura, ainda não implementadas.
 
 ## Navegação e importação conjunta (0.15.0)
+
 Consulte [Importação e navegação](IMPORTACAO.md) para o menu lateral compacto, categorias aninhadas, seleção de relatórios e carregamento em lote. A antiga página OS x OP agora se chama Parque e Manutenção.
 
 ## Explicações dos indicadores (0.15.2)
+
 Clique no pequeno ícone ⓘ para consultar critérios e regras. Nos relatórios principais, explicações diretas são agrupadas ao lado do título; ferramentas e cards têm ajuda própria. O balão fecha ao clicar novamente, fora dele, no botão Fechar ou com Escape. Escape e Fechar devolvem o foco ao ícone. Rolagem externa e mudança de tamanho da janela fecham o balão para não deslocar sua referência. Período, filtros, valores válidos/excluídos e avisos dinâmicos permanecem visíveis. Explicações continuam incluídas na impressão/PDF de cada seção.
-Implementação compartilhada em src/InfoNote.jsx; adicionar uma explicação estática com InfoNote. Não envolver contagens de revisão ou alertas nesse componente. Section agrupa filhos diretos InfoNote no título e mantém o texto na cópia impressa. Nenhuma regra de cálculo foi alterada.
+Implementação compartilhada em src/components/InfoNote.jsx; adicionar uma explicação estática com InfoNote. Não envolver contagens de revisão ou alertas nesse componente. Section agrupa filhos diretos InfoNote no título e mantém o texto na cópia impressa. Nenhuma regra de cálculo foi alterada.
 
 ### Posição e ícones (0.15.3)
-A ajuda agrupada dos relatórios principais fica no canto superior direito do cabeçalho. Os cards mantêm sua ajuda no canto superior direito. O espaço do cabeçalho é reservado para evitar sobreposição com o título ou a impressão. Os ícones do menu e da ajuda são SVGs compartilhados em src/Icon.jsx, com cor herdada do tema e rótulos acessíveis nos botões. As explicações específicas de ferramentas permanecem junto ao seu contexto.
+
+A ajuda agrupada dos relatórios principais fica no canto superior direito do cabeçalho. Os cards mantêm sua ajuda no canto superior direito. O espaço do cabeçalho é reservado para evitar sobreposição com o título ou a impressão. Os ícones do menu e da ajuda são SVGs compartilhados em src/components/Icon.jsx, com cor herdada do tema e rótulos acessíveis nos botões. As explicações específicas de ferramentas permanecem junto ao seu contexto.
 
 ### Blocos internos (0.15.4)
+
 Cabeçalhos internos com explicação usam inline-help-heading: título à esquerda e InfoNote à direita, alinhados ao topo. Esse padrão inclui Valores de contrato e widgets de gráficos, com espaçamento reservado para evitar sobreposição. O balão e a cópia impressa mantêm seu conteúdo e comportamento.
 
 ### Harmonia visual (0.15.6)
-O arquivo src/layout-polish.css reúne o ajuste compartilhado de títulos, campos e ações dos relatórios. Agrupamento e participantes dos gráficos usam fonte de 12px e seletores de 36px, com rótulos e campos alinhados em duas colunas; abaixo de 520px passam a uma coluna. Cabeçalhos internos alinham título e ajuda. Ações mantêm espaçamento e quebra de linha; valores numéricos preservam legibilidade. As alterações foram revisadas no código e compiladas, com validação visual interativa ainda pendente. Filtros, vínculos, estatísticas e exportações permanecem com os mesmos critérios.
+
+O arquivo src/styles/layout-polish.css reúne o ajuste compartilhado de títulos, campos e ações dos relatórios. Agrupamento e participantes dos gráficos usam fonte de 12px e seletores de 36px, com rótulos e campos alinhados em duas colunas; abaixo de 520px passam a uma coluna. Cabeçalhos internos alinham título e ajuda. Ações mantêm espaçamento e quebra de linha; valores numéricos preservam legibilidade. As alterações foram revisadas no código e compiladas, com validação visual interativa ainda pendente. Filtros, vínculos, estatísticas e exportações permanecem com os mesmos critérios.
 
 ## Administração (0.16.0)
+
 Consulte [Usuários e permissões](USUARIOS-E-PERMISSOES.md) para cadastro, suspensão, liberação de páginas e ações. A autenticação continua no Cloudflare; o banco guarda somente usuários/permissões. A publicação exige build React e deploy do Worker pelo Wrangler.

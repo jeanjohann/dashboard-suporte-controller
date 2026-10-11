@@ -52,6 +52,6 @@ Valor Faturado, Valor Multa e Valor Total da Kore aparecem separados por dados, 
 
 ## Manutenção e validação
 
-`src/consumption.js`: parser CSV e funções básicas; `src/lineConsumption.js`: formatos, unidades, elegibilidade, vínculos, referência, versões e linha do tempo; `src/consumptionHistory.js`: IndexedDB e validação do backup; `src/LinesPage.jsx`: tela; `src/LineRecordsTable.jsx`: ordenação e paginação.
+`src/modules/consumption/domain/consumption.js`: parser CSV e funções básicas; `src/modules/consumption/domain/lineConsumption.js`: formatos, unidades, elegibilidade, vínculos, referência, versões e linha do tempo; `src/modules/consumption/data/consumptionHistory.js`: IndexedDB e validação do backup; `src/modules/consumption/components/LinesPage.jsx`: tela; `src/modules/consumption/components/LineRecordsTable.jsx`: ordenação e paginação.
 
 Testes cobrem conversão exata, zero/ausência, identificadores, serviços separados, duplicidades antes dos filtros, vínculos ambíguos, média de referência, versões, períodos e backups incompatíveis. Conferência no navegador com os arquivos reais cobre importação, totais por soma inteira independente, vínculo operacional, recarga, CSV completo, anotações, reimportação idêntica, backup/restauração, novos períodos e telas desktop/móvel. Os arquivos de origem não são modificados.

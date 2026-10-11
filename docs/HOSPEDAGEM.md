@@ -40,6 +40,7 @@ A hospedagem entrega o sistema; os arquivos importados continuam sendo processad
 `public/_headers`: cabeçalhos básicos e HTML sem cache persistente. `public/robots.txt`: pedido para não indexar o site. **Esses arquivos não substituem autenticação.** `.node-version`: runtime de build.
 
 Referências oficiais:
+
 - https://developers.cloudflare.com/pages/framework-guides/deploy-a-react-site/
 - https://developers.cloudflare.com/pages/platform/known-issues/#enable-access-on-your-pagesdev-domain
 - https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/one-time-pin/
@@ -60,4 +61,5 @@ Desabilitar exportação controla comandos oferecidos pelo aplicativo; não impe
 Sequência: conectar repositório e criar Pages, configurar Access para produção e prévias, validar acesso quando o usuário autorizar solicitar código; depois implementar e validar gestão interna de permissões. Não anunciar permissões ativas antes dessa validação.
 
 ## Hospedagem confirmada e evolução 0.16.0
+
 O proprietário publicou como Worker em https://dashboard-suporte-controller.jean-johann.workers.dev/ e confirmou login por código. A política Acesso Jean foi aplicada a All traffic. As instruções anteriores de Pages são históricas; a configuração atual usa wrangler.jsonc. Para a evolução de gestão interna, consulte [Usuários e permissões](USUARIOS-E-PERMISSOES.md). O proprietário forneceu o AUD e Database ID; a interface e API estão implementadas. A validação autenticada da nova versão permanece pendente; não considerar a administração interna ativa antes de conferir seu menu após o deploy.

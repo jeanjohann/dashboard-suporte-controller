@@ -1,0 +1,139 @@
+/**
+ * Interface de consumo M2M: importação, histórico local, filtros, conferência e exportação.
+ * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
+ */
+import React, { useEffect, useState } from 'react';
+import { compareValues } from '../../../shared/data/sorting.js';
+import { consumptionEligible, VOLUME_SCALE } from '../domain/lineConsumption.js';
+const mb = (value) =>
+  value == null
+    ? '—'
+    : (value / VOLUME_SCALE).toLocaleString('pt-BR', { maximumFractionDigits: 6 }) + ' MB';
+const columns = [
+  ['Operadora', (row) => row.operator],
+  ['MSISDN', (row) => row.number],
+  ['ICCID', (row) => 'ICCID ' + row.iccid],
+  ['Cliente vinculado', (row) => row.link?.client || null],
+  ['ID equipamento', (row) => (row.link?.serial ? 'ID ' + row.link.serial : null)],
+  ['Consumo MB', (row) => (consumptionEligible(row) ? row.ticks : null)],
+  ['MB por dia', (row) => (consumptionEligible(row) ? row.ticks / row.days : null)],
+  ['Vezes a média', (row) => row.ratio],
+  ['Plano / produto', (row) => row.plan],
+  ['Vínculo', (row) => row.linkState],
+];
+/** Ordena e pagina os registros de consumo antes de apresentar a conferência de cada linha. */
+export function LineRecordsTable({ records, onView }) {
+  const [sort, setSort] = useState(null),
+    [page, setPage] = useState(0),
+    size = 100;
+  useEffect(() => setPage(0), [records]);
+  const ordered = sort
+    ? records
+        .map((row, index) => ({ row, index }))
+        .sort(
+          (a, b) =>
+            compareValues(
+              columns[sort.index][1](a.row),
+              columns[sort.index][1](b.row),
+              sort.direction,
+            ) || a.index - b.index,
+        )
+        .map((item) => item.row)
+    : records;
+  const offset = Math.min(page * size, Math.max(0, Math.floor((ordered.length - 1) / size) * size)),
+    shown = ordered.slice(offset, offset + size);
+  return (
+    <div className="line-records">
+      <p className="scope">
+        {ordered.length ? `${offset + 1} a ${offset + shown.length}` : '0'} de {ordered.length}{' '}
+        registros. A ordenação considera o recorte completo; o CSV inclui todos os registros
+        filtrados.
+      </p>
+      <div className="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              {columns.map(([label], index) => (
+                <th
+                  key={label}
+                  aria-sort={
+                    sort?.index === index
+                      ? sort.direction === 'asc'
+                        ? 'ascending'
+                        : 'descending'
+                      : 'none'
+                  }
+                >
+                  <button
+                    className="sort-heading"
+                    onClick={() => {
+                      setPage(0);
+                      setSort((previous) =>
+                        previous?.index === index
+                          ? previous.direction === 'asc'
+                            ? { index, direction: 'desc' }
+                            : null
+                          : { index, direction: 'asc' },
+                      );
+                    }}
+                  >
+                    {label} {sort?.index === index ? (sort.direction === 'asc' ? '↑' : '↓') : '↕'}
+                  </button>
+                </th>
+              ))}
+              <th>Conferir</th>
+            </tr>
+          </thead>
+          <tbody>
+            {shown.map((row) => (
+              <tr key={row.id}>
+                <td>{row.operator}</td>
+                <td>{row.number}</td>
+                <td>{row.iccid}</td>
+                <td>
+                  <span className="table-cell-text" title={row.link?.client || 'Não vinculado'}>
+                    {row.link?.client || 'Não vinculado'}
+                  </span>
+                </td>
+                <td>{row.link?.serial || 'Não informado'}</td>
+                <td>{mb(consumptionEligible(row) ? row.ticks : null)}</td>
+                <td>{mb(consumptionEligible(row) ? row.ticks / row.days : null)}</td>
+                <td>
+                  {row.ratio == null
+                    ? '—'
+                    : row.ratio.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + '×'}
+                  {row.attention && <small className="line-attention">Investigar consumo</small>}
+                </td>
+                <td>
+                  <span className="table-cell-text" title={row.plan}>
+                    {row.plan}
+                  </span>
+                </td>
+                <td>
+                  <span className="table-cell-text" title={row.linkState}>
+                    {row.linkState}
+                  </span>
+                </td>
+                <td>
+                  <button onClick={() => onView(row)}>Conferir e acompanhar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="line-actions">
+        <button disabled={offset === 0} onClick={() => setPage(Math.max(0, page - 1))}>
+          Anterior
+        </button>
+        <span className="scope">
+          Página {ordered.length ? Math.floor(offset / size) + 1 : 0} de{' '}
+          {Math.ceil(ordered.length / size)}
+        </span>
+        <button disabled={offset + size >= ordered.length} onClick={() => setPage(page + 1)}>
+          Próxima
+        </button>
+      </div>
+    </div>
+  );
+}

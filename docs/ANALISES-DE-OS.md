@@ -42,7 +42,7 @@ Média = soma dos custos totais válidos / quantidade de custos totais válidos,
 
 Tabelas ordenáveis, acesso às linhas originais, CSV com arquivo/filtros/origem e impressão/PDF por seção. Rankings podem mostrar 10, 20 ou todos; tabela e totais completos. Referência temporal do ciclo consta na impressão pelo contexto existente. Gráfico de composição é impresso junto da seção; números dos componentes estão na tabela.
 
-`src/insights.js` mantém as agregações; `src/AdvancedInsights.jsx` apresenta as análises. Nenhuma regra de importação, financeiro, trocas ou vínculo de ciclos foi substituída. Cobertura de testes: exclusões e total divergente, agrupamento de técnicos, chamados, visitas do mesmo dia, intervalos cumulativos e filtros sem atalhos, sobreposição de categorias, mediana sem ciclos abertos, bases compatíveis nos percentuais mensais.
+`src/modules/orders/domain/insights.js` mantém as agregações; `src/modules/orders/components/AdvancedInsights.jsx` apresenta as análises. Nenhuma regra de importação, financeiro, trocas ou vínculo de ciclos foi substituída. Cobertura de testes: exclusões e total divergente, agrupamento de técnicos, chamados, visitas do mesmo dia, intervalos cumulativos e filtros sem atalhos, sobreposição de categorias, mediana sem ciclos abertos, bases compatíveis nos percentuais mensais.
 
 Conferência com o arquivo original desta entrega: 59 grupos de cliente; custo agregado de R$ 154.723,41, igual ao financeiro existente; 490 chamados com realizados, dos quais 252 com vários serviços; 89 eventos de troca de rastreador; 28 ciclos encerrados e 337 sem retirada registrada na referência 04/10/2026. Mediana global dos encerrados: 136,5 dias. Esses valores são uma conferência dessa versão do arquivo, não expectativas fixas para novas importações.
 
@@ -50,7 +50,7 @@ Conferência com o arquivo original desta entrega: 59 grupos de cliente; custo a
 
 Mapa aprovado: 162 → MXT-162; 144 → MXT-130v2; 130 ou 137 → MXT-130v1; 141, 142 ou 143 → MXT-141. A classificação usa o prefixo do ID Rastreador da Implementação e não altera ID ou Modelo originais. IDs desconhecidos, ausentes ou incompatíveis ficam no grupo Modelo não identificado pelo ID; os ciclos continuam contados e elegíveis para as mesmas medidas de duração. Um card quantifica esses ciclos.
 
-Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/trackerModels.js para extensão futura.
+Tempo observado dos rastreadores passa a comparar por Modelo pelo prefixo do ID como padrão. Também permite Modelo original da planilha e Razão Social. O relatório descritivo XLSX/CSV usa a mesma classificação por prefixo. Filtros da coluna Modelo continuam referindo-se ao conteúdo original. Mediana permanece restrita a encerrados; vínculo de ciclos não mudou. Regras centralizadas em src/modules/orders/domain/trackerModels.js para extensão futura.
 
 ## Revisão de vida útil — 10/10/2026
 

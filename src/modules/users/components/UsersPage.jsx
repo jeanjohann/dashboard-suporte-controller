@@ -1,0 +1,233 @@
+/**
+ * Administração de usuários e permissões. O cadastro interno não substitui a liberação no Cloudflare Access.
+ * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
+ */
+import React, { useEffect, useState } from 'react';
+import { Navigation } from '../../../app/Navigation.jsx';
+import { SidePanelProvider } from '../../../app/SidePanel.jsx';
+import { useAccess } from '../../../shared/security/Access.jsx';
+import { api } from '../../../shared/security/accessClient.js';
+import { moduleLabels } from '../../../shared/security/permissions.js';
+const blank = () => ({
+  email: '',
+  role: 'user',
+  active: true,
+  pages: [],
+  canImport: false,
+  canExport: false,
+  version: 0,
+});
+/** Lista e edita usuários por meio da API protegida. A liberação de login no Cloudflare permanece uma etapa separada. */
+export function UsersPage({ onPage }) {
+  const { user, reload } = useAccess(),
+    [users, setUsers] = useState([]),
+    [owner, setOwner] = useState(''),
+    [draft, setDraft] = useState(blank),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState(''),
+    [message, setMessage] = useState('');
+  async function list() {
+    try {
+      const result = await api('/api/admin/users');
+      setUsers(result.users);
+      setOwner(result.owner);
+      setError('');
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+  useEffect(() => {
+    list();
+  }, []);
+  async function save(event) {
+    event.preventDefault();
+    setBusy(true);
+    setError('');
+    setMessage('');
+    try {
+      await api('/api/admin/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(draft),
+      });
+      setDraft(blank());
+      await list();
+      await reload();
+      setMessage(
+        'Permissões salvas. Novos usuários também precisam estar liberados na política do Cloudflare Access.',
+      );
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  const fixed = draft.email === owner || draft.email === user.email;
+  return (
+    <SidePanelProvider>
+      <div className="app users-page">
+        <Navigation page="users" onPage={onPage} />
+        <main>
+          <header>
+            <div>
+              <div className="eyebrow">ADMINISTRAÇÃO</div>
+              <h1>Usuários e permissões</h1>
+              <p>Defina páginas e ações disponíveis para cada pessoa.</p>
+            </div>
+            <button
+              onClick={() => {
+                setDraft(blank());
+                setMessage('');
+                setError('');
+              }}
+            >
+              Novo usuário
+            </button>
+          </header>
+          {error && (
+            <p role="alert" className="error">
+              {error}
+            </p>
+          )}
+          {message && (
+            <p role="status" className="notice">
+              {message}
+            </p>
+          )}
+          <form className="panel user-form" onSubmit={save}>
+            <h2>{draft.version ? 'Editar acesso' : 'Cadastrar acesso'}</h2>
+            <label>
+              E-mail
+              <input
+                type="email"
+                required
+                disabled={draft.version > 0 || busy}
+                value={draft.email}
+                onChange={(e) => setDraft({ ...draft, email: e.target.value.trim().toLowerCase() })}
+              />
+            </label>
+            <label>
+              Perfil
+              <select
+                disabled={fixed || busy}
+                value={draft.role}
+                onChange={(e) => setDraft({ ...draft, role: e.target.value })}
+              >
+                <option value="user">Usuário</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                disabled={fixed || busy}
+                checked={draft.active}
+                onChange={(e) => setDraft({ ...draft, active: e.target.checked })}
+              />
+              Acesso ativo
+            </label>
+            <fieldset disabled={busy || draft.role === 'admin'}>
+              <legend>Páginas liberadas</legend>
+              {Object.entries(moduleLabels).map(([key, label]) => (
+                <label key={key}>
+                  <input
+                    type="checkbox"
+                    checked={draft.role === 'admin' || draft.pages.includes(key)}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        pages: e.target.checked
+                          ? [...draft.pages, key]
+                          : draft.pages.filter((p) => p !== key),
+                      })
+                    }
+                  />
+                  {label}
+                </label>
+              ))}
+            </fieldset>
+            <fieldset disabled={busy || draft.role === 'admin'}>
+              <legend>Ações permitidas</legend>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={draft.role === 'admin' || draft.canImport}
+                  onChange={(e) => setDraft({ ...draft, canImport: e.target.checked })}
+                />
+                Importar arquivos
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={draft.role === 'admin' || draft.canExport}
+                  onChange={(e) => setDraft({ ...draft, canExport: e.target.checked })}
+                />
+                Exportar e imprimir relatórios / backups
+              </label>
+            </fieldset>
+            {draft.role === 'admin' && (
+              <p className="scope">
+                Administradores acessam todas as páginas e ações e podem gerir usuários.
+              </p>
+            )}
+            <button disabled={busy} type="submit">
+              {busy ? 'Salvando…' : 'Salvar permissões'}
+            </button>
+          </form>
+          <section className="panel">
+            <h2>Acessos cadastrados</h2>
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>E-mail</th>
+                    <th>Perfil</th>
+                    <th>Situação</th>
+                    <th>Páginas</th>
+                    <th>Importar</th>
+                    <th>Exportar</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((u) => (
+                    <tr key={u.email}>
+                      <td>{u.email}</td>
+                      <td>{u.role === 'admin' ? 'Administrador' : 'Usuário'}</td>
+                      <td>{u.active ? 'Ativo' : 'Suspenso'}</td>
+                      <td>
+                        {u.role === 'admin'
+                          ? 'Todas'
+                          : u.pages.map((p) => moduleLabels[p]).join(', ') || 'Nenhuma'}
+                      </td>
+                      <td>{u.canImport ? 'Sim' : 'Não'}</td>
+                      <td>{u.canExport ? 'Sim' : 'Não'}</td>
+                      <td>
+                        <button
+                          disabled={busy}
+                          onClick={() => {
+                            const { updatedAt, ...editable } = u;
+                            setDraft(editable);
+                            setMessage('');
+                            setError('');
+                          }}
+                        >
+                          Editar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <p className="scope">
+            O cadastro não envia e-mails nem modifica a política do Cloudflare. Planilhas continuam
+            locais. Bloquear exportação limita comandos do sistema; não impede copiar informações já
+            exibidas.
+          </p>
+        </main>
+      </div>
+    </SidePanelProvider>
+  );
+}
