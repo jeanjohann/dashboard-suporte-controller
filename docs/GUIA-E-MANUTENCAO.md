@@ -219,3 +219,7 @@ No topo da página de OS, após a importação, Abrir todos os relatórios e Rec
 ## Operacional — 0.13.0
 
 Importe a aba Equipamentos na página Operacional — Importação e Revisão. Confira os pontos e exporte o CSV para ajustar a planilha de origem. Importe as OS em sua página e abra Operacional × OS — Análises. Ambos os arquivos permanecem em memória durante a navegação. Não interpretar ausência nas OS como erro. Leia [regras e manutenção do módulo](OPERACIONAL.md) antes de alterar os vínculos. Código: src/operational.js, src/OperationalPage.jsx e src/operational.test.js.
+
+## Manutenção do parque — 0.14.0
+
+Indicadores exploratórios sobre a base operacional vinculável, filtros múltiplos e relatório XLSX/CSV com seleção de colunas implementados. Regras financeiras e de titularidade histórica continuam pendentes. Consulte [Manutenção do parque e relatórios](PARQUE-E-MANUTENCAO.md).

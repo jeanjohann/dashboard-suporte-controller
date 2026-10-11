@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.13.0 — operacional, revisão e cobertura do histórico de OS.
+**Versão:** 0.14.0 — operacional, revisão e cobertura do histórico de OS.
 
 ## Documentação do projeto
 
@@ -56,3 +56,7 @@ Exportação de quantitativos, percentuais e critérios em XLSX (resumo, origina
 ## Vida em campo dos equipamentos
 
 Na categoria Equipamentos, a seção Vida em campo até primeira troca mostra média, mediana, amostra, observações sem troca, cancelamentos e vínculos para revisão. Rastreadores usam pares confirmados de retirada/entrada; acessórios usam troca explícita por categoria. É possível analisar instalação inicial ou o ciclo iniciado numa troca anterior, com conferência das linhas e CSV. Consulte os [critérios de vida em campo](docs/VIDA-EM-CAMPO.md).
+
+## Manutenção do parque e relatórios
+
+A página Operacional × OS possui indicadores com base vinculável explícita e relatórios XLSX/CSV personalizáveis. Consulte [regras e guia](docs/PARQUE-E-MANUTENCAO.md).

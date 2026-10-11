@@ -220,3 +220,7 @@ No topo da página de OS, após a importação, Abrir todos os relatórios e Rec
 ## Operacional — 0.13.0
 
 Duas páginas independentes para revisão e análises, com vínculo serial + placa. Equipamentos sem OS não são divergências: a operacional é mais antiga que o histórico de atendimentos. Regras, limites e pendências em [Operacional](OPERACIONAL.md). Cancelado exige data válida para confirmar interrupção da mensalidade; faturamento e pró-rata ainda não calculados.
+
+## Manutenção do parque — 0.14.0
+
+Indicadores exploratórios sobre a base operacional vinculável, filtros múltiplos e relatório XLSX/CSV com seleção de colunas implementados. Regras financeiras e de titularidade histórica continuam pendentes. Consulte [Manutenção do parque e relatórios](PARQUE-E-MANUTENCAO.md).

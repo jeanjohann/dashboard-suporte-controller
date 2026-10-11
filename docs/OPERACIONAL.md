@@ -39,3 +39,7 @@ Próximas análises: manutenção por cliente/contrato, custos por equipamento e
 ## Validação
 
 Testes sintéticos verificam limite A:BY, preservação de identificadores, zero monetário, cancelamento sem data, repetição, calendário Excel, cabeçalhos, ausência histórica e bloqueio de vínculo ambíguo/errado. Arquivo de exemplo: 1.744 registros, 77 colunas e 163 pontos; com OS local: 624 correspondências, 1.096 sem atendimento no histórico disponível e 24 identificações incompletas/incompatíveis. São resultados desses arquivos, não critérios fixos nem erros confirmados.
+
+## Manutenção do parque — 0.14.0
+
+Indicadores exploratórios sobre a base operacional vinculável, filtros múltiplos e relatório XLSX/CSV com seleção de colunas implementados. Regras financeiras e de titularidade histórica continuam pendentes. Consulte [Manutenção do parque e relatórios](PARQUE-E-MANUTENCAO.md).

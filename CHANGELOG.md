@@ -6,6 +6,16 @@
 
 # Histórico de versões
 
+## 0.14.0 — 11/10/2026
+
+- Indicadores de assistência e intervenções por 100 registros vinculáveis, com cobertura e limitações históricas explícitas.
+- Comparações por cliente/modelo/plano/situação, visitas repetidas e trocas, reaproveitando critérios atuais das OS.
+- Filtros múltiplos operacionais e período independente das novas análises.
+- Relatório XLSX/CSV com seleção das colunas do resumo, critérios e fontes opcionais; contrapartes de trocas rastreáveis.
+- Novas seções integradas à personalização, abertura/recolhimento, tabelas ordenáveis e impressão/PDF.
+- Documentação e testes de base, filtros, eventos, originais e formatos de exportação.
+
+
 ## Em desenvolvimento — aparência e temas
 
 - Revisão geral de todas as páginas e categorias: regra compartilhada para ações de tabela, filtros, exportações e detalhes; inclui Consumo M2M, histórico, Operacional e equipamentos.
