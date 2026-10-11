@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import React, { useEffect, useState } from 'react';
+import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { compareValues } from '../../../shared/data/sorting.js';
 import { consumptionEligible, VOLUME_SCALE } from '../domain/lineConsumption.js';
 const mb = (value) =>
@@ -22,7 +23,17 @@ const columns = [
   ['Vínculo', (row) => row.linkState],
 ];
 /** Ordena e pagina os registros de consumo antes de apresentar a conferência de cada linha. */
-export function LineRecordsTable({ records, onView }) {
+export function LineRecordsTable({ records, onView, onExport }) {
+  const [checked, setChecked] = useState([]);
+  // Somente linhas do recorte atual podem ser exportadas; seleção preservada entre páginas.
+  const selected = records.filter((row) => checked.includes(row.id));
+  useEffect(() => {
+    const ids = new Set(records.map((row) => row.id));
+    setChecked((previous) => {
+      const next = previous.filter((id) => ids.has(id));
+      return next.length === previous.length ? previous : next;
+    });
+  }, [records]);
   const [sort, setSort] = useState(null),
     [page, setPage] = useState(0),
     size = 100;
@@ -44,6 +55,22 @@ export function LineRecordsTable({ records, onView }) {
     shown = ordered.slice(offset, offset + size);
   return (
     <div className="line-records">
+      <div className="line-actions" data-no-print>
+        <button onClick={() => setChecked(records.map((row) => row.id))} disabled={!records.length}>
+          Selecionar todas as linhas filtradas
+        </button>
+        <button onClick={() => setChecked([])} disabled={!selected.length}>
+          Limpar seleção
+        </button>
+        <span className="scope">{selected.length} linhas selecionadas</span>
+        <PermissionButton
+          action="export"
+          disabled={!selected.length}
+          onClick={() => onExport(selected)}
+        >
+          Exportar seleção CSV
+        </PermissionButton>
+      </div>
       <p className="scope">
         {ordered.length ? `${offset + 1} a ${offset + shown.length}` : '0'} de {ordered.length}{' '}
         registros. A ordenação considera o recorte completo; o CSV inclui todos os registros
@@ -53,6 +80,7 @@ export function LineRecordsTable({ records, onView }) {
         <table>
           <thead>
             <tr>
+              <th>Selecionar</th>
               {columns.map(([label], index) => (
                 <th
                   key={label}
@@ -87,6 +115,20 @@ export function LineRecordsTable({ records, onView }) {
           <tbody>
             {shown.map((row) => (
               <tr key={row.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    aria-label={`Selecionar linha ${row.operator} ${row.number} ${row.iccid}`}
+                    checked={checked.includes(row.id)}
+                    onChange={(event) =>
+                      setChecked((previous) =>
+                        event.target.checked
+                          ? [...previous, row.id]
+                          : previous.filter((id) => id !== row.id),
+                      )
+                    }
+                  />
+                </td>
                 <td>{row.operator}</td>
                 <td>{row.number}</td>
                 <td>{row.iccid}</td>

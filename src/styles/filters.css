@@ -1,4 +1,12 @@
 /* Filtros compactos compartilhados. Listas flutuantes preservam o espaço dos relatórios. */
+.line-tracked-select input[type='search'] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+}
 .compact-filters {
   padding: 10px 14px;
 }

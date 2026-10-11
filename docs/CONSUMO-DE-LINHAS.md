@@ -67,3 +67,11 @@ Imprimir / Salvar PDF no cabeçalho da seção inclui tabela, gráfico e observa
 A página acessa a persistência por historyRepository.js, com contrato assíncrono read/write. Hoje o único adaptador utiliza o IndexedDB existente, sem mudança no formato ou migração dos dados. A camada facilita a substituição futura por armazenamento autorizado, mas não habilita sincronização. Um serviço compartilhado exigirá autenticação, autorização por base, controle de concorrência, migração e política de retenção antes de ser ativado. A persistência de planilhas dos outros módulos permanece independente.
 
 O seletor e o cabeçalho do histórico exibem cliente e placa da referência operacional atual. Sem vínculo confirmado, mostram Linha não identificada. Vínculos parciais preservam as informações conhecidas e indicam cliente/placa ausentes. O contexto exportado também inclui a placa; esse vínculo não é atribuído retroativamente às apurações antigas.
+
+## Relação de linhas por consumo e seleção
+
+Em Filtros da página, use Consumo acima de (MB) para escolher um limite absoluto sobre o total da apuração de cada linha. A comparação é estritamente maior, com até seis casas decimais, combinada aos outros filtros da página. Valores incompatíveis ficam fora; zero é um limite válido. Limpar o campo desativa o limite. A média de investigação continua calculada no extrato completo da operadora e período.
+
+Nas tabelas de consumo, marque linhas individualmente ou clique em Selecionar todas as linhas filtradas. Esse botão seleciona o recorte inteiro, incluindo páginas ainda não exibidas. Exportar seleção CSV inclui somente registros marcados ainda presentes no recorte, com cliente, placa, identificadores, apuração, consumo, origem e critérios da exportação. A seleção permanece entre páginas; linhas removidas por filtros saem da seleção. Marcações de seleção não são observações salvas e não permanecem após recarregar.
+
+Na linha do tempo, Buscar linha no histórico pesquisa cliente e placa da referência operacional atual, número, ICCID ou operadora. A linha já selecionada permanece disponível, mesmo se não corresponder à busca; o histórico selecionado não é filtrado nem reduzido pela busca. Sem busca, todas as opções aparecem.

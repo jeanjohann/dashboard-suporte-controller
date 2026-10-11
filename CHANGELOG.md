@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.17.4 — 11/10/2026
+
+- Filtro absoluto de consumo acima de um valor em MB, combinado aos demais filtros e aplicado ao recorte completo.
+- Seleção individual ou de todas as linhas filtradas, incluindo várias páginas, com exportação CSV da seleção.
+- Busca por cliente, placa, número, ICCID e operadora no seletor do histórico, preservando o chip selecionado e suas apurações.
+- Exportação informa quantidade, escopo e limite; seleção manual não altera observações salvas.
+
 ## 0.17.3 — 11/10/2026
 
 - Cliente e placa da referência operacional atual no seletor e cabeçalho do histórico da linha.

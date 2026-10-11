@@ -20,6 +20,7 @@ import {
 } from '../../../components/Section.jsx';
 import { ReportControls, PagePersonalization } from '../../../components/ReportControls.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
+import { aboveConsumptionLimit, consumptionLimit } from '../domain/consumptionSelection.js';
 import { LineRecordsTable } from './LineRecordsTable.jsx';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { Chart } from '../../../components/Chart.jsx';
@@ -184,6 +185,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     ['linkState', 'Vínculo operacional'],
     ['status', 'Situação no extrato'],
   ];
+  const [lineSearch, setLineSearch] = useState('');
   const selected = allRows.filter(
     (row) =>
       row.service === 'dados' &&
@@ -191,6 +193,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
       fields.every(
         ([key]) => !filters[key]?.length || filters[key].includes(row[key] || 'Não informado'),
       ) &&
+      aboveConsumptionLimit(row, filters.minimumMB) &&
       (!filters.consumption ||
         (filters.consumption === 'zero' && row.ticks === 0) ||
         (filters.consumption === 'positive' && row.ticks > 0) ||
@@ -333,10 +336,24 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
       'addlog-historico-consumo-' + today() + '.json',
     );
   }
-  function exportRecords() {
+  function exportRecords(records) {
+    const exporting = Array.isArray(records) ? records : selected;
     download(
       csv([
         ['Relatório', 'Consumo de linhas'],
+        [
+          'Escopo exportado',
+          Array.isArray(records)
+            ? 'Somente linhas marcadas do recorte atual'
+            : 'Todas as linhas filtradas',
+        ],
+        ['Quantidade de registros exportados', exporting.length],
+        [
+          'Limite absoluto',
+          filters.minimumMB === '' || filters.minimumMB == null
+            ? 'Sem limite'
+            : `Consumo total estritamente acima de ${filters.minimumMB} MB por apuração`,
+        ],
         ['Critério', 'Dados móveis por chip e período. SMS e frete separados. KB / 1024 = MB.'],
         ['Períodos', JSON.stringify(periods)],
         ['Filtros', JSON.stringify({ ...filters, busca: search })],
@@ -369,7 +386,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
           'Linha CSV',
           'Revisão',
         ],
-        ...selected.map((row) => [
+        ...exporting.map((row) => [
           row.operator,
           row.iccid,
           row.number,
@@ -394,7 +411,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
         ]),
       ]),
       'text/csv;charset=utf-8',
-      'consumo-linhas-filtrado.csv',
+      Array.isArray(records) ? 'consumo-linhas-selecionadas.csv' : 'consumo-linhas-filtrado.csv',
     );
   }
   async function exportLineHistory(format) {
@@ -459,7 +476,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     setTracked(chipKey(row));
   }
   function rowsTable(records) {
-    return <LineRecordsTable records={records} onView={viewRow} />;
+    return <LineRecordsTable records={records} onView={viewRow} onExport={exportRecords} />;
   }
   const ranked = [...eligible].sort((a, b) =>
     rankMeasure === 'daily' ? b.ticks / b.days - a.ticks / a.days : b.ticks - a.ticks,
@@ -598,6 +615,17 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                         onChange={(value) => filter(key, value)}
                       />
                     ))}
+                    <label>
+                      Consumo acima de (MB)
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.000001"
+                        value={filters.minimumMB || ''}
+                        placeholder="Sem limite"
+                        onChange={(event) => filter('minimumMB', event.target.value)}
+                      />
+                    </label>
                     <label>
                       Consumo
                       <select
@@ -987,6 +1015,16 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                     </button>
                     <button onClick={() => filter('consumption', 'zero')}>Ver consumo zero</button>
                   </div>
+                  <p className="scope">
+                    O limite absoluto considera consumo total da apuração estritamente maior que o
+                    valor em MB, combinado com os demais filtros. Valores inválidos não entram. A
+                    seleção vale para o recorte atual e atravessa as páginas da tabela.
+                  </p>
+                  {Number.isNaN(consumptionLimit(filters.minimumMB)) && (
+                    <p role="alert" className="error">
+                      Informe um limite não negativo com até seis casas decimais.
+                    </p>
+                  )}
                   {shown('Linhas para investigar') && rowsTable(selected)}
                 </Section>
                 <Section
@@ -1040,6 +1078,15 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                     usuários: use o backup para proteger ou transferir os dados.
                   </InfoNote>
                   <label className="line-tracked-select" data-no-print>
+                    Buscar linha no histórico
+                    <input
+                      type="search"
+                      value={lineSearch}
+                      placeholder="Cliente, placa, número ou ICCID…"
+                      onChange={(event) => setLineSearch(event.target.value)}
+                    />
+                  </label>
+                  <label className="line-tracked-select" data-no-print>
                     Chip para acompanhar{' '}
                     <select
                       value={tracked}
@@ -1056,6 +1103,22 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                             .map((row) => [chipKey(row), row]),
                         ).values(),
                       ]
+                        .filter(
+                          (row) =>
+                            chipKey(row) === tracked ||
+                            !lineSearch.trim() ||
+                            [
+                              row.number,
+                              row.iccid,
+                              row.operator,
+                              row.link?.client,
+                              row.link?.plate,
+                            ].some((value) =>
+                              String(value || '')
+                                .toLocaleLowerCase('pt-BR')
+                                .includes(lineSearch.trim().toLocaleLowerCase('pt-BR')),
+                            ),
+                        )
                         .sort((a, b) => a.number.localeCompare(b.number))
                         .map((row) => (
                           <option key={chipKey(row)} value={chipKey(row)}>
