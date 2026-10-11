@@ -8,6 +8,7 @@ import { Section } from '../../../components/Section.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { summaryMetrics } from '../domain/summary.js';
 import { attendanceExtent } from '../../../shared/data/filters.js';
+import { metricHelp } from '../config/metricHelp.js';
 const currency = (cents) =>
   (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const dateLabel = (date) => (date ? date.split('-').reverse().join('/') : 'Sem limite');
@@ -41,15 +42,17 @@ export function SummaryCards({ data, financial, devices, visible, filters = {} }
         </p>
       </div>
       <InfoNote>
-        Resumo dos filtros atuais. Contagens e valores financeiros usam as regras aprovadas. Clique
-        em um card para conferir a origem.
+        Cada card utiliza os filtros atuais e a base indicada em sua explicação. Uma linha é um
+        serviço; um chamado pode conter vários serviços. Valores financeiros consideram somente
+        Concluída ou Pago, ignorando Cancelada e pendências. Dados incompatíveis são excluídos do
+        cálculo correspondente e não preenchidos com zero. Clique no card para conferir a origem.
       </InfoNote>
       <div className="summary-grid">
         {metrics.map((item) => (
           <div key={item.key} className="summary-card-item">
             <InfoNote label={`Regras de ${item.label}`}>
-              {item.note}. O resultado segue os filtros ativos; clique no card para conferir as
-              linhas de origem.
+              {metricHelp[item.key]} Base atual: {item.note}. O resultado segue os filtros ativos;
+              clique no card para conferir as linhas de origem.
             </InfoNote>
             <button
               className={`summary-card ${detail === item.key ? 'chosen' : ''}`}

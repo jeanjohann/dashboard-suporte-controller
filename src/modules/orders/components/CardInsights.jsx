@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import React from 'react';
+import { InfoNote } from '../../../components/InfoNote.jsx';
 import { maintenanceInsights, serviceProfile } from '../domain/cardInsights.js';
 const currency = (v) =>
   v == null ? '—' : (v / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -19,7 +20,17 @@ export function MaintenanceSummary({ data, selectedClient, onSelect, onDetail })
     leader = m.leader;
   return (
     <div className="card-insights">
-      <h4>Concentração das manutenções</h4>
+      <div className="inline-help-heading">
+        <h4>Concentração das manutenções</h4>
+        <InfoNote>
+          Conta Assistências Técnicas Concluída ou Pago por razão social. A participação dos cinco
+          primeiros é a soma dos atendimentos desses clientes dividida pelo total de manutenções
+          selecionadas, incluindo manutenções sem cliente identificado no denominador. O custo soma
+          Custo Total válido e a média usa apenas manutenções com esse valor válido, incluindo zero.
+          Use para identificar concentração da demanda e gastos; volume alto pode refletir uma frota
+          maior e não prova maior taxa de falhas.
+        </InfoNote>
+      </div>
       <dl className="cost-summary">
         <div>
           <dt>Clientes identificados com manutenção</dt>
@@ -108,7 +119,18 @@ export function ServiceProfileSummary({ data, previous, onDetail }) {
     return <p className="scope">Resumo indisponível: faltam Status ou Tipo de Serviço.</p>;
   return (
     <div className="card-insights">
-      <h4>Quantidade e custo por tipo</h4>
+      <div className="inline-help-heading">
+        <h4>Quantidade e custo por tipo</h4>
+        <InfoNote>
+          Agrupa linhas Concluída ou Pago pelo Tipo de Serviço registrado. O percentual de cada tipo
+          é sua quantidade dividida por todos os realizados na seleção. O custo soma Custo Total
+          válido; a média divide essa soma pela quantidade de custos válidos do tipo, incluindo
+          zeros. Cancelada não entra. Um tipo chamado Cancelamento em um serviço realizado
+          permanece, pois descreve a retirada executada, e não uma OS cancelada. Use para comparar o
+          perfil dos serviços e seus gastos. A comparação anterior usa intervalo de mesma duração e
+          mesmos filtros.
+        </InfoNote>
+      </div>
       <div className="profile-summary-list">
         {profile.items.map((item) => (
           <div key={item.label}>

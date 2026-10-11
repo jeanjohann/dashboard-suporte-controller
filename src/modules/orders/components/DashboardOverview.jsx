@@ -2,6 +2,7 @@
  * Interface de Ordens de Serviço: apresenta análises, contexto e registros de origem sem modificar a planilha.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { metricHelp } from '../config/metricHelp.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React from 'react';
 import {
@@ -111,7 +112,13 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
         {cards.map(([key, label, format]) => {
           const delta = d.past ? change(d.current[key], d.past[key]) : null;
           return (
-            <article key={key}>
+            <article key={key} className="executive-card-help">
+              <InfoNote label={`Regras de ${label}`}>
+                {metricHelp[key]} O período e os filtros da página são aplicados. Quando existe
+                comparação, usamos o intervalo imediatamente anterior de igual duração e os mesmos
+                filtros de categoria. A variação percentual é a diferença dividida pela base
+                anterior; uma base anterior zero não permite calcular esse percentual.
+              </InfoNote>
               <span>{label}</span>
               <strong>{format(d.current[key])}</strong>
               <small>
@@ -155,7 +162,12 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
         <article className="panel dashboard-widget">
           <div className="inline-help-heading">
             <h3>Movimento dos atendimentos</h3>
-            <InfoNote>Realizados por mês de atendimento · outros tipos separados.</InfoNote>
+            <InfoNote>
+              Conta as linhas Concluída ou Pago por mês da Data de atendimento. Separa
+              Implementação, Assistência Técnica e demais tipos. Registros sem data válida ficam
+              fora do gráfico mensal. Use para observar a evolução do volume e do perfil de
+              serviços, sem tratar vários serviços de um chamado como um único atendimento.
+            </InfoNote>
           </div>
           <MultiChart
             items={d.months}

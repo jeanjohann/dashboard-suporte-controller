@@ -2,19 +2,34 @@
  * Componente compartilhado de apresentação. As regras de negócio são fornecidas pelos módulos.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 /** Permite selecionar mais de um valor no mesmo campo; a combinação entre campos é feita pelo filtro de dados. */
 export function MultiFilter({ label, options, values, disabled, onChange }) {
   const [search, setSearch] = useState('');
+  const root = useRef(null);
+  // Fecha o menu ao clicar fora ou pressionar Escape, mantendo as escolhas realizadas.
+  useEffect(() => {
+    const close = (event) => {
+      if (event.type === 'keydown' && event.key !== 'Escape') return;
+      if (event.type === 'pointerdown' && root.current?.contains(event.target)) return;
+      root.current?.querySelector('details')?.removeAttribute('open');
+    };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', close);
+    return () => {
+      document.removeEventListener('pointerdown', close);
+      document.removeEventListener('keydown', close);
+    };
+  }, []);
   const visible = options.filter((value) =>
     value.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')),
   );
   return (
-    <div className="multi-filter">
+    <div className="multi-filter" ref={root}>
       <span>{label}</span>
       <details>
-        <summary>
+        <summary aria-label={`Selecionar ${label}`}>
           {disabled ? 'Coluna ausente' : values.length ? `${values.length} selecionados` : 'Todos'}
         </summary>
         {!disabled && (

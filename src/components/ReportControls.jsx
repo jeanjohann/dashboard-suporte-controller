@@ -5,6 +5,7 @@
 import { InfoNote } from './InfoNote.jsx';
 import React from 'react';
 import { SidebarContent } from '../app/SidePanel.jsx';
+import { alignHelp } from './HelpLayout.jsx';
 /** Apresenta as ações compartilhadas para abrir ou recolher os relatórios. */
 export function ReportControls({ onExpand }) {
   return null;
@@ -13,9 +14,9 @@ export function ReportControls({ onExpand }) {
 export function PagePersonalization({ labels, hidden, setHidden, children }) {
   return (
     <>
-      <details className="panel personalization">
+      <details className="panel personalization compact-filters">
         <summary>Filtros da página</summary>
-        {children}
+        {alignHelp(children)}
       </details>
       <SidebarContent>
         <section className="sidebar-reports" aria-label="Relatórios exibidos">

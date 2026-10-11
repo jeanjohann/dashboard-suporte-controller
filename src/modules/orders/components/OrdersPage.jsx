@@ -19,6 +19,7 @@ import {
   attendanceExtent,
 } from '../../../shared/data/filters.js';
 import { BarChart } from '../../../components/BarChart.jsx';
+import { PeriodFilter } from '../../../components/PeriodFilter.jsx';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { equipment } from '../domain/equipment.js';
 import { Explorers } from './Explorers.jsx';
@@ -221,41 +222,30 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                     </nav>
                   </SidebarContent>
 
-                  <details className="panel personalization">
+                  <PeriodFilter
+                    start={filters.start}
+                    end={filters.end}
+                    earliest={importedPeriod.start}
+                    onChange={changeFilter}
+                  />
+                  <details className="panel personalization compact-filters">
                     <summary>Filtros da página</summary>
                     <section className="panel filters">
-                      <h2>Filtros da análise</h2>
+                      <div className="inline-help-heading">
+                        <h2>Filtros da análise</h2>
+                        <InfoNote label="Como os filtros da OS são aplicados">
+                          Filtros combinados aplicados aos indicadores, gráficos, chamados e
+                          revisão. Em um mesmo campo, qualquer valor selecionado é aceito; entre
+                          campos, a linha precisa atender a todos os filtros. Agendamentos por
+                          responsável usam Agendamento; os demais indicadores de OS usam Data de
+                          atendimento. A busca textual filtra somente a tabela. Na vida em campo, os
+                          filtros selecionam instalações ou eventos de troca conforme o modo
+                          escolhido na seção. O período acima é compartilhado por toda a análise;
+                          registros sem data válida são excluídos apenas quando há limite de data
+                          ativo. As contagens e exclusões continuam visíveis para conferência.
+                        </InfoNote>
+                      </div>
                       <div className="filter-grid">
-                        <label>
-                          Período a partir de
-                          <input
-                            type="date"
-                            value={filters.start || ''}
-                            onChange={(event) => changeFilter('start', event.target.value)}
-                          />
-                          <button
-                            type="button"
-                            className="oldest-date"
-                            disabled={!importedPeriod.start}
-                            onClick={() => changeFilter('start', importedPeriod.start)}
-                          >
-                            Usar registro mais antigo
-                          </button>
-                          <small>
-                            {importedPeriod.start
-                              ? 'Primeira data válida da planilha: ' +
-                                importedPeriod.start.split('-').reverse().join('/')
-                              : 'Planilha sem datas de atendimento válidas'}
-                          </small>
-                        </label>
-                        <label>
-                          Período até
-                          <input
-                            type="date"
-                            value={filters.end || ''}
-                            onChange={(event) => changeFilter('end', event.target.value)}
-                          />
-                        </label>
                         {filterFields.map((label) => {
                           const index = data.columns.findIndex((col) => col.label === label);
                           const options =
@@ -290,12 +280,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                         Limpar filtros e busca
                       </button>
                       <p className="scope">
-                        {selected.rows.length} de {data.rows.length} registros na seleção. Filtros
-                        combinados aplicados aos indicadores, gráficos, chamados e revisão.
-                        Agendamentos por responsável usam Agendamento; os demais indicadores de OS
-                        usam Data de atendimento. A busca textual filtra somente a tabela. Na vida
-                        em campo, os filtros selecionam instalações ou eventos de troca conforme o
-                        modo escolhido na seção.
+                        {selected.rows.length} de {data.rows.length} registros na seleção.
                       </p>
                       {selected.missingDates > 0 && (
                         <p className="scope">
@@ -310,8 +295,15 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                       )}
                     </section>
 
-                    <section className="panel filters">
-                      <h2>Filtros adicionais da planilha</h2>
+                    <details className="extra-filters">
+                      <summary className="inline-help-heading">
+                        <span>Filtros adicionais da planilha</span>{' '}
+                        <InfoNote>
+                          Seleção exata pelo conteúdo exibido. Datas e valores adicionais não são
+                          intervalos. Inclui opção Sem dados. Remover uma coluna também limpa sua
+                          seleção. Estes filtros afetam toda a análise.
+                        </InfoNote>
+                      </summary>
                       <label>
                         Adicionar coluna{' '}
                         <select
@@ -338,11 +330,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                             ))}
                         </select>
                       </label>
-                      <InfoNote>
-                        Seleção exata pelo conteúdo exibido. Datas e valores adicionais não são
-                        intervalos. Inclui opção Sem dados. Remover uma coluna também limpa sua
-                        seleção. Estes filtros afetam toda a análise.
-                      </InfoNote>
+
                       <div className="filter-grid">
                         {extraColumns.map((index) => {
                           const position = data.columns.findIndex((col) => col.index === index);
@@ -377,7 +365,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                           );
                         })}
                       </div>
-                    </section>
+                    </details>
                     <SidebarContent>
                       <section className="sidebar-reports" aria-label="Relatórios exibidos">
                         <h3>Relatórios exibidos</h3>

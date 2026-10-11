@@ -21,8 +21,14 @@ export function ContractSummary({ data, onDetail }) {
       <div className="inline-help-heading">
         <h4>Valores de contrato</h4>
         <InfoNote>
-          Valor a cobrar, separado pela coluna Cobrança. Serviços Concluída/Pago no período e
-          filtros selecionados.
+          Soma a coluna Valor a cobrar das linhas Concluída ou Pago, separando a coluna Cobrança em
+          Cliente e Addlog. Cliente é o valor contratual a cobrar do cliente; Addlog é o valor
+          contratual que a empresa absorve. Não se trata da soma de Técnico e Km. Cada média divide
+          a soma do grupo pela quantidade de valores contratuais válidos desse grupo, incluindo
+          zero. Canceladas, valores incompatíveis e cobranças sem classificação válida ficam fora.
+          Use para dimensionar a distribuição dos serviços contratados e da absorção pela empresa.
+          Os totais não comprovam recebimento nem representam lucro. Período e filtros da página são
+          aplicados; as exclusões aparecem abaixo de cada grupo.
         </InfoNote>
       </div>
       <div className="contract-groups">

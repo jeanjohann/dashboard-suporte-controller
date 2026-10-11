@@ -10,6 +10,7 @@ import './styles/identity.css';
 import './styles/theme.css';
 import './styles/sidebar.css';
 import './styles/layout-polish.css';
+import './styles/filters.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>

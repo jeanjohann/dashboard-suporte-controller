@@ -125,3 +125,9 @@ Depois das verificações automáticas, confira no navegador os fluxos afetados:
 ## Atualização da documentação
 
 Registre a alteração no `CHANGELOG.md`, atualize o guia do módulo e mantenha esta tabela coerente quando mover arquivos. O `README.md` é a entrada do projeto; documentos de produto explicam as regras, e este guia explica onde implementá-las. Algumas seções dos guias registram etapas históricas: para saber o comportamento atual, confira a seção mais recente e os testes correspondentes.
+
+## Apresentação de filtros e ajuda
+
+`components/PeriodFilter.jsx` controla o período compartilhado da página de OS. `components/MultiFilter.jsx` mantém a seleção múltipla com busca e fechamento por clique externo ou Escape. `styles/filters.css` concentra os ajustes de densidade e responsividade.
+
+`components/HelpLayout.jsx` organiza explicações em blocos HTML e fragmentos dos relatórios; não inspeciona componentes de domínio e não altera cálculos. `Section` e `PagePersonalization` aplicam essa organização. As regras de texto dos principais cards das OS ficam em `modules/orders/config/metricHelp.js`. Consulte [Filtros e apresentação](FILTROS-E-APRESENTACAO.md) para o significado dos valores financeiros.

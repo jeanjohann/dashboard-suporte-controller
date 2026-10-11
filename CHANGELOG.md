@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.17.1 — 11/10/2026
+
+- Filtros compartilhados compactos, com seleção múltipla em listas flutuantes e fechamento por clique externo ou Escape.
+- Período das OS sempre acessível acima dos relatórios, utilizando os mesmos filtros dos cards, gráficos e tabelas.
+- Filtros adicionais das OS recolhíveis e explicações de blocos internos alinhadas à direita do título.
+- Explicações financeiras ampliadas: origem, status, denominadores, exclusões e finalidade dos principais indicadores.
+- Nenhuma alteração nas regras de cálculo, importação ou permissões.
+
 ## 0.17.0 — 11/10/2026
 
 - Página Monitoramento de Frota em preparação, iniciando sem dados e com demonstração opt-in claramente identificada.

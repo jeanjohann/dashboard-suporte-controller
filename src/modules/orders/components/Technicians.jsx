@@ -6,6 +6,7 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import React, { useState } from 'react';
 import { technicianRanking } from '../domain/technicians.js';
 import { Section } from '../../../components/Section.jsx';
+import { InfoNote } from '../../../components/InfoNote.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { Chart } from '../../../components/Chart.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
@@ -18,6 +19,16 @@ export function Technicians({ data, visible }) {
   const result = technicianRanking(data);
   return (
     <Section title="Ranking de técnicos" visible={visible}>
+      <InfoNote>
+        Agrupa atendimentos Concluída ou Pago pelo código do técnico, exibindo também os nomes
+        registrados. Cada linha é um atendimento; chamados distintos são contados separadamente.
+        Códigos ausentes ficam fora do ranking. Soma Custo Total, Técnico e Km em suas bases válidas
+        próprias: cada média divide a soma do campo pela quantidade de valores válidos desse campo,
+        incluindo zeros. A média de deslocamento cobrado utiliza somente valores positivos. Custo
+        Total lançado prevalece sobre Técnico + Km. O ranking ajuda a avaliar volume e gastos por
+        prestador; não mede qualidade do atendimento. Pago sinaliza pagamento ao técnico, enquanto
+        Concluída informa execução sem confirmar o pagamento. Os filtros da página se aplicam.
+      </InfoNote>
       {!result ? (
         <p>Indisponível: faltam colunas necessárias.</p>
       ) : (

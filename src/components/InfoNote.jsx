@@ -60,7 +60,12 @@ export function InfoNote({ children, label = 'Como este resultado é calculado' 
         aria-label={label}
         aria-expanded={open}
         aria-controls={open ? id : undefined}
-        onClick={() => setOpen((value) => !value)}
+        onClick={(event) => {
+          // A ajuda em um título recolhível não deve também abrir ou fechar o relatório.
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen((value) => !value);
+        }}
       >
         <Icon name="info" size={17} />
       </button>

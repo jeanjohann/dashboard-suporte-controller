@@ -6,6 +6,7 @@ import { PermissionButton } from '../shared/security/Access.jsx';
 import { authorizeAction } from '../shared/security/accessClient.js';
 import React, { createContext, useContext, useRef } from 'react';
 import { InfoNote } from './InfoNote.jsx';
+import { alignHelp, helpChildren } from './HelpLayout.jsx';
 export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
@@ -14,7 +15,7 @@ export function Section({ title, visible = true, children }) {
   const section = useRef(),
     context = useContext(PrintContext);
   const hiddenSections = useContext(HiddenSectionsContext);
-  const content = React.Children.toArray(children),
+  const content = helpChildren(children),
     notes = content.filter((child) => React.isValidElement(child) && child.type === InfoNote);
   async function print() {
     if (!(await authorizeAction('export'))) return;
@@ -97,7 +98,7 @@ export function Section({ title, visible = true, children }) {
                 {child.props.children}
               </span>
             ) : (
-              child
+              alignHelp(child)
             ),
           )}
         </div>
