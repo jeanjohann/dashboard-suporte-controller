@@ -19,3 +19,13 @@
 .summary-card strong,.life-cards strong{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .report-heading-actions{flex-shrink:0}
 @media(max-width:520px){.dashboard-widget>label:has(>select),.chart-heading>label,.chart-order-control{grid-template-columns:1fr;gap:5px;max-width:none}.chart-heading{align-items:flex-start}.dashboard-widget,.chart-panel{padding:14px}.report-downloads>button,.line-actions>button{min-height:40px}.report-heading-actions{flex-shrink:1}.inline-help-heading>h2,.inline-help-heading>h3,.inline-help-heading>h4{overflow-wrap:anywhere}}
+.access-status{max-width:640px;margin:60px auto;padding:24px}
+.users-page .user-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:20px;margin-bottom:20px}
+.user-form>h2,.user-form>fieldset,.user-form>p{grid-column:1/-1}
+.user-form>label:has(input:not([type=checkbox])),.user-form>label:has(select){display:flex;flex-direction:column;gap:8px}
+.user-form label:has(input[type=checkbox]){display:flex;align-items:center;gap:8px;font-size:13px}
+.user-form fieldset{display:flex;flex-wrap:wrap;gap:16px;border:1px solid var(--ui-border);border-radius:8px;padding:16px}
+.user-form legend{font-size:13px;padding:0 6px}
+.user-form button[type=submit]{justify-self:start}
+.users-page>main>.panel:not(.user-form){padding:20px}
+@media(max-width:650px){.users-page .user-form{grid-template-columns:1fr}.user-form fieldset{flex-direction:column}}

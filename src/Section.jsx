@@ -1,3 +1,5 @@
+import {PermissionButton} from './Access.jsx';
+import {authorizeAction} from './accessClient.js';
 import React,{createContext,useContext,useRef} from 'react';
 import {InfoNote} from './InfoNote.jsx';
 export const PrintContext=createContext({});
@@ -7,7 +9,8 @@ export function Section({title,visible=true,children}){
   const section=useRef(),context=useContext(PrintContext);
   const hiddenSections=useContext(HiddenSectionsContext);
   const content=React.Children.toArray(children),notes=content.filter(child=>React.isValidElement(child)&&child.type===InfoNote);
-  function print(){
+  async function print(){
+    if(!await authorizeAction('export'))return;
     const frame=document.createElement('iframe');frame.title='Impressão da seção';frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px';document.body.append(frame);
     const doc=frame.contentDocument;const heading=doc.createElement('h1');heading.textContent=title;
     const metadata=doc.createElement('p');metadata.textContent=`Arquivo: ${context.filename||'—'} | Filtros: ${JSON.stringify(context.filters||{})} | Referência temporal: ${context.referenceDate||'—'}`;
@@ -18,5 +21,5 @@ export function Section({title,visible=true,children}){
     frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});
     setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},200);
   }
-  return <section hidden={!visible||hiddenSections.includes(title)} className="workspace-section report-block"><header className="report-heading"><div className="report-title"><h2>{title}</h2></div><div className="report-heading-actions">{notes.length>0&&<InfoNote label={`Regras de ${title}`}>{notes.map((note,index)=><p key={index}>{note.props.children}</p>)}</InfoNote>}<button onClick={print}>Imprimir / Salvar PDF</button></div></header><div className="section-body"><div className="section-content" ref={section}>{content.map((child,index)=>notes.includes(child)?<span key={`note-${index}`} className="info-print">{child.props.children}</span>:child)}</div></div></section>;
+  return <section hidden={!visible||hiddenSections.includes(title)} className="workspace-section report-block"><header className="report-heading"><div className="report-title"><h2>{title}</h2></div><div className="report-heading-actions">{notes.length>0&&<InfoNote label={`Regras de ${title}`}>{notes.map((note,index)=><p key={index}>{note.props.children}</p>)}</InfoNote>}<PermissionButton action="export" onClick={print}>Imprimir / Salvar PDF</PermissionButton></div></header><div className="section-body"><div className="section-content" ref={section}>{content.map((child,index)=>notes.includes(child)?<span key={`note-${index}`} className="info-print">{child.props.children}</span>:child)}</div></div></section>;
 }

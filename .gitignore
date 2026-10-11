@@ -20,3 +20,7 @@ Thumbs.db
 # Revisão visual local
 /layout-review/
 /layout-review.mjs
+
+# Artefatos locais do Worker e banco de teste
+.wrangler/
+.worker-build/

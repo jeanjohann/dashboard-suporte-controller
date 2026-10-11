@@ -243,3 +243,6 @@ Cabeçalhos internos com explicação usam inline-help-heading: título à esque
 
 ### Harmonia visual (0.15.6)
 O arquivo src/layout-polish.css reúne o ajuste compartilhado de títulos, campos e ações dos relatórios. Agrupamento e participantes dos gráficos usam fonte de 12px e seletores de 36px, com rótulos e campos alinhados em duas colunas; abaixo de 520px passam a uma coluna. Cabeçalhos internos alinham título e ajuda. Ações mantêm espaçamento e quebra de linha; valores numéricos preservam legibilidade. As alterações foram revisadas no código e compiladas, com validação visual interativa ainda pendente. Filtros, vínculos, estatísticas e exportações permanecem com os mesmos critérios.
+
+## Administração (0.16.0)
+Consulte [Usuários e permissões](USUARIOS-E-PERMISSOES.md) para cadastro, suspensão, liberação de páginas e ações. A autenticação continua no Cloudflare; o banco guarda somente usuários/permissões. A publicação exige build React e deploy do Worker pelo Wrangler.

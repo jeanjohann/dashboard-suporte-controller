@@ -6,6 +6,14 @@
 
 # Histórico de versões
 
+## 0.16.0 — 11/10/2026
+
+- Cadastro administrativo de usuários com páginas, importação, exportação e suspensão de acessos.
+- Worker com validação do JWT Access e banco D1 somente para usuários/permissões.
+- Produção consulta permissões no servidor; menus e comandos adaptados e ações revalidadas.
+- Proteção do administrador inicial, versão concorrente, origem e validação do cadastro.
+- 123 testes aprovados, um ignorado; build e empacotamento Wrangler validados. Login remoto da nova versão ainda precisa ser confirmado.
+
 ## 0.15.7 — 11/10/2026
 
 - Preparação para Cloudflare Pages: Node 22, cabeçalhos básicos, HTML sem cache persistente e solicitação de não indexação.

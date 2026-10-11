@@ -1,5 +1,6 @@
 import React from 'react';
 const paths={
+ users:<><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 5a3 3 0 0 1 0 6M21 21v-3a6 6 0 0 0-3-5"/></>,
  orders:<><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 9h6M9 13h6M9 17h4"/></>,
  operational:<><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 10h18M9 10v10M15 10v10"/></>,
  lines:<><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 3v4h8M9 12h6v5H9zM12 12v5"/></>,

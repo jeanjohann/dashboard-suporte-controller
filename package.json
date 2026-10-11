@@ -1,6 +1,6 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.15.7",
+  "version": "0.16.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,12 +9,14 @@
     "test": "node --test"
   },
   "dependencies": {
+    "jose": "^6.2.12",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^3.10.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "wrangler": "^4.149.0"
   }
 }

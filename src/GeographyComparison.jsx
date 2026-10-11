@@ -1,3 +1,4 @@
+import {PermissionButton} from './Access.jsx';
 import {InfoNote} from './InfoNote.jsx';
 import React,{useContext,useState} from 'react';
 import {PrintContext} from './Section.jsx';
@@ -56,7 +57,7 @@ export function GeographyComparison({data,column}){
   </div>
   <ul className="chart-legend geography-legend">{series.map(item=><li key={item.key}><span style={{background:item.color}}/>{item.label}</li>)}</ul>
   <p className="scope">{shown.length} de {groups.length} regiões, ordenadas pelo total de {metrics[measure].toLocaleLowerCase('pt-BR')}. Clique em uma barra para conferir os atendimentos. As duas barras usam a mesma escala.{signed?' Valores negativos aparecem à esquerda do centro.':''}</p>
-  <details className="chart-tools"><summary>Detalhes e exportação</summary><InfoNote>A tabela e o CSV incluem todas as regiões, mesmo quando o gráfico mostra apenas as maiores. Regiões sem identificação permanecem como “Sem dados”.</InfoNote><div className="report-downloads"><button className="chart-export" onClick={exportChart}>Baixar este gráfico SVG</button><button className="chart-export" onClick={exportTable}>Baixar comparação CSV</button></div></details>
+  <details className="chart-tools"><summary>Detalhes e exportação</summary><InfoNote>A tabela e o CSV incluem todas as regiões, mesmo quando o gráfico mostra apenas as maiores. Regiões sem identificação permanecem como “Sem dados”.</InfoNote><div className="report-downloads"><PermissionButton action="export" className="chart-export" onClick={exportChart}>Baixar este gráfico SVG</PermissionButton><PermissionButton action="export" className="chart-export" onClick={exportTable}>Baixar comparação CSV</PermissionButton></div></details>
   <div className="readable-bars geography-bars" aria-label={`Comparação por ${column}: ${metrics[measure]}`}>
    {shown.map(group=><div className="geography-row" key={group.label}>
     <button className="geography-region bar-select" onClick={()=>setSelection({label:group.label,series:'all'})} aria-label={`Conferir todos os atendimentos de ${group.label}`}>{group.label}</button>

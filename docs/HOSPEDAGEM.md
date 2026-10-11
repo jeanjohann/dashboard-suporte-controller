@@ -58,3 +58,6 @@ Isso ainda não está implementado. A política de Cloudflare Access permite ent
 Desabilitar exportação controla comandos oferecidos pelo aplicativo; não impede uma pessoa de copiar, fotografar ou imprimir dados já exibidos no navegador. O modelo atual processa arquivos locais, portanto ações locais precisam também de regras na interface. Restrições fortes sobre leitura dos dados exigem armazenamento e entrega pelo servidor, que são uma evolução separada.
 
 Sequência: conectar repositório e criar Pages, configurar Access para produção e prévias, validar acesso quando o usuário autorizar solicitar código; depois implementar e validar gestão interna de permissões. Não anunciar permissões ativas antes dessa validação.
+
+## Hospedagem confirmada e evolução 0.16.0
+O proprietário publicou como Worker em https://dashboard-suporte-controller.jean-johann.workers.dev/ e confirmou login por código. A política Acesso Jean foi aplicada a All traffic. As instruções anteriores de Pages são históricas; a configuração atual usa wrangler.jsonc. Para a evolução de gestão interna, consulte [Usuários e permissões](USUARIOS-E-PERMISSOES.md). O proprietário forneceu o AUD e Database ID; a interface e API estão implementadas. A validação autenticada da nova versão permanece pendente; não considerar a administração interna ativa antes de conferir seu menu após o deploy.

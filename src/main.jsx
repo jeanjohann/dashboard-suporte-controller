@@ -1,3 +1,8 @@
+import {PermissionButton} from './Access.jsx';
+import {AccessProvider,useAccess} from './Access.jsx';
+import {UsersPage} from './UsersPage.jsx';
+import {allowsPage,allowsSource} from './permissions.js';
+import {authorizeAction,accessUser} from './accessClient.js';
 import {InfoNote} from './InfoNote.jsx';
 import {FieldLifePanel} from './FieldLifePanel.jsx';
 import {ExtendedInsights} from './ExtendedInsights.jsx';
@@ -53,6 +58,7 @@ const [layoutMessage,setLayoutMessage]=useState('');
   const [referenceDate,setReferenceDate] = useState(todaySaoPaulo);
   const changeFilter = (key,value) => {setFilters(previous => ({...previous,[key]:value}));setPage(0);};
   async function load(event) {
+    if(!await authorizeAction('import')){event.target.value='';return;}
     const file = event.target.files?.[0];
     if (!file) return;
     setBusy(true); setError('');
@@ -80,9 +86,9 @@ const [layoutMessage,setLayoutMessage]=useState('');
   const currency = cents => (cents/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   return <SidePanelProvider><ExpansionContext.Provider value={expansion}><PrintContext.Provider value={{filename,filters,referenceDate}}><div className="app">
     <Navigation page="orders" onPage={onPage}/>
-    <main><header><div><div className="eyebrow">CONTROLE DE SERVIÇOS</div><h1>Ordens de serviço</h1><p>Importe sua planilha e confira os atendimentos antes de analisar.</p></div><button onClick={() => input.current.click()} disabled={busy}>{busy ? 'Lendo arquivo…' : '↑ Importar planilha'}</button><input ref={input} type="file" accept=".xlsx,.xls" hidden onChange={load}/></header>
+    <main><header><div><div className="eyebrow">CONTROLE DE SERVIÇOS</div><h1>Ordens de serviço</h1><p>Importe sua planilha e confira os atendimentos antes de analisar.</p></div><PermissionButton action="import" onClick={() => input.current.click()} disabled={busy}>{busy ? 'Lendo arquivo…' : '↑ Importar planilha'}</PermissionButton><input ref={input} type="file" accept=".xlsx,.xls" hidden onChange={load}/></header>
     {error && <div role="alert" className="error">{error}{data && ' A importação anterior continua disponível.'}</div>}
-    {!data ? <section className="empty"><div className="file-icon">▤</div><h2>Sua operação começa pela planilha</h2><p>Selecione o Excel que contém a aba <strong>OS 2025</strong>.<br/>A ordem dos registros e das colunas será preservada.</p><button onClick={() => input.current.click()} disabled={busy}>Selecionar arquivo Excel</button><div className="principles"><span>✓ Uma linha = um atendimento</span><span>✓ Chamados podem se repetir</span><span>✓ Sem correções automáticas</span></div></section> : <>
+    {!data ? <section className="empty"><div className="file-icon">▤</div><h2>Sua operação começa pela planilha</h2><p>Selecione o Excel que contém a aba <strong>OS 2025</strong>.<br/>A ordem dos registros e das colunas será preservada.</p><PermissionButton action="import" onClick={() => input.current.click()} disabled={busy}>Selecionar arquivo Excel</PermissionButton><div className="principles"><span>✓ Uma linha = um atendimento</span><span>✓ Chamados podem se repetir</span><span>✓ Sem correções automáticas</span></div></section> : <>
       <SidebarContent><nav className="category-navigation" aria-label="Categorias de análise">{dashboardCategories.map(item=><button key={item.key} aria-current={category===item.key?'page':undefined} className={category===item.key?'active':''} onClick={()=>{setCategory(item.key);setExpansion(null);}}>{item.label}</button>)}</nav></SidebarContent>
 
       <details className="panel personalization"><summary>Filtros da página</summary>
@@ -133,12 +139,19 @@ const [layoutMessage,setLayoutMessage]=useState('');
     </>}</main></div></PrintContext.Provider></ExpansionContext.Provider></SidePanelProvider>;
 }
 function Workspace(){
+  const {user}=useAccess();
+  const allowed=key=>allowsPage(user,key);
   const [page,setPage]=useState('orders'),[orders,setOrders]=useState(null),[operational,setOperational]=useState(null),[consumptionRevision,setConsumptionRevision]=useState(0);
   async function applyBatch(batch){
+    if(!await authorizeAction('import'))throw Error('Importação não autorizada.');
+    for(const [key,value] of Object.entries(batch))if((Array.isArray(value)?value.length:value)&&!allowsSource(accessUser()||user,key))throw Error('Você não tem permissão para importar esta base.');
     if(batch.consumption.length){const archive=await readConsumptionHistory();await writeConsumptionHistory(mergeBulkHistory(archive,batch));setConsumptionRevision(value=>value+1);}
     if(batch.orders)setOrders(batch.orders);
     if(batch.operational)setOperational(batch.operational);
   }
-  return <><div hidden={page!=='imports'}><ImportPage onPage={setPage} onApply={applyBatch} orders={orders} operational={operational}/></div><div hidden={page!=='orders'}><App onPage={setPage} onImport={setOrders} operational={operational} source={orders}/></div><div hidden={page!=='lines'}><LinesPage onPage={setPage} operational={operational} onOperationalChange={setOperational} reloadToken={consumptionRevision}/></div><div hidden={!['operational','operational-analysis'].includes(page)}><OperationalPage page={page} onPage={setPage} orders={orders} source={operational} setSource={setOperational}/></div></>;
+  const current=allowed(page)?page:['orders','operational','lines','operational-analysis','users','imports'].find(allowed);
+  if(!current)return <main className="access-status"><h1>Nenhuma página liberada</h1><p>Solicite ao administrador a liberação das páginas necessárias.</p></main>;
+  return <>{current==='users'&&<UsersPage onPage={setPage}/>}<div hidden={current!=='imports'}>{allowed('imports')&&<ImportPage onPage={setPage} onApply={applyBatch} orders={allowed('orders')||allowed('operational-analysis')?orders:null} operational={allowed('operational')||allowed('operational-analysis')?operational:null}/>}</div><div hidden={current!=='orders'}>{allowed('orders')&&<App onPage={setPage} onImport={setOrders} operational={operational} source={orders}/>}</div><div hidden={current!=='lines'}>{allowed('lines')&&<LinesPage onPage={setPage} operational={operational} onOperationalChange={setOperational} reloadToken={consumptionRevision}/>}</div><div hidden={!['operational','operational-analysis'].includes(current)}>{(allowed('operational')||allowed('operational-analysis'))&&<OperationalPage page={['operational','operational-analysis'].includes(current)?current:allowed('operational')?'operational':'operational-analysis'} onPage={setPage} orders={orders} source={operational} setSource={setOperational}/>}</div></>;
 }
-createRoot(document.getElementById('root')).render(<ThemeProvider><Workspace/></ThemeProvider>);
+createRoot(document.getElementById('root')).render(<ThemeProvider><AccessProvider><Workspace/></AccessProvider></ThemeProvider>);
+

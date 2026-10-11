@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.15.7 — operacional, revisão e cobertura do histórico de OS.
+**Versão:** 0.16.0 — operacional, revisão e cobertura do histórico de OS.
 
 ## Documentação do projeto
+
+- [Usuários e permissões](docs/USUARIOS-E-PERMISSOES.md)
 
 - [Hospedagem e acesso Cloudflare (configuração pendente)](docs/HOSPEDAGEM.md)
 

@@ -1,0 +1,22 @@
+{
+  "name": "dashboard-suporte-controller",
+  "main": "server/worker.js",
+  "compatibility_date": "2026-10-11",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "ACCESS_ISSUER": "https://small-grass-95ae.cloudflareaccess.com",
+    "ACCESS_AUD": "2e8bc40b094fc274b05494926b0395e1df8bd5f573b76815f7e1626b5567a579",
+    "BOOTSTRAP_ADMIN": "jeancjohann@gmail.com"
+  },
+  "d1_databases": [{
+    "binding": "USERS_DB",
+    "database_name": "dashboard-suporte-acessos",
+    "database_id": "cdc65ce1-280f-4f15-945d-f6fba8a9141b",
+    "migrations_dir": "migrations"
+  }]
+}

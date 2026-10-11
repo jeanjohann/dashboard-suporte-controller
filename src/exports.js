@@ -1,3 +1,4 @@
+import {authorizeAction} from './accessClient.js';
 const safeText = value => {
   let text=String(value??'');
   if (/^[\s]*[=+@-]/.test(text)) text="'"+text;
@@ -11,7 +12,7 @@ export function reportCsv(result,{grouping,measure,measureLabel,filename,filters
     ...result.items.map(item=>[item.label,monetary?item.value/100:item.value,'',item.rows.join(', ')])
   ]);
 }
-export function download(content,type,filename){const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+export async function download(content,type,filename){if(!await authorizeAction('export'))return;const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&apos;');
 export function chartSvg(items,{title,subtitle,format,note='Somente realizados · valores contratuais não são recebimentos'}){
   const width=1200,labelWidth=480,barWidth=470,max=Math.max(1,...items.map(item=>Math.abs(item.value))),signed=items.some(item=>item.value<0);
