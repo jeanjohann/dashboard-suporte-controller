@@ -1,11 +1,16 @@
 import React,{useEffect,useState} from 'react';
 import {ThemeToggle} from './Theme.jsx';
 import {SidePanelTarget} from './SidePanel.jsx';
-const pages=[['imports','Importação'],['orders','Ordens de Serviço'],['operational','Operacional'],['lines','Controle de Consumo M2M'],['operational-analysis','Parque e Manutenção']];
+const pages=[['orders','Ordens de Serviço','▤'],['operational','Operacional','▦'],['lines','Controle de Consumo M2M','◉'],['operational-analysis','Parque e Manutenção','◎'],['imports','Importação','⇧']];
 export function Navigation({page,onPage}){
   const [collapsed,setCollapsed]=useState(()=>{try{return localStorage.getItem('addlog-sidebar-collapsed')==='true';}catch{return false;}});
+  const [menuOpen,setMenuOpen]=useState(true);
+  useEffect(()=>setMenuOpen(true),[page]);
   useEffect(()=>{const sync=()=>{try{setCollapsed(localStorage.getItem('addlog-sidebar-collapsed')==='true');}catch{}};window.addEventListener('sidebar-change',sync);window.addEventListener('storage',sync);return()=>{window.removeEventListener('sidebar-change',sync);window.removeEventListener('storage',sync);};},[]);
-  const toggle=()=>{const next=!collapsed;setCollapsed(next);try{localStorage.setItem('addlog-sidebar-collapsed',String(next));}catch{}window.dispatchEvent(new Event('sidebar-change'));};
-  const icons=['⇧','▤','▦','◉','◎'];
-  return <aside className={`app-navigation${collapsed?' sidebar-collapsed':''}`}><button className="sidebar-toggle" type="button" onClick={toggle} aria-label={collapsed?'Expandir menu':'Recolher menu'} aria-expanded={!collapsed} title={collapsed?'Expandir menu':'Recolher menu'}>{collapsed?'»':'«'}</button><div className="logo" aria-label="Addlog Suporte Controller"><span className="brand-image" role="img" aria-label="Addlog"/><div className="brand-caption">SUPORTE CONTROLLER</div></div><nav className="side-navigation" aria-label="Páginas do sistema">{pages.map(([key,label],index)=><div className="navigation-group" key={key}><button type="button" title={label} aria-label={label} className={page===key?'active':''} aria-current={page===key?'page':undefined} onClick={()=>onPage(key)}><span className="navigation-icon" aria-hidden="true">{icons[index]}</span><span className="navigation-label">{label}</span></button>{page===key&&<SidePanelTarget/>}</div>)}</nav><ThemeToggle/></aside>;
+  const changeCollapsed=next=>{setCollapsed(next);try{localStorage.setItem('addlog-sidebar-collapsed',String(next));}catch{}window.dispatchEvent(new Event('sidebar-change'));};
+  function select(key){if(key===page){if(collapsed){changeCollapsed(false);setMenuOpen(true);}else setMenuOpen(value=>!value);}else{onPage(key);setMenuOpen(true);}}
+  return <aside className={`app-navigation${collapsed?' sidebar-collapsed':''}`}>
+    <div className="sidebar-brand-row"><div className="logo" aria-label="Addlog"><span className="brand-image" role="img" aria-label="Addlog"/></div><button className="sidebar-toggle" type="button" onClick={()=>changeCollapsed(!collapsed)} aria-label={collapsed?'Expandir menu':'Recolher menu'} aria-expanded={!collapsed} title={collapsed?'Expandir menu':'Recolher menu'}>{collapsed?'»':'«'}</button></div>
+    <nav className="side-navigation" aria-label="Páginas do sistema">{pages.map(([key,label,icon])=><div className="navigation-group" key={key}><button type="button" title={label} aria-label={label} className={page===key?'active':''} aria-current={page===key?'page':undefined} aria-expanded={key!=='imports'&&page===key?!collapsed&&menuOpen:undefined} aria-controls={key!=='imports'&&page===key?`submenu-${key}`:undefined} onClick={()=>select(key)}><span className="navigation-icon" aria-hidden="true">{icon}</span><span className="navigation-label">{label}</span>{key!=='imports'&&page===key&&<span className="navigation-chevron" aria-hidden="true">{menuOpen?'⌃':'⌄'}</span>}</button>{page===key&&<div id={`submenu-${key}`} hidden={collapsed||!menuOpen}><SidePanelTarget/></div>}</div>)}</nav><ThemeToggle/>
+  </aside>;
 }

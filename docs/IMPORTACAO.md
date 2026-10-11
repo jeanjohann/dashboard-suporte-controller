@@ -20,3 +20,6 @@ O botão de setas permite recolher o menu para uma faixa de ícones, com nomes d
 ## Validação
 
 Testes automatizados cobrem reconhecimento de abas, conflitos de referências, preservação do histórico e duplicidade de consumo. A compilação valida a integração. A conferência visual interativa deve ser realizada no navegador do usuário.
+
+### Ajustes de navegação (0.15.1)
+A marca mostra apenas o símbolo no menu recolhido e a logo Addlog no menu aberto, sem a legenda Suporte Controller. O botão de recolhimento fica ao lado da marca. Os itens começam logo abaixo; Importação é o último. Clique novamente na página selecionada para fechar ou abrir suas opções. No menu compacto, clicar no ícone da página atual expande a lateral para acessar as opções. Fechar opções mantém filtros e escolhas de relatórios.

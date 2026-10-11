@@ -45,3 +45,22 @@
 .app>aside.sidebar-collapsed .side-navigation button{justify-content:center;padding:12px 6px}
 .sidebar-collapsed .sidebar-toggle,.sidebar-collapsed button.theme-toggle{align-self:center}
 @media(max-width:760px){.app>aside .side-navigation{display:flex;overflow:visible;flex:none}.app>aside.sidebar-collapsed{width:100%;min-width:0;height:auto;flex-direction:row;align-items:center}.app>aside.sidebar-collapsed .side-navigation{flex:1;flex-direction:row;justify-content:center;flex-wrap:wrap}.sidebar-collapsed .navigation-group{flex:0 0 auto}.sidebar-collapsed .sidebar-toggle{align-self:center}}
+/* Cabeçalho compacto: símbolo completo e navegação alinhada ao topo. */
+.app>aside.app-navigation{gap:14px;padding-top:16px;flex-wrap:nowrap}
+.app-navigation .sidebar-brand-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0;min-height:34px}
+.app>aside.app-navigation .logo{display:block;margin:0;min-width:0;flex:1}
+.app-navigation .sidebar-brand-row .brand-image{display:block;width:145px;max-width:100%;height:32px}
+.app-navigation .sidebar-toggle{display:flex;align-items:center;justify-content:center;align-self:center;flex:0 0 24px;min-width:24px;min-height:30px;padding:0;background:transparent;color:var(--ui-muted);font-size:20px}
+.app>aside.app-navigation .side-navigation{justify-content:flex-start;gap:3px}
+.app>aside.app-navigation .side-navigation button{min-height:38px;padding:8px 10px;border-radius:7px;font-weight:500}
+.navigation-chevron{margin-left:auto;font-size:14px;color:var(--ui-muted)}
+.navigation-group .sidebar-tools{gap:14px;margin:5px 0 9px 12px;padding-top:3px}
+.sidebar-tools .category-navigation{border:0;border-radius:0;gap:2px}
+.app>aside .sidebar-tools .category-navigation button{min-height:32px;padding:6px 8px;font-size:12px}
+.app>aside.sidebar-collapsed{width:88px;min-width:88px;padding:16px 8px;gap:14px}
+.app>aside.sidebar-collapsed .sidebar-brand-row{gap:4px;width:100%}
+.app>aside.sidebar-collapsed .logo{display:block;flex:0 0 28px}
+.app>aside.sidebar-collapsed .brand-image{width:28px;height:28px;mask:url('/brand/addlog-symbol.svg') center / contain no-repeat}
+.app>aside.sidebar-collapsed .navigation-label,.sidebar-collapsed .navigation-chevron{display:none}
+.app>aside.sidebar-collapsed .side-navigation button{padding:9px 6px}
+@media(max-width:760px){.app>aside.sidebar-collapsed{width:100%;min-width:0;flex-direction:column;align-items:stretch}.app>aside.sidebar-collapsed .sidebar-brand-row{width:64px}.app>aside.sidebar-collapsed .side-navigation{justify-content:flex-start}.app>aside.sidebar-collapsed button.theme-toggle{align-self:flex-start}}

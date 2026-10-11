@@ -6,6 +6,13 @@
 
 # Histórico de versões
 
+## 0.15.1 — 11/10/2026
+
+- Logo completa no menu aberto e somente símbolo no menu compacto, sem legenda Suporte Controller.
+- Botão de recolhimento ao lado da marca, navegação alinhada ao topo e Importação por último.
+- Clique na página selecionada abre/fecha suas opções sem alterar filtros ou relatórios.
+- Espaçamentos menores e indicadores discretos de abertura.
+
 ## 0.15.0 — 11/10/2026
 
 - Importação conjunta de OS, operacional e CSVs de consumo, com prévia, seleção e validação do lote.
