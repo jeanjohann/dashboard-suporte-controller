@@ -6,6 +6,13 @@
 
 # Histórico de versões
 
+## 0.15.6 — 11/10/2026
+
+- Padronização compartilhada dos controles de gráficos, com tamanho, altura e alinhamento consistentes para agrupamento e participantes.
+- Ajustes no ritmo de títulos, ajuda, exportação, ações e cards numéricos.
+- Controles empilhados em telas estreitas e dimensões mínimas para botões; sem alteração nos dados ou cálculos.
+- Compilação validada; conferência visual interativa permanece pendente no navegador.
+
 ## 0.15.5 — 11/10/2026
 
 - Vida em campo até primeira troca: comparação principal pela média, com cards de mínimo e máximo.

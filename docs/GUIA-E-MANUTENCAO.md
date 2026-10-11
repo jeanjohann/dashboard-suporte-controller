@@ -240,3 +240,6 @@ A ajuda agrupada dos relatórios principais fica no canto superior direito do ca
 
 ### Blocos internos (0.15.4)
 Cabeçalhos internos com explicação usam inline-help-heading: título à esquerda e InfoNote à direita, alinhados ao topo. Esse padrão inclui Valores de contrato e widgets de gráficos, com espaçamento reservado para evitar sobreposição. O balão e a cópia impressa mantêm seu conteúdo e comportamento.
+
+### Harmonia visual (0.15.6)
+O arquivo src/layout-polish.css reúne o ajuste compartilhado de títulos, campos e ações dos relatórios. Agrupamento e participantes dos gráficos usam fonte de 12px e seletores de 36px, com rótulos e campos alinhados em duas colunas; abaixo de 520px passam a uma coluna. Cabeçalhos internos alinham título e ajuda. Ações mantêm espaçamento e quebra de linha; valores numéricos preservam legibilidade. As alterações foram revisadas no código e compiladas, com validação visual interativa ainda pendente. Filtros, vínculos, estatísticas e exportações permanecem com os mesmos critérios.

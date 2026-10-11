@@ -26,6 +26,7 @@ import './style.css';
 import './identity.css';
 import './theme.css';
 import './sidebar.css';
+import './layout-polish.css';
 import {ThemeProvider} from './Theme.jsx';
 import {ReportControls} from './ReportControls.jsx';
 import {DashboardOverview} from './DashboardOverview.jsx';
