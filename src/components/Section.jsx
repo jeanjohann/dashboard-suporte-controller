@@ -51,7 +51,7 @@ export function Section({ title, visible = true, children }) {
       element.replaceWith(label);
     });
     clone
-      .querySelectorAll('button,input,select,.recharts-tooltip-wrapper')
+      .querySelectorAll('button,input,select,[data-no-print],.recharts-tooltip-wrapper')
       .forEach((element) => element.remove());
     clone.querySelectorAll('details').forEach((element) => (element.open = true));
     const style = doc.createElement('style');

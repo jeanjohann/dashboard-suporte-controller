@@ -131,3 +131,5 @@ Registre a alteração no `CHANGELOG.md`, atualize o guia do módulo e mantenha 
 `components/PeriodFilter.jsx` controla o período compartilhado da página de OS. `components/MultiFilter.jsx` mantém a seleção múltipla com busca e fechamento por clique externo ou Escape. `styles/filters.css` concentra os ajustes de densidade e responsividade.
 
 `components/HelpLayout.jsx` organiza explicações em blocos HTML e fragmentos dos relatórios; não inspeciona componentes de domínio e não altera cálculos. `Section` e `PagePersonalization` aplicam essa organização. As regras de texto dos principais cards das OS ficam em `modules/orders/config/metricHelp.js`. Consulte [Filtros e apresentação](FILTROS-E-APRESENTACAO.md) para o significado dos valores financeiros.
+
+O consumo utiliza `modules/consumption/data/historyRepository.js` como contrato de leitura/gravação, mantendo o IndexedDB existente como único adaptador. `domain/lineHistoryReport.js` gera o relatório individual sem combinar apurações sobrepostas. A integração compartilhada futura não está ativada; exige autorização e tratamento de conflitos no servidor.

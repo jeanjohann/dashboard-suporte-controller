@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.17.2 — 11/10/2026
+
+- Histórico individual de consumo exportável em XLSX e CSV, com contexto, apurações e observações/marcações salvas.
+- Impressão da linha do tempo exclui formulário e rascunhos; exibe identificação e resumo do acompanhamento.
+- Contrato de armazenamento separado da página, utilizando exclusivamente o IndexedDB existente e preservando dados e backups.
+- Integração futura com armazenamento compartilhado documentada, sem sincronização ou envio de dados nesta etapa.
+- Testes de identidade, períodos sobrepostos, anotações do chip, proteção de fórmulas e contrato de armazenamento.
+
 ## 0.17.1 — 11/10/2026
 
 - Filtros compartilhados compactos, com seleção múltipla em listas flutuantes e fechamento por clique externo ou Escape.

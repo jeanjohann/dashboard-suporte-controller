@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.17.1 — primeira etapa do Monitoramento de Frota, com demonstração isolada.
+**Versão:** 0.17.2 — primeira etapa do Monitoramento de Frota, com demonstração isolada.
 
 ## Documentação do projeto
 

@@ -55,3 +55,13 @@ Valor Faturado, Valor Multa e Valor Total da Kore aparecem separados por dados, 
 `src/modules/consumption/domain/consumption.js`: parser CSV e funções básicas; `src/modules/consumption/domain/lineConsumption.js`: formatos, unidades, elegibilidade, vínculos, referência, versões e linha do tempo; `src/modules/consumption/data/consumptionHistory.js`: IndexedDB e validação do backup; `src/modules/consumption/components/LinesPage.jsx`: tela; `src/modules/consumption/components/LineRecordsTable.jsx`: ordenação e paginação.
 
 Testes cobrem conversão exata, zero/ausência, identificadores, serviços separados, duplicidades antes dos filtros, vínculos ambíguos, média de referência, versões, períodos e backups incompatíveis. Conferência no navegador com os arquivos reais cobre importação, totais por soma inteira independente, vínculo operacional, recarga, CSV completo, anotações, reimportação idêntica, backup/restauração, novos períodos e telas desktop/móvel. Os arquivos de origem não são modificados.
+
+## Relatório individual e armazenamento futuro
+
+Em Investigação, selecione o chip em Linha do tempo de consumo. Registre a data, a marcação e a observação e clique em Salvar acompanhamento. As informações são confirmadas somente depois de gravadas no navegador e permanecem após recarregar a página.
+
+Use Exportar histórico XLSX para obter abas Contexto, Apurações e Acompanhamento. Exportar histórico CSV entrega o mesmo conteúdo em blocos. Identificadores permanecem textuais, incluindo zeros iniciais. Os relatórios incluem todas as apurações em uso elegíveis da operadora + ICCID selecionados, sem limitar ao filtro de apuração do topo. Versões arquivadas não entram. Períodos sobrepostos permanecem separados e não geram um total acumulado artificial. A última marcação é determinada pela data da ação; empates mantêm a ordem de registro disponível.
+
+Imprimir / Salvar PDF no cabeçalho da seção inclui tabela, gráfico e observações salvas. Não inclui formulário nem rascunhos. Exportação e impressão respeitam a permissão de exportar do usuário. O relatório não substitui o backup JSON: use Histórico e arquivos para salvar uma cópia restaurável dos arquivos e anotações.
+
+A página acessa a persistência por historyRepository.js, com contrato assíncrono read/write. Hoje o único adaptador utiliza o IndexedDB existente, sem mudança no formato ou migração dos dados. A camada facilita a substituição futura por armazenamento autorizado, mas não habilita sincronização. Um serviço compartilhado exigirá autenticação, autorização por base, controle de concorrência, migração e política de retenção antes de ser ativado. A persistência de planilhas dos outros módulos permanece independente.

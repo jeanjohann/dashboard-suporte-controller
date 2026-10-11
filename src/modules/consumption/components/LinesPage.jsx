@@ -42,14 +42,14 @@ import {
   lineTimeline,
   consumptionEligible,
 } from '../domain/lineConsumption.js';
-import {
-  emptyHistory,
-  readConsumptionHistory,
-  writeConsumptionHistory,
-  fileDigest,
-  validateBackup,
-} from '../data/consumptionHistory.js';
+import { emptyHistory, fileDigest, validateBackup } from '../data/consumptionHistory.js';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
+import { consumptionHistoryRepository } from '../data/historyRepository.js';
+import {
+  lineHistoryReport,
+  lineHistoryCsv,
+  lineHistoryWorkbook,
+} from '../domain/lineHistoryReport.js';
 const mb = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 6 }) + ' MB';
 const volume = (value) => mb(value == null ? null : value / VOLUME_SCALE);
@@ -114,7 +114,8 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
   useEffect(() => {
     let live = true;
     setReady(false);
-    readConsumptionHistory()
+    consumptionHistoryRepository
+      .read()
       .then((value) => {
         if (live) {
           setArchive(value);
@@ -138,7 +139,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     setBusy(true);
     setError('');
     try {
-      await writeConsumptionHistory(next);
+      await consumptionHistoryRepository.write(next);
       setArchive(next);
       setMessage(success);
     } catch (e) {
@@ -395,6 +396,24 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
       'text/csv;charset=utf-8',
       'consumo-linhas-filtrado.csv',
     );
+  }
+  async function exportLineHistory(format) {
+    if (!trackedRow || !(await authorizeAction('export'))) return;
+    try {
+      const report = lineHistoryReport(timeline, notes);
+      const filename = 'historico-linha-' + trackedRow.iccid.replace(/[^a-zA-Z0-9_-]/g, '_');
+      if (format === 'xlsx') {
+        await download(
+          lineHistoryWorkbook(report),
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          filename + '.xlsx',
+        );
+      } else {
+        await download(lineHistoryCsv(report), 'text/csv;charset=utf-8', filename + '.csv');
+      }
+    } catch (error) {
+      setError('Não foi possível gerar o histórico. ' + error.message);
+    }
   }
   async function changeVersion(file) {
     try {
@@ -1009,7 +1028,18 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   title="Linha do tempo de consumo"
                   visible={shown('Linha do tempo de consumo') && !!statements.length}
                 >
-                  <label className="line-tracked-select">
+                  <InfoNote>
+                    Histórico local identificado por operadora + ICCID. Exibe todas as apurações em
+                    uso desse chip e as observações salvas, independentemente do período e dos
+                    filtros do topo. MB por dia divide o consumo pela duração da apuração; períodos
+                    sobrepostos não são somados. Marcações registram ações administrativas e não
+                    comprovam correção de falha. O cliente e o equipamento atuais vêm da referência
+                    operacional; cada anotação preserva o vínculo exibido na ação. CSV e XLSX
+                    incluem contexto, apurações e acompanhamento. Imprimir / Salvar PDF apresenta os
+                    registros salvos; o formulário e rascunhos ficam fora. Sem sincronização entre
+                    usuários: use o backup para proteger ou transferir os dados.
+                  </InfoNote>
+                  <label className="line-tracked-select" data-no-print>
                     Chip para acompanhar{' '}
                     <select
                       value={tracked}
@@ -1037,10 +1067,23 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   {trackedRow ? (
                     <>
                       <p className="scope">
-                        {trackedRow.operator} · ICCID {trackedRow.iccid} · referência atual:{' '}
+                        {trackedRow.operator} · MSISDN {trackedRow.number} · ICCID{' '}
+                        {trackedRow.iccid} · referência atual:{' '}
                         {trackedRow.link?.client || 'Não vinculado'} / ID{' '}
                         {trackedRow.link?.serial || 'Não informado'}. A linha do tempo usa todas as
                         apurações em uso desse chip, além do período selecionado no topo.
+                      </p>
+                      <div className="line-actions" data-no-print>
+                        <PermissionButton action="export" onClick={() => exportLineHistory('xlsx')}>
+                          Exportar histórico XLSX
+                        </PermissionButton>
+                        <PermissionButton action="export" onClick={() => exportLineHistory('csv')}>
+                          Exportar histórico CSV
+                        </PermissionButton>
+                      </div>
+                      <p className="scope">
+                        {timeline.length} apurações · {notes.length} observações salvas · última
+                        marcação por data da ação: {notes.at(-1)?.status || 'Sem acompanhamento'}.
                       </p>
                       {timeline.length < 2 && (
                         <p className="notice">
@@ -1092,7 +1135,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                         Apurações semanais e mensais podem se sobrepor. São observações separadas,
                         sem somar snapshots ou presumir o consumo de dias individuais.
                       </InfoNote>
-                      <div className="line-note-form">
+                      <div className="line-note-form" data-no-print>
                         <label>
                           Data da ação
                           <input
@@ -1126,6 +1169,9 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                           Salvar acompanhamento
                         </button>
                       </div>
+                      {!notes.length && (
+                        <p className="scope">Nenhuma observação salva para esta linha.</p>
+                      )}
                       {!!notes.length && (
                         <ul className="visit-timeline">
                           {notes.map((note) => (
