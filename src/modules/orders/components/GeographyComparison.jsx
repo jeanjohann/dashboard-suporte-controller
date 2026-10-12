@@ -3,12 +3,12 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { PermissionButton } from '../../../shared/security/Access.jsx';
-import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useContext, useState } from 'react';
+import { InfoNote } from '../../../components/InfoNote.jsx';
 import { PrintContext } from '../../../components/Section.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
-import { groupedCosts } from '../domain/insights.js';
+import { groupedCosts, effectiveMaintenanceRows } from '../domain/insights.js';
 import { field } from '../../../shared/data/filters.js';
 import { rankingItems } from '../../../shared/charts/chartRules.js';
 import { csv, download, chartSvg } from '../../../shared/export/exports.js';
@@ -56,9 +56,7 @@ export function GeographyComparison({ data, column }) {
   const maintenance = groupedCosts(
     {
       ...data,
-      rows: data.rows.filter(
-        (row) => field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
-      ),
+      rows: effectiveMaintenanceRows(data),
     },
     column,
   );
@@ -163,10 +161,10 @@ export function GeographyComparison({ data, column }) {
   }
   return (
     <div className="geography-comparison">
-      <InfoNote>
+      <span className="info-print">
         Serviços Concluída/Pago no período e filtros selecionados. Manutenções são os atendimentos
-        de Assistência Técnica e já estão incluídas no total.
-      </InfoNote>
+        de Assistência Técnica sem Motivo Visita Improdutiva e já estão incluídas no total.
+      </span>
       <div className="geography-summary">
         <div>
           <span>Total de atendimentos</span>
@@ -216,11 +214,14 @@ export function GeographyComparison({ data, column }) {
         {signed ? ' Valores negativos aparecem à esquerda do centro.' : ''}
       </p>
       <details className="chart-tools">
-        <summary>Detalhes e exportação</summary>
-        <InfoNote>
-          A tabela e o CSV incluem todas as regiões, mesmo quando o gráfico mostra apenas as
-          maiores. Regiões sem identificação permanecem como “Sem dados”.
-        </InfoNote>
+        <summary className="inline-help-heading">
+          <span>Detalhes e exportação</span>{' '}
+          <InfoNote>
+            A tabela e o CSV incluem todas as regiões, mesmo quando o gráfico mostra apenas as
+            maiores. Regiões sem identificação permanecem como “Sem dados”.
+          </InfoNote>
+        </summary>
+
         <div className="report-downloads">
           <PermissionButton action="export" className="chart-export" onClick={exportChart}>
             Baixar este gráfico SVG
@@ -273,10 +274,10 @@ export function GeographyComparison({ data, column }) {
           </div>
         ))}
       </div>
-      <InfoNote>
+      <span className="info-print">
         Compare as barras; não some total e manutenção. Custos usam Custo Total e deslocamento usa
         Km como despesa. Valores ausentes são excluídos das médias; zeros são mantidos.
-      </InfoNote>
+      </span>
       <details className="report-details">
         <summary>Comparação completa e bases de cálculo</summary>
         <div className="table-scroll">
@@ -366,10 +367,10 @@ export function GeographyComparison({ data, column }) {
           </SortableTable>
         </div>
       </details>
-      <InfoNote>
+      <span className="info-print">
         Valor contratual absorvido usa Valor a cobrar e Cobrança = Addlog; não indica recebimento ou
         lucro.
-      </InfoNote>
+      </span>
       {selectedGroup && (
         <>
           <button onClick={() => setSelection(null)}>Fechar atendimentos selecionados</button>

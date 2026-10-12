@@ -240,7 +240,16 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
               </p>
               <div className="dashboard-chart-grid life-charts">
                 <article className="dashboard-widget">
-                  <h3>Tempo até troca dos ciclos completos</h3>
+                  <div className="inline-help-heading">
+                    <h3>Tempo até troca dos ciclos completos</h3>
+                    <InfoNote>
+                      Distribui a quantidade de ciclos completos nas faixas de dias corridos entre
+                      início e troca identificada. Cada ciclo entra em uma faixa; cancelamentos, sem
+                      troca e vínculos não resolvidos ficam fora. A base segue categoria, início do
+                      ciclo, filtros e limite do histórico escolhidos. Não é distribuição da idade
+                      de todos os equipamentos instalados.
+                    </InfoNote>
+                  </div>
                   <p className="scope">
                     Quantidade de ciclos por faixa de duração. Base: {stats.complete}.
                   </p>

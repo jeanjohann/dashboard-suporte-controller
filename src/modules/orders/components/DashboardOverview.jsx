@@ -236,7 +236,16 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
       </div>
       <div className="dashboard-lower-grid">
         <article className="panel dashboard-widget">
-          <h3>Clientes com mais manutenção</h3>
+          <div className="inline-help-heading">
+            <h3>Clientes com mais manutenção</h3>
+            <InfoNote label="Regras de Clientes com mais manutenção">
+              Conta Assistências Técnicas Concluída/Pago sem Motivo Visita Improdutiva por razão
+              social, seguindo os filtros de OS. O gráfico apresenta os dez maiores grupos; o
+              detalhe permite conferir as linhas. Volume alto pode refletir tamanho da frota e não
+              mede taxa de falha. O resumo mostra custos válidos e participação na base de
+              manutenções selecionadas.
+            </InfoNote>
+          </div>
           <Chart
             compact
             title="Assistências técnicas realizadas"
@@ -262,12 +271,30 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
           />
         </article>
         <article className="panel dashboard-widget">
-          <h3>Perfil dos serviços realizados</h3>
+          <div className="inline-help-heading">
+            <h3>Perfil dos serviços realizados</h3>
+            <InfoNote label="Regras de Perfil dos serviços realizados">
+              Conta linhas Concluída/Pago por Tipo de Serviço e separa Motivo Visita Improdutiva em
+              grupo próprio. Participação = quantidade do grupo / total de visitas e atendimentos
+              registrados na seleção. Custos e médias usam Custo Total válido do grupo, incluindo
+              zero. A comparação anterior usa intervalo de mesma duração e mesmos filtros de
+              categoria; não comprova cobertura completa do histórico.
+            </InfoNote>
+          </div>
           <Chart compact title="Participação por tipo de serviço" type="donut" items={d.types} />
           <ServiceProfileSummary data={d.selected} previous={d.previous} onDetail={setDetail} />
         </article>
         <article className="panel dashboard-widget">
-          <h3>Composição dos custos</h3>
+          <div className="inline-help-heading">
+            <h3>Composição dos custos</h3>
+            <InfoNote label="Regras de Composição dos custos">
+              Usa somente linhas Concluída/Pago com Técnico e Km válidos simultaneamente, incluindo
+              visitas improdutivas. Soma cada componente na mesma amostra e divide pela quantidade
+              dessas linhas para calcular as médias. Km é despesa em reais. Esta soma analítica não
+              substitui Custo Total lançado; campos ausentes não são zero. Use para observar a
+              participação do serviço técnico e do deslocamento, considerando a seleção atual.
+            </InfoNote>
+          </div>
           <p className="scope">
             {pairs.length} atendimentos com serviço técnico e deslocamento válidos. Mesma base para
             ambos os componentes; não substitui o Custo Total lançado.
@@ -339,7 +366,15 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
             </div>
             <div className="dashboard-chart-grid">
               <article className="panel dashboard-widget">
-                <h3>Parque por situação</h3>
+                <div className="inline-help-heading">
+                  <h3>Parque por situação</h3>
+                  <InfoNote label="Regras de Parque por situação">
+                    Conta todos os registros do arquivo operacional completo por situação, inclusive
+                    cancelados. Campos ausentes ficam em grupo próprio. Não segue período nem
+                    filtros da OS e não reconstrói parque ativo histórico. Serve para visualizar a
+                    composição da referência importada.
+                  </InfoNote>
+                </div>
                 <Chart
                   compact
                   title="Registros por situação"
@@ -348,7 +383,15 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
                 />
               </article>
               <article className="panel dashboard-widget">
-                <h3>Clientes com mais equipamentos registrados</h3>
+                <div className="inline-help-heading">
+                  <h3>Clientes com mais equipamentos registrados</h3>
+                  <InfoNote label="Regras de Clientes com mais equipamentos registrados">
+                    Conta linhas do arquivo operacional completo por cliente e apresenta os dez
+                    maiores grupos. Todas as situações entram, incluindo cancelados; cliente ausente
+                    fica como Não informado. Não aplica período nem filtros da OS, não soma
+                    mensalidades e não presume equipamentos atualmente ativos.
+                  </InfoNote>
+                </div>
                 <Chart
                   compact
                   title="10 maiores grupos por cliente"

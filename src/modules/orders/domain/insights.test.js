@@ -9,6 +9,7 @@ import { periodMetrics } from './dashboard.js';
 import { isUnproductive } from './attendanceKind.js';
 import {
   groupedCosts,
+  effectiveMaintenanceRows,
   callInsights,
   recurringVisits,
   interventionProfiles,
@@ -80,6 +81,13 @@ test('improdutivas não são manutenção, modos de visita preservam intervalos 
   assert.equal(metrics.maintenance, 2);
   assert.equal(metrics.unproductive, 1);
   assert.equal(metrics.cost, 30000);
+  const regionalMaintenance = groupedCosts({
+    ...original,
+    rows: effectiveMaintenanceRows(original),
+  });
+  assert.equal(regionalMaintenance[0].rows.length, 2);
+  assert.equal(regionalMaintenance[0].cost.sum, 20000);
+  assert.equal(groupedCosts(original)[0].cost.sum, 30000);
   const tech = technicianRanking(original).items[0];
   assert.equal(tech.productive, 2);
   assert.equal(tech.unproductive, 1);

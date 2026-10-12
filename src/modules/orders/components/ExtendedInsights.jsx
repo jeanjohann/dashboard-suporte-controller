@@ -157,8 +157,9 @@ export function ExtendedInsights({ original, data, visibility, operational }) {
       >
         <Groups data={data} column="Motivo" maintenance />
         <InfoNote>
-          Visitas improdutivas aparecem com o motivo registrado, sem inferir falha do equipamento ou
-          responsabilidade do técnico.
+          Assistências Concluída/Pago com Motivo Visita Improdutiva ficam fora desta análise de
+          manutenção efetiva. Os custos dessas visitas continuam nos indicadores financeiros gerais.
+          Motivos registrados não comprovam falha do equipamento ou responsabilidade do técnico.
         </InfoNote>
       </Section>
       <Section

@@ -8,6 +8,15 @@ import { money } from './analysis.js';
 import { trackerMotives } from './equipment.js';
 import { trackerModel } from './trackerModels.js';
 export const done = (data, row) => ['Pago', 'Concluída'].includes(field(data, row, 'Status')?.raw);
+/** Subconjunto efetivo de manutenção. O volume/custo total de visitas continua em base própria. */
+export function effectiveMaintenanceRows(data) {
+  return data.rows.filter(
+    (row) =>
+      done(data, row) &&
+      !isUnproductive(data, row) &&
+      field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
+  );
+}
 const value = (data, row, label) => {
   if (!row) return null;
   const cell = field(data, row, label);

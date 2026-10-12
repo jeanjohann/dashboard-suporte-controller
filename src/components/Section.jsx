@@ -7,11 +7,12 @@ import { authorizeAction } from '../shared/security/accessClient.js';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { InfoNote } from './InfoNote.jsx';
 import { alignHelp, helpChildren } from './HelpLayout.jsx';
+import { reportHelpFor } from './reportHelp.js';
 export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
 /** Agrupa relatório, ajuda e impressão isolada com contexto de arquivo, filtros e referência temporal. */
-export function Section({ title, visible = true, defaultOpen = true, summary, children }) {
+export function Section({ title, visible = true, defaultOpen = true, summary, help, children }) {
   const [open, setOpen] = useState(defaultOpen);
   const [compact, setCompact] = useState(false);
   const hasSummary = Boolean(summary);
@@ -28,6 +29,8 @@ export function Section({ title, visible = true, defaultOpen = true, summary, ch
   const hiddenSections = useContext(HiddenSectionsContext);
   const content = helpChildren(children),
     notes = content.filter((child) => React.isValidElement(child) && child.type === InfoNote);
+  // A explicação específica da seção cobre cabeçalhos que antes dependiam apenas de notas internas.
+  const description = help ?? reportHelpFor(title);
   async function print() {
     if (!(await authorizeAction('export'))) return;
     const frame = document.createElement('iframe');
@@ -109,8 +112,9 @@ export function Section({ title, visible = true, defaultOpen = true, summary, ch
           >
             {open ? 'Recolher' : 'Abrir'}
           </button>
-          {notes.length > 0 && (
+          {(description || notes.length > 0) && (
             <InfoNote label={`Regras de ${title}`}>
+              {description && <p>{description}</p>}
               {notes.map((note, index) => (
                 <p key={index}>{note.props.children}</p>
               ))}
@@ -128,6 +132,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, ch
       )}
       <div className="section-body" hidden={!open || compact}>
         <div className="section-content" ref={section}>
+          {description && <span className="info-print">{description}</span>}
           {content.map((child, index) =>
             notes.includes(child) ? (
               <span key={`note-${index}`} className="info-print">

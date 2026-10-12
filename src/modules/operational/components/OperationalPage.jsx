@@ -328,6 +328,14 @@ export function OperationalPage({ page, onPage, orders, source, setSource }) {
                       anterior. Fórmulas são lidas pelo resultado armazenado no Excel, sem
                       recálculo.
                     </p>
+                    <div className="inline-help-heading" hidden={menuCategory !== 'overview'}>
+                      <h2>{analysis ? 'Cobertura do histórico' : 'Resumo da importação'}</h2>
+                      <InfoNote>
+                        {analysis
+                          ? 'Equipamentos na seleção usa filtros e busca desta página. A cobertura cruza serial + placa com o arquivo de OS completo; não aplica seus filtros. Vínculos ambíguos e identificações incompatíveis ficam separados. Sem atendimento no histórico disponível não é erro: a Operacional é mais antiga. Não comprova instalação, atividade ou ausência de manutenção anterior.'
+                          : 'Contagens do arquivo operacional completo: registros importados, pontos para revisão, linhas distintas com apontamento e linhas sem Nº não importadas. Um registro pode ter vários pontos. Estes cards não seguem filtros nem busca; a tabela de revisão tem seu próprio recorte. Não confirmam divergências automaticamente nem alteram a planilha.'}
+                      </InfoNote>
+                    </div>
                     <section className="cards" hidden={menuCategory !== 'overview'}>
                       {cards.map(([label, value]) => (
                         <article key={label}>

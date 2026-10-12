@@ -29,3 +29,13 @@ A revisão deste ajuste detalha os cards de OS, valores de contrato, ranking de 
 Os menus de seleção múltipla são renderizados em uma camada independente do painel, com posição e altura limitadas pela janela. Isso evita cortes pelas bordas dos painéis. Clique externo, Escape, rolagem da página ou redimensionamento fecham o menu; rolar as próprias opções mantém o menu aberto.
 
 Os relatórios organizados em Section possuem comando Abrir/Recolher no cabeçalho. OS, Operacional e Consumo também oferecem comandos de abrir/recolher todos. Recolher mantém o conteúdo montado, preservando filtros e seleções; ocultar um relatório no menu é uma configuração independente. A impressão continua incluindo o conteúdo do relatório, mesmo recolhido. Na versão 0.17.6, oito análises de OS/técnicos oferecem Resumo/Completo; o comando global de visão resumida aplica síntese somente às seções que já possuem indicadores definidos. A cobertura restante está na fila.
+
+## Revisão dos balões — 0.17.7
+
+Os cabeçalhos de relatório das páginas OS, Operacional, Consumo, Parque e Manutenção e Monitoramento passaram por conferência de cobertura. Seções que tinham ajuda apenas dentro do conteúdo agora também possuem explicação no cabeçalho. O ícone fica à direita do título, disponível nos modos completo, resumido e recolhido.
+
+O catálogo `src/components/reportHelp.js` complementa explicações locais com fonte, população, cálculo, exclusões, finalidade e limites de interpretação. `Section` aceita `help` para uma descrição específica; sem essa propriedade utiliza o título registrado no catálogo. Títulos desconhecidos não recebem uma regra genérica inventada. Ao adicionar ou renomear um relatório, registrar sua explicação ou fornecer a propriedade e verificar o cabeçalho, incluindo o caso sem dados. Detalhes Original · linha possuem regra própria de rastreabilidade.
+
+As explicações permanecem na impressão pelo conteúdo textual, mesmo com o relatório recolhido ou resumido. O balão não altera filtros ou resultados e fecha por clique externo, Escape, rolagem ou redimensionamento.
+
+Nesta revisão, a comparação geográfica foi alinhada à regra já aprovada: o subconjunto de manutenção efetiva exclui Motivo Visita Improdutiva, enquanto o total de visitas e seus custos válidos continuam preservados. A tabela e o CSV seguem o mesmo subconjunto. A participação de manutenção compara esse subconjunto ao total regional; não soma as duas séries.

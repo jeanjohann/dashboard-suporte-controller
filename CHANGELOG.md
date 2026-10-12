@@ -7,6 +7,15 @@
 
 # Histórico de versões
 
+## 0.17.7 — 12/10/2026
+
+- Completa os ícones de ajuda dos cabeçalhos de relatório em OS, Operacional, Consumo e Parque e Manutenção, com explicações de fonte, cálculo, exclusões e finalidade.
+- Catálogo de textos de apresentação integrado ao Section; ajuda disponível em resumo/completo/recolhido e preservada na impressão.
+- Ajuda nos gráficos da visão geral, resumo operacional e distribuição de duração dos ciclos completos, alinhada à direita dos títulos.
+- Corrige a comparação geográfica para excluir visitas improdutivas do subconjunto de manutenção efetiva, conforme regra já aprovada, preservando totais e custos de todas as visitas.
+- Conferência de 47 cabeçalhos de relatório, balões no computador/celular e teste da base financeira da manutenção.
+- Item de revisão dos ícones concluído na fila; demais prioridades preservadas.
+
 ## 0.17.6 — 12/10/2026
 
 - Motivo Visita Improdutiva separado das manutenções efetivas, preservando todos os custos financeiros válidos.

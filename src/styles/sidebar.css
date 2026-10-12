@@ -632,3 +632,8 @@ button.info-trigger:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* O cabeçalho de resumo acompanha a categoria sem sobrepor o atributo hidden. */
+.inline-help-heading[hidden] {
+  display: none;
+}
