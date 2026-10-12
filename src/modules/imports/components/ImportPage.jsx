@@ -14,7 +14,7 @@ import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { inspectImportFile, assembleImportBatch, importTypeLabels } from '../domain/bulkImport.js';
 /** Apresenta a prévia dos arquivos reconhecidos e aplica somente o lote selecionado e autorizado. */
-export function ImportPage({ onPage, onApply, orders, operational }) {
+export function ImportPage({ onPage, onApply, orders, operational, logistics }) {
   const input = useRef(),
     [items, setItems] = useState([]),
     [busy, setBusy] = useState(false),
@@ -89,7 +89,7 @@ export function ImportPage({ onPage, onApply, orders, operational }) {
             <div>
               <div className="eyebrow">CENTRAL DE ARQUIVOS</div>
               <h1>Importação</h1>
-              <p>Carregue OS, operacional e extratos de consumo em uma única seleção.</p>
+              <p>Carregue OS, operacional, logística e extratos de consumo em uma única seleção.</p>
             </div>
             <PermissionButton action="import" disabled={busy} onClick={() => input.current.click()}>
               {busy ? 'Processando…' : 'Selecionar arquivos'}
@@ -104,9 +104,9 @@ export function ImportPage({ onPage, onApply, orders, operational }) {
             />
           </header>
           <div className="notice">
-            Excel é identificado pelas abas OS 2025 e Equipamentos; CSV usa os formatos de consumo
-            já suportados. Selecione uma OS, um operacional e quantos extratos de consumo precisar.
-            Confira o lote abaixo antes de aplicar.
+            Excel é identificado pelas abas OS 2025, Equipamentos ou Envios + Devoluções; CSV usa os
+            formatos de consumo já suportados. Selecione uma OS, um operacional, uma logística e
+            quantos extratos de consumo precisar. Confira o lote abaixo antes de aplicar.
           </div>
           {error && (
             <p className="error" role="alert">
@@ -128,6 +128,11 @@ export function ImportPage({ onPage, onApply, orders, operational }) {
               <span>Operacional carregado na sessão</span>
               <strong>{operational?.data.rows.length.toLocaleString('pt-BR') || '—'}</strong>
               <small>{operational?.filename || 'Não importado'}</small>
+            </article>
+            <article>
+              <span>Logística carregada na sessão</span>
+              <strong>{logistics?.data.rows.length.toLocaleString('pt-BR') || '—'}</strong>
+              <small>{logistics?.filename || 'Não importada'}</small>
             </article>
           </section>
           {!!items.length && (

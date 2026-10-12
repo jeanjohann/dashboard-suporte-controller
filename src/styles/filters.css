@@ -1,4 +1,30 @@
 /* Filtros compactos compartilhados. Listas flutuantes preservam o espaço dos relatórios. */
+.logistics-import-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-bottom: 16px;
+}
+.logistics-import-actions .scope {
+  margin: 0;
+}
+.logistics-search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.logistics-cell-note {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.logistics-origin {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ui-border);
+}
 .lifecycle-controls {
   display: flex;
   flex-wrap: wrap;

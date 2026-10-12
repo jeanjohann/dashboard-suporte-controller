@@ -3,6 +3,7 @@
 A página **Importação** permite selecionar vários arquivos de uma vez. Confira o tipo reconhecido e marque os arquivos desejados antes de clicar em **Aplicar arquivos selecionados**.
 
 - Excel: abas `OS 2025` e `Equipamentos`. Um arquivo pode conter ambas. Cada lote aceita uma referência de OS e uma operacional.
+- Logística: Excel com `Envios` e `Devoluções`; uma referência por lote, reconhecida pelas abas e cabeçalhos. Exige acesso a Parque e Manutenção e permissão de importação. Consertos não é importado. A referência é mantida na sessão, sem gravar no histórico de consumo. Consulte [Logística](LOGISTICA-DE-EQUIPAMENTOS.md).
 - CSV: formatos de consumo suportados pelo módulo M2M, identificados pelos cabeçalhos.
 - Arquivos não reconhecidos aparecem com erro e ficam fora da seleção.
 - OS e operacional substituem as referências atuais da sessão, preservando os dados originais e as regras de revisão.

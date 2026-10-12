@@ -26,6 +26,7 @@ import { csv, download } from '../../../shared/export/exports.js';
 import { field } from '../../../shared/data/filters.js';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { ParkInsights } from '../../park/components/ParkInsights.jsx';
+import { LogisticsPanel } from '../../logistics/components/LogisticsPanel.jsx';
 import { parkSections } from '../../park/domain/parkAnalysis.js';
 import {
   operationalMenus,
@@ -38,7 +39,15 @@ const money = (value) =>
   (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const Section = (props) => <BaseSection visible={true} {...props} />;
 /** Compartilha a base operacional entre revisão e Parque e Manutenção, mantendo filtros e categorias da página. */
-export function OperationalPage({ page, onPage, orders, source, setSource }) {
+export function OperationalPage({
+  page,
+  onPage,
+  orders,
+  source,
+  setSource,
+  logistics,
+  setLogistics,
+}) {
   const [expansion, setExpansion] = useState(null),
     [hiddenSections, setHiddenSections] = useState([]);
   const [filters, setFilters] = useState({});
@@ -88,6 +97,7 @@ export function OperationalPage({ page, onPage, orders, source, setSource }) {
     }
   }
   const analysis = page === 'operational-analysis',
+    logisticsView = analysis && menuCategory === 'logistics',
     data = source?.data,
     linked = data ? linkOperational(data, orders?.data) : [],
     rows = linked.filter(
@@ -219,70 +229,72 @@ export function OperationalPage({ page, onPage, orders, source, setSource }) {
                     ))}
                   </nav>
                 </SidebarContent>
-                <PagePersonalization
-                  labels={
-                    (analysis ? crossAnalysisMenus : operationalMenus).find(
-                      (menu) => menu.key === menuCategory,
-                    )?.sections || []
-                  }
-                  hidden={hiddenSections}
-                  setHidden={setHiddenSections}
-                >
-                  {data ? (
-                    <>
-                      <h3>Filtros operacionais</h3>
-                      <section className="panel filters">
-                        <label>
-                          Buscar cliente, serial, placa, ICCID, situação, plano ou modelo
-                          <input
-                            value={search}
-                            onChange={(e) => {
-                              setSearch(e.target.value);
-                              setOffset(0);
-                            }}
-                          />
-                        </label>
-                        <div className="filter-grid">
-                          {[
-                            ['client', 'Cliente operacional'],
-                            ['model', 'Modelo operacional'],
-                            ['plan', 'Plano operacional'],
-                            ['status', 'Situação operacional'],
-                          ].map(([key, label]) => (
-                            <MultiFilter
-                              key={key}
-                              label={label}
-                              values={filters[key] || []}
-                              options={[
-                                ...new Set(data.rows.map((row) => row[key] || 'Não informado')),
-                              ].sort((a, b) => a.localeCompare(b, 'pt-BR'))}
-                              onChange={(values) => {
-                                setFilters((previous) => ({ ...previous, [key]: values }));
+                {!logisticsView && (
+                  <PagePersonalization
+                    labels={
+                      (analysis ? crossAnalysisMenus : operationalMenus).find(
+                        (menu) => menu.key === menuCategory,
+                      )?.sections || []
+                    }
+                    hidden={hiddenSections}
+                    setHidden={setHiddenSections}
+                  >
+                    {data ? (
+                      <>
+                        <h3>Filtros operacionais</h3>
+                        <section className="panel filters">
+                          <label>
+                            Buscar cliente, serial, placa, ICCID, situação, plano ou modelo
+                            <input
+                              value={search}
+                              onChange={(e) => {
+                                setSearch(e.target.value);
                                 setOffset(0);
                               }}
                             />
-                          ))}
-                        </div>
-                        <button
-                          onClick={() => {
-                            setFilters({});
-                            setSearch('');
-                            setOffset(0);
-                          }}
-                        >
-                          Limpar filtros operacionais
-                        </button>
-                        <p className="scope">
-                          {rows.length} de {data.rows.length} registros. A busca afeta os cards de
-                          análise, gráficos, vínculos e revisão. Os cards de importação representam
-                          o arquivo completo.
-                        </p>
-                      </section>
-                    </>
-                  ) : (
-                    <p className="scope">Importe a planilha para disponibilizar os filtros.</p>
-                  )}
-                </PagePersonalization>
+                          </label>
+                          <div className="filter-grid">
+                            {[
+                              ['client', 'Cliente operacional'],
+                              ['model', 'Modelo operacional'],
+                              ['plan', 'Plano operacional'],
+                              ['status', 'Situação operacional'],
+                            ].map(([key, label]) => (
+                              <MultiFilter
+                                key={key}
+                                label={label}
+                                values={filters[key] || []}
+                                options={[
+                                  ...new Set(data.rows.map((row) => row[key] || 'Não informado')),
+                                ].sort((a, b) => a.localeCompare(b, 'pt-BR'))}
+                                onChange={(values) => {
+                                  setFilters((previous) => ({ ...previous, [key]: values }));
+                                  setOffset(0);
+                                }}
+                              />
+                            ))}
+                          </div>
+                          <button
+                            onClick={() => {
+                              setFilters({});
+                              setSearch('');
+                              setOffset(0);
+                            }}
+                          >
+                            Limpar filtros operacionais
+                          </button>
+                          <p className="scope">
+                            {rows.length} de {data.rows.length} registros. A busca afeta os cards de
+                            análise, gráficos, vínculos e revisão. Os cards de importação
+                            representam o arquivo completo.
+                          </p>
+                        </section>
+                      </>
+                    ) : (
+                      <p className="scope">Importe a planilha para disponibilizar os filtros.</p>
+                    )}
+                  </PagePersonalization>
+                )}
                 <ReportControls onExpand={setExpansion} />
                 <header>
                   <div>
@@ -292,25 +304,36 @@ export function OperationalPage({ page, onPage, orders, source, setSource }) {
                     </h1>
                     <p>
                       {analysis
-                        ? 'Parque registrado e cobertura do histórico de serviços.'
+                        ? logisticsView
+                          ? 'Envios e devoluções de equipamentos · registros e conferência.'
+                          : 'Parque registrado e cobertura do histórico de serviços.'
                         : 'Confira os registros originais e os pontos para revisão manual.'}
                     </p>
                   </div>
-                  <PermissionButton
-                    action="import"
-                    disabled={busy}
-                    onClick={() => input.current.click()}
-                  >
-                    {busy ? 'Lendo…' : 'Importar operacional'}
-                  </PermissionButton>
+                  {!logisticsView && (
+                    <PermissionButton
+                      action="import"
+                      disabled={busy}
+                      onClick={() => input.current.click()}
+                    >
+                      {busy ? 'Lendo…' : 'Importar operacional'}
+                    </PermissionButton>
+                  )}
                   <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
                 </header>
-                {error && (
+                {error && !logisticsView && (
                   <div className="error" role="alert">
                     {error} {data && 'A importação anterior foi mantida.'}
                   </div>
                 )}
-                {!data ? (
+                {logisticsView ? (
+                  <LogisticsPanel
+                    source={logistics}
+                    onImport={setLogistics}
+                    hiddenSections={hiddenSections}
+                    setHiddenSections={setHiddenSections}
+                  />
+                ) : !data ? (
                   <section className="empty">
                     <h2>Selecione a planilha operacional</h2>
                     <p>Aba Equipamentos, tabela A:BY. Dados mantidos somente nesta sessão.</p>

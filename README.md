@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.17.9 — temas claro/escuro e alinhamento visual refinados; Monitoramento de Frota em demonstração isolada.
+**Versão:** 0.18.0 — leitura e revisão de Envios/Devoluções em Parque e Manutenção; Monitoramento de Frota em demonstração isolada.
 
 ## Documentação do projeto
+
+- [Logística de equipamentos — envios e devoluções](docs/LOGISTICA-DE-EQUIPAMENTOS.md)
 
 - [Diagramas técnicos e guia de leitura das planilhas](docs/DIAGRAMAS-DO-SISTEMA.md)
 

@@ -24,6 +24,7 @@ export function Workspace() {
   const [page, setPage] = useState('orders'),
     [orders, setOrders] = useState(null),
     [operational, setOperational] = useState(null),
+    [logistics, setLogistics] = useState(null),
     [consumptionRevision, setConsumptionRevision] = useState(0);
   // A autorização é reconsultada antes de aplicar o lote; ocultar um botão não basta.
   async function applyBatch(batch) {
@@ -39,6 +40,7 @@ export function Workspace() {
     }
     if (batch.orders) setOrders(batch.orders);
     if (batch.operational) setOperational(batch.operational);
+    if (batch.logistics) setLogistics(batch.logistics);
   }
   const current = allowed(page)
     ? page
@@ -73,6 +75,7 @@ export function Workspace() {
             operational={
               allowed('operational') || allowed('operational-analysis') ? operational : null
             }
+            logistics={allowed('operational-analysis') ? logistics : null}
           />
         )}
       </div>
@@ -111,6 +114,8 @@ export function Workspace() {
             orders={orders}
             source={operational}
             setSource={setOperational}
+            logistics={allowed('operational-analysis') ? logistics : null}
+            setLogistics={setLogistics}
           />
         )}
       </div>

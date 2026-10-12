@@ -19,6 +19,13 @@ test('permissões recusam páginas, ações e bases não concedidas', () => {
   assert.equal(allowsAction(user, 'export'), false);
   assert.equal(allowsPage({ ...user, active: false }, 'orders'), false);
   assert.equal(allowsSource({ ...user, pages: ['operational-analysis'] }, 'operational'), true);
+  assert.equal(allowsSource(user, 'logistics'), false);
+  assert.equal(allowsSource({ ...user, pages: ['operational'] }, 'logistics'), false);
+  assert.equal(allowsSource({ ...user, pages: ['operational-analysis'] }, 'logistics'), true);
+  assert.equal(
+    allowsSource({ ...user, pages: ['operational-analysis'], canImport: false }, 'logistics'),
+    false,
+  );
 });
 test('cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas', () => {
   const input = { ...user, email: ' USER@COMPANY.COM ', version: 0 };

@@ -1,5 +1,9 @@
 # Manutenção do parque e relatórios — 0.14.0
 
+## Logística — 0.18.0
+
+Nova categoria para ler Envios e Devoluções, com dados independentes da OS/Operacional, contagem de movimentações e recebimentos datados, filtros, revisão, origem e exportação local. Consertos fica fora. Consulte [o guia da logística](LOGISTICA-DE-EQUIPAMENTOS.md). Os cruzamentos logísticos citados nas propostas abaixo ainda não foram ativados.
+
 ## Propostas de aprofundamento — análise em 12/10/2026
 
 As propostas abaixo ainda não são funcionalidades implementadas. A versão 0.17.9 refina a apresentação, sem modificar os cálculos do parque. Já existem contagens de base vinculável, equipamentos com assistência, assistências por 100 registros, retornos 30/60/90 e trocas. As próximas análises devem complementar esses indicadores.
@@ -21,7 +25,7 @@ Uma planilha logística pode completar o rastreamento por serial: envio, retirad
 
 Antes da integração, será necessário conferir se cada linha representa evento ou resumo, qual data representa saída/retirada/recebimento, como identificar duplicidades, quais são as situações válidas e como ligar acessórios sem serial. As datas de logística não substituem automaticamente as datas de instalação/retirada em campo. Retorno por problema não comprova defeito; recebimento não comprova encerramento de cobrança; envio não comprova instalação.
 
-Com vínculos confirmados, poderá apoiar a conferência de equipamentos recebidos ainda presentes no cadastro de campo, retiradas sem retorno registrado e diferenças de identificação entre OS, operacional e logística. Essas ocorrências devem ser tratadas como pontos de conferência, considerando datas das bases e cobertura histórica. Não há importador logístico nem nova persistência ativados nesta etapa.
+Com vínculos confirmados, poderá apoiar a conferência de equipamentos recebidos ainda presentes no cadastro de campo, retiradas sem retorno registrado e diferenças de identificação entre OS, operacional e logística. Essas ocorrências devem ser tratadas como pontos de conferência, considerando datas das bases e cobertura histórica. A leitura inicial foi implementada em 0.18.0, conforme o guia de Logística. Os cruzamentos e a persistência logística continuam pendentes.
 
 Esta entrega aprofunda os indicadores e as exportações da página **Operacional × OS — Análises**. Importação, revisão, regras financeiras e critérios de cobrança permanecem nas regras existentes. Não calcula faturamento, pró-rata, custo por contrato nem titularidade histórica.
 

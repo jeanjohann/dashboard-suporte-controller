@@ -7,6 +7,15 @@
 
 # Histórico de versões
 
+## 0.18.0 — 12/10/2026
+
+- Categoria Logística em Parque e Manutenção, independente da importação de OS/Operacional, com leitura manual das abas Envios e Devoluções.
+- Cards de movimentações e recebimentos datados, filtros de tipo/recebimento/período/busca, tabelas ordenáveis e conferência de todas as células de origem.
+- Revisão de ausências, datas incompatíveis/invertidas, formatação de IDs e possíveis repetições de mesma aba + ID + data, mantendo as linhas para revisão.
+- Situação preservada sem interpretação; Consertos fica fora. Contagens representam movimentações, sem expandir kits ou inferir estoque, defeitos, instalação ou cancelamento financeiro.
+- Integração à importação conjunta, limitada a uma referência logística por lote. Dados somente na sessão; acesso exige Parque e Manutenção e ações de importação/exportação separadas.
+- CSV e impressão/PDF seguem o recorte. Documentação e testes de datas, origem, critérios de revisão, lote e permissões atualizados.
+
 ## 0.17.9 — 12/10/2026
 
 - Tema claro em cinzas neutros, branco e laranja; tema escuro em grafite, com superfícies cinza e laranja mais destacado.

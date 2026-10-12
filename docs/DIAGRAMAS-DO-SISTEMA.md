@@ -2,6 +2,8 @@
 
 Referência: versão 0.17.8, conferida no código em 12/10/2026. Este guia explica os caminhos dos dados para usuários e para manutenção técnica. Os exemplos são conceituais e não contêm registros de clientes. Consulte os guias de cada módulo para as regras completas de cada relatório.
 
+Complemento da versão 0.18.0: Logística também é lida localmente e mantida na memória do Workspace, com as abas Envios e Devoluções. O fluxo ilustrado continua representando reconhecimento, origem, filtros, revisão e exportação; os detalhes desse novo layout estão em [Logística de equipamentos](LOGISTICA-DE-EQUIPAMENTOS.md). Não existe nova rota de envio de planilhas ao servidor.
+
 ## 1. Arquitetura técnica
 
 [Abrir SVG vetorial](diagrams/addlog-arquitetura-tecnica-swimlane.svg) · [Abrir PNG](diagrams/addlog-arquitetura-tecnica-swimlane.png)

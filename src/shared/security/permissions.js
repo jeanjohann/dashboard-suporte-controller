@@ -36,7 +36,7 @@ export function allowsAction(user, action) {
       (action === 'import' ? user.canImport : action === 'export' ? user.canExport : false)),
   );
 }
-/** Relaciona a base importada às páginas autorizadas; Parque e Manutenção precisa de OS e operacional. */
+/** Relaciona cada base às páginas autorizadas; logística acompanha exclusivamente Parque e Manutenção. */
 export function allowsSource(user, type) {
   if (!allowsAction(user, 'import')) return false;
   return (
@@ -47,7 +47,9 @@ export function allowsSource(user, type) {
         ? allowsPage(user, 'orders') || allowsPage(user, 'operational-analysis')
         : type === 'operational'
           ? allowsPage(user, 'operational') || allowsPage(user, 'operational-analysis')
-          : false)
+          : type === 'logistics'
+            ? allowsPage(user, 'operational-analysis')
+            : false)
   );
 }
 /** Aceita somente os campos de cadastro previstos e valida tipos, páginas e versão; dados de planilhas são recusados. */

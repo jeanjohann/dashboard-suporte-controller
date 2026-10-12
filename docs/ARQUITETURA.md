@@ -26,6 +26,9 @@ src/
     park/                  Parque e Manutenção
       components/          Relatórios dos cruzamentos
       domain/              Indicadores, exportações e testes
+    logistics/             Envios e devoluções, sem leitura de Consertos
+      components/          Cards, filtros, revisão e origem
+      domain/              Importador, seleção e testes
     users/components/      Administração de usuários
     monitoring/            Monitoramento em preparação, demonstração, domínio e relatórios
     imports/               Importação conjunta
@@ -59,6 +62,8 @@ Monitoramento possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONITORAMEN
 4. As funções em `domain/` calculam os indicadores. Quando um vínculo exige contexto completo, como uma troca de equipamento, usam a base original antes de aplicar o recorte.
 5. Os componentes apresentam o resultado, as exclusões e as linhas de origem. Exportação e impressão usam os fluxos locais com verificação de permissão.
 6. O histórico de consumo fica no IndexedDB do navegador. O servidor recebe somente consultas de sessão e cadastros de usuários; não recebe planilhas nem relatórios.
+
+A logística (0.18.0) utiliza uma referência própria na memória do Workspace, acessível em Parque e Manutenção e na Importação conjunta. Não depende das bases OS/Operacional para a primeira conferência. `modules/logistics/domain/logistics.js` preserva abas/linhas/células e calcula apenas movimentações e recebimentos datados; vínculos e diagnóstico logístico permanecem fora dessa etapa. Permissão de fonte logística acompanha Parque e Manutenção, além da ação de importação.
 
 ## Onde alterar cada assunto
 

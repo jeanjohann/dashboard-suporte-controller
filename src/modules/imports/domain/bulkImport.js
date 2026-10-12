@@ -5,6 +5,7 @@
 import XLSX from 'xlsx';
 import { importWorkbook } from '../../orders/data/import.js';
 import { importOperational } from '../../operational/domain/operational.js';
+import { importLogistics } from '../../logistics/domain/logistics.js';
 import {
   importLineStatement,
   mergeHistoryFiles,
@@ -15,6 +16,7 @@ export const importTypeLabels = {
   orders: 'Ordens de Serviço',
   operational: 'Operacional',
   consumption: 'Consumo M2M',
+  logistics: 'Logística · Envios e Devoluções',
 };
 const decode = (buffer) => {
   const text = new TextDecoder('utf-8').decode(buffer);
@@ -50,7 +52,14 @@ export async function inspectImportFile(file) {
     types.push('operational');
     result.operational = { filename: name, data: importOperational(buffer), savedAt: importedAt };
   }
-  if (!types.length) throw new Error('Nenhuma aba reconhecida: esperado OS 2025 ou Equipamentos.');
+  if (book.SheetNames.includes('Envios') || book.SheetNames.includes('Devoluções')) {
+    types.push('logistics');
+    result.logistics = { filename: name, data: importLogistics(buffer), savedAt: importedAt };
+  }
+  if (!types.length)
+    throw new Error(
+      'Nenhuma aba reconhecida: esperado OS 2025, Equipamentos ou Envios + Devoluções.',
+    );
   return {
     ...result,
     types,
@@ -61,11 +70,11 @@ export async function inspectImportFile(file) {
 }
 /** Valida a seleção de arquivos e reúne o lote que será aplicado à sessão. */
 export function assembleImportBatch(items) {
-  const batch = { orders: null, operational: null, consumption: [] };
+  const batch = { orders: null, operational: null, logistics: null, consumption: [] };
   if (!items.length) throw new Error('Selecione ao menos um arquivo reconhecido.');
   for (const item of items) {
     if (item.error) throw new Error('Há arquivo selecionado com erro.');
-    for (const type of ['orders', 'operational'])
+    for (const type of ['orders', 'operational', 'logistics'])
       if (item[type]) {
         if (batch[type])
           throw new Error(`Selecione apenas um arquivo de ${importTypeLabels[type]} por lote.`);

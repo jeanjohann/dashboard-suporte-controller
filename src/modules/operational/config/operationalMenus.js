@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { parkSections } from '../../park/domain/parkAnalysis.js';
+import { logisticsSections } from '../../logistics/domain/logistics.js';
 
 export const operationalMenus = [
   { key: 'overview', label: 'Visão geral', sections: [] },
@@ -15,6 +16,7 @@ export const crossAnalysisMenus = [
   { key: 'maintenance', label: 'Manutenção', sections: parkSections.slice(0, 3) },
   { key: 'monthly', label: 'Valores mensais', sections: ['Valores mensais lançados'] },
   { key: 'links', label: 'Vínculos', sections: ['Vínculos com o histórico de OS'] },
+  { key: 'logistics', label: 'Logística', sections: logisticsSections },
   { key: 'reports', label: 'Relatórios', sections: [parkSections[3]] },
 ];
 /** Define as seções visíveis conforme a categoria escolhida no operacional ou em Parque e Manutenção. */

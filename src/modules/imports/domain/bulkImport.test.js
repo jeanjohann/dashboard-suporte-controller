@@ -38,6 +38,54 @@ const file = (text) => ({
   name: 'consumo.csv',
   arrayBuffer: async () => new TextEncoder().encode(text).buffer,
 });
+
+test('lote reconhece logística isolada e recusa duas referências sem depender do nome do arquivo', async () => {
+  const book = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(
+    book,
+    XLSX.utils.aoa_to_sheet([
+      [
+        'Chamado',
+        'Envio',
+        'Recebimento',
+        'Cliente',
+        'Equipamento',
+        'ID',
+        'Rastreio',
+        'Cidade',
+        'A/C',
+      ],
+      [
+        '#1',
+        '01/01/2025',
+        '02/01/2025',
+        'Cliente',
+        'Coletora',
+        '00123',
+        'Código',
+        'Cidade',
+        'Destinatário',
+      ],
+    ]),
+    'Envios',
+  );
+  XLSX.utils.book_append_sheet(
+    book,
+    XLSX.utils.aoa_to_sheet([
+      ['Data Recebimento', 'Equipamento', 'ID', 'Cliente', 'Placa', 'Situação'],
+    ]),
+    'Devoluções',
+  );
+  const bytes = XLSX.write(book, { type: 'array', bookType: 'xlsx' });
+  const item = await inspectImportFile({ name: 'modelo.xlsx', arrayBuffer: async () => bytes });
+  assert.deepEqual(item.types, ['logistics']);
+  assert.equal(item.logistics.data.rows[0].id, '00123');
+  const batch = assembleImportBatch([item]);
+  assert.equal(batch.logistics.data.rows.length, 1);
+  assert.equal(batch.orders, null);
+  assert.equal(batch.operational, null);
+  assert.throws(() => assembleImportBatch([item, item]), /apenas um/);
+});
 test('lote reconhece duas abas no mesmo Excel e preserva linhas de origem', async () => {
   const item = await inspectImportFile(excel(['OS 2025', 'Equipamentos']));
   assert.deepEqual(item.types, ['orders', 'operational']);
