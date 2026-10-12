@@ -1,5 +1,28 @@
 # Manutenção do parque e relatórios — 0.14.0
 
+## Propostas de aprofundamento — análise em 12/10/2026
+
+As propostas abaixo ainda não são funcionalidades implementadas. A versão 0.17.9 refina a apresentação, sem modificar os cálculos do parque. Já existem contagens de base vinculável, equipamentos com assistência, assistências por 100 registros, retornos 30/60/90 e trocas. As próximas análises devem complementar esses indicadores.
+
+| Proposta                                          | Cálculo ou informação                                                                                           | Apresentação sugerida                                           | Condição para implementar                                                                                                 |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Concentração das assistências                     | Assistências efetivas dos cinco maiores clientes/modelos ÷ total de assistências efetivas vinculadas no recorte | Card percentual, ranking com volume e tamanho da base           | Utiliza vínculos atuais; apresentar concentração, sem interpretar como qualidade ou falha                                 |
+| Histórico por equipamento do parque               | Quantidade de intervenções efetivas, visitas improdutivas e datas observadas por serial + placa                 | Tabela com detalhe e linha do tempo                             | Separar visitas de manutenção; manter equipamentos sem histórico como cobertura desconhecida                              |
+| Tempo desde a última intervenção registrada       | Data de referência − última data válida de intervenção efetiva; faixas de tempo com grupo Sem histórico         | Cards e distribuição por cliente/modelo                         | Definir quais intervenções entram e a data de referência; tempo sem OS não comprova necessidade de manutenção             |
+| Composição financeira dos atendimentos vinculados | Custo Total lançado, Técnico e Km válidos dos serviços realizados; custos improdutivos separados                | Cards, comparação por cliente/modelo e tabela das bases válidas | Confirmar atribuição: custo por atendimento é mais seguro; troca com dois seriais não deve duplicar custo por equipamento |
+| Matriz modelo × motivo                            | Contagens de assistências efetivas vinculadas, agrupadas por modelo operacional e motivo da OS                  | Matriz com quantitativos, percentuais e linhas de origem        | Modelo é da fotografia operacional; revisar modelo e titularidade históricos antes de afirmar causalidade                 |
+| Evolução das intervenções vinculadas              | Quantidade e custo dos serviços vinculados por mês de atendimento                                               | Volume/custo mensais com identificação dos vínculos             | A fotografia atual não é o tamanho histórico do parque; evitar taxa mensal de falhas ou disponibilidade                   |
+
+Sugestão de sequência: concentração das assistências e histórico individual primeiro; composição financeira após validar a atribuição de custo. Manutenção sem troca continua dependendo da classificação anteriormente adiada.
+
+### Base futura de envios e recebimentos
+
+Uma planilha logística pode completar o rastreamento por serial: envio, retirada, recebimento, análise, reparo, reaproveitamento ou descarte, conforme os eventos efetivamente registrados. Campos úteis: serial/ID, modelo, tipo e data do evento, cliente, placa quando disponível, origem/destino, motivo, situação, número da OS e diagnóstico quando houver.
+
+Antes da integração, será necessário conferir se cada linha representa evento ou resumo, qual data representa saída/retirada/recebimento, como identificar duplicidades, quais são as situações válidas e como ligar acessórios sem serial. As datas de logística não substituem automaticamente as datas de instalação/retirada em campo. Retorno por problema não comprova defeito; recebimento não comprova encerramento de cobrança; envio não comprova instalação.
+
+Com vínculos confirmados, poderá apoiar a conferência de equipamentos recebidos ainda presentes no cadastro de campo, retiradas sem retorno registrado e diferenças de identificação entre OS, operacional e logística. Essas ocorrências devem ser tratadas como pontos de conferência, considerando datas das bases e cobertura histórica. Não há importador logístico nem nova persistência ativados nesta etapa.
+
 Esta entrega aprofunda os indicadores e as exportações da página **Operacional × OS — Análises**. Importação, revisão, regras financeiras e critérios de cobrança permanecem nas regras existentes. Não calcula faturamento, pró-rata, custo por contrato nem titularidade histórica.
 
 ## Como usar

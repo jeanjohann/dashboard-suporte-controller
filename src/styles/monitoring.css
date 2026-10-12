@@ -1,4 +1,17 @@
 /* Organização do módulo em preparação; cores herdadas do tema do sistema. */
+.monitoring-preparation {
+  padding: 20px;
+}
+.monitoring-preparation h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+.monitoring-preparation p {
+  margin: 0;
+  max-width: 72ch;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
 .monitoring-menu {
   display: grid;
   gap: 6px;
@@ -7,8 +20,8 @@
   text-align: left;
 }
 .monitoring-menu button.active {
-  background: var(--ui-accent-ink);
-  color: var(--ui-button-text);
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-ink);
 }
 .monitoring-filters {
   padding: 16px;

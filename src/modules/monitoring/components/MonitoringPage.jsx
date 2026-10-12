@@ -116,7 +116,7 @@ export function MonitoringPage({ onPage }) {
                 : 'Integração real ainda não ativada. Explore a demonstração para avaliar filtros e relatórios; ela não representa veículos de clientes.'}
             </div>
             {!snapshot ? (
-              <section className="panel">
+              <section className="panel monitoring-preparation">
                 <h2>Preparado para a próxima etapa</h2>
                 <p>
                   Após confirmar o fuso, o significado da última comunicação e os limites da API,

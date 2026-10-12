@@ -24,6 +24,8 @@ Atualizada em 12/10/2026. Esta é a fila consolidada atual; observações de ver
 
 ## Já entregues — não recolocar na fila
 
+Novas propostas registradas em 12/10/2026: aprofundamento do Parque e Manutenção (concentração, histórico individual, última intervenção e composição financeira) e leitura de uma futura planilha de envios/recebimentos. Critérios e dependências estão em [Parque e Manutenção](PARQUE-E-MANUTENCAO.md). Aguardam escolha de prioridade e, para logística, o arquivo e a validação dos eventos; não foram ativadas.
+
 Importação manual, múltiplos filtros, personalização de seções, controles de abrir/recolher, relatórios descritivos, análises por cliente/veículo/técnico, vida observada, cruzamentos básicos com a Operacional, consumo com histórico e anotações locais, backup/restauração, exportação/impressão por linha, seleção de linhas para CSV e limite absoluto de consumo. O monitoramento ainda utiliza somente demonstração; seus controles não equivalem a integração real.
 
 ## Limites

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.17.8 — filtros de responsáveis do suporte e diagramas do sistema; Monitoramento de Frota em demonstração isolada.
+**Versão:** 0.17.9 — temas claro/escuro e alinhamento visual refinados; Monitoramento de Frota em demonstração isolada.
 
 ## Documentação do projeto
 

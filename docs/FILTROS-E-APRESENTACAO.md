@@ -1,5 +1,13 @@
 # Filtros e apresentação
 
+## Temas e alinhamento — 0.17.9
+
+O tema claro utiliza fundo cinza neutro (`#F6F7F9`), superfícies brancas e destaque laranja (`#FF8A32`). O escuro usa fundo grafite (`#191A1E`), superfícies cinza (`#22242A`) e laranja (`#FF943D`). Texto, links, alertas, tabelas e gráficos herdam a paleta de `src/styles/theme.css`; a escolha de tema continua salva no navegador. Cores de sucesso, atenção e erro permanecem distintas.
+
+Cards e painéis usam acabamento plano. Sombras ficam reservadas às camadas flutuantes, como balões e listas; a primeira indicação executiva conserva uma linha de destaque discreta. Fonte local Inter e ícones vetoriais continuam utilizados, sem dependência de fontes externas.
+
+Seletores simples dos relatórios e controles de participantes compartilham alinhamento de rótulo/campo. No celular, empilham quando necessário. Seletores de histórico e configurações com estrutura própria ficam fora dessa padronização. O bloco de preparação do Monitoramento recebe espaçamento interno e texto com largura de leitura limitada. Esses ajustes são de apresentação e não alteram indicadores, filtros, permissões ou armazenamento.
+
 ## Situação dos ciclos — 0.17.8
 
 Em **OS → Equipamentos → Tempo observado em campo**, o seletor **Situação dos ciclos** permite Todos (padrão), Encerrados ou Sem retirada registrada. Atua depois dos filtros principais e somente na tabela/impressão dessa seção. A contagem informa quantos ciclos aparecem dentre os identificados, com a situação escolhida também no PDF. Nenhum vínculo é recalculado por essa escolha; os demais relatórios e avisos de revisão permanecem com suas regras. Nova importação restaura Todos.

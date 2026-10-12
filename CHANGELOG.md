@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.17.9 — 12/10/2026
+
+- Tema claro em cinzas neutros, branco e laranja; tema escuro em grafite, com superfícies cinza e laranja mais destacado.
+- Cards e painéis planos, com hierarquia por bordas/espaçamento; botões secundários escuros em cinza, mantendo texto contrastante e destaque laranja nas ações principais.
+- Alinha larguras de Agrupar por, Comparar por e Participantes no gráfico, com empilhamento no celular; seletores especiais de relatório/histórico preservam seus layouts próprios.
+- Corrige espaçamento interno do bloco de preparação do monitoramento e mantém a navegação da demonstração legível nos dois temas.
+- Documenta propostas de aprofundamento do Parque e Manutenção e de uma futura base de envios/recebimentos. Nenhuma nova regra de cálculo ou integração foi ativada.
+
 ## 0.17.8 — 12/10/2026
 
 - Filtros principais separados de responsável do suporte pela execução e pelo agendamento, com seleção múltipla e combinação com todo o recorte das OS.

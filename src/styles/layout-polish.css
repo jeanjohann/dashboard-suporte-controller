@@ -23,13 +23,14 @@
   line-height: 1.4;
 }
 .dashboard-widget > label:has(> select),
+.section-content > label:not(.report-selection):not(.line-tracked-select):has(> select),
 .chart-heading > label,
 .chart-order-control {
   display: grid;
-  grid-template-columns: minmax(130px, 1fr) minmax(120px, 200px);
+  grid-template-columns: 160px minmax(0, 220px);
   align-items: center;
   gap: 8px 12px;
-  max-width: 460px;
+  max-width: 392px;
   width: 100%;
   font-size: 12px;
   line-height: 1.5;
@@ -38,6 +39,27 @@
 }
 .dashboard-widget > label:has(> select) {
   margin-bottom: 10px;
+}
+.section-content > label:not(.report-selection):not(.line-tracked-select):has(> select) {
+  margin: 0 0 12px;
+}
+.section-content > label:not(.report-selection):not(.line-tracked-select):has(> select) > select {
+  width: 100%;
+  min-width: 0;
+}
+/* Um gráfico compacto não reserva a posição de um título que não foi exibido. */
+.bar-chart > .chart-heading:not(:has(> h3)) {
+  justify-content: flex-start;
+}
+/* Superfícies planas: a hierarquia vem do fundo, da borda e do espaço interno. */
+.panel,
+.workspace-section,
+.summary-card,
+.executive-cards article {
+  box-shadow: none;
+}
+.executive-cards article:first-child {
+  box-shadow: inset 0 2px var(--ui-accent);
 }
 .chart-heading {
   gap: 10px 16px;
@@ -93,6 +115,7 @@
 }
 .scope {
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 .summary-grid,
 .dashboard-chart-grid,
@@ -109,6 +132,7 @@
 }
 @media (max-width: 520px) {
   .dashboard-widget > label:has(> select),
+  .section-content > label:not(.report-selection):not(.line-tracked-select):has(> select),
   .chart-heading > label,
   .chart-order-control {
     grid-template-columns: 1fr;
