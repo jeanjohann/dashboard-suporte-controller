@@ -1,5 +1,17 @@
 # Filtros e apresentação
 
+## Situação dos ciclos — 0.17.8
+
+Em **OS → Equipamentos → Tempo observado em campo**, o seletor **Situação dos ciclos** permite Todos (padrão), Encerrados ou Sem retirada registrada. Atua depois dos filtros principais e somente na tabela/impressão dessa seção. A contagem informa quantos ciclos aparecem dentre os identificados, com a situação escolhida também no PDF. Nenhum vínculo é recalculado por essa escolha; os demais relatórios e avisos de revisão permanecem com suas regras. Nova importação restaura Todos.
+
+Encerrado significa instalação e retirada registradas do mesmo serial/placa segundo os critérios de vínculo; não significa necessariamente troca, pois retiradas por cancelamento também encerram ciclos. Sem retirada registrada mede até a referência escolhida, sem comprovar atividade. Para comparar tempos até primeira troca, use a seção específica. A data de referência continua disponível e aplica-se apenas aos ciclos sem retirada.
+
+## Responsáveis do suporte — 0.17.8
+
+Os filtros principais das OS incluem **Suporte · execução** (responsável na coluna `Resp. Execução`) e **Suporte · agendamento** (responsável na coluna `Resp. Agendamento`). Os rótulos curtos mantêm o painel compacto; a ajuda explica os dois papéis. Cada lista aceita vários nomes. São funções distintas: selecionar Ana na execução não seleciona automaticamente linhas em que Ana aparece somente no agendamento. Ao usar ambos, a linha deve atender às duas seleções.
+
+Os responsáveis combinam com status, cliente, técnico, serviço, motivo, cidade, UF e período, seguindo as regras de cada relatório. A seleção afeta cards, gráficos, tabelas, revisão e exportações da análise. Não atribui ao suporte o custo de um técnico nem altera a planilha. Os nomes são lidos como registrados; não há unificação automática de grafias. Coluna ausente desabilita o respectivo campo. Limpar filtros restaura todas as linhas, inclusive as sem responsável. As duas colunas deixam de aparecer no seletor de filtros adicionais porque agora são filtros principais.
+
 Os filtros de categoria continuam combinados entre si e permitem vários valores por campo. As listas agora flutuam sobre o conteúdo: abrir uma lista não aumenta a altura do painel. Clique fora ou pressione Escape para fechar. As seleções permanecem visíveis e podem ser removidas individualmente.
 
 Os painéis compartilhados de OS, Operacional e Consumo usam campos compactos e uma grade responsiva. O componente MultiFilter também aplica o menu compacto ao Parque e ao Monitoramento. Campos específicos de cada módulo preservam seu significado.

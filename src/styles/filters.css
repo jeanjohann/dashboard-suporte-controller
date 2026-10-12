@@ -1,4 +1,20 @@
 /* Filtros compactos compartilhados. Listas flutuantes preservam o espaço dos relatórios. */
+.lifecycle-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+.lifecycle-controls label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.lifecycle-controls select,
+.lifecycle-controls input {
+  max-width: 100%;
+}
 .report-expansion-controls {
   display: flex;
   flex-wrap: wrap;

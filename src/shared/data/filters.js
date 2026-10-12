@@ -8,11 +8,19 @@ export const filterFields = [
   'Status',
   'Razão Social',
   'Nome do Técnico',
+  'Resp. Execução',
+  'Resp. Agendamento',
   'Tipo de Serviço',
   'Motivo',
   'Cidade',
   'UF',
 ];
+/** Rótulos da interface separados dos cabeçalhos exatos usados na leitura da planilha. */
+export const filterLabels = {
+  'Razão Social': 'Cliente · razão social',
+  'Resp. Execução': 'Suporte · execução',
+  'Resp. Agendamento': 'Suporte · agendamento',
+};
 /** Localiza a célula pelo cabeçalho da coluna sem alterar seu valor original. */
 export function field(data, row, label) {
   const index = data.columns.findIndex((col) => col.label === label);

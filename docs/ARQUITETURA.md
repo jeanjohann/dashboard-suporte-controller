@@ -49,6 +49,8 @@ As pastas `node_modules`, `dist`, `.wrangler` e `.worker-build` são geradas por
 
 ## Fluxo dos dados
 
+Os [diagramas do sistema e da leitura dos arquivos](DIAGRAMAS-DO-SISTEMA.md) apresentam a separação entre pessoa, navegador e Cloudflare, os campos interpretados e os caminhos de revisão. Os SVGs podem ser ampliados para estudo e apresentação.
+
 Monitoramento possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONITORAMENTO-DE-FROTA.md). Nesta etapa seus dados fictícios ficam isolados, sem API, agendamento ou armazenamento no servidor.
 
 1. `src/main.jsx` aplica o tema e a verificação de acesso antes de montar `app/Workspace.jsx`.

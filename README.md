@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.17.7 — primeira etapa do Monitoramento de Frota, com demonstração isolada.
+**Versão:** 0.17.8 — filtros de responsáveis do suporte e diagramas do sistema; Monitoramento de Frota em demonstração isolada.
 
 ## Documentação do projeto
+
+- [Diagramas técnicos e guia de leitura das planilhas](docs/DIAGRAMAS-DO-SISTEMA.md)
 
 - [Monitoramento de Frota — demonstração e próximos passos](docs/MONITORAMENTO-DE-FROTA.md)
 

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1168" viewBox="0 0 1200 1168" role="img" aria-label="01 · Arquitetura técnica e limites dos dados">
+<title>01 · Arquitetura técnica e limites dos dados</title>
+<desc>Fluxo atual de autenticação e permissões, arquivos no navegador, cálculos locais e histórico de consumo. O D1 contém usuários e permissões; as planilhas não são enviadas ao servidor.</desc>
+<rect x="0" y="0" width="1200" height="1168" fill="#FFFFFF"/>
+<text x="48" y="64" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="start" fill="#23303B">01 · Arquitetura técnica e limites dos dados</text>
+<text x="48" y="92" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#536775">Addlog · Suporte Controller · arquitetura atual 0.17.8 · 12/10/2026</text>
+<rect x="48" y="128" width="312" height="992" rx="8" fill="#EAEDEE" stroke="#536775" stroke-width="2"/>
+<text x="204" y="156" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">Pessoa autorizada</text>
+<rect x="400" y="128" width="344" height="992" rx="8" fill="#EAEDEE" stroke="#536775" stroke-width="2"/>
+<text x="572" y="156" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">Navegador · React</text>
+<rect x="784" y="128" width="368" height="992" rx="8" fill="#EAEDEE" stroke="#536775" stroke-width="2"/>
+<text x="968" y="156" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">Cloudflare · Access/Worker/D1</text>
+<path d="M 284 216 L 891 216" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 902 216 L 890 221 L 890 211 Z" fill="#536775"/>
+<rect x="518" y="192" width="164" height="28" rx="4" fill="#FFFFFF"/>
+<text x="600" y="210" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#536775">sessão autenticada</text>
+<path d="M 984 252 L 984 325" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 984 336 L 979 324 L 989 324 Z" fill="#536775"/>
+<rect x="802" y="270" width="168" height="28" rx="4" fill="#FFFFFF"/>
+<text x="970" y="288" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">GET /api/me + JWT</text>
+<path d="M 1074 360 L 1120 360 L 1120 648 L 1101 648" fill="none" stroke="#357A9A" stroke-width="2" stroke-linecap="round"/>
+<path d="M 1090 648 L 1102 643 L 1102 653 Z" fill="#357A9A"/>
+<rect x="994" y="414" width="116" height="28" rx="4" fill="#FFFFFF"/>
+<text x="1110" y="432" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">JWT inválido</text>
+<path d="M 984 384 L 984 469" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 984 480 L 979 468 L 989 468 Z" fill="#536775"/>
+<rect x="770" y="414" width="200" height="28" rx="4" fill="#FFFFFF"/>
+<text x="970" y="432" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">JWT válido: consulta D1</text>
+<path d="M 984 528 L 984 613" fill="none" stroke="#357A9A" stroke-width="2" stroke-linecap="round"/>
+<path d="M 984 624 L 979 612 L 989 612 Z" fill="#357A9A"/>
+<rect x="1000" y="560" width="132" height="28" rx="4" fill="#FFFFFF"/>
+<text x="1000" y="578" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#536775">acesso negado</text>
+<path d="M 890 504 L 752 504 L 752 648 L 711 648" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 700 648 L 712 643 L 712 653 Z" fill="#536775"/>
+<rect x="586" y="560" width="156" height="28" rx="4" fill="#FFFFFF"/>
+<text x="742" y="578" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">acesso autorizado</text>
+<path d="M 600 672 L 600 720 L 208 720 L 208 745" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 208 756 L 203 744 L 213 744 Z" fill="#536775"/>
+<rect x="328" y="696" width="152" height="28" rx="4" fill="#FFFFFF"/>
+<text x="404" y="714" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#536775">páginas liberadas</text>
+<path d="M 286 792 L 515 792" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 526 792 L 514 797 L 514 787 Z" fill="#536775"/>
+<rect x="350" y="768" width="108" height="28" rx="4" fill="#FFFFFF"/>
+<text x="404" y="786" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#536775">Excel / CSV</text>
+<path d="M 600 828 L 600 889" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 600 900 L 595 888 L 605 888 Z" fill="#536775"/>
+<rect x="448" y="846" width="140" height="28" rx="4" fill="#FFFFFF"/>
+<text x="588" y="864" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">células e origem</text>
+<path d="M 600 972 L 600 1033" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 600 1044 L 595 1032 L 605 1032 Z" fill="#536775"/>
+<rect x="614" y="990" width="148" height="28" rx="4" fill="#FFFFFF"/>
+<text x="614" y="1008" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#536775">consumo e notas</text>
+<path d="M 508 936 L 416 936 L 416 1080 L 297 1080" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 286 1080 L 298 1075 L 298 1085 Z" fill="#536775"/>
+<rect x="224" y="990" width="180" height="28" rx="4" fill="#FFFFFF"/>
+<text x="404" y="1008" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">CSV/XLSX/PDF/SVG</text>
+<rect x="132" y="180" width="152" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="208" y="212" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="208" dy="0">Pessoa acessa</tspan><tspan x="208" dy="20">o sistema</tspan></text>
+<rect x="902" y="180" width="164" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="984" y="212" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="984" dy="0">Access confirma</tspan><tspan x="984" dy="20">identidade</tspan></text>
+<rect x="894" y="336" width="180" height="48" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="984" y="366" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">Worker valida JWT</text>
+<rect x="890" y="480" width="188" height="48" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="984" y="510" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">Worker consulta D1</text>
+<rect x="878" y="624" width="212" height="48" rx="24" fill="#E7EFF3" stroke="#357A9A" stroke-width="2"/>
+<text x="984" y="654" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">Worker recusa entrada</text>
+<rect x="500" y="624" width="200" height="48" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="654" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">React monta páginas</text>
+<rect x="130" y="756" width="156" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="208" y="788" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="208" dy="0">Pessoa importa</tspan><tspan x="208" dy="20">arquivos</tspan></text>
+<rect x="526" y="756" width="148" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="788" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">React mantém</tspan><tspan x="600" dy="20">bases locais</tspan></text>
+<rect x="508" y="900" width="184" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="932" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">Domínios calculam</tspan><tspan x="600" dy="20">indicadores</tspan></text>
+<rect x="524" y="1044" width="152" height="72" rx="24" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="1076" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">Navegador</tspan><tspan x="600" dy="20">salva consumo</tspan></text>
+<rect x="130" y="1044" width="156" height="72" rx="24" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="208" y="1076" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="208" dy="0">Pessoa exporta</tspan><tspan x="208" dy="20">relatórios</tspan></text>
+</svg>

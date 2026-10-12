@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.17.8 — 12/10/2026
+
+- Filtros principais separados de responsável do suporte pela execução e pelo agendamento, com seleção múltipla e combinação com todo o recorte das OS.
+- Tempo observado em campo permite exibir Todos, Encerrados ou Sem retirada registrada; a impressão segue esse recorte local e informa situação/contagem, sem alterar vínculos e outros indicadores.
+- Rótulos claros na tela, mantendo os cabeçalhos originais `Resp. Execução` e `Resp. Agendamento` na leitura; papéis não são unidos automaticamente.
+- Diagramas SVG/PNG da arquitetura e da importação, com guia dos campos, regras, armazenamento e limitações.
+- Testes da combinação dos responsáveis, preservação da origem, limpeza de filtros e aplicação aos indicadores da visão geral.
+
 ## 0.17.7 — 12/10/2026
 
 - Completa os ícones de ajuda dos cabeçalhos de relatório em OS, Operacional, Consumo e Parque e Manutenção, com explicações de fonte, cálculo, exclusões e finalidade.

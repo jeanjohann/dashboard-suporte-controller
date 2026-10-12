@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1264" viewBox="0 0 1200 1264" role="img" aria-label="02 · Como os arquivos viram análises">
+<title>02 · Como os arquivos viram análises</title>
+<desc>Três entradas reconhecidas: OS 2025, Equipamentos e CSV Arqia/Kore. O navegador valida o layout, preserva referências, aponta revisão, aplica filtros e calcula relatórios. Layout inválido exige corrigir a fonte e reimportar.</desc>
+<rect x="0" y="0" width="1200" height="1264" fill="#FFFFFF"/>
+<text x="48" y="64" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="start" fill="#23303B">02 · Como os arquivos viram análises</text>
+<text x="48" y="92" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#536775">Addlog · Suporte Controller · arquitetura atual 0.17.8 · 12/10/2026</text>
+<path d="M 208 252 L 208 312 L 558 312 L 558 361" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 558 372 L 553 360 L 563 360 Z" fill="#536775"/>
+<rect x="220" y="270" width="136" height="28" rx="4" fill="#FFFFFF"/>
+<text x="220" y="288" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#536775">Excel: OS 2025</text>
+<path d="M 600 252 L 600 361" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 600 372 L 595 360 L 605 360 Z" fill="#536775"/>
+<rect x="614" y="270" width="176" height="28" rx="4" fill="#FFFFFF"/>
+<text x="614" y="288" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#536775">Excel: Equipamentos</text>
+<path d="M 984 252 L 984 312 L 642 312 L 642 361" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 642 372 L 637 360 L 647 360 Z" fill="#536775"/>
+<rect x="820" y="270" width="152" height="28" rx="4" fill="#FFFFFF"/>
+<text x="972" y="288" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">CSV: Arqia / Kore</text>
+<path d="M 684 408 L 792 408 L 792 600 L 901 600" fill="none" stroke="#357A9A" stroke-width="2" stroke-linecap="round"/>
+<path d="M 912 600 L 900 605 L 900 595 Z" fill="#357A9A"/>
+<rect x="806" y="490" width="164" height="28" rx="4" fill="#FFFFFF"/>
+<text x="806" y="508" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#536775">não: layout inválido</text>
+<path d="M 600 444 L 600 553" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 600 564 L 595 552 L 605 552 Z" fill="#536775"/>
+<rect x="390" y="490" width="196" height="28" rx="4" fill="#FFFFFF"/>
+<text x="586" y="508" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">sim: layout reconhecido</text>
+<path d="M 600 636 L 600 757" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 600 768 L 595 756 L 605 756 Z" fill="#536775"/>
+<rect x="430" y="682" width="156" height="28" rx="4" fill="#FFFFFF"/>
+<text x="586" y="700" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">registros + revisão</text>
+<path d="M 600 816 L 600 937" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 600 948 L 595 936 L 605 936 Z" fill="#536775"/>
+<rect x="438" y="874" width="148" height="28" rx="4" fill="#FFFFFF"/>
+<text x="586" y="892" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">recorte escolhido</text>
+<path d="M 600 1020 L 600 1129" fill="none" stroke="#536775" stroke-width="2" stroke-linecap="round"/>
+<path d="M 600 1140 L 595 1128 L 605 1128 Z" fill="#536775"/>
+<rect x="410" y="1066" width="176" height="28" rx="4" fill="#FFFFFF"/>
+<text x="586" y="1084" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="400" text-anchor="end" fill="#536775">indicadores + origem</text>
+<rect x="130" y="180" width="156" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="208" y="212" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="208" dy="0">Pessoa fornece</tspan><tspan x="208" dy="20">OS 2025</tspan></text>
+<rect x="522" y="180" width="156" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="212" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">Pessoa fornece</tspan><tspan x="600" dy="20">Equipamentos</tspan></text>
+<rect x="900" y="180" width="168" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="984" y="212" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="984" dy="0">Pessoa fornece</tspan><tspan x="984" dy="20">CSV de consumo</tspan></text>
+<rect x="516" y="372" width="168" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="404" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">Navegador</tspan><tspan x="600" dy="20">reconhece layout</tspan></text>
+<rect x="912" y="564" width="144" height="72" rx="24" fill="#E7EFF3" stroke="#357A9A" stroke-width="2"/>
+<text x="984" y="596" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="984" dy="0">Pessoa ajusta</tspan><tspan x="984" dy="20">e reimporta</tspan></text>
+<rect x="512" y="564" width="176" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="596" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">Navegador</tspan><tspan x="600" dy="20">preserva a origem</tspan></text>
+<rect x="496" y="768" width="208" height="48" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="798" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B">Pessoa escolhe filtros</text>
+<rect x="514" y="948" width="172" height="72" rx="8" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="980" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">Domínios cruzam</tspan><tspan x="600" dy="20">e calculam</tspan></text>
+<rect x="518" y="1140" width="164" height="72" rx="24" fill="#F4E8E4" stroke="#A6421F" stroke-width="2"/>
+<text x="600" y="1172" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#23303B"><tspan x="600" dy="0">Pessoa consulta</tspan><tspan x="600" dy="20">e exporta</tspan></text>
+</svg>

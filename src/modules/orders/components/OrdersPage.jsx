@@ -15,6 +15,7 @@ import { summarize, finance } from '../domain/analysis.js';
 import {
   applyFilters,
   filterFields,
+  filterLabels,
   monthlyCompleted,
   attendanceExtent,
 } from '../../../shared/data/filters.js';
@@ -70,6 +71,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
   const [filters, setFilters] = useState({});
   const [extraColumns, setExtraColumns] = useState([]);
   const [referenceDate, setReferenceDate] = useState(todaySaoPaulo);
+  const [cycleState, setCycleState] = useState('Todos');
   const changeFilter = (key, value) => {
     setFilters((previous) => ({ ...previous, [key]: value }));
     setPage(0);
@@ -101,6 +103,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
   }
   useEffect(() => {
     setFilters({});
+    setCycleState('Todos');
     setExtraColumns([]);
     setRecordSort(null);
     setPage(0);
@@ -143,6 +146,10 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
   const monthly = selected ? monthlyCompleted(selected) : null;
   const devices = selected ? equipment(data, selected) : null;
   const lifecycle = selected ? observedPeriods(data, selected, referenceDate) : null;
+  // Recorte local de apresentação: não altera os vínculos, a revisão ou outros relatórios.
+  const displayedPeriods = (lifecycle?.periods ?? []).filter(
+    (period) => cycleState === 'Todos' || period.state === cycleState,
+  );
   const review = selected
     ? [
         ...selected.issues,
@@ -236,13 +243,16 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                         <InfoNote label="Como os filtros da OS são aplicados">
                           Filtros combinados aplicados aos indicadores, gráficos, chamados e
                           revisão. Em um mesmo campo, qualquer valor selecionado é aceito; entre
-                          campos, a linha precisa atender a todos os filtros. Agendamentos por
-                          responsável usam Agendamento; os demais indicadores de OS usam Data de
-                          atendimento. A busca textual filtra somente a tabela. Na vida em campo, os
-                          filtros selecionam instalações ou eventos de troca conforme o modo
-                          escolhido na seção. O período acima é compartilhado por toda a análise;
-                          registros sem data válida são excluídos apenas quando há limite de data
-                          ativo. As contagens e exclusões continuam visíveis para conferência.
+                          campos, a linha precisa atender a todos os filtros. Responsáveis do
+                          suporte pelo agendamento e pela execução são filtrados separadamente: cada
+                          seleção consulta sua própria coluna, Resp. Agendamento ou Resp. Execução,
+                          sem unir os dois papéis. Os relatórios de agendamentos por responsável
+                          usam Agendamento; os demais indicadores de OS usam Data de atendimento. A
+                          busca textual filtra somente a tabela. Na vida em campo, os filtros
+                          selecionam instalações ou eventos de troca conforme o modo escolhido na
+                          seção. O período acima é compartilhado por toda a análise; registros sem
+                          data válida são excluídos apenas quando há limite de data ativo. As
+                          contagens e exclusões continuam visíveis para conferência.
                         </InfoNote>
                       </div>
                       <div className="filter-grid">
@@ -261,7 +271,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                           return (
                             <MultiFilter
                               key={label}
-                              label={label === 'Razão Social' ? 'Cliente · razão social' : label}
+                              label={filterLabels[label] || label}
                               options={options}
                               disabled={index < 0}
                               values={filters[label] || []}
@@ -537,20 +547,30 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                   <Section title={sectionLabels.lifecycle} visible={visible.lifecycle}>
                     <section className="panel chart-panel">
                       <h2>Tempo observado em campo</h2>
-                      <label>
-                        Referência para períodos sem retirada{' '}
-                        <input
-                          type="date"
-                          value={referenceDate}
-                          onChange={(event) => setReferenceDate(event.target.value)}
-                        />
-                      </label>
-                      <button
-                        style={{ marginLeft: 12 }}
-                        onClick={() => setReferenceDate(todaySaoPaulo())}
-                      >
-                        Usar data atual
-                      </button>
+                      <div className="lifecycle-controls" data-no-print>
+                        <label>
+                          Situação dos ciclos{' '}
+                          <select
+                            value={cycleState}
+                            onChange={(event) => setCycleState(event.target.value)}
+                          >
+                            <option value="Todos">Todos</option>
+                            <option value="Encerrado">Encerrados</option>
+                            <option value="Sem retirada registrada">Sem retirada registrada</option>
+                          </select>
+                        </label>
+                        <label>
+                          Referência para períodos sem retirada{' '}
+                          <input
+                            type="date"
+                            value={referenceDate}
+                            onChange={(event) => setReferenceDate(event.target.value)}
+                          />
+                        </label>
+                        <button onClick={() => setReferenceDate(todaySaoPaulo())}>
+                          Usar data atual
+                        </button>
+                      </div>
                       <InfoNote>
                         Mesmo serial e placa, instalação anterior à retirada. Vínculos analisados no
                         arquivo completo; ambos os registros precisam atender aos filtros. Várias
@@ -559,7 +579,11 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                         confirmar atividade ou ausência de problemas. A referência afeta apenas
                         ciclos sem retirada; ciclos encerrados mantêm suas datas reais. Dias
                         corridos até retirada, inclusive cancelamento. Para medir até primeira
-                        troca, use a seção Vida em campo até primeira troca.
+                        troca, use a seção Vida em campo até primeira troca. Situação dos ciclos
+                        filtra somente a tabela e a impressão desta seção, depois de aplicar os
+                        filtros principais. Não modifica os demais indicadores nem remove avisos de
+                        revisão. Encerrado significa retirada registrada, não necessariamente troca
+                        de equipamento.
                       </InfoNote>
                       {lifecycle.unavailable ? (
                         <p>Indisponível: faltam colunas.</p>
@@ -567,7 +591,17 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                         <p role="alert">Escolha uma data de referência válida.</p>
                       ) : (
                         <>
-                          <p>{lifecycle.periods.length} períodos identificados.</p>
+                          <p>
+                            {displayedPeriods.length} de {lifecycle.periods.length} períodos
+                            exibidos. Situação:{' '}
+                            {cycleState === 'Encerrado' ? 'Encerrados' : cycleState}.
+                          </p>
+                          {!displayedPeriods.length && (
+                            <p>
+                              Nenhum ciclo corresponde à situação selecionada e aos filtros da
+                              página.
+                            </p>
+                          )}
                           <div className="table-scroll">
                             <SortableTable>
                               <thead>
@@ -582,7 +616,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                                 </tr>
                               </thead>
                               <tbody>
-                                {lifecycle.periods.map((period) => (
+                                {displayedPeriods.map((period) => (
                                   <tr key={period.installationRow}>
                                     <td>{period.plate}</td>
                                     <td>{period.serial}</td>
