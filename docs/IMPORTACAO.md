@@ -12,6 +12,8 @@ A página **Importação** permite selecionar vários arquivos de uma vez. Confi
 
 ## Organização da tela
 
+Desde 0.18.1, o menu aberto mede 230 px no computador e 210 px entre 761 e 1050 px de tela. Recolhido, mede 76 px e mostra o símbolo da logo, os ícones e o comando de expansão. Recuos menores preservam os nomes completos, que podem quebrar em mais de uma linha. No celular, a navegação mantém a largura da tela. Nenhum filtro ou relatório é alterado por esse ajuste.
+
 As categorias e os checkboxes de relatórios ficam dentro da página selecionada no menu lateral. Os relatórios principais aparecem em blocos abertos; filtros e detalhes internos podem continuar recolhíveis. Ocultar um relatório não altera os filtros nem os cálculos.
 
 O botão de setas permite recolher o menu para uma faixa de ícones, com nomes disponíveis ao passar o mouse e rótulos acessíveis. A preferência é salva no navegador e compartilhada entre as páginas. O tema é controlado por um ícone discreto no rodapé. A seleção usa fundo suave e linha lateral, sem sombra.

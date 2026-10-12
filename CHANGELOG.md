@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.18.1 — 12/10/2026
+
+- Menu lateral aberto reduzido de 270 para 230 px; 210 px em telas intermediárias e faixa recolhida de 76 px.
+- Menor espaço lateral e recuo dos submenus, preservando logo, nomes completos, expansão e seletor de tema.
+- Layout móvel continua ocupando a largura da tela; ajuste exclusivamente visual, sem alterações de dados ou regras.
+
 ## 0.18.0 — 12/10/2026
 
 - Categoria Logística em Parque e Manutenção, independente da importação de OS/Operacional, com leitura manual das abas Envios e Devoluções.
