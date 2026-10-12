@@ -13,6 +13,7 @@ import {
   durationInsights,
   monthlyCosts,
 } from '../domain/insights.js';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { Section } from '../../../components/Section.jsx';
 import { Chart } from '../../../components/Chart.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
@@ -186,11 +187,12 @@ export function AdvancedInsights({
     [profileMetric, setProfileMetric] = useState('assistance'),
     [durationBy, setDurationBy] = useState('ID Rastreador'),
     [monthlyMetric, setMonthlyMetric] = useState('cost'),
-    [vehicle, setVehicle] = useState('');
+    [vehicle, setVehicle] = useState(''),
+    [attendanceKind, setAttendanceKind] = useState('productive');
   const clients = groupedCosts(data),
     composition = groupedCosts(data, compositionBy),
     calls = callInsights(data),
-    recurrence = recurringVisits(original, data),
+    recurrence = recurringVisits(original, data, attendanceKind),
     profiles = interventionProfiles(data, devices),
     durations = durationInsights(data, lifecycle, durationBy),
     monthly = monthlyCosts(data);
@@ -214,10 +216,33 @@ export function AdvancedInsights({
     trackers: 'Eventos de troca de rastreador',
     collector: 'Trocas de coletora',
     rfid: 'Trocas de RFID',
+    unproductive: 'Visitas improdutivas',
   };
   return (
     <>
-      <Section defaultOpen={false} title="Custo por cliente" visible={visibility.clientCosts}>
+      <Section
+        defaultOpen={false}
+        title="Custo por cliente"
+        visible={visibility.clientCosts}
+        summary={
+          clients && (
+            <ReportSummary
+              metrics={[
+                ['Clientes / grupos', number(clients.length)],
+                [
+                  'Custo total lançado',
+                  currency(
+                    clients.some((g) => g.cost.count)
+                      ? clients.reduce((sum, g) => sum + g.cost.sum, 0)
+                      : null,
+                  ),
+                ],
+              ]}
+              note="Concluída/Pago, incluindo visitas improdutivas. Custo Total válido lançado; categorias e período da página. Consulte o completo para exclusões e valores contratuais."
+            />
+          )
+        }
+      >
         {!clients ? (
           unavailable
         ) : (
@@ -266,7 +291,37 @@ export function AdvancedInsights({
           </>
         )}
       </Section>
-      <Section defaultOpen={false} title="Composição do custo" visible={visibility.costComposition}>
+      <Section
+        defaultOpen={false}
+        title="Composição do custo"
+        visible={visibility.costComposition}
+        summary={
+          composition && (
+            <ReportSummary
+              metrics={[
+                ['Grupos', number(composition.length)],
+                [
+                  'Serviço técnico',
+                  currency(
+                    composition.some((g) => g.composition.count)
+                      ? composition.reduce((sum, g) => sum + g.composition.technician, 0)
+                      : null,
+                  ),
+                ],
+                [
+                  'Deslocamento',
+                  currency(
+                    composition.some((g) => g.composition.count)
+                      ? composition.reduce((sum, g) => sum + g.composition.travel, 0)
+                      : null,
+                  ),
+                ],
+              ]}
+              note="Mesma base de linhas Concluída/Pago com ambos os componentes válidos, incluindo improdutivas. Não substitui Custo Total lançado."
+            />
+          )
+        }
+      >
         {!composition ? (
           unavailable
         ) : (
@@ -313,14 +368,59 @@ export function AdvancedInsights({
           </>
         )}
       </Section>
-      <Section defaultOpen={false} title="Atendimentos por veículo" visible={visibility.recurrence}>
+      <Section
+        defaultOpen={false}
+        title="Atendimentos por veículo"
+        visible={visibility.recurrence}
+        summary={
+          recurrence && (
+            <ReportSummary
+              metrics={[
+                ['Veículos identificados', number(recurrence.items.length)],
+                [
+                  'Linhas contabilizadas',
+                  number(recurrence.items.reduce((sum, g) => sum + g.rows.length, 0)),
+                ],
+                [
+                  'Intervalos observados',
+                  number(recurrence.items.reduce((sum, g) => sum + g.intervals.length, 0)),
+                ],
+              ]}
+              note={`Cliente + placa; modo ${attendanceKind === 'productive' ? 'intervenções sem improdutivas' : attendanceKind === 'unproductive' ? 'somente improdutivas' : 'todas as visitas'}. Concluída/Pago e filtros atuais; intervalos exigem data válida. Não é taxa de falha.`}
+            />
+          )
+        }
+      >
+        <label className="report-selection">
+          Contabilizar
+          <select
+            value={attendanceKind}
+            onChange={(event) => {
+              setAttendanceKind(event.target.value);
+              setVehicle('');
+            }}
+          >
+            <option value="productive">Intervenções executadas (sem improdutivas)</option>
+            <option value="unproductive">Somente visitas improdutivas</option>
+            <option value="all">Todas as visitas e intervenções</option>
+          </select>
+        </label>
+        <InfoNote>
+          Visita improdutiva é identificada pelo Motivo, independentemente do Tipo de Serviço. O
+          modo escolhido afeta apenas este relatório, seu gráfico, linha do tempo e exportação. Os
+          intervalos são calculados entre visitas do mesmo modo no histórico completo, respeitando a
+          seleção de datas e categorias nos dois extremos. Custos financeiros da página permanecem
+          com os valores válidos das visitas improdutivas. Os demais tipos de serviço podem ser
+          selecionados nos filtros principais. Sem Motivo disponível não é possível separar as
+          visitas.
+        </InfoNote>
         {!recurrence ? (
           unavailable
         ) : (
           <>
             <p className="scope">
-              Cliente + placa, com identificação exata. Cada linha Concluída/Pago conta como um
-              atendimento no gráfico e na tabela. Datas distintas válidas são contadas
+              Cliente + placa, com identificação exata. Cada linha Concluída/Pago do modo escolhido
+              conta como um atendimento no gráfico e na tabela. Datas distintas válidas são contadas
               separadamente; vários atendimentos no mesmo dia compartilham uma data. Retornos em até
               30/60/90 dias são cumulativos e contam intervalos entre visitas consecutivas, não
               veículos únicos. Não comprovam falha. O histórico completo define a visita seguinte;
@@ -342,6 +442,7 @@ export function AdvancedInsights({
             <InsightTable
               {...tableProps}
               title="Atendimentos por veículo"
+              filters={{ ...filters, modoAtendimento: attendanceKind }}
               headers={[
                 'Cliente',
                 'Placa',
@@ -419,6 +520,18 @@ export function AdvancedInsights({
         defaultOpen={false}
         title="Chamados com vários serviços"
         visible={visibility.multiCalls}
+        summary={
+          calls && (
+            <ReportSummary
+              metrics={[
+                ['Chamados', number(calls.items.length)],
+                ['Com várias linhas', number(calls.multiple.length)],
+                ['Média de linhas', number(calls.average)],
+              ]}
+              note="Concluída/Pago, incluindo visitas improdutivas. Linhas distintas podem pertencer ao mesmo chamado; não equivale à quantidade de manutenções."
+            />
+          )
+        }
       >
         {!calls ? (
           unavailable
@@ -471,6 +584,21 @@ export function AdvancedInsights({
         defaultOpen={false}
         title="Perfil das intervenções por cliente"
         visible={visibility.interventions}
+        summary={
+          profiles && (
+            <ReportSummary
+              metrics={[
+                ['Clientes / grupos', number(profiles.length)],
+                [
+                  'Assistências efetivas',
+                  number(profiles.reduce((sum, g) => sum + g.assistance, 0)),
+                ],
+                ['Improdutivas', number(profiles.reduce((sum, g) => sum + g.unproductive, 0))],
+              ]}
+              note="Concluída/Pago na seleção. Motivo Visita Improdutiva é separado dos tipos de intervenção; eventos de troca seguem identificação própria."
+            />
+          )
+        }
       >
         {!profiles ? (
           unavailable
@@ -539,6 +667,18 @@ export function AdvancedInsights({
         defaultOpen={false}
         title="Tempo até retirada no histórico"
         visible={visibility.durationAnalysis}
+        summary={
+          durations && (
+            <ReportSummary
+              metrics={[
+                ['Ciclos encerrados', number(durations.closedCount)],
+                ['Mediana até retirada (dias)', number(durations.median)],
+                ['Sem retirada registrada', number(durations.openCount)],
+              ]}
+              note="Somente ciclos identificados. Mediana usa encerrados; sem retirada não comprova atividade. Este indicador até retirada difere da vida até primeira troca."
+            />
+          )
+        }
       >
         {!durations ? (
           unavailable
@@ -605,7 +745,30 @@ export function AdvancedInsights({
           </>
         )}
       </Section>
-      <Section defaultOpen={false} title="Evolução dos custos" visible={visibility.costEvolution}>
+      <Section
+        defaultOpen={false}
+        title="Evolução dos custos"
+        visible={visibility.costEvolution}
+        summary={
+          monthly && (
+            <ReportSummary
+              metrics={[
+                ['Meses observados', number(monthly.items.length)],
+                [
+                  'Custo total lançado',
+                  currency(
+                    monthly.items.some((g) => g.cost.count)
+                      ? monthly.items.reduce((sum, g) => sum + g.cost.sum, 0)
+                      : null,
+                  ),
+                ],
+                ['Sem data válida', number(monthly.missingDate)],
+              ]}
+              note="Concluída/Pago por Data de atendimento, incluindo visitas improdutivas. Custos válidos dos meses observados; sem data não participa da evolução."
+            />
+          )
+        }
+      >
         {!monthly ? (
           unavailable
         ) : (

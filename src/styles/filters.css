@@ -186,3 +186,14 @@
     display: none;
   }
 }
+
+.report-summary .summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+.report-summary .summary-card {
+  padding: 10px 12px;
+}
+.report-summary .summary-card strong {
+  font-size: 22px;
+}

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.17.5 — primeira etapa do Monitoramento de Frota, com demonstração isolada.
+**Versão:** 0.17.6 — primeira etapa do Monitoramento de Frota, com demonstração isolada.
 
 ## Documentação do projeto
 
@@ -74,3 +74,5 @@ Na categoria Equipamentos, a seção Vida em campo até primeira troca mostra m�
 A página Operacional × OS possui indicadores com base vinculável explícita e relatórios XLSX/CSV personalizáveis. Consulte [regras e guia](docs/PARQUE-E-MANUTENCAO.md).
 
 Guia de filtros e leitura financeira: [Filtros e apresentação](docs/FILTROS-E-APRESENTACAO.md).
+
+[Fila consolidada para prioridades](docs/PROXIMOS-AJUSTES.md).

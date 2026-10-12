@@ -1,3 +1,4 @@
+import { isUnproductive } from './attendanceKind.js';
 /**
  * Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -9,7 +10,9 @@ export function managementMetrics(data, schedulingData = data) {
     ['Concluída', 'Pago'].includes(field(data, row, 'Status')?.raw),
   );
   const maintenance = completed.filter(
-    (row) => field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
+    (row) =>
+      !isUnproductive(data, row) &&
+      field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
   );
   const group = (rows, label) => {
     if (!data.columns.some((col) => col.label === label)) return null;
@@ -52,7 +55,10 @@ export function managementMetrics(data, schedulingData = data) {
     scheduling: schedulingAvailable
       ? [...schedulingGroups.values()].sort((a, b) => b.value - a.value)
       : null,
-    execution: group(completed, 'Resp. Execução'),
+    execution: group(
+      completed.filter((row) => !isUnproductive(data, row)),
+      'Resp. Execução',
+    ),
     clients: group(maintenance, 'Razão Social'),
   };
 }

@@ -2,6 +2,7 @@
  * Interface de Ordens de Serviço: apresenta análises, contexto e registros de origem sem modificar a planilha.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { isUnproductive } from '../domain/attendanceKind.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
@@ -22,7 +23,9 @@ function Groups({ data, column, maintenance = false, absorbed = false }) {
     ...data,
     rows: data.rows.filter(
       (row) =>
-        (!maintenance || field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica') &&
+        (!maintenance ||
+          (!isUnproductive(data, row) &&
+            field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica')) &&
         (!absorbed || field(data, row, 'Cobrança')?.raw === 'Addlog'),
     ),
   };

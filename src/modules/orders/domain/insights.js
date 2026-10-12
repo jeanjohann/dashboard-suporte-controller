@@ -1,3 +1,4 @@
+import { isUnproductive, matchesAttendanceKind } from './attendanceKind.js';
 /**
  * Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -117,7 +118,7 @@ export function callInsights(data) {
   };
 }
 /** Agrupa visitas por cliente + placa + dia e mede retornos cumulativos em 30, 60 e 90 dias, sem inferir falha. */
-export function recurringVisits(original, selected) {
+export function recurringVisits(original, selected, mode = 'productive') {
   if (
     ['Status', 'Placa', 'Razão Social', 'Data de atendimento'].some(
       (label) => !original.columns.some((col) => col.label === label),
@@ -129,7 +130,7 @@ export function recurringVisits(original, selected) {
   let missingIdentifier = 0,
     missingDate = 0;
   for (const row of original.rows) {
-    if (!done(original, row)) continue;
+    if (!done(original, row) || !matchesAttendanceKind(original, row, mode)) continue;
     const plate = value(original, row, 'Placa'),
       client = value(original, row, 'Razão Social');
     if (!plate || !client) {
@@ -210,6 +211,7 @@ export function interventionProfiles(data, devices) {
         rows: [],
         implementation: 0,
         assistance: 0,
+        unproductive: 0,
         removal: 0,
         trackers: 0,
         collector: 0,
@@ -222,6 +224,10 @@ export function interventionProfiles(data, devices) {
       const group = get(row);
       group.rows.push(row.sourceRow);
       const type = value(data, row, 'Tipo de Serviço');
+      if (isUnproductive(data, row)) {
+        group.unproductive++;
+        continue;
+      }
       if (type === 'Implementação') group.implementation++;
       if (type === 'Assistência Técnica') group.assistance++;
       if (trackerMotives.removal.includes(value(data, row, 'Motivo'))) group.removal++;

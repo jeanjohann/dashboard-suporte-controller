@@ -5,6 +5,7 @@
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import React, { useState } from 'react';
 import { technicianRanking } from '../domain/technicians.js';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { Section } from '../../../components/Section.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
@@ -16,9 +17,25 @@ const avg = (sum, count) => (count ? currency(sum / count) : '—');
 /** Apresenta o ranking por código do técnico, nome e componentes de custo, com detalhamento de origem. */
 export function Technicians({ data, visible }) {
   const [detail, setDetail] = useState(null);
+  const [volume, setVolume] = useState('productive');
   const result = technicianRanking(data);
   return (
-    <Section title="Ranking de técnicos" visible={visible}>
+    <Section
+      title="Ranking de técnicos"
+      visible={visible}
+      summary={
+        result && (
+          <ReportSummary
+            metrics={[
+              ['Técnicos identificados', result.items.length],
+              ['Intervenções executadas', result.items.reduce((sum, g) => sum + g.productive, 0)],
+              ['Visitas improdutivas', result.items.reduce((sum, g) => sum + g.unproductive, 0)],
+            ]}
+            note="Concluída/Pago por código de técnico. Custos válidos de ambos os grupos permanecem no completo; códigos ausentes ficam fora do ranking."
+          />
+        )
+      }
+    >
       <InfoNote>
         Agrupa atendimentos Concluída ou Pago pelo código do técnico, exibindo também os nomes
         registrados. Cada linha é um atendimento; chamados distintos são contados separadamente.
@@ -28,6 +45,8 @@ export function Technicians({ data, visible }) {
         Total lançado prevalece sobre Técnico + Km. O ranking ajuda a avaliar volume e gastos por
         prestador; não mede qualidade do atendimento. Pago sinaliza pagamento ao técnico, enquanto
         Concluída informa execução sem confirmar o pagamento. Os filtros da página se aplicam.
+        Motivo Visita Improdutiva separa visitas sem intervenção; o gráfico permite escolher o
+        volume. Custos e médias financeiras incluem as visitas improdutivas válidas.
       </InfoNote>
       {!result ? (
         <p>Indisponível: faltam colunas necessárias.</p>
@@ -39,12 +58,26 @@ export function Technicians({ data, visible }) {
             Médias usam os valores válidos de cada campo, incluindo zeros. Deslocamento quando
             cobrado usa apenas valores positivos. Volume não mede qualidade ou produtividade.
           </p>
+          <label>
+            Volume no gráfico{' '}
+            <select value={volume} onChange={(event) => setVolume(event.target.value)}>
+              <option value="productive">Intervenções executadas</option>
+              <option value="unproductive">Visitas improdutivas</option>
+              <option value="attendances">Todas as visitas e atendimentos</option>
+            </select>
+          </label>
           <Chart
             ranking
-            title="Atendimentos realizados por técnico"
+            title={
+              volume === 'productive'
+                ? 'Intervenções executadas por técnico'
+                : volume === 'unproductive'
+                  ? 'Visitas improdutivas por técnico'
+                  : 'Todas as visitas e atendimentos por técnico'
+            }
             items={result.items.map((item) => ({
               label: `${[...item.names].join(' / ') || 'Sem nome'} · ${item.code}`,
-              value: item.attendances,
+              value: item[volume],
             }))}
           />
           <PermissionButton
@@ -56,7 +89,9 @@ export function Technicians({ data, visible }) {
                   [
                     'Código',
                     'Técnico',
-                    'Realizados',
+                    'Visitas e atendimentos',
+                    'Intervenções executadas',
+                    'Visitas improdutivas',
                     'Chamados',
                     'Custo total BRL',
                     'Linhas Excel',
@@ -65,6 +100,8 @@ export function Technicians({ data, visible }) {
                     item.code,
                     [...item.names].join(' / '),
                     item.attendances,
+                    item.productive,
+                    item.unproductive,
                     item.calls.size,
                     item.cost / 100,
                     item.rows.join(', '),
@@ -86,7 +123,9 @@ export function Technicians({ data, visible }) {
                     {[
                       'Código',
                       'Técnico',
-                      'Realizados',
+                      'Visitas e atendimentos',
+                      'Intervenções executadas',
+                      'Visitas improdutivas',
                       'Chamados',
                       'Custo total',
                       'Serviço técnico',
@@ -108,6 +147,8 @@ export function Technicians({ data, visible }) {
                       <td>{item.code}</td>
                       <td>{[...item.names].join(' / ') || 'Sem nome'}</td>
                       <td>{item.attendances}</td>
+                      <td>{item.productive}</td>
+                      <td>{item.unproductive}</td>
                       <td>{item.calls.size}</td>
                       <td>{currency(item.cost)}</td>
                       <td>{currency(item.technician)}</td>

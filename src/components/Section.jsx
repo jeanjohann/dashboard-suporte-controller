@@ -11,13 +11,18 @@ export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
 /** Agrupa relatório, ajuda e impressão isolada com contexto de arquivo, filtros e referência temporal. */
-export function Section({ title, visible = true, defaultOpen = true, children }) {
+export function Section({ title, visible = true, defaultOpen = true, summary, children }) {
   const [open, setOpen] = useState(defaultOpen);
+  const [compact, setCompact] = useState(false);
+  const hasSummary = Boolean(summary);
   const expansion = useContext(ExpansionContext);
   // Conteúdo permanece montado ao recolher: gráficos, filtros e seleção não são reiniciados.
   useEffect(() => {
-    if (expansion && typeof expansion.open === 'boolean') setOpen(expansion.open);
-  }, [expansion]);
+    if (expansion && typeof expansion.open === 'boolean') {
+      setOpen(expansion.open);
+      setCompact(hasSummary && expansion.mode === 'summary');
+    }
+  }, [expansion, hasSummary]);
   const section = useRef(),
     context = useContext(PrintContext);
   const hiddenSections = useContext(HiddenSectionsContext);
@@ -84,6 +89,18 @@ export function Section({ title, visible = true, defaultOpen = true, children })
           <h2>{title}</h2>
         </div>
         <div className="report-heading-actions">
+          {hasSummary && (
+            <button
+              type="button"
+              aria-label={`${compact ? 'Visão completa' : 'Visão resumida'} de ${title}`}
+              onClick={() => {
+                setOpen(true);
+                setCompact((value) => !value);
+              }}
+            >
+              {compact ? 'Completo' : 'Resumo'}
+            </button>
+          )}
           <button
             type="button"
             aria-expanded={open}
@@ -104,7 +121,12 @@ export function Section({ title, visible = true, defaultOpen = true, children })
           </PermissionButton>
         </div>
       </header>
-      <div className="section-body" hidden={!open}>
+      {hasSummary && (
+        <div className="section-body" hidden={!open || !compact}>
+          {summary}
+        </div>
+      )}
+      <div className="section-body" hidden={!open || compact}>
         <div className="section-content" ref={section}>
           {content.map((child, index) =>
             notes.includes(child) ? (

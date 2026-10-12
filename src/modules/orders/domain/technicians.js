@@ -1,3 +1,4 @@
+import { isUnproductive } from './attendanceKind.js';
 /**
  * Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -27,6 +28,8 @@ export function technicianRanking(data) {
         code: key,
         names: new Set(),
         attendances: 0,
+        productive: 0,
+        unproductive: 0,
         calls: new Set(),
         cost: 0,
         technician: 0,
@@ -40,6 +43,8 @@ export function technicianRanking(data) {
       });
     const group = groups.get(key);
     group.attendances++;
+    if (isUnproductive(data, row)) group.unproductive++;
+    else group.productive++;
     group.calls.add(row.os);
     group.rows.push(row.sourceRow);
     const name = field(data, row, 'Nome do Técnico');

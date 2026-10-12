@@ -4,6 +4,9 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { technicianRanking } from './technicians.js';
+import { periodMetrics } from './dashboard.js';
+import { isUnproductive } from './attendanceKind.js';
 import {
   groupedCosts,
   callInsights,
@@ -54,6 +57,35 @@ const base = {
   'Valor a cobrar': 200,
   Modelo: 'M',
 };
+
+test('improdutivas não são manutenção, modos de visita preservam intervalos e todos os custos', () => {
+  const original = data([
+    { ...base, Motivo: 'Manutenção', 'Cód.': 1, 'Data de atendimento': serial('2026-01-01') },
+    {
+      ...base,
+      Motivo: 'Visita Improdutiva',
+      'Cód.': 1,
+      'Data de atendimento': serial('2026-01-10'),
+    },
+    { ...base, Motivo: 'Manutenção', 'Cód.': 1, 'Data de atendimento': serial('2026-02-01') },
+    { ...base, Status: 'Cancelada', Motivo: 'Visita Improdutiva', 'Cód.': 1 },
+  ]);
+  assert.equal(isUnproductive(original, original.rows[1]), true);
+  const productive = recurringVisits(original, original);
+  assert.equal(productive.items[0].rows.length, 2);
+  assert.equal(productive.items[0].intervals[0].days, 31);
+  assert.equal(recurringVisits(original, original, 'all').items[0].rows.length, 3);
+  assert.equal(recurringVisits(original, original, 'unproductive').items[0].rows.length, 1);
+  const metrics = periodMetrics(original);
+  assert.equal(metrics.maintenance, 2);
+  assert.equal(metrics.unproductive, 1);
+  assert.equal(metrics.cost, 30000);
+  const tech = technicianRanking(original).items[0];
+  assert.equal(tech.productive, 2);
+  assert.equal(tech.unproductive, 1);
+  assert.equal(tech.cost, 30000);
+  assert.equal(interventionProfiles(original, {}).at(0).assistance, 2);
+});
 test('custos por cliente mantêm total divergente, exclusões e cobrança Addlog separada', () => {
   const d = data([
     base,

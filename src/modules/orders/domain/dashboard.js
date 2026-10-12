@@ -1,3 +1,4 @@
+import { isUnproductive } from './attendanceKind.js';
 /**
  * Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -27,8 +28,12 @@ export function periodMetrics(data) {
   const costs = completed.map((r) => money(field(data, r, 'Custo Total'))).filter((v) => v != null);
   return {
     completed: completed.length,
+    productive: completed.filter((r) => !isUnproductive(data, r)).length,
+    unproductive: completed.filter((r) => isUnproductive(data, r)).length,
     maintenance: completed.filter(
-      (r) => field(data, r, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
+      (r) =>
+        !isUnproductive(data, r) &&
+        field(data, r, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
     ).length,
     calls: new Set(completed.map((r) => r.os)).size,
     cost: costs.length ? costs.reduce((s, v) => s + v, 0) : null,
@@ -63,14 +68,17 @@ export function dashboardData(original, filters) {
     types = new Map();
   for (const r of selected.rows) {
     if (!['Concluída', 'Pago'].includes(field(original, r, 'Status')?.raw)) continue;
-    const label =
-      String(field(original, r, 'Tipo de Serviço')?.raw ?? '').trim() || 'Não informado';
+    const label = isUnproductive(original, r)
+      ? 'Visita Improdutiva'
+      : String(field(original, r, 'Tipo de Serviço')?.raw ?? '').trim() || 'Não informado';
     types.set(label, (types.get(label) || 0) + 1);
     const date = attendanceDate(original, r);
     if (!date) continue;
     const month = date.slice(0, 7),
       item = months.get(month) || { label: month, implementation: 0, maintenance: 0, other: 0 };
-    if (label === 'Assistência Técnica') item.maintenance++;
+    if (isUnproductive(original, r)) {
+      item.unproductive = (item.unproductive || 0) + 1;
+    } else if (label === 'Assistência Técnica') item.maintenance++;
     else if (label === 'Implementação') item.implementation++;
     else item.other++;
     months.set(month, item);

@@ -1,0 +1,31 @@
+# Fila de implementação e ajustes
+
+Atualizada em 12/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
+
+| Código | Item                                                                                                                 | Situação / dependência                                                                                                             | Prioridade |
+| ------ | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| A01    | Separar visitas improdutivas dos indicadores de manutenção, com modos no relatório por veículo e ranking de técnicos | Entregue em 0.17.6; manter custos válidos de ambas as categorias                                                                   | Concluído  |
+| A02    | Visão resumida com indicadores principais e base de cálculo                                                          | Entregue em 0.17.6 em oito análises de OS/técnicos                                                                                 | Concluído  |
+| A03    | Revisar seções sem ícone de explicação                                                                               | Solicitado: origem, status, fórmulas, denominadores, exclusões, finalidade e limites; ícone à direita do título                    | A definir  |
+| A04    | Ampliar resumos aos demais relatórios e módulos                                                                      | Definir os indicadores essenciais de cada seção antes de sintetizar                                                                | A definir  |
+| A05    | Classificar manutenção sem troca                                                                                     | Critério adiado pelo usuário; distinguir assistência, troca e manutenção efetiva sem troca                                         | A definir  |
+| A06    | Identificação de clientes/filiais                                                                                    | Confirmar papéis dos dois CNPJs da OS e chave adequada, sem unir nomes parecidos automaticamente                                   | A definir  |
+| A07    | Modelo explícito na planilha                                                                                         | Usuário considera nova coluna; definir prioridade da coluna frente ao prefixo e revisão de conflitos                               | A definir  |
+| A08    | Regras financeiras da Operacional                                                                                    | Confirmar início/fim de contrato, competência mensal, cancelamento e pró-rata antes de calcular faturamento esperado               | A definir  |
+| A09    | Conclusão integral de chamados e previsões                                                                           | Definir status mistos e previsão de Agendar/Agendado; não alterar atuais totais realizados                                         | A definir  |
+| A10    | Armazenamento compartilhado do acompanhamento de consumo                                                             | Adiado; contrato local read/write preparado. Exige servidor, autorização, concorrência, retenção, migração e backups               | A definir  |
+| A11    | Consumo por contrato e franquia                                                                                      | Definir fonte dos vínculos e regras de franquia compartilhada/excedentes; não inferir pelo nome do plano                           | A definir  |
+| A12    | API real do monitoramento                                                                                            | Aguarda desenvolvimento: comunicação/fuso, rastreador, bases, tokens, paginação, limites e ambiente de teste                       | A definir  |
+| A13    | Infraestrutura e coleta periódica                                                                                    | Definir servidor, credenciais, frequência por base, falhas/parcialidade e permissões por base                                      | A definir  |
+| A14    | Histórico de comunicação e alertas                                                                                   | Depois da coleta: episódios, recuperação, acompanhamento persistente, responsáveis, regras/canais de aviso e retenção              | A definir  |
+| A15    | Consumo via API                                                                                                      | Confirmar endpoint, unidades, apuração, atualização e vínculo do chip; não prometer tempo real antes dessa definição               | A definir  |
+| A16    | Ampliar conciliação entre operacional, OS e consumo                                                                  | Vínculos básicos já existem. Cruzamento histórico consumo × manutenção depende de titularidade no tempo e critérios de divergência | A definir  |
+| A17    | Revisão contínua de layout e documentação                                                                            | Harmonizar telas/impressão/responsividade e remover ambiguidades de notas históricas; não esconder bases relevantes                | A definir  |
+
+## Já entregues — não recolocar na fila
+
+Importação manual, múltiplos filtros, personalização de seções, controles de abrir/recolher, relatórios descritivos, análises por cliente/veículo/técnico, vida observada, cruzamentos básicos com a Operacional, consumo com histórico e anotações locais, backup/restauração, exportação/impressão por linha, seleção de linhas para CSV e limite absoluto de consumo. O monitoramento ainda utiliza somente demonstração; seus controles não equivalem a integração real.
+
+## Limites
+
+Lucro, recebimento comprovado, inadimplência, SLA e produtividade por hora não são funcionalidades aprovadas para desenvolvimento neste momento: faltam dados e/ou regras. Não devem ser apresentados como indicadores disponíveis nem como compromissos da fila.

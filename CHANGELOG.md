@@ -7,6 +7,15 @@
 
 # Histórico de versões
 
+## 0.17.6 — 12/10/2026
+
+- Motivo Visita Improdutiva separado das manutenções efetivas, preservando todos os custos financeiros válidos.
+- Atendimentos por veículo com três modos e critério explícito na exportação; ranking de técnicos com contagens separadas e seleção do volume no gráfico.
+- Perfis e evolução distinguem improdutivas; manutenção por cliente, execução e assistência no parque não contam essas visitas como intervenção.
+- Visão resumida em oito relatórios de OS/técnicos, com indicadores, bases e retorno ao completo sem reiniciar controles.
+- Fila consolidada para priorização, incluindo revisão dos ícones de explicação ainda ausentes.
+- Teste de improdutividade, intervalos por modo, manutenção efetiva e preservação dos custos.
+
 ## 0.17.5 — 12/10/2026
 
 - Corrige corte dos filtros de seleção múltipla pelas bordas dos painéis em todas as páginas: menus independentes, busca acessível e altura limitada pela janela.

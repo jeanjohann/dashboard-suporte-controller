@@ -23,12 +23,13 @@ export function MaintenanceSummary({ data, selectedClient, onSelect, onDetail })
       <div className="inline-help-heading">
         <h4>Concentração das manutenções</h4>
         <InfoNote>
-          Conta Assistências Técnicas Concluída ou Pago por razão social. A participação dos cinco
-          primeiros é a soma dos atendimentos desses clientes dividida pelo total de manutenções
-          selecionadas, incluindo manutenções sem cliente identificado no denominador. O custo soma
-          Custo Total válido e a média usa apenas manutenções com esse valor válido, incluindo zero.
-          Use para identificar concentração da demanda e gastos; volume alto pode refletir uma frota
-          maior e não prova maior taxa de falhas.
+          Conta Assistências Técnicas Concluída ou Pago por razão social, excluindo Motivo Visita
+          Improdutiva. A participação dos cinco primeiros é a soma dos atendimentos desses clientes
+          dividida pelo total de manutenções selecionadas, incluindo manutenções sem cliente
+          identificado no denominador. O custo soma Custo Total válido e a média usa apenas
+          manutenções com esse valor válido, incluindo zero. Use para identificar concentração da
+          demanda e gastos; volume alto pode refletir uma frota maior e não prova maior taxa de
+          falhas.
         </InfoNote>
       </div>
       <dl className="cost-summary">
@@ -122,13 +123,13 @@ export function ServiceProfileSummary({ data, previous, onDetail }) {
       <div className="inline-help-heading">
         <h4>Quantidade e custo por tipo</h4>
         <InfoNote>
-          Agrupa linhas Concluída ou Pago pelo Tipo de Serviço registrado. O percentual de cada tipo
-          é sua quantidade dividida por todos os realizados na seleção. O custo soma Custo Total
-          válido; a média divide essa soma pela quantidade de custos válidos do tipo, incluindo
-          zeros. Cancelada não entra. Um tipo chamado Cancelamento em um serviço realizado
-          permanece, pois descreve a retirada executada, e não uma OS cancelada. Use para comparar o
-          perfil dos serviços e seus gastos. A comparação anterior usa intervalo de mesma duração e
-          mesmos filtros.
+          Agrupa linhas Concluída ou Pago pelo Tipo de Serviço registrado, apresentando Motivo
+          Visita Improdutiva em grupo próprio. O percentual de cada tipo é sua quantidade dividida
+          por todos os realizados na seleção. O custo soma Custo Total válido; a média divide essa
+          soma pela quantidade de custos válidos do tipo, incluindo zeros. Cancelada não entra. Um
+          tipo chamado Cancelamento em um serviço realizado permanece, pois descreve a retirada
+          executada, e não uma OS cancelada. Use para comparar o perfil dos serviços e seus gastos.
+          A comparação anterior usa intervalo de mesma duração e mesmos filtros.
         </InfoNote>
       </div>
       <div className="profile-summary-list">
@@ -174,7 +175,8 @@ export function ServiceProfileSummary({ data, previous, onDetail }) {
         {previous
           ? 'Comparação com o intervalo anterior de mesma duração.'
           : 'Selecione início e fim para comparar quantidades.'}{' '}
-        Tipos mantidos como registrados, inclusive Cancelamento em linhas Concluída/Pago.
+        Improdutivas ficam em grupo próprio; os demais tipos seguem o registro, inclusive
+        Cancelamento em linhas Concluída/Pago.
       </p>
     </div>
   );

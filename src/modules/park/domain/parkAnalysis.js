@@ -1,3 +1,4 @@
+import { isUnproductive } from '../../orders/domain/attendanceKind.js';
 /**
  * Cruzamentos entre operacional e OS, com vínculo conservador, denominadores explícitos e linhas de origem.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -69,7 +70,9 @@ export function parkAnalysis(linked, orders, { start = '', end = '', group = 'cl
       ...row,
       services,
       assistance: services.filter(
-        (service) => field(orders, service, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
+        (service) =>
+          !isUnproductive(orders, service) &&
+          field(orders, service, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
       ),
     };
   });
@@ -144,14 +147,18 @@ export function parkAnalysis(linked, orders, { start = '', end = '', group = 'cl
     .sort((a, b) => b.assistance - a.assistance || a.label.localeCompare(b.label, 'pt-BR'));
   const categories = new Map();
   for (const service of services) {
-    const label = String(field(orders, service, 'Tipo de Serviço')?.raw || 'Não informado'),
+    const label = isUnproductive(orders, service)
+        ? 'Visita Improdutiva'
+        : String(field(orders, service, 'Tipo de Serviço')?.raw || 'Não informado'),
       item = categories.get(label) || { label, value: 0, rows: [] };
     item.value++;
     item.rows.push(service.sourceRow);
     categories.set(label, item);
   }
   const assistance = services.filter(
-    (row) => field(orders, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
+    (row) =>
+      !isUnproductive(orders, row) &&
+      field(orders, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
   );
   return {
     unavailable,

@@ -19,8 +19,8 @@ export function ManagementOverview({ data, schedulingData }) {
           <div className="inline-help-heading">
             <h2>Execuções por responsável do suporte</h2>
             <InfoNote>
-              Uma linha por atendimento realizado · Concluída ou Pago · Data de atendimento.
-              Responsáveis ausentes permanecem em grupo separado.
+              Uma linha por intervenção executada · Concluída ou Pago sem Motivo Visita Improdutiva
+              · Data de atendimento. Responsáveis ausentes permanecem em grupo separado.
             </InfoNote>
           </div>
           {metrics.execution ? (
@@ -42,8 +42,8 @@ export function ManagementOverview({ data, schedulingData }) {
           <div className="inline-help-heading">
             <h2>Clientes com mais manutenção</h2>
             <InfoNote>
-              Assistência Técnica realizada · agrupamento pela razão social · quantidade de linhas
-              de atendimento.
+              Assistência Técnica realizada, excluindo Motivo Visita Improdutiva · agrupamento pela
+              razão social · quantidade de linhas de atendimento.
             </InfoNote>
           </div>
           {metrics.clients ? (

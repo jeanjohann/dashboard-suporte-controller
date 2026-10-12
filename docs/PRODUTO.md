@@ -224,3 +224,7 @@ Duas páginas independentes para revisão e análises, com vínculo serial + pla
 ## Manutenção do parque — 0.14.0
 
 Indicadores exploratórios sobre a base operacional vinculável, filtros múltiplos e relatório XLSX/CSV com seleção de colunas implementados. Regras financeiras e de titularidade histórica continuam pendentes. Consulte [Manutenção do parque e relatórios](PARQUE-E-MANUTENCAO.md).
+
+## Visita improdutiva — decisão de 12/10/2026
+
+Identificar pelo Motivo Visita Improdutiva e separar de intervenção executada. Excluir de manutenção efetiva; manter valores financeiros válidos lançados. Atendimentos por veículo permite escolher o modo e ranking de técnicos mostra quantitativos separados. Não classificar improdutividade por instrução livre. Consulte ANALISES-DE-OS.md e PROXIMOS-AJUSTES.md.

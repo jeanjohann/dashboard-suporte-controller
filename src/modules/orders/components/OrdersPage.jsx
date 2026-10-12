@@ -473,7 +473,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                   >
                     {monthly ? (
                       <BarChart
-                        title="Atendimentos realizados por mês"
+                        title="Visitas e atendimentos registrados por mês"
                         description={`Data de atendimento · somente Concluída e Pago · ${monthly.missingDates} realizados excluídos deste gráfico por data ausente ou inválida. Meses sem registros não são exibidos.`}
                         items={monthly.items}
                       />

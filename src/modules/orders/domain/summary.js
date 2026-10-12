@@ -2,6 +2,7 @@
  * Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { isUnproductive } from './attendanceKind.js';
 import { field } from '../../../shared/data/filters.js';
 import { money } from './analysis.js';
 /** Reúne indicadores de volume, chamados e finanças para os cards, usando as bases já analisadas. */
@@ -16,7 +17,7 @@ export function summaryMetrics(data, financial, devices) {
   return [
     {
       key: 'completed',
-      label: 'Atendimentos realizados',
+      label: 'Visitas e atendimentos',
       value: statusAvailable ? completed.length : null,
       note: 'Concluída ou Pago',
       rows: rows(completed),
@@ -72,6 +73,20 @@ export function summaryMetrics(data, financial, devices) {
       value: devices?.accessoryAvailable ? devices.accessories.RFID : null,
       note: 'Uma linha por troca de leitor',
       rows: devices?.accessoryRows.RFID ?? [],
+    },
+    {
+      key: 'productive',
+      label: 'Intervenções executadas',
+      value: statusAvailable ? completed.filter((row) => !isUnproductive(data, row)).length : null,
+      note: 'Concluída/Pago sem Motivo Visita Improdutiva',
+      rows: rows(completed.filter((row) => !isUnproductive(data, row))),
+    },
+    {
+      key: 'unproductive',
+      label: 'Visitas improdutivas',
+      value: statusAvailable ? completed.filter((row) => isUnproductive(data, row)).length : null,
+      note: 'Motivo Visita Improdutiva',
+      rows: rows(completed.filter((row) => isUnproductive(data, row))),
     },
   ];
 }

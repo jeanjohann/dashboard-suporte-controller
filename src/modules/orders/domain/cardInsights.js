@@ -1,3 +1,4 @@
+import { isUnproductive } from './attendanceKind.js';
 /**
  * Regras de análise das Ordens de Serviço. Preservam a origem das linhas e distinguem ausência de dados de valor zero.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -9,7 +10,12 @@ function groupRows(data, rows, label) {
   const map = new Map();
   for (const row of rows) {
     const cell = field(data, row, label),
-      name = cell?.issue ? 'Valor com erro' : String(cell?.raw ?? '').trim() || 'Não informado';
+      name =
+        label === 'Tipo de Serviço' && isUnproductive(data, row)
+          ? 'Visita Improdutiva'
+          : cell?.issue
+            ? 'Valor com erro'
+            : String(cell?.raw ?? '').trim() || 'Não informado';
     let group = map.get(name);
     if (!group) {
       group = {
@@ -47,7 +53,9 @@ export function maintenanceInsights(data) {
     return null;
   const rows = data.rows.filter(
       (row) =>
-        completed(data, row) && field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
+        completed(data, row) &&
+        !isUnproductive(data, row) &&
+        field(data, row, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
     ),
     groups = groupRows(data, rows, 'Razão Social'),
     clients = groups.filter((g) => g.identified),

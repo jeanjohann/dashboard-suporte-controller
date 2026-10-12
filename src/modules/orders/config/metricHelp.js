@@ -1,7 +1,11 @@
 /** Textos de apoio para leitura financeira e operacional; não executam nem alteram cálculos. */
 export const metricHelp = {
+  productive:
+    'Conta linhas Concluída ou Pago sem Motivo Visita Improdutiva. Inclui os tipos de serviço executados, não apenas manutenção. Sem motivo informado, a planilha não permite confirmar improdutividade.',
+  unproductive:
+    'Conta linhas Concluída ou Pago com Motivo Visita Improdutiva. Houve visita, mas não execução da intervenção prevista. Seus custos válidos continuam incluídos nos indicadores financeiros.',
   completed:
-    'Conta cada linha com status Concluída ou Pago como um atendimento realizado. Um mesmo chamado pode ter várias linhas. Cancelada, Agendar e Agendado ficam fora. Use para medir o volume de serviços executados; Pago informa pagamento ao técnico, não recebimento do cliente.',
+    'Conta cada linha com status Concluída ou Pago como visita ou atendimento registrado, incluindo visitas improdutivas. Não equivale à quantidade de manutenções executadas. Um mesmo chamado pode ter várias linhas. Cancelada, Agendar e Agendado ficam fora. Use para medir o volume de serviços executados; Pago informa pagamento ao técnico, não recebimento do cliente.',
   calls:
     'Conta uma vez cada número de chamado que possui pelo menos um atendimento realizado na seleção. Vários serviços do mesmo chamado não aumentam este total. Use a comparação com atendimentos para identificar chamados com várias intervenções.',
   cost: 'Soma os valores válidos da coluna Custo Total nas linhas Concluída ou Pago. O valor lançado prevalece mesmo quando difere da soma Técnico + Km; a diferença deve ser conferida na revisão. Canceladas e valores ausentes ou incompatíveis não entram. Mede o custo registrado para executar os serviços, sem comprovar pagamento ou lucro.',

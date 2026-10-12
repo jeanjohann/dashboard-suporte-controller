@@ -80,7 +80,9 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
       ]
     : [];
   const cards = [
-    ['completed', 'Atendimentos realizados', number],
+    ['completed', 'Visitas e atendimentos', number],
+    ['productive', 'Intervenções executadas', number],
+    ['unproductive', 'Visitas improdutivas', number],
     ['maintenance', 'Manutenções realizadas', number],
     ['calls', 'Chamados atendidos', number],
     ['cost', 'Custo total lançado', currency],
@@ -173,6 +175,12 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
             items={d.months}
             series={[
               { key: 'implementation', label: 'Implementações', color: '#357a9a', stack: 'volume' },
+              {
+                key: 'unproductive',
+                label: 'Visitas improdutivas',
+                color: '#ad9455',
+                stack: 'volume',
+              },
               {
                 key: 'maintenance',
                 label: 'Assistências técnicas',

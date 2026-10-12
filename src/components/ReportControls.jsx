@@ -11,8 +11,11 @@ export function ReportControls({ onExpand }) {
   if (!onExpand) return null;
   return (
     <div className="report-expansion-controls" data-no-print>
-      <button type="button" onClick={() => onExpand({ open: true })}>
+      <button type="button" onClick={() => onExpand({ open: true, mode: 'complete' })}>
         Abrir todos os relatórios
+      </button>
+      <button type="button" onClick={() => onExpand({ open: true, mode: 'summary' })}>
+        Visão resumida dos relatórios
       </button>
       <button type="button" onClick={() => onExpand({ open: false })}>
         Recolher todos os relatórios
