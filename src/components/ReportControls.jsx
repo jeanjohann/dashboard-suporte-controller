@@ -8,7 +8,17 @@ import { SidebarContent } from '../app/SidePanel.jsx';
 import { alignHelp } from './HelpLayout.jsx';
 /** Apresenta as ações compartilhadas para abrir ou recolher os relatórios. */
 export function ReportControls({ onExpand }) {
-  return null;
+  if (!onExpand) return null;
+  return (
+    <div className="report-expansion-controls" data-no-print>
+      <button type="button" onClick={() => onExpand({ open: true })}>
+        Abrir todos os relatórios
+      </button>
+      <button type="button" onClick={() => onExpand({ open: false })}>
+        Recolher todos os relatórios
+      </button>
+    </div>
+  );
 }
 /** Controla quais seções aparecem, preservando a possibilidade de reexibi-las. */
 export function PagePersonalization({ labels, hidden, setHidden, children }) {

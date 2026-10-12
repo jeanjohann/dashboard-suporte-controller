@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.17.5 — 12/10/2026
+
+- Corrige corte dos filtros de seleção múltipla pelas bordas dos painéis em todas as páginas: menus independentes, busca acessível e altura limitada pela janela.
+- Busca de linhas no histórico agora mostra quantidade de correspondências e resultados clicáveis, com orientação quando não encontra vínculo.
+- Recupera abrir/recolher relatórios individualmente e comandos de abrir/recolher todos, preservando conteúdo montado.
+- Mantém critérios dos indicadores, filtros e histórico sem alteração.
+
 ## 0.17.4 — 11/10/2026
 
 - Filtro absoluto de consumo acima de um valor em MB, combinado aos demais filtros e aplicado ao recorte completo.

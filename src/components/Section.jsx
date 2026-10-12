@@ -4,14 +4,20 @@
  */
 import { PermissionButton } from '../shared/security/Access.jsx';
 import { authorizeAction } from '../shared/security/accessClient.js';
-import React, { createContext, useContext, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { InfoNote } from './InfoNote.jsx';
 import { alignHelp, helpChildren } from './HelpLayout.jsx';
 export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
 /** Agrupa relatório, ajuda e impressão isolada com contexto de arquivo, filtros e referência temporal. */
-export function Section({ title, visible = true, children }) {
+export function Section({ title, visible = true, defaultOpen = true, children }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const expansion = useContext(ExpansionContext);
+  // Conteúdo permanece montado ao recolher: gráficos, filtros e seleção não são reiniciados.
+  useEffect(() => {
+    if (expansion && typeof expansion.open === 'boolean') setOpen(expansion.open);
+  }, [expansion]);
   const section = useRef(),
     context = useContext(PrintContext);
   const hiddenSections = useContext(HiddenSectionsContext);
@@ -78,6 +84,14 @@ export function Section({ title, visible = true, children }) {
           <h2>{title}</h2>
         </div>
         <div className="report-heading-actions">
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-label={`${open ? 'Recolher' : 'Abrir'} relatório ${title}`}
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? 'Recolher' : 'Abrir'}
+          </button>
           {notes.length > 0 && (
             <InfoNote label={`Regras de ${title}`}>
               {notes.map((note, index) => (
@@ -90,7 +104,7 @@ export function Section({ title, visible = true, children }) {
           </PermissionButton>
         </div>
       </header>
-      <div className="section-body">
+      <div className="section-body" hidden={!open}>
         <div className="section-content" ref={section}>
           {content.map((child, index) =>
             notes.includes(child) ? (

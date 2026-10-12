@@ -186,6 +186,18 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     ['status', 'Situação no extrato'],
   ];
   const [lineSearch, setLineSearch] = useState('');
+  const historyChoices = [
+    ...new Map(
+      allRows.filter((row) => row.service === 'dados').map((row) => [chipKey(row), row]),
+    ).values(),
+  ].sort((a, b) => a.number.localeCompare(b.number));
+  const matchesHistorySearch = (row) =>
+    [row.number, row.iccid, row.operator, row.link?.client, row.link?.plate].some((value) =>
+      String(value || '')
+        .toLocaleLowerCase('pt-BR')
+        .includes(lineSearch.trim().toLocaleLowerCase('pt-BR')),
+    );
+  const historyMatches = lineSearch.trim() ? historyChoices.filter(matchesHistorySearch) : [];
   const selected = allRows.filter(
     (row) =>
       row.service === 'dados' &&
@@ -1086,6 +1098,38 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                       onChange={(event) => setLineSearch(event.target.value)}
                     />
                   </label>
+                  {lineSearch.trim() && (
+                    <div className="history-search-results" data-no-print>
+                      <p className="scope" role="status">
+                        {historyMatches.length} linhas encontradas. Clique em uma opção para abrir o
+                        histórico.
+                      </p>
+                      {!historyMatches.length && (
+                        <p className="scope">
+                          Nenhuma correspondência. Cliente e placa exigem vínculo confirmado com a
+                          planilha operacional; você também pode buscar pelo número ou ICCID.
+                        </p>
+                      )}
+                      <div className="history-search-list">
+                        {historyMatches.map((row) => (
+                          <button
+                            key={chipKey(row)}
+                            type="button"
+                            onClick={() => {
+                              setTracked(chipKey(row));
+                              setDetail(null);
+                              setLineSearch('');
+                            }}
+                          >
+                            {row.link
+                              ? `${row.link.client || 'Cliente não informado'} · ${row.link.plate || 'Placa não informada'}`
+                              : 'Linha não identificada'}{' '}
+                            · {row.operator} · {row.number} · ICCID {row.iccid}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <label className="line-tracked-select" data-no-print>
                     Chip para acompanhar{' '}
                     <select

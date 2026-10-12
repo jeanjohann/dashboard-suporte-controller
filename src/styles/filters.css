@@ -1,4 +1,56 @@
 /* Filtros compactos compartilhados. Listas flutuantes preservam o espaço dos relatórios. */
+.report-expansion-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+.active-filter-actions,
+.report-heading-actions {
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+}
+.report-heading {
+  flex-wrap: wrap;
+}
+.report-expansion-controls button {
+  padding: 7px 10px;
+  font-size: 11px;
+  color: var(--ui-ink);
+  background: var(--ui-soft);
+}
+.section-body[hidden] {
+  display: none;
+}
+.floating-filter-menu {
+  overflow: auto;
+  font-size: 12px;
+  color: var(--ui-ink);
+}
+.floating-filter-menu input:not([type='checkbox']) {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+}
+.history-search-list {
+  max-height: 220px;
+  overflow: auto;
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.history-search-list button {
+  text-align: left;
+  font-size: 12px;
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+  overflow-wrap: anywhere;
+}
 .line-tracked-select input[type='search'] {
   width: 100%;
   padding: 8px 10px;

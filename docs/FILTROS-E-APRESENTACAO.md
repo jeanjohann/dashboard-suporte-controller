@@ -25,3 +25,7 @@ Os balões devem explicar: campo de origem, status e filtros considerados, soma 
 Não confundir retirada executada para cancelamento de um contrato com status Cancelada da OS. Um valor apresentado como “—” indica ausência de base disponível; não deve ser interpretado como zero.
 
 A revisão deste ajuste detalha os cards de OS, valores de contrato, ranking de técnicos, perfil e concentração das manutenções. Regras específicas de equipamento, parque e consumo permanecem nos respectivos balões e documentação de domínio.
+
+Os menus de seleção múltipla são renderizados em uma camada independente do painel, com posição e altura limitadas pela janela. Isso evita cortes pelas bordas dos painéis. Clique externo, Escape, rolagem da página ou redimensionamento fecham o menu; rolar as próprias opções mantém o menu aberto.
+
+Os relatórios organizados em Section possuem comando Abrir/Recolher no cabeçalho. OS, Operacional e Consumo também oferecem comandos de abrir/recolher todos. Recolher mantém o conteúdo montado, preservando filtros e seleções; ocultar um relatório no menu é uma configuração independente. A impressão continua incluindo o conteúdo do relatório, mesmo recolhido. Uma visão com síntese dos indicadores por relatório ainda não foi implementada.
