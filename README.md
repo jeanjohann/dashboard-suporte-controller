@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.18.1 — menu lateral mais estreito e logística em Parque e Manutenção; Monitoramento de Frota em demonstração isolada.
+**Versão:** 0.18.2 — laranjas mais claros, menu lateral compacto e logística em Parque e Manutenção; Monitoramento de Frota em demonstração isolada.
 
 ## Documentação do projeto
 

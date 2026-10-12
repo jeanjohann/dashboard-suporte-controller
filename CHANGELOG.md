@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.18.2 — 12/10/2026
+
+- Clareia discretamente os laranjas de destaque, estados selecionados e hover nos temas claro/escuro, preservando contraste de texto.
+- Ajuste exclusivamente da paleta; fundos neutros, navegação e regras de cálculo permanecem como na versão anterior.
+
 ## 0.18.1 — 12/10/2026
 
 - Menu lateral aberto reduzido de 270 para 230 px; 210 px em telas intermediárias e faixa recolhida de 76 px.

@@ -1,5 +1,9 @@
 # Filtros e apresentação
 
+## Laranja de destaque — 0.18.2
+
+Ajuste leve da paleta para avaliação: destaque `#FF943D` no claro e `#FF9E46` no escuro, com hover, texto de seleção e fundos suaves correspondentes. Os cinzas/brancos e a organização do layout permanecem. Texto sobre o destaque continua escuro; texto de seleção no claro usa laranja mais profundo para conservar legibilidade. A paleta atual é definida em `src/styles/theme.css`; os valores de 0.17.9 abaixo são referência daquela entrega.
+
 ## Temas e alinhamento — 0.17.9
 
 O tema claro utiliza fundo cinza neutro (`#F6F7F9`), superfícies brancas e destaque laranja (`#FF8A32`). O escuro usa fundo grafite (`#191A1E`), superfícies cinza (`#22242A`) e laranja (`#FF943D`). Texto, links, alertas, tabelas e gráficos herdam a paleta de `src/styles/theme.css`; a escolha de tema continua salva no navegador. Cores de sucesso, atenção e erro permanecem distintas.
