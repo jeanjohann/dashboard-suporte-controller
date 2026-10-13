@@ -3,7 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { parseCsv, parseMB, consumptionDate, displayDate, MB_SCALE } from './consumption.js';
-import { operationalFields } from '../../operational/domain/operational.js';
+import { operationalCell } from '../../operational/domain/operational.js';
 
 // MB and KB are summed exactly, without rounding each CSV row.
 export const VOLUME_SCALE = MB_SCALE * 1024;
@@ -249,15 +249,10 @@ export function linkConsumption(rows, source) {
       model: 'Não informado',
     }));
   const indexes = { iccid: new Map(), phone: new Map() };
-  const columnIndex = (letter) => {
-    let result = 0;
-    for (const char of letter) result = result * 26 + char.charCodeAt(0) - 64;
-    return result - 1;
-  };
   for (const row of operational.rows)
     for (const key of ['iccid', 'phone']) {
       const value = clean(row[key]),
-        cell = row.cells?.[columnIndex(operationalFields[key])];
+        cell = operationalCell(row, key);
       if (
         !validID(value) ||
         cell?.error ||
@@ -279,7 +274,7 @@ export function linkConsumption(rows, source) {
       if (a[0].sourceRow === b[0].sourceRow) {
         linkState = 'ICCID e número conferidos';
         link = a[0];
-        const serialCell = link.cells?.[columnIndex(operationalFields.serial)];
+        const serialCell = operationalCell(link, 'serial');
         if (
           !validID(link.serial) ||
           serialCell?.error ||

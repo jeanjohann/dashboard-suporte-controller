@@ -23,6 +23,66 @@ export const operationalFields = {
   iccid: 'BN',
 };
 const clean = (value) => String(value ?? '').trim();
+const compactFields = {
+  ...operationalFields,
+  plan: 'AU',
+  monthly: 'AJ',
+  charge: 'AK',
+  status: 'AL',
+  canceled: 'AM',
+  implemented: 'AV',
+  plate: 'AY',
+  serial: 'BC',
+  model: 'BE',
+  phone: 'BG',
+  iccid: 'BH',
+};
+export function operationalLayout(columns) {
+  const label = (letter) => columns.find((column) => column.letter === letter)?.label;
+  const matches = (pairs) => pairs.every(([letter, expected]) => label(letter) === expected);
+  if (
+    matches([
+      ['A', 'Nº'],
+      ['BC', 'Equipamentos'],
+      ['AY', 'Placa instalada'],
+      ['AL', 'Situação'],
+    ])
+  ) {
+    if (
+      !matches([
+        ['B', 'CNPJ / CPF'],
+        ['C', 'RAZÃO SOCIAL'],
+        ['S', 'Inicio ciclo'],
+        ['T', 'Fim Ciclo'],
+        ['AU', 'Plano Contratado'],
+        ['AJ', 'Mensalidade'],
+        ['AK', 'Cobrança'],
+        ['AM', 'Data Cancelamento'],
+        ['AV', 'Data Implementação'],
+        ['BE', 'Modelo'],
+        ['BG', 'Telefone'],
+        ['BH', 'ICCID'],
+        ['BJ', 'APN'],
+      ])
+    )
+      throw new Error('Confira os cabeçalhos da aba Equipamentos: layout compacto incompleto.');
+    return { name: 'compact', fields: compactFields, count: 62 };
+  }
+  if (
+    matches([
+      ['A', 'Nº'],
+      ['BH', 'Equipamentos'],
+      ['BF', 'Placa instalada'],
+      ['AU', 'Situação'],
+    ])
+  )
+    return { name: 'legacy', fields: operationalFields, count: 77 };
+  throw new Error('Confira os cabeçalhos da aba Equipamentos: o layout não foi reconhecido.');
+}
+export function operationalCell(row, key) {
+  const fields = row.layout === 'compact' ? compactFields : operationalFields;
+  return row.cells?.[XLSX.utils.decode_col(fields[key])];
+}
 /** Interpreta datas operacionais considerando o calendário do Excel e preserva ausência quando não há data válida. */
 export function operationalDate(value, date1904 = false) {
   if (typeof value !== 'number' || !Number.isFinite(value)) return null;
@@ -35,17 +95,13 @@ export function importOperational(buffer) {
   const book = XLSX.read(buffer, { type: 'array', cellNF: true, cellText: true }),
     sheet = book.Sheets.Equipamentos;
   if (!sheet?.['!ref']) throw new Error('A aba “Equipamentos” não foi encontrada ou está vazia.');
-  for (const [letter, label] of [
-    ['A', 'Nº'],
-    ['BH', 'Equipamentos'],
-    ['BF', 'Placa instalada'],
-    ['AU', 'Situação'],
-  ])
-    if (clean(sheet[letter + '1']?.v) !== label)
-      throw new Error(
-        `Confira o cabeçalho ${letter}1: esperado “${label}”. O layout não foi reconhecido.`,
-      );
-  const columns = Array.from({ length: 77 }, (_, index) => {
+  const headers = Array.from({ length: 77 }, (_, index) => ({
+    letter: XLSX.utils.encode_col(index),
+    label: clean(sheet[XLSX.utils.encode_col(index) + '1']?.v),
+  }));
+  const layout = operationalLayout(headers),
+    fields = layout.fields;
+  const columns = Array.from({ length: layout.count }, (_, index) => {
     const letter = XLSX.utils.encode_col(index);
     return { index, letter, label: clean(sheet[letter + '1']?.v) || letter };
   });
@@ -69,6 +125,7 @@ export function importOperational(buffer) {
       continue;
     }
     const row = {
+      layout: layout.name,
       sourceRow: r,
       cells: columns.map((c) => {
         const cell = sheet[c.letter + r];
@@ -80,7 +137,7 @@ export function importOperational(buffer) {
         };
       }),
     };
-    for (const [key, letter] of Object.entries(operationalFields))
+    for (const [key, letter] of Object.entries(fields))
       row[key] = clean(row.cells[XLSX.utils.decode_col(letter)].raw);
     rows.push(row);
     for (const c of columns) {
@@ -96,43 +153,47 @@ export function importOperational(buffer) {
     }
     for (const key of ['client', 'serial', 'plate', 'iccid'])
       if (!row[key])
-        issue(
-          row,
-          operationalFields[key],
-          'Campo ausente; conferir conforme a situação do equipamento.',
-        );
+        issue(row, fields[key], 'Campo ausente; conferir conforme a situação do equipamento.');
     for (const key of ['serial', 'iccid']) {
-      const cell = row.cells[XLSX.utils.decode_col(operationalFields[key])];
+      const cell = row.cells[XLSX.utils.decode_col(fields[key])];
       if (row[key] && !/^\d+$/.test(row[key]))
         issue(
           row,
-          operationalFields[key],
+          fields[key],
           'Identificador contém caracteres não numéricos; conferir.',
           'Formato',
         );
       if (typeof cell.raw === 'number' && (!Number.isSafeInteger(cell.raw) || row[key].length > 15))
         issue(
           row,
-          operationalFields[key],
+          fields[key],
           'Identificador numérico longo: pode haver perda de precisão no Excel. Conferir e armazenar como texto.',
           'Formato',
         );
     }
     for (const key of ['cycleStart', 'cycleEnd', 'canceled', 'implemented']) {
-      const letter = operationalFields[key],
+      const letter = fields[key],
         cell = row.cells[XLSX.utils.decode_col(letter)];
       row[key + 'Date'] = cell.error ? null : operationalDate(cell.raw, date1904);
       if (cell.raw != null && !row[key + 'Date'])
         issue(row, letter, 'Data incompatível; a célula original foi preservada.', 'Formato');
     }
     if (row.cycleStartDate && row.cycleEndDate && row.cycleStartDate > row.cycleEndDate)
-      issue(row, 'T', 'Fim do ciclo anterior ao início.');
+      issue(row, fields.cycleEnd, 'Fim do ciclo anterior ao início.');
     if (row.status === 'Cancelado' && !row.canceledDate)
-      issue(row, 'AV', 'Cancelado sem data válida: interrupção da mensalidade não confirmada.');
+      issue(
+        row,
+        fields.canceled,
+        'Cancelado sem data válida: interrupção da mensalidade não confirmada.',
+      );
     if (row.status !== 'Cancelado' && row.canceledDate)
-      issue(row, 'AU', 'Data de cancelamento preenchida com situação diferente de Cancelado.');
+      issue(
+        row,
+        fields.status,
+        'Data de cancelamento preenchida com situação diferente de Cancelado.',
+      );
     for (const key of ['monthly', 'charge']) {
-      const cell = row.cells[XLSX.utils.decode_col(operationalFields[key])];
+      const cell = row.cells[XLSX.utils.decode_col(fields[key])];
       row[key + 'Cents'] =
         !cell.error && typeof cell.raw === 'number' && Number.isFinite(cell.raw)
           ? Math.round(cell.raw * 100)
@@ -140,7 +201,7 @@ export function importOperational(buffer) {
       if (row[key + 'Cents'] == null)
         issue(
           row,
-          operationalFields[key],
+          fields[key],
           'Valor monetário ausente ou incompatível; excluído somente deste indicador.',
           'Formato',
         );
@@ -159,7 +220,7 @@ export function importOperational(buffer) {
         for (const row of list)
           issue(
             row,
-            operationalFields[key],
+            fields[key],
             `Valor repetido nas linhas ${list.map((r) => r.sourceRow).join(', ')}; verificar se os vínculos são legítimos. Não houve exclusão automática.`,
             'Possível divergência',
           );
@@ -193,7 +254,10 @@ export function linkOperational(data, orders) {
     const key = JSON.stringify([row.serial, row.plate]),
       services = index.get(key) || [];
     const invalid =
-      !/^\d+$/.test(row.serial) || !row.plate || row.cells?.[59]?.error || row.cells?.[57]?.error;
+      !/^\d+$/.test(row.serial) ||
+      !row.plate ||
+      operationalCell(row, 'serial')?.error ||
+      operationalCell(row, 'plate')?.error;
     const state = !orders
       ? 'OS não importada'
       : !available

@@ -1,3 +1,4 @@
+import { operationalCell } from '../../operational/domain/operational.js';
 import { isUnproductive } from '../../orders/domain/attendanceKind.js';
 /**
  * Cruzamentos entre operacional e OS, com vínculo conservador, denominadores explícitos e linhas de origem.
@@ -51,7 +52,8 @@ export function parkAnalysis(linked, orders, { start = '', end = '', group = 'cl
       /^\d+$/.test(row.serial) &&
       Number(row.serial) > 0 &&
       validPlate(row.plate) &&
-      (typeof row.cells?.[59]?.raw !== 'number' || Number.isSafeInteger(row.cells[59].raw)),
+      (typeof operationalCell(row, 'serial')?.raw !== 'number' ||
+        Number.isSafeInteger(operationalCell(row, 'serial').raw)),
   );
   const missingDates = new Set(),
     selectedServices = new Map();
