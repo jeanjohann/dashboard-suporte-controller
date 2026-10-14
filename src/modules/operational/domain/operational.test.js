@@ -6,6 +6,109 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import XLSX from 'xlsx';
 import { importOperational, linkOperational, operationalDate } from './operational.js';
+import { linkConsumption } from '../../consumption/domain/lineConsumption.js';
+import { emptyHistory, validateBackup } from '../../consumption/data/consumptionHistory.js';
+
+function compactWorkbook({ serialError = false, duplicate = false, missing = false } = {}) {
+  const sheet = {};
+  const headers = {
+    A: 'Nº',
+    B: 'CNPJ / CPF',
+    C: 'RAZÃO SOCIAL',
+    S: 'Inicio ciclo',
+    T: 'Fim Ciclo',
+    AU: 'Plano Contratado',
+    AJ: 'Mensalidade',
+    AK: 'Cobrança',
+    AL: 'Situação',
+    AM: 'Data Cancelamento',
+    AV: 'Data Implementação',
+    AY: 'Placa instalada',
+    BC: 'Equipamentos',
+    BE: 'Modelo',
+    BG: 'Telefone',
+    BH: 'ICCID',
+    BJ: 'APN',
+    BP: 'Modelo',
+    BR: 'Situação',
+    BU: 'RAZÃO SOCIAL',
+  };
+  for (const [col, value] of Object.entries(headers)) sheet[col + '1'] = { t: 's', v: value };
+  const record = {
+    A: 1,
+    C: 'Cliente',
+    S: 46023,
+    T: 46022,
+    AU: 'Plano',
+    AJ: 25.5,
+    AK: 0,
+    AL: 'Cancelado',
+    AY: 'ABC1D23',
+    BC: '00162',
+    BE: 'Modelo original',
+    BG: '005511913795620',
+    BH: '089551805670305208517',
+    AV: 46000,
+  };
+  for (const row of duplicate ? [2, 3] : [2])
+    for (const [col, value] of Object.entries(record))
+      sheet[col + row] = { t: typeof value === 'number' ? 'n' : 's', v: value };
+  sheet.BU4 = { t: 's', v: 'Resumo auxiliar' };
+  if (serialError) sheet.BC2 = { t: 'e', v: 7 };
+  if (missing) delete sheet.AJ1;
+  sheet['!ref'] = 'A1:CB4';
+  const book = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(book, sheet, 'Equipamentos');
+  return XLSX.write(book, { type: 'array', bookType: 'xlsx' });
+}
+
+test('layout compacto preserva campos, endereços e vínculos sem importar resumos auxiliares', async () => {
+  const data = importOperational(compactWorkbook());
+  assert.equal(data.columns.length, 62);
+  assert.equal(data.rows.length, 1);
+  assert.equal(data.skipped, 0);
+  const row = data.rows[0];
+  assert.equal(row.serial, '00162');
+  assert.equal(row.iccid, '089551805670305208517');
+  assert.equal(row.phone, '005511913795620');
+  assert.equal(row.plan, 'Plano');
+  assert.equal(row.model, 'Modelo original');
+  assert.equal(row.monthlyCents, 2550);
+  assert.equal(row.chargeCents, 0);
+  assert.ok(data.issues.some((issue) => issue.address === 'AM2'));
+  assert.ok(data.issues.some((issue) => issue.address === 'T2'));
+  const orders = {
+    columns: [{ label: 'ID Rastreador' }, { label: 'Placa' }],
+    rows: [{ cells: [{ raw: '00162' }, { raw: 'ABC1D23' }] }],
+  };
+  assert.equal(linkOperational(data, orders)[0].services.length, 1);
+  const consumption = [{ iccid: row.iccid, number: row.phone }];
+  assert.equal(linkConsumption(consumption, { data })[0].link.serial, '00162');
+  const backup = { ...emptyHistory(), operational: { filename: 'teste.xlsx', data } };
+  assert.equal(
+    (await validateBackup(JSON.stringify(backup))).operational.data.rows[0].serial,
+    '00162',
+  );
+  row.layout = 'legacy';
+  await assert.rejects(validateBackup(JSON.stringify(backup)), /Registro operacional incompatível/);
+});
+
+test('layout compacto bloqueia cabeçalhos ausentes, erros no serial e vínculos duplicados', () => {
+  assert.throws(() => importOperational(compactWorkbook({ missing: true })), /cabeçalhos/);
+  const orders = { columns: [{ label: 'ID Rastreador' }, { label: 'Placa' }], rows: [] };
+  const broken = importOperational(compactWorkbook({ serialError: true }));
+  assert.equal(
+    linkOperational(broken, orders)[0].state,
+    'Identificação incompleta ou incompatível',
+  );
+  const duplicate = importOperational(compactWorkbook({ duplicate: true }));
+  assert.equal(linkOperational(duplicate, orders)[0].state, 'Vínculo operacional ambíguo');
+  assert.ok(
+    duplicate.issues.some(
+      (issue) => issue.address === 'BC2' && issue.category === 'Possível divergência',
+    ),
+  );
+});
 function workbook(records) {
   const sheet = {
     A1: { t: 's', v: 'Nº' },

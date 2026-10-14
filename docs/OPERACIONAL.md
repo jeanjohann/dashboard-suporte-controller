@@ -4,11 +4,13 @@ Entrega inicial 0.13.0. Duas páginas compartilham a importação em memória: *
 
 ## Importação e rastreabilidade
 
-Arquivo Excel, aba `Equipamentos`, cabeçalhos na linha 1. Tabela limitada a A:BY (77 colunas); resumos auxiliares à direita não viram equipamentos. O layout de A/Nº, BH/Equipamentos, BF/Placa instalada e AU/Situação é validado antes de aceitar o arquivo. Linhas sem Nº não são importadas e são contabilizadas se houver conteúdo em A:BY. Nº pode repetir, portanto a linha Excel identifica o registro.
+Arquivo Excel, aba `Equipamentos`, cabeçalhos na linha 1. São aceitos o layout anterior A:BY (77 colunas) e o layout compacto A:BJ (62 colunas), com validação dos cabeçalhos antes de aceitar o arquivo. Resumos auxiliares à direita não viram equipamentos. Linhas sem Nº não são importadas e são contabilizadas se houver conteúdo na tabela reconhecida. Nº pode repetir, portanto a linha Excel identifica o registro.
 
-Originais, cabeçalhos e fórmulas são preservados para inspeção das 77 colunas. Cabeçalhos repetidos são distinguidos pela letra. Não há edição nem correção automática. Fórmulas usam valores armazenados no arquivo: não há recálculo ou garantia de atualização. A importação desta página permanece na sessão. No módulo de consumo, é possível guardar a referência operacional no histórico local e no backup; a importação do operacional pela página de consumo já a guarda. Fontes não são alteradas nem enviadas ao GitHub. Importação que falha mantém a anterior.
+Originais, cabeçalhos e fórmulas são preservados para inspeção de todas as colunas do layout reconhecido. Cabeçalhos repetidos são distinguidos pela letra. Não há edição nem correção automática. Fórmulas usam valores armazenados no arquivo: não há recálculo ou garantia de atualização. A importação desta página permanece na sessão. No módulo de consumo, é possível guardar a referência operacional no histórico local e no backup; a importação do operacional pela página de consumo já a guarda. Fontes não são alteradas nem enviadas ao GitHub. Importação que falha mantém a anterior.
 
 Mapa principal: C cliente; S/T ciclo lançado; AK plano; AS mensalidade; AT cobrança monetária; AU situação; AV cancelamento; BC implementação; BF placa; BH serial; BJ modelo original; BM telefone da linha; BN ICCID. O significado de BB/Contrato e do ciclo permanece pendente; não usar como identificador único ou vigência contratual.
+
+No layout compacto: A Nº; B documento; C cliente; S/T ciclo; AU plano; AJ mensalidade; AK cobrança monetária; AL situação; AM cancelamento; AV implementação; AY placa; BC serial; BE modelo original; BG telefone; BH ICCID. Os vínculos com OS, consumo, manutenção e a restauração do backup usam o mapa do layout importado. O arquivo Excel permanece intacto.
 
 ## Revisão
 

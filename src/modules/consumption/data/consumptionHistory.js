@@ -3,7 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { importLineStatement } from '../domain/lineConsumption.js';
-import { operationalFields } from '../../operational/domain/operational.js';
+import { operationalCell, operationalLayout } from '../../operational/domain/operational.js';
 export const emptyHistory = () => ({
   version: 1,
   files: [],
@@ -138,7 +138,7 @@ export async function validateBackup(text) {
       typeof op.filename !== 'string' ||
       !Array.isArray(rows) ||
       !Array.isArray(columns) ||
-      columns.length !== 77 ||
+      ![62, 77].includes(columns.length) ||
       columns.some(
         (col, index) =>
           !col ||
@@ -148,15 +148,18 @@ export async function validateBackup(text) {
       )
     )
       throw new Error('Referência operacional incompatível.');
+    const layout = operationalLayout(columns);
+    if (columns.length !== layout.count) throw new Error('Referência operacional incompatível.');
     const seen = new Set();
     for (const row of rows) {
       if (
         !row ||
+        (row.layout ?? 'legacy') !== layout.name ||
         !Number.isInteger(row.sourceRow) ||
         row.sourceRow < 2 ||
         seen.has(row.sourceRow) ||
         !Array.isArray(row.cells) ||
-        row.cells.length !== 77 ||
+        row.cells.length !== columns.length ||
         row.cells.some(
           (cell) =>
             !cell ||
@@ -166,11 +169,7 @@ export async function validateBackup(text) {
         ['iccid', 'phone', 'client', 'serial', 'model', 'status', 'plate'].some(
           (key) =>
             typeof row[key] !== 'string' ||
-            row[key] !==
-              String(
-                row.cells[columns.findIndex((col) => col.letter === operationalFields[key])].raw ??
-                  '',
-              ).trim(),
+            row[key] !== String(operationalCell(row, key)?.raw ?? '').trim(),
         )
       )
         throw new Error('Registro operacional incompatível no backup.');

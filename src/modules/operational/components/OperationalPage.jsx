@@ -336,7 +336,10 @@ export function OperationalPage({
                 ) : !data ? (
                   <section className="empty">
                     <h2>Selecione a planilha operacional</h2>
-                    <p>Aba Equipamentos, tabela A:BY. Dados mantidos somente nesta sessão.</p>
+                    <p>
+                      Aba Equipamentos, colunas originais do layout reconhecido. Dados mantidos
+                      somente nesta sessão.
+                    </p>
                   </section>
                 ) : (
                   <>
@@ -421,9 +424,7 @@ export function OperationalPage({
                             {['monthly', 'charge'].map((key) => (
                               <article key={key}>
                                 <span>
-                                  {key === 'monthly'
-                                    ? 'Mensalidade lançada · AS'
-                                    : 'Cobrança lançada · AT'}
+                                  {key === 'monthly' ? 'Mensalidade lançada' : 'Cobrança lançada'}
                                 </span>
                                 <strong>
                                   {money(rows.reduce((sum, r) => sum + (r[key + 'Cents'] ?? 0), 0))}
@@ -565,7 +566,9 @@ export function OperationalPage({
                                     <td>{r.model}</td>
                                     <td>{r.status}</td>
                                     <td>
-                                      <button onClick={() => setDetail(r)}>Ver 77 colunas</button>
+                                      <button onClick={() => setDetail(r)}>
+                                        Ver {data.columns.length} colunas
+                                      </button>
                                     </td>
                                   </tr>
                                 ))}
