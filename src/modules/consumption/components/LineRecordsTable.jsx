@@ -5,12 +5,9 @@
 import React, { useEffect, useState } from 'react';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { compareValues } from '../../../shared/data/sorting.js';
-import { chipKey, consumptionEligible, VOLUME_SCALE } from '../domain/lineConsumption.js';
+import { chipKey, consumptionEligible } from '../domain/lineConsumption.js';
+import { formatVolume as mb } from '../utils/consumptionFormatting.js';
 import { latestConsumptionNotes } from '../domain/consumptionFollowup.js';
-const mb = (value) =>
-  value == null
-    ? '—'
-    : (value / VOLUME_SCALE).toLocaleString('pt-BR', { maximumFractionDigits: 6 }) + ' MB';
 const recordColumns = [
   ['Operadora', (row) => row.operator],
   ['MSISDN', (row) => row.number],

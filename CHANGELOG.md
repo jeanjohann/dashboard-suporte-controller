@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.20.1 — 14/10/2026
+
+- Primeira etapa da refatoração do Controle de Consumo: separa estado de persistência, acompanhamento individual, painel do histórico e painel de arquivos/backups da página coordenadora.
+- Formatos locais compartilhados pela grade e pelo histórico; busca e opções do chip usam a mesma seleção. Preserva regras, layout, autorizações, formato do IndexedDB/backup e dados existentes.
+- Identificação acessível explícita do formulário de acompanhamento, inclusive ao exibir erro de gravação. Conferência com falha simulada preserva histórico e rascunho.
+- Documenta revisão inicial, responsabilidades, critérios preservados e próximas etapas em `REVISAO-E-REFATORACAO.md`.
+
 ## 0.20.0 — 14/10/2026
 
 - Grade de acompanhamento em Consumo → Investigação, começando pelos maiores consumos totais do período filtrado, com cliente/placa, apuração, MB/dia, última marcação e data da ação.

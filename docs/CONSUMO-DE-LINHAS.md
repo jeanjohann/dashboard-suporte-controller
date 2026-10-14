@@ -52,6 +52,8 @@ Valor Faturado, Valor Multa e Valor Total da Kore aparecem separados por dados, 
 
 ## Manutenção e validação
 
+Na versão 0.20.1, acompanhamento e persistência foram extraídos da página principal: `hooks/useLineFollowup.js` coordena busca/rascunho/histórico/exportação; `hooks/useConsumptionArchive.js` confirma gravações; `components/LineHistoryPanel.jsx` e `ConsumptionArchivePanel.jsx` apresentam histórico e arquivos; `utils/consumptionFormatting.js` reúne os formatos do módulo. Regras e formato do histórico/backup permanecem os mesmos. Veja [o registro de revisão e refatoração](REVISAO-E-REFATORACAO.md).
+
 `src/modules/consumption/domain/consumption.js`: parser CSV e funções básicas; `src/modules/consumption/domain/lineConsumption.js`: formatos, unidades, elegibilidade, vínculos, referência, versões e linha do tempo; `src/modules/consumption/data/consumptionHistory.js`: IndexedDB e validação do backup; `src/modules/consumption/components/LinesPage.jsx`: tela; `src/modules/consumption/components/LineRecordsTable.jsx`: ordenação e paginação.
 
 Testes cobrem conversão exata, zero/ausência, identificadores, serviços separados, duplicidades antes dos filtros, vínculos ambíguos, média de referência, versões, períodos e backups incompatíveis. Conferência no navegador com os arquivos reais cobre importação, totais por soma inteira independente, vínculo operacional, recarga, CSV completo, anotações, reimportação idêntica, backup/restauração, novos períodos e telas desktop/móvel. Os arquivos de origem não são modificados.

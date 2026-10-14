@@ -21,6 +21,8 @@ src/
       config/              Categorias do menu
     consumption/           Consumo M2M
       components/          Tela e tabela de registros
+      hooks/               Estado de persistência local e acompanhamento individual
+      utils/               Formatos de apresentação, sem React
       domain/              Parsers, cálculos, vínculos e testes
       data/                Histórico IndexedDB, backups e testes
     park/                  Parque e Manutenção
@@ -66,6 +68,8 @@ Monitoramento Ativo possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONIT
 A logística (0.18.0) utiliza uma referência própria na memória do Workspace, acessível em Parque e Manutenção e na Importação conjunta. Não depende das bases OS/Operacional para a primeira conferência. `modules/logistics/domain/logistics.js` preserva abas/linhas/células e calcula apenas movimentações e recebimentos datados; vínculos e diagnóstico logístico permanecem fora dessa etapa. Permissão de fonte logística acompanha Parque e Manutenção, além da ação de importação.
 
 ## Onde alterar cada assunto
+
+O acompanhamento individual do consumo está em `hooks/useLineFollowup.js` e `components/LineHistoryPanel.jsx`; leitura/confirmação de gravação em `hooks/useConsumptionArchive.js`; versões e backups em `components/ConsumptionArchivePanel.jsx`. A primeira etapa de extração e a sequência de manutenção estão em [Revisão técnica e refatoração](REVISAO-E-REFATORACAO.md).
 
 | Assunto                                       | Arquivo principal                                                      | Guia de regras             |
 | --------------------------------------------- | ---------------------------------------------------------------------- | -------------------------- |

@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.0 — Fila de acompanhamento do consumo com histórico local, nova identidade visual Addlog e favicon com o símbolo. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.1 — Primeira etapa de refatoração do consumo: acompanhamento, persistência local, painel de arquivos e formatos separados. Regras e histórico preservados. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
+
+[Revisão técnica e refatoração gradual](docs/REVISAO-E-REFATORACAO.md): diagnóstico, primeira etapa concluída, verificações e sequência proposta.
 
 - [Logística de equipamentos — envios e devoluções](docs/LOGISTICA-DE-EQUIPAMENTOS.md)
 

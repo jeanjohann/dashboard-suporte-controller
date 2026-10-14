@@ -40,25 +40,21 @@ import {
   mergeHistoryFiles,
   toggleHistoryFile,
   statementSignature,
-  lineTimeline,
   consumptionEligible,
 } from '../domain/lineConsumption.js';
-import { emptyHistory, fileDigest, validateBackup } from '../data/consumptionHistory.js';
+import { fileDigest, validateBackup } from '../data/consumptionHistory.js';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
-import { consumptionHistoryRepository } from '../data/historyRepository.js';
+import { LineHistoryPanel } from './LineHistoryPanel.jsx';
+import { ConsumptionArchivePanel } from './ConsumptionArchivePanel.jsx';
+import { useLineFollowup } from '../hooks/useLineFollowup.js';
+import { useConsumptionArchive } from '../hooks/useConsumptionArchive.js';
 import {
-  lineHistoryReport,
-  lineHistoryCsv,
-  lineHistoryWorkbook,
-} from '../domain/lineHistoryReport.js';
-const mb = (value) =>
-  value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 6 }) + ' MB';
-const volume = (value) => mb(value == null ? null : value / VOLUME_SCALE);
-const number = (value) => value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-const currency = (value) =>
-  value == null
-    ? 'Não informado'
-    : (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  formatMB as mb,
+  formatVolume as volume,
+  formatNumber as number,
+  formatCurrency as currency,
+  currentDate as today,
+} from '../utils/consumptionFormatting.js';
 const categories = [
   ['overview', 'Visão geral', ['Visão geral do consumo', 'Comparativos por operadora']],
   [
@@ -74,17 +70,6 @@ const categories = [
   ['history', 'Histórico e arquivos', ['Arquivos e histórico', 'Mensalidades dos extratos']],
 ];
 const labels = categories.flatMap(([, , sections]) => sections);
-const today = () => {
-  const parts = new Intl.DateTimeFormat('en', {
-    timeZone: 'America/Sao_Paulo',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(new Date());
-  return ['year', 'month', 'day']
-    .map((key) => parts.find((part) => part.type === key).value)
-    .join('-');
-};
 const decode = (buffer) => {
   let text = new TextDecoder('utf-8').decode(buffer);
   return text.includes('\uFFFD') ? new TextDecoder('windows-1252').decode(buffer) : text;
@@ -95,21 +80,14 @@ const sumMoney = (rows, key) => {
 };
 /** Coordena extratos, versões, notas e referência operacional no histórico local do navegador. */
 export function LinesPage({ onPage, operational, onOperationalChange, reloadToken = 0 }) {
-  const [archive, setArchive] = useState(emptyHistory),
-    [ready, setReady] = useState(false),
-    [busy, setBusy] = useState(false),
-    [error, setError] = useState(''),
-    [message, setMessage] = useState(''),
-    [pending, setPending] = useState([]),
+  const { archive, ready, busy, error, message, setBusy, setError, setMessage, commit } =
+    useConsumptionArchive(reloadToken);
+  const [pending, setPending] = useState([]),
     [backup, setBackup] = useState(null),
     [category, setCategory] = useState('overview'),
     [filters, setFilters] = useState({}),
     [search, setSearch] = useState(''),
     [detail, setDetail] = useState(null),
-    [tracked, setTracked] = useState(''),
-    [noteText, setNoteText] = useState(''),
-    [noteDate, setNoteDate] = useState(today),
-    [noteStatus, setNoteStatus] = useState('Investigar'),
     [expansion, setExpansion] = useState(null),
     [hiddenSections, setHiddenSections] = useState([]),
     [rankMeasure, setRankMeasure] = useState('daily');
@@ -118,44 +96,6 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     backupInput = useRef(),
     historyAnchor = useRef();
   const [historyReveal, setHistoryReveal] = useState(0);
-  useEffect(() => {
-    let live = true;
-    setReady(false);
-    consumptionHistoryRepository
-      .read()
-      .then((value) => {
-        if (live) {
-          setArchive(value);
-          setReady(true);
-          setError('');
-        }
-      })
-      .catch((e) => {
-        if (live) {
-          setError(
-            'Não foi possível abrir o histórico local. Recarregue a página antes de importar arquivos: ' +
-              e.message,
-          );
-        }
-      });
-    return () => {
-      live = false;
-    };
-  }, [reloadToken]);
-  async function commit(next, success) {
-    setBusy(true);
-    setError('');
-    try {
-      await consumptionHistoryRepository.write(next);
-      setArchive(next);
-      setMessage(success);
-    } catch (e) {
-      setError('Não foi possível salvar. O histórico anterior foi mantido. ' + e.message);
-      throw e;
-    } finally {
-      setBusy(false);
-    }
-  }
   const statements = useMemo(() => historyStatements(archive.files), [archive.files]);
   const reference = operational?.data ? operational : archive.operational;
   const linked = useMemo(
@@ -171,6 +111,12 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     () => attachBaselines(linked, baselines, archive.settings.factor),
     [linked, baselines, archive.settings.factor],
   );
+  const followup = useLineFollowup({ allRows, archive, commit, setError });
+  const { tracked, setTracked, setLineSearch } = followup;
+  function selectTracked(key) {
+    setTracked(key);
+    setDetail(null);
+  }
   const operators = [...new Set(statements.map((statement) => statement.operator))].sort();
   const periods = Object.fromEntries(
     operators.map((operator) => {
@@ -191,19 +137,6 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     ['linkState', 'Vínculo operacional'],
     ['status', 'Situação no extrato'],
   ];
-  const [lineSearch, setLineSearch] = useState('');
-  const historyChoices = [
-    ...new Map(
-      allRows.filter((row) => row.service === 'dados').map((row) => [chipKey(row), row]),
-    ).values(),
-  ].sort((a, b) => a.number.localeCompare(b.number));
-  const matchesHistorySearch = (row) =>
-    [row.number, row.iccid, row.operator, row.link?.client, row.link?.plate].some((value) =>
-      String(value || '')
-        .toLocaleLowerCase('pt-BR')
-        .includes(lineSearch.trim().toLocaleLowerCase('pt-BR')),
-    );
-  const historyMatches = lineSearch.trim() ? historyChoices.filter(matchesHistorySearch) : [];
   const selected = allRows.filter(
     (row) =>
       row.service === 'dados' &&
@@ -228,24 +161,11 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     attention = eligible.filter((row) => row.attention),
     visibleSections = categories.find(([key]) => key === category)[2],
     shown = (label) => visibleSections.includes(label);
-  const selectedDetail = selected.find((row) => row.id === detail),
-    timeline = lineTimeline(allRows, tracked),
-    trackedRow = timeline.at(-1),
-    notes = archive.notes
-      .filter(
-        (note) =>
-          trackedRow && note.operator === trackedRow.operator && note.iccid === trackedRow.iccid,
-      )
-      .sort((a, b) => a.date.localeCompare(b.date));
+  const selectedDetail = selected.find((row) => row.id === detail);
   function filter(key, value) {
     setFilters((previous) => ({ ...previous, [key]: value }));
     setDetail(null);
   }
-  useEffect(() => {
-    setNoteText('');
-    setNoteDate(today());
-    setNoteStatus(notes.at(-1)?.status || 'Investigar');
-  }, [tracked]);
   useEffect(() => {
     if (historyReveal)
       historyAnchor.current?.scrollIntoView({
@@ -456,24 +376,6 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
       Array.isArray(records) ? 'consumo-linhas-selecionadas.csv' : 'consumo-linhas-filtrado.csv',
     );
   }
-  async function exportLineHistory(format) {
-    if (!trackedRow || !(await authorizeAction('export'))) return;
-    try {
-      const report = lineHistoryReport(timeline, notes);
-      const filename = 'historico-linha-' + trackedRow.iccid.replace(/[^a-zA-Z0-9_-]/g, '_');
-      if (format === 'xlsx') {
-        await download(
-          lineHistoryWorkbook(report),
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          filename + '.xlsx',
-        );
-      } else {
-        await download(lineHistoryCsv(report), 'text/csv;charset=utf-8', filename + '.csv');
-      }
-    } catch (error) {
-      setError('Não foi possível gerar o histórico. ' + error.message);
-    }
-  }
   async function changeVersion(file) {
     try {
       const files = toggleHistoryFile(archive.files, file.id);
@@ -486,33 +388,12 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
       setError(e.message);
     }
   }
-  async function addNote() {
-    if (
-      !trackedRow ||
-      !noteText.trim() ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(noteDate) ||
-      !Number.isFinite(Date.parse(noteDate)) ||
-      new Date(noteDate).toISOString().slice(0, 10) !== noteDate
-    )
-      return;
-    const note = {
-      id: crypto.randomUUID(),
-      operator: trackedRow.operator,
-      iccid: trackedRow.iccid,
-      date: noteDate,
-      status: noteStatus,
-      text: noteText.trim(),
-      client: trackedRow.link?.client || '',
-      plate: trackedRow.link?.plate || '',
-      serial: trackedRow.link?.serial || '',
-    };
-    try {
-      await commit(
-        { ...archive, notes: [...archive.notes, note] },
-        'Acompanhamento salvo no histórico.',
-      );
-      setNoteText('');
-    } catch {}
+  /** Guarda a fotografia operacional atual, sem alterar o vínculo histórico das ações. */
+  function saveOperationalReference() {
+    commit(
+      { ...archive, operational: { ...operational, savedAt: new Date().toISOString() } },
+      'Referência operacional guardada.',
+    ).catch(() => {});
   }
   function viewRow(row) {
     setDetail(row.id);
@@ -1036,255 +917,14 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   )}
                 </Section>
                 <div ref={historyAnchor} className="consumption-history-anchor" />
-                <Section
-                  key={historyReveal}
-                  title="Linha do tempo de consumo"
+                <LineHistoryPanel
                   visible={shown('Linha do tempo de consumo') && !!statements.length}
-                >
-                  <InfoNote>
-                    Histórico local identificado por operadora + ICCID. Exibe todas as apurações em
-                    uso desse chip e as observações salvas, independentemente do período e dos
-                    filtros do topo. MB por dia divide o consumo pela duração da apuração; períodos
-                    sobrepostos não são somados. Marcações registram ações administrativas e não
-                    comprovam correção de falha. O cliente e o equipamento atuais vêm da referência
-                    operacional; cada anotação preserva o vínculo exibido na ação. CSV e XLSX
-                    incluem contexto, apurações e acompanhamento. Imprimir / Salvar PDF apresenta os
-                    registros salvos; o formulário e rascunhos ficam fora. Sem sincronização entre
-                    usuários: use o backup para proteger ou transferir os dados.
-                  </InfoNote>
-                  <label className="line-tracked-select" data-no-print>
-                    Buscar linha no histórico
-                    <input
-                      type="search"
-                      value={lineSearch}
-                      placeholder="Cliente, placa, número ou ICCID…"
-                      onChange={(event) => setLineSearch(event.target.value)}
-                    />
-                  </label>
-                  {lineSearch.trim() && (
-                    <div className="history-search-results" data-no-print>
-                      <p className="scope" role="status">
-                        {historyMatches.length} linhas encontradas. Clique em uma opção para abrir o
-                        histórico.
-                      </p>
-                      {!historyMatches.length && (
-                        <p className="scope">
-                          Nenhuma correspondência. Cliente e placa exigem vínculo confirmado com a
-                          planilha operacional; você também pode buscar pelo número ou ICCID.
-                        </p>
-                      )}
-                      <div className="history-search-list">
-                        {historyMatches.map((row) => (
-                          <button
-                            key={chipKey(row)}
-                            type="button"
-                            onClick={() => {
-                              setTracked(chipKey(row));
-                              setDetail(null);
-                              setLineSearch('');
-                            }}
-                          >
-                            {row.link
-                              ? `${row.link.client || 'Cliente não informado'} · ${row.link.plate || 'Placa não informada'}`
-                              : 'Linha não identificada'}{' '}
-                            · {row.operator} · {row.number} · ICCID {row.iccid}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <label className="line-tracked-select" data-no-print>
-                    Chip para acompanhar{' '}
-                    <select
-                      value={tracked}
-                      onChange={(event) => {
-                        setTracked(event.target.value);
-                        setDetail(null);
-                      }}
-                    >
-                      <option value="">Selecione uma linha na tabela ou aqui</option>
-                      {[
-                        ...new Map(
-                          allRows
-                            .filter((row) => row.service === 'dados')
-                            .map((row) => [chipKey(row), row]),
-                        ).values(),
-                      ]
-                        .filter(
-                          (row) =>
-                            chipKey(row) === tracked ||
-                            !lineSearch.trim() ||
-                            [
-                              row.number,
-                              row.iccid,
-                              row.operator,
-                              row.link?.client,
-                              row.link?.plate,
-                            ].some((value) =>
-                              String(value || '')
-                                .toLocaleLowerCase('pt-BR')
-                                .includes(lineSearch.trim().toLocaleLowerCase('pt-BR')),
-                            ),
-                        )
-                        .sort((a, b) => a.number.localeCompare(b.number))
-                        .map((row) => (
-                          <option key={chipKey(row)} value={chipKey(row)}>
-                            {row.operator} · {row.number} · {row.iccid} ·{' '}
-                            {row.link
-                              ? `${row.link.client || 'Cliente não informado'} · ${row.link.plate || 'Placa não informada'}`
-                              : 'Linha não identificada'}
-                          </option>
-                        ))}
-                    </select>
-                  </label>
-                  {trackedRow ? (
-                    <>
-                      <button
-                        type="button"
-                        data-no-print
-                        onClick={() => {
-                          setTracked('');
-                          setDetail(null);
-                        }}
-                      >
-                        Fechar histórico
-                      </button>
-                      <p className="scope">
-                        {trackedRow.operator} · MSISDN {trackedRow.number} · ICCID{' '}
-                        {trackedRow.iccid} · referência atual:{' '}
-                        {trackedRow.link
-                          ? `${trackedRow.link.client || 'Cliente não informado'} · Placa ${trackedRow.link.plate || 'não informada'}`
-                          : 'Linha não identificada'}{' '}
-                        / ID {trackedRow.link?.serial || 'Não informado'}. A linha do tempo usa
-                        todas as apurações em uso desse chip, além do período selecionado no topo.
-                      </p>
-                      <div className="line-actions" data-no-print>
-                        <PermissionButton action="export" onClick={() => exportLineHistory('xlsx')}>
-                          Exportar histórico XLSX
-                        </PermissionButton>
-                        <PermissionButton action="export" onClick={() => exportLineHistory('csv')}>
-                          Exportar histórico CSV
-                        </PermissionButton>
-                      </div>
-                      <p className="scope">
-                        {timeline.length} apurações · {notes.length} observações salvas · última
-                        marcação por data da ação: {notes.at(-1)?.status || 'Sem acompanhamento'}.
-                      </p>
-                      {timeline.length < 2 && (
-                        <p className="notice">
-                          Há uma apuração deste chip. Importe novos períodos para acompanhar
-                          mudanças no consumo.
-                        </p>
-                      )}
-                      <div className="line-note-form" data-no-print>
-                        <label>
-                          Data da ação
-                          <input
-                            type="date"
-                            value={noteDate}
-                            onChange={(event) => setNoteDate(event.target.value)}
-                          />
-                        </label>
-                        <label>
-                          Acompanhamento
-                          <select
-                            value={noteStatus}
-                            onChange={(event) => setNoteStatus(event.target.value)}
-                          >
-                            {['Investigar', 'Ação realizada', 'Acompanhar', 'Encerrado'].map(
-                              (status) => (
-                                <option key={status}>{status}</option>
-                              ),
-                            )}
-                          </select>
-                        </label>
-                        <label className="line-note-text">
-                          Anotação
-                          <textarea
-                            value={noteText}
-                            onChange={(event) => setNoteText(event.target.value)}
-                            placeholder="Descreva a investigação, ajuste ou troca realizada…"
-                          />
-                        </label>
-                        <button disabled={busy || !noteText.trim() || !noteDate} onClick={addNote}>
-                          Salvar acompanhamento
-                        </button>
-                      </div>
-                      {!notes.length && (
-                        <p className="scope">Nenhuma observação salva para esta linha.</p>
-                      )}
-                      {!!notes.length && (
-                        <ul className="visit-timeline">
-                          {notes.map((note) => (
-                            <li key={note.id}>
-                              <strong>{note.date.split('-').reverse().join('/')}</strong>
-                              <div className="timeline-entry">
-                                <span className="timeline-status">{note.status}</span>
-                                <span className="timeline-text">{note.text}</span>
-                                {note.plate && (
-                                  <small>Placa registrada na ação: {note.plate}</small>
-                                )}
-                                {note.serial && (
-                                  <small>
-                                    Equipamento registrado na ação: {note.serial} · {note.client}
-                                  </small>
-                                )}
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      <Chart
-                        compact
-                        exportNote={chartNote}
-                        type="line"
-                        title="Consumo médio diário por apuração"
-                        items={timeline.map((row) => ({ label: row.period, value: row.mbDay }))}
-                        format={(value) => mb(value) + '/dia'}
-                      />
-                      <div className="table-scroll">
-                        <SortableTable>
-                          <thead>
-                            <tr>
-                              {[
-                                'Apuração',
-                                'Dias',
-                                'MSISDN',
-                                'Consumo MB',
-                                'MB por dia',
-                                'Arquivo',
-                                'Linha CSV',
-                              ].map((label) => (
-                                <th key={label}>{label}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {timeline.map((row) => (
-                              <tr key={row.id}>
-                                <td>{row.period}</td>
-                                <td>{row.days}</td>
-                                <td>{row.number}</td>
-                                <td data-sort={row.ticks}>{mb(row.mb)}</td>
-                                <td data-sort={row.mbDay}>{mb(row.mbDay)}</td>
-                                <td>{row.filename}</td>
-                                <td>{row.sourceRow}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </SortableTable>
-                      </div>
-                      <InfoNote>
-                        Apurações semanais e mensais podem se sobrepor. São observações separadas,
-                        sem somar snapshots ou presumir o consumo de dias individuais.
-                      </InfoNote>
-                    </>
-                  ) : (
-                    <p className="scope">
-                      Selecione um chip para ver seu histórico e registrar as ações de investigação.
-                    </p>
-                  )}
-                </Section>
+                  revealToken={historyReveal}
+                  chartNote={chartNote}
+                  busy={busy}
+                  followup={followup}
+                  onSelect={selectTracked}
+                />
                 <Section
                   title="Linhas para investigar"
                   visible={shown('Linhas para investigar') && !!statements.length}
@@ -1445,98 +1085,20 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                     </SortableTable>
                   </div>
                 </Section>
-                <Section title="Arquivos e histórico" visible={shown('Arquivos e histórico')}>
-                  <p className="scope">
-                    Os arquivos originais, a referência operacional e as anotações ficam neste
-                    navegador e endereço do dashboard. Exporte um backup para levar a outro
-                    computador ou proteger o histórico. Uma nova versão do mesmo período arquiva a
-                    anterior, sem apagá-la.
-                  </p>
-                  <div className="line-actions">
-                    <PermissionButton
-                      action="export"
-                      disabled={busy || !ready}
-                      onClick={exportBackup}
-                    >
-                      Baixar backup do histórico
-                    </PermissionButton>
-                    <PermissionButton
-                      action="import"
-                      disabled={busy || !ready}
-                      onClick={() => backupInput.current.click()}
-                    >
-                      Revisar backup para restaurar
-                    </PermissionButton>
-                    {operational?.data && (
-                      <button
-                        disabled={busy}
-                        onClick={() =>
-                          commit(
-                            {
-                              ...archive,
-                              operational: { ...operational, savedAt: new Date().toISOString() },
-                            },
-                            'Referência operacional guardada.',
-                          ).catch(() => {})
-                        }
-                      >
-                        Guardar operacional atual no histórico
-                      </button>
-                    )}
-                  </div>
-                  {backup && (
-                    <div className="notice">
-                      <strong>
-                        Backup conferido: {backup.files.length} arquivos e {backup.notes.length}{' '}
-                        anotações.
-                      </strong>
-                      <p>
-                        A restauração substitui o histórico deste navegador. Baixe o backup atual
-                        antes de prosseguir, se quiser preservá-lo.
-                      </p>
-                      <div className="line-actions">
-                        <PermissionButton action="import" disabled={busy} onClick={restoreBackup}>
-                          Restaurar substituindo o histórico atual
-                        </PermissionButton>
-                        <button disabled={busy} onClick={() => setBackup(null)}>
-                          Cancelar restauração
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  <div className="table-scroll">
-                    <SortableTable>
-                      <thead>
-                        <tr>
-                          {['Arquivo', 'Operadora', 'Apuração', 'Registros', 'Versão', 'Ação'].map(
-                            (label) => (
-                              <th key={label}>{label}</th>
-                            ),
-                          )}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {archive.files.map((file) => {
-                          const parsed = importLineStatement(file.text, file.filename, file.id);
-                          return (
-                            <tr key={file.id}>
-                              <td>{file.filename}</td>
-                              <td>{parsed.operator}</td>
-                              <td>{parsed.periods.map((period) => period.label).join(' / ')}</td>
-                              <td>{parsed.rows.length}</td>
-                              <td>{file.active === false ? 'Arquivada' : 'Em uso'}</td>
-                              <td>
-                                <button disabled={busy} onClick={() => changeVersion(file)}>
-                                  {file.active === false ? 'Reativar versão' : 'Arquivar versão'}
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </SortableTable>
-                  </div>
-                </Section>
+                <ConsumptionArchivePanel
+                  visible={shown('Arquivos e histórico')}
+                  archive={archive}
+                  operational={operational}
+                  ready={ready}
+                  busy={busy}
+                  backup={backup}
+                  onExport={exportBackup}
+                  onReview={() => backupInput.current.click()}
+                  onRestore={restoreBackup}
+                  onCancel={() => setBackup(null)}
+                  onSaveOperational={saveOperationalReference}
+                  onChangeVersion={changeVersion}
+                />
                 {selectedDetail && (
                   <section className="panel line-source">
                     <button onClick={() => setDetail(null)}>Fechar registros de origem</button>
