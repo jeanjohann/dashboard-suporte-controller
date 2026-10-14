@@ -20,7 +20,7 @@ No layout compacto: A Nº; B documento; C cliente; S/T ciclo; AU plano; AJ mensa
 
 Datas numéricas seguem o calendário 1900/1904 da pasta, rejeitando o dia fictício 29/02/1900. Texto de data não é convertido automaticamente. Moeda usa números Excel em centavos apenas na análise; zero válido é mantido. Valores ausentes não se tornam zero: são excluídos do indicador e quantificados.
 
-Busca por cliente, serial, placa, ICCID, situação, plano e modelo limita revisão e análises. Cards da importação representam o arquivo completo. CSV de revisão respeita busca/categoria e informa célula, original, motivo e arquivo. Seções oferecem impressão/PDF pelo navegador. Tabela de registros tem 50 linhas por página, com ordenação da página atual explicitada; revisão e vínculos ordenam seu conjunto completo.
+Busca por cliente, serial, placa, ICCID, situação, plano e modelo limita revisão e análises. Cards da importação representam o arquivo completo. CSV de revisão respeita busca/categoria e informa célula, original, motivo e arquivo. Seções oferecem impressão/PDF pelo navegador. Tabela de registros tem 50 linhas por página, com ordenação de todo o recorte antes da paginação. Ordenar volta à primeira página; o terceiro clique restaura a ordem original. Seriais mantêm precisão textual, empates seguem a linha de origem e ausências ficam ao final. Revisão e vínculos também ordenam seu conjunto completo.
 
 ## Operacional × OS
 

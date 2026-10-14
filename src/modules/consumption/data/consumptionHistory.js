@@ -54,8 +54,12 @@ export async function writeConsumptionHistory(history) {
 }
 /** Calcula SHA-256 do conteúdo para reconhecer arquivos idênticos sem depender do nome. */
 export async function fileDigest(text) {
+  if (!globalThis.crypto?.subtle)
+    throw new Error(
+      'Para importar extratos e restaurar backups de consumo, abra o sistema por HTTPS ou pelo endereço local (localhost).',
+    );
   const bytes = new TextEncoder().encode(text),
-    hash = await crypto.subtle.digest('SHA-256', bytes);
+    hash = await globalThis.crypto.subtle.digest('SHA-256', bytes);
   return [...new Uint8Array(hash)].map((value) => value.toString(16).padStart(2, '0')).join('');
 }
 /** Confere estrutura, conteúdo e integridade do backup antes de permitir a restauração local. */

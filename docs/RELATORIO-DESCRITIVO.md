@@ -8,6 +8,8 @@ Uma linha por análise, grupo e indicador: análise, agrupamento, grupo, indicad
 
 O percentual é Valor/Base, armazenado como fração: 0,1 = 10%. No XLSX a célula tem formato percentual. No CSV o valor continua fracionário para manipulação externa. Base zero/ausente e medidas sem participação deixam percentual vazio. Médias e medianas nunca recebem percentual artificial. A descrição arredonda somente para leitura; colunas numéricas preservam a precisão calculada.
 
+No XLSX, a base dos quantitativos é exibida como inteiro; bases de valores em BRL mantêm duas casas decimais. Isso altera somente o formato de exibição.
+
 ## Populações dos percentuais
 
 - Serviços por cliente, chamado ou mês: participação nos serviços realizados elegíveis daquela análise.

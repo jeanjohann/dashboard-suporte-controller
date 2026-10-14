@@ -7,6 +7,16 @@
 
 # Histórico de versões
 
+## 0.20.6 — 14/10/2026
+
+- Ordenação do operacional aplicada ao recorte completo antes da paginação, com ausências ao final, precisão textual dos seriais e retorno à primeira página ao ordenar.
+- Comparação de tempo até retirada mantém o seletor disponível e desabilita colunas ausentes, sem interromper as demais análises.
+- CSVs financeiros das análises estratégicas exportam números em reais e percentuais em pontos percentuais, com unidades explícitas, zero/negativos válidos e ausências vazias. XLSX descritivo distingue bases de contagem e monetárias.
+- Parser compartilhado dos extratos reconhece delimitadores fora das aspas do cabeçalho, incluindo aspas escapadas e cabeçalhos multilinha, preservando a linha física de origem.
+- Revisão de variantes de status, Pago/Pago em e cabeçalhos repetidos, sem alterar originais, contagens ou elegibilidade financeira. Pagamento continua referente ao técnico.
+- Identificadores locais com alternativa a randomUUID, mantendo anotações/configurações existentes. SHA-256 do consumo preservado, com mensagem clara quando o endereço não oferece suporte.
+- Evita varreduras repetidas em legendas e bases do descritivo; mensagens de divergência em pt-BR. Documentação atual separada das regras históricas.
+
 ## 0.20.5 — 14/10/2026
 
 - Vida em campo: cards de implementações/instalações identificadas, primeiras trocas e sua participação, sem troca registrada, cancelamentos e tempo médio acompanhado. Nomes acompanham categoria e modo de início/seleção.

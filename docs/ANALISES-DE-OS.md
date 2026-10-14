@@ -73,3 +73,9 @@ Atendimentos por veículo inicia sem improdutivas e permite somente improdutivas
 Ranking de técnicos mantém custos de todas as linhas elegíveis e mostra contagens separadas. O gráfico permite escolher intervenções, improdutivas ou volume total; CSV e tabela apresentam os três quantitativos. Não prova qualidade nem produtividade por hora.
 
 O modo Resumo está disponível em Custo por cliente, Composição do custo, Atendimentos por veículo, Chamados com vários serviços, Perfil das intervenções por cliente, Tempo até retirada no histórico, Evolução dos custos e Ranking de técnicos. Ele mostra indicadores calculados na mesma base do completo e uma descrição do recorte. Completo e recolhido mantêm o conteúdo montado; impressão continua gerando o relatório completo. O comando global aplica resumo somente às seções com síntese definida; as demais permanecem completas. Ampliar a cobertura está na fila de prioridades.
+
+## Exportações e colunas opcionais — 0.20.6
+
+Os CSVs de Custo por cliente, Composição do custo, Serviços por chamado e Evolução dos custos exportam moedas como números em reais e percentuais em pontos percentuais (14,2 representa 14,2%). As unidades constam no preâmbulo; ausências ficam vazias e médias mantêm a precisão. Apresentação na tela, linhas de origem, filtros e bases continuam iguais. O CSV descritivo possui contrato próprio de percentuais fracionários, conforme [seu guia](RELATORIO-DESCRITIVO.md).
+
+Comparar por no tempo até retirada permanece disponível mesmo quando faltam colunas. Opções ausentes ficam desabilitadas; caso a fonte mude após uma seleção, a mensagem orienta escolher outra comparação. Modelo original ausente não afeta a comparação pelo prefixo do ID nem a vida em campo até primeira troca. Avisos de status, pagamento ao técnico e cabeçalhos repetidos aparecem em Dados e revisão sem corrigir a base ou alterar os indicadores.

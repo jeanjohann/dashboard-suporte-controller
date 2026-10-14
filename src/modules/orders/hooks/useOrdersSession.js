@@ -7,6 +7,7 @@ import { applyFilters, attendanceExtent, monthlyCompleted } from '../../../share
 import { equipment } from '../domain/equipment.js';
 import { observedPeriods, todaySaoPaulo } from '../domain/lifecycle.js';
 import { searchOrderRecords, sortOrderRecords } from '../domain/orderRecords.js';
+import { reviewOrderConsistency } from '../domain/orderReview.js';
 
 /** A base pertence ao Workspace; falhas de importação não a substituem. Busca textual afeta apenas a tabela. */
 export function useOrdersSession({ source, onImport }) {
@@ -80,6 +81,7 @@ export function useOrdersSession({ source, onImport }) {
   const review = selected
     ? [
         ...selected.issues,
+        ...reviewOrderConsistency(selected),
         ...(financial?.issues ?? []),
         ...(devices?.issues ?? []),
         ...(lifecycle?.review ?? []),

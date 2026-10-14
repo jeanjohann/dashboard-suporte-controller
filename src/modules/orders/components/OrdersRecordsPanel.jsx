@@ -191,18 +191,18 @@ export function OrdersRecordsPanel({ data, selected, review, visible, records })
               <tbody>
                 {review.map((issue, index) => (
                   <tr key={issue.address + index}>
-                    <td>{issue.address}</td>
-                    <td>{issue.column}</td>
-                    <td>{issue.value}</td>
-                    <td>{issue.reason}</td>
+                    <td title={issue.address}>{issue.address}</td>
+                    <td title={issue.column}>{issue.column}</td>
+                    <td title={String(issue.value ?? '')}>{issue.value}</td>
+                    <td title={issue.reason}>{issue.reason}</td>
                   </tr>
                 ))}
               </tbody>
             </SortableTable>
             {!review.length && (
               <p className="review-empty">
-                Nenhum erro do Excel ou valor incompatível com formato de data foi detectado. Isso
-                não valida as regras de negócio.
+                Nenhum ponto de revisão foi detectado neste recorte. Isso não confirma a correção
+                completa do cadastro ou das regras de negócio.
               </p>
             )}
           </div>
@@ -210,7 +210,9 @@ export function OrdersRecordsPanel({ data, selected, review, visible, records })
       </section>
       <InfoNote>
         Conferência estrutural: erros do Excel e formatos de data inválidos. Divergências de custo
-        dos serviços realizados também são sinalizadas. Outras validações serão definidas com você.
+        dos serviços realizados, cabeçalhos repetidos, variações de escrita do status e coerência
+        entre Pago e Pago em também são sinalizados. Os avisos não corrigem células nem confirmam
+        recebimento do cliente.
       </InfoNote>
     </Section>
   );

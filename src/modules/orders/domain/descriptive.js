@@ -78,11 +78,16 @@ export function descriptiveReport(
           ['addlogCost', 'Custo total em cobranças Addlog'],
         ];
         const totalRows = groups.reduce((s, g) => s + g.rows.length, 0),
-          calls = new Set(
-            data.rows
-              .filter((row) => groups.some((g) => g.rows.includes(row.sourceRow)))
-              .map((row) => row.os),
-          ).size;
+          calls = new Set(groups.flatMap((group) => [...group.calls])).size,
+          financialBases = Object.fromEntries(
+            fields.map(([field]) => [
+              field,
+              {
+                total: groups.reduce((sum, group) => sum + group[field].sum, 0),
+                negative: groups.some((group) => group[field].count && group[field].sum < 0),
+              },
+            ]),
+          );
         for (const g of groups) {
           emit(
             title,
@@ -107,8 +112,7 @@ export function descriptiveReport(
             g.rows,
           );
           for (const [field, label] of fields) {
-            const total = groups.reduce((s, x) => s + x[field].sum, 0),
-              negative = groups.some((x) => x[field].count && x[field].sum < 0);
+            const { total, negative } = financialBases[field];
             emit(
               title,
               'Razão Social',
@@ -438,7 +442,7 @@ export function descriptiveWorkbook(
       base = sheet['G' + (i + 2)],
       percentage = sheet['H' + (i + 2)];
     if (value?.t === 'n') value.z = result.records[i].unit === 'BRL' ? '#,##0.00' : '0.##';
-    if (base?.t === 'n') base.z = '#,##0.00';
+    if (base?.t === 'n') base.z = result.records[i].unit === 'BRL' ? '#,##0.00' : '#,##0';
     if (percentage?.t === 'n') percentage.z = '0.00%';
   }
   sheet['!autofilter'] = { ref: sheet['!ref'] };

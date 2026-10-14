@@ -10,7 +10,7 @@ import {
 } from '../../../shared/security/accessClient.js';
 import { allowsSource } from '../../../shared/security/permissions.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { importOperational, linkOperational } from '../domain/operational.js';
 import {
@@ -24,6 +24,7 @@ import { SortableTable } from '../../../components/SortableTable.jsx';
 import { Chart } from '../../../components/Chart.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import { field } from '../../../shared/data/filters.js';
+import { sortOperationalRecords } from '../domain/operationalRecords.js';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { ParkInsights } from '../../park/components/ParkInsights.jsx';
 import { LogisticsPanel } from '../../logistics/components/LogisticsPanel.jsx';
@@ -70,6 +71,12 @@ export function OperationalPage({
     [group, setGroup] = useState('client'),
     [chartType, setChartType] = useState('bars'),
     [detail, setDetail] = useState(null);
+  const [recordSort, setRecordSort] = useState(null);
+  useEffect(() => {
+    setRecordSort(null);
+    setOffset(0);
+    setDetail(null);
+  }, [source]);
   async function load(event) {
     if (!(await authorizeAction('import'))) {
       event.target.value = '';
@@ -110,6 +117,7 @@ export function OperationalPage({
             (value) => value.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')),
           )),
     );
+  const orderedRecords = sortOperationalRecords(rows, recordSort);
   const selected = new Set(rows.map((row) => row.sourceRow)),
     issues =
       data?.issues.filter(
@@ -544,7 +552,13 @@ export function OperationalPage({
                         </Section>
                         <Section title="Registros operacionais">
                           <div className="table-scroll">
-                            <SortableTable>
+                            <SortableTable
+                              sort={recordSort}
+                              onSortChange={(next) => {
+                                setRecordSort(next);
+                                setOffset(0);
+                              }}
+                            >
                               <thead>
                                 <tr>
                                   <th>Linha</th>
@@ -557,7 +571,7 @@ export function OperationalPage({
                                 </tr>
                               </thead>
                               <tbody>
-                                {rows.slice(offset * 50, offset * 50 + 50).map((r) => (
+                                {orderedRecords.slice(offset * 50, offset * 50 + 50).map((r) => (
                                   <tr key={r.sourceRow}>
                                     <td>{r.sourceRow}</td>
                                     <td>{r.client}</td>
@@ -581,7 +595,7 @@ export function OperationalPage({
                             </button>
                             <span>
                               {offset + 1} / {Math.max(1, Math.ceil(rows.length / 50))} · ordenação
-                              da página atual
+                              de toda a seleção
                             </span>
                             <button
                               disabled={(offset + 1) * 50 >= rows.length}

@@ -9,11 +9,31 @@ const normalize = (value) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim();
+/** Conta separadores somente fora das aspas do primeiro registro lógico, inclusive cabeçalhos multilinha. */
+function csvDelimiter(text) {
+  const counts = new Map([
+    [';', 0],
+    ['\t', 0],
+    [',', 0],
+  ]);
+  let quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '"') {
+      if (quoted && text[i + 1] === '"') i++;
+      else quoted = !quoted;
+    } else if (!quoted) {
+      if (char === '\r' || char === '\n') break;
+      if (counts.has(char)) counts.set(char, counts.get(char) + 1);
+    }
+  }
+  const [delimiter, count] = [...counts].sort((a, b) => b[1] - a[1])[0];
+  return count ? delimiter : ',';
+}
 /** Interpreta delimitadores, aspas e quebras de linha sem perder a posição de origem dos registros. */
 export function parseCsv(text) {
   text = text.replace(/^\uFEFF/, '');
-  const first = text.split(/\r?\n/, 1)[0];
-  const delimiter = first.includes(';') ? ';' : first.includes('\t') ? '\t' : ',';
+  const delimiter = csvDelimiter(text);
   const rows = [];
   let cells = [],
     value = '',

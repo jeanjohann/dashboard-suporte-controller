@@ -1,10 +1,12 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.5 — Vida em campo passa a mostrar implementações identificadas, participação das primeiras trocas e tempo médio acompanhado, separado da média até troca. Bases, cancelamentos e revisão ficam explícitos nos cards, tabelas e CSV. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.6 — Correções de ordenação global do operacional, seletores, exportações numéricas e reconhecimento do CSV. Revisão de status/pagamentos/cabeçalhos sem correção automática. Indicadores de vida em campo da 0.20.5 preservados. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 
 [Revisão técnica e refatoração gradual](docs/REVISAO-E-REFATORACAO.md): diagnóstico, etapas concluídas, verificações e sequência proposta.
+
+[Correções da análise crítica](docs/CORRECOES-DA-ANALISE-CRITICA.md): ajustes entregues, compatibilidade das exportações e sugestões que dependem de novas regras.
 
 - [Logística de equipamentos — envios e devoluções](docs/LOGISTICA-DE-EQUIPAMENTOS.md)
 

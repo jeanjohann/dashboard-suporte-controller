@@ -14,8 +14,12 @@ export function plainText(value) {
   return plainText(value.props?.children);
 }
 /** Ordena linhas pelos cabeçalhos selecionados mantendo os filhos React e as referências de origem. */
-export function SortableTable({ children, ...props }) {
-  const [sort, setSort] = useState(null);
+export function SortableTable({ children, sort: controlledSort, onSortChange, ...props }) {
+  const [localSort, setLocalSort] = useState(null);
+  // Em tabelas paginadas, o chamador ordena o recorte completo antes de fornecer a página.
+  const controlled = typeof onSortChange === 'function';
+  const sort = controlled ? controlledSort : localSort;
+  const setSort = controlled ? onSortChange : setLocalSort;
   return (
     <table {...props}>
       {Children.map(children, (part) => {
@@ -64,15 +68,17 @@ export function SortableTable({ children, ...props }) {
             const cell = Children.toArray(row.props.children)[sort?.index];
             return cell?.props?.['data-sort'] ?? plainText(cell);
           };
-          const ordered = sort
-            ? rows
-                .map((row, index) => ({ row, index }))
-                .sort(
-                  (a, b) =>
-                    compareValues(value(a.row), value(b.row), sort.direction) || a.index - b.index,
-                )
-                .map((item) => item.row)
-            : rows;
+          const ordered =
+            sort && !controlled
+              ? rows
+                  .map((row, index) => ({ row, index }))
+                  .sort(
+                    (a, b) =>
+                      compareValues(value(a.row), value(b.row), sort.direction) ||
+                      a.index - b.index,
+                  )
+                  .map((item) => item.row)
+              : rows;
           return cloneElement(part, {}, ordered);
         }
         return part;

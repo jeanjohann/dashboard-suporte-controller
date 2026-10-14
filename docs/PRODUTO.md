@@ -1,12 +1,29 @@
 # Suporte Controller — produto e regras de negócio
 
-Atualizado em 04/10/2026. Versão atual: 0.8.0.
+Atualizado em 14/10/2026. Versão atual: 0.20.6.
 
 ## Objetivo
 
 Importar a planilha de ordens de serviço da Addlog para consulta, conferência e análises de gestão e apresentações. A planilha é utilizada pelo financeiro para controlar serviços cobrados de clientes, custos absorvidos pela Addlog e pagamentos de técnicos. Também registra eventos associados aos equipamentos.
 
-## Situação do produto
+## Regras atuais e referências
+
+- Uma linha de OS é um atendimento; o número da OS identifica um chamado, que pode conter várias linhas. A ordem e os valores de origem são preservados.
+- Indicadores de realizados exigem Status exatamente Concluída ou Pago. Pago significa pagamento ao técnico. Variações de escrita e incoerências com Pago em geram avisos de revisão, sem normalização automática nem mudança dos totais.
+- Km é despesa de deslocamento em reais. Custo Total lançado permanece oficial, mesmo divergindo de Técnico + Km. Ausências não viram zero; médias usam valores válidos do próprio campo, incluindo zero. Valor a cobrar é contratual, separado por Cobrança Cliente/Addlog, sem comprovar receita ou lucro.
+- Manutenção efetiva exclui Visita Improdutiva nos indicadores que assim especificam. Custos financeiros válidos das improdutivas são mantidos. Os modos do relatório por veículo têm populações explícitas.
+- Troca de rastreador exige o par realizado de retirada/entrada no mesmo chamado, cliente, placa e data, com seriais diferentes. Reinstalação participa somente com par confirmado. Acessórios exigem troca/trocar explícito e categoria identificada; manutenção genérica não confirma substituição.
+- Vida em campo até primeira troca e tempo até retirada são análises distintas. Média até troca usa apenas trocas confirmadas; tempo acompanhado inclui os encerramentos/limites válidos e tem base própria. Sem troca ou sem retirada não comprova atividade ou ausência de falha. Consulte [Vida em campo](VIDA-EM-CAMPO.md).
+- Identificadores preservam zeros, acentos e hífens. Vínculos incertos não são corrigidos automaticamente. Cabeçalhos repetidos ficam acessíveis pela posição/letra e são sinalizados; consultas por nome continuam usando a primeira ocorrência.
+- OS possui categorias de análise, filtros globais e busca restrita à tabela. OS e consumo mantêm filtros independentes. Ordenação das tabelas paginadas de OS, operacional e consumo considera o recorte completo antes da paginação.
+- Consumo preserva períodos, precisão, referência por operadora/apuração e histórico local com backup. Franquia compartilhada não significa saldo global por operadora nem bloqueio por exceder 20 MB. Consulte [Consumo](CONSUMO-DE-LINHAS.md).
+- Importação/exportação seguem as permissões atuais. Esta entrega não muda autenticação, banco, fontes, backups ou contratos. OS/operacional permanecem na sessão; acompanhamento de consumo continua neste navegador.
+
+Os guias de cada módulo descrevem as regras atuais: [Análises de OS](ANALISES-DE-OS.md), [Operacional](OPERACIONAL.md), [Parque e Manutenção](PARQUE-E-MANUTENCAO.md), [Logística](LOGISTICA-DE-EQUIPAMENTOS.md), [Monitoramento](MONITORAMENTO-DE-FROTA.md) e [Permissões](USUARIOS-E-PERMISSOES.md). Correções da revisão crítica em [0.20.6](CORRECOES-DA-ANALISE-CRITICA.md). Pendências atuais em [Fila de ajustes](PROXIMOS-AJUSTES.md).
+
+## Registro histórico das versões iniciais
+
+As seções abaixo registram decisões e limitações da época de cada versão. Não são uma lista do que ainda falta implementar. Regras antigas sobre troca de acessórios, reinstalação, navegação e análises propostas foram substituídas pelas referências atuais acima; o histórico é mantido para rastreabilidade.
 
 Versão 0.8.0: detalhes dos registros por mês/grupo, ordenação por cabeçalho, impressão/PDF por seção e ranking de técnicos. Ranking usa Cód. como chave e mostra os nomes associados. Somente Concluída/Pago; código inválido exclui a linha do ranking com contagem. Código zero é válido. Chamados são distintos dentro de cada técnico e não aditivos entre técnicos.
 
@@ -139,7 +156,7 @@ Regras confirmadas: mesmo chamado e placa, ambos realizados, seriais distintos. 
 
 O vínculo é resolvido na importação completa para que filtros não escondam ambiguidades. Uma troca entra na seleção apenas quando ambas as linhas atendem aos filtros. A data do gráfico é a instalação substituta; eventos sem essa data não entram no gráfico e são contabilizados separadamente.
 
-Para acessórios, basta a palavra-chave sem exigir troca por padrão. Ignoram-se maiúsculas/minúsculas e acentos apenas nessa classificação, sem alterar o original. Ambas as categorias ou nenhuma geram revisão e exclusão somente da contagem de acessórios. A opção visível Exigir a palavra troca pode ser ativada para testes e não é persistida.
+Regra histórica da versão 0.4.0, substituída: nessa etapa bastava a palavra-chave do acessório e existia uma opção para exigir troca. Na regra atual, troca/trocar explícito é obrigatório; verificação, RFID solto ou teclado travado não confirmam substituição. Consulte [Vida em campo](VIDA-EM-CAMPO.md).
 
 Pendências: vínculo da instalação anterior ao serial retirado, múltiplos ciclos, data de referência dos ativos e validação de sequência temporal. Nenhuma vida útil ou causa de falha é inferida automaticamente.
 

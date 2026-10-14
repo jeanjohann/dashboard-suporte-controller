@@ -24,6 +24,8 @@ Atualizada em 14/10/2026. Esta é a fila consolidada atual; observações de ver
 
 ## Já entregues — não recolocar na fila
 
+Correções da análise crítica (0.20.6): ordenação completa do operacional, seletor de comparação com coluna ausente, CSVs financeiros numéricos, formato das bases XLSX, reconhecimento de delimitadores entre aspas e avisos de status/pagamento/cabeçalhos sem mudança dos totais. Compatibilidade e limites em [Correções da análise crítica](CORRECOES-DA-ANALISE-CRITICA.md). Novos cruzamentos e alterações de regra continuam nas dependências da fila.
+
 Vida em campo (0.20.5): total identificado, participação das primeiras trocas e tempo médio acompanhado, com revisão/cancelamentos e bases explícitas. Tabelas, CSV e impressão acompanham os indicadores. Uma estimativa de sobrevivência permanece uma proposta futura que exige validar cobertura do histórico e encerramento da observação; não foi ativada nesta etapa. Critérios em [Vida em campo](VIDA-EM-CAMPO.md).
 
 Refatoração gradual: acompanhamento/persistência entregues em 0.20.1; importação, filtros e relatórios separados em 0.20.2; controles compartilhados de CSS consolidados em 0.20.3; coordenação e painéis da página de OS separados em 0.20.4. A avaliação de carregamento (R05) continua prevista, condicionada às medições e à preservação de filtros/bases ao navegar. Diagnóstico, critérios de compatibilidade e sequência R01–R05 estão em [Revisão técnica e refatoração](REVISAO-E-REFATORACAO.md).

@@ -88,3 +88,19 @@ test('seleção vazia e análise indisponível são explícitas', () => {
   assert.equal(descriptiveReport(d, d, null, null, []).records.length, 0);
   assert.ok(descriptiveReport(d, d, null, { unavailable: true }, ['duration']).notes.length);
 });
+
+test('bases de contagem e moeda usam formatos próprios sem perder chamados compartilhados entre clientes', () => {
+  const data = fixture();
+  data.rows[1].os = data.rows[0].os;
+  const result = descriptiveReport(data, data, null, null, ['clients']);
+  const calls = result.records.filter((record) => record.indicator === 'Chamados distintos');
+  assert.ok(calls.every((record) => record.base === 1));
+  const book = XLSX.read(
+    descriptiveWorkbook(result, data, { filters: {}, includeOriginal: false }),
+    { type: 'array', cellNF: true },
+  );
+  result.records.forEach((record, index) => {
+    const base = book.Sheets.Relatório['G' + (index + 2)];
+    if (base?.t === 'n') assert.equal(base.z, record.unit === 'BRL' ? '#,##0.00' : '#,##0');
+  });
+});

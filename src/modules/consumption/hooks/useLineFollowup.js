@@ -4,6 +4,7 @@ import { chipKey, lineTimeline } from '../domain/lineConsumption.js';
 import { currentDate as today } from '../utils/consumptionFormatting.js';
 import { authorizeAction } from '../../../shared/security/accessClient.js';
 import { download } from '../../../shared/export/exports.js';
+import { localId } from '../../../shared/data/localId.js';
 import {
   lineHistoryReport,
   lineHistoryCsv,
@@ -75,7 +76,7 @@ export function useLineFollowup({ allRows, archive, commit, setError }) {
     )
       return;
     const note = {
-      id: crypto.randomUUID(),
+      id: localId(),
       operator: trackedRow.operator,
       iccid: trackedRow.iccid,
       date: noteDate,

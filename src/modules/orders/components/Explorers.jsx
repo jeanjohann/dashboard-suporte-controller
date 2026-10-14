@@ -12,6 +12,7 @@ import { field } from '../../../shared/data/filters.js';
 import { Chart } from '../../../components/Chart.jsx';
 import { Section } from '../../../components/Section.jsx';
 import { reportCsv, chartSvg, csv, download } from '../../../shared/export/exports.js';
+import { localId } from '../../../shared/data/localId.js';
 const currency = (value) =>
   (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 /** Permite agrupar medidas, consultar histórico e salvar somente configurações de relatório no navegador. */
@@ -73,7 +74,7 @@ export function Explorers({ data, filename, filters, onRestoreFilters, visibilit
               persist([
                 ...saved,
                 {
-                  id: crypto.randomUUID(),
+                  id: localId(),
                   name: saveName.trim(),
                   schema,
                   grouping,

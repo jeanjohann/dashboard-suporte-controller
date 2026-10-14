@@ -74,6 +74,7 @@ export function Chart({
   }
   const reason = chartAvailability(items, measure),
     circular = type === 'pie' || type === 'donut';
+  const total = circular ? items.reduce((sum, item) => sum + item.value, 0) : 0;
   if (!items.length) return <p className="scope">Sem dados para esta seleção.</p>;
   if (circular && reason)
     return (
@@ -235,8 +236,7 @@ export function Chart({
             {items.map((item, i) => (
               <li key={item.label}>
                 <span style={{ background: colors[i % colors.length] }} />
-                {item.label}: {format(item.value)} (
-                {((item.value / items.reduce((s, x) => s + x.value, 0)) * 100).toFixed(1)}%)
+                {item.label}: {format(item.value)} ({((item.value / total) * 100).toFixed(1)}%)
               </li>
             ))}
           </ul>

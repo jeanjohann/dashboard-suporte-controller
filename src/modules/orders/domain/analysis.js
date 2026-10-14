@@ -51,7 +51,7 @@ export function finance(data) {
         address: `${column.letter}${row.sourceRow}`,
         column: 'Custo Total',
         value: cell('Custo Total').display,
-        reason: `Divergência: Técnico + Km = ${((technician + travel) / 100).toFixed(2)}; total lançado mantido.`,
+        reason: `Divergência: Técnico + Km = ${((technician + travel) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}; total lançado mantido.`,
       });
     }
   }

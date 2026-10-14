@@ -19,6 +19,7 @@ import { Chart } from '../../../components/Chart.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
+import { financialFields, insightExportValues } from '../domain/insightExport.js';
 const number = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const currency = (value) =>
@@ -27,15 +28,7 @@ const currency = (value) =>
     : (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const metric = (value) => (value?.count ? value.sum : null);
 const day = (value) => value?.split('-').reverse().join('/') || '—';
-const financialFields = [
-  ['cost', 'Custo total lançado'],
-  ['technician', 'Serviço técnico'],
-  ['travel', 'Deslocamento'],
-  ['client', 'Contratual Cliente'],
-  ['absorbed', 'Contratual Addlog'],
-  ['addlogCost', 'Custo total em cobranças Addlog'],
-];
-function InsightTable({ title, headers, items, values, data, filename, filters }) {
+function InsightTable({ title, headers, items, values, exportKind, data, filename, filters }) {
   const [detail, setDetail] = useState(null);
   return (
     <div className="insight-table">
@@ -49,10 +42,23 @@ function InsightTable({ title, headers, items, values, data, filename, filters }
               ['Arquivo', filename],
               ['Filtros', JSON.stringify(filters)],
               ['Regra', 'Somente realizados; valores contratuais não são recebimentos'],
+              ...(exportKind
+                ? [
+                    ['Unidade monetária', 'BRL (reais); valores numéricos sem símbolo de moeda'],
+                    [
+                      'Percentuais',
+                      'Pontos percentuais: 14,2 representa 14,2%; ausência fica vazia',
+                    ],
+                  ]
+                : []),
               [],
               ...[
                 headers.concat('Linhas Excel'),
-                ...items.map((item) => values(item).concat((item.rows || []).join(', '))),
+                ...items.map((item) =>
+                  (exportKind ? insightExportValues(exportKind, item) : values(item)).concat(
+                    (item.rows || []).join(', '),
+                  ),
+                ),
               ],
             ]),
             'text/csv;charset=utf-8',
@@ -272,6 +278,7 @@ export function AdvancedInsights({
             <InsightTable
               {...tableProps}
               title="Custo por cliente"
+              exportKind="clients"
               headers={[
                 'Cliente',
                 'Realizados',
@@ -341,6 +348,7 @@ export function AdvancedInsights({
             <InsightTable
               {...tableProps}
               title="Composição do custo"
+              exportKind="composition"
               headers={[
                 'Grupo',
                 'Técnico (pares válidos)',
@@ -561,6 +569,7 @@ export function AdvancedInsights({
             <InsightTable
               {...tableProps}
               title="Serviços por chamado"
+              exportKind="calls"
               headers={[
                 'Chamado',
                 'Realizados',
@@ -680,8 +689,32 @@ export function AdvancedInsights({
           )
         }
       >
+        <label>
+          Comparar por{' '}
+          <select value={durationBy} onChange={(event) => setDurationBy(event.target.value)}>
+            {[
+              ['ID Rastreador', 'Modelo pelo prefixo do ID'],
+              ['Modelo', 'Modelo original da planilha'],
+              ['Razão Social', 'Razão Social'],
+            ].map(([key, label]) => {
+              const absent = !data.columns.some((column) => column.label === key);
+              return (
+                <option key={key} value={key} disabled={absent}>
+                  {label}
+                  {absent ? ' · coluna ausente' : ''}
+                </option>
+              );
+            })}
+          </select>
+        </label>
         {!durations ? (
-          unavailable
+          !data.columns.some((column) => column.label === durationBy) ? (
+            <p role="status">
+              A coluna “{durationBy}” não está nesta planilha. Escolha outra comparação acima.
+            </p>
+          ) : (
+            unavailable
+          )
         ) : (
           <>
             <InfoNote>
@@ -707,14 +740,6 @@ export function AdvancedInsights({
                 </div>
               ))}
             </div>
-            <label>
-              Comparar por{' '}
-              <select value={durationBy} onChange={(event) => setDurationBy(event.target.value)}>
-                <option value="ID Rastreador">Modelo pelo prefixo do ID</option>
-                <option value="Modelo">Modelo original da planilha</option>
-                <option>Razão Social</option>
-              </select>
-            </label>
             <Chart
               ranking
               title="Mediana de dias até retirada"
@@ -823,6 +848,7 @@ export function AdvancedInsights({
             <InsightTable
               {...tableProps}
               title="Evolução dos custos"
+              exportKind="monthly"
               headers={[
                 'Mês',
                 'Realizados',
