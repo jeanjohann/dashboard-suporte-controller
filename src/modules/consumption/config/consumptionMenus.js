@@ -1,9 +1,9 @@
-/** Categorias do consumo. Mantém títulos usados nas preferências e contextos de impressão. */
+/** Categorias do consumo. Rótulos podem mudar; chaves e títulos dos relatórios preservam preferências e impressão. */
 export const consumptionCategories = [
   ['overview', 'Visão geral', ['Visão geral do consumo', 'Comparativos por operadora']],
   [
     'investigation',
-    'Investigação',
+    'Acompanhamento',
     ['Fila de acompanhamento do consumo', 'Linha do tempo de consumo', 'Linhas para investigar'],
   ],
   [

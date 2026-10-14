@@ -1,6 +1,6 @@
 # Revisão técnica e refatoração gradual
 
-Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1, 0.20.2 e 0.20.3. Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. Deve acompanhar as próximas etapas.
+Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1, 0.20.2, 0.20.3 e 0.20.4. Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. Deve acompanhar as próximas etapas.
 
 ## Diagnóstico inicial
 
@@ -65,6 +65,30 @@ A conferência antes/depois utilizou dados fictícios em um navegador separado: 
 
 Esta entrega organiza a apresentação existente. Não cria novos cálculos nem modifica persistência ou autorização. O título da aba passa a **Addlog | Suporte Controller** para representar o conjunto dos módulos; o favicon permanece.
 
+## Quarta etapa entregue — coordenação das OS
+
+Na versão 0.20.4, `OrdersPage.jsx` passa de 1.015 para 209 linhas, contando as linhas físicas do arquivo. A página continua coordenando categoria, preferência de relatórios e contextos de expansão/impressão. A extração conserva a estrutura do conteúdo, a ordem dos relatórios e os estados que dependem da página permanecer montada. Nenhum CSS foi alterado nesta etapa.
+
+| Local no módulo `src/modules/orders/` | Responsabilidade                                                                                                                                                              |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hooks/useOrdersSession.js`           | Base recebida do Workspace, importação autorizada, filtros, busca, ordenação/paginação, referência dos ciclos, resultados do domínio, revisão e restauração de filtros salvos |
+| `components/OrdersImportPanel.jsx`    | Cabeçalho, seletor de arquivo, leitura/erro e apresentação inicial                                                                                                            |
+| `components/OrdersFiltersPanel.jsx`   | Período, filtros principais/adicionais, resumo ativo e comandos globais de relatório                                                                                          |
+| `components/OrdersReportMenu.jsx`     | Categorias e seleção de relatórios; preferências continuam na chave local existente                                                                                           |
+| `components/OrdersLifecyclePanel.jsx` | Situação e referência dos ciclos; tabela recebe períodos já vinculados                                                                                                        |
+| `components/OrdersSwapsPanel.jsx`     | Trocas de acessórios/rastreadores e detalhamento dos pares                                                                                                                    |
+| `components/OrdersTotalsPanels.jsx`   | Evolução mensal, indicadores financeiros/operacionais e linhas por chamado                                                                                                    |
+| `components/OrdersRecordsPanel.jsx`   | Células originais, busca, tabela ordenada/paginada e revisão                                                                                                                  |
+| `domain/orderRecords.js`              | Busca pelo conteúdo exibido e ordenação imutável do recorte completo; sem dependência de React                                                                                |
+
+Funções de cálculo, importador e relatórios que já tinham arquivos próprios permanecem nesses locais. O controlador chama os mesmos cálculos existentes. Trocas e ciclos consultam a base completa antes de considerar o recorte. A escolha de situação dos ciclos atua somente na tabela/impressão da seção. Busca textual não altera indicadores, revisões ou relatórios descritivos. A ordenação mantém páginas de 50 registros, ausência/erro ao final e desempate por linha de origem.
+
+Importação inválida conserva a base anterior; importação bem-sucedida continua reiniciando filtros, busca, paginação, ordenação e situação dos ciclos. Preferência de exibição, data de referência e categoria conservam os critérios anteriores. A aplicação de uma configuração salva restaura também as colunas adicionais, limpa a busca e volta à primeira página.
+
+A comparação antes/depois verificou conteúdo, controles e dimensões das oito categorias, em 1440/390 px e claro/escuro: 32 estados iguais, sem transbordamento horizontal da página. Com dados fictícios, foram conferidos Última, ordenação antes da paginação, busca sem efeito nos totais, navegação entre módulos, seleção múltipla, remoção/restauração de filtro adicional, preferências, consulta mensal, ciclos, impressão e exportação. Testes de domínio cobrem imutabilidade, conteúdo exibido, ausências/erros, empates e restauração da ordem original.
+
+No consumo, apenas o rótulo da categoria **Investigação** passa a **Acompanhamento**. A chave `investigation` e os títulos dos relatórios permanecem para conservar configurações e comportamento.
+
 ## Critérios preservados nas etapas
 
 - Mesmas chaves do IndexedDB, formato do histórico e backup. Nenhuma migração, limpeza ou transferência de dados.
@@ -86,12 +110,12 @@ Executar também `npm run check`: caminhos locais, formatação, testes e build.
 
 ## Sequência proposta
 
-| Etapa | Escopo                                                                               | Situação                                                               |
-| ----- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| R01   | Separar acompanhamento, persistência local, painel de arquivos e formatos do consumo | Entregue em 0.20.1                                                     |
-| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Entregue em 0.20.2                                                     |
-| R03   | Mapear CSS e consolidar apresentação dos controles compartilhados                    | Entregue em 0.20.3                                                     |
-| R04   | Dividir a coordenação e os grandes relatórios de OS                                  | Próxima etapa sugerida, com escopo e verificações por responsabilidade |
-| R05   | Medir e avaliar carregamento por módulo, mantendo bases e estado de navegação        | Depende de medições e conferência do ciclo de vida das páginas         |
+| Etapa | Escopo                                                                               | Situação                                                           |
+| ----- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| R01   | Separar acompanhamento, persistência local, painel de arquivos e formatos do consumo | Entregue em 0.20.1                                                 |
+| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Entregue em 0.20.2                                                 |
+| R03   | Mapear CSS e consolidar apresentação dos controles compartilhados                    | Entregue em 0.20.3                                                 |
+| R04   | Dividir a coordenação e os grandes relatórios de OS                                  | Entregue em 0.20.4: controlador e painéis antes reunidos na página |
+| R05   | Medir e avaliar carregamento por módulo, mantendo bases e estado de navegação        | Depende de medições e conferência do ciclo de vida das páginas     |
 
 Cada entrega deve ter um escopo limitado, revisão das mudanças e documentação. Alterações de regra de negócio ou formato de armazenamento precisam ser tratadas como mudanças próprias, com compatibilidade definida antes de implementação.

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.3 — Controles compartilhados de relatórios consolidados em um arquivo de estilos, com aparência conferida nos dois temas e telas menores. A aba do navegador usa Addlog | Suporte Controller. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.4 — Página de OS dividida em controlador da sessão e painéis de importação, filtros e relatórios, preservando regras e apresentação. A categoria Investigação do consumo passa a Acompanhamento. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 

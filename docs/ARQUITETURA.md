@@ -12,6 +12,7 @@ src/
   modules/
     orders/                Ordens de Serviço
       components/          Página, cards e relatórios
+      hooks/               Estado da base, importação e controles da sessão
       domain/              Cálculos, equipamentos, histórico e testes
       data/                Importador Excel e testes
       config/              Categorias e preferências de exibição
@@ -116,6 +117,14 @@ Na versão 0.20.2, `hooks/useConsumptionImports.js` controla importações, vers
 | Identidade e gravação de usuários             | `server/worker.js`                                                     | `USUARIOS-E-PERMISSOES.md` |
 
 Quando uma tabela indicar vários nomes na mesma célula, eles pertencem à mesma pasta do primeiro caminho.
+
+## Coordenação das OS — 0.20.4
+
+`OrdersPage.jsx` mantém categorias, preferências de exibição e contextos dos relatórios. `hooks/useOrdersSession.js` concentra importação autorizada, filtros, busca/ordenação/paginação, referência e situação dos ciclos e chamadas às funções de análise. A base continua pertencendo ao Workspace; o controlador não grava a planilha nem substitui dados após uma falha de leitura.
+
+Os componentes `OrdersImportPanel`, `OrdersFiltersPanel`, `OrdersReportMenu`, `OrdersLifecyclePanel`, `OrdersSwapsPanel`, `OrdersTotalsPanels` e `OrdersRecordsPanel` apresentam responsabilidades separadas. Os relatórios recebem dados e ações; não mantêm outra cópia da base. Contextos de impressão e expansão continuam envolvendo todos os painéis. A montagem durante navegação e as chaves das preferências permanecem.
+
+`domain/orderRecords.js` contém busca pelo texto exibido e ordenação do recorte completo, antes da paginação. Essas funções não substituem `applyFilters`: a busca é restrita à tabela, enquanto os indicadores continuam usando a seleção principal. Testes próprios verificam imutabilidade e ausências/erros ao final. Relatórios já separados, como `AdvancedInsights`, `Explorers` e `FieldLifePanel`, continuam em seus arquivos; a extração não reescreve suas regras.
 
 ## Dependências e limites
 

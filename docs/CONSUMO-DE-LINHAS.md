@@ -4,11 +4,13 @@ Módulo de acompanhamento da Arqia e da Kore, integrado à identidade Addlog. O 
 
 ## Uso
 
+A categoria **Acompanhamento** substitui o nome Investigação desde a versão 0.20.4. Seus relatórios, histórico e preferências mantêm os mesmos critérios; a chave interna `investigation` permanece.
+
 1. Abra **Linhas - Controle de Consumo** e clique em **Importar extratos**. Pode selecionar os dois arquivos CSV juntos.
 2. Confira a operadora, as datas e a separação entre dados, SMS e outros serviços. Clique em **Salvar no histórico**. Uma importação inválida preserva os dados guardados.
 3. Importe o operacional XLSX para conferir ICCID + MSISDN e mostrar cliente, ID do equipamento, modelo e placa. A importação pela página de linhas guarda essa referência. Se importar pela página Operacional, use **Guardar operacional atual no histórico** para incluí-la no backup.
 4. Os filtros ficam em **Personalizar o que aparece na tela**, abaixo do menu de categorias. Selecione uma apuração por operadora; a mais recente vem selecionada inicialmente. Filtros múltiplos usam OU dentro do campo e E entre os campos.
-5. Em **Investigação**, consulte maiores consumos, destaques ou zeros. **Conferir e acompanhar** abre a linha CSV original e seleciona o chip na linha do tempo. Registre data, situação e anotação da ação.
+5. Em **Acompanhamento**, consulte maiores consumos, destaques ou zeros. **Conferir e acompanhar** abre a linha CSV original e seleciona o chip na linha do tempo. Registre data, situação e anotação da ação.
 6. Em **Histórico e arquivos**, baixe o backup JSON. No outro navegador/computador, importe e confira esse backup antes de restaurar. A restauração substitui o histórico local; o cancelamento e arquivos incompatíveis preservam o histórico anterior.
 
 A OS continua carregada apenas na sessão e seus filtros são independentes. O consumo é salvo em IndexedDB, local ao navegador e ao endereço do dashboard, inclusive à porta utilizada. O backup leva os CSVs originais, suas versões, a referência operacional importada, anotações e o limite de investigação. Não há sincronização entre computadores. Trocar o endereço/navegador ou limpar seus dados exige restaurar o backup. A leitura ou gravação que falha é informada.
@@ -64,7 +66,7 @@ Importação e revisão de arquivos ficam em `useConsumptionImports.js`; prévia
 
 ## Fila de acompanhamento — 0.20.0
 
-Em **Investigação**, a grade vem antes do histórico e do gráfico. Exibe apenas apurações elegíveis do recorte, começando pelo maior consumo total em MB. Cliente/placa vêm do vínculo operacional atual; sem vínculo confirmado, aparece Linha não identificada. Campos incluem operadora, número, ICCID, apuração, MB por dia, última marcação e data da ação. Como cada operadora pode ter períodos diferentes, use MB por dia para comparar durações. Não há soma de períodos sobrepostos nem exclusão automática por consumo alto.
+Em **Acompanhamento**, a grade vem antes do histórico e do gráfico. Exibe apenas apurações elegíveis do recorte, começando pelo maior consumo total em MB. Cliente/placa vêm do vínculo operacional atual; sem vínculo confirmado, aparece Linha não identificada. Campos incluem operadora, número, ICCID, apuração, MB por dia, última marcação e data da ação. Como cada operadora pode ter períodos diferentes, use MB por dia para comparar durações. Não há soma de períodos sobrepostos nem exclusão automática por consumo alto.
 
 Clique no status para abrir e exibir a linha do tempo abaixo, inclusive se ela estava oculta/recolhida. Registre data, marcação e observação e use **Salvar acompanhamento**. A grade é atualizada somente após a gravação no IndexedDB. A última marcação é escolhida pela maior data da ação; em empate, pela última anotação registrada. Identificação do histórico permanece operadora + ICCID, independente de número/cliente atual. Trocar de chip limpa o rascunho para evitar vincular uma anotação ao chip errado.
 
@@ -72,7 +74,7 @@ A grade possui dez registros por página, Anterior/Próxima/Último, ordenação
 
 ## Relatório individual e armazenamento futuro
 
-Em Investigação, selecione o chip em Linha do tempo de consumo. Registre a data, a marcação e a observação e clique em Salvar acompanhamento. As informações são confirmadas somente depois de gravadas no navegador e permanecem após recarregar a página.
+Em Acompanhamento, selecione o chip em Linha do tempo de consumo. Registre a data, a marcação e a observação e clique em Salvar acompanhamento. As informações são confirmadas somente depois de gravadas no navegador e permanecem após recarregar a página.
 
 Use Exportar histórico XLSX para obter abas Contexto, Apurações e Acompanhamento. Exportar histórico CSV entrega o mesmo conteúdo em blocos. Identificadores permanecem textuais, incluindo zeros iniciais. Os relatórios incluem todas as apurações em uso elegíveis da operadora + ICCID selecionados, sem limitar ao filtro de apuração do topo. Versões arquivadas não entram. Períodos sobrepostos permanecem separados e não geram um total acumulado artificial. A última marcação é determinada pela data da ação; empates mantêm a ordem de registro disponível.
 

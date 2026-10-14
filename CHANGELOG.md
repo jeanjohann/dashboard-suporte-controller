@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.20.4 — 14/10/2026
+
+- Controle de Consumo: renomeia a categoria Investigação para **Acompanhamento**, preservando sua chave interna, os relatórios, histórico e preferências existentes.
+- Quarta etapa de refatoração: `OrdersPage.jsx` passa de 1.015 para 209 linhas. Importação, filtros, menu de relatórios, ciclos, trocas, totais, chamados e conferência das células têm painéis próprios; `useOrdersSession.js` reúne o estado da base e as ações da sessão.
+- Busca textual e ordenação da tabela original extraídas em funções de domínio com regressões próprias. Busca afeta somente a tabela; ordenação usa o recorte completo antes das páginas de 50 linhas, mantém ausências/erros no fim e empates por linha de origem.
+- Conserva autorização de importação/exportação, reset por nova base, referência dos ciclos, preferências, filtros salvos, contextos de impressão e montagem durante a navegação.
+- Comparação de conteúdo e dimensões em 32 estados das oito categorias de OS, em dois temas e desktop/celular. Conferência de filtros, busca, ordenação, paginação, detalhamento mensal, configurações, ciclos, falha/nova importação, impressão e exportação com dados fictícios.
+
 ## 0.20.3 — 14/10/2026
 
 - Terceira etapa de refatoração: consolida cabeçalhos de relatórios, ações, tabelas, ordenação, foco de teclado e estados desabilitados em `src/styles/controls.css`.
