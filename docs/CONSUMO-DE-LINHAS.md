@@ -58,6 +58,10 @@ Na versão 0.20.1, acompanhamento e persistência foram extraídos da página pr
 
 Testes cobrem conversão exata, zero/ausência, identificadores, serviços separados, duplicidades antes dos filtros, vínculos ambíguos, média de referência, versões, períodos e backups incompatíveis. Conferência no navegador com os arquivos reais cobre importação, totais por soma inteira independente, vínculo operacional, recarga, CSV completo, anotações, reimportação idêntica, backup/restauração, novos períodos e telas desktop/móvel. Os arquivos de origem não são modificados.
 
+## Organização dos fluxos — 0.20.2
+
+Importação e revisão de arquivos ficam em `useConsumptionImports.js`; prévia e seletores têm componentes próprios. Filtros visuais ficam em `ConsumptionFiltersPanel.jsx`, e o recorte é calculado por `consumptionFilters.js`. CSV filtrado/selecionado é montado por `consumptionRecordsReport.js`. Cards, investigação, equipamentos, valores dos extratos e origem foram extraídos em painéis por assunto. Esses componentes recebem os mesmos dados e preservam critérios, títulos, impressão, permissões e formato de armazenamento. Confira o mapa de responsabilidades em [Revisão e refatoração](REVISAO-E-REFATORACAO.md).
+
 ## Fila de acompanhamento — 0.20.0
 
 Em **Investigação**, a grade vem antes do histórico e do gráfico. Exibe apenas apurações elegíveis do recorte, começando pelo maior consumo total em MB. Cliente/placa vêm do vínculo operacional atual; sem vínculo confirmado, aparece Linha não identificada. Campos incluem operadora, número, ICCID, apuração, MB por dia, última marcação e data da ação. Como cada operadora pode ter períodos diferentes, use MB por dia para comparar durações. Não há soma de períodos sobrepostos nem exclusão automática por consumo alto.

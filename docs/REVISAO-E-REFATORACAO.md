@@ -1,6 +1,6 @@
 # Revisão técnica e refatoração gradual
 
-Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Primeira entrega: 0.20.1. Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. Deve acompanhar as próximas etapas.
+Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1 e 0.20.2. Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. Deve acompanhar as próximas etapas.
 
 ## Diagnóstico inicial
 
@@ -33,7 +33,27 @@ Os caminhos da tabela são relativos a `src/modules/consumption/`. Busca do hist
 
 A página coordenadora passou de 1.618 para 1.180 linhas. Essa métrica descreve a distribuição das responsabilidades; o código extraído continua fazendo parte do aplicativo. Os campos do formulário receberam identificação acessível explícita, inclusive durante mensagens de falha.
 
-## Critérios preservados
+## Segunda etapa entregue — importação, filtros e relatórios
+
+A versão 0.20.2 separa a prévia, os seletores de arquivo, os filtros e os relatórios por assunto. A página principal passa de 1.180 para 433 linhas, mantendo a coordenação de estado, vínculos, indicadores, navegação e contexto da impressão. A estrutura total conserva as funções existentes; essa distribuição facilita localizar e revisar alterações.
+
+| Local no módulo de consumo                                                | Responsabilidade                                                                                                                                                                                     |
+| ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hooks/useConsumptionImports.js`                                          | Leitura dos arquivos, revisão e confirmação de importação, cancelamento, versões, referência operacional e backups. Mantém autorização antes de cada fluxo e confirmação de escrita pelo repositório |
+| `components/ConsumptionImportHeader.jsx` e `ConsumptionImportPreview.jsx` | Seletores de arquivo e prévia antes da gravação                                                                                                                                                      |
+| `components/ConsumptionFiltersPanel.jsx`                                  | Controles de apuração, seleção múltipla, limite em MB, busca, fator de investigação e visibilidade                                                                                                   |
+| `domain/consumptionFilters.js`                                            | Uma apuração por operadora e seleção por categorias, busca e limite absoluto. Preserva ordem e referências da base                                                                                   |
+| `domain/consumptionRecordsReport.js`                                      | Montagem do CSV filtrado ou selecionado, com origem, contexto, unidades e proteção de textos contra fórmulas                                                                                         |
+| `components/ConsumptionOverviewPanels.jsx`                                | Cards, faixas, consumo por plano e comparativos de operadoras                                                                                                                                        |
+| `components/ConsumptionInvestigationPanel.jsx`                            | Ranking e tabela de investigação                                                                                                                                                                     |
+| `components/ConsumptionEquipmentPanels.jsx`                               | Consumo por cliente/equipamento e revisão de vínculos                                                                                                                                                |
+| `components/ConsumptionInvoicesPanel.jsx`                                 | Valores de dados, SMS e outros serviços, mantendo frete sem rateio                                                                                                                                   |
+| `components/ConsumptionSourcePanel.jsx`                                   | Células originais e candidatos de vínculo operacional                                                                                                                                                |
+| `config/consumptionMenus.js`                                              | Categorias e títulos estáveis dos relatórios                                                                                                                                                         |
+
+Critérios de seleção e montagem do CSV agora têm testes próprios de regressão. A conferência no navegador cobre prévia sem gravação automática, importação Arqia/Kore, arquivo idêntico, cancelamento e correção com arquivamento da versão anterior, origem das células, valores separados por serviço, exportação, backups e preservação ao navegar. Os fluxos de histórico, rascunho, gravação, busca e telas menores da etapa anterior também foram conferidos.
+
+## Critérios preservados nas duas etapas
 
 - Mesmas chaves do IndexedDB, formato do histórico e backup. Nenhuma migração, limpeza ou transferência de dados.
 - Gravação confirmada pelo repositório antes da atualização do histórico visível. Falha conserva o histórico anterior e o rascunho.
@@ -57,7 +77,7 @@ Executar também `npm run check`: caminhos locais, formatação, testes e build.
 | Etapa | Escopo                                                                               | Situação                                                       |
 | ----- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
 | R01   | Separar acompanhamento, persistência local, painel de arquivos e formatos do consumo | Entregue em 0.20.1                                             |
-| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Próxima etapa sugerida                                         |
+| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Entregue em 0.20.2                                             |
 | R03   | Mapear CSS e consolidar apresentação dos controles compartilhados                    | Após R02, com comparação visual em claro/escuro e celular      |
 | R04   | Dividir a coordenação e os grandes relatórios de OS                                  | Após consolidar o padrão de componentes do consumo             |
 | R05   | Medir e avaliar carregamento por módulo, mantendo bases e estado de navegação        | Depende de medições e conferência do ciclo de vida das páginas |

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.1 — Primeira etapa de refatoração do consumo: acompanhamento, persistência local, painel de arquivos e formatos separados. Regras e histórico preservados. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.2 — Segunda etapa de refatoração do consumo: importação, filtros, CSV e relatórios separados por responsabilidade. Regras e histórico preservados. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 

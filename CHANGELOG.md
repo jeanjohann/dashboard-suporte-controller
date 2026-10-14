@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.20.2 — 14/10/2026
+
+- Segunda etapa de refatoração do consumo: extrai o controlador de importações/versões/backups, cabeçalho, prévia e painel de filtros.
+- Relatórios separados em visão geral, investigação, equipamentos, mensalidades e células de origem. Categorias/títulos em configuração própria; preserva layout, estado, contexto de impressão e cálculos.
+- Seleção por período/categorias/busca/limite e CSV filtrado/selecionado extraídos em funções de domínio com testes próprios. Preserva ordenação original da base, identificadores, unidades, ausências, valores financeiros e proteção contra fórmulas.
+- Conferência de Arqia/Kore, importação idêntica, cancelamento, correção de versão, arquivos originais, mensalidades por serviço, histórico, busca, exportação, backups e navegação.
+
 ## 0.20.1 — 14/10/2026
 
 - Primeira etapa da refatoração do Controle de Consumo: separa estado de persistência, acompanhamento individual, painel do histórico e painel de arquivos/backups da página coordenadora.

@@ -23,6 +23,7 @@ src/
       components/          Tela e tabela de registros
       hooks/               Estado de persistência local e acompanhamento individual
       utils/               Formatos de apresentação, sem React
+      config/              Categorias e títulos dos relatórios
       domain/              Parsers, cálculos, vínculos e testes
       data/                Histórico IndexedDB, backups e testes
     park/                  Parque e Manutenção
@@ -70,6 +71,8 @@ A logística (0.18.0) utiliza uma referência própria na memória do Workspace,
 ## Onde alterar cada assunto
 
 O acompanhamento individual do consumo está em `hooks/useLineFollowup.js` e `components/LineHistoryPanel.jsx`; leitura/confirmação de gravação em `hooks/useConsumptionArchive.js`; versões e backups em `components/ConsumptionArchivePanel.jsx`. A primeira etapa de extração e a sequência de manutenção estão em [Revisão técnica e refatoração](REVISAO-E-REFATORACAO.md).
+
+Na versão 0.20.2, `hooks/useConsumptionImports.js` controla importações, versões e backups; `ConsumptionImportHeader.jsx` e `ConsumptionImportPreview.jsx` apresentam os arquivos e a prévia; `ConsumptionFiltersPanel.jsx` apresenta os controles. Seleção e CSV estão em `domain/consumptionFilters.js` e `consumptionRecordsReport.js`. Relatórios são separados em painéis de visão geral, investigação, equipamentos, mensalidades e origem, recebendo o mesmo recorte e contexto da página. Categorias ficam em `config/consumptionMenus.js`.
 
 | Assunto                                       | Arquivo principal                                                      | Guia de regras             |
 | --------------------------------------------- | ---------------------------------------------------------------------- | -------------------------- |

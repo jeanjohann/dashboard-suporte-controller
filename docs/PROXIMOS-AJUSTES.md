@@ -24,7 +24,7 @@ Atualizada em 14/10/2026. Esta é a fila consolidada atual; observações de ver
 
 ## Já entregues — não recolocar na fila
 
-Refatoração gradual: primeira etapa do consumo entregue em 0.20.1. Importação/filtros, CSS, coordenação das OS e avaliação de carregamento continuam previstos para entregas posteriores. Diagnóstico, critérios de compatibilidade e sequência R01–R05 estão em [Revisão técnica e refatoração](REVISAO-E-REFATORACAO.md).
+Refatoração gradual: acompanhamento/persistência entregues em 0.20.1; importação, filtros e relatórios separados em 0.20.2. CSS, coordenação das OS e avaliação de carregamento continuam previstos para entregas posteriores. Diagnóstico, critérios de compatibilidade e sequência R01–R05 estão em [Revisão técnica e refatoração](REVISAO-E-REFATORACAO.md).
 
 Monitoramento Ativo (0.19.0): tabela prioritária com os seis campos informados para a API, sinais de duração, interface compacta e histórico manual por veículo com botão Salvar atualização. Funciona somente na demonstração e na sessão atual; integração real, coleta e armazenamento permanente continuam nos itens A12–A14.
 
