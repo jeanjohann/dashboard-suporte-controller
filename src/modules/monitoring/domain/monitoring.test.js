@@ -3,7 +3,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import XLSX from 'xlsx';
 import { monitoringDemo } from '../data/demo.js';
-import { monitorSnapshot, monitoringInstant, vehicleKey } from './monitoring.js';
+import {
+  monitorSnapshot,
+  monitoringInstant,
+  vehicleKey,
+  monitoringIndicator,
+  monitoringVoltage,
+  recordMonitoringUpdate,
+} from './monitoring.js';
 import { monitoringReport, monitoringCsv, monitoringWorkbook } from './monitoringReport.js';
 
 test('limites em horas são inclusivos e faixas exclusivas; ausência não vira zero', () => {
@@ -72,8 +79,71 @@ test('situação filtra tabela mas conserva base percentual; XLSX/CSV identifica
   assert.match(monitoringCsv(tables), /DADOS FICTÍCIOS/);
   assert.match(monitoringCsv(tables), /'=1\+1/);
   const book = XLSX.read(monitoringWorkbook(tables), { type: 'array' });
-  assert.equal(book.Sheets['Veículos'].L2.t, 's');
-  assert.equal(book.Sheets['Veículos'].L2.v, '=1+1');
+  const sheet = book.Sheets['Veículos'];
+  const columns = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
+  const at = (name) => sheet[XLSX.utils.encode_cell({ r: 1, c: columns.indexOf(name) })];
+  assert.equal(at('Observações').t, 's');
+  assert.equal(at('Observações').v, '=1+1');
   assert.equal(book.Sheets['Resumo por base'].E2.v, 0.5);
-  assert.equal(book.Sheets['Veículos'].G2.t, 'n');
+  assert.equal(at('Horas desde a atualização').t, 'n');
+});
+
+test('sinais respeitam limites sem arredondamento e neutralizam coleta antiga/datas ausentes', () => {
+  const signal = (hours, state = 'delayed') => monitoringIndicator({ hours, state });
+  assert.equal(signal(47.999, 'recent').tone, 'recent');
+  assert.equal(signal(48).tone, 'attention');
+  assert.equal(signal(71.999).tone, 'attention');
+  assert.equal(signal(72, 'recent').tone, 'high');
+  assert.equal(signal(96).tone, 'critical');
+  assert.equal(signal(150, 'stale').tone, 'unknown');
+  assert.equal(signal(null, 'missing').tone, 'unknown');
+  assert.equal(signal(null, 'invalid').tone, 'unknown');
+  assert.equal(monitoringVoltage(0), '0 V');
+  assert.equal(monitoringVoltage(12.6), '12,6 V');
+  assert.equal(monitoringVoltage(null), 'Não informado');
+});
+
+test('tratamento só muda após registro, conserva histórico e não altera classificação técnica', () => {
+  const first = recordMonitoringUpdate(
+    undefined,
+    { status: 'Em análise', owner: 'Equipe suporte', text: 'Contato iniciado' },
+    '2026-10-14T10:00:00-03:00',
+  );
+  const second = recordMonitoringUpdate(
+    first,
+    { status: 'Manutenção agendada', owner: 'Equipe suporte', text: 'Visita combinada' },
+    '2026-10-14T11:00:00-03:00',
+  );
+  assert.equal(first.history.length, 1);
+  assert.equal(first.status, 'Em análise');
+  assert.equal(second.history.length, 2);
+  assert.equal(second.status, 'Manutenção agendada');
+  assert.equal(second.history[0].text, 'Contato iniciado');
+  assert.throws(
+    () => recordMonitoringUpdate(second, { status: second.status, owner: second.owner, text: '' }),
+    /Altere/,
+  );
+  assert.throws(
+    () => recordMonitoringUpdate(second, { status: 'Qualquer', text: 'Observação' }),
+    /status/,
+  );
+  const snapshot = monitoringDemo(),
+    result = monitorSnapshot(snapshot),
+    key = result.rows[0].key;
+  const closed = recordMonitoringUpdate(
+    second,
+    { status: 'Acompanhamento encerrado', owner: 'Equipe suporte', text: 'Ação encerrada' },
+    '2026-10-14T12:00:00-03:00',
+  );
+  assert.equal(result.rows[0].state, 'delayed');
+  const tables = monitoringReport(result, {}, { [key]: closed });
+  assert.equal(tables.history.length, 4);
+  assert.equal(
+    tables.vehicles[1][tables.vehicles[0].indexOf('Alimentação (V)')],
+    snapshot.vehicles[0].supplyVoltageV,
+  );
+  const book = XLSX.read(monitoringWorkbook(tables), { type: 'array' });
+  assert.equal(book.Sheets['Histórico'].I2.v, 'Contato iniciado');
+  assert.equal(book.Sheets['Histórico'].I4.v, 'Ação encerrada');
+  assert.match(monitoringCsv(tables), /Histórico do acompanhamento/);
 });

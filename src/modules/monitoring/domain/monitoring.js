@@ -10,6 +10,52 @@ export const monitoringStates = {
   stale: 'Coleta desatualizada',
 };
 
+export const monitoringStages = [
+  'Não iniciado',
+  'Em análise',
+  'Aguardando contato',
+  'Manutenção agendada',
+  'Acompanhamento encerrado',
+];
+
+/** Sinal visual por duração utilizável; uma coleta antiga nunca recebe cor de alerta confirmado. */
+export function monitoringIndicator(row) {
+  if (
+    !['recent', 'delayed'].includes(row.state) ||
+    row.hours == null ||
+    !Number.isFinite(row.hours)
+  )
+    return { tone: 'unknown', label: monitoringStates[row.state] || 'Sem classificação' };
+  if (row.hours >= 96) return { tone: 'critical', label: '4 dias ou mais' };
+  if (row.hours >= 72) return { tone: 'high', label: '3 a menos de 4 dias' };
+  if (row.hours >= 48) return { tone: 'attention', label: '2 a menos de 3 dias' };
+  return { tone: 'recent', label: 'Menos de 2 dias' };
+}
+
+/** Apresenta a alimentação em volts, sem criar limites de tensão ou converter unidades. */
+export function monitoringVoltage(value) {
+  if (value == null || value === '') return 'Não informado';
+  if (typeof value === 'number' && Number.isFinite(value))
+    return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 }).format(value) + ' V';
+  return typeof value === 'string' ? value + ' V' : 'Valor para revisão';
+}
+
+/** Acrescenta um registro explícito de tratamento; digitar um rascunho não muda o status publicado. */
+export function recordMonitoringUpdate(previous = {}, draft, at = new Date().toISOString()) {
+  if (!monitoringStages.includes(draft.status)) throw Error('Escolha um status válido.');
+  if (monitoringInstant(at) == null) throw Error('Data da atualização inválida.');
+  const owner = String(draft.owner ?? '').trim(),
+    text = String(draft.text ?? '').trim();
+  if (
+    !text &&
+    draft.status === (previous.status || monitoringStages[0]) &&
+    owner === (previous.owner || '')
+  )
+    throw Error('Altere o status ou responsável, ou descreva o que foi tratado.');
+  const entry = { at, status: draft.status, owner, text };
+  return { ...entry, history: [...(previous.history || []), entry] };
+}
+
 /** Aceita ISO com fuso e data existente; textos brasileiros exigirão um adaptador confirmado. */
 export function monitoringInstant(value) {
   if (

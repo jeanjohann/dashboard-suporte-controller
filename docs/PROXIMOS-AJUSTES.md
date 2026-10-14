@@ -1,6 +1,6 @@
 # Fila de implementação e ajustes
 
-Atualizada em 12/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
+Atualizada em 14/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
 
 | Código | Item                                                                                                                 | Situação / dependência                                                                                                             | Prioridade |
 | ------ | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -23,6 +23,8 @@ Atualizada em 12/10/2026. Esta é a fila consolidada atual; observações de ver
 | A17    | Revisão contínua de layout e documentação                                                                            | Harmonizar telas/impressão/responsividade e remover ambiguidades de notas históricas; não esconder bases relevantes                | A definir  |
 
 ## Já entregues — não recolocar na fila
+
+Monitoramento Ativo (0.19.0): tabela prioritária com os seis campos informados para a API, sinais de duração, interface compacta e histórico manual por veículo com botão Salvar atualização. Funciona somente na demonstração e na sessão atual; integração real, coleta e armazenamento permanente continuam nos itens A12–A14.
 
 Logística (0.18.0): leitura e conferência de Envios e Devoluções, com recebimentos datados. Consertos excluído por solicitação do usuário. Integração logística com OS/parque, titularidade histórica e interpretação de Situação continuam pendentes; a leitura inicial não ativa esses cruzamentos.
 

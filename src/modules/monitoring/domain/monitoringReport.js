@@ -1,7 +1,7 @@
 /** Relatórios locais do retrato analisado; demonstração é identificada no contexto e em cada linha. */
 import XLSX from 'xlsx';
 import { csv } from '../../../shared/export/exports.js';
-import { monitoringStates } from './monitoring.js';
+import { monitoringStates, monitoringIndicator } from './monitoring.js';
 
 /** Monta o recorte completo e o resumo das bases; a situação filtra somente as linhas detalhadas. */
 export function monitoringReport(result, filters, notes = {}) {
@@ -17,6 +17,14 @@ export function monitoringReport(result, filters, notes = {}) {
         'Todas as situações dos clientes selecionados; tabela respeita o filtro de situação.',
       ],
       ['Persistência', 'Acompanhamento nesta etapa: apenas memória da sessão.'],
+      [
+        'Telemetria',
+        'Alimentação em volts; perfil preservado como configuração. Nenhum alerta de tensão/perfil.',
+      ],
+      [
+        'Histórico',
+        'Somente atualizações registradas pelo usuário; rascunhos não alteram status e não entram no relatório.',
+      ],
     ],
     vehicles: [
       [
@@ -25,8 +33,11 @@ export function monitoringReport(result, filters, notes = {}) {
         'Placa',
         'Veículo ID',
         'Rastreador ID',
-        'Último registro ISO',
-        'Horas desde o registro',
+        'Alimentação (V)',
+        'Perfil',
+        'Última atualização ISO',
+        'Horas desde a atualização',
+        'Faixa visual',
         'Situação técnica',
         'Última coleta ISO',
         'Acompanhamento',
@@ -39,8 +50,11 @@ export function monitoringReport(result, filters, notes = {}) {
         row.plate,
         row.vehicleId,
         row.trackerId,
+        row.supplyVoltageV ?? '',
+        row.profile ?? '',
         row.lastRecordAt || '',
         row.hours ?? '',
+        monitoringIndicator(row).label,
         monitoringStates[row.state],
         row.collectionAt,
         notes[row.key]?.status || 'Não iniciado',
@@ -58,21 +72,55 @@ export function monitoringReport(result, filters, notes = {}) {
         group.percentage / 100,
       ]),
     ],
+    history: [
+      [
+        'Modo',
+        'Base',
+        'Placa',
+        'Veículo ID',
+        'Rastreador ID',
+        'Registro ISO',
+        'Status',
+        'Responsável',
+        'O que foi tratado',
+      ],
+      ...result.rows.flatMap((row) =>
+        (notes[row.key]?.history || []).map((entry) => [
+          mode,
+          row.clientName,
+          row.plate,
+          row.vehicleId,
+          row.trackerId,
+          entry.at,
+          entry.status,
+          entry.owner,
+          entry.text,
+        ]),
+      ),
+    ],
   };
 }
 
 /** Exporta contexto e veículos com proteção de texto contra fórmulas de planilha. */
 export function monitoringCsv(tables) {
-  return csv([...tables.context, [], ...tables.vehicles]);
+  return csv([
+    ...tables.context,
+    [],
+    ...tables.vehicles,
+    [],
+    ['Histórico do acompanhamento'],
+    ...tables.history,
+  ]);
 }
 
-/** Gera três abas, mantendo identificadores como texto e percentuais como frações numéricas. */
+/** Mantém identificadores como texto, volts numéricos, percentuais e o histórico registrado em aba própria. */
 export function monitoringWorkbook(tables) {
   const book = XLSX.utils.book_new();
   for (const [name, rows] of [
     ['Contexto', tables.context],
     ['Veículos', tables.vehicles],
     ['Resumo por base', tables.summary],
+    ['Histórico', tables.history],
   ]) {
     const sheet = XLSX.utils.aoa_to_sheet(rows);
     if (name === 'Resumo por base')

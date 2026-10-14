@@ -10,22 +10,10 @@ import { Section, PrintContext } from '../../../components/Section.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { download } from '../../../shared/export/exports.js';
 import { monitoringDemo } from '../data/demo.js';
-import {
-  monitorSnapshot,
-  monitoringDate,
-  monitoringDuration,
-  monitoringStates,
-} from '../domain/monitoring.js';
+import { MonitoringQueue } from './MonitoringQueue.jsx';
+import { monitorSnapshot, monitoringDate, monitoringStates } from '../domain/monitoring.js';
 import { monitoringReport, monitoringCsv, monitoringWorkbook } from '../domain/monitoringReport.js';
 import '../../../styles/monitoring.css';
-
-const stages = [
-  'Não iniciado',
-  'Em análise',
-  'Aguardando contato',
-  'Manutenção agendada',
-  'Acompanhamento encerrado',
-];
 
 /** Mantém notas somente nesta sessão; encerramento administrativo não altera a situação técnica. */
 export function MonitoringPage({ onPage }) {
@@ -36,7 +24,6 @@ export function MonitoringPage({ onPage }) {
     [selected, setSelected] = useState(null),
     [page, setPage] = useState(0);
   const result = snapshot ? monitorSnapshot(snapshot, filters) : null;
-  const detail = result?.rows.find((row) => row.key === selected);
   const bases = snapshot
     ? [...new Set(snapshot.vehicles.map((row) => row.clientId))].map((id) => ({
         id,
@@ -56,12 +43,6 @@ export function MonitoringPage({ onPage }) {
     setPage(0);
     setFilters({ clients: [], threshold: 48, state: 'all' });
   }
-  function note(key, value) {
-    setNotes((previous) => ({
-      ...previous,
-      [detail.key]: { ...previous[detail.key], [key]: value },
-    }));
-  }
   const exportFile = (format) =>
     download(
       format === 'csv' ? monitoringCsv(tables) : monitoringWorkbook(tables),
@@ -70,6 +51,13 @@ export function MonitoringPage({ onPage }) {
         : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       `DEMO-monitoramento.${format}`,
     );
+  const modeNotice = (
+    <div className="notice">
+      {snapshot
+        ? 'DEMONSTRAÇÃO — Dados fictícios, referência congelada e critérios provisórios. Nenhuma API está conectada. Notas desaparecem ao recarregar ou sair da demonstração.'
+        : 'Integração real ainda não ativada. Explore a demonstração para avaliar filtros e relatórios; ela não representa veículos de clientes.'}
+    </div>
+  );
   return (
     <SidePanelProvider>
       <div className="app monitoring-page">
@@ -103,83 +91,101 @@ export function MonitoringPage({ onPage }) {
             <header>
               <div>
                 <div className="eyebrow">MONITORAMENTO PREVENTIVO · EM PREPARAÇÃO</div>
-                <h1>Monitoramento de frota</h1>
+                <h1>Monitoramento Ativo</h1>
                 <p>Comunicação, prioridades e acompanhamento do suporte.</p>
               </div>
               <button onClick={demonstration}>
                 {snapshot ? 'Sair da demonstração' : 'Explorar demonstração'}
               </button>
             </header>
-            <div className="notice">
-              {snapshot
-                ? 'DEMONSTRAÇÃO — Dados fictícios, referência congelada e critérios provisórios. Nenhuma API está conectada. Notas desaparecem ao recarregar ou sair da demonstração.'
-                : 'Integração real ainda não ativada. Explore a demonstração para avaliar filtros e relatórios; ela não representa veículos de clientes.'}
-            </div>
+
             {!snapshot ? (
-              <section className="panel monitoring-preparation">
-                <h2>Preparado para a próxima etapa</h2>
-                <p>
-                  Após confirmar o fuso, o significado da última comunicação e os limites da API,
-                  conectaremos o coletor no servidor. Nenhum token é solicitado nesta tela.
-                </p>
-              </section>
+              <>
+                {modeNotice}
+                <section className="panel monitoring-preparation">
+                  <h2>Preparado para a próxima etapa</h2>
+                  <p>
+                    Após confirmar o fuso, o significado da última comunicação e os limites da API,
+                    conectaremos o coletor no servidor. Nenhum token é solicitado nesta tela.
+                  </p>
+                </section>
+              </>
             ) : (
               <>
-                <section className="panel monitoring-filters">
-                  <MultiFilter
-                    label="Bases de clientes"
-                    options={bases.map((base) => base.label)}
-                    values={bases
-                      .filter((base) => filters.clients.includes(base.id))
-                      .map((base) => base.label)}
-                    onChange={(value) =>
-                      update(
-                        'clients',
-                        bases.filter((base) => value.includes(base.label)).map((base) => base.id),
-                      )
-                    }
-                  />
-                  <label>
-                    Limite de atenção
-                    <select
-                      aria-label="Limite de atenção"
-                      value={filters.threshold}
-                      onChange={(event) => update('threshold', Number(event.target.value))}
-                    >
-                      {[48, 72, 96].map((hours) => (
-                        <option key={hours} value={hours}>
-                          {hours} horas
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    Situação técnica
-                    <select
-                      aria-label="Situação técnica"
-                      value={filters.state}
-                      onChange={(event) => update('state', event.target.value)}
-                    >
-                      <option value="all">Todas</option>
-                      {Object.entries(monitoringStates).map(([key, label]) => (
-                        <option key={key} value={key}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <InfoNote>
-                    Tempo desde o último registro até a referência congelada. Abaixo do limite não
-                    significa online neste instante. Faixas 48/72/96 h e validade de coleta inferior
-                    a 2 h são provisórias. Falha de coleta, data futura ou inválida e ausência de
-                    posição não confirmam interrupção. Cards e gráficos abrangem todas as situações
-                    das bases selecionadas; o filtro de situação afeta tabela e exportação de
-                    veículos.
-                  </InfoNote>
+                <section
+                  className="panel monitoring-filters"
+                  aria-label="Filtros do monitoramento ativo"
+                >
+                  <div className="inline-help-heading">
+                    <h2>Filtros do monitoramento</h2>
+                    <InfoNote>
+                      Tempo desde o último registro até a referência congelada. Abaixo do limite não
+                      significa online neste instante. Faixas 48/72/96 h e validade de coleta
+                      inferior a 2 h são provisórias. Falha de coleta, data futura ou inválida e
+                      ausência de posição não confirmam interrupção. Cards e gráficos abrangem todas
+                      as situações das bases selecionadas; o filtro de situação afeta tabela e
+                      exportação de veículos.
+                    </InfoNote>
+                  </div>
+                  <div className="monitoring-filter-fields">
+                    <MultiFilter
+                      label="Bases de clientes"
+                      options={bases.map((base) => base.label)}
+                      values={bases
+                        .filter((base) => filters.clients.includes(base.id))
+                        .map((base) => base.label)}
+                      onChange={(value) =>
+                        update(
+                          'clients',
+                          bases.filter((base) => value.includes(base.label)).map((base) => base.id),
+                        )
+                      }
+                    />
+                    <label>
+                      Limite de atenção
+                      <select
+                        aria-label="Limite de atenção"
+                        value={filters.threshold}
+                        onChange={(event) => update('threshold', Number(event.target.value))}
+                      >
+                        {[48, 72, 96].map((hours) => (
+                          <option key={hours} value={hours}>
+                            {hours} horas
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Situação técnica
+                      <select
+                        aria-label="Situação técnica"
+                        value={filters.state}
+                        onChange={(event) => update('state', event.target.value)}
+                      >
+                        <option value="all">Todas</option>
+                        {Object.entries(monitoringStates).map(([key, label]) => (
+                          <option key={key} value={key}>
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
                   <p className="scope">
                     Referência: {monitoringDate(snapshot.referenceAt)} · São Paulo · Dados fictícios
                   </p>
                 </section>
+                {modeNotice}
+                <MonitoringQueue
+                  visible={category !== 'reports'}
+                  result={result}
+                  notes={notes}
+                  onRecord={(key, value) => setNotes((previous) => ({ ...previous, [key]: value }))}
+                  selected={selected}
+                  onSelect={setSelected}
+                  page={page}
+                  setPage={setPage}
+                />
                 <section className="cards monitoring-cards">
                   {[
                     ['Veículos monitorados', result.totals.fleet, 'Bases selecionadas'],
@@ -279,119 +285,12 @@ export function MonitoringPage({ onPage }) {
                     />
                   </details>
                 </div>
-                <div hidden={category === 'reports'}>
-                  <Section title="Fila de acompanhamento">
-                    <InfoNote>
-                      DEMONSTRAÇÃO. Ordem inicial: maior duração conhecida. Uma linha por veículo e
-                      base, não por placa. Acompanhamento administrativo é independente da
-                      comunicação.
-                    </InfoNote>
-                    <div className="table-scroll">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Veículo / base</th>
-                            <th>Último registro</th>
-                            <th>Tempo decorrido</th>
-                            <th>Situação técnica</th>
-                            <th>Acompanhamento</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {result.rows.slice(page * 10, page * 10 + 10).map((row) => (
-                            <tr key={row.key}>
-                              <td>
-                                {row.plate}
-                                <small className="monitoring-cell-note">{row.clientName}</small>
-                              </td>
-                              <td>{monitoringDate(row.lastRecordAt)}</td>
-                              <td>{monitoringDuration(row.hours)}</td>
-                              <td>{monitoringStates[row.state]}</td>
-                              <td>{notes[row.key]?.status || 'Não iniciado'}</td>
-                              <td>
-                                <button onClick={() => setSelected(row.key)}>Detalhes</button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="monitoring-actions">
-                      <span>
-                        {result.rows.length} {result.rows.length === 1 ? 'veículo' : 'veículos'} no
-                        recorte
-                      </span>
-                      <button disabled={page === 0} onClick={() => setPage((value) => value - 1)}>
-                        Anterior
-                      </button>
-                      <span>
-                        Página {page + 1} de {Math.max(1, Math.ceil(result.rows.length / 10))}
-                      </span>
-                      <button
-                        disabled={(page + 1) * 10 >= result.rows.length}
-                        onClick={() => setPage((value) => value + 1)}
-                      >
-                        Próxima
-                      </button>
-                    </div>
-                    {detail && (
-                      <section className="monitoring-detail">
-                        <div className="monitoring-actions">
-                          <h3>
-                            {detail.plate} · {detail.clientName}
-                          </h3>
-                          <button onClick={() => setSelected(null)}>Fechar detalhes</button>
-                        </div>
-                        <p>
-                          Rastreador: {detail.trackerId} · Veículo: {detail.vehicleId}
-                        </p>
-                        <p>
-                          Última coleta: {monitoringDate(detail.collectionAt)} · Último registro:{' '}
-                          {monitoringDate(detail.lastRecordAt)}
-                        </p>
-                        <div className="monitoring-fields">
-                          <label>
-                            Acompanhamento
-                            <select
-                              value={notes[detail.key]?.status || stages[0]}
-                              onChange={(event) => note('status', event.target.value)}
-                            >
-                              {stages.map((stage) => (
-                                <option key={stage}>{stage}</option>
-                              ))}
-                            </select>
-                          </label>
-                          <label>
-                            Responsável
-                            <input
-                              value={notes[detail.key]?.owner || ''}
-                              onChange={(event) => note('owner', event.target.value)}
-                            />
-                          </label>
-                          <label>
-                            Observações
-                            <textarea
-                              value={notes[detail.key]?.text || ''}
-                              onChange={(event) => note('text', event.target.value)}
-                            />
-                          </label>
-                        </div>
-                        <p className="scope">
-                          Rascunho apenas nesta sessão, incluído nos relatórios. Encerrar
-                          acompanhamento não marca o veículo como comunicando. Histórico individual
-                          e consumo dependem da integração real.
-                        </p>
-                      </section>
-                    )}
-                  </Section>
-                </div>
                 <div hidden={category !== 'reports'}>
                   <Section title="Relatório de acompanhamento">
                     <InfoNote>
                       DEMONSTRAÇÃO. Exporta todos os veículos do recorte, não apenas a página
-                      exibida; inclui critério, referência e rascunhos. XLSX também inclui resumo
-                      por base.
+                      exibida; inclui critério, referência, alimentação, perfil e histórico de
+                      tratamento registrado. XLSX também inclui resumo por base e histórico.
                     </InfoNote>
                     <p>
                       {result.rows.length} veículos · Referência{' '}

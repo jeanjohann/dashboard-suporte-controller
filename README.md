@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.18.2 — laranjas mais claros, menu lateral compacto e logística em Parque e Manutenção; Monitoramento de Frota em demonstração isolada.
+**Versão:** 0.19.0 — Monitoramento Ativo com tabela prioritária, alimentação/perfil e histórico de tratamento; integração real ainda em preparação.
 
 ## Documentação do projeto
 
@@ -8,7 +8,7 @@
 
 - [Diagramas técnicos e guia de leitura das planilhas](docs/DIAGRAMAS-DO-SISTEMA.md)
 
-- [Monitoramento de Frota — demonstração e próximos passos](docs/MONITORAMENTO-DE-FROTA.md)
+- [Monitoramento Ativo — demonstração e próximos passos](docs/MONITORAMENTO-DE-FROTA.md)
 
 - [Arquitetura, estrutura de pastas e roteiro de manutenção](docs/ARQUITETURA.md)
 

@@ -13,6 +13,8 @@ export function monitoringDemo() {
       vehicleId: `vehicle-${i}`,
       plate: `ABC-${1001 + i}`,
       trackerId: `162${710001 + i}`,
+      supplyVoltageV: i === 10 ? null : i === 11 ? 0 : i % 2 ? 24.4 : 12.6,
+      profile: i === 10 ? null : `Perfil DEMO ${i % 2 ? '02' : '01'}`,
       lastRecordAt:
         hours == null ? null : new Date(Date.parse(referenceAt) - hours * 3600000).toISOString(),
     })),

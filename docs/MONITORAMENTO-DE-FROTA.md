@@ -1,8 +1,22 @@
-# Monitoramento de Frota — primeira etapa
+# Monitoramento Ativo — em preparação
+
+## Tabela prioritária e tratamento — 0.19.0
+
+O nome visível é **Monitoramento Ativo**; a permissão permanece `monitoring`, sem alterar os acessos cadastrados. Na demonstração, a ordem da visão analítica é filtros, aviso de demonstração, fila, cards e gráficos. Fontes/controles mais compactos são específicos da página; o celular mantém área de toque adequada e rolagem própria da tabela.
+
+A fila expõe Placa, ID rastreador, Cliente/Base, Última atualização, Alimentação em **volts** e Perfil como nome/código de configuração. O contrato interno usa `plate`, `trackerId`, `clientName`/`clientId`, `lastRecordAt`, `supplyVoltageV` e `profile`; o adaptador do JSON real ainda será definido. Zero de alimentação é preservado, ausência é Não informado. A tela pode arredondar a três casas, mas exporta o valor numérico original. Perfil é apresentado como recebido. Não há limites ou alertas de tensão/perfil nesta etapa.
+
+Sinais exclusivos: verde para menos de 48 h, atenção para 48 a menos de 72 h, laranja para 72 a menos de 96 h, crítico para 96 h ou mais. Legenda e texto acompanham as cores. Essas faixas fixas independem do limite escolhido. Coleta desatualizada, data inválida/futura e ausência de registro ficam neutras, mesmo havendo duração histórica conhecida. Abaixo de 2 dias não significa online neste instante.
+
+Clicar no status de Acompanhamento abre um painel compacto abaixo da fila, com formulário e histórico. **Salvar atualização** acrescenta data/hora da ação, status, responsável e observação. Digitação é apenas rascunho e não muda a tabela nem entra no relatório. Pode salvar observação mantendo status, ou alteração de status/responsável sem observação. Sem alteração ou texto, o registro é recusado. Eventos antigos não são editados/excluídos nesta etapa.
+
+As datas do tratamento são da ação do usuário, diferentes da referência congelada da telemetria fictícia. O histórico usa base + veículo do contrato interno, não placa isolada. A API precisará oferecer ou permitir confirmar uma chave estável de veículo; não criar identidade por placa ou nome parecido automaticamente.
+
+CSV/XLSX incluem tratamento registrado dos veículos do recorte, independentemente da página da fila. O XLSX inclui aba Histórico; impressão da fila inclui a página apresentada e o histórico selecionado, excluindo formulário de rascunho. Tudo fica **somente na sessão de demonstração**, desaparecendo ao recarregar ou sair dela. Não há gravação do monitoramento no navegador, D1 ou servidor, nem API real ativada.
 
 ## O que está disponível
 
-A página prepara o módulo de acompanhamento preventivo com a organização **Visão analítica** escolhida pelo usuário. Ela inicia sem dados e permite ativar uma demonstração explícita, inteiramente fictícia, com referência congelada em 11/10/2026 às 10:00 no fuso de São Paulo. Nenhuma consulta à API, token, agendamento, notificação ou gravação de monitoramento no servidor foi implementada nesta etapa.
+A página inicia sem dados e permite ativar uma demonstração explícita, inteiramente fictícia, com referência congelada em 11/10/2026 às 10:00 no fuso de São Paulo. Nenhuma consulta à API, token, agendamento, notificação ou gravação de monitoramento no servidor foi implementada nesta etapa.
 
 Há filtros por múltiplas bases, limite de atenção e situação técnica; cards, distribuição temporal, comparação por base, fila paginada, detalhes e rascunhos de acompanhamento. A série de coletas é ilustrativa, limitada à demonstração, usa todas as bases e o limite fixo de 48 horas. Ela não afirma horários reais de falhas ou recuperação.
 
@@ -22,9 +36,9 @@ Esses critérios são uma proposta para validação, não uma política operacio
 
 ## Acompanhamento e relatórios
 
-Responsável, observação e situação administrativa podem ser preenchidos nos detalhes. São rascunhos somente em memória: desaparecem ao recarregar, sair da demonstração ou perder a sessão. Encerrar acompanhamento não altera a comunicação técnica. Os rascunhos entram no relatório exportado, sem modificar os exemplos nem as planilhas existentes.
+Responsável, observação e situação administrativa podem ser preenchidos nos detalhes. São rascunhos até clicar em Salvar atualização; somente registros confirmados entram no histórico e nos relatórios. Tudo permanece em memória: desaparece ao recarregar, sair da demonstração ou perder a sessão. Encerrar acompanhamento não altera a comunicação técnica nem modifica os exemplos ou planilhas existentes.
 
-CSV e XLSX exportam todos os veículos do recorte, independentemente da página exibida. Incluem modo de demonstração, referência, filtros, critérios e notas. XLSX também oferece resumo por base, com percentuais numéricos. Nomes dos arquivos e conteúdo identificam **DEMO / DADOS FICTÍCIOS**. Impressão das seções segue a permissão de exportação; a fila imprime a página apresentada.
+CSV e XLSX exportam todos os veículos do recorte, independentemente da página exibida. Incluem modo de demonstração, referência, filtros, critérios, alimentação/perfil e tratamento registrado. XLSX oferece resumo por base, com percentuais numéricos, e aba Histórico. Nomes dos arquivos e conteúdo identificam **DEMO / DADOS FICTÍCIOS**. Impressão das seções segue a permissão de exportação; a fila imprime a página apresentada.
 
 Histórico individual de ocorrências, recuperações, consumo por equipamento, persistência compartilhada e notificações ficam para as próximas etapas. O consumo depende da confirmação dos campos, unidade e período da informação retornada pelo equipamento.
 
@@ -35,6 +49,7 @@ Histórico individual de ocorrências, recuperações, consumo por equipamento, 
 ## Código e manutenção
 
 - `src/modules/monitoring/components/MonitoringPage.jsx`: página, filtros, rascunhos e ações.
+- `src/modules/monitoring/components/MonitoringQueue.jsx`: fila, sinais, formulário e histórico de tratamento.
 - `src/modules/monitoring/domain/monitoring.js`: contrato normalizado, qualidade das coletas, classificação e indicadores.
 - `src/modules/monitoring/domain/monitoringReport.js`: tabelas de relatório, CSV e XLSX.
 - `src/modules/monitoring/domain/monitoring.test.js`: limites, duplicidade, coleta, datas e exportação.
@@ -43,6 +58,6 @@ Histórico individual de ocorrências, recuperações, consumo por equipamento, 
 
 ## Pendências antes de ativar dados reais
 
-Confirmar campo e significado da última comunicação, fuso, ID de rastreador, escopo e descoberta das bases, validade dos tokens, paginação, limites e dados de consumo. Definir infraestrutura, retenção do histórico e permissões por base. O serviço de coleta deverá rodar no servidor mesmo com a página fechada, com credenciais protegidas e registro de falhas da integração. Um retorno parcial não deve ser tratado como desaparecimento de veículos.
+Confirmar campo/significado da última comunicação, fuso, chave estável do veículo, ID do rastreador, nomes do JSON para alimentação/perfil, escopo e descoberta das bases, validade dos tokens, paginação, limites e dados de consumo. Unidade de alimentação (volts) e significado geral de Perfil (configuração) foram confirmados pelo usuário. Definir infraestrutura, retenção do histórico e permissões por base. O serviço de coleta deverá rodar no servidor mesmo com a página fechada, com credenciais protegidas e registro de falhas da integração. Um retorno parcial não deve ser tratado como desaparecimento de veículos.
 
 Não foram adicionados dados reais ao servidor. O futuro armazenamento de monitoramento será uma alteração explícita de arquitetura; as planilhas dos módulos existentes continuam locais.

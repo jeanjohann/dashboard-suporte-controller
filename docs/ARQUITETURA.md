@@ -54,7 +54,7 @@ As pastas `node_modules`, `dist`, `.wrangler` e `.worker-build` são geradas por
 
 Os [diagramas do sistema e da leitura dos arquivos](DIAGRAMAS-DO-SISTEMA.md) apresentam a separação entre pessoa, navegador e Cloudflare, os campos interpretados e os caminhos de revisão. Os SVGs podem ser ampliados para estudo e apresentação.
 
-Monitoramento possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONITORAMENTO-DE-FROTA.md). Nesta etapa seus dados fictícios ficam isolados, sem API, agendamento ou armazenamento no servidor.
+Monitoramento Ativo possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONITORAMENTO-DE-FROTA.md). Nesta etapa seus dados fictícios ficam isolados, sem API, agendamento ou armazenamento no servidor. `MonitoringPage.jsx` coordena filtros e relatórios; `MonitoringQueue.jsx` reúne a tabela prioritária e o formulário de tratamento. O domínio acrescenta uma entrada ao histórico somente após Salvar atualização; os registros ficam na memória da sessão e acompanham a exportação do recorte.
 
 1. `src/main.jsx` aplica o tema e a verificação de acesso antes de montar `app/Workspace.jsx`.
 2. O Workspace mantém OS e operacional na memória da sessão e coordena as páginas autorizadas. As páginas permitidas continuam montadas, mas ocultas durante a navegação, preservando seus filtros. Uma página sem permissão não é montada.

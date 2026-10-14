@@ -7,6 +7,15 @@
 
 # Histórico de versões
 
+## 0.19.0 — 14/10/2026
+
+- Nome visível Monitoramento Ativo no menu, página e permissões; mantém o identificador `monitoring` e os acessos já cadastrados.
+- Filtros no topo e fila como primeira ferramenta, antes dos cards/gráficos; tabela inclui placa, ID rastreador, cliente/base, última atualização, alimentação em volts e perfil de configuração.
+- Fontes, botões, espaçamentos e tabela mais compactos apenas nesta página; controles de toque mantidos no celular.
+- Sinal de duração com legenda e texto para faixas de 2/3/4 dias; coleta antiga ou informação indeterminada permanece neutra, sem inferir falha.
+- Status administrativo clicável abre painel compacto de tratamento/histórico. Salvar atualização acrescenta data/hora, status, responsável e observação; rascunhos não mudam a tabela e encerrar acompanhamento não confirma recuperação.
+- CSV/XLSX incluem alimentação, perfil e histórico registrado do recorte; demonstração continua fictícia e sem API, servidor ou persistência do acompanhamento.
+
 ## 0.18.2 — 12/10/2026
 
 - Clareia discretamente os laranjas de destaque, estados selecionados e hover nos temas claro/escuro, preservando contraste de texto.
