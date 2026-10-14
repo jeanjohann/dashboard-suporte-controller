@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.20.7 — 14/10/2026
+
+- Importador de Ordens de Serviço aceita a aba atual **OS 2025_26**, mantendo **OS 2025** para arquivos anteriores.
+- Importação individual e conjunta compartilham o reconhecimento dos nomes; abas de clientes/técnicos continuam fora da leitura das OS. Colunas, linhas, identificadores e cálculos preservados.
+- O resultado informa `sheetName` e a tela exibe a aba realmente importada. Orientações e erros de leitura usam os nomes aceitos.
+- Arquivo com as duas abas reconhecidas exige definir uma única base antes da importação; não escolhe nem soma automaticamente. Falha mantém a base anterior.
+- Testes de compatibilidade entre nomes, valores/ordem, aba vazia, ambiguidade e lote com operacional. Documentação atualizada.
+
 ## 0.20.6 — 14/10/2026
 
 - Ordenação do operacional aplicada ao recorte completo antes da paginação, com ausências ao final, precisão textual dos seriais e retorno à primeira página ao ordenar.

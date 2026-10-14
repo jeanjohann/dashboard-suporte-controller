@@ -4,7 +4,19 @@
  */
 import XLSX from 'xlsx';
 
-/** Lê a aba OS 2025 ou a aba única aceita, preservando cabeçalhos, valores e número físico da linha para conferência. */
+export const ordersSheetNames = ['OS 2025_26', 'OS 2025'];
+
+/** Reconhece o nome atual ou legado sem escolher silenciosamente entre duas bases de OS. */
+export function findOrdersSheetName(sheetNames) {
+  const found = sheetNames.filter((name) => ordersSheetNames.includes(name));
+  if (found.length > 1)
+    throw new Error(
+      'Há duas abas de OS reconhecidas (OS 2025_26 e OS 2025). Mantenha apenas uma com nome reconhecido no arquivo para definir a base que será importada.',
+    );
+  return found[0] || null;
+}
+
+/** Lê a aba atual ou legada, preservando cabeçalhos, valores e número físico da linha para conferência. */
 export function importWorkbook(buffer) {
   const workbook = XLSX.read(buffer, {
     type: 'array',
@@ -12,12 +24,13 @@ export function importWorkbook(buffer) {
     cellNF: true,
     cellText: true,
   });
-  const sheet = workbook.Sheets['OS 2025'];
+  const sheetName = findOrdersSheetName(workbook.SheetNames);
+  const sheet = sheetName ? workbook.Sheets[sheetName] : null;
   if (!sheet)
     throw new Error(
-      'A aba “OS 2025” não foi encontrada. O arquivo deve conter uma aba com esse nome.',
+      'Nenhuma aba de OS foi encontrada. O arquivo deve conter a aba “OS 2025_26” ou “OS 2025”.',
     );
-  if (!sheet['!ref']) throw new Error('A aba OS 2025 está vazia.');
+  if (!sheet['!ref']) throw new Error(`A aba ${sheetName} está vazia.`);
   const range = XLSX.utils.decode_range(sheet['!ref']);
   const columns = [];
   for (let c = 0; c <= range.e.c; c++) {
@@ -55,6 +68,7 @@ export function importWorkbook(buffer) {
     rows.push({ sourceRow: r + 1, os: String(os.v), cells });
   }
   return {
+    sheetName,
     columns,
     rows,
     issues,

@@ -100,7 +100,7 @@ A revisão agora inclui divergências de Custo Total versus Técnico + Km dos se
 
 ## Importação
 
-1. Use Excel `.xlsx` ou `.xls`, com a aba **OS 2025**.
+1. Use Excel `.xlsx` ou `.xls`, com a aba **OS 2025_26** ou **OS 2025**. Se o arquivo tiver ambas, deixe somente a base desejada com um desses nomes reconhecidos antes de importar; não há escolha nem soma automática entre abas.
 2. Mantenha cabeçalhos na primeira linha e número da OS na coluna A.
 3. Clique em Importar planilha e escolha o arquivo.
 4. Confira contagens, registros e a aba Revisão.
@@ -157,14 +157,15 @@ React executa no navegador; Vite serve e compila. SheetJS lê o Excel e é obtid
 
 `importWorkbook(buffer)` retorna:
 
-| Propriedade | Conteúdo                                              |
-| ----------- | ----------------------------------------------------- |
-| columns     | index (base zero), letter e label                     |
-| rows        | sourceRow (linha Excel base um), os e cells           |
-| cells       | display, raw e issue                                  |
-| issues      | address, row, column, value e reason                  |
-| skipped     | Linhas com dados nas colunas reconhecidas, mas sem OS |
-| calls       | Quantidade de números de OS distintos                 |
+| Propriedade | Conteúdo                                                |
+| ----------- | ------------------------------------------------------- |
+| sheetName   | Nome real da aba de OS importada: OS 2025_26 ou OS 2025 |
+| columns     | index (base zero), letter e label                       |
+| rows        | sourceRow (linha Excel base um), os e cells             |
+| cells       | display, raw e issue                                    |
+| issues      | address, row, column, value e reason                    |
+| skipped     | Linhas com dados nas colunas reconhecidas, mas sem OS   |
+| calls       | Quantidade de números de OS distintos                   |
 
 raw preserva o valor lido; display usa a representação disponível da célula. Erros podem ter códigos internos em raw. Não há avaliação de fórmulas. Datas numéricas não são automaticamente convertidas em objetos Date; a futura análise deverá interpretá-las explicitamente.
 

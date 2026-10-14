@@ -40,7 +40,7 @@ Tipos de gráfico: barras, linhas, pizza/rosca e tabela nos relatórios. Pizza/r
 | Recurso                                                     | Situação                     |
 | ----------------------------------------------------------- | ---------------------------- |
 | React e importação manual de Excel                          | Implementado                 |
-| Leitura da aba OS 2025, preservando a ordem                 | Implementado                 |
+| Leitura de OS 2025_26 ou OS 2025, preservando a ordem       | Implementado                 |
 | Contagem de linhas e chamados distintos                     | Implementado                 |
 | Busca, paginação e revisão estrutural de células            | Implementado                 |
 | Contagens por status e detalhamento por chamado             | Implementado na versão 0.2.0 |

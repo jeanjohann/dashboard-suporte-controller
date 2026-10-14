@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.6 — Correções de ordenação global do operacional, seletores, exportações numéricas e reconhecimento do CSV. Revisão de status/pagamentos/cabeçalhos sem correção automática. Indicadores de vida em campo da 0.20.5 preservados. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.7 — Importação de OS aceita a aba atual OS 2025_26 e mantém OS 2025. Importação conjunta usa o mesmo reconhecimento; a tela informa a aba lida. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 
@@ -30,7 +30,7 @@
 
 As contagens operacionais e os totais financeiros de serviços realizados estão implementados. O gráfico mensal está implementado; relatórios personalizados e histórico por placa/serial estão implementados. Consulte os documentos antes de futuras alterações.
 
-Primeira versão: importação manual e conferência da aba `OS 2025`.
+Importação manual e conferência da aba `OS 2025_26` ou do formato anterior `OS 2025`, preservando a ordem original.
 
 ## Executar
 

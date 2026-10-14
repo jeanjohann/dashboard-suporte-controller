@@ -3,7 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import XLSX from 'xlsx';
-import { importWorkbook } from '../../orders/data/import.js';
+import { importWorkbook, findOrdersSheetName } from '../../orders/data/import.js';
 import { importOperational } from '../../operational/domain/operational.js';
 import { importLogistics } from '../../logistics/domain/logistics.js';
 import {
@@ -44,7 +44,7 @@ export async function inspectImportFile(file) {
   const book = XLSX.read(buffer, { type: 'array', bookSheets: true }),
     types = [],
     result = { filename: name };
-  if (book.SheetNames.includes('OS 2025')) {
+  if (findOrdersSheetName(book.SheetNames)) {
     types.push('orders');
     result.orders = { filename: name, data: importWorkbook(buffer), savedAt: importedAt };
   }
@@ -58,7 +58,7 @@ export async function inspectImportFile(file) {
   }
   if (!types.length)
     throw new Error(
-      'Nenhuma aba reconhecida: esperado OS 2025, Equipamentos ou Envios + Devoluções.',
+      'Nenhuma aba reconhecida: esperado OS 2025_26 ou OS 2025, Equipamentos ou Envios + Devoluções.',
     );
   return {
     ...result,

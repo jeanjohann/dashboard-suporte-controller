@@ -28,8 +28,8 @@ export function OrdersImportPanel({ input, busy, error, data, load }) {
           <div className="file-icon">▤</div>
           <h2>Sua operação começa pela planilha</h2>
           <p>
-            Selecione o Excel que contém a aba <strong>OS 2025</strong>.<br />A ordem dos registros
-            e das colunas será preservada.
+            Selecione o Excel que contém a aba <strong>OS 2025_26</strong> ou{' '}
+            <strong>OS 2025</strong>.<br />A ordem dos registros e das colunas será preservada.
           </p>
           <PermissionButton action="import" onClick={() => input.current.click()} disabled={busy}>
             Selecionar arquivo Excel

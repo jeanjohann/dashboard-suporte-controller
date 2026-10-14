@@ -95,6 +95,16 @@ test('lote reconhece duas abas no mesmo Excel e preserva linhas de origem', asyn
   assert.ok(batch.orders && batch.operational);
   assert.throws(() => assembleImportBatch([item, item]), /apenas um/);
 });
+
+test('lote reconhece OS 2025_26 com operacional e rejeita duas bases de OS no mesmo arquivo', async () => {
+  const item = await inspectImportFile(excel(['OS 2025_26', 'Equipamentos']));
+  assert.deepEqual(item.types, ['orders', 'operational']);
+  assert.equal(item.orders.data.sheetName, 'OS 2025_26');
+  assert.equal(item.orders.data.rows[0].sourceRow, 2);
+  assert.equal(item.operational.data.rows[0].serial, '162123');
+  assert.equal(assembleImportBatch([item]).orders, item.orders);
+  await assert.rejects(() => inspectImportFile(excel(['OS 2025', 'OS 2025_26'])), /duas abas/);
+});
 test('lote rejeita arquivo sem aba reconhecida e seleção vazia', async () => {
   await assert.rejects(() => inspectImportFile(excel(['Outro'])), /Nenhuma aba/);
   assert.throws(() => assembleImportBatch([]), /ao menos/);

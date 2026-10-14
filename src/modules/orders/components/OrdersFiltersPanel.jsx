@@ -211,7 +211,7 @@ export function OrdersFiltersPanel({
       </div>
       <div className="source">
         <span className="dot" /> <strong>{filename}</strong>
-        <span>Aba OS 2025</span>
+        <span>Aba {data.sheetName || 'OS 2025'}</span>
         <span>Somente leitura</span>
       </div>
     </>

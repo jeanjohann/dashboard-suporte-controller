@@ -104,9 +104,10 @@ export function ImportPage({ onPage, onApply, orders, operational, logistics }) 
             />
           </header>
           <div className="notice">
-            Excel é identificado pelas abas OS 2025, Equipamentos ou Envios + Devoluções; CSV usa os
-            formatos de consumo já suportados. Selecione uma OS, um operacional, uma logística e
-            quantos extratos de consumo precisar. Confira o lote abaixo antes de aplicar.
+            Excel é identificado pelas abas OS 2025_26 ou OS 2025, Equipamentos ou Envios +
+            Devoluções; CSV usa os formatos de consumo já suportados. Selecione uma OS, um
+            operacional, uma logística e quantos extratos de consumo precisar. Confira o lote abaixo
+            antes de aplicar.
           </div>
           {error && (
             <p className="error" role="alert">

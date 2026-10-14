@@ -78,7 +78,7 @@ Erro de **estrutura** pode impedir a importação inteira. Problema de **conteú
 
 ### Ordens de Serviço
 
-- Aba exigida atualmente: **`OS 2025`**, mesmo que o arquivo tenha somente uma aba.
+- Abas aceitas: **`OS 2025_26`** (atual) ou **`OS 2025`** (anterior), mesmo que o arquivo tenha somente uma aba. O nome OS 2025 nos diagramas também exemplifica o fluxo do formato atual. Arquivo com as duas abas reconhecidas exige definir uma única base antes de importar.
 - Cabeçalhos na **primeira linha**. A coluna **A** identifica o número da OS; linhas seguintes sem esse número ficam fora da importação e são contabilizadas quando contêm outros dados.
 - Lê todas as colunas com cabeçalho não vazio, preservando a ordem física. Abas de base de clientes e técnicos não são usadas por esse importador.
 - Cada linha é um serviço/atendimento. O mesmo número de OS pode aparecer em várias linhas e representa um chamado com vários serviços.
