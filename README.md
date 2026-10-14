@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.4 — Página de OS dividida em controlador da sessão e painéis de importação, filtros e relatórios, preservando regras e apresentação. A categoria Investigação do consumo passa a Acompanhamento. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.5 — Vida em campo passa a mostrar implementações identificadas, participação das primeiras trocas e tempo médio acompanhado, separado da média até troca. Bases, cancelamentos e revisão ficam explícitos nos cards, tabelas e CSV. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 

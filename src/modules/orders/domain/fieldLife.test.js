@@ -280,3 +280,74 @@ test('média e extremos por modelo usam a mesma amostra completa sem incluir obs
   assert.equal(empty.min, null);
   assert.equal(empty.max, null);
 });
+
+test('tempo acompanhado inclui observações e cancelamentos, separando revisão e média até troca', () => {
+  const periods = [
+    { model: 'MXT-162', state: 'replaced', days: 31 },
+    { model: 'MXT-162', state: 'observed', days: 40 },
+    { model: 'MXT-162', state: 'canceled', days: 9 },
+    { model: 'MXT-162', state: 'review', days: null },
+  ];
+  const snapshot = structuredClone(periods);
+  const stats = lifeStats(periods);
+  assert.equal(stats.total, 4);
+  assert.equal(stats.replacementShare, 0.25);
+  assert.equal(stats.observedShare, 0.25);
+  assert.deepEqual(stats.followup, { count: 3, days: 80, mean: 80 / 3, excluded: 1 });
+  assert.equal(stats.mean, 31);
+  assert.equal(stats.min, 31);
+  assert.equal(stats.max, 31);
+  assert.deepEqual(lifeGroups(periods)[0].followup, stats.followup);
+  assert.deepEqual(periods, snapshot);
+});
+
+test('duração válida zero participa; ausências, textos, negativos e revisão não são convertidos em zero', () => {
+  const stats = lifeStats([
+    { state: 'observed', days: 0 },
+    { state: 'observed', days: null },
+    { state: 'observed', days: '10' },
+    { state: 'observed', days: -1 },
+    { state: 'observed', days: NaN },
+    { state: 'observed', days: Infinity },
+    { state: 'review', days: 100 },
+  ]);
+  assert.deepEqual(stats.followup, { count: 1, days: 0, mean: 0, excluded: 6 });
+  assert.equal(stats.mean, null);
+  const empty = lifeStats([]);
+  assert.equal(empty.replacementShare, null);
+  assert.equal(empty.observedShare, null);
+  assert.deepEqual(empty.followup, { count: 0, days: 0, mean: null, excluded: 0 });
+  assert.equal(lifeStats([{ state: 'review', days: null }]).followup.mean, null);
+});
+
+test('acompanhamento respeita limite e seleção sem modificar a duração das trocas encerradas', () => {
+  const b = { Placa: 'DEF2G34', 'ID Rastreador': '162000003' };
+  const c = { Placa: 'GHI3J45', 'ID Rastreador': '141000004' };
+  const d = fixture([
+    initial(),
+    remove(),
+    incoming(),
+    initial('2025-01-01', b),
+    initial('2025-01-01', c),
+    remove('2025-01-10', { ...c, 'Tipo de Serviço': 'Cancelamento' }),
+    initial('2025-01-01', { Placa: 'JKL4M56', 'ID Rastreador': '' }),
+    { ...base, date: '2025-02-10', Motivo: 'Visita Improdutiva' },
+  ]);
+  const full = lifeStats(trackers(fieldLife(d, d)));
+  assert.equal(full.total, 4);
+  assert.deepEqual(full.followup, { count: 3, days: 80, mean: 80 / 3, excluded: 1 });
+  assert.equal(full.mean, 31);
+  const selected = { ...d, rows: [d.rows[3]] };
+  const onlyOpen = lifeStats(trackers(fieldLife(d, selected)));
+  assert.equal(onlyOpen.total, 1);
+  assert.equal(onlyOpen.observedShare, 1);
+  assert.equal(onlyOpen.followup.mean, 40);
+  assert.equal(onlyOpen.mean, null);
+  const earlier = lifeStats(trackers(fieldLife(d, d, { referenceDate: '2025-01-20' })));
+  assert.equal(earlier.complete, 0);
+  assert.equal(earlier.followup.days, 47);
+  const events = lifeStats(trackers(fieldLife(d, d, { scope: 'event' })));
+  assert.equal(events.total, 2);
+  assert.equal(events.followup.mean, 20);
+  assert.equal(events.replacementShare, 0.5);
+});

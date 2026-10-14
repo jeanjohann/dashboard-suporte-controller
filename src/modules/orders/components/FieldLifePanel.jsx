@@ -6,6 +6,8 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useMemo, useState, useEffect, useContext } from 'react';
 import { fieldLife, lifeStats, lifeGroups, lifeStates } from '../domain/fieldLife.js';
+import { fieldLifeSummaryRows } from '../domain/fieldLifeSummary.js';
+import { FieldLifeCards } from './FieldLifeCards.jsx';
 import { Section, PrintContext } from '../../../components/Section.jsx';
 import { Chart } from '../../../components/Chart.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
@@ -14,7 +16,6 @@ import { csv, download } from '../../../shared/export/exports.js';
 const number = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 const date = (value) => (value ? value.split('-').reverse().join('/') : '—');
-const duration = (value) => (value == null ? 'Sem ciclo completo' : number(value) + ' dias');
 /** Apresenta ciclos até primeira troca, estatísticas de duração, exclusões e contexto exportável. */
 export function FieldLifePanel({ original, data, filename, filters, visible }) {
   const printContext = useContext(PrintContext);
@@ -66,8 +67,48 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
         ['Filtros', JSON.stringify(filters)],
         [
           'Critério',
-          'Média e mediana somente dos ciclos com primeira troca confirmada. Cancelamentos e observações sem troca separados.',
+          'Tempo médio acompanhado inclui durações válidas até troca, cancelamento ou limite; revisão fica fora. Média até primeira troca usa somente trocas confirmadas. Percentuais usam todos os ciclos identificados no recorte e não são taxas de falha.',
         ],
+        ['Comparar por', groupBy === 'model' ? 'Modelo / categoria' : 'Cliente'],
+        ['Resumo do acompanhamento'],
+        ...fieldLifeSummaryRows(stats),
+        [
+          'Trocas sem duração resolvida',
+          unmeasured.length,
+          'eventos',
+          '',
+          'Base própria: retirada/troca que atende aos filtros do topo.',
+        ],
+        [],
+        ['Resumo por grupo'],
+        [
+          'Grupo',
+          'Ciclos identificados',
+          'Primeiras trocas',
+          'Participação com troca (fração)',
+          'Sem troca',
+          'Cancelamentos',
+          'Revisão',
+          'Durações acompanhadas válidas',
+          'Tempo médio acompanhado (dias)',
+          'Tempo médio até troca (dias)',
+          'Mínimo até troca (dias)',
+          'Máximo até troca (dias)',
+        ],
+        ...groups.map((g) => [
+          g.label,
+          g.total,
+          g.complete,
+          g.replacementShare ?? '',
+          g.observed,
+          g.canceled,
+          g.review,
+          g.followup.count,
+          g.followup.mean ?? '',
+          g.mean ?? '',
+          g.min ?? '',
+          g.max ?? '',
+        ]),
         [],
         [
           'Cliente',
@@ -186,50 +227,19 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                   {date(result.latest)}.
                 </p>
               )}
-              <div className="life-cards">
-                <article>
-                  <span>Ciclos com primeira troca</span>
-                  <strong>{number(stats.complete)}</strong>
-                  <small>{stats.total} ciclos selecionados</small>
-                </article>
-                <article>
-                  <span>Tempo médio observado até a primeira troca</span>
-                  <strong>{duration(stats.mean)}</strong>
-                  <small>{stats.complete} ciclos completos na base</small>
-                </article>
-                <article>
-                  <div className="inline-help-heading">
-                    <span>Menor tempo até troca</span>
-                    <InfoNote>
-                      Média = soma dos dias dos ciclos com troca confirmada dividida pela quantidade
-                      desses ciclos. Menor e maior são os extremos da mesma amostra. Mediana
-                      complementar: {duration(stats.median)}. Cancelamentos, vínculos incertos e
-                      ciclos sem troca ficam fora desses cálculos.
-                    </InfoNote>
-                  </div>
-                  <strong>{duration(stats.min)}</strong>
-                  <small>{stats.complete} ciclos completos na base</small>
-                </article>
-                <article>
-                  <span>Maior tempo até troca</span>
-                  <strong>{duration(stats.max)}</strong>
-                  <small>{stats.complete} ciclos completos na base</small>
-                </article>
-                <article>
-                  <span>Sem troca registrada</span>
-                  <strong>{number(stats.observed)}</strong>
-                  <small>Tempo observado separado das médias</small>
-                </article>
-                <article>
-                  <span>Trocas sem duração resolvida</span>
-                  <strong>{number(unmeasured.length)}</strong>
-                  <small>Retiradas/trocas que atendem aos filtros do topo</small>
-                </article>
-              </div>
+              <FieldLifeCards
+                stats={stats}
+                category={category}
+                basis={basis}
+                scope={scope}
+                unmeasured={unmeasured.length}
+              />
               <p className="scope">
-                As estatísticas descrevem os ciclos completos encontrados; não estimam a vida útil
-                de todo o parque. {stats.canceled} ciclos encerrados por cancelamento e{' '}
-                {stats.review} ciclos com vínculo incerto ficam fora da média e mediana.{' '}
+                Tempo médio acompanhado inclui ciclos com troca, sem troca e cancelamentos com
+                duração válida; {stats.followup.excluded} ciclos ficam fora por revisão ou duração
+                incompatível. Média até troca, mínimo e máximo usam somente primeiras trocas
+                confirmadas; {stats.canceled} cancelamentos e {stats.review} ciclos em revisão ficam
+                fora dessa amostra. Nenhuma dessas médias estima a vida útil final do parque.{' '}
                 {result.excludedAfterReference > 0
                   ? result.excludedAfterReference +
                     ' instalações selecionadas posteriores ao limite ficam fora da observação.'
@@ -294,9 +304,12 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                 <div className="inline-help-heading">
                   <h3>Tempo por {groupBy === 'model' ? 'modelo / tipo' : 'cliente'}</h3>
                   <InfoNote>
-                    A categoria selecionada define o tipo de equipamento. Cada grupo usa apenas seus
-                    próprios ciclos com primeira troca confirmada; grupos sem ciclos completos
-                    permanecem visíveis, sem duração calculada.
+                    Cada grupo mostra todos os seus ciclos identificados. Participação com troca
+                    divide as primeiras trocas pelo total do grupo, incluindo revisão no
+                    denominador. Tempo médio acompanhado usa durações válidas até troca,
+                    cancelamento ou limite; média, mínimo e máximo até troca usam somente trocas
+                    confirmadas. Bases diferentes permanecem separadas. Percentuais não são taxas de
+                    falha nem comparações ajustadas pela idade dos equipamentos.
                   </InfoNote>
                 </div>
                 <div className="table-scroll">
@@ -305,8 +318,11 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                       <tr>
                         {[
                           'Grupo',
-                          'Ciclos analisados',
-                          'Média (dias)',
+                          'Ciclos identificados',
+                          'Primeiras trocas',
+                          'Com troca (%)',
+                          'Tempo médio acompanhado (dias)',
+                          'Média até troca (dias)',
                           'Mínimo (dias)',
                           'Máximo (dias)',
                           'Origem',
@@ -319,7 +335,14 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                       {groups.map((g) => (
                         <tr key={g.label}>
                           <td>{g.label}</td>
+                          <td>{g.total}</td>
                           <td>{g.complete}</td>
+                          <td data-sort={g.replacementShare}>
+                            {g.replacementShare == null
+                              ? '—'
+                              : number(g.replacementShare * 100) + '%'}
+                          </td>
+                          <td data-sort={g.followup.mean}>{number(g.followup.mean)}</td>
                           <td data-sort={g.mean}>{number(g.mean)}</td>
                           <td data-sort={g.min}>{number(g.min)}</td>
                           <td data-sort={g.max}>{number(g.max)}</td>
@@ -352,6 +375,10 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                       <tr>
                         {[
                           'Grupo',
+                          'Ciclos identificados',
+                          'Durações acompanhadas válidas',
+                          'Tempo médio acompanhado (dias)',
+                          'Com troca (%)',
                           'Ciclos completos',
                           'Média (dias)',
                           'Mediana (dias)',
@@ -370,6 +397,14 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                       {groups.map((g) => (
                         <tr key={g.label}>
                           <td>{g.label}</td>
+                          <td>{g.total}</td>
+                          <td>{g.followup.count}</td>
+                          <td data-sort={g.followup.mean}>{number(g.followup.mean)}</td>
+                          <td data-sort={g.replacementShare}>
+                            {g.replacementShare == null
+                              ? '—'
+                              : number(g.replacementShare * 100) + '%'}
+                          </td>
                           <td>{g.complete}</td>
                           <td data-sort={g.mean}>{number(g.mean)}</td>
                           <td data-sort={g.median}>{number(g.median)}</td>
@@ -410,6 +445,8 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                           'Mês de instalação',
                           'Ciclos selecionados',
                           'Primeira troca',
+                          'Com troca (%)',
+                          'Tempo médio acompanhado (dias)',
                           'Sem troca registrada',
                           'Cancelamento',
                           'Revisar',
@@ -425,6 +462,12 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                           <td>{g.label}</td>
                           <td>{g.total}</td>
                           <td>{g.complete}</td>
+                          <td data-sort={g.replacementShare}>
+                            {g.replacementShare == null
+                              ? '—'
+                              : number(g.replacementShare * 100) + '%'}
+                          </td>
+                          <td data-sort={g.followup.mean}>{number(g.followup.mean)}</td>
                           <td>{g.observed}</td>
                           <td>{g.canceled}</td>
                           <td>{g.review}</td>

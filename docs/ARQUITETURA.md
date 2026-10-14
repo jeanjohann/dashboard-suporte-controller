@@ -126,6 +126,12 @@ Os componentes `OrdersImportPanel`, `OrdersFiltersPanel`, `OrdersReportMenu`, `O
 
 `domain/orderRecords.js` contém busca pelo texto exibido e ordenação do recorte completo, antes da paginação. Essas funções não substituem `applyFilters`: a busca é restrita à tabela, enquanto os indicadores continuam usando a seleção principal. Testes próprios verificam imutabilidade e ausências/erros ao final. Relatórios já separados, como `AdvancedInsights`, `Explorers` e `FieldLifePanel`, continuam em seus arquivos; a extração não reescreve suas regras.
 
+## Indicadores de acompanhamento em campo — 0.20.5
+
+`orders/domain/fieldLife.js` mantém as regras de vínculo e acrescenta em `lifeStats` a participação com/sem troca e o resumo `followup` (quantidade, soma de dias, média e exclusões). `lifeGroups` aplica essas bases a cada modelo, cliente ou mês. A média até troca continua em `mean`; o tempo acompanhado fica separado em `followup.mean`.
+
+`orders/components/FieldLifeCards.jsx` apresenta os cards e seus balões. `FieldLifePanel.jsx` coordena categoria, início, filtros, limite, tabelas e impressão. `orders/domain/fieldLifeSummary.js` monta as linhas numéricas do resumo CSV com unidades e denominadores. Os caminhos são relativos a `src/modules/`. Consulte [Vida em campo](VIDA-EM-CAMPO.md) antes de interpretar as duas médias ou alterar suas populações.
+
 ## Dependências e limites
 
 - `components/` contém elementos reaproveitados; o cálculo específico deve ficar no domínio correspondente. Existem dependências históricas de componentes para contexto de aplicação e configurações de OS; esta organização não tenta eliminar todas elas de uma vez.

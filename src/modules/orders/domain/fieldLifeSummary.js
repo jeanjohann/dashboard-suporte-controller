@@ -1,0 +1,98 @@
+/** Linhas numéricas do resumo de acompanhamento, compartilhadas pela exportação dos ciclos. */
+export function fieldLifeSummaryRows(stats) {
+  return [
+    ['Indicador', 'Valor', 'Unidade', 'Base', 'Critério'],
+    [
+      'Ciclos identificados',
+      stats.total,
+      'ciclos',
+      stats.total,
+      'Inclui troca, sem troca, cancelamento e revisão no recorte.',
+    ],
+    [
+      'Primeiras trocas confirmadas no ciclo',
+      stats.complete,
+      'ciclos',
+      stats.total,
+      'Somente primeira troca vinculada.',
+    ],
+    [
+      'Participação com primeira troca',
+      stats.replacementShare ?? '',
+      'fração',
+      stats.total,
+      'Primeiras trocas / ciclos identificados; 0,1 = 10%. Não é taxa de falha.',
+    ],
+    [
+      'Sem primeira troca registrada',
+      stats.observed,
+      'ciclos',
+      stats.total,
+      'Observação até o limite do histórico, sem comprovar atividade.',
+    ],
+    [
+      'Participação sem primeira troca',
+      stats.observedShare ?? '',
+      'fração',
+      stats.total,
+      'Sem troca / ciclos identificados; cancelamentos e revisão são separados.',
+    ],
+    [
+      'Encerrados por cancelamento',
+      stats.canceled,
+      'ciclos',
+      stats.total,
+      'Cancelamento não é troca nem falha confirmada.',
+    ],
+    ['Ciclos em revisão', stats.review, 'ciclos', stats.total, 'Duração incerta não vira zero.'],
+    [
+      'Ciclos com duração acompanhada válida',
+      stats.followup.count,
+      'ciclos',
+      stats.total,
+      'Troca, sem troca ou cancelamento com dias válidos.',
+    ],
+    [
+      'Soma do tempo acompanhado',
+      stats.followup.days,
+      'dias',
+      stats.followup.count,
+      'Soma das durações válidas até troca, cancelamento ou limite.',
+    ],
+    [
+      'Tempo médio acompanhado',
+      stats.followup.mean ?? '',
+      'dias',
+      stats.followup.count,
+      'Soma dos dias acompanhados / ciclos com duração válida; não estima vida útil final.',
+    ],
+    [
+      'Excluídos do tempo médio acompanhado',
+      stats.followup.excluded,
+      'ciclos',
+      stats.total,
+      'Revisão ou duração ausente/incompatível.',
+    ],
+    [
+      'Tempo médio até primeira troca',
+      stats.mean ?? '',
+      'dias',
+      stats.complete,
+      'Somente ciclos com primeira troca confirmada.',
+    ],
+    [
+      'Menor tempo até primeira troca',
+      stats.min ?? '',
+      'dias',
+      stats.complete,
+      'Mínimo da mesma amostra de trocas confirmadas.',
+    ],
+    [
+      'Maior tempo até primeira troca',
+      stats.max ?? '',
+      'dias',
+      stats.complete,
+      'Máximo da mesma amostra de trocas confirmadas.',
+    ],
+  ];
+}

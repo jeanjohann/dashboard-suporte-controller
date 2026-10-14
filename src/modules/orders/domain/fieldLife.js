@@ -36,17 +36,36 @@ export const lifeStates = {
   canceled: 'Observação encerrada por cancelamento',
   review: 'Ciclo precisa de revisão',
 };
-/** Calcula média, mediana, mínimo e máximo somente das primeiras trocas confirmadas; ciclos abertos não entram nessas estatísticas. */
+/** Separa estatísticas até troca da duração acompanhada; percentuais descritivos usam todos os ciclos identificados. */
 export function lifeStats(periods) {
   const complete = periods.filter((p) => p.state === 'replaced'),
     values = complete.map((p) => p.days).sort((a, b) => a - b),
     middle = Math.floor(values.length / 2);
+  // Ciclos abertos e cancelamentos possuem tempo acompanhado, mas não vida útil final conhecida.
+  const followed = periods.filter(
+    (p) =>
+      ['replaced', 'observed', 'canceled'].includes(p.state) &&
+      typeof p.days === 'number' &&
+      Number.isFinite(p.days) &&
+      p.days >= 0,
+  );
+  const followedDays = followed.reduce((sum, p) => sum + p.days, 0);
   return {
     total: periods.length,
     complete: complete.length,
     observed: periods.filter((p) => p.state === 'observed').length,
     canceled: periods.filter((p) => p.state === 'canceled').length,
     review: periods.filter((p) => p.state === 'review').length,
+    replacementShare: periods.length ? complete.length / periods.length : null,
+    observedShare: periods.length
+      ? periods.filter((p) => p.state === 'observed').length / periods.length
+      : null,
+    followup: {
+      count: followed.length,
+      days: followedDays,
+      mean: followed.length ? followedDays / followed.length : null,
+      excluded: periods.length - followed.length,
+    },
     mean: values.length ? values.reduce((s, x) => s + x, 0) / values.length : null,
     median: values.length
       ? values.length % 2

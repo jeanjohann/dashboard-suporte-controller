@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.20.5 — 14/10/2026
+
+- Vida em campo: cards de implementações/instalações identificadas, primeiras trocas e sua participação, sem troca registrada, cancelamentos e tempo médio acompanhado. Nomes acompanham categoria e modo de início/seleção.
+- Tempo médio acompanhado soma os dias válidos até troca, cancelamento ou limite do histórico e divide pelos ciclos com duração válida. Revisão/ausências ficam fora, sem virar zero. Média até primeira troca, mínimo e máximo mantêm sua amostra de trocas confirmadas.
+- Percentuais descritivos usam todos os ciclos identificados no recorte, incluindo revisão no denominador; não representam taxa de falha ou previsão de vida útil. Bases e limites explicados em balões no título de cada card.
+- Comparação por modelo/cliente e acompanhamento mensal incluem cobertura e tempo acompanhado. CSV dos ciclos inclui resumo numérico com unidades/bases/critérios e resumo por grupo; impressão conserva os novos dados mesmo com seção recolhida.
+- Testes de durações válidas/zero, revisão, cancelamento, referência, filtros e exportação. Conferência no navegador de categorias, modos, ordenação, seleção vazia e responsividade em claro/escuro.
+
 ## 0.20.4 — 14/10/2026
 
 - Controle de Consumo: renomeia a categoria Investigação para **Acompanhamento**, preservando sua chave interna, os relatórios, histórico e preferências existentes.

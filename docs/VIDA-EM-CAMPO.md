@@ -28,9 +28,27 @@ O limite padrão é a última Data de atendimento válida entre Concluída/Pago 
 
 ## Indicadores
 
-Média, mediana, mínimo, máximo e faixas de duração usam somente ciclos completos com troca confirmada. Dias corridos = data de troca menos data da instalação. Observações sem troca, cancelamentos e ciclos incertos ficam em contagens separadas. Grupos sem ciclo completo têm média/mediana indisponível, nunca zero.
+Média **até primeira troca**, mediana, mínimo, máximo e faixas de duração usam somente ciclos completos com troca confirmada. Dias corridos = data de troca menos data da instalação. Observações sem troca, cancelamentos e ciclos incertos ficam em contagens separadas. Grupos sem ciclo completo têm média/mediana até troca indisponível, nunca zero. O tempo médio acompanhado, descrito abaixo, tem outra base e inclui durações válidas sem troca e por cancelamento.
 
 Comparações por modelo do rastreador (prefixos aprovados do ID) ou cliente incluem tamanho da amostra. O acompanhamento pelo mês da instalação apresenta completos, sem troca, cancelamentos e revisão sem calcular taxa de falha para coortes com diferentes tempos de acompanhamento. A estatística dos ciclos completos descreve a amostra; não estima a vida útil de todo o parque nem idade desde fabricação.
+
+## Cobertura e tempo acompanhado — 0.20.5
+
+O painel passa a mostrar o total de ciclos identificados, a quantidade/participação de primeiras trocas, os ciclos sem troca, cancelamentos e o tempo médio acompanhado. Os cards conservam média e extremos até troca e a base própria dos eventos sem duração resolvida. Cada título possui ajuda à direita com origem, população, fórmula, exclusões e limites.
+
+**Total identificado** reúne ciclos com primeira troca, sem troca registrada, cancelamento e revisão, na categoria, início, filtros e limite escolhidos. No modo inicial dos rastreadores, corresponde às Implementações Concluída/Pago com motivo de instalação reconhecido. Dados incompletos dessas instalações podem gerar ciclos em revisão. Não equivale à contagem irrestrita de todas as linhas Implementação nem a todo o parque; entradas que não atendem aos critérios de início não são presumidas como instalações. Acessórios exigem instalação explícita. Registros posteriores ao limite continuam fora da observação e são informados separadamente.
+
+No modo de entrada por troca, o título indica **Entradas por troca identificadas**. Na seleção por evento, indica **Ciclos no recorte de encerramento**, porque selecionar retiradas/trocas não representa todas as implementações. A nomenclatura evita apresentar a seleção de encerramentos como cobertura integral.
+
+**Participação com primeira troca = ciclos com troca confirmada / total identificado**. A participação sem troca usa os ciclos sem troca registrada no numerador e o mesmo total no denominador. Revisão e cancelamentos permanecem no total e em suas contagens próprias; não são classificados como equipamento saudável ou falha. Denominador zero produz percentual indisponível, não 0%. Esses percentuais descrevem registros, sem ajustar diferentes tempos de observação ou comparar confiabilidade entre modelos.
+
+**Tempo médio acompanhado = soma dos dias acompanhados válidos / quantidade dos ciclos com duração válida**. O fim é a primeira troca confirmada, o cancelamento identificado ou o limite do histórico, conforme a situação de cada ciclo. Inclui durações válidas desses três grupos. Revisão, ausência, valores não numéricos, negativos ou não finitos ficam fora; duração zero válida participa. O card informa a base e o número de excluídos. Sem duração válida, mostra “—”.
+
+Exemplo fictício: um ciclo com troca aos 31 dias, um sem troca acompanhado por 40 dias, um cancelado aos 9 dias e um em revisão. Total: 4; troca: 1 (25%); tempo médio acompanhado: (31 + 40 + 9) / 3 = 26,7 dias; média até primeira troca: 31 dias, sobre 1 ciclo. A revisão não acrescenta duração zero. Tempo acompanhado não estima vida útil final ou funcionamento comprovado; o mesmo equipamento pode continuar acumulando tempo em uma importação posterior.
+
+A tabela por modelo/cliente e o acompanhamento pelo mês de instalação incluem total, participação com troca e tempo acompanhado. A comparação completa explicita a quantidade de durações válidas. O gráfico de comparação continua usando apenas a média até primeira troca, com sua amostra própria. A impressão inclui os novos cards e critérios. **Baixar ciclos CSV** inclui resumo numérico (valor, unidade, base e critério), resumo por grupo e as linhas dos ciclos. Percentuais são frações: 0,25 = 25%; ausência de média permanece vazia na exportação. O CSV conserva as referências de origem e os contextos de categoria, modo, filtros e limite.
+
+Esta etapa acrescenta indicadores descritivos. Uma futura estimativa de sobrevivência requer critérios próprios de cobertura e encerramento da observação antes da implementação.
 
 ## Conferência do arquivo local em 10/10/2026
 
