@@ -48,6 +48,44 @@
   min-width: 0;
   max-width: 100%;
 }
+/* Acompanhamento do consumo mantém status compacto e histórico imediatamente abaixo da fila. */
+.consumption-followup-queue .table-scroll {
+  max-height: 410px;
+}
+.consumption-followup-queue .table-scroll th,
+.consumption-followup-queue .table-scroll td {
+  padding: 7px 8px;
+  font-size: 11px;
+}
+.consumption-followup-queue td:has(> .consumption-followup-button) {
+  min-width: 120px;
+}
+/* Mantém a ação disponível mesmo quando os identificadores exigem rolagem horizontal. */
+.consumption-followup-queue th:last-child,
+.consumption-followup-queue td:last-child {
+  position: sticky;
+  right: 0;
+  background: var(--ui-surface);
+  border-left: 1px solid var(--ui-border);
+  z-index: 1;
+}
+.consumption-followup-queue th:last-child {
+  background: var(--ui-soft);
+  z-index: 2;
+}
+.consumption-followup-button {
+  min-height: 28px;
+  padding: 5px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.consumption-followup-button[aria-expanded='true'] {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-ink);
+}
+.consumption-history-anchor {
+  scroll-margin-top: 16px;
+}
 .active-filter-actions,
 .report-heading-actions {
   flex-wrap: wrap;

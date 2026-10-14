@@ -1,5 +1,11 @@
 # Filtros e apresentação
 
+## Identidade visual Addlog — 0.20.0
+
+A logo padrão fornecida pelo usuário substitui a versão monocromática: símbolo vetorial com gradiente `#FCA237` → `#F05A00`, escrita `#241F21` no claro e clara no escuro. O favicon e o menu recolhido usam só o símbolo. Os arquivos públicos são recursos vetoriais da marca, sem dados importados.
+
+Destaques utilizam `#FCA237`, com texto escuro sobre botões. Texto de seleção no claro usa `#B44500` para conservar contraste; no escuro, `#FFB865`. Gráficos principais acompanham o laranja da marca. Superfícies continuam neutras e cores semânticas de sucesso, atenção e erro permanecem distintas. Valores das versões anteriores abaixo são registros históricos.
+
 ## Laranja de destaque — 0.18.2
 
 Ajuste leve da paleta para avaliação: destaque `#FF943D` no claro e `#FF9E46` no escuro, com hover, texto de seleção e fundos suaves correspondentes. Os cinzas/brancos e a organização do layout permanecem. Texto sobre o destaque continua escuro; texto de seleção no claro usa laranja mais profundo para conservar legibilidade. A paleta atual é definida em `src/styles/theme.css`; os valores de 0.17.9 abaixo são referência daquela entrega.

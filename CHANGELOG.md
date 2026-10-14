@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.20.0 — 14/10/2026
+
+- Grade de acompanhamento em Consumo → Investigação, começando pelos maiores consumos totais do período filtrado, com cliente/placa, apuração, MB/dia, última marcação e data da ação.
+- Clicar no status abre a linha do tempo logo abaixo e permite salvar uma nova anotação no histórico local existente. Seleção/exportação, ordenação do recorte completo e paginação com Último mantidas; histórico permanece após recarga no mesmo navegador.
+- Novas anotações preservam também a placa exibida na ação; backup e relatório individual incluem esse campo opcional, mantendo compatibilidade com registros anteriores.
+- Logo padrão com símbolo em gradiente laranja e texto adaptado ao claro/escuro. Menu recolhido e favicon usam apenas o símbolo. Paleta de destaques/gráficos acompanha as cores da marca, preservando distinção de alertas.
+
 ## 0.19.1 — 14/10/2026
 
 - Botão Último na Fila de acompanhamento do Monitoramento Ativo: acessa a última página do recorte filtrado, fecha os detalhes selecionados e fica desabilitado quando já está no fim ou não há páginas adicionais.

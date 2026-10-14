@@ -61,7 +61,11 @@ const currency = (value) =>
     : (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const categories = [
   ['overview', 'Visão geral', ['Visão geral do consumo', 'Comparativos por operadora']],
-  ['investigation', 'Investigação', ['Linhas para investigar', 'Linha do tempo de consumo']],
+  [
+    'investigation',
+    'Investigação',
+    ['Fila de acompanhamento do consumo', 'Linha do tempo de consumo', 'Linhas para investigar'],
+  ],
   [
     'equipment',
     'Clientes e equipamentos',
@@ -111,7 +115,9 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     [rankMeasure, setRankMeasure] = useState('daily');
   const input = useRef(),
     operationalInput = useRef(),
-    backupInput = useRef();
+    backupInput = useRef(),
+    historyAnchor = useRef();
+  const [historyReveal, setHistoryReveal] = useState(0);
   useEffect(() => {
     let live = true;
     setReady(false);
@@ -234,6 +240,30 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
   function filter(key, value) {
     setFilters((previous) => ({ ...previous, [key]: value }));
     setDetail(null);
+  }
+  useEffect(() => {
+    setNoteText('');
+    setNoteDate(today());
+    setNoteStatus(notes.at(-1)?.status || 'Investigar');
+  }, [tracked]);
+  useEffect(() => {
+    if (historyReveal)
+      historyAnchor.current?.scrollIntoView({
+        block: 'start',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'instant'
+          : 'smooth',
+      });
+  }, [historyReveal]);
+  function followLine(row) {
+    setTracked(chipKey(row));
+    setDetail(null);
+    setLineSearch('');
+    setHiddenSections((previous) =>
+      previous.filter((title) => title !== 'Linha do tempo de consumo'),
+    );
+    setExpansion(null);
+    setHistoryReveal((previous) => previous + 1);
   }
   async function load(event) {
     if (!(await authorizeAction('import'))) {
@@ -473,6 +503,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
       status: noteStatus,
       text: noteText.trim(),
       client: trackedRow.link?.client || '',
+      plate: trackedRow.link?.plate || '',
       serial: trackedRow.link?.serial || '',
     };
     try {
@@ -991,90 +1022,22 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   </div>
                 </Section>
                 <Section
-                  title="Linhas para investigar"
-                  visible={shown('Linhas para investigar') && !!statements.length}
+                  title="Fila de acompanhamento do consumo"
+                  visible={shown('Fila de acompanhamento do consumo') && !!statements.length}
+                  help="Linhas de dados com consumo válido, respeitando operadora, apuração, busca e filtros da página. Ordem inicial: maior consumo total em MB, sem somar períodos sobrepostos. Períodos de durações diferentes devem ser comparados também por MB por dia. Clique nos títulos para ordenar todo o recorte antes de paginar; o terceiro clique restaura a ordem inicial. Acompanhamento mostra a última ação salva por data para operadora + ICCID; empates usam a última entrada. Clicar no status abre o histórico abaixo, com todas as apurações em uso do chip. Anotações são confirmadas após Salvar acompanhamento e permanecem neste navegador, sem sincronização entre usuários. Cliente e placa são da referência operacional atual; ausência de vínculo aparece como Linha não identificada. Consumo alto e status administrativo não confirmam defeito nem resolução. Registros inválidos/duplicados ficam disponíveis para conferência em Linhas para investigar."
                 >
-                  <p className="scope">
-                    {attention.length} linhas acima de {archive.settings.factor}× a média geral da
-                    própria operadora e apuração. O destaque indica consumo para investigar; não
-                    confirma defeito ou bloqueio. Todas as linhas do recorte estão na tabela.
-                  </p>
-                  <label className="chart-order-control">
-                    Ordenar gráfico por{' '}
-                    <select
-                      value={rankMeasure}
-                      onChange={(event) => setRankMeasure(event.target.value)}
-                    >
-                      <option value="daily">Consumo por dia</option>
-                      <option value="volume">Consumo total do período</option>
-                    </select>
-                  </label>
-                  <Chart
-                    compact
-                    exportNote={chartNote}
-                    ranking
-                    items={rankItems}
-                    title="Maiores consumos"
-                    format={(value) => mb(value) + (rankMeasure === 'daily' ? '/dia' : '')}
-                    onItemClick={(item) => viewRow(selected.find((row) => row.id === item.id))}
-                  />
-                  <div className="line-actions">
-                    <PermissionButton action="export" onClick={exportRecords}>
-                      Baixar linhas filtradas CSV
-                    </PermissionButton>
-                    <button onClick={() => filter('consumption', 'attention')}>
-                      Ver somente destaques
-                    </button>
-                    <button onClick={() => filter('consumption', 'zero')}>Ver consumo zero</button>
-                  </div>
-                  <p className="scope">
-                    O limite absoluto considera consumo total da apuração estritamente maior que o
-                    valor em MB, combinado com os demais filtros. Valores inválidos não entram. A
-                    seleção vale para o recorte atual e atravessa as páginas da tabela.
-                  </p>
-                  {Number.isNaN(consumptionLimit(filters.minimumMB)) && (
-                    <p role="alert" className="error">
-                      Informe um limite não negativo com até seis casas decimais.
-                    </p>
+                  {shown('Fila de acompanhamento do consumo') && (
+                    <LineRecordsTable
+                      records={eligible}
+                      onView={viewRow}
+                      onExport={exportRecords}
+                      followup={{ notes: archive.notes, tracked, onSelect: followLine }}
+                    />
                   )}
-                  {shown('Linhas para investigar') && rowsTable(selected)}
                 </Section>
+                <div ref={historyAnchor} className="consumption-history-anchor" />
                 <Section
-                  title="Consumo por cliente e equipamento"
-                  visible={shown('Consumo por cliente e equipamento') && !!statements.length}
-                >
-                  <InfoNote>
-                    Vínculos confirmados por ICCID e MSISDN no mesmo registro do operacional. Casos
-                    sem vínculo ficam identificados; a situação e a localização da fotografia
-                    operacional podem diferir da época do consumo.
-                  </InfoNote>
-                  <Chart
-                    compact
-                    exportNote={chartNote}
-                    ranking
-                    items={[...clientGroups.values()].map((group) => ({
-                      label: group.label,
-                      value: group.ticks / VOLUME_SCALE,
-                    }))}
-                    title="Consumo por cliente na referência"
-                    format={mb}
-                  />
-                  {shown('Consumo por cliente e equipamento') && rowsTable(selected)}
-                </Section>
-                <Section
-                  title="Revisão dos vínculos"
-                  visible={shown('Revisão dos vínculos') && !!statements.length}
-                  defaultOpen={false}
-                >
-                  <p className="scope">
-                    {selected.filter((row) => !row.link).length} registros do recorte sem
-                    confirmação pelos dois identificadores. Não escolhemos um cliente
-                    automaticamente quando existem conflitos ou duplicidades.
-                  </p>
-                  {shown('Revisão dos vínculos') && rowsTable(selected.filter((row) => !row.link))}
-                </Section>
-
-                <Section
+                  key={historyReveal}
                   title="Linha do tempo de consumo"
                   visible={shown('Linha do tempo de consumo') && !!statements.length}
                 >
@@ -1176,6 +1139,16 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   </label>
                   {trackedRow ? (
                     <>
+                      <button
+                        type="button"
+                        data-no-print
+                        onClick={() => {
+                          setTracked('');
+                          setDetail(null);
+                        }}
+                      >
+                        Fechar histórico
+                      </button>
                       <p className="scope">
                         {trackedRow.operator} · MSISDN {trackedRow.number} · ICCID{' '}
                         {trackedRow.iccid} · referência atual:{' '}
@@ -1203,50 +1176,6 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                           mudanças no consumo.
                         </p>
                       )}
-                      <Chart
-                        compact
-                        exportNote={chartNote}
-                        type="line"
-                        title="Consumo médio diário por apuração"
-                        items={timeline.map((row) => ({ label: row.period, value: row.mbDay }))}
-                        format={(value) => mb(value) + '/dia'}
-                      />
-                      <div className="table-scroll">
-                        <SortableTable>
-                          <thead>
-                            <tr>
-                              {[
-                                'Apuração',
-                                'Dias',
-                                'MSISDN',
-                                'Consumo MB',
-                                'MB por dia',
-                                'Arquivo',
-                                'Linha CSV',
-                              ].map((label) => (
-                                <th key={label}>{label}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {timeline.map((row) => (
-                              <tr key={row.id}>
-                                <td>{row.period}</td>
-                                <td>{row.days}</td>
-                                <td>{row.number}</td>
-                                <td data-sort={row.ticks}>{mb(row.mb)}</td>
-                                <td data-sort={row.mbDay}>{mb(row.mbDay)}</td>
-                                <td>{row.filename}</td>
-                                <td>{row.sourceRow}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </SortableTable>
-                      </div>
-                      <InfoNote>
-                        Apurações semanais e mensais podem se sobrepor. São observações separadas,
-                        sem somar snapshots ou presumir o consumo de dias individuais.
-                      </InfoNote>
                       <div className="line-note-form" data-no-print>
                         <label>
                           Data da ação
@@ -1292,6 +1221,9 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                               <div className="timeline-entry">
                                 <span className="timeline-status">{note.status}</span>
                                 <span className="timeline-text">{note.text}</span>
+                                {note.plate && (
+                                  <small>Placa registrada na ação: {note.plate}</small>
+                                )}
                                 {note.serial && (
                                   <small>
                                     Equipamento registrado na ação: {note.serial} · {note.client}
@@ -1302,6 +1234,50 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                           ))}
                         </ul>
                       )}
+                      <Chart
+                        compact
+                        exportNote={chartNote}
+                        type="line"
+                        title="Consumo médio diário por apuração"
+                        items={timeline.map((row) => ({ label: row.period, value: row.mbDay }))}
+                        format={(value) => mb(value) + '/dia'}
+                      />
+                      <div className="table-scroll">
+                        <SortableTable>
+                          <thead>
+                            <tr>
+                              {[
+                                'Apuração',
+                                'Dias',
+                                'MSISDN',
+                                'Consumo MB',
+                                'MB por dia',
+                                'Arquivo',
+                                'Linha CSV',
+                              ].map((label) => (
+                                <th key={label}>{label}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {timeline.map((row) => (
+                              <tr key={row.id}>
+                                <td>{row.period}</td>
+                                <td>{row.days}</td>
+                                <td>{row.number}</td>
+                                <td data-sort={row.ticks}>{mb(row.mb)}</td>
+                                <td data-sort={row.mbDay}>{mb(row.mbDay)}</td>
+                                <td>{row.filename}</td>
+                                <td>{row.sourceRow}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </SortableTable>
+                      </div>
+                      <InfoNote>
+                        Apurações semanais e mensais podem se sobrepor. São observações separadas,
+                        sem somar snapshots ou presumir o consumo de dias individuais.
+                      </InfoNote>
                     </>
                   ) : (
                     <p className="scope">
@@ -1309,6 +1285,90 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                     </p>
                   )}
                 </Section>
+                <Section
+                  title="Linhas para investigar"
+                  visible={shown('Linhas para investigar') && !!statements.length}
+                >
+                  <p className="scope">
+                    {attention.length} linhas acima de {archive.settings.factor}× a média geral da
+                    própria operadora e apuração. O destaque indica consumo para investigar; não
+                    confirma defeito ou bloqueio. Todas as linhas do recorte estão na tabela.
+                  </p>
+                  <label className="chart-order-control">
+                    Ordenar gráfico por{' '}
+                    <select
+                      value={rankMeasure}
+                      onChange={(event) => setRankMeasure(event.target.value)}
+                    >
+                      <option value="daily">Consumo por dia</option>
+                      <option value="volume">Consumo total do período</option>
+                    </select>
+                  </label>
+                  <Chart
+                    compact
+                    exportNote={chartNote}
+                    ranking
+                    items={rankItems}
+                    title="Maiores consumos"
+                    format={(value) => mb(value) + (rankMeasure === 'daily' ? '/dia' : '')}
+                    onItemClick={(item) => viewRow(selected.find((row) => row.id === item.id))}
+                  />
+                  <div className="line-actions">
+                    <PermissionButton action="export" onClick={exportRecords}>
+                      Baixar linhas filtradas CSV
+                    </PermissionButton>
+                    <button onClick={() => filter('consumption', 'attention')}>
+                      Ver somente destaques
+                    </button>
+                    <button onClick={() => filter('consumption', 'zero')}>Ver consumo zero</button>
+                  </div>
+                  <p className="scope">
+                    O limite absoluto considera consumo total da apuração estritamente maior que o
+                    valor em MB, combinado com os demais filtros. Valores inválidos não entram. A
+                    seleção vale para o recorte atual e atravessa as páginas da tabela.
+                  </p>
+                  {Number.isNaN(consumptionLimit(filters.minimumMB)) && (
+                    <p role="alert" className="error">
+                      Informe um limite não negativo com até seis casas decimais.
+                    </p>
+                  )}
+                  {shown('Linhas para investigar') && rowsTable(selected)}
+                </Section>
+                <Section
+                  title="Consumo por cliente e equipamento"
+                  visible={shown('Consumo por cliente e equipamento') && !!statements.length}
+                >
+                  <InfoNote>
+                    Vínculos confirmados por ICCID e MSISDN no mesmo registro do operacional. Casos
+                    sem vínculo ficam identificados; a situação e a localização da fotografia
+                    operacional podem diferir da época do consumo.
+                  </InfoNote>
+                  <Chart
+                    compact
+                    exportNote={chartNote}
+                    ranking
+                    items={[...clientGroups.values()].map((group) => ({
+                      label: group.label,
+                      value: group.ticks / VOLUME_SCALE,
+                    }))}
+                    title="Consumo por cliente na referência"
+                    format={mb}
+                  />
+                  {shown('Consumo por cliente e equipamento') && rowsTable(selected)}
+                </Section>
+                <Section
+                  title="Revisão dos vínculos"
+                  visible={shown('Revisão dos vínculos') && !!statements.length}
+                  defaultOpen={false}
+                >
+                  <p className="scope">
+                    {selected.filter((row) => !row.link).length} registros do recorte sem
+                    confirmação pelos dois identificadores. Não escolhemos um cliente
+                    automaticamente quando existem conflitos ou duplicidades.
+                  </p>
+                  {shown('Revisão dos vínculos') && rowsTable(selected.filter((row) => !row.link))}
+                </Section>
+
                 <Section
                   title="Mensalidades dos extratos"
                   visible={shown('Mensalidades dos extratos') && !!statements.length}

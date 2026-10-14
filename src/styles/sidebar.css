@@ -427,7 +427,8 @@
 .app > aside.sidebar-collapsed .brand-image {
   width: 28px;
   height: 28px;
-  mask: url('/brand/addlog-symbol.svg') center / contain no-repeat;
+  mask: none;
+  background-image: url('/brand/addlog-symbol.svg');
 }
 .app > aside.sidebar-collapsed .navigation-label,
 .sidebar-collapsed .navigation-chevron {

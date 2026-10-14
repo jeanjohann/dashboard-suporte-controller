@@ -121,6 +121,7 @@ export async function validateBackup(text) {
       status: note.status,
       serial: String(note.serial || ''),
       client: String(note.client || ''),
+      ...(Object.hasOwn(note, 'plate') ? { plate: String(note.plate || '') } : {}),
     };
   });
   let operational = null;

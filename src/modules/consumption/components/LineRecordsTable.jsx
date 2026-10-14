@@ -5,12 +5,13 @@
 import React, { useEffect, useState } from 'react';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { compareValues } from '../../../shared/data/sorting.js';
-import { consumptionEligible, VOLUME_SCALE } from '../domain/lineConsumption.js';
+import { chipKey, consumptionEligible, VOLUME_SCALE } from '../domain/lineConsumption.js';
+import { latestConsumptionNotes } from '../domain/consumptionFollowup.js';
 const mb = (value) =>
   value == null
     ? '—'
     : (value / VOLUME_SCALE).toLocaleString('pt-BR', { maximumFractionDigits: 6 }) + ' MB';
-const columns = [
+const recordColumns = [
   ['Operadora', (row) => row.operator],
   ['MSISDN', (row) => row.number],
   ['ICCID', (row) => 'ICCID ' + row.iccid],
@@ -23,7 +24,20 @@ const columns = [
   ['Vínculo', (row) => row.linkState],
 ];
 /** Ordena e pagina os registros de consumo antes de apresentar a conferência de cada linha. */
-export function LineRecordsTable({ records, onView, onExport }) {
+export function LineRecordsTable({ records, onView, onExport, followup }) {
+  const latest = latestConsumptionNotes(followup?.notes || []);
+  const columns = followup
+    ? [
+        ...recordColumns.slice(0, 3),
+        ['Cliente vinculado', (row) => row.link?.client || null],
+        ['Placa', (row) => row.link?.plate || null],
+        ['Apuração', (row) => row.start],
+        ['Consumo MB', (row) => row.ticks],
+        ['MB por dia', (row) => row.ticks / row.days],
+        ['Última ação', (row) => latest.get(chipKey(row))?.date || null],
+        ['Acompanhamento', (row) => latest.get(chipKey(row))?.status || 'Sem acompanhamento'],
+      ]
+    : recordColumns;
   const [checked, setChecked] = useState([]);
   // Somente linhas do recorte atual podem ser exportadas; seleção preservada entre páginas.
   const selected = records.filter((row) => checked.includes(row.id));
@@ -36,8 +50,9 @@ export function LineRecordsTable({ records, onView, onExport }) {
   }, [records]);
   const [sort, setSort] = useState(null),
     [page, setPage] = useState(0),
-    size = 100;
-  useEffect(() => setPage(0), [records]);
+    size = followup ? 10 : 100;
+  const recordSignature = records.map((row) => row.id).join('\u001f');
+  useEffect(() => setPage(0), [recordSignature]);
   const ordered = sort
     ? records
         .map((row, index) => ({ row, index }))
@@ -50,11 +65,13 @@ export function LineRecordsTable({ records, onView, onExport }) {
             ) || a.index - b.index,
         )
         .map((item) => item.row)
-    : records;
+    : followup
+      ? [...records].sort((a, b) => b.ticks - a.ticks)
+      : records;
   const offset = Math.min(page * size, Math.max(0, Math.floor((ordered.length - 1) / size) * size)),
     shown = ordered.slice(offset, offset + size);
   return (
-    <div className="line-records">
+    <div className={`line-records${followup ? ' consumption-followup-queue' : ''}`}>
       <div className="line-actions" data-no-print>
         <button onClick={() => setChecked(records.map((row) => row.id))} disabled={!records.length}>
           Selecionar todas as linhas filtradas
@@ -109,7 +126,7 @@ export function LineRecordsTable({ records, onView, onExport }) {
                   </button>
                 </th>
               ))}
-              <th>Conferir</th>
+              {!followup && <th>Conferir</th>}
             </tr>
           </thead>
           <tbody>
@@ -132,33 +149,76 @@ export function LineRecordsTable({ records, onView, onExport }) {
                 <td>{row.operator}</td>
                 <td>{row.number}</td>
                 <td>{row.iccid}</td>
-                <td>
-                  <span className="table-cell-text" title={row.link?.client || 'Não vinculado'}>
-                    {row.link?.client || 'Não vinculado'}
-                  </span>
-                </td>
-                <td>{row.link?.serial || 'Não informado'}</td>
-                <td>{mb(consumptionEligible(row) ? row.ticks : null)}</td>
-                <td>{mb(consumptionEligible(row) ? row.ticks / row.days : null)}</td>
-                <td>
-                  {row.ratio == null
-                    ? '—'
-                    : row.ratio.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + '×'}
-                  {row.attention && <small className="line-attention">Investigar consumo</small>}
-                </td>
-                <td>
-                  <span className="table-cell-text" title={row.plan}>
-                    {row.plan}
-                  </span>
-                </td>
-                <td>
-                  <span className="table-cell-text" title={row.linkState}>
-                    {row.linkState}
-                  </span>
-                </td>
-                <td>
-                  <button onClick={() => onView(row)}>Conferir e acompanhar</button>
-                </td>
+                {followup ? (
+                  <>
+                    <td>
+                      <span
+                        className="table-cell-text"
+                        title={row.link?.client || 'Linha não identificada'}
+                      >
+                        {row.link?.client || 'Linha não identificada'}
+                      </span>
+                    </td>
+                    <td>{row.link?.plate || 'Não informada'}</td>
+                    <td>{row.period}</td>
+                    <td>
+                      {mb(row.ticks)}
+                      {row.attention && (
+                        <small className="line-attention">Investigar consumo</small>
+                      )}
+                    </td>
+                    <td>{mb(row.ticks / row.days)}</td>
+                    <td>{latest.get(chipKey(row))?.date?.split('-').reverse().join('/') || '—'}</td>
+                    <td>
+                      <span className="info-print">
+                        {latest.get(chipKey(row))?.status || 'Sem acompanhamento'}
+                      </span>
+                      <button
+                        type="button"
+                        className="consumption-followup-button"
+                        aria-label={`Acompanhar ${row.operator} ${row.iccid}`}
+                        aria-expanded={followup.tracked === chipKey(row)}
+                        onClick={() => followup.onSelect(row)}
+                      >
+                        {latest.get(chipKey(row))?.status || 'Sem acompanhamento'}
+                      </button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>
+                      <span className="table-cell-text" title={row.link?.client || 'Não vinculado'}>
+                        {row.link?.client || 'Não vinculado'}
+                      </span>
+                    </td>
+                    <td>{row.link?.serial || 'Não informado'}</td>
+                    <td>{mb(consumptionEligible(row) ? row.ticks : null)}</td>
+                    <td>{mb(consumptionEligible(row) ? row.ticks / row.days : null)}</td>
+                    <td>
+                      {row.ratio == null
+                        ? '—'
+                        : row.ratio.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + '×'}
+                      {row.attention && (
+                        <small className="line-attention">Investigar consumo</small>
+                      )}
+                    </td>
+                    <td>
+                      <span className="table-cell-text" title={row.plan}>
+                        {row.plan}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="table-cell-text" title={row.linkState}>
+                        {row.linkState}
+                      </span>
+                    </td>
+                  </>
+                )}
+                {!followup && (
+                  <td>
+                    <button onClick={() => onView(row)}>Conferir e acompanhar</button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -174,6 +234,13 @@ export function LineRecordsTable({ records, onView, onExport }) {
         </span>
         <button disabled={offset + size >= ordered.length} onClick={() => setPage(page + 1)}>
           Próxima
+        </button>
+        <button
+          type="button"
+          disabled={offset + size >= ordered.length}
+          onClick={() => setPage(Math.max(0, Math.ceil(ordered.length / size) - 1))}
+        >
+          Último
         </button>
       </div>
     </div>

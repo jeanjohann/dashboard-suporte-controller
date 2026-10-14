@@ -2,10 +2,11 @@
 /* Paleta compartilhada: superfícies, texto e controles. */
 :root {
   color-scheme: light;
+  --brand-logo-url: url('/brand/addlog.svg');
   --ui-background: #f6f7f9;
   --ui-surface: #ffffff;
   --ui-soft: #f0f2f5;
-  --ui-ink: #272b33;
+  --ui-ink: #241f21;
   --ui-muted: #626b79;
   --ui-border: #dce0e7;
   --ui-line: #e9ecf1;
@@ -13,13 +14,13 @@
   --ui-button-bg: #30343d;
   --ui-button-text: #ffffff;
   --ui-button-hover: #424752;
-  --ui-accent: #ff943d;
+  --ui-accent: #fca237;
   --ui-on-accent: #281c13;
-  --ui-accent-hover: #ffa65d;
-  --ui-accent-ink: #b54a16;
-  --ui-accent-soft: #fff4eb;
-  --ui-accent-border: #f3d8bf;
-  --ui-coral: #e76d43;
+  --ui-accent-hover: #ffb456;
+  --ui-accent-ink: #b44500;
+  --ui-accent-soft: #fff4e7;
+  --ui-accent-border: #f6d7b2;
+  --ui-coral: #f05a00;
   --ui-link: #32688c;
   --ui-success-bg: #edf6f2;
   --ui-success-ink: #276654;
@@ -29,7 +30,7 @@
   --ui-error-bg: #fff0ed;
   --ui-error-ink: #a34435;
   --ui-chart-negative: #ba5675;
-  --chart-main: #497d9d;
+  --chart-main: #d96212;
   --chart-secondary: #338574;
   --addlog-background: var(--ui-background);
   --addlog-ink: var(--ui-ink);
@@ -39,6 +40,7 @@
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
+  --brand-logo-url: url('/brand/addlog-dark.svg');
   --ui-background: #191a1e;
   --ui-surface: #22242a;
   --ui-soft: #2a2d34;
@@ -50,11 +52,11 @@
   --ui-button-bg: #363a44;
   --ui-button-text: #f0f1f4;
   --ui-button-hover: #454a56;
-  --ui-accent: #ff9e46;
-  --ui-accent-hover: #ffb56f;
-  --ui-accent-ink: #ffb573;
-  --ui-accent-soft: #402e22;
-  --ui-accent-border: #7d5739;
+  --ui-accent: #fca237;
+  --ui-accent-hover: #ffb456;
+  --ui-accent-ink: #ffb865;
+  --ui-accent-soft: #3d2b20;
+  --ui-accent-border: #835332;
   --ui-coral: #ff997a;
   --ui-link: #8dc5e8;
   --ui-success-bg: #243a32;
@@ -65,7 +67,7 @@
   --ui-error-bg: #402d30;
   --ui-error-ink: #ffafa5;
   --ui-chart-negative: #df8c9e;
-  --chart-main: #83b3d0;
+  --chart-main: #fca237;
   --chart-secondary: #6bc2aa;
 }
 
@@ -97,8 +99,8 @@
   display: block;
   width: 145px;
   height: 32px;
-  background: var(--ui-ink);
-  mask: url('/brand/addlog.svg') center / contain no-repeat;
+  background: var(--brand-logo-url) center / contain no-repeat;
+  mask: none;
 }
 .app-navigation .brand-caption {
   font-size: 8px;

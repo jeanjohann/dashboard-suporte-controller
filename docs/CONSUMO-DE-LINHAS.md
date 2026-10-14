@@ -56,6 +56,14 @@ Valor Faturado, Valor Multa e Valor Total da Kore aparecem separados por dados, 
 
 Testes cobrem conversão exata, zero/ausência, identificadores, serviços separados, duplicidades antes dos filtros, vínculos ambíguos, média de referência, versões, períodos e backups incompatíveis. Conferência no navegador com os arquivos reais cobre importação, totais por soma inteira independente, vínculo operacional, recarga, CSV completo, anotações, reimportação idêntica, backup/restauração, novos períodos e telas desktop/móvel. Os arquivos de origem não são modificados.
 
+## Fila de acompanhamento — 0.20.0
+
+Em **Investigação**, a grade vem antes do histórico e do gráfico. Exibe apenas apurações elegíveis do recorte, começando pelo maior consumo total em MB. Cliente/placa vêm do vínculo operacional atual; sem vínculo confirmado, aparece Linha não identificada. Campos incluem operadora, número, ICCID, apuração, MB por dia, última marcação e data da ação. Como cada operadora pode ter períodos diferentes, use MB por dia para comparar durações. Não há soma de períodos sobrepostos nem exclusão automática por consumo alto.
+
+Clique no status para abrir e exibir a linha do tempo abaixo, inclusive se ela estava oculta/recolhida. Registre data, marcação e observação e use **Salvar acompanhamento**. A grade é atualizada somente após a gravação no IndexedDB. A última marcação é escolhida pela maior data da ação; em empate, pela última anotação registrada. Identificação do histórico permanece operadora + ICCID, independente de número/cliente atual. Trocar de chip limpa o rascunho para evitar vincular uma anotação ao chip errado.
+
+A grade possui dez registros por página, Anterior/Próxima/Último, ordenação sobre todo o recorte e seleção para CSV. Valores inválidos/duplicados continuam disponíveis em Linhas para investigar e na revisão. O histórico usa todas as apurações em uso do chip, independentemente dos filtros da grade. Novas ações guardam também a placa exibida, incluída no backup e relatório individual; ações anteriores sem placa são preservadas. Não há sincronização entre usuários ou envio dos dados ao servidor.
+
 ## Relatório individual e armazenamento futuro
 
 Em Investigação, selecione o chip em Linha do tempo de consumo. Registre a data, a marcação e a observação e clique em Salvar acompanhamento. As informações são confirmadas somente depois de gravadas no navegador e permanecem após recarregar a página.

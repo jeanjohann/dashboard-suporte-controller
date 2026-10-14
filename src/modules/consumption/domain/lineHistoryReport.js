@@ -68,6 +68,7 @@ export function lineHistoryReport(timeline, notes, generatedAt = new Date().toIS
         'Observação',
         'Cliente registrado na ação',
         'Equipamento registrado na ação',
+        'Placa registrada na ação',
       ],
       ...selectedNotes.map((note) => [
         note.operator,
@@ -77,6 +78,7 @@ export function lineHistoryReport(timeline, notes, generatedAt = new Date().toIS
         note.text,
         note.client || '',
         note.serial || '',
+        note.plate || '',
       ]),
     ],
   };

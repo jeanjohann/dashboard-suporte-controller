@@ -39,6 +39,10 @@ test('backup confere CSV/hash e preserva versões arquivadas, notas, zeros inici
   assert.equal(parsed.files[0].text, source);
   assert.equal(parsed.files[1].active, false);
   assert.deepEqual(parsed.notes, [note]);
+  const withPlate = await validateBackup(
+    JSON.stringify({ ...history, notes: [{ ...note, plate: 'ABC1D23' }] }),
+  );
+  assert.equal(withPlate.notes[0].plate, 'ABC1D23');
   assert.equal(parsed.settings.factor, 3);
   assert.equal(parsed.settings.periods.Arqia, 'p');
 });

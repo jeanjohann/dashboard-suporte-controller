@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.19.1 — Monitoramento Ativo com tabela prioritária, alimentação/perfil, histórico de tratamento, ordenação por coluna e atalho para a última página; integração real ainda em preparação.
+**Versão:** 0.20.0 — Fila de acompanhamento do consumo com histórico local, nova identidade visual Addlog e favicon com o símbolo. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 
