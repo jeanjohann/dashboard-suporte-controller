@@ -10,8 +10,50 @@ import {
   monitoringIndicator,
   monitoringVoltage,
   recordMonitoringUpdate,
+  sortMonitoringRows,
 } from './monitoring.js';
 import { monitoringReport, monitoringCsv, monitoringWorkbook } from './monitoringReport.js';
+
+test('fila ordena todo o recorte antes de paginar, mantém ausências no fim e IDs longos como texto', () => {
+  const rows = Array.from({ length: 205 }, (_, index) => ({
+    key: String(index),
+    hours: 204 - index,
+    trackerId: '895518082703008' + String(index).padStart(5, '0'),
+  }));
+  rows.push({ key: 'missing', hours: null, trackerId: null });
+  const ascending = sortMonitoringRows(rows, { key: 'hours', direction: 'asc' });
+  assert.equal(ascending[0].hours, 0);
+  assert.equal(ascending.slice(200, 210).length, 6);
+  assert.equal(ascending.at(-1).key, 'missing');
+  assert.equal(sortMonitoringRows(rows, { key: 'hours', direction: 'desc' }).at(-1).key, 'missing');
+  assert.equal(rows[0].hours, 204);
+  assert.equal(sortMonitoringRows(rows, null), rows);
+  const identifiers = sortMonitoringRows(rows, { key: 'trackerId', direction: 'desc' });
+  assert.equal(identifiers[0].key, '204');
+  assert.equal(identifiers[1].key, '203');
+  const dates = [
+    { lastRecordAt: '2026-10-14T08:00:00-03:00' },
+    { lastRecordAt: '2026-10-14T10:00:00Z' },
+    { lastRecordAt: 'data inválida' },
+  ];
+  assert.equal(sortMonitoringRows(dates, { key: 'lastRecordAt', direction: 'asc' })[0], dates[1]);
+  assert.equal(
+    sortMonitoringRows(dates, { key: 'lastRecordAt', direction: 'desc' }).at(-1),
+    dates[2],
+  );
+  const stages = sortMonitoringRows(
+    [{ key: 'a' }, { key: 'b' }],
+    { key: 'stage', direction: 'asc' },
+    { b: { status: 'Em análise' } },
+  );
+  assert.equal(stages[0].key, 'b');
+  const volts = [{ supplyVoltageV: 12.6 }, { supplyVoltageV: 0 }, { supplyVoltageV: null }];
+  assert.equal(sortMonitoringRows(volts, { key: 'supplyVoltageV', direction: 'asc' })[0], volts[1]);
+  assert.equal(
+    sortMonitoringRows(volts, { key: 'supplyVoltageV', direction: 'desc' }).at(-1),
+    volts[2],
+  );
+});
 
 test('limites em horas são inclusivos e faixas exclusivas; ausência não vira zero', () => {
   const snapshot = monitoringDemo(),

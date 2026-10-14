@@ -10,6 +10,7 @@ import {
   monitoringVoltage,
   monitoringStages,
   recordMonitoringUpdate,
+  sortMonitoringRows,
 } from '../domain/monitoring.js';
 
 const legend = [
@@ -18,6 +19,18 @@ const legend = [
   ['high', '3 a <4 dias'],
   ['critical', '4 dias ou mais'],
   ['unknown', 'Sem classificação'],
+];
+
+const columns = [
+  ['plate', 'Placa'],
+  ['trackerId', 'ID rastreador'],
+  ['client', 'Cliente / base'],
+  ['lastRecordAt', 'Última atualização'],
+  ['supplyVoltageV', 'Alimentação'],
+  ['profile', 'Perfil'],
+  ['hours', 'Sem atualização'],
+  ['state', 'Situação técnica'],
+  ['stage', 'Acompanhamento'],
 ];
 
 export function MonitoringQueue({
@@ -35,6 +48,19 @@ export function MonitoringQueue({
   const historyPanel = useRef();
   const [draft, setDraft] = useState({ status: monitoringStages[0], owner: '', text: '' });
   const [message, setMessage] = useState('');
+  const [sort, setSort] = useState(null);
+  const orderedRows = sortMonitoringRows(result.rows, sort, notes);
+  function orderBy(key) {
+    setSort((previous) =>
+      previous?.key === key
+        ? previous.direction === 'asc'
+          ? { key, direction: 'desc' }
+          : null
+        : { key, direction: 'asc' },
+    );
+    setPage(0);
+    onSelect(null);
+  }
   useEffect(() => {
     setDraft({ status: saved?.status || monitoringStages[0], owner: saved?.owner || '', text: '' });
     setMessage('');
@@ -79,23 +105,26 @@ export function MonitoringQueue({
         <table>
           <thead>
             <tr>
-              {[
-                'Placa',
-                'ID rastreador',
-                'Cliente / base',
-                'Última atualização',
-                'Alimentação',
-                'Perfil',
-                'Sem atualização',
-                'Situação técnica',
-                'Acompanhamento',
-              ].map((label) => (
-                <th key={label}>{label}</th>
+              {columns.map(([key, label]) => (
+                <th
+                  key={key}
+                  aria-sort={
+                    sort?.key === key
+                      ? sort.direction === 'asc'
+                        ? 'ascending'
+                        : 'descending'
+                      : 'none'
+                  }
+                >
+                  <button type="button" className="sort-heading" onClick={() => orderBy(key)}>
+                    {label} {sort?.key === key ? (sort.direction === 'asc' ? '↑' : '↓') : '↕'}
+                  </button>
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {result.rows.slice(page * 10, page * 10 + 10).map((row) => {
+            {orderedRows.slice(page * 10, page * 10 + 10).map((row) => {
               const signal = monitoringIndicator(row);
               return (
                 <tr key={row.key} data-signal={signal.tone}>
@@ -171,6 +200,16 @@ export function MonitoringQueue({
           }}
         >
           Próxima
+        </button>
+        <button
+          type="button"
+          disabled={(page + 1) * 10 >= result.rows.length}
+          onClick={() => {
+            setPage(Math.max(0, Math.ceil(result.rows.length / 10) - 1));
+            onSelect(null);
+          }}
+        >
+          Último
         </button>
       </div>
       {detail && (

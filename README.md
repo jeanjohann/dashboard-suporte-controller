@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.19.0 — Monitoramento Ativo com tabela prioritária, alimentação/perfil e histórico de tratamento; integração real ainda em preparação.
+**Versão:** 0.19.1 — Monitoramento Ativo com tabela prioritária, alimentação/perfil, histórico de tratamento, ordenação por coluna e atalho para a última página; integração real ainda em preparação.
 
 ## Documentação do projeto
 

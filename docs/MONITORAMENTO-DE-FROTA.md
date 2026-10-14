@@ -16,6 +16,10 @@ CSV/XLSX incluem tratamento registrado dos veículos do recorte, independentemen
 
 ## O que está disponível
 
+A fila exibe dez veículos por página, com Anterior, Próxima e Último. O botão Último (0.19.1) leva ao fim do resultado filtrado e fecha os detalhes abertos. Fica desabilitado na última página, inclusive em resultados vazios ou com até dez veículos. Alterar filtros retorna à primeira página; a exportação continua abrangendo todo o recorte.
+
+As nove colunas permitem ordenar pelo título: primeiro clique crescente, segundo decrescente e terceiro restaura a ordem inicial de maior duração conhecida. A ordenação usa todo o recorte antes da paginação e retorna à primeira página, fechando os detalhes. Datas usam o instante completo, duração e tensão numérica usam os valores originais; identificadores permanecem texto e valores ausentes ficam ao final nas duas direções. O status de acompanhamento usa somente atualizações salvas. Ordenar a tabela não altera filtros, indicadores ou dados de origem; CSV/XLSX mantêm a ordem original do recorte exportado.
+
 A página inicia sem dados e permite ativar uma demonstração explícita, inteiramente fictícia, com referência congelada em 11/10/2026 às 10:00 no fuso de São Paulo. Nenhuma consulta à API, token, agendamento, notificação ou gravação de monitoramento no servidor foi implementada nesta etapa.
 
 Há filtros por múltiplas bases, limite de atenção e situação técnica; cards, distribuição temporal, comparação por base, fila paginada, detalhes e rascunhos de acompanhamento. A série de coletas é ilustrativa, limitada à demonstração, usa todas as bases e o limite fixo de 48 horas. Ela não afirma horários reais de falhas ou recuperação.

@@ -72,6 +72,11 @@
   padding: 7px 9px;
   font-size: 11px;
 }
+.monitoring-page > main .monitoring-queue-table .sort-heading {
+  min-height: 0;
+  padding: 0;
+  font-size: inherit;
+}
 .monitoring-legend {
   display: flex;
   flex-wrap: wrap;

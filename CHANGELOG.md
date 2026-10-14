@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.19.1 — 14/10/2026
+
+- Botão Último na Fila de acompanhamento do Monitoramento Ativo: acessa a última página do recorte filtrado, fecha os detalhes selecionados e fica desabilitado quando já está no fim ou não há páginas adicionais.
+- Ordenação pelas nove colunas da fila, aplicada ao recorte completo antes da paginação. Cliques alternam crescente, decrescente e ordem inicial; ausências ficam ao final e identificadores mantêm precisão textual.
+
 ## 0.19.0 — 14/10/2026
 
 - Nome visível Monitoramento Ativo no menu, página e permissões; mantém o identificador `monitoring` e os acessos já cadastrados.

@@ -18,6 +18,40 @@ export const monitoringStages = [
   'Acompanhamento encerrado',
 ];
 
+/** Ordena o recorte inteiro, antes de paginar. Identificadores são comparados como texto, sem perda de precisão. */
+export function sortMonitoringRows(rows, sort, notes = {}) {
+  const fields = {
+    plate: (row) => row.plate,
+    trackerId: (row) => row.trackerId,
+    client: (row) => row.clientName || row.clientId,
+    lastRecordAt: (row) => monitoringInstant(row.lastRecordAt),
+    supplyVoltageV: (row) => row.supplyVoltageV,
+    profile: (row) => row.profile,
+    hours: (row) => row.hours,
+    state: (row) => monitoringStates[row.state],
+    stage: (row) => notes[row.key]?.status || monitoringStages[0],
+  };
+  const value = fields[sort?.key];
+  if (!value || !['asc', 'desc'].includes(sort?.direction)) return rows;
+  const comparable = (row) => {
+    const raw = value(row);
+    if (raw == null || (typeof raw === 'number' && !Number.isFinite(raw))) return null;
+    return typeof raw === 'number' ? raw : String(raw).trim() || null;
+  };
+  return rows
+    .map((row, index) => ({ row, index, value: comparable(row) }))
+    .sort((a, b) => {
+      if (a.value == null) return b.value == null ? a.index - b.index : 1;
+      if (b.value == null) return -1;
+      const comparison =
+        typeof a.value === 'number' && typeof b.value === 'number'
+          ? a.value - b.value
+          : String(a.value).localeCompare(String(b.value), 'pt-BR', { numeric: true });
+      return (sort.direction === 'desc' ? -comparison : comparison) || a.index - b.index;
+    })
+    .map((entry) => entry.row);
+}
+
 /** Sinal visual por duração utilizável; uma coleta antiga nunca recebe cor de alerta confirmado. */
 export function monitoringIndicator(row) {
   if (
