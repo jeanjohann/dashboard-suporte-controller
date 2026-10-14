@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.20.3 — 14/10/2026
+
+- Terceira etapa de refatoração: consolida cabeçalhos de relatórios, ações, tabelas, ordenação, foco de teclado e estados desabilitados em `src/styles/controls.css`.
+- Reúne 36 seletores compartilhados antes distribuídos entre seis arquivos e remove 31 declarações redundantes. Conserva a precedência das regras responsivas, cores de tema, ícones de ajuda e ajustes próprios dos módulos.
+- Comparação antes/depois em 240 estados de tela: 15 combinações de página/categoria, oito larguras e dois temas, sem diferenças nos estilos e dimensões dos controles comparados. Conferência de ajuda, teclado, ordenação e impressão com dados fictícios.
+- Título da aba atualizado para **Addlog | Suporte Controller**, mantendo o favicon da marca.
+- Documenta responsabilidades do CSS e cuidados para futuras alterações. Cálculos, filtros, permissões e armazenamento preservados.
+
 ## 0.20.2 — 14/10/2026
 
 - Segunda etapa de refatoração do consumo: extrai o controlador de importações/versões/backups, cabeçalho, prévia e painel de filtros.

@@ -1,0 +1,264 @@
+/* Controles compartilhados de relatórios. Tema fornece as cores; módulos mantêm seus ajustes de densidade.
+ * A sequência de regras gerais e breakpoints conserva a cascata validada nas telas existentes.
+ * Alguns seletores têm blocos complementares: não agrupar todos os @media ao final sem conferir os controles.
+ */
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.table-scroll {
+  overflow: auto;
+  max-height: 560px;
+}
+.sort-heading {
+  color: inherit;
+  border-radius: 0;
+}
+.sort-heading:hover {
+  color: var(--ui-accent-ink);
+}
+.section-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.section-actions button {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-ink);
+}
+.report-downloads {
+  display: flex;
+  margin: 18px 0;
+}
+button svg {
+  flex: 0 0 auto;
+}
+.sort-heading {
+  display: inline;
+  background: transparent !important;
+  line-height: 1.5;
+  text-align: left;
+  padding: 0;
+  white-space: nowrap;
+  font-size: inherit;
+}
+.section-actions button {
+  line-height: 1.4;
+}
+.table-scroll th,
+.table-scroll td {
+  line-height: 1.5;
+  vertical-align: middle;
+}
+.line-actions {
+  display: flex;
+  margin: 12px 0;
+}
+.line-actions button {
+  min-height: 36px;
+  font-size: 12px;
+}
+.line-actions button:not(:first-child) {
+  background: var(--ui-soft);
+  color: var(--ui-muted);
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--ui-accent-ink);
+  outline-offset: 3px;
+}
+.section-body {
+  padding: 16px;
+  min-width: 0;
+}
+.section-actions {
+  margin-bottom: 8px;
+}
+.section-actions button {
+  min-height: 30px;
+  font-size: 11px;
+  padding: 6px 10px;
+}
+.table-scroll {
+  scrollbar-width: thin;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 10px 12px;
+}
+.sort-heading {
+  min-height: 0;
+}
+.table-scroll {
+  margin: 12px 0;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+.line-actions > button:not(:first-child):hover:not(:disabled) {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-ink);
+}
+.active-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+.active-filter-actions .report-icon-controls {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin: 0;
+}
+.active-filter-actions > button {
+  min-height: 32px;
+}
+.active-filter-actions .report-icon-controls button {
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 6px;
+}
+@media (max-width: 700px) {
+  .active-filter-actions {
+    margin-left: 0;
+  }
+}
+@media (max-width: 600px) {
+  .section-body {
+    padding: 12px;
+  }
+  .active-filter-actions > button,
+  .active-filter-actions .report-icon-controls button {
+    min-height: 38px;
+    height: 38px;
+  }
+  .active-filter-actions .report-icon-controls button {
+    width: 38px;
+  }
+  .line-actions button {
+    min-height: 40px;
+  }
+  .table-scroll th,
+  .table-scroll td {
+    padding: 9px 10px;
+  }
+}
+.report-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--ui-border);
+  background: var(--ui-soft);
+  border-radius: 12px 12px 0 0;
+}
+.report-heading h2 {
+  font-size: 18px;
+  margin: 0;
+  color: var(--ui-ink);
+}
+/* Ícones de ajuda conservam tamanho e tipografia próprios em sidebar.css. */
+.report-heading button:not(.info-trigger) {
+  font-size: 11px;
+  padding: 8px 11px;
+}
+@media (max-width: 760px) {
+  .report-heading {
+    padding: 14px;
+  }
+  .report-heading h2 {
+    font-size: 16px;
+  }
+}
+.report-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.report-title .info-note {
+  margin: 0;
+}
+.report-heading {
+  position: relative;
+  align-items: flex-start;
+  padding-right: 60px;
+}
+.report-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: auto;
+}
+.report-heading-actions > .info-note {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .report-heading {
+    padding-right: 50px;
+  }
+  .report-heading-actions > .info-note {
+    top: 10px;
+    right: 10px;
+  }
+}
+.table-scroll {
+  min-width: 0;
+}
+.report-downloads,
+.line-actions {
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.report-downloads > button,
+.line-actions > button {
+  font-size: 12px;
+  min-height: 36px;
+  line-height: 1.4;
+}
+.report-heading-actions {
+  flex-shrink: 0;
+}
+@media (max-width: 520px) {
+  .report-downloads > button,
+  .line-actions > button {
+    min-height: 40px;
+  }
+  .report-heading-actions {
+    flex-shrink: 1;
+  }
+}
+.report-expansion-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+.active-filter-actions,
+.report-heading-actions {
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+}
+.report-heading {
+  flex-wrap: wrap;
+}
+.report-expansion-controls button {
+  padding: 7px 10px;
+  font-size: 11px;
+  color: var(--ui-ink);
+  background: var(--ui-soft);
+}
+.section-body[hidden] {
+  display: none;
+}

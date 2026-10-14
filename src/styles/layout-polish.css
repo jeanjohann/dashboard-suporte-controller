@@ -2,8 +2,7 @@
 /* Ritmo visual compartilhado: controles, títulos e ações dos relatórios. */
 .dashboard-widget,
 .chart-panel,
-.life-group-summary,
-.table-scroll {
+.life-group-summary {
   min-width: 0;
 }
 .dashboard-widget > h3,
@@ -100,18 +99,10 @@
 .chart-tools[open] > summary {
   margin-bottom: 8px;
 }
-.report-downloads,
-.line-actions,
 .overview-links {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-}
-.report-downloads > button,
-.line-actions > button {
-  font-size: 12px;
-  min-height: 36px;
-  line-height: 1.4;
 }
 .scope {
   line-height: 1.6;
@@ -126,9 +117,6 @@
 .life-cards strong {
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
-}
-.report-heading-actions {
-  flex-shrink: 0;
 }
 @media (max-width: 520px) {
   .dashboard-widget > label:has(> select),
@@ -145,13 +133,6 @@
   .dashboard-widget,
   .chart-panel {
     padding: 14px;
-  }
-  .report-downloads > button,
-  .line-actions > button {
-    min-height: 40px;
-  }
-  .report-heading-actions {
-    flex-shrink: 1;
   }
   .inline-help-heading > h2,
   .inline-help-heading > h3,

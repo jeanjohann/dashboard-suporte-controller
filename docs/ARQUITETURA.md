@@ -53,6 +53,26 @@ import/                    Planilhas e CSVs locais; fora do Git
 
 As pastas `node_modules`, `dist`, `.wrangler` e `.worker-build` são geradas por ferramentas. Não editar arquivos nelas para mudar o comportamento do sistema. `layout-review/` contém imagens locais de revisões anteriores; `layout-review.mjs` é um roteiro histórico dependente de arquivos e ferramentas locais, não faz parte da execução ou dos testes oficiais.
 
+## Organização dos estilos — 0.20.3
+
+`src/main.jsx` carrega os estilos globais nesta ordem: `style.css`, `identity.css`, `theme.css`, `sidebar.css`, `layout-polish.css`, `filters.css` e `controls.css`. Essa sequência participa da precedência do CSS; mudar a ordem exige conferir as telas afetadas.
+
+| Arquivo em `src/styles/` | Responsabilidade                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `style.css`              | Estruturas históricas de páginas, cards, gráficos e relatórios específicos                                                |
+| `identity.css`           | Tipografia, identidade visual e apresentação base dos campos                                                              |
+| `theme.css`              | Variáveis de cores claro/escuro e aplicação da paleta                                                                     |
+| `sidebar.css`            | Navegação, identidade do menu e camadas de ajuda                                                                          |
+| `layout-polish.css`      | Alinhamento de seletores, gráficos e ajustes específicos de apresentação                                                  |
+| `filters.css`            | Painéis de filtros, seleção múltipla e ajustes próprios das grades                                                        |
+| `controls.css`           | Cabeçalhos e ações de relatórios, abrir/recolher, exportação, rolagem de tabelas, ordenação, foco e estados desabilitados |
+
+Os arquivos antigos ainda contêm ajustes de componentes específicos; esta etapa não reescreve todo o CSS. Ao ajustar um controle comum, procurar primeiro sua regra em `controls.css`. Cores devem usar variáveis de tema. Densidade exclusiva de um módulo, como o Monitoramento, permanece no CSS desse módulo. Não aplicar regras de botão de ação aos ícones de ajuda.
+
+As regras gerais e responsivas do arquivo compartilhado preservam a sequência da cascata existente. Blocos complementares de um seletor não são necessariamente duplicações: podem conservar a precedência entre breakpoints. Não mover todos os `@media` ao final sem comparar os estilos calculados, as dimensões dos controles e os dois temas. Impressão também deve ser conferida quando o ajuste afeta cabeçalhos ou conteúdo recolhido.
+
+O nome da aba do navegador é definido por `<title>` em `index.html`: **Addlog | Suporte Controller**. O favicon usa `public/brand/addlog-symbol.svg`.
+
 ## Fluxo dos dados
 
 Os [diagramas do sistema e da leitura dos arquivos](DIAGRAMAS-DO-SISTEMA.md) apresentam a separação entre pessoa, navegador e Cloudflare, os campos interpretados e os caminhos de revisão. Os SVGs podem ser ampliados para estudo e apresentação.

@@ -60,6 +60,14 @@ Os menus de seleção múltipla são renderizados em uma camada independente do 
 
 Os relatórios organizados em Section possuem comando Abrir/Recolher no cabeçalho. OS, Operacional e Consumo também oferecem comandos de abrir/recolher todos. Recolher mantém o conteúdo montado, preservando filtros e seleções; ocultar um relatório no menu é uma configuração independente. A impressão continua incluindo o conteúdo do relatório, mesmo recolhido. Na versão 0.17.6, oito análises de OS/técnicos oferecem Resumo/Completo; o comando global de visão resumida aplica síntese somente às seções que já possuem indicadores definidos. A cobertura restante está na fila.
 
+## Controles compartilhados — 0.20.3
+
+Cabeçalhos, ações de exportação, comandos de abrir/recolher, rolagem de tabelas, botões de ordenação e foco pelo teclado agora têm seus estilos compartilhados em `src/styles/controls.css`. A reorganização preserva tamanhos, espaçamentos, cores e comportamento nos dois temas. As regras de filtros e os ajustes compactos do Monitoramento continuam nos arquivos responsáveis por essas interfaces.
+
+O ícone de explicação conserva tamanho e tipografia próprios, no canto direito do título; não recebe o formato de um botão de ação. A comparação antes/depois cobre 240 estados de tela, incluindo larguras intermediárias e celular. Ajuda, teclado, ordenação, controles desabilitados e impressão foram conferidos com dados fictícios. Consulte [Arquitetura](ARQUITETURA.md) antes de mudar a ordem dos estilos ou seus breakpoints.
+
+A aba do navegador usa **Addlog | Suporte Controller**, abrangendo todos os módulos; o favicon continua sendo o símbolo da marca.
+
 ## Revisão dos balões — 0.17.7
 
 Os cabeçalhos de relatório das páginas OS, Operacional, Consumo, Parque e Manutenção e Monitoramento passaram por conferência de cobertura. Seções que tinham ajuda apenas dentro do conteúdo agora também possuem explicação no cabeçalho. O ícone fica à direita do título, disponível nos modos completo, resumido e recolhido.

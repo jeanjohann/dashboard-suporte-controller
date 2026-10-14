@@ -1,10 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.2 — Segunda etapa de refatoração do consumo: importação, filtros, CSV e relatórios separados por responsabilidade. Regras e histórico preservados. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.3 — Controles compartilhados de relatórios consolidados em um arquivo de estilos, com aparência conferida nos dois temas e telas menores. A aba do navegador usa Addlog | Suporte Controller. Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 
-[Revisão técnica e refatoração gradual](docs/REVISAO-E-REFATORACAO.md): diagnóstico, primeira etapa concluída, verificações e sequência proposta.
+[Revisão técnica e refatoração gradual](docs/REVISAO-E-REFATORACAO.md): diagnóstico, etapas concluídas, verificações e sequência proposta.
 
 - [Logística de equipamentos — envios e devoluções](docs/LOGISTICA-DE-EQUIPAMENTOS.md)
 

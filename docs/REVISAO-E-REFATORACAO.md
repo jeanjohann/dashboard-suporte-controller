@@ -1,6 +1,6 @@
 # Revisão técnica e refatoração gradual
 
-Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1 e 0.20.2. Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. Deve acompanhar as próximas etapas.
+Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1, 0.20.2 e 0.20.3. Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. Deve acompanhar as próximas etapas.
 
 ## Diagnóstico inicial
 
@@ -53,7 +53,19 @@ A versão 0.20.2 separa a prévia, os seletores de arquivo, os filtros e os rela
 
 Critérios de seleção e montagem do CSV agora têm testes próprios de regressão. A conferência no navegador cobre prévia sem gravação automática, importação Arqia/Kore, arquivo idêntico, cancelamento e correção com arquivamento da versão anterior, origem das células, valores separados por serviço, exportação, backups e preservação ao navegar. Os fluxos de histórico, rascunho, gravação, busca e telas menores da etapa anterior também foram conferidos.
 
-## Critérios preservados nas duas etapas
+## Terceira etapa entregue — controles e estilos compartilhados
+
+A versão 0.20.3 reúne em `src/styles/controls.css` os estilos comuns de cabeçalhos, títulos, ações de relatório, exportação, comandos de abrir/recolher, tabelas com rolagem, botões de ordenação, foco de teclado e estados desabilitados. Foram mapeadas 77 ocorrências de 36 seletores entre `style.css`, `identity.css`, `theme.css`, `sidebar.css`, `layout-polish.css` e `filters.css`; 31 declarações sobrescritas e redundantes foram removidas.
+
+O novo arquivo é carregado depois de `filters.css`, na ordem declarada em `src/main.jsx`. Suas regras continuam usando as variáveis de `theme.css`. Navegação e balões permanecem em `sidebar.css`; filtros e alinhamentos específicos mantêm seus arquivos. Os controles compactos do Monitoramento continuam no CSS do módulo. A tipografia e o tamanho dos ícones de explicação têm regra própria: não devem herdar o tamanho dos botões de ação.
+
+A sequência entre regras gerais e regras responsivas foi preservada. Alguns seletores têm blocos complementares em posições distintas: agrupar todos os breakpoints no final ou aplicar uma altura comum a qualquer botão pode alterar a aparência existente. Antes de reorganizar novamente, comparar estilos efetivos e dimensões, incluindo seletores mais específicos dos módulos.
+
+A conferência antes/depois utilizou dados fictícios em um navegador separado: 15 combinações de página/categoria de OS, Operacional, Parque e Manutenção, Consumo, Monitoramento e Importação, em oito larguras (1440, 1024, 760, 700, 650, 600, 520 e 390 px) e dois temas. Nos 240 estados comparados, os controles conservaram estilos e dimensões, sem rolagem horizontal da página nem erros de execução. Tabelas mantêm sua rolagem interna. Ajuda por clique/Escape, foco pelo teclado, ordenação, estados desabilitados e impressão de registros salvos também foram conferidos.
+
+Esta entrega organiza a apresentação existente. Não cria novos cálculos nem modifica persistência ou autorização. O título da aba passa a **Addlog | Suporte Controller** para representar o conjunto dos módulos; o favicon permanece.
+
+## Critérios preservados nas etapas
 
 - Mesmas chaves do IndexedDB, formato do histórico e backup. Nenhuma migração, limpeza ou transferência de dados.
 - Gravação confirmada pelo repositório antes da atualização do histórico visível. Falha conserva o histórico anterior e o rascunho.
@@ -74,12 +86,12 @@ Executar também `npm run check`: caminhos locais, formatação, testes e build.
 
 ## Sequência proposta
 
-| Etapa | Escopo                                                                               | Situação                                                       |
-| ----- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
-| R01   | Separar acompanhamento, persistência local, painel de arquivos e formatos do consumo | Entregue em 0.20.1                                             |
-| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Entregue em 0.20.2                                             |
-| R03   | Mapear CSS e consolidar apresentação dos controles compartilhados                    | Após R02, com comparação visual em claro/escuro e celular      |
-| R04   | Dividir a coordenação e os grandes relatórios de OS                                  | Após consolidar o padrão de componentes do consumo             |
-| R05   | Medir e avaliar carregamento por módulo, mantendo bases e estado de navegação        | Depende de medições e conferência do ciclo de vida das páginas |
+| Etapa | Escopo                                                                               | Situação                                                               |
+| ----- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| R01   | Separar acompanhamento, persistência local, painel de arquivos e formatos do consumo | Entregue em 0.20.1                                                     |
+| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Entregue em 0.20.2                                                     |
+| R03   | Mapear CSS e consolidar apresentação dos controles compartilhados                    | Entregue em 0.20.3                                                     |
+| R04   | Dividir a coordenação e os grandes relatórios de OS                                  | Próxima etapa sugerida, com escopo e verificações por responsabilidade |
+| R05   | Medir e avaliar carregamento por módulo, mantendo bases e estado de navegação        | Depende de medições e conferência do ciclo de vida das páginas         |
 
 Cada entrega deve ter um escopo limitado, revisão das mudanças e documentação. Alterações de regra de negócio ou formato de armazenamento precisam ser tratadas como mudanças próprias, com compatibilidade definida antes de implementação.

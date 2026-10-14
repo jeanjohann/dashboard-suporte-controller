@@ -46,10 +46,6 @@ button {
   padding: 12px 18px;
   font-weight: 600;
 }
-button:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
 .app {
   display: flex;
   min-height: 100vh;
@@ -230,10 +226,6 @@ header p {
   padding: 11px;
   border-radius: 7px;
   width: 280px;
-}
-.table-scroll {
-  overflow: auto;
-  max-height: 560px;
 }
 table {
   border-collapse: separate;
@@ -493,9 +485,6 @@ footer button {
   background: var(--ui-soft);
   border-radius: 12px;
 }
-.section-body {
-  padding: 18px;
-}
 .section-body > .panel {
   border: 0;
   margin-bottom: 12px;
@@ -567,9 +556,6 @@ footer button {
   .chart-legend {
     grid-template-columns: 1fr;
   }
-  .section-body {
-    padding: 10px;
-  }
   .workspace-section > summary {
     padding: 16px;
   }
@@ -604,29 +590,6 @@ footer button {
 }
 [hidden] {
   display: none !important;
-}
-.sort-heading {
-  background: transparent;
-  color: inherit;
-  padding: 0;
-  text-align: left;
-  border-radius: 0;
-  white-space: nowrap;
-  font-size: inherit;
-}
-.sort-heading:hover {
-  color: var(--ui-accent-ink);
-}
-.section-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-.section-actions button {
-  font-size: 12px;
-  padding: 8px 12px;
-  background: var(--ui-accent-soft);
-  color: var(--ui-accent-ink);
 }
 .record-details {
   border-top: 2px solid var(--ui-accent-border);
@@ -852,13 +815,6 @@ footer button {
 }
 .visit-timeline small {
   color: var(--ui-muted);
-}
-
-.report-downloads {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin: 18px 0;
 }
 
 .operational-page td {

@@ -109,27 +109,6 @@
   font-size: 11px;
   line-height: 1.5;
 }
-.report-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 18px 22px;
-  border-bottom: 1px solid var(--ui-border);
-  background: var(--ui-soft);
-  border-radius: 12px 12px 0 0;
-}
-.report-heading h2 {
-  font-size: 18px;
-  margin: 0;
-  color: var(--ui-ink);
-}
-.report-heading button {
-  font-size: 11px;
-  padding: 8px 11px;
-}
 .report-block {
   overflow: hidden;
 }
@@ -235,12 +214,6 @@
   .app > main {
     width: 100%;
     padding: 16px;
-  }
-  .report-heading {
-    padding: 14px;
-  }
-  .report-heading h2 {
-    font-size: 16px;
   }
   .import-page .cards {
     grid-template-columns: 1fr;
@@ -526,15 +499,6 @@ button.info-trigger:hover {
     display: block !important;
   }
 }
-.report-title {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-}
-.report-title .info-note {
-  margin: 0;
-}
 .info-popover p {
   margin: 0 0 10px;
 }
@@ -557,38 +521,12 @@ button.info-trigger:hover {
   margin: 0;
   z-index: 1;
 }
-/* Ajuda e ações sempre alinhadas à direita, no topo da seção. */
-.report-heading {
-  position: relative;
-  align-items: flex-start;
-  padding-right: 60px;
-}
-.report-heading-actions {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-left: auto;
-}
-.report-heading-actions > .info-note {
-  position: absolute;
-  top: 14px;
-  right: 16px;
-  margin: 0;
-}
+/* SVGs não devem reduzir ou introduzir espaço de linha nos controles. */
 .navigation-icon svg,
 .navigation-chevron svg,
 .info-trigger svg {
   display: block;
   flex-shrink: 0;
-}
-@media (max-width: 760px) {
-  .report-heading {
-    padding-right: 50px;
-  }
-  .report-heading-actions > .info-note {
-    top: 10px;
-    right: 10px;
-  }
 }
 /* Cabeçalhos dos blocos internos: ajuda no mesmo canto superior direito. */
 .inline-help-heading {

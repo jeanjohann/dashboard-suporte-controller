@@ -41,13 +41,6 @@
 .lifecycle-controls input {
   max-width: 100%;
 }
-.report-expansion-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  min-width: 0;
-  max-width: 100%;
-}
 /* Acompanhamento do consumo mantém status compacto e histórico imediatamente abaixo da fila. */
 .consumption-followup-queue .table-scroll {
   max-height: 410px;
@@ -85,24 +78,6 @@
 }
 .consumption-history-anchor {
   scroll-margin-top: 16px;
-}
-.active-filter-actions,
-.report-heading-actions {
-  flex-wrap: wrap;
-  min-width: 0;
-  max-width: 100%;
-}
-.report-heading {
-  flex-wrap: wrap;
-}
-.report-expansion-controls button {
-  padding: 7px 10px;
-  font-size: 11px;
-  color: var(--ui-ink);
-  background: var(--ui-soft);
-}
-.section-body[hidden] {
-  display: none;
 }
 .floating-filter-menu {
   overflow: auto;

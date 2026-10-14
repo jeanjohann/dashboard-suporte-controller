@@ -40,16 +40,6 @@ button {
 button:hover:not(:disabled) {
   background: var(--ui-button-hover);
 }
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-summary:focus-visible {
-  outline: 2px solid var(--ui-accent-ink);
-  outline-offset: 3px;
-}
-button svg {
-  flex: 0 0 auto;
-}
 input:not([type='checkbox']),
 select,
 textarea {
@@ -244,16 +234,6 @@ small {
 .chart-heading select {
   margin: 0;
   min-width: 100px;
-}
-.sort-heading {
-  display: inline;
-  min-height: 0;
-  background: transparent !important;
-  line-height: 1.5;
-  text-align: left;
-  padding: 0;
-  white-space: nowrap;
-  font-size: inherit;
 }
 .report-icon-controls {
   margin: 8px 0 14px;
@@ -491,7 +471,6 @@ small {
   min-width: 160px;
   max-width: 360px;
 }
-.section-actions button,
 .chart-export,
 footer button {
   min-height: 32px;
@@ -526,11 +505,6 @@ footer button {
 }
 .readable-bars {
   scrollbar-width: thin;
-}
-.table-scroll th,
-.table-scroll td {
-  line-height: 1.5;
-  vertical-align: middle;
 }
 footer,
 footer > div {
@@ -1195,21 +1169,6 @@ footer > div {
 }
 
 /* Consumo de linhas: histórico, referência e investigação. */
-.line-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 12px 0;
-}
-.line-actions button {
-  min-height: 36px;
-  font-size: 12px;
-}
-.line-actions button:not(:first-child) {
-  background: var(--ui-soft);
-  color: var(--ui-muted);
-}
 .line-message {
   padding: 12px 16px;
   background: var(--ui-success-bg);
