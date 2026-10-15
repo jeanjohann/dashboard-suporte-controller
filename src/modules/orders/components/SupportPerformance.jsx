@@ -9,8 +9,14 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { download } from '../../../shared/export/exports.js';
 import { todaySaoPaulo } from '../domain/lifecycle.js';
 import { supportPeriod, supportPerformance, supportRoles } from '../domain/supportPerformance.js';
-import { supportReport, supportCsv, supportWorkbook } from '../domain/supportReport.js';
+import {
+  supportReport,
+  supportComparisonReport,
+  supportCsv,
+  supportWorkbook,
+} from '../domain/supportReport.js';
 import { RecordDetails } from './RecordDetails.jsx';
+import { SupportComparison } from './SupportComparison.jsx';
 
 const percent = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
@@ -45,9 +51,14 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
   const [month, setMonth] = useState(today.slice(0, 7)),
     [year, setYear] = useState(today.slice(0, 4));
   const [metric, setMetric] = useState('productive');
+  const both = role === 'both';
   const result = useMemo(
-    () => supportPerformance(original, filters, role),
+    () => supportPerformance(original, filters, both ? 'execution' : role),
     [original, filters, role],
+  );
+  const scheduling = useMemo(
+    () => (both ? supportPerformance(original, filters, 'scheduling') : null),
+    [original, filters, both],
   );
   useEffect(() => setDetail(null), [original, filters, role]);
   const apply = (preset, nextMonth = month, nextYear = year) => {
@@ -58,13 +69,15 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
     setDetail(null);
   };
   const exportFile = (format) => {
-    const tables = supportReport(original, result, filters, filename);
+    const tables = both
+      ? supportComparisonReport(original, result, scheduling, filters, filename)
+      : supportReport(original, result, filters, filename);
     return download(
       format === 'csv' ? supportCsv(tables) : supportWorkbook(tables),
       format === 'csv'
         ? 'text/csv;charset=utf-8'
         : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      `equipe-suporte-${role}.${format}`,
+      `equipe-suporte-${both ? 'ambos' : role}.${format}`,
     );
   };
   return (
@@ -73,15 +86,29 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
       visible={visible}
       help={help}
       summary={
-        !result.unavailable && (
+        !result.unavailable &&
+        (!both || !scheduling.unavailable) && (
           <ReportSummary
-            metrics={[
-              ['Atendimentos efetivos', result.totals.productive],
-              ['Visitas improdutivas', result.totals.unproductive],
-              ['Chamados distintos', result.totals.calls],
-              ['Clientes identificados', result.totals.clients],
-            ]}
-            note={`${result.role.label} · ${result.role.date}. Somente Concluída/Pago; não mede qualidade.`}
+            metrics={
+              both
+                ? [
+                    ['Agendamentos efetivos', scheduling.totals.productive],
+                    ['Execuções efetivas', result.totals.productive],
+                    ['Agendamentos · improdutivas', scheduling.totals.unproductive],
+                    ['Execuções · improdutivas', result.totals.unproductive],
+                  ]
+                : [
+                    ['Atendimentos efetivos', result.totals.productive],
+                    ['Visitas improdutivas', result.totals.unproductive],
+                    ['Chamados distintos', result.totals.calls],
+                    ['Clientes identificados', result.totals.clients],
+                  ]
+            }
+            note={
+              both
+                ? 'Ambos · cada papel mantém sua data e base. Não somar como atendimentos únicos.'
+                : `${result.role.label} · ${result.role.date}. Somente Concluída/Pago; não mede qualidade.`
+            }
           />
         )
       }
@@ -102,6 +129,7 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
                 {item.label}
               </option>
             ))}
+            <option value="both">Ambos</option>
           </select>
         </label>
         <div className="support-period-shortcuts" aria-label="Atalhos de período do suporte">
@@ -141,12 +169,25 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
         </label>
       </div>
       <p className="scope">
-        {result.role.label} · Data utilizada: {result.role.date} · Período:{' '}
-        {filters.start || 'início do histórico'} até {filters.end || 'fim do histórico'}. Datas
-        personalizadas e responsáveis: filtros da página. Os atalhos atualizam o período de toda a
-        análise de OS.
+        {both
+          ? 'Ambos · Agendamentos: Agendamento; Execuções: Data de atendimento'
+          : `${result.role.label} · Data utilizada: ${result.role.date}`}{' '}
+        · Período: {filters.start || 'início do histórico'} até {filters.end || 'fim do histórico'}.
+        Datas personalizadas e responsáveis: filtros da página. Os atalhos atualizam o período de
+        toda a análise de OS.
       </p>
-      {result.unavailable ? (
+      {both ? (
+        <SupportComparison
+          original={original}
+          execution={result}
+          scheduling={scheduling}
+          metric={metric}
+          setMetric={setMetric}
+          filename={filename}
+          filters={filters}
+          onExport={exportFile}
+        />
+      ) : result.unavailable ? (
         <p role="status">Indisponível: faltam as colunas {result.unavailable.join(', ')}.</p>
       ) : (
         <>

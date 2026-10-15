@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.21.0 — Equipe de suporte com períodos, ranking e exportação. Monitoramento Ativo com acompanhamento separado da análise, cards que abrem a fila filtrada e consulta autenticada preparada para o futuro coletor. A API do fornecedor ainda não está conectada; anotações do monitoramento continuam somente na sessão. Páginas visitadas conservam estado durante a navegação autorizada.
+**Versão:** 0.21.1 — Equipe de suporte permite selecionar Ambos para comparar agendamentos e execuções em barras e evolução separadas, com tabelas e exportações identificadas por responsabilidade. Monitoramento Ativo mantém a preparação do coletor; a API do fornecedor ainda não está conectada. Páginas visitadas conservam estado durante a navegação autorizada.
 
 ## Documentação do projeto
 

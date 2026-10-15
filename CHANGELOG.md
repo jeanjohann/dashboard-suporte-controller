@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.21.1 — 15/10/2026
+
+- Filtro Responsabilidade da Equipe de suporte com opção Ambos, exibindo duas barras por pessoa e duas séries na evolução. Execução/Agendamento conservam suas datas, filtros e contagens próprias.
+- Cards, ranking, participações, comparação anterior, improdutivas e linhas de origem separados por papel. Limite do gráfico considera pessoas, mantendo as duas barras; não soma os papéis como atendimentos únicos.
+- CSV/XLSX com identificação de responsabilidade e originais sem duplicação física, SVG dos dois gráficos e impressão. Falta de coluna impede a comparação com aviso e conserva seleção dos papéis disponíveis.
+- Testes de dupla atribuição, períodos diferentes, filtros de responsável, improdutivas, lacunas temporais e percentuais/linhas exportados. Sem alteração das regras dos modos individuais.
+
 ## 0.21.0 — 15/10/2026
 
 - Nova categoria Equipe de suporte nas OS: execução/agendamento separados, últimos sete dias, semana anterior, mês, ano, histórico completo e período personalizado pelos filtros compartilhados.

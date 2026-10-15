@@ -86,13 +86,64 @@ export function supportReport(data, result, filters, filename) {
 }
 export const supportCsv = (tables) =>
   csv(Object.entries(tables).flatMap(([name, rows]) => [[name], ...rows, []]));
+
+/** Exporta os dois papéis com bases separadas e mantém cada linha original uma única vez na aba de origem. */
+export function supportComparisonReport(data, execution, scheduling, filters, filename) {
+  const reports = [
+    ['Agendamento', supportReport(data, scheduling, filters, filename), scheduling],
+    ['Execução', supportReport(data, execution, filters, filename), execution],
+  ];
+  const tables = {
+    Contexto: [
+      ['Arquivo', filename],
+      ['Papel', 'Ambos'],
+      ['Filtros', JSON.stringify(filters)],
+      ['Data de Agendamento', scheduling.role.date],
+      ['Data de Execução', execution.role.date],
+      [
+        'Regra',
+        'Cada papel mantém seu próprio período, contagens, exclusões e participação. Não somar agendamentos e execuções como atendimentos únicos.',
+      ],
+      ...reports.flatMap(([role, report]) => report.Contexto.slice(4).map((row) => [role, ...row])),
+    ],
+  };
+  for (const name of ['Resumo', 'Responsáveis', 'Evolução', 'Perfil'])
+    tables[name] = [
+      ['Responsabilidade', ...reports[0][1][name][0]],
+      ...reports.flatMap(([role, report]) => report[name].slice(1).map((row) => [role, ...row])),
+    ];
+  const sources = reports.map(([role, , result]) => [
+    role,
+    new Set(result.rows.map((row) => row.sourceRow)),
+  ]);
+  tables.Atendimentos = [
+    [
+      'Linha Excel',
+      ...data.columns.map((column) => column.label),
+      'Responsabilidades neste recorte',
+    ],
+    ...data.rows
+      .filter((row) => sources.some(([, rows]) => rows.has(row.sourceRow)))
+      .map((row) => [
+        row.sourceRow,
+        ...row.cells.map((cell) => cell.raw ?? ''),
+        sources
+          .filter(([, rows]) => rows.has(row.sourceRow))
+          .map(([role]) => role)
+          .join(' / '),
+      ]),
+  ];
+  return tables;
+}
 export function supportWorkbook(tables) {
   const book = XLSX.utils.book_new();
   for (const [name, rows] of Object.entries(tables)) {
     const sheet = XLSX.utils.aoa_to_sheet(rows);
-    if (name === 'Responsáveis')
+    const shareIndex = rows[0]?.indexOf('Participação dos efetivos');
+    if (name === 'Responsáveis' && shareIndex >= 0)
       for (let row = 2; row <= rows.length; row++)
-        if (sheet[`G${row}`]) sheet[`G${row}`].z = '0.0%';
+        if (sheet[XLSX.utils.encode_cell({ r: row - 1, c: shareIndex })])
+          sheet[XLSX.utils.encode_cell({ r: row - 1, c: shareIndex })].z = '0.0%';
     XLSX.utils.book_append_sheet(book, sheet, name);
   }
   return XLSX.write(book, { type: 'array', bookType: 'xlsx' });

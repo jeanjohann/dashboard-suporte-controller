@@ -73,6 +73,8 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
       ':root{--chart-main:#357a9a;--ui-chart-negative:#ba5675}@page{size:landscape;margin:12mm}body{font:11px Arial;color:#192c43}h1{font-size:20px}h2{font-size:15px}table{border-collapse:collapse;width:100%}th,td{padding:5px;border:1px solid #ccd5dd;white-space:normal!important;max-width:none!important;overflow:visible!important}thead{display:table-header-group}.table-scroll,.chart-bars,.readable-bars{max-height:none!important;overflow:visible!important}.panel{break-inside:auto}.scope{font-size:10px}svg{max-width:100%}th{position:static}.cards{display:flex;gap:15px}.chart-legend{list-style:none;padding:0}.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.summary-card{border:1px solid #ccd5dd;padding:12px;display:flex;flex-direction:column;gap:8px}.summary-card strong{font-size:20px}.readable-bar-row{display:grid;grid-template-columns:34% 1fr 100px;gap:16px;align-items:center;padding:12px 0;break-inside:avoid}.bar-name{overflow-wrap:anywhere}.readable-track{position:relative;height:18px;background:#edf2f4;print-color-adjust:exact}.readable-track div{print-color-adjust:exact}.stack-track{display:flex;height:20px;background:#edf2f4;print-color-adjust:exact}.stack-track span{display:block;height:100%;print-color-adjust:exact}.visit-timeline li{margin:12px 0;break-inside:avoid}.geography-summary{display:flex;gap:24px;margin:15px 0}.geography-summary>div{display:flex;flex-direction:column;gap:5px}.geography-summary strong{font-size:20px}.geography-row{display:grid;grid-template-columns:20% 1fr;gap:16px;padding:12px 0;border-bottom:1px solid #edf1f4;break-inside:avoid}.geography-series-list{display:grid;gap:8px}.geography-series{display:grid;grid-template-columns:140px minmax(0,1fr) 130px;gap:10px;align-items:center}.geography-series strong{text-align:right}.geography-track{display:block;position:relative;height:14px;background:#edf2f4;border-radius:4px;print-color-adjust:exact}.geography-fill{display:block;position:absolute;height:100%;border-radius:4px;print-color-adjust:exact}.geography-zero{position:absolute;left:50%;height:100%;border-left:1px solid #687e91}.geography-legend span{print-color-adjust:exact}';
     style.textContent +=
       ' .info-print{display:block!important;margin:8px 0}.info-trigger{display:none!important}';
+    style.textContent +=
+      ' :root{--chart-secondary:#328b7d}.support-comparison-rows{max-height:none;overflow:visible}.support-comparison-row{display:grid;grid-template-columns:28% 1fr;gap:16px;padding:10px 0;break-inside:avoid}.support-comparison-values{display:grid;gap:10px}.support-comparison-series{display:grid;grid-template-columns:100px 1fr 46px;gap:10px;align-items:center}.support-comparison-series .readable-track>div{height:100%}.support-comparison-series strong{text-align:right}';
     doc.head.append(style);
     doc.title = title;
     doc.body.append(heading, metadata, clone);
@@ -130,7 +132,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
           {summary}
         </div>
       )}
-      <div className="section-body" hidden={!open || compact}>
+      <div className="section-body" hidden={!open || (hasSummary && compact)}>
         <div className="section-content" ref={section}>
           {description && <span className="info-print">{description}</span>}
           {content.map((child, index) =>

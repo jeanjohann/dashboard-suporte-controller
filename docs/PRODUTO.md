@@ -1,12 +1,14 @@
 # Suporte Controller — produto e regras de negócio
 
-Atualizado em 14/10/2026. Versão atual: 0.20.6.
+Atualizado em 15/10/2026. Versão atual: 0.21.1.
 
 ## Objetivo
 
 Importar a planilha de ordens de serviço da Addlog para consulta, conferência e análises de gestão e apresentações. A planilha é utilizada pelo financeiro para controlar serviços cobrados de clientes, custos absorvidos pela Addlog e pagamentos de técnicos. Também registra eventos associados aos equipamentos.
 
 ## Regras atuais e referências
+
+Equipe de suporte: Execução, Agendamento ou Ambos. Ambos compara os papéis sem somá-los, com datas, bases, detalhes e exportações próprios. Critérios em [Equipe de suporte](EQUIPE-DE-SUPORTE.md).
 
 - Uma linha de OS é um atendimento; o número da OS identifica um chamado, que pode conter várias linhas. A ordem e os valores de origem são preservados.
 - Indicadores de realizados exigem Status exatamente Concluída ou Pago. Pago significa pagamento ao técnico. Variações de escrita e incoerências com Pago em geram avisos de revisão, sem normalização automática nem mudança dos totais.
