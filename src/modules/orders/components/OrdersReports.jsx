@@ -17,6 +17,7 @@ import { FieldLifePanel } from './FieldLifePanel.jsx';
 import { ExtendedInsights } from './ExtendedInsights.jsx';
 import { AdvancedInsights } from './AdvancedInsights.jsx';
 import { Explorers } from './Explorers.jsx';
+import { SupportPerformance } from './SupportPerformance.jsx';
 
 /** Recebe o controlador existente; não mantém outra cópia dos dados ou filtros. */
 export function OrdersReports({ session, category, visible, operational, onPage }) {
@@ -41,6 +42,13 @@ export function OrdersReports({ session, category, visible, operational, onPage 
   } = session;
   return (
     <>
+      <SupportPerformance
+        original={data}
+        filters={filters}
+        setFilters={session.setFilters}
+        filename={filename}
+        visible={visible.supportPerformance}
+      />
       {category === 'overview' && (
         <DashboardOverview
           original={data}

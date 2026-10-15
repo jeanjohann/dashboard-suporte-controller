@@ -1,5 +1,17 @@
 # Monitoramento Ativo — em preparação
 
+## Organização atual — 0.21.0
+
+A página inicia em **Acompanhamento**: filtros no topo, busca por placa/rastreador/cliente/perfil/responsável, seleção de situação técnica, status administrativo e recorte, seguidos da fila e do histórico selecionado. **Visão analítica** contém somente indicadores e gráficos; **Relatórios** contém as exportações. As descrições de fila junto da análise em versões abaixo são históricas e foram substituídas por esta organização.
+
+Doze cards: frota, acima do limite, 96 h ou mais, sem posição, alertas não iniciados/em análise/aguardando contato/com manutenção agendada, bases afetadas, maior tempo acima do limite, sem classificação utilizável e encerrados ainda acima do limite. Todos permitem abrir a fila correspondente, mantendo bases/limite e limpando busca/situação/status/recorte anteriores. Conferir uma base na tabela restringe também a base selecionada.
+
+Cards e gráficos usam todas as situações das bases selecionadas. Busca, situação, status e recorte pertencem somente à fila e à exportação de veículos. Em acompanhamento = Em análise + Aguardando contato + Manutenção agendada **entre os veículos acima do limite**. Cobertura divide essa quantidade pelo total acima do limite; sem alertas, percentual ausente. Encerrados ainda acima do limite ficam explícitos e não são recuperações. Coletas sem qualidade não participam de alertas ou maior duração.
+
+CSV/XLSX incluem indicadores e resumo por base, além de veículos e histórico. As duas primeiras bases não são recortadas pela busca da fila e isso é informado no contexto. Não há mais série temporal fictícia na análise: evolução real dependerá do armazenamento das coletas.
+
+A consulta autenticada manual e o contrato interno estão preparados, mas não há fornecedor conectado. O botão Consultar integração retorna indisponibilidade até configurar o coletor privado. Nenhum token é solicitado na interface. Consulte [Integração do monitoramento](INTEGRACAO-MONITORAMENTO.md) para schema, autorização, tratamento de falhas e pendências de ativação. Notas permanecem somente na sessão, inclusive no caminho de dados reais preparado. A referência real é atualizada localmente a cada minuto sem renovar o instante da coleta; demonstração conserva referência congelada.
+
 ## Tabela prioritária e tratamento — 0.19.0
 
 O nome visível é **Monitoramento Ativo**; a permissão permanece `monitoring`, sem alterar os acessos cadastrados. Na demonstração, a ordem da visão analítica é filtros, aviso de demonstração, fila, cards e gráficos. Fontes/controles mais compactos são específicos da página; o celular mantém área de toque adequada e rolagem própria da tabela.

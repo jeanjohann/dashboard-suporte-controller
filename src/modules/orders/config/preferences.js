@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 export const sectionLabels = {
+  supportPerformance: 'Equipe de suporte',
   fieldLife: 'Vida em campo até primeira troca',
   maintenanceReasons: 'Motivos das manutenções',
   absorbedAnalysis: 'Serviços absorvidos pela Addlog',

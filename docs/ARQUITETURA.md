@@ -1,5 +1,11 @@
 # Arquitetura e organização do código
 
+## Entrega 0.21.0 — suporte e monitoramento
+
+A categoria Equipe de suporte reutiliza a base/filtros de OS; calendário e atribuição ficam em `supportPerformance.js`, exportação em `supportReport.js` e apresentação em `SupportPerformance.jsx`. Datas de execução/agendamento permanecem distintas, com critérios no [guia da equipe](EQUIPE-DE-SUPORTE.md).
+
+Monitoramento separa fonte (`useMonitoringSource.js`), contrato/transporte (`snapshotContract.js`/`monitoringClient.js`), regras (`monitoring.js`/`monitoringAnalytics.js`) e apresentação (`MonitoringPage`, `MonitoringQueue`, `MonitoringAnalytics`). O Worker possui uma rota autenticada para futuro Service Binding privado, sem serviço configurado nesta entrega. D1 e dados locais dos demais módulos permanecem com a mesma finalidade. [Contrato e limites da integração](INTEGRACAO-MONITORAMENTO.md).
+
 Este guia é o ponto de partida para estudar o sistema e localizar o código antes de fazer alterações. A versão 0.16.1 organiza arquivos por responsabilidade; os critérios de cálculo, nomes dos campos e formatos das bases permanecem os mesmos.
 
 ## Estrutura do projeto

@@ -7,6 +7,15 @@
 
 # Histórico de versões
 
+## 0.21.0 — 15/10/2026
+
+- Nova categoria Equipe de suporte nas OS: execução/agendamento separados, últimos sete dias, semana anterior, mês, ano, histórico completo e período personalizado pelos filtros compartilhados.
+- Cards, ranking, comparação com intervalo anterior equivalente, perfil/evolução, linhas de origem, CSV/XLSX e impressão. Efetivos e visitas improdutivas separados; sem responsável/data explícitos. Volume não representa qualidade ou produtividade por hora.
+- Monitoramento abre em Acompanhamento, com grade separada da Visão analítica e dos Relatórios. Busca, situação, status administrativo e recortes afetam toda a fila antes da paginação e a exportação.
+- Doze cards analíticos clicáveis, cobertura de tratamento, distribuição dos status e detalhamento por base. Encerramento administrativo não representa recuperação da comunicação.
+- Contrato v1, cliente da própria origem e porta autenticada para futuro coletor privado, com permissão de monitoramento no servidor, leitura limitada, validação e sanitização. Sem binding configurado retorna indisponibilidade; nenhuma API externa, token ou coleta automática foi ativado.
+- Consulta real manual preparada; falhas/parcialidade mantêm a frota anterior com coletas indisponíveis, sem fallback fictício. Demonstração permanece explícita e anotações seguem apenas na sessão. Documentação técnica/instrucional atualizada.
+
 ## 0.20.8 — 15/10/2026
 
 - Etapa R05: módulos carregados na primeira visita autorizada. Depois, permanecem montados e ocultos durante a navegação, conservando bases, filtros, ordenação, seleção e rascunhos. Operacional e Parque continuam compartilhando a mesma instância; administração conserva seu reinício ao sair.

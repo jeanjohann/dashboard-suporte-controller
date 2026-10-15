@@ -1,8 +1,11 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.8 — Módulos carregados na primeira visita e relatórios de OS após a importação da base. Páginas visitadas conservam filtros, dados e rascunhos durante a navegação autorizada. Medições e limites em [Desempenho e carregamento](docs/DESEMPENHO-E-CARREGAMENTO.md). Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.21.0 — Equipe de suporte com períodos, ranking e exportação. Monitoramento Ativo com acompanhamento separado da análise, cards que abrem a fila filtrada e consulta autenticada preparada para o futuro coletor. A API do fornecedor ainda não está conectada; anotações do monitoramento continuam somente na sessão. Páginas visitadas conservam estado durante a navegação autorizada.
 
 ## Documentação do projeto
+
+- [Equipe de suporte — indicadores e períodos](docs/EQUIPE-DE-SUPORTE.md)
+- [Integração do monitoramento — contrato técnico e ativação futura](docs/INTEGRACAO-MONITORAMENTO.md)
 
 [Revisão técnica e refatoração gradual](docs/REVISAO-E-REFATORACAO.md): diagnóstico, etapas concluídas, verificações e sequência proposta.
 

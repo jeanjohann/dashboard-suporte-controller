@@ -23,6 +23,7 @@ export const dashboardCategories = [
     sections: ['absorbedAnalysis', 'clientCosts', 'costComposition', 'costEvolution', 'finance'],
   },
   { key: 'technicians', label: 'Técnicos', sections: ['technicians', 'technicianContext'] },
+  { key: 'support', label: 'Equipe de suporte', sections: ['supportPerformance'] },
   {
     key: 'equipment',
     label: 'Equipamentos',

@@ -164,3 +164,55 @@ test('configuração incompleta recusa APIs e rotas desconhecidas não viram HTM
     db.close();
   }
 });
+
+test('monitoramento exige página autorizada, serviço privado e GET; não encaminha identidade nem erros do fornecedor', async () => {
+  const db = database();
+  try {
+    const admin = createHandler(async () => owner),
+      e = env(db);
+    const path = '/api/monitoring/snapshot';
+    assert.equal((await admin(request('GET', null, path), e)).status, 503);
+    await admin(request('PUT', input), e);
+    let calls = 0;
+    const snapshot = {
+      schemaVersion: 1,
+      complete: true,
+      referenceAt: '2026-10-15T12:00:00Z',
+      collections: [],
+      vehicles: [],
+      secret: 'private-token',
+    };
+    e.MONITORING_SERVICE = {
+      async fetch(req) {
+        calls++;
+        assert.equal(req.url, 'https://monitoring.internal/snapshot');
+        assert.equal(req.headers.get('Cookie'), null);
+        assert.equal(req.headers.get('Cf-Access-Jwt-Assertion'), null);
+        return Response.json(snapshot);
+      },
+    };
+    const member = createHandler(async () => input.email);
+    assert.equal((await member(request('GET', null, path), e)).status, 403);
+    assert.equal(calls, 0);
+    await admin(request('PUT', { ...input, version: 1, pages: ['monitoring'] }), e);
+    const response = await member(request('GET', null, path), e);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+    assert.doesNotMatch(await response.text(), /private-token/);
+    assert.equal((await member(request('POST', null, path), e)).status, 405);
+    e.MONITORING_SERVICE = { fetch: async () => Response.json({ ...snapshot, complete: false }) };
+    assert.equal((await member(request('GET', null, path), e)).status, 502);
+    e.MONITORING_SERVICE = {
+      fetch: async () => {
+        throw Error('private-token');
+      },
+    };
+    const failure = await member(request('GET', null, path), e);
+    assert.equal(failure.status, 502);
+    assert.doesNotMatch(await failure.text(), /private-token/);
+    await admin(request('PUT', { ...input, version: 2, active: false }), e);
+    assert.equal((await member(request('GET', null, path), e)).status, 403);
+  } finally {
+    db.close();
+  }
+});

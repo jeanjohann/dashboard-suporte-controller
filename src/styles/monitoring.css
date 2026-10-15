@@ -242,6 +242,48 @@
   display: block;
   margin-top: 7px;
 }
+.monitoring-page > main .monitoring-metric-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  text-align: left;
+  padding: 14px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+  min-width: 0;
+}
+.monitoring-page > main .monitoring-metric-card:hover {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent-soft);
+}
+.monitoring-page .monitoring-metric-card strong {
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+.monitoring-page .monitoring-metric-card small {
+  font-weight: 400;
+  color: var(--ui-muted);
+}
+.monitoring-filter-fields > button {
+  align-self: end;
+  justify-self: start;
+}
+.monitoring-queue-filters {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(200px, 1.4fr) repeat(3, minmax(140px, 1fr));
+  gap: 10px;
+  border-top: 1px solid var(--ui-border);
+  padding-top: 10px;
+}
+.monitoring-queue-filters input {
+  width: 100%;
+}
+.monitoring-queue-filters .scope {
+  grid-column: 1/-1;
+}
 .monitoring-charts {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -284,6 +326,9 @@
   width: 100%;
 }
 @media (max-width: 1000px) {
+  .monitoring-queue-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .monitoring-charts {
     grid-template-columns: 1fr;
   }
@@ -294,6 +339,9 @@
   }
 }
 @media (max-width: 550px) {
+  .monitoring-queue-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .monitoring-fields {
     grid-template-columns: 1fr;
   }

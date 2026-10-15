@@ -50,6 +50,11 @@ export function MonitoringQueue({
   const [message, setMessage] = useState('');
   const [sort, setSort] = useState(null);
   const orderedRows = sortMonitoringRows(result.rows, sort, notes);
+  const pages = Math.max(1, Math.ceil(result.rows.length / 10));
+  useEffect(() => {
+    if (page >= pages) setPage(pages - 1);
+    if (selected && !detail) onSelect(null);
+  }, [page, pages, selected, Boolean(detail)]);
   function orderBy(key) {
     setSort((previous) =>
       previous?.key === key
@@ -81,7 +86,7 @@ export function MonitoringQueue({
       const next = recordMonitoringUpdate(saved, draft);
       onRecord(detail.key, next);
       setDraft((previous) => ({ ...previous, text: '' }));
-      setMessage('Atualização registrada nesta sessão de demonstração.');
+      setMessage('Atualização registrada nesta sessão. Exporte o histórico antes de sair.');
     } catch (error) {
       setMessage(error.message);
     }
@@ -91,7 +96,7 @@ export function MonitoringQueue({
     <Section
       title="Fila de acompanhamento"
       visible={visible}
-      help="Demonstração com dados fictícios. Uma linha por veículo/base, em ordem inicial de maior duração conhecida. Placa, ID rastreador, cliente/base, última atualização, alimentação em volts e perfil são apresentados sem inferir defeito elétrico ou configuração. Os sinais usam faixas fixas de 2/3/4 dias, independentemente do limite de atenção selecionado. Coleta desatualizada, data inválida/futura e ausência de registro recebem sinal neutro. Abaixo de 2 dias não confirma que está online neste instante. O status de acompanhamento é administrativo; clique nele para consultar o histórico e registre atualizações explicitamente. Tudo permanece somente nesta sessão. A impressão inclui a página exibida e o histórico selecionado; CSV/XLSX incluem todo o recorte."
+      help="Uma linha por veículo/base, em ordem inicial de maior duração conhecida. A demonstração é explicitamente fictícia. Placa, ID rastreador, cliente/base, última atualização, alimentação em volts e perfil são apresentados sem inferir defeito elétrico ou configuração. Os sinais usam faixas fixas de 2/3/4 dias, independentemente do limite de atenção selecionado. Coleta desatualizada, data inválida/futura e ausência de registro recebem sinal neutro. Abaixo de 2 dias não confirma que está online neste instante. O status de acompanhamento é administrativo; clique nele para consultar o histórico e registre atualizações explicitamente. Busca, situação, status e recorte filtram a fila inteira antes da ordenação e paginação. Tudo permanece somente nesta sessão. A impressão inclui a página exibida e o histórico selecionado; CSV/XLSX incluem todo o recorte."
     >
       <div className="monitoring-legend" aria-label="Legenda do tempo sem atualização">
         {legend.map(([tone, label]) => (
@@ -290,8 +295,8 @@ export function MonitoringQueue({
             </div>
           </div>
           <p className="scope">
-            Histórico manual desta sessão de demonstração. Encerrar acompanhamento não confirma
-            recuperação da comunicação. A API e a persistência ainda serão conectadas.
+            Histórico manual desta sessão. Encerrar acompanhamento não confirma recuperação da
+            comunicação. A API e a persistência ainda serão conectadas.
           </p>
         </section>
       )}

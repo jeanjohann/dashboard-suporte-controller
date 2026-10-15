@@ -2,9 +2,11 @@
 import XLSX from 'xlsx';
 import { csv } from '../../../shared/export/exports.js';
 import { monitoringStates, monitoringIndicator } from './monitoring.js';
+import { monitoringAnalytics } from './monitoringAnalytics.js';
 
 /** Monta o recorte completo e o resumo das bases; a situação filtra somente as linhas detalhadas. */
 export function monitoringReport(result, filters, notes = {}) {
+  const analysis = monitoringAnalytics(result, notes);
   const mode = result.demonstration ? 'DEMONSTRAÇÃO — DADOS FICTÍCIOS' : 'Dados de monitoramento';
   return {
     context: [
@@ -14,7 +16,7 @@ export function monitoringReport(result, filters, notes = {}) {
       ['Critério', 'Limites provisórios 48/72/96 h; coleta utilizável há menos de 2 h.'],
       [
         'Base dos cards',
-        'Todas as situações dos clientes selecionados; tabela respeita o filtro de situação.',
+        'Todas as situações das bases selecionadas; veículos respeitam situação, status, recorte e busca da fila.',
       ],
       ['Persistência', 'Acompanhamento nesta etapa: apenas memória da sessão.'],
       [
@@ -72,6 +74,34 @@ export function monitoringReport(result, filters, notes = {}) {
         group.percentage / 100,
       ]),
     ],
+    indicators: [
+      ['Indicador', 'Valor', 'Base / unidade'],
+      ['Veículos monitorados', result.totals.fleet, 'Todas as situações das bases selecionadas'],
+      ['Acima do limite', analysis.alerts, 'Coleta utilizável; limite selecionado'],
+      ['96 h ou mais', result.totals.critical, 'Coleta utilizável'],
+      ['Bases afetadas', analysis.affectedBases, 'Bases com ao menos um veículo acima do limite'],
+      [
+        'Maior tempo acima do limite',
+        analysis.maximumHours,
+        'Horas; datas válidas e coleta utilizável',
+      ],
+      [
+        'Sem classificação utilizável',
+        analysis.unknown,
+        'Sem posição, data inválida ou coleta desatualizada',
+      ],
+      [
+        'Em acompanhamento',
+        analysis.active,
+        'Em análise, Aguardando contato ou Manutenção agendada, acima do limite',
+      ],
+      [
+        'Cobertura de acompanhamento',
+        analysis.coverage,
+        'Fração 0–1 sobre os veículos acima do limite; não é recuperação',
+      ],
+      ...analysis.stages.map((item) => [item.label, item.value, 'Veículos acima do limite']),
+    ],
     history: [
       [
         'Modo',
@@ -108,6 +138,12 @@ export function monitoringCsv(tables) {
     [],
     ...tables.vehicles,
     [],
+    ['Resumo por base'],
+    ...tables.summary,
+    [],
+    ['Indicadores das bases selecionadas'],
+    ...tables.indicators,
+    [],
     ['Histórico do acompanhamento'],
     ...tables.history,
   ]);
@@ -120,12 +156,17 @@ export function monitoringWorkbook(tables) {
     ['Contexto', tables.context],
     ['Veículos', tables.vehicles],
     ['Resumo por base', tables.summary],
+    ['Indicadores', tables.indicators],
     ['Histórico', tables.history],
   ]) {
     const sheet = XLSX.utils.aoa_to_sheet(rows);
     if (name === 'Resumo por base')
       for (let row = 2; row <= rows.length; row++)
         if (sheet[`E${row}`]) sheet[`E${row}`].z = '0.0%';
+    if (name === 'Indicadores') {
+      const row = rows.findIndex((entry) => entry[0] === 'Cobertura de acompanhamento') + 1;
+      if (sheet[`B${row}`]) sheet[`B${row}`].z = '0.0%';
+    }
     XLSX.utils.book_append_sheet(book, sheet, name);
   }
   return XLSX.write(book, { type: 'array', bookType: 'xlsx' });

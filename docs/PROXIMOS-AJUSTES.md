@@ -24,6 +24,8 @@ Atualizada em 15/10/2026. Esta é a fila consolidada atual; observações de ver
 
 ## Já entregues — não recolocar na fila
 
+Equipe de suporte e organização do Monitoramento (0.21.0): períodos, execução/agendamento, ranking e relatórios; acompanhamento separado da análise, cards e filtros da fila. Contrato e consulta autenticada para futuro coletor preparados. Isso não conclui A12–A14: API do fornecedor, coleta automática, histórico persistido, alertas e permissões por base ainda dependem das definições documentadas em [Integração do monitoramento](INTEGRACAO-MONITORAMENTO.md).
+
 Correções da análise crítica (0.20.6): ordenação completa do operacional, seletor de comparação com coluna ausente, CSVs financeiros numéricos, formato das bases XLSX, reconhecimento de delimitadores entre aspas e avisos de status/pagamento/cabeçalhos sem mudança dos totais. Compatibilidade e limites em [Correções da análise crítica](CORRECOES-DA-ANALISE-CRITICA.md). Novos cruzamentos e alterações de regra continuam nas dependências da fila.
 
 Vida em campo (0.20.5): total identificado, participação das primeiras trocas e tempo médio acompanhado, com revisão/cancelamentos e bases explícitas. Tabelas, CSV e impressão acompanham os indicadores. Uma estimativa de sobrevivência permanece uma proposta futura que exige validar cobertura do histórico e encerramento da observação; não foi ativada nesta etapa. Critérios em [Vida em campo](VIDA-EM-CAMPO.md).

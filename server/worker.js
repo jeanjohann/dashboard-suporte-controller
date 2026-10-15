@@ -1,8 +1,10 @@
 /**
  * API de usuários do Worker. Autentica a identidade e autoriza cada operação no servidor.
- * Este serviço não recebe nem armazena planilhas, registros operacionais ou relatórios.
+ * Planilhas e relatórios importados continuam locais. A porta de telemetria preparada usa serviço privado,
+ * sem coletor configurado nem armazenamento de frota nesta entrega.
  */
 import { usersSchema } from './schema.js';
+import { monitoringResponse } from './monitoring.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
   normalizeEmail,
@@ -93,6 +95,11 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
+      if (url.pathname === '/api/monitoring/snapshot') {
+        if (user.role !== 'admin' && !user.pages.includes('monitoring'))
+          return reply({ error: 'Acesso ao monitoramento não autorizado.' }, 403);
+        return monitoringResponse(request, env);
+      }
       if (url.pathname !== '/api/admin/users') return reply({ error: 'Rota não encontrada.' }, 404);
       if (user.role !== 'admin')
         return reply({ error: 'Somente administradores podem gerir usuários.' }, 403);

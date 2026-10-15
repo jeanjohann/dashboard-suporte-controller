@@ -7,6 +7,7 @@ import { Workspace } from './app/Workspace.jsx';
 // A sequência dos estilos preserva a precedência dos ajustes de identidade, tema e layout.
 // CSS do Monitoramento continua antes dos estilos globais, mesmo com sua página carregada sob demanda.
 import './styles/monitoring.css';
+import './styles/support.css';
 import './styles/style.css';
 import './styles/identity.css';
 import './styles/theme.css';
