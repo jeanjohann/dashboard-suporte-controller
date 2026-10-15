@@ -81,7 +81,7 @@ Os [diagramas do sistema e da leitura dos arquivos](DIAGRAMAS-DO-SISTEMA.md) apr
 Monitoramento Ativo possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONITORAMENTO-DE-FROTA.md). Nesta etapa seus dados fictícios ficam isolados, sem API, agendamento ou armazenamento no servidor. `MonitoringPage.jsx` coordena filtros e relatórios; `MonitoringQueue.jsx` reúne a tabela prioritária e o formulário de tratamento. O domínio acrescenta uma entrada ao histórico somente após Salvar atualização; os registros ficam na memória da sessão e acompanham a exportação do recorte.
 
 1. `src/main.jsx` aplica o tema e a verificação de acesso antes de montar `app/Workspace.jsx`.
-2. O Workspace mantém OS e operacional na memória da sessão e coordena as páginas autorizadas. As páginas permitidas continuam montadas, mas ocultas durante a navegação, preservando seus filtros. Uma página sem permissão não é montada.
+2. O Workspace mantém OS e operacional na memória da sessão e coordena as páginas autorizadas. Desde 0.20.8, cada página é carregada na primeira visita; depois permanece montada, mas oculta durante a navegação, preservando filtros e rascunhos. Uma página sem permissão não é montada. Administração mantém seu reinício ao sair.
 3. Os importadores transformam Excel/CSV em estruturas analisáveis, preservando células e referências da origem. Os problemas são apontados para revisão; a planilha não é corrigida.
 4. As funções em `domain/` calculam os indicadores. Quando um vínculo exige contexto completo, como uma troca de equipamento, usam a base original antes de aplicar o recorte.
 5. Os componentes apresentam o resultado, as exclusões e as linhas de origem. Exportação e impressão usam os fluxos locais com verificação de permissão.
@@ -132,6 +132,14 @@ Os componentes `OrdersImportPanel`, `OrdersFiltersPanel`, `OrdersReportMenu`, `O
 
 `orders/components/FieldLifeCards.jsx` apresenta os cards e seus balões. `FieldLifePanel.jsx` coordena categoria, início, filtros, limite, tabelas e impressão. `orders/domain/fieldLifeSummary.js` monta as linhas numéricas do resumo CSV com unidades e denominadores. Os caminhos são relativos a `src/modules/`. Consulte [Vida em campo](VIDA-EM-CAMPO.md) antes de interpretar as duas médias ou alterar suas populações.
 
+## Carregamento por módulo — 0.20.8
+
+`app/DeferredPage.jsx` combina primeira visita, preservação da instância, carregamento e falha isolada. As declarações `lazy` ficam fora de `Workspace` e `OrdersPage`, mantendo identidades estáveis. Operacional e Parque continuam com uma única instância; o controlador das OS e as bases permanecem em seus níveis anteriores.
+
+`orders/components/OrdersReports.jsx` recebe a sessão e é carregado quando há dados. Aguardar esse módulo não elimina nem corrige a base importada. `vite.config.js` separa React, gráficos e planilhas; a ordem do CSS continua explícita em `main.jsx`. A compilação gera manifesto e `scripts/bundle-report.mjs` informa o peso da entrada e das dependências estáticas até a tela inicial de OS.
+
+Medições, limites e roteiro de conferência estão em [Desempenho e carregamento](DESEMPENHO-E-CARREGAMENTO.md). Primeira visita pode carregar código adicional; retornos preservam o estado enquanto a página continuar autorizada. Não transformar a preservação em montagem antecipada de todas as páginas, nem desmontar páginas visitadas a cada troca de menu.
+
 ## Dependências e limites
 
 - `components/` contém elementos reaproveitados; o cálculo específico deve ficar no domínio correspondente. Existem dependências históricas de componentes para contexto de aplicação e configurações de OS; esta organização não tenta eliminar todas elas de uma vez.
@@ -167,7 +175,7 @@ npx wrangler deploy --dry-run --outdir .worker-build
 - `check` reúne caminhos, formatação, testes e compilação; interrompe ao encontrar uma falha.
 - O dry-run do Wrangler verifica o empacotamento do Worker e seus bindings sem publicar.
 
-Há um teste opcional com um arquivo Excel real, ignorado quando o arquivo esperado não está disponível. A suíte não deve exigir dados de clientes no repositório. A compilação também pode avisar sobre o tamanho do pacote: esse aviso já existe e a divisão de carregamento por página fica para uma evolução própria.
+Há um teste opcional com um arquivo Excel real, ignorado quando o arquivo esperado não está disponível. A suíte não deve exigir dados de clientes no repositório. Desde 0.20.8 o carregamento é dividido por módulo e relatórios de OS. Um eventual aviso de tamanho deve levar à análise das dependências e medições; não aumentar o limite apenas para esconder o aviso. O relatório de tamanho da compilação não substitui medições de rede/renderização.
 
 Depois das verificações automáticas, confira no navegador os fluxos afetados: navegação, importação, filtros, relatórios e, quando aplicável, login e permissões. Uma compilação bem-sucedida não substitui essa conferência visual.
 

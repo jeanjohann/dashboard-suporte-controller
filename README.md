@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.20.7 — Importação de OS aceita a aba atual OS 2025_26 e mantém OS 2025. Importação conjunta usa o mesmo reconhecimento; a tela informa a aba lida. Monitoramento Ativo segue com integração real em preparação.
+**Versão:** 0.20.8 — Módulos carregados na primeira visita e relatórios de OS após a importação da base. Páginas visitadas conservam filtros, dados e rascunhos durante a navegação autorizada. Medições e limites em [Desempenho e carregamento](docs/DESEMPENHO-E-CARREGAMENTO.md). Monitoramento Ativo segue com integração real em preparação.
 
 ## Documentação do projeto
 

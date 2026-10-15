@@ -1,6 +1,6 @@
 # Revisão técnica e refatoração gradual
 
-Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1, 0.20.2, 0.20.3 e 0.20.4. Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. Deve acompanhar as próximas etapas.
+Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1, 0.20.2, 0.20.3, 0.20.4 e 0.20.8 (15/10/2026). Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. O diagnóstico inicial abaixo descreve a base anterior às entregas.
 
 ## Diagnóstico inicial
 
@@ -89,6 +89,14 @@ A comparação antes/depois verificou conteúdo, controles e dimensões das oito
 
 No consumo, apenas o rótulo da categoria **Investigação** passa a **Acompanhamento**. A chave `investigation` e os títulos dos relatórios permanecem para conservar configurações e comportamento.
 
+## Quinta etapa entregue — medição e carregamento
+
+A versão 0.20.8 conclui R05 com comparação da compilação de produção antes/depois. A primeira tentativa de separar somente páginas reduziu pouco o JavaScript até as OS e deixou o tempo de abertura praticamente igual. A entrega também adia os relatórios de OS até existir base e separa as bibliotecas de gráficos e planilhas. Cinco execuções controladas por versão mediram cerca de 48% menos JavaScript até a primeira tela de OS e mediana de 1,81 s para 1,31 s, com bases vazias e permissões fictícias.
+
+Páginas são carregadas na primeira visita autorizada e continuam montadas depois. Filtros, bases, seleção, rascunhos e histórico da sessão são conservados na navegação. Operacional/Parque compartilham a instância existente. Administração conserva seu comportamento de desmontar ao sair. Negar/revogar acesso impede a montagem; uma falha isolada não força a recarga do sistema nem das outras páginas. O lote continua podendo alimentar páginas antes da primeira visita.
+
+Metodologia, tamanhos, custo da primeira visita, limites dos resultados, responsabilidades e conferência estão em [Desempenho e carregamento](DESEMPENHO-E-CARREGAMENTO.md). Não se trata de medição completa de cálculos com grandes planilhas ou do ambiente Cloudflare real. Os demais itens da fila não foram iniciados nesta entrega.
+
 ## Critérios preservados nas etapas
 
 - Mesmas chaves do IndexedDB, formato do histórico e backup. Nenhuma migração, limpeza ou transferência de dados.
@@ -98,7 +106,7 @@ No consumo, apenas o rótulo da categoria **Investigação** passa a **Acompanha
 - Critérios de elegibilidade, duplicidades, vínculos, conversão de unidades, referências de investigação e totais financeiros permanecem no domínio existente.
 - Ordenação, seleção, paginação, escolha de seções, impressão e exportação continuam com seus critérios atuais.
 - Ações de importação/exportação conservam suas verificações de autorização. O acompanhamento permanece local neste navegador.
-- Páginas autorizadas continuam montadas durante a navegação; os filtros e bases da sessão são preservados.
+- Após a primeira visita, páginas autorizadas continuam montadas durante a navegação; os filtros e bases da sessão são preservados. Páginas ainda não visitadas não são montadas antecipadamente (0.20.8).
 
 ## Validação da etapa
 
@@ -110,12 +118,12 @@ Executar também `npm run check`: caminhos locais, formatação, testes e build.
 
 ## Sequência proposta
 
-| Etapa | Escopo                                                                               | Situação                                                           |
-| ----- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| R01   | Separar acompanhamento, persistência local, painel de arquivos e formatos do consumo | Entregue em 0.20.1                                                 |
-| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Entregue em 0.20.2                                                 |
-| R03   | Mapear CSS e consolidar apresentação dos controles compartilhados                    | Entregue em 0.20.3                                                 |
-| R04   | Dividir a coordenação e os grandes relatórios de OS                                  | Entregue em 0.20.4: controlador e painéis antes reunidos na página |
-| R05   | Medir e avaliar carregamento por módulo, mantendo bases e estado de navegação        | Depende de medições e conferência do ciclo de vida das páginas     |
+| Etapa | Escopo                                                                               | Situação                                                                |
+| ----- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| R01   | Separar acompanhamento, persistência local, painel de arquivos e formatos do consumo | Entregue em 0.20.1                                                      |
+| R02   | Separar prévia/importação, filtros e demais relatórios do consumo                    | Entregue em 0.20.2                                                      |
+| R03   | Mapear CSS e consolidar apresentação dos controles compartilhados                    | Entregue em 0.20.3                                                      |
+| R04   | Dividir a coordenação e os grandes relatórios de OS                                  | Entregue em 0.20.4: controlador e painéis antes reunidos na página      |
+| R05   | Medir e avaliar carregamento por módulo, mantendo bases e estado de navegação        | Entregue em 0.20.8, com medições e conferência de preservação de estado |
 
 Cada entrega deve ter um escopo limitado, revisão das mudanças e documentação. Alterações de regra de negócio ou formato de armazenamento precisam ser tratadas como mudanças próprias, com compatibilidade definida antes de implementação.

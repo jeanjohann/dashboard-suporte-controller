@@ -3,20 +3,42 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { useAccess } from '../shared/security/Access.jsx';
-import { UsersPage } from '../modules/users/components/UsersPage.jsx';
 import { allowsPage, allowsSource } from '../shared/security/permissions.js';
 import { authorizeAction, accessUser } from '../shared/security/accessClient.js';
-import React, { useState } from 'react';
-import { LinesPage } from '../modules/consumption/components/LinesPage.jsx';
-import { OperationalPage } from '../modules/operational/components/OperationalPage.jsx';
-import { ImportPage } from '../modules/imports/components/ImportPage.jsx';
-import {
-  readConsumptionHistory,
-  writeConsumptionHistory,
-} from '../modules/consumption/data/consumptionHistory.js';
-import { mergeBulkHistory } from '../modules/imports/domain/bulkImport.js';
-import { OrdersPage } from '../modules/orders/components/OrdersPage.jsx';
-import { MonitoringPage } from '../modules/monitoring/components/MonitoringPage.jsx';
+import React, { lazy, useState } from 'react';
+import { DeferredPage } from './DeferredPage.jsx';
+
+// Declarações estáveis: recriar lazy dentro do Workspace reiniciaria os estados das páginas.
+const UsersPage = lazy(() =>
+  import('../modules/users/components/UsersPage.jsx').then((module) => ({
+    default: module.UsersPage,
+  })),
+);
+const LinesPage = lazy(() =>
+  import('../modules/consumption/components/LinesPage.jsx').then((module) => ({
+    default: module.LinesPage,
+  })),
+);
+const OperationalPage = lazy(() =>
+  import('../modules/operational/components/OperationalPage.jsx').then((module) => ({
+    default: module.OperationalPage,
+  })),
+);
+const ImportPage = lazy(() =>
+  import('../modules/imports/components/ImportPage.jsx').then((module) => ({
+    default: module.ImportPage,
+  })),
+);
+const OrdersPage = lazy(() =>
+  import('../modules/orders/components/OrdersPage.jsx').then((module) => ({
+    default: module.OrdersPage,
+  })),
+);
+const MonitoringPage = lazy(() =>
+  import('../modules/monitoring/components/MonitoringPage.jsx').then((module) => ({
+    default: module.MonitoringPage,
+  })),
+);
 /** Mantém as bases da sessão e coordena páginas autorizadas e importações conjuntas. */
 export function Workspace() {
   const { user } = useAccess();
@@ -33,9 +55,14 @@ export function Workspace() {
       if ((Array.isArray(value) ? value.length : value) && !allowsSource(accessUser() || user, key))
         throw Error('Você não tem permissão para importar esta base.');
     if (batch.consumption.length) {
+      // Dependências do lote são carregadas somente quando há consumo a gravar.
+      const [history, { mergeBulkHistory }] = await Promise.all([
+        import('../modules/consumption/data/consumptionHistory.js'),
+        import('../modules/imports/domain/bulkImport.js'),
+      ]);
       // Confirma a gravação local antes de atualizar as outras bases e avisar a tela de consumo.
-      const archive = await readConsumptionHistory();
-      await writeConsumptionHistory(mergeBulkHistory(archive, batch));
+      const archive = await history.readConsumptionHistory();
+      await history.writeConsumptionHistory(mergeBulkHistory(archive, batch));
       setConsumptionRevision((value) => value + 1);
     }
     if (batch.orders) setOrders(batch.orders);
@@ -62,63 +89,94 @@ export function Workspace() {
     );
   return (
     <>
-      {current === 'users' && <UsersPage onPage={setPage} />}
-      <div hidden={current !== 'monitoring'}>
-        {allowed('monitoring') && <MonitoringPage onPage={setPage} />}
-      </div>
-      <div hidden={current !== 'imports'}>
-        {allowed('imports') && (
-          <ImportPage
-            onPage={setPage}
-            onApply={applyBatch}
-            orders={allowed('orders') || allowed('operational-analysis') ? orders : null}
-            operational={
-              allowed('operational') || allowed('operational-analysis') ? operational : null
-            }
-            logistics={allowed('operational-analysis') ? logistics : null}
-          />
-        )}
-      </div>
-      <div hidden={current !== 'orders'}>
+      <DeferredPage
+        active={current === 'users'}
+        allowed={allowed('users')}
+        page="users"
+        onPage={setPage}
+        keepMounted={false}
+      >
+        <UsersPage onPage={setPage} />
+      </DeferredPage>
+      <DeferredPage
+        active={current === 'monitoring'}
+        allowed={allowed('monitoring')}
+        page="monitoring"
+        onPage={setPage}
+      >
+        <MonitoringPage onPage={setPage} />
+      </DeferredPage>
+      <DeferredPage
+        active={current === 'imports'}
+        allowed={allowed('imports')}
+        page="imports"
+        onPage={setPage}
+      >
+        <ImportPage
+          onPage={setPage}
+          onApply={applyBatch}
+          orders={allowed('orders') || allowed('operational-analysis') ? orders : null}
+          operational={
+            allowed('operational') || allowed('operational-analysis') ? operational : null
+          }
+          logistics={allowed('operational-analysis') ? logistics : null}
+        />
+      </DeferredPage>
+      <DeferredPage
+        active={current === 'orders'}
+        allowed={allowed('orders')}
+        page="orders"
+        onPage={setPage}
+      >
         {/* Manter a página permitida montada conserva filtros; sem permissão, ela não é criada. */}
-        {allowed('orders') && (
-          <OrdersPage
-            onPage={setPage}
-            onImport={setOrders}
-            operational={operational}
-            source={orders}
-          />
-        )}
-      </div>
-      <div hidden={current !== 'lines'}>
-        {allowed('lines') && (
-          <LinesPage
-            onPage={setPage}
-            operational={operational}
-            onOperationalChange={setOperational}
-            reloadToken={consumptionRevision}
-          />
-        )}
-      </div>
-      <div hidden={!['operational', 'operational-analysis'].includes(current)}>
-        {(allowed('operational') || allowed('operational-analysis')) && (
-          <OperationalPage
-            page={
-              ['operational', 'operational-analysis'].includes(current)
-                ? current
-                : allowed('operational')
-                  ? 'operational'
-                  : 'operational-analysis'
-            }
-            onPage={setPage}
-            orders={orders}
-            source={operational}
-            setSource={setOperational}
-            logistics={allowed('operational-analysis') ? logistics : null}
-            setLogistics={setLogistics}
-          />
-        )}
-      </div>
+        <OrdersPage
+          onPage={setPage}
+          onImport={setOrders}
+          operational={operational}
+          source={orders}
+        />
+      </DeferredPage>
+      <DeferredPage
+        active={current === 'lines'}
+        allowed={allowed('lines')}
+        page="lines"
+        onPage={setPage}
+      >
+        <LinesPage
+          onPage={setPage}
+          operational={operational}
+          onOperationalChange={setOperational}
+          reloadToken={consumptionRevision}
+        />
+      </DeferredPage>
+      <DeferredPage
+        active={['operational', 'operational-analysis'].includes(current)}
+        allowed={allowed('operational') || allowed('operational-analysis')}
+        page={
+          ['operational', 'operational-analysis'].includes(current)
+            ? current
+            : allowed('operational')
+              ? 'operational'
+              : 'operational-analysis'
+        }
+        onPage={setPage}
+      >
+        <OperationalPage
+          page={
+            ['operational', 'operational-analysis'].includes(current)
+              ? current
+              : allowed('operational')
+                ? 'operational'
+                : 'operational-analysis'
+          }
+          onPage={setPage}
+          orders={orders}
+          source={operational}
+          setSource={setOperational}
+          logistics={allowed('operational-analysis') ? logistics : null}
+          setLogistics={setLogistics}
+        />
+      </DeferredPage>
     </>
   );
 }

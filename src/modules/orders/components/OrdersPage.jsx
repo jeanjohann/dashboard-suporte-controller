@@ -1,5 +1,5 @@
 /** Coordena categorias, preferências e contexto dos relatórios de OS; estado e apresentação têm responsabilidades próprias. */
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { PrintContext, ExpansionContext } from '../../../components/Section.jsx';
@@ -9,23 +9,10 @@ import { useOrdersSession } from '../hooks/useOrdersSession.js';
 import { OrdersImportPanel } from './OrdersImportPanel.jsx';
 import { OrdersFiltersPanel } from './OrdersFiltersPanel.jsx';
 import { OrdersCategories } from './OrdersReportMenu.jsx';
-import { OrdersLifecyclePanel } from './OrdersLifecyclePanel.jsx';
-import { OrdersSwapsPanel } from './OrdersSwapsPanel.jsx';
-import { OrdersRecordsPanel } from './OrdersRecordsPanel.jsx';
-import {
-  OrdersMonthlyPanel,
-  OrdersFinancePanel,
-  OrdersOperationsPanel,
-  OrdersCallsPanel,
-} from './OrdersTotalsPanels.jsx';
-import { DashboardOverview } from './DashboardOverview.jsx';
-import { SummaryCards } from './SummaryCards.jsx';
-import { Technicians } from './Technicians.jsx';
-import { DescriptiveReport } from './DescriptiveReport.jsx';
-import { FieldLifePanel } from './FieldLifePanel.jsx';
-import { ExtendedInsights } from './ExtendedInsights.jsx';
-import { AdvancedInsights } from './AdvancedInsights.jsx';
-import { Explorers } from './Explorers.jsx';
+// Identidade estável para conservar o estado dos relatórios após a primeira importação.
+const OrdersReports = lazy(() =>
+  import('./OrdersReports.jsx').then((module) => ({ default: module.OrdersReports })),
+);
 
 /** Mantém a página montada no Workspace e conserva a ordem dos relatórios e seus identificadores. */
 export function OrdersPage({ onPage, onImport, operational, source }) {
@@ -63,19 +50,8 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
     extraColumns,
     setExtraColumns,
     referenceDate,
-    setReferenceDate,
-    cycleState,
-    setCycleState,
     importedPeriod,
     selected,
-    summary,
-    financial,
-    monthly,
-    devices,
-    lifecycle,
-    displayedPeriods,
-    review,
-    restoreFilters,
     records,
   } = session;
   const { setSearch, setPage } = records;
@@ -112,92 +88,22 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                     layoutMessage={layoutMessage}
                     setExpansion={setExpansion}
                   />
-                  {category === 'overview' && (
-                    <DashboardOverview
-                      original={data}
-                      filters={filters}
+                  <Suspense
+                    fallback={
+                      <section className="panel" role="status">
+                        <h2>Preparando análises…</h2>
+                        <p>Aguarde um instante.</p>
+                      </section>
+                    }
+                  >
+                    <OrdersReports
+                      session={session}
+                      category={category}
+                      visible={visible}
                       operational={operational}
                       onPage={onPage}
                     />
-                  )}
-                  <SummaryCards
-                    data={selected}
-                    financial={financial}
-                    devices={devices}
-                    visible={visible.summary && category !== 'overview'}
-                    filters={filters}
-                  />
-                  <OrdersMonthlyPanel
-                    monthly={monthly}
-                    selected={selected}
-                    category={category}
-                    visible={visible.monthly && category !== 'overview'}
-                  />
-                  <Technicians data={selected} visible={visible.technicians} />
-                  <DescriptiveReport
-                    original={data}
-                    data={selected}
-                    devices={devices}
-                    lifecycle={lifecycle}
-                    filename={filename}
-                    filters={filters}
-                    referenceDate={referenceDate}
-                    visible={visible.descriptive}
-                  />
-                  <FieldLifePanel
-                    original={data}
-                    data={selected}
-                    filename={filename}
-                    filters={filters}
-                    visible={visible.fieldLife}
-                  />
-                  <ExtendedInsights
-                    original={data}
-                    data={selected}
-                    visibility={visible}
-                    operational={operational?.data || operational}
-                  />
-                  <AdvancedInsights
-                    original={data}
-                    data={selected}
-                    devices={devices}
-                    lifecycle={lifecycle}
-                    visibility={visible}
-                    filename={filename}
-                    filters={filters}
-                  />
-                  <Explorers
-                    key={filename}
-                    visibility={visible}
-                    data={selected}
-                    filename={filename}
-                    filters={filters}
-                    onRestoreFilters={restoreFilters}
-                  />
-                  <OrdersLifecyclePanel
-                    lifecycle={lifecycle}
-                    displayedPeriods={displayedPeriods}
-                    cycleState={cycleState}
-                    setCycleState={setCycleState}
-                    referenceDate={referenceDate}
-                    setReferenceDate={setReferenceDate}
-                    visible={visible.lifecycle}
-                  />
-                  <OrdersSwapsPanel devices={devices} visible={visible.swaps} />
-                  <OrdersFinancePanel financial={financial} visible={visible.finance} />
-                  <OrdersOperationsPanel
-                    summary={summary}
-                    category={category}
-                    visible={visible.operations}
-                  />
-                  <OrdersCallsPanel summary={summary} visible={visible.calls} />
-                  <OrdersRecordsPanel
-                    data={data}
-                    selected={selected}
-                    review={review}
-                    visible={visible.records}
-                    records={records}
-                  />
+                  </Suspense>
                 </>
               )}
             </main>

@@ -1,6 +1,6 @@
 # Fila de implementação e ajustes
 
-Atualizada em 14/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
+Atualizada em 15/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
 
 | Código | Item                                                                                                                 | Situação / dependência                                                                                                             | Prioridade |
 | ------ | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -28,7 +28,7 @@ Correções da análise crítica (0.20.6): ordenação completa do operacional, 
 
 Vida em campo (0.20.5): total identificado, participação das primeiras trocas e tempo médio acompanhado, com revisão/cancelamentos e bases explícitas. Tabelas, CSV e impressão acompanham os indicadores. Uma estimativa de sobrevivência permanece uma proposta futura que exige validar cobertura do histórico e encerramento da observação; não foi ativada nesta etapa. Critérios em [Vida em campo](VIDA-EM-CAMPO.md).
 
-Refatoração gradual: acompanhamento/persistência entregues em 0.20.1; importação, filtros e relatórios separados em 0.20.2; controles compartilhados de CSS consolidados em 0.20.3; coordenação e painéis da página de OS separados em 0.20.4. A avaliação de carregamento (R05) continua prevista, condicionada às medições e à preservação de filtros/bases ao navegar. Diagnóstico, critérios de compatibilidade e sequência R01–R05 estão em [Revisão técnica e refatoração](REVISAO-E-REFATORACAO.md).
+Refatoração gradual R01–R05 concluída: acompanhamento/persistência em 0.20.1; importação, filtros e relatórios do consumo em 0.20.2; controles compartilhados de CSS em 0.20.3; coordenação das OS em 0.20.4; medição e carregamento por módulo/relatórios de OS em 0.20.8. Filtros, bases e rascunhos foram conferidos durante a navegação. Resultados e limites em [Desempenho e carregamento](DESEMPENHO-E-CARREGAMENTO.md) e sequência em [Revisão técnica e refatoração](REVISAO-E-REFATORACAO.md). Os demais itens aguardam prioridade do usuário.
 
 Monitoramento Ativo (0.19.0): tabela prioritária com os seis campos informados para a API, sinais de duração, interface compacta e histórico manual por veículo com botão Salvar atualização. Funciona somente na demonstração e na sessão atual; integração real, coleta e armazenamento permanente continuam nos itens A12–A14.
 

@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.20.8 — 15/10/2026
+
+- Etapa R05: módulos carregados na primeira visita autorizada. Depois, permanecem montados e ocultos durante a navegação, conservando bases, filtros, ordenação, seleção e rascunhos. Operacional e Parque continuam compartilhando a mesma instância; administração conserva seu reinício ao sair.
+- Relatórios de OS e gráficos carregados após haver base importada. React, gráficos e planilhas separados em arquivos de produção; dependências de gravação do lote são carregadas somente quando necessárias. CSS conserva o mesmo conteúdo e ordem.
+- Carregamento e falha isolados por página, com navegação disponível e recarga explícita. Nenhuma recarga automática que descarte planilhas da sessão.
+- Cinco medições controladas antes/depois: JavaScript até a primeira tela de OS reduzido em cerca de 48%; mediana de abertura de 1,81 s para 1,31 s. Primeira visita a outro módulo pode exigir pequeno carregamento. Resultados locais com bases vazias e API de permissões simulada; não são promessa de tempo em produção.
+- Manifesto e relatório de tamanho na compilação para acompanhar dependências estáticas e tardias. Documentação registra metodologia, limites e verificações de estado, importação conjunta, armazenamento local, permissões e falha de módulo.
+
 ## 0.20.7 — 14/10/2026
 
 - Importador de Ordens de Serviço aceita a aba atual **OS 2025_26**, mantendo **OS 2025** para arquivos anteriores.

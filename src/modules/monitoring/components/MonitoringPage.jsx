@@ -13,7 +13,6 @@ import { monitoringDemo } from '../data/demo.js';
 import { MonitoringQueue } from './MonitoringQueue.jsx';
 import { monitorSnapshot, monitoringDate, monitoringStates } from '../domain/monitoring.js';
 import { monitoringReport, monitoringCsv, monitoringWorkbook } from '../domain/monitoringReport.js';
-import '../../../styles/monitoring.css';
 
 /** Mantém notas somente nesta sessão; encerramento administrativo não altera a situação técnica. */
 export function MonitoringPage({ onPage }) {

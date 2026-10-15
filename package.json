@@ -1,15 +1,15 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.20.7",
+  "version": "0.20.8",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "vite build && node scripts/bundle-report.mjs",
     "test": "node --test",
     "check:imports": "node scripts/check-imports.mjs",
-    "format": "prettier --write src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc .prettierrc.json",
-    "format:check": "prettier --check src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc .prettierrc.json",
+    "format": "prettier --write src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
+    "format:check": "prettier --check src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
     "check": "npm run check:imports && npm run format:check && npm test && npm run build"
   },
   "dependencies": {
