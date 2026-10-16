@@ -1,5 +1,9 @@
 # Filtros e apresentação
 
+## Menu pela logo — 0.21.2
+
+A própria logo Addlog recolhe e expande a barra lateral, substituindo a seta separada. No menu recolhido aparece somente o símbolo da marca; clicar nele abre novamente. O controle é um botão acessível por Tab, Enter e Espaço, com foco visível e indicação de estado. A preferência continua salva neste navegador e compartilhada entre as páginas, sem alterar dados ou filtros.
+
 ## Identidade visual Addlog — 0.20.0
 
 A logo padrão fornecida pelo usuário substitui a versão monocromática: símbolo vetorial com gradiente `#FCA237` → `#F05A00`, escrita `#241F21` no claro e clara no escuro. O favicon e o menu recolhido usam só o símbolo. Os arquivos públicos são recursos vetoriais da marca, sem dados importados.

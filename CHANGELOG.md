@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.21.2 — 16/10/2026
+
+- Logo Addlog passa a recolher/expandir o menu, substituindo o botão com seta. Mantém símbolo no modo recolhido, preferência salva, sincronização entre páginas e navegação por teclado com foco visível.
+- Remove estilos do controle anterior e mantém a área da logo clicável nos dois temas e em telas menores. Documentação de apresentação atualizada.
+
 ## 0.21.1 — 15/10/2026
 
 - Filtro Responsabilidade da Equipe de suporte com opção Ambos, exibindo duas barras por pessoa e duas séries na evolução. Execução/Agendamento conservam suas datas, filtros e contagens próprias.

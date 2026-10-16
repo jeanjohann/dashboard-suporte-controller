@@ -261,21 +261,12 @@
   background: transparent;
   padding: 0;
 }
-.sidebar-toggle {
-  align-self: flex-end;
-  background: transparent;
-  color: var(--ui-muted);
-  padding: 4px 10px;
-  font-size: 22px;
-  box-shadow: none;
-}
 .app > aside.sidebar-collapsed {
   width: 76px;
   min-width: 76px;
   padding: 18px 10px;
   gap: 15px;
 }
-.sidebar-collapsed .logo,
 .sidebar-collapsed .navigation-label,
 .sidebar-collapsed .sidebar-tools {
   display: none;
@@ -284,7 +275,6 @@
   justify-content: center;
   padding: 12px 6px;
 }
-.sidebar-collapsed .sidebar-toggle,
 .sidebar-collapsed button.theme-toggle {
   align-self: center;
 }
@@ -310,9 +300,6 @@
   .sidebar-collapsed .navigation-group {
     flex: 0 0 auto;
   }
-  .sidebar-collapsed .sidebar-toggle {
-    align-self: center;
-  }
 }
 /* Cabeçalho compacto: símbolo completo e navegação alinhada ao topo. */
 .app > aside.app-navigation {
@@ -329,29 +316,29 @@
   min-height: 34px;
 }
 .app > aside.app-navigation .logo {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  min-width: 0;
-  flex: 1;
+  min-width: 36px;
+  min-height: 36px;
+  max-width: 100%;
+  flex: 0 1 auto;
+  padding: 2px 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+}
+.app > aside.app-navigation .logo:hover {
+  background: transparent;
+  opacity: 0.85;
 }
 .app-navigation .sidebar-brand-row .brand-image {
   display: block;
   width: 145px;
   max-width: 100%;
   height: 32px;
-}
-.app-navigation .sidebar-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: center;
-  flex: 0 0 24px;
-  min-width: 24px;
-  min-height: 30px;
-  padding: 0;
-  background: transparent;
-  color: var(--ui-muted);
-  font-size: 20px;
 }
 .app > aside.app-navigation .side-navigation {
   justify-content: flex-start;
@@ -392,10 +379,10 @@
 .app > aside.sidebar-collapsed .sidebar-brand-row {
   gap: 4px;
   width: 100%;
+  justify-content: center;
 }
 .app > aside.sidebar-collapsed .logo {
-  display: block;
-  flex: 0 0 28px;
+  flex: 0 0 36px;
 }
 .app > aside.sidebar-collapsed .brand-image {
   width: 28px;

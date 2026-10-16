@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.21.1 — Equipe de suporte permite selecionar Ambos para comparar agendamentos e execuções em barras e evolução separadas, com tabelas e exportações identificadas por responsabilidade. Monitoramento Ativo mantém a preparação do coletor; a API do fornecedor ainda não está conectada. Páginas visitadas conservam estado durante a navegação autorizada.
+**Versão:** 0.21.2 — Clique na logo Addlog para recolher ou expandir o menu, sem botão de seta separado. Equipe de suporte mantém a comparação entre agendamentos e execuções. Monitoramento Ativo segue com a API do fornecedor em preparação.
 
 ## Documentação do projeto
 

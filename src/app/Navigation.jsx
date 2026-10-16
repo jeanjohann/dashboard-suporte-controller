@@ -67,18 +67,16 @@ export function Navigation({ page, onPage }) {
   return (
     <aside className={`app-navigation${collapsed ? ' sidebar-collapsed' : ''}`}>
       <div className="sidebar-brand-row">
-        <div className="logo" aria-label="Addlog">
-          <span className="brand-image" role="img" aria-label="Addlog" />
-        </div>
+        {/* A marca é o único controle de expansão, com suporte nativo a clique, Enter e Espaço. */}
         <button
-          className="sidebar-toggle"
+          className="logo"
           type="button"
           onClick={() => changeCollapsed(!collapsed)}
           aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
           aria-expanded={!collapsed}
           title={collapsed ? 'Expandir menu' : 'Recolher menu'}
         >
-          {<Icon name={collapsed ? 'right' : 'left'} size={17} />}
+          <span className="brand-image" aria-hidden="true" />
         </button>
       </div>
       <nav className="side-navigation" aria-label="Páginas do sistema">
