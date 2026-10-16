@@ -1,7 +1,8 @@
 /** Cabeçalho e seletores de arquivo do consumo; ações e referências são fornecidas pelo controlador. */
 import React from 'react';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
-export function ConsumptionImportHeader({ busy, ready, imports }) {
+import { PageSettingsButton } from '../../../components/PageSettings.jsx';
+export function ConsumptionImportHeader({ busy, ready, imports, settingsAvailable }) {
   const { input, operationalInput, backupInput, load, loadOperational, readBackup } = imports;
   return (
     <header>
@@ -26,6 +27,7 @@ export function ConsumptionImportHeader({ busy, ready, imports }) {
         >
           Importar operacional
         </PermissionButton>
+        <PageSettingsButton available={settingsAvailable} />
       </div>
       <input hidden ref={input} type="file" accept=".csv,text/csv" multiple onChange={load} />
       <input

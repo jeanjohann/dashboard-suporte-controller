@@ -1,5 +1,9 @@
 # Filtros e apresentação
 
+## Preferências no cabeçalho — 0.22.0
+
+“Relatórios exibidos” saiu da lateral e passou para a engrenagem Personalizar página. A janela permite visibilidade e apresentação inicial por seção, com Salvar, Cancelar e Restaurar padrão. Preferências locais e antigas escolhas de OS são preservadas; a lateral mantém somente categorias. Consulte [Personalização das páginas](PERSONALIZACAO-DE-PAGINAS.md) para modos, disponibilidade e limites.
+
 ## Menu leve e compacto — 0.21.3
 
 Estilo da navegação ajustado à referência visual: linhas principais com altura mínima de 34 px no desktop, ícones vetoriais de 16 px, texto neutro e seleção com fundo laranja suave, sem faixa lateral ou sombra. Nomes longos podem ocupar duas linhas sem corte. Submenus mantêm a hierarquia com recuo e guia discreta; ferramentas de relatório continuam na página selecionada. O rodapé separa visualmente o controle de tema. No celular, itens principais preservam 44 px de área de toque e categorias 40 px. Logo clicável, modo recolhido, permissões, nomes e funções permanecem os mesmos; a imagem foi usada somente como referência estética.

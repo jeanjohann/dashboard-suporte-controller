@@ -38,3 +38,20 @@ export const sectionLabels = {
 export function cleanPreferences(value) {
   return Object.fromEntries(Object.keys(sectionLabels).map((key) => [key, value?.[key] !== false]));
 }
+/** Chaves históricas preservadas; o título real vincula a apresentação à Section correspondente. */
+export const orderLayoutDefinitions = Object.entries(sectionLabels)
+  .filter(([id]) => !['filters', 'extras'].includes(id))
+  .map(([id, label]) => ({
+    id,
+    label,
+    title: id === 'geography' ? 'Distribuição geográfica dos serviços' : label,
+  }));
+
+export function legacyOrderLayout() {
+  const preferences = cleanPreferences(
+    JSON.parse(localStorage.getItem('suporte-layout-v1') || '{}'),
+  );
+  return Object.fromEntries(
+    Object.entries(preferences).map(([id, visible]) => [id, { visible, mode: 'default' }]),
+  );
+}

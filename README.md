@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.21.3 — Menu lateral mais leve e compacto, com ícones discretos, seleção suave e submenus organizados. A logo continua recolhendo/expandindo o menu. Equipe de suporte mantém a comparação entre agendamentos e execuções; a API do Monitoramento Ativo segue em preparação.
+**Versão:** 0.22.0 — Engrenagem no cabeçalho para escolher relatórios e sua apresentação inicial, com Salvar, Cancelar e Restaurar padrão. Preferências locais por módulo; escolhas antigas das OS preservadas. A lateral mantém somente navegação. A API do Monitoramento Ativo segue em preparação.
 
 ## Documentação do projeto
+
+- [Personalização de páginas — engrenagem, relatórios e apresentação](docs/PERSONALIZACAO-DE-PAGINAS.md)
 
 - [Equipe de suporte — indicadores e períodos](docs/EQUIPE-DE-SUPORTE.md)
 - [Integração do monitoramento — contrato técnico e ativação futura](docs/INTEGRACAO-MONITORAMENTO.md)

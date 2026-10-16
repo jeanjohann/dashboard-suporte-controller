@@ -14,7 +14,7 @@ import { SortableTable } from '../../../components/SortableTable.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import { importLogistics, selectLogistics, logisticsSections } from '../domain/logistics.js';
 
-export function LogisticsPanel({ source, onImport, hiddenSections, setHiddenSections }) {
+export function LogisticsPanel({ source, onImport }) {
   const input = useRef();
   const [filters, setFilters] = useState({}),
     [busy, setBusy] = useState(false),
@@ -132,11 +132,7 @@ export function LogisticsPanel({ source, onImport, hiddenSections, setHiddenSect
         </section>
       ) : (
         <>
-          <PagePersonalization
-            labels={logisticsSections}
-            hidden={hiddenSections}
-            setHidden={setHiddenSections}
-          >
+          <PagePersonalization>
             <div className="inline-help-heading">
               <h3>Filtros da logística</h3>
               <InfoNote>

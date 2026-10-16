@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Personalização de apresentação — 0.22.0
+
+Preferências visuais usam `shared/layout/` e o modal `components/PageSettings.jsx`. Cada módulo fornece catálogo e categoria; `Section` registra a capacidade real de resumo e aplica visibilidade/apresentação. Preferências são locais e não integram arquivos importados nem o banco de usuários. Compatibilidade com OS e extensão em [Personalização das páginas](PERSONALIZACAO-DE-PAGINAS.md).
+
 ## Entrega 0.21.0 — suporte e monitoramento
 
 A categoria Equipe de suporte reutiliza a base/filtros de OS; calendário e atribuição ficam em `supportPerformance.js`, exportação em `supportReport.js` e apresentação em `SupportPerformance.jsx`. Datas de execução/agendamento permanecem distintas, com critérios no [guia da equipe](EQUIPE-DE-SUPORTE.md).

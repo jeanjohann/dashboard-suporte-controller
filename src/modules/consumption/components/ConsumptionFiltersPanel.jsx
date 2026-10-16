@@ -5,9 +5,6 @@ import { InfoNote } from '../../../components/InfoNote.jsx';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { periodOptions } from '../domain/lineConsumption.js';
 export function ConsumptionFiltersPanel({
-  visibleSections,
-  hiddenSections,
-  setHiddenSections,
   operators,
   periods,
   statements,
@@ -25,11 +22,7 @@ export function ConsumptionFiltersPanel({
   setFilters,
 }) {
   return (
-    <PagePersonalization
-      labels={visibleSections}
-      hidden={hiddenSections}
-      setHidden={setHiddenSections}
-    >
+    <PagePersonalization>
       <h3>Filtros de consumo</h3>
       <div className="filter-grid">
         {operators.map((operator) => (

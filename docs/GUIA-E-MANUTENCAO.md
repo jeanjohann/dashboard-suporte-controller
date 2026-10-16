@@ -24,7 +24,7 @@ Na tabela de atendimentos, Última abre a última página dos resultados da sele
 
 ## Organização da tela e gráficos — versão 0.7.0
 
-O sistema mantém uma única tela. Cada seção pode ser recolhida pelo título. Personalizar o que aparece na tela permite mostrar/ocultar filtros, indicadores, relatórios, histórico, trocas e revisão. Todas começam visíveis; a preferência de visibilidade é salva no navegador e Mostrar todas as seções restaura o padrão. Recolhimento é apenas da sessão. Ocultar não limpa filtros nem altera cálculos. O resumo dos filtros continua acessível, com botão de limpeza.
+Cada página conserva suas seções e categorias. A engrenagem Personalizar página permite escolher os relatórios exibidos e sua apresentação inicial, com confirmação em Salvar preferências. Restaurar padrão prepara as seções da categoria como visíveis e exige Salvar. Resumos aparecem somente onde há esse formato. Os botões de abrir/recolher/resumir dos relatórios continuam temporários, enquanto a apresentação inicial pode ser salva no navegador. Ocultar não limpa filtros nem altera cálculos. Os filtros permanecem acessíveis. Uso, compatibilidade e armazenamento em [Personalização das páginas](PERSONALIZACAO-DE-PAGINAS.md).
 
 Gráficos possuem barras, linhas, pizza e rosca, com detalhes ao passar o cursor. O relatório mantém tabela e salva também o tipo de gráfico. Pizza/rosca não representam chamados distintos por grupo, pois grupos podem se sobrepor; essas medidas usam barras/linhas/tabela. Valores negativos e total não positivo também impedem pizza/rosca. Todas as categorias são incluídas sem agrupamento automático em Outros. Muitas categorias favorecem barras. Linhas em categorias não temporais não representam evolução temporal.
 

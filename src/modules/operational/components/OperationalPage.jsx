@@ -35,6 +35,12 @@ import {
   hiddenByOperationalMenu,
 } from '../config/operationalMenus.js';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
+import { usePageLayout, PageLayoutProvider } from '../../../shared/layout/PageLayout.jsx';
+import { PageSettingsButton } from '../../../components/PageSettings.jsx';
+
+const layoutDefinitions = [
+  ...new Set([...operationalMenus, ...crossAnalysisMenus].flatMap((menu) => menu.sections)),
+].map((title) => ({ id: title, title }));
 
 const money = (value) =>
   (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -49,8 +55,9 @@ export function OperationalPage({
   logistics,
   setLogistics,
 }) {
-  const [expansion, setExpansion] = useState(null),
-    [hiddenSections, setHiddenSections] = useState([]);
+  const [expansion, setExpansion] = useState(null);
+  const operationalLayout = usePageLayout('operational');
+  const parkLayout = usePageLayout('park');
   const [filters, setFilters] = useState({});
   const [menuSelections, setMenuSelections] = useState({
     operational: 'overview',
@@ -207,448 +214,457 @@ export function OperationalPage({
   }
   return (
     <SidePanelProvider>
-      <HiddenSectionsContext.Provider
-        value={[...hiddenSections, ...hiddenByOperationalMenu(analysis, menuCategory)]}
+      <PageLayoutProvider
+        layout={analysis ? parkLayout : operationalLayout}
+        definitions={layoutDefinitions}
+        activeIds={
+          (analysis ? crossAnalysisMenus : operationalMenus).find(
+            (menu) => menu.key === menuCategory,
+          )?.sections || []
+        }
+        scope={`${analysis ? 'Parque e Manutenção' : 'Operacional'} · ${(analysis ? crossAnalysisMenus : operationalMenus).find((menu) => menu.key === menuCategory)?.label}`}
       >
-        <ExpansionContext.Provider value={expansion}>
-          <PrintContext.Provider
-            value={{ filename: source?.filename, filters: { busca: search, categoria: category } }}
-          >
-            <div className="app operational-page">
-              <Navigation page={page} onPage={onPage} />
-              <main>
-                <SidebarContent>
-                  <nav
-                    className="category-navigation"
-                    aria-label={
-                      analysis ? 'Categorias de Parque e Manutenção' : 'Categorias do operacional'
-                    }
-                  >
-                    {(analysis ? crossAnalysisMenus : operationalMenus).map((menu) => (
-                      <button
-                        type="button"
-                        key={menu.key}
-                        aria-current={menuCategory === menu.key ? 'page' : undefined}
-                        className={menuCategory === menu.key ? 'active' : ''}
-                        onClick={() => selectMenu(menu.key)}
-                      >
-                        {menu.label}
-                      </button>
-                    ))}
-                  </nav>
-                </SidebarContent>
-                {!logisticsView && (
-                  <PagePersonalization
-                    labels={
-                      (analysis ? crossAnalysisMenus : operationalMenus).find(
-                        (menu) => menu.key === menuCategory,
-                      )?.sections || []
-                    }
-                    hidden={hiddenSections}
-                    setHidden={setHiddenSections}
-                  >
-                    {data ? (
-                      <>
-                        <h3>Filtros operacionais</h3>
-                        <section className="panel filters">
-                          <label>
-                            Buscar cliente, serial, placa, ICCID, situação, plano ou modelo
-                            <input
-                              value={search}
-                              onChange={(e) => {
-                                setSearch(e.target.value);
-                                setOffset(0);
-                              }}
-                            />
-                          </label>
-                          <div className="filter-grid">
-                            {[
-                              ['client', 'Cliente operacional'],
-                              ['model', 'Modelo operacional'],
-                              ['plan', 'Plano operacional'],
-                              ['status', 'Situação operacional'],
-                            ].map(([key, label]) => (
-                              <MultiFilter
-                                key={key}
-                                label={label}
-                                values={filters[key] || []}
-                                options={[
-                                  ...new Set(data.rows.map((row) => row[key] || 'Não informado')),
-                                ].sort((a, b) => a.localeCompare(b, 'pt-BR'))}
-                                onChange={(values) => {
-                                  setFilters((previous) => ({ ...previous, [key]: values }));
+        <HiddenSectionsContext.Provider value={hiddenByOperationalMenu(analysis, menuCategory)}>
+          <ExpansionContext.Provider value={expansion}>
+            <PrintContext.Provider
+              value={{
+                filename: source?.filename,
+                filters: { busca: search, categoria: category },
+              }}
+            >
+              <div className="app operational-page">
+                <Navigation page={page} onPage={onPage} />
+                <main>
+                  <SidebarContent>
+                    <nav
+                      className="category-navigation"
+                      aria-label={
+                        analysis ? 'Categorias de Parque e Manutenção' : 'Categorias do operacional'
+                      }
+                    >
+                      {(analysis ? crossAnalysisMenus : operationalMenus).map((menu) => (
+                        <button
+                          type="button"
+                          key={menu.key}
+                          aria-current={menuCategory === menu.key ? 'page' : undefined}
+                          className={menuCategory === menu.key ? 'active' : ''}
+                          onClick={() => selectMenu(menu.key)}
+                        >
+                          {menu.label}
+                        </button>
+                      ))}
+                    </nav>
+                  </SidebarContent>
+                  {!logisticsView && (
+                    <PagePersonalization>
+                      {data ? (
+                        <>
+                          <h3>Filtros operacionais</h3>
+                          <section className="panel filters">
+                            <label>
+                              Buscar cliente, serial, placa, ICCID, situação, plano ou modelo
+                              <input
+                                value={search}
+                                onChange={(e) => {
+                                  setSearch(e.target.value);
                                   setOffset(0);
                                 }}
                               />
-                            ))}
-                          </div>
-                          <button
-                            onClick={() => {
-                              setFilters({});
-                              setSearch('');
-                              setOffset(0);
-                            }}
-                          >
-                            Limpar filtros operacionais
-                          </button>
-                          <p className="scope">
-                            {rows.length} de {data.rows.length} registros. A busca afeta os cards de
-                            análise, gráficos, vínculos e revisão. Os cards de importação
-                            representam o arquivo completo.
-                          </p>
-                        </section>
-                      </>
-                    ) : (
-                      <p className="scope">Importe a planilha para disponibilizar os filtros.</p>
-                    )}
-                  </PagePersonalization>
-                )}
-                <ReportControls onExpand={setExpansion} />
-                <header>
-                  <div>
-                    <div className="eyebrow">BASE OPERACIONAL</div>
-                    <h1>
-                      {analysis ? 'Parque e Manutenção' : 'Operacional — Importação e Revisão'}
-                    </h1>
-                    <p>
-                      {analysis
-                        ? logisticsView
-                          ? 'Envios e devoluções de equipamentos · registros e conferência.'
-                          : 'Parque registrado e cobertura do histórico de serviços.'
-                        : 'Confira os registros originais e os pontos para revisão manual.'}
-                    </p>
-                  </div>
-                  {!logisticsView && (
-                    <PermissionButton
-                      action="import"
-                      disabled={busy}
-                      onClick={() => input.current.click()}
-                    >
-                      {busy ? 'Lendo…' : 'Importar operacional'}
-                    </PermissionButton>
-                  )}
-                  <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
-                </header>
-                {error && !logisticsView && (
-                  <div className="error" role="alert">
-                    {error} {data && 'A importação anterior foi mantida.'}
-                  </div>
-                )}
-                {logisticsView ? (
-                  <LogisticsPanel
-                    source={logistics}
-                    onImport={setLogistics}
-                    hiddenSections={hiddenSections}
-                    setHiddenSections={setHiddenSections}
-                  />
-                ) : !data ? (
-                  <section className="empty">
-                    <h2>Selecione a planilha operacional</h2>
-                    <p>
-                      Aba Equipamentos, colunas originais do layout reconhecido. Dados mantidos
-                      somente nesta sessão.
-                    </p>
-                  </section>
-                ) : (
-                  <>
-                    <div className="source">
-                      <strong>{source.filename}</strong>
-                      <span>Aba Equipamentos · somente leitura</span>
-                      <span>OS: {orders?.filename || 'não importada'}</span>
-                    </div>
-                    <p className="notice">
-                      O operacional é mais antigo que o histórico de OS. Ausência de atendimento
-                      registrado não indica erro, falta de instalação ou ausência de manutenção
-                      anterior. Fórmulas são lidas pelo resultado armazenado no Excel, sem
-                      recálculo.
-                    </p>
-                    <div className="inline-help-heading" hidden={menuCategory !== 'overview'}>
-                      <h2>{analysis ? 'Cobertura do histórico' : 'Resumo da importação'}</h2>
-                      <InfoNote>
-                        {analysis
-                          ? 'Equipamentos na seleção usa filtros e busca desta página. A cobertura cruza serial + placa com o arquivo de OS completo; não aplica seus filtros. Vínculos ambíguos e identificações incompatíveis ficam separados. Sem atendimento no histórico disponível não é erro: a Operacional é mais antiga. Não comprova instalação, atividade ou ausência de manutenção anterior.'
-                          : 'Contagens do arquivo operacional completo: registros importados, pontos para revisão, linhas distintas com apontamento e linhas sem Nº não importadas. Um registro pode ter vários pontos. Estes cards não seguem filtros nem busca; a tabela de revisão tem seu próprio recorte. Não confirmam divergências automaticamente nem alteram a planilha.'}
-                      </InfoNote>
-                    </div>
-                    <section className="cards" hidden={menuCategory !== 'overview'}>
-                      {cards.map(([label, value]) => (
-                        <article key={label}>
-                          <span>{label}</span>
-                          <strong>
-                            {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
-                          </strong>
-                        </article>
-                      ))}
-                    </section>
-                    {analysis ? (
-                      <>
-                        <ParkInsights
-                          rows={rows}
-                          operational={data}
-                          orders={orders?.data}
-                          operationalFilename={source.filename}
-                          ordersFilename={orders?.filename}
-                          filters={{ ...filters, busca: search }}
-                          onConfigurePeriod={() => selectMenu('maintenance')}
-                        />
-                        <Section title="Parque por cliente, modelo, plano e situação">
-                          <label>
-                            Agrupar por{' '}
-                            <select value={group} onChange={(e) => setGroup(e.target.value)}>
+                            </label>
+                            <div className="filter-grid">
                               {[
-                                ['client', 'Cliente'],
-                                ['model', 'Modelo lançado'],
-                                ['plan', 'Plano'],
-                                ['status', 'Situação'],
+                                ['client', 'Cliente operacional'],
+                                ['model', 'Modelo operacional'],
+                                ['plan', 'Plano operacional'],
+                                ['status', 'Situação operacional'],
                               ].map(([key, label]) => (
-                                <option key={key} value={key}>
-                                  {label}
-                                </option>
+                                <MultiFilter
+                                  key={key}
+                                  label={label}
+                                  values={filters[key] || []}
+                                  options={[
+                                    ...new Set(data.rows.map((row) => row[key] || 'Não informado')),
+                                  ].sort((a, b) => a.localeCompare(b, 'pt-BR'))}
+                                  onChange={(values) => {
+                                    setFilters((previous) => ({ ...previous, [key]: values }));
+                                    setOffset(0);
+                                  }}
+                                />
                               ))}
-                            </select>
-                          </label>
-                          <label>
-                            {' '}
-                            Gráfico{' '}
-                            <select
-                              value={chartType}
-                              onChange={(e) => setChartType(e.target.value)}
-                            >
-                              <option value="bars">Barras</option>
-                              <option value="pie">Pizza</option>
-                              <option value="donut">Rosca</option>
-                            </select>
-                          </label>
-                          <Chart
-                            title="Equipamentos registrados"
-                            items={items}
-                            type={chartType}
-                            ranking
-                            exportNote="Uma linha operacional = um equipamento contratado; inclui todas as situações na seleção."
-                          />
-                        </Section>
-                        <Section title="Valores mensais lançados">
-                          <section className="cards financial-cards">
-                            {['monthly', 'charge'].map((key) => (
-                              <article key={key}>
-                                <span>
-                                  {key === 'monthly' ? 'Mensalidade lançada' : 'Cobrança lançada'}
-                                </span>
-                                <strong>
-                                  {money(rows.reduce((sum, r) => sum + (r[key + 'Cents'] ?? 0), 0))}
-                                </strong>
-                                <small>
-                                  {rows.filter((r) => r[key + 'Cents'] == null).length} valores
-                                  ausentes/incompatíveis excluídos
-                                </small>
-                              </article>
-                            ))}
-                          </section>
-                          <InfoNote>
-                            Soma dos valores lançados em todas as situações selecionadas, inclusive
-                            cancelados. Não representa faturamento, recebimento ou mensalidade ativa
-                            calculada. Cancelamento interrompe mensalidade somente com situação
-                            Cancelado e data válida; efeito no mês e pró-rata ainda pendentes. Datas
-                            S/T não foram interpretadas como vigência de contrato.
-                          </InfoNote>
-                        </Section>
-                        <Section title="Vínculos com o histórico de OS">
-                          <InfoNote>
-                            Serial + placa após remoção de espaços nas extremidades, sem alterar
-                            originais. Histórico completo importado, independente dos filtros da
-                            página de OS. Repetição do par no operacional impede atribuição
-                            automática. Um serviço pode envolver retirada ou instalação: a
-                            correspondência não confirma situação atual.
-                          </InfoNote>
-                          <PermissionButton
-                            action="export"
-                            disabled={!canLink}
-                            onClick={exportLinks}
-                          >
-                            Exportar vínculos CSV
-                          </PermissionButton>
-                          {!canLink && (
-                            <p className="notice">
-                              Importe a planilha na página Ordens de serviço com as colunas ID
-                              Rastreador e Placa para habilitar o cruzamento.
-                            </p>
-                          )}
-                          <div className="table-scroll">
-                            <SortableTable>
-                              <thead>
-                                <tr>
-                                  <th>Linha operacional</th>
-                                  <th>Cliente</th>
-                                  <th>Serial</th>
-                                  <th>Placa</th>
-                                  <th>Vínculo</th>
-                                  <th>Linhas OS</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {rows.map((r) => (
-                                  <tr key={r.sourceRow}>
-                                    <td>{r.sourceRow}</td>
-                                    <td>{r.client}</td>
-                                    <td>{r.serial}</td>
-                                    <td>{r.plate}</td>
-                                    <td>{r.state}</td>
-                                    <td>
-                                      {r.state === 'Com histórico disponível'
-                                        ? r.services.map((s) => s.sourceRow).join(', ')
-                                        : '—'}
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </SortableTable>
-                          </div>
-                        </Section>
-                      </>
-                    ) : (
-                      <>
-                        <Section title="Revisão manual">
-                          <label>
-                            Categoria{' '}
-                            <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                              <option value="">Todas</option>
-                              {['Formato', 'Conferência', 'Possível divergência'].map((c) => (
-                                <option key={c}>{c}</option>
-                              ))}
-                            </select>
-                          </label>
-                          <PermissionButton action="export" onClick={exportReview}>
-                            Exportar revisão CSV
-                          </PermissionButton>
-                          <p className="scope">
-                            {issues.length} pontos na seleção. Repetições são candidatos à
-                            conferência, não erros confirmados. Nenhum registro é corrigido ou
-                            removido automaticamente.
-                          </p>
-                          <div className="table-scroll">
-                            <SortableTable>
-                              <thead>
-                                <tr>
-                                  <th>Categoria</th>
-                                  <th>Célula</th>
-                                  <th>Coluna</th>
-                                  <th>Original</th>
-                                  <th>Motivo</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {issues.map((i, index) => (
-                                  <tr key={index}>
-                                    <td>{i.category}</td>
-                                    <td>{i.address}</td>
-                                    <td>{i.column}</td>
-                                    <td>{i.value}</td>
-                                    <td>{i.reason}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </SortableTable>
-                          </div>
-                        </Section>
-                        <Section title="Registros operacionais">
-                          <div className="table-scroll">
-                            <SortableTable
-                              sort={recordSort}
-                              onSortChange={(next) => {
-                                setRecordSort(next);
+                            </div>
+                            <button
+                              onClick={() => {
+                                setFilters({});
+                                setSearch('');
                                 setOffset(0);
                               }}
                             >
-                              <thead>
-                                <tr>
-                                  <th>Linha</th>
-                                  <th>Cliente</th>
-                                  <th>Serial</th>
-                                  <th>Placa</th>
-                                  <th>Modelo</th>
-                                  <th>Situação</th>
-                                  <th>Original</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {orderedRecords.slice(offset * 50, offset * 50 + 50).map((r) => (
-                                  <tr key={r.sourceRow}>
-                                    <td>{r.sourceRow}</td>
-                                    <td>{r.client}</td>
-                                    <td>{r.serial}</td>
-                                    <td>{r.plate}</td>
-                                    <td>{r.model}</td>
-                                    <td>{r.status}</td>
-                                    <td>
-                                      <button onClick={() => setDetail(r)}>
-                                        Ver {data.columns.length} colunas
-                                      </button>
-                                    </td>
-                                  </tr>
+                              Limpar filtros operacionais
+                            </button>
+                            <p className="scope">
+                              {rows.length} de {data.rows.length} registros. A busca afeta os cards
+                              de análise, gráficos, vínculos e revisão. Os cards de importação
+                              representam o arquivo completo.
+                            </p>
+                          </section>
+                        </>
+                      ) : (
+                        <p className="scope">Importe a planilha para disponibilizar os filtros.</p>
+                      )}
+                    </PagePersonalization>
+                  )}
+                  <ReportControls onExpand={setExpansion} />
+                  <header>
+                    <div>
+                      <div className="eyebrow">BASE OPERACIONAL</div>
+                      <h1>
+                        {analysis ? 'Parque e Manutenção' : 'Operacional — Importação e Revisão'}
+                      </h1>
+                      <p>
+                        {analysis
+                          ? logisticsView
+                            ? 'Envios e devoluções de equipamentos · registros e conferência.'
+                            : 'Parque registrado e cobertura do histórico de serviços.'
+                          : 'Confira os registros originais e os pontos para revisão manual.'}
+                      </p>
+                    </div>
+                    <div className="page-header-actions">
+                      {!logisticsView && (
+                        <PermissionButton
+                          className="header-import-action"
+                          action="import"
+                          disabled={busy}
+                          onClick={() => input.current.click()}
+                        >
+                          {busy ? 'Lendo…' : 'Importar operacional'}
+                        </PermissionButton>
+                      )}
+                      <PageSettingsButton available={logisticsView ? !!logistics?.data : !!data} />
+                    </div>
+                    <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
+                  </header>
+                  {error && !logisticsView && (
+                    <div className="error" role="alert">
+                      {error} {data && 'A importação anterior foi mantida.'}
+                    </div>
+                  )}
+                  {logisticsView ? (
+                    <LogisticsPanel source={logistics} onImport={setLogistics} />
+                  ) : !data ? (
+                    <section className="empty">
+                      <h2>Selecione a planilha operacional</h2>
+                      <p>
+                        Aba Equipamentos, colunas originais do layout reconhecido. Dados mantidos
+                        somente nesta sessão.
+                      </p>
+                    </section>
+                  ) : (
+                    <>
+                      <div className="source">
+                        <strong>{source.filename}</strong>
+                        <span>Aba Equipamentos · somente leitura</span>
+                        <span>OS: {orders?.filename || 'não importada'}</span>
+                      </div>
+                      <p className="notice">
+                        O operacional é mais antigo que o histórico de OS. Ausência de atendimento
+                        registrado não indica erro, falta de instalação ou ausência de manutenção
+                        anterior. Fórmulas são lidas pelo resultado armazenado no Excel, sem
+                        recálculo.
+                      </p>
+                      <div className="inline-help-heading" hidden={menuCategory !== 'overview'}>
+                        <h2>{analysis ? 'Cobertura do histórico' : 'Resumo da importação'}</h2>
+                        <InfoNote>
+                          {analysis
+                            ? 'Equipamentos na seleção usa filtros e busca desta página. A cobertura cruza serial + placa com o arquivo de OS completo; não aplica seus filtros. Vínculos ambíguos e identificações incompatíveis ficam separados. Sem atendimento no histórico disponível não é erro: a Operacional é mais antiga. Não comprova instalação, atividade ou ausência de manutenção anterior.'
+                            : 'Contagens do arquivo operacional completo: registros importados, pontos para revisão, linhas distintas com apontamento e linhas sem Nº não importadas. Um registro pode ter vários pontos. Estes cards não seguem filtros nem busca; a tabela de revisão tem seu próprio recorte. Não confirmam divergências automaticamente nem alteram a planilha.'}
+                        </InfoNote>
+                      </div>
+                      <section className="cards" hidden={menuCategory !== 'overview'}>
+                        {cards.map(([label, value]) => (
+                          <article key={label}>
+                            <span>{label}</span>
+                            <strong>
+                              {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
+                            </strong>
+                          </article>
+                        ))}
+                      </section>
+                      {analysis ? (
+                        <>
+                          <ParkInsights
+                            rows={rows}
+                            operational={data}
+                            orders={orders?.data}
+                            operationalFilename={source.filename}
+                            ordersFilename={orders?.filename}
+                            filters={{ ...filters, busca: search }}
+                            onConfigurePeriod={() => selectMenu('maintenance')}
+                          />
+                          <Section title="Parque por cliente, modelo, plano e situação">
+                            <label>
+                              Agrupar por{' '}
+                              <select value={group} onChange={(e) => setGroup(e.target.value)}>
+                                {[
+                                  ['client', 'Cliente'],
+                                  ['model', 'Modelo lançado'],
+                                  ['plan', 'Plano'],
+                                  ['status', 'Situação'],
+                                ].map(([key, label]) => (
+                                  <option key={key} value={key}>
+                                    {label}
+                                  </option>
                                 ))}
-                              </tbody>
-                            </SortableTable>
-                          </div>
-                          <footer>
-                            <button disabled={!offset} onClick={() => setOffset(offset - 1)}>
-                              Anterior
-                            </button>
-                            <span>
-                              {offset + 1} / {Math.max(1, Math.ceil(rows.length / 50))} · ordenação
-                              de toda a seleção
-                            </span>
-                            <button
-                              disabled={(offset + 1) * 50 >= rows.length}
-                              onClick={() => setOffset(offset + 1)}
+                              </select>
+                            </label>
+                            <label>
+                              {' '}
+                              Gráfico{' '}
+                              <select
+                                value={chartType}
+                                onChange={(e) => setChartType(e.target.value)}
+                              >
+                                <option value="bars">Barras</option>
+                                <option value="pie">Pizza</option>
+                                <option value="donut">Rosca</option>
+                              </select>
+                            </label>
+                            <Chart
+                              title="Equipamentos registrados"
+                              items={items}
+                              type={chartType}
+                              ranking
+                              exportNote="Uma linha operacional = um equipamento contratado; inclui todas as situações na seleção."
+                            />
+                          </Section>
+                          <Section title="Valores mensais lançados">
+                            <section className="cards financial-cards">
+                              {['monthly', 'charge'].map((key) => (
+                                <article key={key}>
+                                  <span>
+                                    {key === 'monthly' ? 'Mensalidade lançada' : 'Cobrança lançada'}
+                                  </span>
+                                  <strong>
+                                    {money(
+                                      rows.reduce((sum, r) => sum + (r[key + 'Cents'] ?? 0), 0),
+                                    )}
+                                  </strong>
+                                  <small>
+                                    {rows.filter((r) => r[key + 'Cents'] == null).length} valores
+                                    ausentes/incompatíveis excluídos
+                                  </small>
+                                </article>
+                              ))}
+                            </section>
+                            <InfoNote>
+                              Soma dos valores lançados em todas as situações selecionadas,
+                              inclusive cancelados. Não representa faturamento, recebimento ou
+                              mensalidade ativa calculada. Cancelamento interrompe mensalidade
+                              somente com situação Cancelado e data válida; efeito no mês e pró-rata
+                              ainda pendentes. Datas S/T não foram interpretadas como vigência de
+                              contrato.
+                            </InfoNote>
+                          </Section>
+                          <Section title="Vínculos com o histórico de OS">
+                            <InfoNote>
+                              Serial + placa após remoção de espaços nas extremidades, sem alterar
+                              originais. Histórico completo importado, independente dos filtros da
+                              página de OS. Repetição do par no operacional impede atribuição
+                              automática. Um serviço pode envolver retirada ou instalação: a
+                              correspondência não confirma situação atual.
+                            </InfoNote>
+                            <PermissionButton
+                              action="export"
+                              disabled={!canLink}
+                              onClick={exportLinks}
                             >
-                              Próxima
-                            </button>
-                            <button
-                              disabled={(offset + 1) * 50 >= rows.length}
-                              onClick={() =>
-                                setOffset(Math.max(0, Math.ceil(rows.length / 50) - 1))
-                              }
-                            >
-                              Última
-                            </button>
-                          </footer>
-                        </Section>
-                        {detail && menuCategory === 'records' && (
-                          <Section title={`Original · linha ${detail.sourceRow}`}>
-                            <button onClick={() => setDetail(null)}>Fechar detalhe</button>
+                              Exportar vínculos CSV
+                            </PermissionButton>
+                            {!canLink && (
+                              <p className="notice">
+                                Importe a planilha na página Ordens de serviço com as colunas ID
+                                Rastreador e Placa para habilitar o cruzamento.
+                              </p>
+                            )}
                             <div className="table-scroll">
                               <SortableTable>
                                 <thead>
                                   <tr>
-                                    <th>Coluna</th>
-                                    <th>Cabeçalho</th>
-                                    <th>Conteúdo original</th>
-                                    <th>Fórmula</th>
+                                    <th>Linha operacional</th>
+                                    <th>Cliente</th>
+                                    <th>Serial</th>
+                                    <th>Placa</th>
+                                    <th>Vínculo</th>
+                                    <th>Linhas OS</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {data.columns.map((c) => (
-                                    <tr key={c.index}>
-                                      <td>{c.letter}</td>
-                                      <td>{c.label}</td>
-                                      <td>{detail.cells[c.index].display}</td>
-                                      <td>{detail.cells[c.index].formula || ''}</td>
+                                  {rows.map((r) => (
+                                    <tr key={r.sourceRow}>
+                                      <td>{r.sourceRow}</td>
+                                      <td>{r.client}</td>
+                                      <td>{r.serial}</td>
+                                      <td>{r.plate}</td>
+                                      <td>{r.state}</td>
+                                      <td>
+                                        {r.state === 'Com histórico disponível'
+                                          ? r.services.map((s) => s.sourceRow).join(', ')
+                                          : '—'}
+                                      </td>
                                     </tr>
                                   ))}
                                 </tbody>
                               </SortableTable>
                             </div>
                           </Section>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-              </main>
-            </div>
-          </PrintContext.Provider>
-        </ExpansionContext.Provider>
-      </HiddenSectionsContext.Provider>
+                        </>
+                      ) : (
+                        <>
+                          <Section title="Revisão manual">
+                            <label>
+                              Categoria{' '}
+                              <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                              >
+                                <option value="">Todas</option>
+                                {['Formato', 'Conferência', 'Possível divergência'].map((c) => (
+                                  <option key={c}>{c}</option>
+                                ))}
+                              </select>
+                            </label>
+                            <PermissionButton action="export" onClick={exportReview}>
+                              Exportar revisão CSV
+                            </PermissionButton>
+                            <p className="scope">
+                              {issues.length} pontos na seleção. Repetições são candidatos à
+                              conferência, não erros confirmados. Nenhum registro é corrigido ou
+                              removido automaticamente.
+                            </p>
+                            <div className="table-scroll">
+                              <SortableTable>
+                                <thead>
+                                  <tr>
+                                    <th>Categoria</th>
+                                    <th>Célula</th>
+                                    <th>Coluna</th>
+                                    <th>Original</th>
+                                    <th>Motivo</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {issues.map((i, index) => (
+                                    <tr key={index}>
+                                      <td>{i.category}</td>
+                                      <td>{i.address}</td>
+                                      <td>{i.column}</td>
+                                      <td>{i.value}</td>
+                                      <td>{i.reason}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </SortableTable>
+                            </div>
+                          </Section>
+                          <Section title="Registros operacionais">
+                            <div className="table-scroll">
+                              <SortableTable
+                                sort={recordSort}
+                                onSortChange={(next) => {
+                                  setRecordSort(next);
+                                  setOffset(0);
+                                }}
+                              >
+                                <thead>
+                                  <tr>
+                                    <th>Linha</th>
+                                    <th>Cliente</th>
+                                    <th>Serial</th>
+                                    <th>Placa</th>
+                                    <th>Modelo</th>
+                                    <th>Situação</th>
+                                    <th>Original</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {orderedRecords.slice(offset * 50, offset * 50 + 50).map((r) => (
+                                    <tr key={r.sourceRow}>
+                                      <td>{r.sourceRow}</td>
+                                      <td>{r.client}</td>
+                                      <td>{r.serial}</td>
+                                      <td>{r.plate}</td>
+                                      <td>{r.model}</td>
+                                      <td>{r.status}</td>
+                                      <td>
+                                        <button onClick={() => setDetail(r)}>
+                                          Ver {data.columns.length} colunas
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </SortableTable>
+                            </div>
+                            <footer>
+                              <button disabled={!offset} onClick={() => setOffset(offset - 1)}>
+                                Anterior
+                              </button>
+                              <span>
+                                {offset + 1} / {Math.max(1, Math.ceil(rows.length / 50))} ·
+                                ordenação de toda a seleção
+                              </span>
+                              <button
+                                disabled={(offset + 1) * 50 >= rows.length}
+                                onClick={() => setOffset(offset + 1)}
+                              >
+                                Próxima
+                              </button>
+                              <button
+                                disabled={(offset + 1) * 50 >= rows.length}
+                                onClick={() =>
+                                  setOffset(Math.max(0, Math.ceil(rows.length / 50) - 1))
+                                }
+                              >
+                                Última
+                              </button>
+                            </footer>
+                          </Section>
+                          {detail && menuCategory === 'records' && (
+                            <Section title={`Original · linha ${detail.sourceRow}`}>
+                              <button onClick={() => setDetail(null)}>Fechar detalhe</button>
+                              <div className="table-scroll">
+                                <SortableTable>
+                                  <thead>
+                                    <tr>
+                                      <th>Coluna</th>
+                                      <th>Cabeçalho</th>
+                                      <th>Conteúdo original</th>
+                                      <th>Fórmula</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {data.columns.map((c) => (
+                                      <tr key={c.index}>
+                                        <td>{c.letter}</td>
+                                        <td>{c.label}</td>
+                                        <td>{detail.cells[c.index].display}</td>
+                                        <td>{detail.cells[c.index].formula || ''}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </SortableTable>
+                              </div>
+                            </Section>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
+                </main>
+              </div>
+            </PrintContext.Provider>
+          </ExpansionContext.Provider>
+        </HiddenSectionsContext.Provider>
+      </PageLayoutProvider>
     </SidePanelProvider>
   );
 }

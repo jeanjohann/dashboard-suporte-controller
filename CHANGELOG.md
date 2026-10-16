@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.22.0 — 16/10/2026
+
+- Configuração de relatórios transferida da lateral para engrenagem no cabeçalho de OS, Operacional, Parque/Logística e Consumo. Categorias sem relatórios configuráveis não exibem o controle.
+- Modal com visibilidade e apresentação inicial por relatório: padrão, completo, resumido quando disponível e recolhido. Salvar confirma; Cancelar/Escape/fechar descartam rascunhos; Restaurar padrão exige confirmação por Salvar.
+- Preferências locais independentes por módulo, com preservação do legado de OS e tratamento explícito de falha de gravação. Filtros, cálculos, dados importados e permissões preservados.
+- Registro de capacidades pela Section, mantendo conteúdo montado e comandos temporários de resumo/recolhimento. Acompanhamento do consumo pode revelar o histórico sem regravar preferências.
+- Testes de formato/migração/isolamento, conferência dos módulos no navegador, teclado, recuperação de relatórios ocultos, rascunhos, armazenamento e responsividade nos dois temas. Documentação de uso e manutenção atualizada.
+
 ## 0.21.3 — 16/10/2026
 
 - Menu lateral mais compacto, com ícones finos de 16 px, texto neutro e seleção por fundo suave, sem faixa lateral. Cores da Addlog mantidas nos dois temas.

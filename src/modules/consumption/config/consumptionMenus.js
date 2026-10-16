@@ -13,3 +13,6 @@ export const consumptionCategories = [
   ],
   ['history', 'Histórico e arquivos', ['Arquivos e histórico', 'Mensalidades dos extratos']],
 ];
+export const consumptionLayoutDefinitions = [
+  ...new Set(consumptionCategories.flatMap(([, , titles]) => titles)),
+].map((title) => ({ id: title, title }));

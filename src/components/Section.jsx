@@ -8,6 +8,8 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { InfoNote } from './InfoNote.jsx';
 import { alignHelp, helpChildren } from './HelpLayout.jsx';
 import { reportHelpFor } from './reportHelp.js';
+import { useLayoutContext } from '../shared/layout/PageLayout.jsx';
+import { availableLayoutMode } from '../shared/layout/pageLayout.js';
 export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
@@ -16,6 +18,16 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
   const [open, setOpen] = useState(defaultOpen);
   const [compact, setCompact] = useState(false);
   const hasSummary = Boolean(summary);
+  const layout = useLayoutContext();
+  const preference = layout?.entries[title];
+  const register = layout?.register;
+  useEffect(() => register?.(title, hasSummary), [register, title, hasSummary]);
+  useEffect(() => {
+    if (!preference) return;
+    const mode = availableLayoutMode(preference.mode, hasSummary);
+    setOpen(mode === 'default' ? defaultOpen : mode !== 'collapsed');
+    setCompact(mode === 'summary');
+  }, [preference, hasSummary, defaultOpen]);
   const expansion = useContext(ExpansionContext);
   // Conteúdo permanece montado ao recolher: gráficos, filtros e seleção não são reiniciados.
   useEffect(() => {
@@ -86,7 +98,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
   }
   return (
     <section
-      hidden={!visible || hiddenSections.includes(title)}
+      hidden={!visible || hiddenSections.includes(title) || preference?.visible === false}
       className="workspace-section report-block"
     >
       <header className="report-heading">

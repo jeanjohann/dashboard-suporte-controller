@@ -1,6 +1,7 @@
 /** Cabeçalho, seleção de arquivo, estado de leitura e apresentação inicial das OS. */
 import React from 'react';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
+import { PageSettingsButton } from '../../../components/PageSettings.jsx';
 
 /** Apresenta o recorte e as ações recebidas; a base original permanece no controlador. */
 export function OrdersImportPanel({ input, busy, error, data, load }) {
@@ -12,9 +13,17 @@ export function OrdersImportPanel({ input, busy, error, data, load }) {
           <h1>Ordens de serviço</h1>
           <p>Importe sua planilha e confira os atendimentos antes de analisar.</p>
         </div>
-        <PermissionButton action="import" onClick={() => input.current.click()} disabled={busy}>
-          {busy ? 'Lendo arquivo…' : '↑ Importar planilha'}
-        </PermissionButton>
+        <div className="page-header-actions">
+          <PermissionButton
+            className="header-import-action"
+            action="import"
+            onClick={() => input.current.click()}
+            disabled={busy}
+          >
+            {busy ? 'Lendo arquivo…' : '↑ Importar planilha'}
+          </PermissionButton>
+          <PageSettingsButton available={!!data} />
+        </div>
         <input ref={input} type="file" accept=".xlsx,.xls" hidden onChange={load} />
       </header>
       {error && (

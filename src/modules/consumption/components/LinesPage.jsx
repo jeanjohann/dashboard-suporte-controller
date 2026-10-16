@@ -3,7 +3,11 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { consumptionRecordsCsv } from '../domain/consumptionRecordsReport.js';
-import { consumptionCategories as categories } from '../config/consumptionMenus.js';
+import {
+  consumptionCategories as categories,
+  consumptionLayoutDefinitions,
+} from '../config/consumptionMenus.js';
+import { usePageLayout, PageLayoutProvider } from '../../../shared/layout/PageLayout.jsx';
 import { ConsumptionOverviewPanels } from './ConsumptionOverviewPanels.jsx';
 import { ConsumptionInvestigationPanel } from './ConsumptionInvestigationPanel.jsx';
 import { ConsumptionEquipmentPanels } from './ConsumptionEquipmentPanels.jsx';
@@ -22,12 +26,7 @@ import {
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
-import {
-  Section,
-  PrintContext,
-  ExpansionContext,
-  HiddenSectionsContext,
-} from '../../../components/Section.jsx';
+import { Section, PrintContext, ExpansionContext } from '../../../components/Section.jsx';
 import { ReportControls } from '../../../components/ReportControls.jsx';
 import { LineRecordsTable } from './LineRecordsTable.jsx';
 import { download } from '../../../shared/export/exports.js';
@@ -50,13 +49,13 @@ import { useConsumptionArchive } from '../hooks/useConsumptionArchive.js';
 /** Coordena extratos, versões, notas e referência operacional no histórico local do navegador. */
 export function LinesPage({ onPage, operational, onOperationalChange, reloadToken = 0 }) {
   const history = useConsumptionArchive(reloadToken);
+  const layout = usePageLayout('consumption');
   const { archive, ready, busy, error, message, setError, commit } = history;
   const [category, setCategory] = useState('overview'),
     [filters, setFilters] = useState({}),
     [search, setSearch] = useState(''),
     [detail, setDetail] = useState(null),
     [expansion, setExpansion] = useState(null),
-    [hiddenSections, setHiddenSections] = useState([]),
     [rankMeasure, setRankMeasure] = useState('daily');
   const historyAnchor = useRef();
   const [historyReveal, setHistoryReveal] = useState(0);
@@ -108,9 +107,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     setTracked(chipKey(row));
     setDetail(null);
     setLineSearch('');
-    setHiddenSections((previous) =>
-      previous.filter((title) => title !== 'Linha do tempo de consumo'),
-    );
+    layout.reveal('Linha do tempo de consumo');
     setExpansion(null);
     setHistoryReveal((previous) => previous + 1);
   }
@@ -227,7 +224,12 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
 
   return (
     <SidePanelProvider>
-      <HiddenSectionsContext.Provider value={hiddenSections}>
+      <PageLayoutProvider
+        layout={layout}
+        definitions={consumptionLayoutDefinitions}
+        activeIds={visibleSections}
+        scope={`Consumo M2M · ${categories.find(([key]) => key === category)[1]}`}
+      >
         <ExpansionContext.Provider value={expansion}>
           <PrintContext.Provider
             value={{
@@ -258,9 +260,6 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   </nav>
                 </SidebarContent>
                 <ConsumptionFiltersPanel
-                  visibleSections={visibleSections}
-                  hiddenSections={hiddenSections}
-                  setHiddenSections={setHiddenSections}
                   operators={operators}
                   periods={periods}
                   statements={statements}
@@ -278,7 +277,12 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   setFilters={setFilters}
                 />
                 <ReportControls onExpand={setExpansion} />
-                <ConsumptionImportHeader busy={busy} ready={ready} imports={imports} />
+                <ConsumptionImportHeader
+                  busy={busy}
+                  ready={ready}
+                  imports={imports}
+                  settingsAvailable={ready && (!!statements.length || category === 'history')}
+                />
                 {!ready && !error && <p role="status">Abrindo histórico…</p>}
                 {error && (
                   <div role="alert" className="error">
@@ -427,7 +431,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
             </div>
           </PrintContext.Provider>
         </ExpansionContext.Provider>
-      </HiddenSectionsContext.Provider>
+      </PageLayoutProvider>
     </SidePanelProvider>
   );
 }

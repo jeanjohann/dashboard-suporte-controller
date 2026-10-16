@@ -3,8 +3,13 @@ import React, { lazy, Suspense, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { PrintContext, ExpansionContext } from '../../../components/Section.jsx';
-import { cleanPreferences } from '../config/preferences.js';
-import { categoryVisibility } from '../config/dashboardCategories.js';
+import {
+  cleanPreferences,
+  orderLayoutDefinitions,
+  legacyOrderLayout,
+} from '../config/preferences.js';
+import { categoryVisibility, dashboardCategories } from '../config/dashboardCategories.js';
+import { usePageLayout, PageLayoutProvider } from '../../../shared/layout/PageLayout.jsx';
 import { useOrdersSession } from '../hooks/useOrdersSession.js';
 import { OrdersImportPanel } from './OrdersImportPanel.jsx';
 import { OrdersFiltersPanel } from './OrdersFiltersPanel.jsx';
@@ -18,24 +23,12 @@ const OrdersReports = lazy(() =>
 export function OrdersPage({ onPage, onImport, operational, source }) {
   const [expansion, setExpansion] = useState(null);
   const [category, setCategory] = useState('overview');
-  const [preferences, setVisible] = useState(() => {
-    try {
-      return cleanPreferences(JSON.parse(localStorage.getItem('suporte-layout-v1') || '{}'));
-    } catch {
-      return cleanPreferences({});
-    }
-  });
+  const layout = usePageLayout('orders', legacyOrderLayout);
+  const preferences = cleanPreferences(
+    Object.fromEntries(Object.entries(layout.effective).map(([id, item]) => [id, item.visible])),
+  );
   const visible = categoryVisibility(preferences, category);
-  const [layoutMessage, setLayoutMessage] = useState('');
-  function setVisibility(next) {
-    setVisible(next);
-    try {
-      localStorage.setItem('suporte-layout-v1', JSON.stringify(next));
-      setLayoutMessage('Preferência salva neste navegador.');
-    } catch {
-      setLayoutMessage('Preferência aplicada só nesta sessão; não foi possível salvar.');
-    }
-  }
+  const menu = dashboardCategories.find((item) => item.key === category);
   const session = useOrdersSession({ source, onImport });
   const {
     input,
@@ -57,59 +50,68 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
   const { setSearch, setPage } = records;
   return (
     <SidePanelProvider>
-      <ExpansionContext.Provider value={expansion}>
-        <PrintContext.Provider value={{ filename, filters, referenceDate }}>
-          <div className="app">
-            <Navigation page="orders" onPage={onPage} />
-            <main>
-              <OrdersImportPanel input={input} busy={busy} error={error} data={data} load={load} />
-              {data && (
-                <>
-                  <OrdersCategories
-                    category={category}
-                    setCategory={setCategory}
-                    setExpansion={setExpansion}
-                  />
-                  <OrdersFiltersPanel
-                    data={data}
-                    filename={filename}
-                    selected={selected}
-                    importedPeriod={importedPeriod}
-                    filters={filters}
-                    setFilters={setFilters}
-                    changeFilter={changeFilter}
-                    extraColumns={extraColumns}
-                    setExtraColumns={setExtraColumns}
-                    setSearch={setSearch}
-                    setPage={setPage}
-                    category={category}
-                    preferences={preferences}
-                    setVisibility={setVisibility}
-                    layoutMessage={layoutMessage}
-                    setExpansion={setExpansion}
-                  />
-                  <Suspense
-                    fallback={
-                      <section className="panel" role="status">
-                        <h2>Preparando análises…</h2>
-                        <p>Aguarde um instante.</p>
-                      </section>
-                    }
-                  >
-                    <OrdersReports
-                      session={session}
+      <PageLayoutProvider
+        layout={layout}
+        definitions={orderLayoutDefinitions}
+        activeIds={category === 'overview' ? [] : menu.sections}
+        scope={`Ordens de Serviço · ${menu.label}`}
+      >
+        <ExpansionContext.Provider value={expansion}>
+          <PrintContext.Provider value={{ filename, filters, referenceDate }}>
+            <div className="app">
+              <Navigation page="orders" onPage={onPage} />
+              <main>
+                <OrdersImportPanel
+                  input={input}
+                  busy={busy}
+                  error={error}
+                  data={data}
+                  load={load}
+                />
+                {data && (
+                  <>
+                    <OrdersCategories
                       category={category}
-                      visible={visible}
-                      operational={operational}
-                      onPage={onPage}
+                      setCategory={setCategory}
+                      setExpansion={setExpansion}
                     />
-                  </Suspense>
-                </>
-              )}
-            </main>
-          </div>
-        </PrintContext.Provider>
-      </ExpansionContext.Provider>
+                    <OrdersFiltersPanel
+                      data={data}
+                      filename={filename}
+                      selected={selected}
+                      importedPeriod={importedPeriod}
+                      filters={filters}
+                      setFilters={setFilters}
+                      changeFilter={changeFilter}
+                      extraColumns={extraColumns}
+                      setExtraColumns={setExtraColumns}
+                      setSearch={setSearch}
+                      setPage={setPage}
+                      setExpansion={setExpansion}
+                    />
+                    <Suspense
+                      fallback={
+                        <section className="panel" role="status">
+                          <h2>Preparando análises…</h2>
+                          <p>Aguarde um instante.</p>
+                        </section>
+                      }
+                    >
+                      <OrdersReports
+                        session={session}
+                        category={category}
+                        visible={visible}
+                        operational={operational}
+                        onPage={onPage}
+                      />
+                    </Suspense>
+                  </>
+                )}
+              </main>
+            </div>
+          </PrintContext.Provider>
+        </ExpansionContext.Provider>
+      </PageLayoutProvider>
     </SidePanelProvider>
   );
 }

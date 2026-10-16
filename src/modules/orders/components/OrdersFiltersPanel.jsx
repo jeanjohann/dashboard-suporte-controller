@@ -5,7 +5,6 @@ import { PeriodFilter } from '../../../components/PeriodFilter.jsx';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { ReportControls } from '../../../components/ReportControls.jsx';
 import { filterFields, filterLabels } from '../../../shared/data/filters.js';
-import { OrdersReportChoices } from './OrdersReportMenu.jsx';
 
 /** Apresenta o recorte e as ações recebidas; a base original permanece no controlador. */
 export function OrdersFiltersPanel({
@@ -20,10 +19,6 @@ export function OrdersFiltersPanel({
   setExtraColumns,
   setSearch,
   setPage,
-  category,
-  preferences,
-  setVisibility,
-  layoutMessage,
   setExpansion,
 }) {
   return (
@@ -163,12 +158,6 @@ export function OrdersFiltersPanel({
             })}
           </div>
         </details>
-        <OrdersReportChoices
-          category={category}
-          preferences={preferences}
-          setVisibility={setVisibility}
-          layoutMessage={layoutMessage}
-        />
       </details>
 
       <div className="active-filters">

@@ -4,6 +4,12 @@
  */
 import React from 'react';
 const paths = {
+  settings: (
+    <>
+      <path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
   monitoring: (
     <>
       <circle cx="12" cy="12" r="9" />

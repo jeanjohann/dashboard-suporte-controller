@@ -15,6 +15,7 @@ import './styles/sidebar.css';
 import './styles/layout-polish.css';
 import './styles/filters.css';
 import './styles/controls.css';
+import './styles/page-settings.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>
