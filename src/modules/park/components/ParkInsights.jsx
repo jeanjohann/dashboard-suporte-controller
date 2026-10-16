@@ -33,9 +33,9 @@ export function ParkInsights({
   onConfigurePeriod,
 }) {
   const [columns, setColumns] = useState(Object.keys(parkColumns));
-  const [start, setStart] = useState(''),
-    [end, setEnd] = useState(''),
-    [group, setGroup] = useState('client'),
+  const start = filters.attendanceStart || '',
+    end = filters.attendanceEnd || '';
+  const [group, setGroup] = useState('client'),
     [measure, setMeasure] = useState('assistance'),
     [type, setType] = useState('bars'),
     [includeOriginal, setIncludeOriginal] = useState(true),
@@ -119,31 +119,6 @@ export function ParkInsights({
       }}
     >
       <Section visible title={parkSections[0]}>
-        <section className="panel filters">
-          <h2>Período dos atendimentos vinculados</h2>
-          <div className="filter-grid">
-            <label>
-              Atendimento a partir de
-              <input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
-            </label>
-            <label>
-              Atendimento até
-              <input type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
-            </label>
-          </div>
-          <button
-            onClick={() => {
-              setStart('');
-              setEnd('');
-            }}
-          >
-            Usar todo o histórico disponível
-          </button>
-          <InfoNote>
-            Estas datas afetam apenas as novas análises de manutenção, sem alterar a base
-            operacional ou os filtros da página de OS.
-          </InfoNote>
-        </section>
         {result.unavailable ? (
           <p className="notice">
             Importe a OS com Status, ID Rastreador, Placa, Tipo de Serviço, Motivo e Data de
@@ -364,7 +339,7 @@ export function ParkInsights({
               {end || 'sem limite final'}.
             </p>
             {onConfigurePeriod && (
-              <button onClick={onConfigurePeriod}>Ajustar período em Manutenção</button>
+              <button onClick={onConfigurePeriod}>Ajustar período desta categoria</button>
             )}
             <label>
               Agrupamento do relatório

@@ -1,5 +1,9 @@
 # Filtros e apresentação
 
+## Filtros por categoria — 0.24.0
+
+O quadro único reúne alcance, período, campos recolhíveis, seleções ativas removíveis, contagem e ações. Cada categoria mantém sua própria seleção durante a sessão; o menu indica campos ativos. Limpar uma categoria não modifica as outras. O guia [Filtros por categoria](FILTROS-POR-CATEGORIA.md) descreve aplicação, reinício por fonte e exceções de consumo, importação e Monitoramento. Descrições de filtros compartilhados nas entregas históricas abaixo representam o comportamento anterior.
+
 ## Preferências no cabeçalho — 0.22.0
 
 “Relatórios exibidos” saiu da lateral e passou para a engrenagem Personalizar página. A janela permite visibilidade e apresentação inicial por seção, com Salvar, Cancelar e Restaurar padrão. Preferências locais e antigas escolhas de OS são preservadas; a lateral mantém somente categorias. Consulte [Personalização das páginas](PERSONALIZACAO-DE-PAGINAS.md) para modos, disponibilidade e limites.

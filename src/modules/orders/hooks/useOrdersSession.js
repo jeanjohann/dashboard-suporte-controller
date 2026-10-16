@@ -8,9 +8,10 @@ import { equipment } from '../domain/equipment.js';
 import { observedPeriods, todaySaoPaulo } from '../domain/lifecycle.js';
 import { searchOrderRecords, sortOrderRecords } from '../domain/orderRecords.js';
 import { reviewOrderConsistency } from '../domain/orderReview.js';
+import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
 
 /** A base pertence ao Workspace; falhas de importação não a substituem. Busca textual afeta apenas a tabela. */
-export function useOrdersSession({ source, onImport }) {
+export function useOrdersSession({ source, onImport, scope = 'overview' }) {
   const input = useRef();
   const previousSource = useRef(source);
   const [recordSort, setRecordSort] = useState(null);
@@ -18,11 +19,18 @@ export function useOrdersSession({ source, onImport }) {
     filename = source?.filename || '';
   const [error, setError] = useState(''),
     [busy, setBusy] = useState(false);
-  const [search, setSearch] = useState(''),
-    [page, setPage] = useState(0),
+  const [page, setPage] = useState(0),
     [view, setView] = useState('records');
-  const [filters, setFilters] = useState({});
-  const [extraColumns, setExtraColumns] = useState([]);
+  const {
+    filters,
+    setFilters,
+    search,
+    setSearch,
+    extraColumns,
+    setExtraColumns,
+    resetSelections,
+    counts,
+  } = useScopedSelection(scope);
   const [referenceDate, setReferenceDate] = useState(todaySaoPaulo);
   const [cycleState, setCycleState] = useState('Todos');
   const changeFilter = (key, value) => {
@@ -45,8 +53,7 @@ export function useOrdersSession({ source, onImport }) {
       setSearch('');
       setView('records');
       onImport({ data: result, filename: file.name });
-      setFilters({});
-      setExtraColumns([]);
+      resetSelections();
       setRecordSort(null);
     } catch (e) {
       setError(e.message || 'Não foi possível ler o arquivo.');
@@ -63,7 +70,7 @@ export function useOrdersSession({ source, onImport }) {
       setPage(0);
       return;
     }
-    setFilters({});
+    resetSelections();
     setCycleState('Todos');
     setExtraColumns([]);
     setRecordSort(null);
@@ -71,6 +78,9 @@ export function useOrdersSession({ source, onImport }) {
     setSearch('');
     setView('records');
   }, [source]);
+  useEffect(() => {
+    setPage(0);
+  }, [scope]);
   const importedPeriod = data ? attendanceExtent(data) : null;
   const selected = data ? applyFilters(data, filters) : null;
   const filtered = searchOrderRecords(selected?.rows ?? [], search);
@@ -113,6 +123,7 @@ export function useOrdersSession({ source, onImport }) {
     busy,
     load,
     filters,
+    filterCounts: counts,
     setFilters,
     changeFilter,
     extraColumns,

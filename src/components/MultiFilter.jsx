@@ -62,7 +62,11 @@ export function MultiFilter({ label, options, values, disabled, onChange }) {
       <span>{label}</span>
       <details onToggle={(event) => setOpen(event.currentTarget.open)}>
         <summary ref={trigger} aria-label={`Selecionar ${label}`}>
-          {disabled ? 'Coluna ausente' : values.length ? `${values.length} selecionados` : 'Todos'}
+          {disabled
+            ? 'Coluna ausente'
+            : values.length
+              ? `${values.length} ${values.length === 1 ? 'selecionado' : 'selecionados'}`
+              : 'Todos'}
         </summary>
         {open &&
           !disabled &&

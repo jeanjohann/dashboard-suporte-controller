@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Seleção por categoria — 0.24.0
+
+`shared/filters/` mantém seleção, busca e colunas adicionais por espaço. OS usa a chave da categoria; Operacional/Parque combinam página e categoria; Consumo e Monitoramento usam suas categorias. Logística conserva seleção própria no coordenador operacional, sem ser apagada por mudança da base operacional. `FilterPanel` apresenta alcance, chips e ações. A atualização de dados Google preserva todos os espaços; outras importações válidas reiniciam as seleções da base. Não há persistência nova ou mudança das funções de domínio. [Critérios e exceções](FILTROS-POR-CATEGORIA.md).
+
 ## Fonte Google Sheets — 0.23.0
 
 O piloto adiciona uma fonte sem alterar os cálculos. `server/googleOrders.js` autentica a conta de serviço e solicita uma única aba fixa. O Worker valida a sessão Access e exige administrador. `shared/data/googleOrdersSnapshot.js` valida o contrato; `modules/orders/data/googleOrders.js` adapta células para `importOrdersSheet`, compartilhado com o Excel. `useGoogleOrders` controla consultas e `OrdersGooglePanel` apresenta o estado da fonte.

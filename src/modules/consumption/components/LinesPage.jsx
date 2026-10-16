@@ -28,6 +28,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { Section, PrintContext, ExpansionContext } from '../../../components/Section.jsx';
 import { ReportControls } from '../../../components/ReportControls.jsx';
+import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
+import { FilterCount } from '../../../components/FilterPanel.jsx';
 import { LineRecordsTable } from './LineRecordsTable.jsx';
 import { download } from '../../../shared/export/exports.js';
 import {
@@ -52,11 +54,14 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
   const layout = usePageLayout('consumption');
   const { archive, ready, busy, error, message, setError, commit } = history;
   const [category, setCategory] = useState('overview'),
-    [filters, setFilters] = useState({}),
-    [search, setSearch] = useState(''),
     [detail, setDetail] = useState(null),
     [expansion, setExpansion] = useState(null),
     [rankMeasure, setRankMeasure] = useState('daily');
+  const { filters, setFilters, search, setSearch, resetSelections, counts } =
+    useScopedSelection(category);
+  useEffect(() => {
+    setDetail(null);
+  }, [category]);
   const historyAnchor = useRef();
   const [historyReveal, setHistoryReveal] = useState(0);
   const statements = useMemo(() => historyStatements(archive.files), [archive.files]);
@@ -115,7 +120,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     history,
     operational,
     onOperationalChange,
-    onResetFilters: () => setFilters({}),
+    onResetFilters: resetSelections,
     onClearDetail: () => setDetail(null),
     onClearTracked: () => setTracked(''),
     onReviewBackup: () => setCategory('history'),
@@ -236,6 +241,7 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
               filename: statements.map((file) => file.filename).join(' / '),
               filters: {
                 ...filters,
+                alcance: `Consumo → ${categories.find(([key]) => key === category)[1]}`,
                 busca: search,
                 periodos: periods,
                 referencia: reference?.filename,
@@ -255,11 +261,21 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                         onClick={() => setCategory(key)}
                       >
                         {label}
+                        <FilterCount count={counts[key]} />
                       </button>
                     ))}
                   </nav>
                 </SidebarContent>
+                <ConsumptionImportHeader
+                  busy={busy}
+                  ready={ready}
+                  imports={imports}
+                  settingsAvailable={ready && (!!statements.length || category === 'history')}
+                />
                 <ConsumptionFiltersPanel
+                  scope={`Consumo → ${categories.find(([key]) => key === category)[1]}`}
+                  selectedCount={selected.length}
+                  actions={<ReportControls onExpand={setExpansion} />}
                   operators={operators}
                   periods={periods}
                   statements={statements}
@@ -275,13 +291,6 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   setSearch={setSearch}
                   setDetail={setDetail}
                   setFilters={setFilters}
-                />
-                <ReportControls onExpand={setExpansion} />
-                <ConsumptionImportHeader
-                  busy={busy}
-                  ready={ready}
-                  imports={imports}
-                  settingsAvailable={ready && (!!statements.length || category === 'history')}
                 />
                 {!ready && !error && <p role="status">Abrindo histórico…</p>}
                 {error && (

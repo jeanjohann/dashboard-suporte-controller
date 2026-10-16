@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import { alignHelp } from './HelpLayout.jsx';
+import { FilterPanel } from './FilterPanel.jsx';
 /** Apresenta as ações compartilhadas para abrir ou recolher os relatórios. */
 export function ReportControls({ onExpand }) {
   if (!onExpand) return null;
@@ -22,13 +23,6 @@ export function ReportControls({ onExpand }) {
   );
 }
 /** Agrupa filtros locais; as escolhas de apresentação ficam no modal de personalização do cabeçalho. */
-export function PagePersonalization({ children }) {
-  return (
-    <>
-      <details className="panel personalization compact-filters">
-        <summary>Filtros da página</summary>
-        {alignHelp(children)}
-      </details>
-    </>
-  );
+export function PagePersonalization({ children, ...props }) {
+  return <FilterPanel {...props}>{alignHelp(children)}</FilterPanel>;
 }

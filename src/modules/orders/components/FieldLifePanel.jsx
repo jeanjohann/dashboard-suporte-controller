@@ -147,6 +147,7 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
         ...printContext,
         referenceDate: result.reference,
         filters: {
+          ...printContext.filters,
           ...filters,
           'Categoria de equipamento': category,
           'Início do ciclo':

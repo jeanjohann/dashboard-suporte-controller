@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Entregue em 0.24.0: filtros independentes por categoria, quadro compacto único e indicação de campos ativos no menu. [Critérios e limites](FILTROS-POR-CATEGORIA.md). Integração Google e demais dependências abaixo permanecem com seus estados próprios.
+
 Piloto Google Sheets de OS preparado em 0.23.0, com fonte fixa e acesso exclusivo de administradores. Aba `OS 2025_26` confirmada em 16/10/2026. A configuração real será retomada quando o proprietário tiver acesso ao Google Cloud no escritório. Pendente: conferir a conta de serviço/API, credencial no Cloudflare, compartilhamento como leitor e comparação real com Excel. Ampliação a outros usuários/módulos e armazenamento compartilhado não foram ativados. [Configuração e limites](GOOGLE-SHEETS.md).
 
 Atualizada em 15/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.

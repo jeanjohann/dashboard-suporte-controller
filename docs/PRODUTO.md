@@ -1,6 +1,6 @@
 # Suporte Controller — produto e regras de negócio
 
-Atualizado em 15/10/2026. Versão atual: 0.21.1.
+Atualizado em 16/10/2026. Versão atual: 0.24.0. Filtros independentes por categoria, conforme escolha do proprietário; detalhes e exceções em [Filtros por categoria](FILTROS-POR-CATEGORIA.md). As seções de versões anteriores registram a evolução histórica.
 
 ## Objetivo
 

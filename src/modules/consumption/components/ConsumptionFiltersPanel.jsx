@@ -1,10 +1,13 @@
 /** Controles de período, categorias, busca e visibilidade. Seleção analítica permanece nas funções de domínio. */
 import React from 'react';
 import { PagePersonalization } from '../../../components/ReportControls.jsx';
-import { InfoNote } from '../../../components/InfoNote.jsx';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { periodOptions } from '../domain/lineConsumption.js';
+import { filterChips, filterDisplay } from '../../../shared/filters/scopedSelection.js';
 export function ConsumptionFiltersPanel({
+  scope,
+  selectedCount,
+  actions,
   operators,
   periods,
   statements,
@@ -21,9 +24,68 @@ export function ConsumptionFiltersPanel({
   setDetail,
   setFilters,
 }) {
+  const labels = Object.fromEntries(fields);
+  Object.assign(labels, {
+    periods: 'Apurações',
+    minimumMB: 'Consumo acima de MB',
+    consumption: 'Consumo',
+  });
+  const chips = filterChips(filters, {
+    labels,
+    format: (value, key) =>
+      key === 'periods'
+        ? Object.entries(value)
+            .map(
+              ([operator, period]) =>
+                `${operator}: ${periodOptions(statements, operator).find((option) => option.key === period)?.label || period}`,
+            )
+            .join('; ')
+        : key === 'consumption'
+          ? { positive: 'Com tráfego', zero: 'Consumo zero', attention: 'Acima da referência' }[
+              value
+            ] || value
+          : filterDisplay(value),
+    remove: (key) => {
+      setFilters((previous) => ({
+        ...previous,
+        [key]: key === 'periods' ? {} : fields.some(([field]) => field === key) ? [] : '',
+      }));
+      setDetail(null);
+    },
+  });
+  if (search)
+    chips.push({
+      key: 'search',
+      label: 'Busca',
+      value: search,
+      remove: () => {
+        setSearch('');
+        setDetail(null);
+      },
+    });
   return (
-    <PagePersonalization>
-      <h3>Filtros de consumo</h3>
+    <PagePersonalization
+      scope={scope}
+      chips={chips}
+      matched={selectedCount}
+      onClear={() => {
+        setFilters({});
+        setSearch('');
+        setDetail(null);
+      }}
+      actions={actions}
+      help="Filtros, busca e apurações afetam somente esta categoria. Uma apuração por operadora, sem somar períodos sobrepostos. A média de investigação usa todas as linhas válidas da operadora na apuração, antes dos filtros; seu multiplicador é configuração compartilhada. A linha do tempo individual usa todo o histórico do chip, independentemente do recorte da grade. Arquivos e backups representam o histórico armazenado, sem ser apagados pelos filtros."
+      source={
+        operators.length
+          ? operators
+              .map(
+                (operator) =>
+                  `${operator}: ${periodOptions(statements, operator).find((period) => period.key === periods[operator])?.label || 'Sem apuração'}`,
+              )
+              .join(' · ')
+          : 'Nenhuma apuração carregada'
+      }
+    >
       <div className="filter-grid">
         {operators.map((operator) => (
           <label key={operator}>
@@ -71,6 +133,7 @@ export function ConsumptionFiltersPanel({
         <label>
           Consumo
           <select
+            aria-label="Consumo"
             value={filters.consumption || ''}
             onChange={(event) => filter('consumption', event.target.value)}
           >
@@ -81,7 +144,7 @@ export function ConsumptionFiltersPanel({
           </select>
         </label>
         <label>
-          Destacar acima de{' '}
+          Referência compartilhada · destacar acima de{' '}
           <input
             type="number"
             min="1"
@@ -114,20 +177,6 @@ export function ConsumptionFiltersPanel({
           placeholder="Digite para buscar…"
         />
       </label>
-      <button
-        onClick={() => {
-          setFilters({});
-          setSearch('');
-          setDetail(null);
-        }}
-      >
-        Limpar filtros
-      </button>
-      <InfoNote>
-        Uma apuração por operadora. Os períodos são preservados; MB por dia ajuda a comparar
-        durações diferentes. A média de investigação usa todas as linhas válidas da operadora nessa
-        apuração, antes da busca e dos filtros de cliente.
-      </InfoNote>
     </PagePersonalization>
   );
 }

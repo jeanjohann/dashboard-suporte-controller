@@ -8,24 +8,46 @@ import {
 } from '../../../shared/security/accessClient.js';
 import { allowsSource } from '../../../shared/security/permissions.js';
 import { Section, PrintContext } from '../../../components/Section.jsx';
-import { InfoNote } from '../../../components/InfoNote.jsx';
-import { PagePersonalization } from '../../../components/ReportControls.jsx';
+import { PagePersonalization, ReportControls } from '../../../components/ReportControls.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import { importLogistics, selectLogistics, logisticsSections } from '../domain/logistics.js';
+import { PeriodFilter } from '../../../components/PeriodFilter.jsx';
+import { filterChips, filterDisplay } from '../../../shared/filters/scopedSelection.js';
 
-export function LogisticsPanel({ source, onImport }) {
+export function LogisticsPanel({ source, onImport, filters, setFilters, onExpand }) {
   const input = useRef();
-  const [filters, setFilters] = useState({}),
-    [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [detail, setDetail] = useState(null);
   useEffect(() => {
-    setFilters({});
     setDetail(null);
   }, [source]);
   const data = source?.data;
   const selected = data ? selectLogistics(data, filters) : null;
+  const earliest = data?.rows
+    .map((row) => row.eventDate)
+    .filter(Boolean)
+    .sort()[0];
+  const chips = filterChips(filters, {
+    labels: {
+      type: 'Movimentação',
+      receipt: 'Recebimento',
+      start: 'De',
+      end: 'Até',
+      search: 'Busca',
+    },
+    format: (value, key) =>
+      key === 'receipt'
+        ? value === 'recorded'
+          ? 'Com data válida'
+          : 'Sem data válida / conferir'
+        : filterDisplay(value),
+    remove: (key) => {
+      setFilters((previous) => ({ ...previous, [key]: '' }));
+      setDetail(null);
+    },
+  });
   const update = (key, value) => {
     setFilters((previous) => ({ ...previous, [key]: value }));
     setDetail(null);
@@ -109,7 +131,12 @@ export function LogisticsPanel({ source, onImport }) {
     );
   }
   return (
-    <PrintContext.Provider value={{ filename: source?.filename, filters }}>
+    <PrintContext.Provider
+      value={{
+        filename: source?.filename,
+        filters: { ...filters, alcance: 'Parque e Manutenção → Logística' },
+      }}
+    >
       <div className="logistics-import-actions" data-no-print>
         <PermissionButton action="import" disabled={busy} onClick={() => input.current.click()}>
           {busy ? 'Lendo logística…' : 'Importar envios e devoluções'}
@@ -132,16 +159,44 @@ export function LogisticsPanel({ source, onImport }) {
         </section>
       ) : (
         <>
-          <PagePersonalization>
-            <div className="inline-help-heading">
-              <h3>Filtros da logística</h3>
-              <InfoNote>
-                Filtros locais desta base. Período usa Envio na aba Envios e Data Recebimento na aba
-                Devoluções. Sem limite de período, registros sem data continuam visíveis; com
-                limite, são excluídos e contados separadamente. Busca consulta as células originais.
-                Estes filtros não afetam OS ou Operacional.
-              </InfoNote>
-            </div>
+          <PagePersonalization
+            actions={<ReportControls onExpand={onExpand} />}
+            scope="Parque e Manutenção → Logística"
+            chips={chips}
+            matched={selected.rows.length}
+            total={data.rows.length}
+            onClear={() => {
+              setFilters({});
+              setDetail(null);
+            }}
+            period={
+              <PeriodFilter
+                start={filters.start}
+                end={filters.end}
+                earliest={earliest}
+                onChange={update}
+              />
+            }
+            help="Filtros somente desta categoria. Período usa Envio em Envios e Data Recebimento em Devoluções. Sem limite, registros sem data permanecem; com limite, são excluídos e contados. Busca consulta células originais. A seleção é mantida ao navegar e não afeta OS, Operacional ou outras categorias de Parque e Manutenção."
+            source={`${source.filename} · Envios + Devoluções · originais preservados`}
+            notice={
+              (selected.invalidPeriod || selected.missingDates > 0) && (
+                <>
+                  {selected.invalidPeriod && (
+                    <p className="error" role="alert">
+                      A data inicial deve ser anterior ou igual à final.
+                    </p>
+                  )}
+                  {selected.missingDates > 0 && (
+                    <span>
+                      {selected.missingDates} movimentações excluídas por data ausente ou inválida
+                      com período ativo.
+                    </span>
+                  )}
+                </>
+              )
+            }
+          >
             <div className="filter-grid">
               <label>
                 Movimentação
@@ -167,22 +222,6 @@ export function LogisticsPanel({ source, onImport }) {
                   <option value="undated">Sem data válida / conferir</option>
                 </select>
               </label>
-              <label>
-                Movimentação a partir de
-                <input
-                  type="date"
-                  value={filters.start || ''}
-                  onChange={(e) => update('start', e.target.value)}
-                />
-              </label>
-              <label>
-                Movimentação até
-                <input
-                  type="date"
-                  value={filters.end || ''}
-                  onChange={(e) => update('end', e.target.value)}
-                />
-              </label>
             </div>
             <label className="logistics-search">
               Buscar cliente, ID, chamado, placa ou conteúdo original
@@ -192,28 +231,7 @@ export function LogisticsPanel({ source, onImport }) {
                 onChange={(e) => update('search', e.target.value)}
               />
             </label>
-            <button
-              onClick={() => {
-                setFilters({});
-                setDetail(null);
-              }}
-            >
-              Limpar filtros da logística
-            </button>
           </PagePersonalization>
-          <div className="source">
-            <strong>{source.filename}</strong>
-            <span>Envios + Devoluções · originais preservados</span>
-          </div>
-          {selected.invalidPeriod && (
-            <p className="error" role="alert">
-              A data inicial deve ser anterior ou igual à final.
-            </p>
-          )}
-          <p className="scope">
-            {selected.rows.length} de {data.rows.length} movimentações na seleção.{' '}
-            {selected.missingDates} excluídas por data ausente ou inválida com período ativo.
-          </p>
           <Section
             title={logisticsSections[0]}
             visible

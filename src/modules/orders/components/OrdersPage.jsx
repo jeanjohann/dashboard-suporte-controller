@@ -31,7 +31,7 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
   );
   const visible = categoryVisibility(preferences, category);
   const menu = dashboardCategories.find((item) => item.key === category);
-  const session = useOrdersSession({ source, onImport });
+  const session = useOrdersSession({ source, onImport, scope: category });
   const google = useGoogleOrders({ source, onImport, active, manualBusy: session.busy });
   const {
     input,
@@ -60,7 +60,13 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
         scope={`Ordens de Serviço · ${menu.label}`}
       >
         <ExpansionContext.Provider value={expansion}>
-          <PrintContext.Provider value={{ filename, filters, referenceDate }}>
+          <PrintContext.Provider
+            value={{
+              filename,
+              filters: { ...filters, alcance: `OS → ${menu.label}` },
+              referenceDate,
+            }}
+          >
             <div className="app">
               <Navigation page="orders" onPage={onPage} />
               <main>
@@ -79,9 +85,12 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                       category={category}
                       setCategory={setCategory}
                       setExpansion={setExpansion}
+                      filterCounts={session.filterCounts}
                     />
                     <OrdersFiltersPanel
                       data={data}
+                      scope={`OS → ${menu.label}`}
+                      search={records.search}
                       filename={filename}
                       selected={selected}
                       importedPeriod={importedPeriod}

@@ -23,7 +23,8 @@ import { ReportControls, PagePersonalization } from '../../../components/ReportC
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { Chart } from '../../../components/Chart.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
-import { field } from '../../../shared/data/filters.js';
+import { field, attendanceExtent } from '../../../shared/data/filters.js';
+import { PeriodFilter } from '../../../components/PeriodFilter.jsx';
 import { sortOperationalRecords } from '../domain/operationalRecords.js';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { ParkInsights } from '../../park/components/ParkInsights.jsx';
@@ -37,6 +38,9 @@ import {
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { usePageLayout, PageLayoutProvider } from '../../../shared/layout/PageLayout.jsx';
 import { PageSettingsButton } from '../../../components/PageSettings.jsx';
+import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
+import { filterChips, activeFilterEntries } from '../../../shared/filters/scopedSelection.js';
+import { FilterCount } from '../../../components/FilterPanel.jsx';
 
 const layoutDefinitions = [
   ...new Set([...operationalMenus, ...crossAnalysisMenus].flatMap((menu) => menu.sections)),
@@ -56,14 +60,52 @@ export function OperationalPage({
   setLogistics,
 }) {
   const [expansion, setExpansion] = useState(null);
+  const [logisticsFilters, setLogisticsFilters] = useState({});
+  useEffect(() => {
+    setLogisticsFilters({});
+  }, [logistics]);
   const operationalLayout = usePageLayout('operational');
   const parkLayout = usePageLayout('park');
-  const [filters, setFilters] = useState({});
   const [menuSelections, setMenuSelections] = useState({
     operational: 'overview',
     'operational-analysis': 'overview',
   });
   const menuCategory = menuSelections[page] || 'overview';
+  const { filters, setFilters, search, setSearch, resetSelections, counts } = useScopedSelection(
+    `${page}:${menuCategory}`,
+  );
+  const category = filters.reviewCategory || '';
+  const setCategory = (value) => setFilters((previous) => ({ ...previous, reviewCategory: value }));
+  const scopeLabel = `${page === 'operational-analysis' ? 'Parque e Manutenção' : 'Operacional'} → ${(page === 'operational-analysis' ? crossAnalysisMenus : operationalMenus).find((menu) => menu.key === menuCategory)?.label}`;
+  const filterLabels = {
+    client: 'Cliente operacional',
+    model: 'Modelo operacional',
+    plan: 'Plano operacional',
+    status: 'Situação operacional',
+    reviewCategory: 'Categoria da revisão',
+    attendanceStart: 'Atendimento de',
+    attendanceEnd: 'Atendimento até',
+  };
+  const chips = filterChips(filters, {
+    labels: filterLabels,
+    remove: (key) => {
+      setFilters((previous) => ({
+        ...previous,
+        [key]: ['reviewCategory', 'attendanceStart', 'attendanceEnd'].includes(key) ? '' : [],
+      }));
+      setOffset(0);
+    },
+  });
+  if (search)
+    chips.push({
+      key: 'search',
+      label: 'Busca',
+      value: search,
+      remove: () => {
+        setSearch('');
+        setOffset(0);
+      },
+    });
   const selectMenu = (key) => {
     setMenuSelections((previous) => ({ ...previous, [page]: key }));
     setExpansion(null);
@@ -72,18 +114,21 @@ export function OperationalPage({
   const input = useRef(),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false),
-    [search, setSearch] = useState(''),
-    [category, setCategory] = useState(''),
     [offset, setOffset] = useState(0),
     [group, setGroup] = useState('client'),
     [chartType, setChartType] = useState('bars'),
     [detail, setDetail] = useState(null);
   const [recordSort, setRecordSort] = useState(null);
   useEffect(() => {
+    resetSelections();
     setRecordSort(null);
     setOffset(0);
     setDetail(null);
   }, [source]);
+  useEffect(() => {
+    setOffset(0);
+    setDetail(null);
+  }, [page, menuCategory]);
   async function load(event) {
     if (!(await authorizeAction('import'))) {
       event.target.value = '';
@@ -102,7 +147,7 @@ export function OperationalPage({
       setDetail(null);
       setSearch('');
       setCategory('');
-      setFilters({});
+      resetSelections();
     } catch (e) {
       setError(e.message);
     } finally {
@@ -229,7 +274,7 @@ export function OperationalPage({
             <PrintContext.Provider
               value={{
                 filename: source?.filename,
-                filters: { busca: search, categoria: category },
+                filters: { ...filters, busca: search, categoria: category, alcance: scopeLabel },
               }}
             >
               <div className="app operational-page">
@@ -251,15 +296,77 @@ export function OperationalPage({
                           onClick={() => selectMenu(menu.key)}
                         >
                           {menu.label}
+                          <FilterCount
+                            count={
+                              menu.key === 'logistics'
+                                ? activeFilterEntries(logisticsFilters).length
+                                : counts[`${page}:${menu.key}`]
+                            }
+                          />
                         </button>
                       ))}
                     </nav>
                   </SidebarContent>
-                  {!logisticsView && (
-                    <PagePersonalization>
+                  <header>
+                    <div>
+                      <div className="eyebrow">BASE OPERACIONAL</div>
+                      <h1>
+                        {analysis ? 'Parque e Manutenção' : 'Operacional — Importação e Revisão'}
+                      </h1>
+                      <p>
+                        {analysis
+                          ? logisticsView
+                            ? 'Envios e devoluções de equipamentos · registros e conferência.'
+                            : 'Parque registrado e cobertura do histórico de serviços.'
+                          : 'Confira os registros originais e os pontos para revisão manual.'}
+                      </p>
+                    </div>
+                    <div className="page-header-actions">
+                      {!logisticsView && (
+                        <PermissionButton
+                          className="header-import-action"
+                          action="import"
+                          disabled={busy}
+                          onClick={() => input.current.click()}
+                        >
+                          {busy ? 'Lendo…' : 'Importar operacional'}
+                        </PermissionButton>
+                      )}
+                      <PageSettingsButton available={logisticsView ? !!logistics?.data : !!data} />
+                    </div>
+                    <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
+                  </header>
+                  {!logisticsView && data && (analysis || menuCategory !== 'overview') && (
+                    <PagePersonalization
+                      scope={scopeLabel}
+                      chips={chips}
+                      matched={rows.length}
+                      total={data.rows.length}
+                      period={
+                        analysis && ['maintenance', 'reports'].includes(menuCategory) ? (
+                          <PeriodFilter
+                            start={filters.attendanceStart}
+                            end={filters.attendanceEnd}
+                            earliest={orders?.data ? attendanceExtent(orders.data).start : null}
+                            onChange={(key, value) =>
+                              setFilters((previous) => ({
+                                ...previous,
+                                [key === 'start' ? 'attendanceStart' : 'attendanceEnd']: value,
+                              }))
+                            }
+                          />
+                        ) : null
+                      }
+                      onClear={() => {
+                        setFilters({});
+                        setSearch('');
+                        setOffset(0);
+                      }}
+                      actions={<ReportControls onExpand={setExpansion} />}
+                      help="A busca e os campos afetam somente esta categoria: registros, análises, vínculos e revisão exibidos aqui. Operacional e Parque e Manutenção mantêm seleções separadas. Em Manutenção e Relatórios, o período seleciona os atendimentos vinculados, sem reduzir o denominador de equipamentos do parque. Cards de conferência da importação representam o arquivo completo. Ausência de histórico nas OS não significa erro."
+                    >
                       {data ? (
                         <>
-                          <h3>Filtros operacionais</h3>
                           <section className="panel filters">
                             <label>
                               Buscar cliente, serial, placa, ICCID, situação, plano ou modelo
@@ -292,20 +399,6 @@ export function OperationalPage({
                                 />
                               ))}
                             </div>
-                            <button
-                              onClick={() => {
-                                setFilters({});
-                                setSearch('');
-                                setOffset(0);
-                              }}
-                            >
-                              Limpar filtros operacionais
-                            </button>
-                            <p className="scope">
-                              {rows.length} de {data.rows.length} registros. A busca afeta os cards
-                              de análise, gráficos, vínculos e revisão. Os cards de importação
-                              representam o arquivo completo.
-                            </p>
                           </section>
                         </>
                       ) : (
@@ -313,43 +406,19 @@ export function OperationalPage({
                       )}
                     </PagePersonalization>
                   )}
-                  <ReportControls onExpand={setExpansion} />
-                  <header>
-                    <div>
-                      <div className="eyebrow">BASE OPERACIONAL</div>
-                      <h1>
-                        {analysis ? 'Parque e Manutenção' : 'Operacional — Importação e Revisão'}
-                      </h1>
-                      <p>
-                        {analysis
-                          ? logisticsView
-                            ? 'Envios e devoluções de equipamentos · registros e conferência.'
-                            : 'Parque registrado e cobertura do histórico de serviços.'
-                          : 'Confira os registros originais e os pontos para revisão manual.'}
-                      </p>
-                    </div>
-                    <div className="page-header-actions">
-                      {!logisticsView && (
-                        <PermissionButton
-                          className="header-import-action"
-                          action="import"
-                          disabled={busy}
-                          onClick={() => input.current.click()}
-                        >
-                          {busy ? 'Lendo…' : 'Importar operacional'}
-                        </PermissionButton>
-                      )}
-                      <PageSettingsButton available={logisticsView ? !!logistics?.data : !!data} />
-                    </div>
-                    <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
-                  </header>
                   {error && !logisticsView && (
                     <div className="error" role="alert">
                       {error} {data && 'A importação anterior foi mantida.'}
                     </div>
                   )}
                   {logisticsView ? (
-                    <LogisticsPanel source={logistics} onImport={setLogistics} />
+                    <LogisticsPanel
+                      source={logistics}
+                      onImport={setLogistics}
+                      onExpand={setExpansion}
+                      filters={logisticsFilters}
+                      setFilters={setLogisticsFilters}
+                    />
                   ) : !data ? (
                     <section className="empty">
                       <h2>Selecione a planilha operacional</h2>
@@ -397,8 +466,14 @@ export function OperationalPage({
                             orders={orders?.data}
                             operationalFilename={source.filename}
                             ordersFilename={orders?.filename}
-                            filters={{ ...filters, busca: search }}
-                            onConfigurePeriod={() => selectMenu('maintenance')}
+                            filters={{ ...filters, busca: search, alcance: scopeLabel }}
+                            onConfigurePeriod={() =>
+                              document
+                                .querySelector(
+                                  '.operational-page .filter-workspace input[type="date"]',
+                                )
+                                ?.focus()
+                            }
                           />
                           <Section title="Parque por cliente, modelo, plano e situação">
                             <label>

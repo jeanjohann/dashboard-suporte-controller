@@ -6,6 +6,8 @@ Para estudar ou alterar o código, comece pelo [guia de arquitetura](ARQUITETURA
 
 Use `npm run format` após editar e `npm run check` antes de registrar a alteração. Novas regras devem ter comentários sobre seu propósito e critérios; os testes ficam junto do módulo correspondente. Atualize também o guia específico e o histórico de versões.
 
+Em 0.24.0, cada categoria tem filtros próprios e um quadro compacto com alcance explícito. A seleção não é mais herdada entre categorias. [Uso, limpeza e exceções](FILTROS-POR-CATEGORIA.md). Regras financeiras e formatos de histórico permanecem os mesmos.
+
 ## Detalhes, ordenação, impressão e técnicos — versão 0.8.0
 
 Conferir linhas abre abaixo uma tabela com todos os registros do mês ou grupo do relatório. A seleção respeita filtros e exclusões da medida. Cabeçalhos alternam crescente, decrescente e ordem padrão; linha Excel permanece como referência. Na tabela principal a ordenação vale para todos os resultados, antes das páginas.

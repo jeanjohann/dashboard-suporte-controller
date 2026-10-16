@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.23.0 — Piloto privado de leitura de OS pelo Google Sheets, exclusivo de administradores e dependente de credencial no servidor. Importação manual preservada; atualização opcional de 15 minutos enquanto a página estiver visível. Engrenagem vetorial ajustada e estilos antigos da seleção lateral removidos. A API do Monitoramento Ativo segue em preparação.
+**Versão:** 0.24.0 — Filtros independentes por categoria em OS, Operacional/Parque, Consumo e Monitoramento. Quadro único reúne alcance, período, campos recolhíveis, seleções removíveis, contagem, origem e ações. O menu identifica categorias com filtros ativos. O piloto Google permanece pendente da configuração no escritório; a API do Monitoramento segue em preparação.
 
 ## Documentação do projeto
+
+- [Filtros por categoria — alcance, navegação e limpeza](docs/FILTROS-POR-CATEGORIA.md)
 
 - [Google Sheets — configuração, uso e limites do piloto](docs/GOOGLE-SHEETS.md)
 

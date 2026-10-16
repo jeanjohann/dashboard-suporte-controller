@@ -17,6 +17,7 @@ import './styles/filters.css';
 import './styles/controls.css';
 import './styles/page-settings.css';
 import './styles/google-orders.css';
+import './styles/filter-workspace.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>

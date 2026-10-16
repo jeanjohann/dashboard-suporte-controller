@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.24.0 — 16/10/2026
+
+- Filtros independentes por aba/categoria, conforme escolha do proprietário: OS, Operacional e Parque em espaços distintos, Consumo e Monitoramento. Seleções permanecem na sessão ao navegar; não há mais herança silenciosa entre categorias.
+- Quadro único com alcance explícito, período, campos recolhíveis, chips para remover filtros, contagem, origem e ações dos relatórios. Limpar atua somente na categoria atual; menu indica a quantidade de campos ativos em cada categoria.
+- Busca, colunas adicionais de OS e apurações por operadora também são independentes. Logística conserva a seleção ao sair e voltar; conferência de importação operacional continua sobre o arquivo completo, sem exibir filtros sem efeito nessa visão.
+- Cards do Monitoramento encaminham explicitamente bases, limite e recorte à fila, preservando a Visão analítica. Referência de investigação do consumo continua compartilhada; linha do tempo individual continua abrangendo todo o histórico do chip.
+- Nova importação válida reinicia as seleções da base; falhas conservam todas. Atualização Google → Google preserva os recortes das categorias. Fórmulas financeiras, denominadores, vínculos e formatos de armazenamento mantidos.
+
 ## 0.23.0 — 16/10/2026
 
 - Piloto de OS com Google Sheets: fonte fixa, conta de serviço somente leitura e rotas autenticadas exclusivas de administradores. Credenciais e tokens permanecem no servidor; sem gravação das planilhas no D1 ou cache persistente.

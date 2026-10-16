@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
-import { InfoNote } from '../../../components/InfoNote.jsx';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { Section, PrintContext } from '../../../components/Section.jsx';
 import { download } from '../../../shared/export/exports.js';
@@ -18,6 +17,9 @@ import {
 } from '../domain/monitoring.js';
 import { filterMonitoringQueue, monitoringFocusLabels } from '../domain/monitoringAnalytics.js';
 import { monitoringReport, monitoringCsv, monitoringWorkbook } from '../domain/monitoringReport.js';
+import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
+import { filterChips, filterDisplay } from '../../../shared/filters/scopedSelection.js';
+import { FilterPanel, FilterCount } from '../../../components/FilterPanel.jsx';
 
 const initialFilters = () => ({
   clients: [],
@@ -32,7 +34,10 @@ const initialFilters = () => ({
 export function MonitoringPage({ onPage }) {
   const { snapshot, source, busy, error, demonstration, refresh } = useMonitoringSource();
   const [category, setCategory] = useState('queue');
-  const [filters, setFilters] = useState(initialFilters);
+  const { filters, setFilters, resetSelections, counts } = useScopedSelection(
+    category,
+    initialFilters,
+  );
   const [notes, setNotes] = useState({}),
     [selected, setSelected] = useState(null),
     [page, setPage] = useState(0);
@@ -44,8 +49,12 @@ export function MonitoringPage({ onPage }) {
     setNotes({});
     setSelected(null);
     setPage(0);
-    setFilters(initialFilters());
+    resetSelections();
   }, [source?.demonstration]);
+  useEffect(() => {
+    setPage(0);
+    setSelected(null);
+  }, [category]);
   const bases = snapshot
     ? snapshot.collections.map((entry) => ({
         id: entry.clientId,
@@ -56,20 +65,51 @@ export function MonitoringPage({ onPage }) {
       }))
     : [];
   const tables = queue ? monitoringReport(queue, filters, notes) : null;
+  const scopeLabel = `Monitoramento Ativo → ${{ queue: 'Acompanhamento', overview: 'Visão analítica', reports: 'Relatórios' }[category]}`;
+  const chips = filterChips(filters, {
+    labels: {
+      clients: 'Bases',
+      threshold: 'Limite',
+      state: 'Situação técnica',
+      focus: 'Recorte da fila',
+      stage: 'Acompanhamento',
+      search: 'Busca',
+    },
+    defaults: initialFilters(),
+    format: (value, key) =>
+      key === 'clients'
+        ? value.map((id) => bases.find((base) => base.id === id)?.label || id).join(', ')
+        : key === 'threshold'
+          ? `${value} horas`
+          : key === 'state'
+            ? monitoringStates[value] || value
+            : key === 'focus'
+              ? monitoringFocusLabels[value] || value
+              : filterDisplay(value),
+    remove: (key) => {
+      setFilters((previous) => ({ ...previous, [key]: initialFilters()[key] }));
+      setSelected(null);
+      setPage(0);
+    },
+  });
   const update = (key, value) => {
     setFilters((previous) => ({ ...previous, [key]: value }));
     setSelected(null);
     setPage(0);
   };
   function openQueue(focus, clientId) {
-    setFilters((previous) => ({
-      ...previous,
-      focus,
-      clients: clientId ? [clientId] : previous.clients,
-      state: 'all',
-      stage: 'all',
-      search: '',
-    }));
+    setFilters(
+      (previous) => ({
+        ...previous,
+        threshold: filters.threshold,
+        focus,
+        clients: clientId ? [clientId] : filters.clients,
+        state: 'all',
+        stage: 'all',
+        search: '',
+      }),
+      'queue',
+    );
     setSelected(null);
     setPage(0);
     setCategory('queue');
@@ -109,6 +149,7 @@ export function MonitoringPage({ onPage }) {
                 onClick={() => setCategory(key)}
               >
                 {label}
+                <FilterCount count={counts[key]} />
               </button>
             ))}
           </div>
@@ -116,7 +157,7 @@ export function MonitoringPage({ onPage }) {
         <PrintContext.Provider
           value={{
             filename: demo ? 'DEMONSTRAÇÃO — DADOS FICTÍCIOS' : 'Integração de monitoramento',
-            filters,
+            filters: { ...filters, alcance: scopeLabel },
             referenceDate: snapshot?.referenceAt,
           }}
         >
@@ -162,21 +203,19 @@ export function MonitoringPage({ onPage }) {
               </>
             ) : (
               <>
-                <section
-                  className="panel monitoring-filters"
-                  aria-label="Filtros do monitoramento ativo"
+                <FilterPanel
+                  scope={scopeLabel}
+                  chips={chips}
+                  matched={category === 'overview' ? result.totals.fleet : queue.rows.length}
+                  total={snapshot.vehicles.length}
+                  onClear={() => {
+                    setFilters(initialFilters());
+                    setSelected(null);
+                    setPage(0);
+                  }}
+                  help="Cada categoria mantém filtros próprios. Tempo desde o último registro até a referência exibida. Faixas de 48/72/96 h e validade da coleta inferior a 2 h são provisórias. Falha de coleta, datas inválidas/futuras ou posição ausente não confirmam interrupção. Bases e limite afetam a análise desta categoria; busca, situação, acompanhamento e recorte afetam sua fila/exportação, sem alterar o denominador dos cards. Clicar em um card abre Acompanhamento e aplica explicitamente as bases, o limite e o recorte desse card na fila, sem modificar os filtros da visão analítica."
+                  source={`Referência: ${monitoringDate(snapshot.referenceAt)} · São Paulo · Limite: ${filters.threshold} horas · ${demo ? 'Dados fictícios' : 'Retrato recebido: ' + monitoringDate(source.referenceAt)}`}
                 >
-                  <div className="inline-help-heading">
-                    <h2>Filtros do monitoramento</h2>
-                    <InfoNote>
-                      Tempo desde o último registro até a referência exibida. Faixas de 48/72/96 h e
-                      validade da coleta inferior a 2 h continuam provisórias. Falha de coleta,
-                      datas inválidas/futuras e ausência de posição não confirmam interrupção. Bases
-                      e limite afetam a análise. Busca, situação, status e recorte afetam a fila e a
-                      exportação de veículos; não mudam o denominador dos cards e gráficos. Abaixo
-                      do limite não significa online neste instante.
-                    </InfoNote>
-                  </div>
                   <div className="monitoring-filter-fields">
                     <MultiFilter
                       label="Bases de clientes"
@@ -205,22 +244,7 @@ export function MonitoringPage({ onPage }) {
                         ))}
                       </select>
                     </label>
-                    <button
-                      onClick={() => {
-                        setFilters(initialFilters());
-                        setSelected(null);
-                        setPage(0);
-                      }}
-                    >
-                      Limpar filtros
-                    </button>
                   </div>
-                  <p className="scope">
-                    Referência: {monitoringDate(snapshot.referenceAt)} · São Paulo ·{' '}
-                    {demo
-                      ? 'Dados fictícios'
-                      : 'Retrato recebido: ' + monitoringDate(source.referenceAt)}
-                  </p>
                   {category !== 'overview' && (
                     <div className="monitoring-queue-filters" data-no-print>
                       <label>
@@ -282,7 +306,7 @@ export function MonitoringPage({ onPage }) {
                       </p>
                     </div>
                   )}
-                </section>
+                </FilterPanel>
                 {modeNotice}
                 {(result.totals.stale > 0 ||
                   result.totals.invalid > 0 ||
