@@ -18,6 +18,7 @@ import './styles/controls.css';
 import './styles/page-settings.css';
 import './styles/google-orders.css';
 import './styles/filter-workspace.css';
+import './styles/overview-kpis.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>

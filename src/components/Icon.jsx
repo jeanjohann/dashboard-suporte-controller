@@ -4,6 +4,54 @@
  */
 import React from 'react';
 const paths = {
+  implementation: (
+    <>
+      <path d="M12 3v12M7 8l5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5" />
+      <path d="M8 17h8" />
+    </>
+  ),
+  vehicle: (
+    <>
+      <path d="m5 8 2-4h10l2 4M4 8h16v10H4zM8 12h8M6 18v3M18 18v3" />
+      <circle cx="7" cy="15" r=".7" />
+      <circle cx="17" cy="15" r=".7" />
+    </>
+  ),
+  building: (
+    <>
+      <rect x="4" y="3" width="16" height="18" rx="2" />
+      <path d="M8 7h2M14 7h2M8 11h2M14 11h2M10 21v-6h4v6" />
+    </>
+  ),
+  check: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m7.5 12 3 3 6-6" />
+    </>
+  ),
+  warning: (
+    <>
+      <path d="m12 3 10 18H2L12 3Z" />
+      <path d="M12 9v5M12 17h.01" />
+    </>
+  ),
+  maintenance: (
+    <>
+      <path d="M14 4a5 5 0 0 0-6 6L3 15a3 3 0 0 0 4 4l5-5a5 5 0 0 0 6-6l-4 4-3-3 4-4Z" />
+    </>
+  ),
+  wallet: (
+    <>
+      <path d="M20 8V5H5a2 2 0 0 0 0 4h15v11H5a2 2 0 0 1-2-2V7" />
+      <path d="M20 12h-5v5h5" />
+      <path d="M17 14.5h.01" />
+    </>
+  ),
+  average: (
+    <>
+      <path d="M3 20h18M6 16V9M12 16V4M18 16v-5M3 7l18-3" />
+    </>
+  ),
   settings: (
     <>
       <path d="M9.4 4.4 10 2.8h4l.6 1.6a2 2 0 0 0 2.5 1.4l1.7-.3 2 3.5-1.1 1.3a2 2 0 0 0 0 2.9l1.1 1.3-2 3.5-1.7-.3a2 2 0 0 0-2.5 1.4l-.6 2h-4l-.6-2a2 2 0 0 0-2.5-1.4l-1.7.3-2-3.5 1.1-1.3a2 2 0 0 0 0-2.9L3.2 9l2-3.5 1.7.3a2 2 0 0 0 2.5-1.4Z" />

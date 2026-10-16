@@ -1,0 +1,153 @@
+/* Paleta restrita ao resumo de OS. Números continuam neutros e cores não indicam desempenho. */
+.overview-kpis {
+  --kpi-operation: #b95b12;
+  --kpi-operation-soft: #fff6eb;
+  --kpi-service: #26766a;
+  --kpi-service-soft: #eff8f5;
+  --kpi-attention: #946916;
+  --kpi-attention-soft: #fff8e8;
+  --kpi-coverage: #456ca8;
+  --kpi-coverage-soft: #f0f5fc;
+  --kpi-finance: #7b58a5;
+  --kpi-finance-soft: #f7f3fc;
+}
+:root[data-theme='dark'] .overview-kpis {
+  --kpi-operation: #ffb865;
+  --kpi-operation-soft: #332a23;
+  --kpi-service: #86cdb9;
+  --kpi-service-soft: #25332f;
+  --kpi-attention: #ecc374;
+  --kpi-attention-soft: #353025;
+  --kpi-coverage: #9cbdec;
+  --kpi-coverage-soft: #28303c;
+  --kpi-finance: #c7abe9;
+  --kpi-finance-soft: #302b3b;
+}
+.kpi-operation {
+  --kpi-color: var(--kpi-operation);
+  --kpi-soft: var(--kpi-operation-soft);
+}
+.kpi-service {
+  --kpi-color: var(--kpi-service);
+  --kpi-soft: var(--kpi-service-soft);
+}
+.kpi-attention {
+  --kpi-color: var(--kpi-attention);
+  --kpi-soft: var(--kpi-attention-soft);
+}
+.kpi-coverage {
+  --kpi-color: var(--kpi-coverage);
+  --kpi-soft: var(--kpi-coverage-soft);
+}
+.kpi-finance {
+  --kpi-color: var(--kpi-finance);
+  --kpi-soft: var(--kpi-finance-soft);
+}
+.executive-cards.overview-kpis {
+  gap: 12px;
+}
+.executive-cards.overview-kpis > .overview-kpi {
+  position: relative;
+  padding: 16px;
+  padding-right: 16px !important; /* Reserva da ajuda fica no título, sem estreitar o valor. */
+  gap: 8px;
+  background: var(--kpi-soft);
+  border: 1px solid var(--ui-border);
+  border-top: 2px solid var(--kpi-color);
+  border-radius: 10px;
+  box-shadow: none;
+}
+.overview-kpis .overview-kpi > .overview-kpi-icon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  color: var(--kpi-color);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-line);
+  border-radius: 8px;
+}
+.overview-kpis .overview-kpi > .overview-kpi-label {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 32px 0 42px;
+  color: var(--ui-muted);
+  font-size: 11px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.overview-kpis .overview-kpi > strong {
+  color: var(--ui-ink);
+  font-size: clamp(20px, 1.9vw, 28px);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  white-space: normal;
+}
+.overview-kpis .overview-kpi > .overview-kpi-base {
+  min-height: 28px;
+  margin-top: 0;
+  line-height: 1.5;
+  color: var(--ui-muted);
+}
+.overview-kpis .overview-kpi > .overview-kpi-change {
+  min-height: 0;
+  margin-top: auto;
+  padding-top: 7px;
+  border-top: 1px solid var(--ui-border);
+  color: var(--ui-ink);
+  line-height: 1.5;
+  font-size: 11px;
+}
+.overview-kpi-change > span:last-child {
+  display: block;
+  margin-top: 2px;
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+.overview-kpi-change > span:first-child {
+  color: var(--kpi-color);
+}
+.overview-kpis .overview-kpi > .info-note {
+  top: 12px;
+  right: 12px;
+}
+@media (max-width: 650px) {
+  .executive-cards.overview-kpis {
+    gap: 10px;
+  }
+  .executive-cards.overview-kpis > .overview-kpi {
+    padding: 12px;
+    padding-right: 12px !important;
+  }
+  .overview-kpis .overview-kpi > .overview-kpi-icon {
+    left: 12px;
+    top: 12px;
+    width: 28px;
+    height: 28px;
+    min-height: 28px;
+  }
+  .overview-kpis .overview-kpi > .overview-kpi-label {
+    padding-left: 36px;
+  }
+  .overview-kpis .overview-kpi > strong {
+    font-size: 21px;
+  }
+  .overview-kpis .kpi-finance > strong {
+    font-size: 18px;
+  }
+}
+/* Em celulares estreitos, prioriza o título completo e a ajuda sobre o ícone decorativo. */
+@media (max-width: 450px) {
+  .overview-kpis .overview-kpi > .overview-kpi-icon {
+    display: none;
+  }
+  .overview-kpis .overview-kpi > .overview-kpi-label {
+    padding-left: 0;
+  }
+}

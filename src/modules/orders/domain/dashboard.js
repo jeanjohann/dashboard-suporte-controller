@@ -5,6 +5,7 @@ import { isUnproductive } from './attendanceKind.js';
  */
 import { applyFilters, field, attendanceDate } from '../../../shared/data/filters.js';
 import { money } from './analysis.js';
+import { sourceText, validPlate } from './trackerReplacements.js';
 /** Constrói o intervalo anterior com a mesma duração inclusiva do período selecionado. */
 export function previousPeriod(filters) {
   const valid = (value) => {
@@ -26,6 +27,21 @@ export function periodMetrics(data) {
     ['Concluída', 'Pago'].includes(field(data, r, 'Status')?.raw),
   );
   const costs = completed.map((r) => money(field(data, r, 'Custo Total'))).filter((v) => v != null);
+  const has = (...labels) =>
+    ['Status', ...labels].every((label) => data.columns.some((col) => col.label === label));
+  const clients = new Set(),
+    vehicles = new Set();
+  let clientsMissing = 0,
+    vehiclesMissing = 0;
+  for (const row of completed) {
+    const client = sourceText(data, row, 'Razão Social');
+    const plate = sourceText(data, row, 'Placa');
+    if (client) clients.add(client);
+    else clientsMissing++;
+    // Mesmo critério conservador de identificação: não presume veículo a partir de placa provisória.
+    if (client && validPlate(plate)) vehicles.add(JSON.stringify([client, plate]));
+    else vehiclesMissing++;
+  }
   return {
     completed: completed.length,
     productive: completed.filter((r) => !isUnproductive(data, r)).length,
@@ -36,6 +52,16 @@ export function periodMetrics(data) {
         field(data, r, 'Tipo de Serviço')?.raw === 'Assistência Técnica',
     ).length,
     calls: new Set(completed.map((r) => r.os)).size,
+    implementations: has('Tipo de Serviço')
+      ? completed.filter(
+          (r) =>
+            !isUnproductive(data, r) && field(data, r, 'Tipo de Serviço')?.raw === 'Implementação',
+        ).length
+      : null,
+    clients: has('Razão Social') ? clients.size : null,
+    vehicles: has('Razão Social', 'Placa') ? vehicles.size : null,
+    clientsMissing,
+    vehiclesMissing,
     cost: costs.length ? costs.reduce((s, v) => s + v, 0) : null,
     average: costs.length ? costs.reduce((s, v) => s + v, 0) / costs.length : null,
     costCount: costs.length,

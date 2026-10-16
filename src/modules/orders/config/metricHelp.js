@@ -1,11 +1,17 @@
 /** Textos de apoio para leitura financeira e operacional; não executam nem alteram cálculos. */
 export const metricHelp = {
+  implementations:
+    'Conta linhas Concluída ou Pago com Tipo de Serviço exatamente Implementação, excluindo Motivo Visita Improdutiva. Conta serviços, não equipamentos únicos nem tamanho do parque. Agendar, Agendado e Cancelada ficam fora. Se a coluna necessária estiver ausente, o card fica indisponível. Use para acompanhar a entrada de serviços de implementação registrada no recorte.',
+  clients:
+    'Conta razões sociais distintas e utilizáveis nas linhas Concluída ou Pago, incluindo visitas improdutivas. Ignora clientes vazios ou células com erro e informa quantas linhas foram excluídas dessa identificação. Remove apenas espaços nas extremidades para a análise; não une grafias parecidas, filiais ou CNPJs e não altera a origem. Representa nomes presentes nos atendimentos, não a carteira completa de clientes.',
+  vehicles:
+    'Conta pares distintos de razão social + placa nas linhas Concluída ou Pago, incluindo visitas improdutivas. Repetições desse par contam uma vez, mesmo com vários chamados ou seriais; a mesma placa em clientes diferentes representa pares distintos. Exclui cliente ausente/com erro e placas vazias/com erro ou marcadores conhecidos, como 0, -, ?, s/placa, sem placa e sem dados. Não corrige grafia nem comprova frota ativa ou identificação definitiva. Informa quantas linhas ficaram sem um par utilizável.',
   productive:
     'Conta linhas Concluída ou Pago sem Motivo Visita Improdutiva. Inclui os tipos de serviço executados, não apenas manutenção. Sem motivo informado, a planilha não permite confirmar improdutividade.',
   unproductive:
     'Conta linhas Concluída ou Pago com Motivo Visita Improdutiva. Houve visita, mas não execução da intervenção prevista. Seus custos válidos continuam incluídos nos indicadores financeiros.',
   completed:
-    'Conta cada linha com status Concluída ou Pago como visita ou atendimento registrado, incluindo visitas improdutivas. Não equivale à quantidade de manutenções executadas. Um mesmo chamado pode ter várias linhas. Cancelada, Agendar e Agendado ficam fora. Use para medir o volume de serviços executados; Pago informa pagamento ao técnico, não recebimento do cliente.',
+    'Conta cada linha com status Concluída ou Pago como visita ou atendimento registrado, incluindo visitas improdutivas. Não equivale à quantidade de manutenções executadas. Um mesmo chamado pode ter várias linhas. Cancelada, Agendar e Agendado ficam fora. Use para medir o volume de visitas registradas; Pago informa pagamento ao técnico, não recebimento do cliente.',
   calls:
     'Conta uma vez cada número de chamado que possui pelo menos um atendimento realizado na seleção. Vários serviços do mesmo chamado não aumentam este total. Use a comparação com atendimentos para identificar chamados com várias intervenções.',
   cost: 'Soma os valores válidos da coluna Custo Total nas linhas Concluída ou Pago. O valor lançado prevalece mesmo quando difere da soma Técnico + Km; a diferença deve ser conferida na revisão. Canceladas e valores ausentes ou incompatíveis não entram. Mede o custo registrado para executar os serviços, sem comprovar pagamento ou lucro.',
@@ -19,5 +25,5 @@ export const metricHelp = {
     'Conta as linhas reconhecidas como troca de coletora nas assistências técnicas por manutenção de acessório, conforme o critério vigente nas instruções. Teclado e terminal de jornada pertencem à mesma categoria. Ambiguidades vão para revisão. Mede substituições registradas, não o estoque total instalado.',
   rfid: 'Conta as linhas reconhecidas como troca de leitor RFID nas assistências técnicas por manutenção de acessório, conforme o critério vigente nas instruções. Cada linha representa um item. Ambiguidades vão para revisão. Mede substituições registradas, sem inferir quantidade instalada ou taxa de falha.',
   maintenance:
-    'Conta as linhas realizadas classificadas como Assistência Técnica na seleção. Mede o volume de manutenção registrado; nem toda assistência envolve troca de equipamento. Um veículo ou chamado pode aparecer em mais de uma linha.',
+    'Conta linhas Concluída ou Pago classificadas como Assistência Técnica na seleção, excluindo Motivo Visita Improdutiva. Mede o volume de manutenção registrado; nem toda assistência envolve troca de equipamento. Um veículo ou chamado pode aparecer em mais de uma linha.',
 };

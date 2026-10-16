@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.25.0 — 16/10/2026
+
+- Visão geral de OS passa a dez cards, acrescentando Implementações realizadas, Clientes com atendimento e Veículos identificados. Os sete cálculos anteriores permanecem iguais.
+- Implementações contam serviços realizados sem Visita Improdutiva. Clientes contam razões sociais utilizáveis distintas; veículos contam pares utilizáveis cliente + placa. Cobertura inclui visitas improdutivas, não representa carteira ou parque ativo e informa linhas sem identificação. Coluna ausente exibe indisponibilidade; base vazia válida exibe zero.
+- Paleta suave por grupo, ícones vetoriais, borda discreta, valores neutros e legendas de base substituem o aviso repetido em cada card. Ajuda no canto superior direito; adaptação aos temas claro/escuro e telas menores. Cores organizam informações sem julgar a variação como desempenho.
+- Com início e fim válidos, os dez indicadores comparam o intervalo anterior de igual duração e mesmos filtros; base anterior zero não gera percentual. Documentação de cálculo e testes de identificações, improdutivas, custos e recortes atualizados.
+
 ## 0.24.0 — 16/10/2026
 
 - Filtros independentes por aba/categoria, conforme escolha do proprietário: OS, Operacional e Parque em espaços distintos, Consumo e Monitoramento. Seleções permanecem na sessão ao navegar; não há mais herança silenciosa entre categorias.

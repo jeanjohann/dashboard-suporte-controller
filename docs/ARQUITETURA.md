@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Cards da visão geral — 0.25.0
+
+`modules/orders/components/OverviewKpis.jsx` apresenta os dez indicadores e a comparação fornecidos por `domain/dashboard.js`, sem recalcular dados na interface. `periodMetrics` acrescenta implementações efetivas e conjuntos de clientes/pares cliente + placa, reaproveitando `sourceText` e `validPlate` da identificação de equipamentos; não altera a origem. `config/metricHelp.js` documenta as bases. `styles/overview-kpis.css` fica restrito a esse painel e possui variáveis próprias nos dois temas. Ícones são SVG locais no componente compartilhado `Icon`. Sem alteração no servidor, armazenamento ou fontes. [Critérios de cálculo e leitura](CARDS-DE-OS.md).
+
 ## Seleção por categoria — 0.24.0
 
 `shared/filters/` mantém seleção, busca e colunas adicionais por espaço. OS usa a chave da categoria; Operacional/Parque combinam página e categoria; Consumo e Monitoramento usam suas categorias. Logística conserva seleção própria no coordenador operacional, sem ser apagada por mudança da base operacional. `FilterPanel` apresenta alcance, chips e ações. A atualização de dados Google preserva todos os espaços; outras importações válidas reiniciam as seleções da base. Não há persistência nova ou mudança das funções de domínio. [Critérios e exceções](FILTROS-POR-CATEGORIA.md).

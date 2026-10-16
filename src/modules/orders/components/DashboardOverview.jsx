@@ -2,7 +2,6 @@
  * Interface de Ordens de Serviço: apresenta análises, contexto e registros de origem sem modificar a planilha.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
-import { metricHelp } from '../config/metricHelp.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React from 'react';
 import {
@@ -15,7 +14,8 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import { dashboardData, change } from '../domain/dashboard.js';
+import { dashboardData } from '../domain/dashboard.js';
+import { OverviewKpis } from './OverviewKpis.jsx';
 import { managementMetrics } from '../domain/management.js';
 import { applyFilters, field } from '../../../shared/data/filters.js';
 import { money } from '../domain/analysis.js';
@@ -23,7 +23,6 @@ import { Chart } from '../../../components/Chart.jsx';
 import { MaintenanceSummary, ServiceProfileSummary } from './CardInsights.jsx';
 import { ContractSummary } from './ContractSummary.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
-const number = (v) => (v == null ? '—' : v.toLocaleString('pt-BR', { maximumFractionDigits: 1 }));
 const currency = (v) =>
   v == null ? '—' : (v / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const date = (v) => v?.split('-').reverse().join('/');
@@ -79,15 +78,6 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
         { label: 'Deslocamento', value: pairs.reduce((sum, p) => sum + p.travel, 0) },
       ]
     : [];
-  const cards = [
-    ['completed', 'Visitas e atendimentos', number],
-    ['productive', 'Intervenções executadas', number],
-    ['unproductive', 'Visitas improdutivas', number],
-    ['maintenance', 'Manutenções realizadas', number],
-    ['calls', 'Chamados atendidos', number],
-    ['cost', 'Custo total lançado', currency],
-    ['average', 'Custo médio válido', currency],
-  ];
   const op = operational?.data,
     groups = (key) => {
       const map = new Map();
@@ -110,28 +100,7 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
             : 'Histórico selecionado'}
         </span>
       </div>
-      <div className="executive-cards">
-        {cards.map(([key, label, format]) => {
-          const delta = d.past ? change(d.current[key], d.past[key]) : null;
-          return (
-            <article key={key} className="executive-card-help">
-              <InfoNote label={`Regras de ${label}`}>
-                {metricHelp[key]} O período e os filtros da página são aplicados. Quando existe
-                comparação, usamos o intervalo imediatamente anterior de igual duração e os mesmos
-                filtros de categoria. A variação percentual é a diferença dividida pela base
-                anterior; uma base anterior zero não permite calcular esse percentual.
-              </InfoNote>
-              <span>{label}</span>
-              <strong>{format(d.current[key])}</strong>
-              <small>
-                {delta
-                  ? `${delta.difference > 0 ? '+' : ''}${format(delta.difference)} vs. anterior${delta.percent == null ? ' · base anterior zero' : ` (${delta.percent > 0 ? '+' : ''}${number(delta.percent)}%)`}`
-                  : 'Selecione início e fim para comparar'}
-              </small>
-            </article>
-          );
-        })}
-      </div>
+      <OverviewKpis current={d.current} past={d.past} />
       <p className="scope">
         {d.range
           ? `Comparação: ${date(d.range.start)} a ${date(d.range.end)} · ${d.range.days} dias em cada período · mesmos filtros de categoria. Histórico disponível não comprova cobertura completa dos períodos.`

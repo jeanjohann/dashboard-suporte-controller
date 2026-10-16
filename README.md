@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.24.0 — Filtros independentes por categoria em OS, Operacional/Parque, Consumo e Monitoramento. Quadro único reúne alcance, período, campos recolhíveis, seleções removíveis, contagem, origem e ações. O menu identifica categorias com filtros ativos. O piloto Google permanece pendente da configuração no escritório; a API do Monitoramento segue em preparação.
+**Versão:** 0.25.0 — Visão geral de OS com dez cards: implementações efetivas, clientes e veículos identificados complementam os sete indicadores existentes. Paleta por grupo, ícones vetoriais, base de cálculo visível e comparação temporal preservada nos dois temas. Filtros seguem independentes por categoria. O piloto Google permanece pendente da configuração no escritório; a API do Monitoramento segue em preparação.
 
 ## Documentação do projeto
+
+- [Cards da visão geral — contagens, bases e cores](docs/CARDS-DE-OS.md)
 
 - [Filtros por categoria — alcance, navegação e limpeza](docs/FILTROS-POR-CATEGORIA.md)
 
