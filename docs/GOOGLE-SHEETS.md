@@ -2,13 +2,13 @@
 
 ## Situação e privacidade
 
-Versão 0.23.0: leitura privada preparada; **ativação e comparação com a planilha real pendentes**. O proprietário forneceu o link e autorizou somente administradores ativos em 16/10/2026. A aba inicialmente configurada é `OS 2025_26`, conforme o nome informado anteriormente; confirmar antes da ativação.
+Versão 0.23.0: leitura privada preparada; **ativação e comparação com a planilha real pendentes**. O proprietário forneceu o link, confirmou a aba `OS 2025_26` e autorizou somente administradores ativos em 16/10/2026. Informou que já possui a estrutura no Google Cloud, mas só terá acesso no escritório na semana seguinte. Até essa configuração, a integração permanece inativa e a importação manual continua funcionando.
 
 Os arquivos importados manualmente continuam locais. **Na fonte Google, os valores passam pelo Worker e chegam ao navegador autorizado.** Não são gravados no D1, no log de conteúdo ou em cache persistente do servidor. Credenciais e tokens ficam somente no servidor. Usuários comuns não podem consultar nem a configuração nem os dados, mesmo com acesso às OS. Manter a planilha privada, sem Publicar na Web ou Qualquer pessoa com o link.
 
 ## Configuração da infraestrutura
 
-1. Em um projeto Google Cloud da empresa, habilitar a Google Sheets API e criar uma conta de serviço dedicada à leitura. Não configurar delegação de domínio nem conceder papéis amplos no projeto para ler uma planilha compartilhada.
+1. No projeto Google Cloud da empresa, conferir a conta de serviço existente e se a Google Sheets API está habilitada. Se necessário, criar uma conta dedicada à leitura. Não configurar delegação de domínio nem conceder papéis amplos no projeto para ler uma planilha compartilhada.
 2. Compartilhar somente a planilha do piloto, como **Leitor**, com o e-mail dessa conta (`...iam.gserviceaccount.com`). Se o Workspace impedir esse compartilhamento, consultar a administração, sem publicar a planilha como alternativa.
 3. Gerar a chave JSON da conta, quando permitido pela política da empresa. Guardar em local seguro: **não colocar no projeto, no chat, nos imports, em variáveis VITE ou no GitHub**.
 4. No Worker Cloudflare, em Settings → Variables and Secrets, criar um **Secret** `GOOGLE_SHEETS_CREDENTIALS` com o JSON completo da chave. O código utiliza somente `client_email` e `private_key`.

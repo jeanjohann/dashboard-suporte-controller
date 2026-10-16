@@ -13,7 +13,7 @@
 - Carregamento explícito, última leitura bem-sucedida, atualização manual e automática opcional de 15 minutos na página OS visível. Falhas conservam a base anterior, arquivo local desliga a fonte e respostas antigas são ignoradas.
 - Adaptador Google reutiliza o leitor do Excel, preservando posições, linhas de origem, identificadores textuais e erros. Atualizações da mesma fonte preservam filtros, busca e ordenação, voltando à primeira página.
 - Engrenagem arredondada de 20 px em controle quadrado, proporções vetoriais protegidas e remoção de estilos sem uso da antiga seleção lateral de relatórios.
-- Documentação e testes com dados fictícios. Ativação real pendente da conta de serviço, compartilhamento como leitor, segredo no Cloudflare, confirmação da aba e comparação com o Excel.
+- Documentação e testes com dados fictícios. Aba `OS 2025_26` confirmada. Ativação real será retomada no escritório: conferir conta de serviço/API, compartilhar como leitor, configurar segredo no Cloudflare e comparar com o Excel.
 
 ## 0.22.0 — 16/10/2026
 
