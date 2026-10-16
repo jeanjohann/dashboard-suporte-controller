@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.22.0 — Engrenagem no cabeçalho para escolher relatórios e sua apresentação inicial, com Salvar, Cancelar e Restaurar padrão. Preferências locais por módulo; escolhas antigas das OS preservadas. A lateral mantém somente navegação. A API do Monitoramento Ativo segue em preparação.
+**Versão:** 0.23.0 — Piloto privado de leitura de OS pelo Google Sheets, exclusivo de administradores e dependente de credencial no servidor. Importação manual preservada; atualização opcional de 15 minutos enquanto a página estiver visível. Engrenagem vetorial ajustada e estilos antigos da seleção lateral removidos. A API do Monitoramento Ativo segue em preparação.
 
 ## Documentação do projeto
+
+- [Google Sheets — configuração, uso e limites do piloto](docs/GOOGLE-SHEETS.md)
 
 - [Personalização de páginas — engrenagem, relatórios e apresentação](docs/PERSONALIZACAO-DE-PAGINAS.md)
 

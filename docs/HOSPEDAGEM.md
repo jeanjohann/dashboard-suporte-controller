@@ -1,5 +1,9 @@
 # Publicação no Cloudflare e controle de acesso
 
+## Piloto Google Sheets — 0.23.0
+
+O Worker pode consultar a fonte privada de OS quando o Secret `GOOGLE_SHEETS_CREDENTIALS` estiver configurado. As rotas `/api/orders/google/status` e `/api/orders/google/snapshot` exigem sessão válida e administrador ativo. A configuração da planilha está no servidor; o navegador não escolhe outra origem. Ao contrário dos arquivos manuais, essa fonte passa pelo Worker, sem persistência de células no D1. Ativação e comparação real estão pendentes. [Passo a passo e privacidade](GOOGLE-SHEETS.md).
+
 ## Estado
 
 Preparação local concluída. **Publicação e políticas de acesso ainda não configuradas nem verificadas.** O proprietário já informou a criação da conta e está no painel; a conexão do GitHub e as configurações externas ainda estão pendentes. Nenhum domínio comprado é necessário: usar `pages.dev`.

@@ -1,5 +1,7 @@
 # Usuários e permissões
 
+Em 0.23.0, o piloto Google Sheets é restrito a **administradores ativos**, tanto na interface quanto nas duas rotas do servidor. Permissão de OS/importação não libera a leitura conectada a um usuário comum. A consulta não recebe planilha ou URL do navegador. Ampliar o acesso requer decisão explícita sobre usuários e bases; dados dessa fonte transitam pelo Worker privado. [Configuração](GOOGLE-SHEETS.md).
+
 Em 0.21.0, Equipe de suporte segue a permissão de OS. A consulta futura `GET /api/monitoring/snapshot` exige JWT válido, usuário ativo e permissão de Monitoramento Ativo também no servidor, sem liberação por alterar o menu. Não há coletor configurado nesta entrega; D1 continua somente com usuários/permissões. O endpoint foi preparado para telemetria futura, sem receber planilhas locais, e não possui autorização por base nesta versão. [Contrato e ativação](INTEGRACAO-MONITORAMENTO.md).
 
 Na versão 0.17.0, Monitoramento de Frota é uma página adicional, em preparação e com demonstração opt-in. Usuários comuns precisam de concessão explícita; a página não libera importações de outras bases. Exportação mantém a regra separada existente. Nenhum dado de frota foi adicionado ao D1.

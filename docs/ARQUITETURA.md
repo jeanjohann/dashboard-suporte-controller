@@ -1,5 +1,11 @@
 # Arquitetura e organização do código
 
+## Fonte Google Sheets — 0.23.0
+
+O piloto adiciona uma fonte sem alterar os cálculos. `server/googleOrders.js` autentica a conta de serviço e solicita uma única aba fixa. O Worker valida a sessão Access e exige administrador. `shared/data/googleOrdersSnapshot.js` valida o contrato; `modules/orders/data/googleOrders.js` adapta células para `importOrdersSheet`, compartilhado com o Excel. `useGoogleOrders` controla consultas e `OrdersGooglePanel` apresenta o estado da fonte.
+
+Nenhuma base é gravada no D1. Credencial e token ficam no servidor; o navegador recebe células e metadados mínimos. Diferentemente do arquivo local, os dados Google transitam pelo Worker autenticado. Sem coletor de fundo ou histórico compartilhado. Configuração e limitações em [Google Sheets](GOOGLE-SHEETS.md).
+
 ## Personalização de apresentação — 0.22.0
 
 Preferências visuais usam `shared/layout/` e o modal `components/PageSettings.jsx`. Cada módulo fornece catálogo e categoria; `Section` registra a capacidade real de resumo e aplica visibilidade/apresentação. Preferências são locais e não integram arquivos importados nem o banco de usuários. Compatibilidade com OS e extensão em [Personalização das páginas](PERSONALIZACAO-DE-PAGINAS.md).
@@ -95,7 +101,7 @@ Monitoramento Ativo possui um guia próprio em [MONITORAMENTO-DE-FROTA.md](MONIT
 3. Os importadores transformam Excel/CSV em estruturas analisáveis, preservando células e referências da origem. Os problemas são apontados para revisão; a planilha não é corrigida.
 4. As funções em `domain/` calculam os indicadores. Quando um vínculo exige contexto completo, como uma troca de equipamento, usam a base original antes de aplicar o recorte.
 5. Os componentes apresentam o resultado, as exclusões e as linhas de origem. Exportação e impressão usam os fluxos locais com verificação de permissão.
-6. O histórico de consumo fica no IndexedDB do navegador. O servidor recebe somente consultas de sessão e cadastros de usuários; não recebe planilhas nem relatórios.
+6. O histórico de consumo fica no IndexedDB do navegador. Arquivos e relatórios manuais não são enviados ao servidor. O piloto Google é uma fonte diferente: o Worker consulta a aba privada e entrega suas células ao administrador, sem persistir a base no D1. A API também trata sessão e cadastros de usuários.
 
 A logística (0.18.0) utiliza uma referência própria na memória do Workspace, acessível em Parque e Manutenção e na Importação conjunta. Não depende das bases OS/Operacional para a primeira conferência. `modules/logistics/domain/logistics.js` preserva abas/linhas/células e calcula apenas movimentações e recebimentos datados; vínculos e diagnóstico logístico permanecem fora dessa etapa. Permissão de fonte logística acompanha Parque e Manutenção, além da ação de importação.
 

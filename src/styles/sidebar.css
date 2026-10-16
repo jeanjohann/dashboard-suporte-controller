@@ -75,47 +75,6 @@
   font-size: 12px;
   white-space: normal;
 }
-.sidebar-reports {
-  padding: 0 4px;
-  color: var(--ui-ink);
-}
-.sidebar-reports h3 {
-  font-size: 11px;
-  font-weight: 600;
-  margin: 0 0 8px;
-}
-.sidebar-reports .preference-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 12px 0;
-}
-.sidebar-reports .preference-grid label {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  font-size: 12px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-.sidebar-reports input {
-  flex-shrink: 0;
-  margin-top: 3px;
-  accent-color: var(--ui-accent-ink);
-}
-.sidebar-reports button {
-  padding: 8px 10px;
-  font-size: 11px;
-  width: 100%;
-  white-space: normal;
-  background: var(--ui-soft);
-  color: var(--ui-ink);
-}
-.sidebar-reports .scope,
-.sidebar-reports p {
-  font-size: 11px;
-  line-height: 1.5;
-}
 .report-block {
   overflow: hidden;
 }
@@ -224,10 +183,6 @@
   .sidebar-tools .category-navigation button {
     width: auto;
     flex: 1 0 auto;
-  }
-  .sidebar-reports .preference-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .app > main {
     width: 100%;
@@ -429,11 +384,6 @@
 .app > aside .sidebar-tools .category-navigation button:hover,
 .app > aside .sidebar-tools .monitoring-menu button:hover {
   background: var(--ui-soft);
-}
-.sidebar-reports {
-  margin-top: 4px;
-  padding-top: 10px;
-  border-top: 1px solid var(--ui-line);
 }
 .app > aside.sidebar-collapsed {
   width: 76px;

@@ -116,7 +116,7 @@ O sistema não altera o arquivo nem recalcula suas fórmulas. Quando necessário
 
 Desde a versão 0.2.0, os cartões mostram realizados, cancelados, chamados com cancelamento e demais status. Abra Detalhamento dos chamados para ver as quantidades de cada chamado. Essas contagens usam toda a importação; a busca filtra somente a tabela de atendimentos. Indicadores financeiros ainda estão pendentes de definição.
 
-Dados ficam na memória do navegador; atualizar ou fechar a página perde a importação. Um novo arquivo válido substitui a importação anterior. Se falhar, os dados anteriores permanecem. A aplicação não envia a planilha a uma API. O módulo de consumo possui persistência local em IndexedDB e backup; as importações de OS continuam somente na sessão.
+Os arquivos manuais são processados no navegador; atualizar ou fechar a página perde a importação de OS. Um novo arquivo válido substitui a base anterior; falhas a conservam. Esses arquivos não são enviados a uma API. O consumo possui persistência local em IndexedDB e backup. O piloto Google, restrito a administradores, consulta a aba pelo Worker privado e mantém o resultado apenas na sessão; configuração, atualização automática e limites estão em [Google Sheets](GOOGLE-SHEETS.md).
 
 ## Execução e verificações
 

@@ -130,6 +130,7 @@ export function Workspace() {
       >
         {/* Manter a página permitida montada conserva filtros; sem permissão, ela não é criada. */}
         <OrdersPage
+          active={current === 'orders'}
           onPage={setPage}
           onImport={setOrders}
           operational={operational}

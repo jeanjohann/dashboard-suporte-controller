@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Piloto Google Sheets de OS preparado em 0.23.0, com fonte fixa e acesso exclusivo de administradores. Pendente: credencial no Cloudflare, compartilhamento como leitor, confirmação da aba e comparação real com Excel. Ampliação a outros usuários/módulos e armazenamento compartilhado não foram ativados. [Configuração e limites](GOOGLE-SHEETS.md).
+
 Atualizada em 15/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
 
 | Código | Item                                                                                                                 | Situação / dependência                                                                                                             | Prioridade |

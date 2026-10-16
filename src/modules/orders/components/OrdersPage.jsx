@@ -14,13 +14,15 @@ import { useOrdersSession } from '../hooks/useOrdersSession.js';
 import { OrdersImportPanel } from './OrdersImportPanel.jsx';
 import { OrdersFiltersPanel } from './OrdersFiltersPanel.jsx';
 import { OrdersCategories } from './OrdersReportMenu.jsx';
+import { useGoogleOrders } from '../hooks/useGoogleOrders.js';
+import { OrdersGooglePanel } from './OrdersGooglePanel.jsx';
 // Identidade estável para conservar o estado dos relatórios após a primeira importação.
 const OrdersReports = lazy(() =>
   import('./OrdersReports.jsx').then((module) => ({ default: module.OrdersReports })),
 );
 
 /** Mantém a página montada no Workspace e conserva a ordem dos relatórios e seus identificadores. */
-export function OrdersPage({ onPage, onImport, operational, source }) {
+export function OrdersPage({ onPage, onImport, operational, source, active = true }) {
   const [expansion, setExpansion] = useState(null);
   const [category, setCategory] = useState('overview');
   const layout = usePageLayout('orders', legacyOrderLayout);
@@ -30,6 +32,7 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
   const visible = categoryVisibility(preferences, category);
   const menu = dashboardCategories.find((item) => item.key === category);
   const session = useOrdersSession({ source, onImport });
+  const google = useGoogleOrders({ source, onImport, active, manualBusy: session.busy });
   const {
     input,
     data,
@@ -67,7 +70,9 @@ export function OrdersPage({ onPage, onImport, operational, source }) {
                   error={error}
                   data={data}
                   load={load}
+                  google={google}
                 />
+                <OrdersGooglePanel google={google} manualBusy={busy} />
                 {data && (
                   <>
                     <OrdersCategories

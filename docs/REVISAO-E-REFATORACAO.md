@@ -1,5 +1,9 @@
 # Revisão técnica e refatoração gradual
 
+## Limpeza pontual — 0.23.0
+
+Removidos somente os seletores `.sidebar-reports`, sem uso desde a transferência das escolhas para o modal. A engrenagem usa desenho arredondado, tamanho de 20 px e proporção quadrada protegida. O leitor de células de OS foi extraído para `importOrdersSheet` para atender Excel e Google sem duplicar critérios. Não houve refatoração geral ou alteração dos cálculos; as etapas R01–R05 permanecem concluídas. O piloto Google e sua ativação pendente estão descritos em [Google Sheets](GOOGLE-SHEETS.md).
+
 Revisão iniciada em 14/10/2026, sobre a versão 0.20.0. Entregas: 0.20.1, 0.20.2, 0.20.3, 0.20.4 e 0.20.8 (15/10/2026). Este documento registra o que foi inspecionado, as alterações realizadas e a sequência proposta. O diagnóstico inicial abaixo descreve a base anterior às entregas.
 
 ## Diagnóstico inicial

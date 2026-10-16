@@ -30,6 +30,11 @@ export function importWorkbook(buffer) {
     throw new Error(
       'Nenhuma aba de OS foi encontrada. O arquivo deve conter a aba “OS 2025_26” ou “OS 2025”.',
     );
+  return importOrdersSheet(sheet, sheetName, Boolean(workbook.Workbook?.WBProps?.date1904));
+}
+
+/** Entrada comum para Excel e Google: mesmas posições, critérios e apontamentos, sem serializar outro arquivo. */
+export function importOrdersSheet(sheet, sheetName, date1904 = false) {
   if (!sheet['!ref']) throw new Error(`A aba ${sheetName} está vazia.`);
   const range = XLSX.utils.decode_range(sheet['!ref']);
   const columns = [];
@@ -73,7 +78,7 @@ export function importWorkbook(buffer) {
     rows,
     issues,
     skipped,
-    date1904: Boolean(workbook.Workbook?.WBProps?.date1904),
+    date1904,
     calls: new Set(rows.map((row) => row.os)).size,
   };
 }

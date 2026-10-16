@@ -12,6 +12,7 @@ import { reviewOrderConsistency } from '../domain/orderReview.js';
 /** A base pertence ao Workspace; falhas de importação não a substituem. Busca textual afeta apenas a tabela. */
 export function useOrdersSession({ source, onImport }) {
   const input = useRef();
+  const previousSource = useRef(source);
   const [recordSort, setRecordSort] = useState(null);
   const data = source?.data || null,
     filename = source?.filename || '';
@@ -56,6 +57,12 @@ export function useOrdersSession({ source, onImport }) {
   }
   // Mudança de fonte inclui importação conjunta; trocar de categoria ou página não reinicia a seleção.
   useEffect(() => {
+    const isRefresh = source?.origin === 'google' && previousSource.current?.origin === 'google';
+    previousSource.current = source;
+    if (isRefresh) {
+      setPage(0);
+      return;
+    }
     setFilters({});
     setCycleState('Todos');
     setExtraColumns([]);

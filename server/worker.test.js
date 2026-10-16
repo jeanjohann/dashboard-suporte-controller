@@ -53,6 +53,38 @@ const input = {
   canExport: false,
   version: 0,
 };
+test('Google Sheets exige sessão ativa e administrador mesmo para consultar configuração', async () => {
+  const db = database();
+  try {
+    const e = env(db),
+      admin = createHandler(async () => owner);
+    await admin(request('PUT', input), e);
+    const member = createHandler(async () => input.email);
+    for (const path of ['/api/orders/google/status', '/api/orders/google/snapshot']) {
+      assert.equal((await member(request('GET', null, path), e)).status, 403);
+      assert.equal(
+        (await createHandler(async () => 'unknown@company.com')(request('GET', null, path), e))
+          .status,
+        403,
+      );
+      assert.equal(
+        (
+          await createHandler(async () => {
+            throw Error('expired');
+          })(request('GET', null, path), e)
+        ).status,
+        401,
+      );
+    }
+    assert.equal((await admin(request('GET', null, '/api/orders/google/snapshot'), e)).status, 503);
+    assert.deepEqual(
+      await (await admin(request('GET', null, '/api/orders/google/status'), e)).json(),
+      { configured: false, sheetName: 'OS 2025_26' },
+    );
+  } finally {
+    db.close();
+  }
+});
 test('JWT confirma assinatura, audiência, emissor e expiração; cabeçalho de e-mail não autoriza', async () => {
   const { privateKey, publicKey } = await generateKeyPair('RS256');
   const make = (audience = aud, expires = '1h') =>

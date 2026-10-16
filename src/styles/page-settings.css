@@ -14,10 +14,10 @@
 }
 button.page-settings-trigger {
   display: inline-flex;
-  flex: 0 0 34px;
-  width: 34px;
-  height: 34px;
-  min-height: 34px;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
   align-items: center;
   justify-content: center;
   padding: 7px;
@@ -25,6 +25,10 @@ button.page-settings-trigger {
   border-radius: 7px;
   background: transparent;
   color: var(--ui-muted);
+}
+button.page-settings-trigger .ui-icon {
+  width: 20px;
+  height: 20px;
 }
 button.page-settings-trigger:hover {
   background: var(--ui-soft);

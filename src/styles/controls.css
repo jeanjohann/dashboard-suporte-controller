@@ -262,3 +262,10 @@ summary:focus-visible {
 .section-body[hidden] {
   display: none;
 }
+/* Ícones compartilhados conservam a proporção e não encolhem junto dos textos. */
+.ui-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  aspect-ratio: 1;
+  vertical-align: middle;
+}

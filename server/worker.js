@@ -1,10 +1,11 @@
 /**
  * API de usuários do Worker. Autentica a identidade e autoriza cada operação no servidor.
- * Planilhas e relatórios importados continuam locais. A porta de telemetria preparada usa serviço privado,
- * sem coletor configurado nem armazenamento de frota nesta entrega.
+ * Arquivos manuais continuam locais; o piloto Google consulta uma aba privada somente para administradores.
+ * A porta de telemetria usa serviço privado, sem coletor configurado nem armazenamento de frota nesta entrega.
  */
 import { usersSchema } from './schema.js';
 import { monitoringResponse } from './monitoring.js';
+import { googleOrdersResponse } from './googleOrders.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
   normalizeEmail,
@@ -95,6 +96,14 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
+      if (['/api/orders/google/status', '/api/orders/google/snapshot'].includes(url.pathname)) {
+        if (user.role !== 'admin')
+          return reply(
+            { error: 'O piloto Google Sheets está disponível apenas para administradores.' },
+            403,
+          );
+        return googleOrdersResponse(request, env);
+      }
       if (url.pathname === '/api/monitoring/snapshot') {
         if (user.role !== 'admin' && !user.pages.includes('monitoring'))
           return reply({ error: 'Acesso ao monitoramento não autorizado.' }, 403);

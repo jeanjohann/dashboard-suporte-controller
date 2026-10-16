@@ -4,7 +4,7 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { PageSettingsButton } from '../../../components/PageSettings.jsx';
 
 /** Apresenta o recorte e as ações recebidas; a base original permanece no controlador. */
-export function OrdersImportPanel({ input, busy, error, data, load }) {
+export function OrdersImportPanel({ input, busy, error, data, load, google }) {
   return (
     <>
       <header>
@@ -14,11 +14,20 @@ export function OrdersImportPanel({ input, busy, error, data, load }) {
           <p>Importe sua planilha e confira os atendimentos antes de analisar.</p>
         </div>
         <div className="page-header-actions">
+          {google?.allowed && (
+            <button
+              type="button"
+              onClick={() => google.setOpen(!google.open)}
+              aria-expanded={google.open}
+            >
+              Google Sheets{google.connected ? ' · conectado' : ''}
+            </button>
+          )}
           <PermissionButton
             className="header-import-action"
             action="import"
             onClick={() => input.current.click()}
-            disabled={busy}
+            disabled={busy || google?.busy}
           >
             {busy ? 'Lendo arquivo…' : '↑ Importar planilha'}
           </PermissionButton>
@@ -40,7 +49,11 @@ export function OrdersImportPanel({ input, busy, error, data, load }) {
             Selecione o Excel que contém a aba <strong>OS 2025_26</strong> ou{' '}
             <strong>OS 2025</strong>.<br />A ordem dos registros e das colunas será preservada.
           </p>
-          <PermissionButton action="import" onClick={() => input.current.click()} disabled={busy}>
+          <PermissionButton
+            action="import"
+            onClick={() => input.current.click()}
+            disabled={busy || google?.busy}
+          >
             Selecionar arquivo Excel
           </PermissionButton>
           <div className="principles">

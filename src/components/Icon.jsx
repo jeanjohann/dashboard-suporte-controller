@@ -6,7 +6,7 @@ import React from 'react';
 const paths = {
   settings: (
     <>
-      <path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3z" />
+      <path d="M9.4 4.4 10 2.8h4l.6 1.6a2 2 0 0 0 2.5 1.4l1.7-.3 2 3.5-1.1 1.3a2 2 0 0 0 0 2.9l1.1 1.3-2 3.5-1.7-.3a2 2 0 0 0-2.5 1.4l-.6 2h-4l-.6-2a2 2 0 0 0-2.5-1.4l-1.7.3-2-3.5 1.1-1.3a2 2 0 0 0 0-2.9L3.2 9l2-3.5 1.7.3a2 2 0 0 0 2.5-1.4Z" />
       <circle cx="12" cy="12" r="3" />
     </>
   ),
@@ -67,9 +67,11 @@ const paths = {
 export function Icon({ name, size = 18 }) {
   return (
     <svg
+      className="ui-icon"
       width={size}
       height={size}
       viewBox="0 0 24 24"
+      preserveAspectRatio="xMidYMid meet"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.7"
