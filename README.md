@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.21.2 — Clique na logo Addlog para recolher ou expandir o menu, sem botão de seta separado. Equipe de suporte mantém a comparação entre agendamentos e execuções. Monitoramento Ativo segue com a API do fornecedor em preparação.
+**Versão:** 0.21.3 — Menu lateral mais leve e compacto, com ícones discretos, seleção suave e submenus organizados. A logo continua recolhendo/expandindo o menu. Equipe de suporte mantém a comparação entre agendamentos e execuções; a API do Monitoramento Ativo segue em preparação.
 
 ## Documentação do projeto
 

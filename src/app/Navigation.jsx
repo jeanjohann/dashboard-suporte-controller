@@ -110,7 +110,9 @@ export function Navigation({ page, onPage }) {
           </div>
         ))}
       </nav>
-      <ThemeToggle />
+      <div className="sidebar-footer">
+        <ThemeToggle />
+      </div>
     </aside>
   );
 }

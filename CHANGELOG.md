@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.21.3 — 16/10/2026
+
+- Menu lateral mais compacto, com ícones finos de 16 px, texto neutro e seleção por fundo suave, sem faixa lateral. Cores da Addlog mantidas nos dois temas.
+- Submenus e ferramentas com espaçamento menor e hierarquia discreta. Rodapé do tema separado por linha leve; celular conserva áreas de toque maiores. Funções, nomes, permissões e ação da logo preservados.
+
 ## 0.21.2 — 16/10/2026
 
 - Logo Addlog passa a recolher/expandir o menu, substituindo o botão com seta. Mantém símbolo no modo recolhido, preferência salva, sincronização entre páginas e navegação por teclado com foco visível.
