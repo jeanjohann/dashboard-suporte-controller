@@ -10,6 +10,7 @@ import { alignHelp, helpChildren } from './HelpLayout.jsx';
 import { reportHelpFor } from './reportHelp.js';
 import { useLayoutContext } from '../shared/layout/PageLayout.jsx';
 import { availableLayoutMode } from '../shared/layout/pageLayout.js';
+import { useReportStory, StoryPortal, StoryViewControl } from '../shared/layout/ReportStories.jsx';
 export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
@@ -39,6 +40,12 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
   const section = useRef(),
     context = useContext(PrintContext);
   const hiddenSections = useContext(HiddenSectionsContext);
+  const available = visible && !hiddenSections.includes(title) && preference?.visible !== false;
+  const story = useReportStory(title, available);
+  // Escolher uma visualização é uma abertura explícita; o modo inicial salvo continua valendo ao entrar.
+  useEffect(() => {
+    if (story?.revision && story.active === title) setOpen(true);
+  }, [story?.revision]);
   const content = helpChildren(children),
     notes = content.filter((child) => React.isValidElement(child) && child.type === InfoNote);
   // A explicação específica da seção cobre cabeçalhos que antes dependiam apenas de notas internas.
@@ -51,7 +58,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
     document.body.append(frame);
     const doc = frame.contentDocument;
     const heading = doc.createElement('h1');
-    heading.textContent = title;
+    heading.textContent = story ? `${story.title} · ${title}` : title;
     const metadata = doc.createElement('p');
     metadata.textContent = `Arquivo: ${context.filename || '—'} | Filtros: ${JSON.stringify(context.filters || {})} | Referência temporal: ${context.referenceDate || '—'}`;
     const clone = section.current.cloneNode(true);
@@ -106,67 +113,76 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
     }, 200);
   }
   return (
-    <section
-      hidden={!visible || hiddenSections.includes(title) || preference?.visible === false}
-      className="workspace-section report-block"
-    >
-      <header className="report-heading">
-        <div className="report-title">
-          <h2>{title}</h2>
-        </div>
-        <div className="report-heading-actions">
-          {hasSummary && (
+    <StoryPortal story={story}>
+      <section
+        hidden={!available || (story && story.active !== title)}
+        className="workspace-section report-block"
+      >
+        <header className="report-heading">
+          <div className="report-title">
+            <h2>{story?.title || title}</h2>
+            {story && <StoryViewControl story={story} title={title} />}
+          </div>
+          <div className="report-heading-actions">
+            {hasSummary && (
+              <button
+                type="button"
+                aria-label={`${compact ? 'Visão completa' : 'Visão resumida'} de ${title}`}
+                onClick={() => {
+                  setOpen(true);
+                  setCompact((value) => !value);
+                }}
+              >
+                {compact ? 'Completo' : 'Resumo'}
+              </button>
+            )}
             <button
               type="button"
-              aria-label={`${compact ? 'Visão completa' : 'Visão resumida'} de ${title}`}
-              onClick={() => {
-                setOpen(true);
-                setCompact((value) => !value);
-              }}
+              aria-expanded={open}
+              aria-label={`${open ? 'Recolher' : 'Abrir'} relatório ${title}`}
+              onClick={() => setOpen((value) => !value)}
             >
-              {compact ? 'Completo' : 'Resumo'}
+              {open ? 'Recolher' : 'Abrir'}
             </button>
-          )}
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-label={`${open ? 'Recolher' : 'Abrir'} relatório ${title}`}
-            onClick={() => setOpen((value) => !value)}
-          >
-            {open ? 'Recolher' : 'Abrir'}
-          </button>
-          {(description || notes.length > 0) && (
-            <InfoNote label={`Regras de ${title}`}>
-              {description && <p>{description}</p>}
-              {notes.map((note, index) => (
-                <p key={index}>{note.props.children}</p>
-              ))}
-            </InfoNote>
-          )}
-          <PermissionButton action="export" onClick={print}>
-            Imprimir / Salvar PDF
-          </PermissionButton>
+            {(description || notes.length > 0) && (
+              <InfoNote label={`Regras de ${title}`}>
+                {description && <p>{description}</p>}
+                {notes.map((note, index) => (
+                  <p key={index}>{note.props.children}</p>
+                ))}
+              </InfoNote>
+            )}
+            <PermissionButton action="export" onClick={print}>
+              Imprimir / Salvar PDF
+            </PermissionButton>
+          </div>
+        </header>
+        {story && (
+          <p className="report-story-context">
+            <strong>{title}</strong>
+            {story.description && <> · {story.description}</>}
+          </p>
+        )}
+        {hasSummary && (
+          <div className="section-body" hidden={!open || !compact}>
+            {summary}
+          </div>
+        )}
+        <div className="section-body" hidden={!open || (hasSummary && compact)}>
+          <div className="section-content" ref={section}>
+            {description && <span className="info-print">{description}</span>}
+            {content.map((child, index) =>
+              notes.includes(child) ? (
+                <span key={`note-${index}`} className="info-print">
+                  {child.props.children}
+                </span>
+              ) : (
+                alignHelp(child)
+              ),
+            )}
+          </div>
         </div>
-      </header>
-      {hasSummary && (
-        <div className="section-body" hidden={!open || !compact}>
-          {summary}
-        </div>
-      )}
-      <div className="section-body" hidden={!open || (hasSummary && compact)}>
-        <div className="section-content" ref={section}>
-          {description && <span className="info-print">{description}</span>}
-          {content.map((child, index) =>
-            notes.includes(child) ? (
-              <span key={`note-${index}`} className="info-print">
-                {child.props.children}
-              </span>
-            ) : (
-              alignHelp(child)
-            ),
-          )}
-        </div>
-      </div>
-    </section>
+      </section>
+    </StoryPortal>
   );
 }

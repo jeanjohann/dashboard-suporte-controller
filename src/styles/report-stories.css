@@ -1,0 +1,107 @@
+/* Uma área estável por assunto; visualizações mantêm suas regras e preferências individuais. */
+.report-story-slot {
+  min-width: 0;
+}
+.report-story-slot .report-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  min-width: 0;
+}
+.report-story-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 400;
+  min-width: 0;
+}
+.report-story-control select {
+  width: auto;
+  max-width: 100%;
+  font-size: 12px;
+  padding: 7px 28px 7px 10px;
+}
+.report-story-context {
+  padding: 10px 18px;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ui-muted);
+  border-bottom: 1px solid var(--ui-border);
+}
+.report-story-context strong {
+  color: var(--ui-ink);
+  font-weight: 600;
+}
+.analysis-destinations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin: 18px 0 10px;
+}
+.analysis-destinations > button {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  text-align: left;
+  padding: 16px;
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  font-weight: 400;
+  line-height: 1.6;
+}
+.analysis-destinations > button:hover {
+  border-color: var(--ui-accent);
+}
+.analysis-destinations strong {
+  font-size: 13px;
+}
+.analysis-destinations span {
+  font-size: 11px;
+  color: var(--ui-muted);
+}
+.analysis-destinations small {
+  color: var(--ui-accent-ink);
+  font-size: 11px;
+  margin-top: auto;
+}
+.analysis-route {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+}
+.analysis-route strong {
+  font-size: 12px;
+}
+.analysis-route p {
+  margin: 6px 0 0;
+}
+.consumption-queue-view {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+@media (max-width: 600px) {
+  .report-story-slot .report-title {
+    width: 100%;
+  }
+  .report-story-control,
+  .report-story-control select {
+    width: 100%;
+  }
+  .report-story-context {
+    padding: 10px 12px;
+  }
+  .analysis-destinations {
+    grid-template-columns: 1fr;
+  }
+}

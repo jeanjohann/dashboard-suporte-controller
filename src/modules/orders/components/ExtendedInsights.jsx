@@ -10,9 +10,8 @@ import { Chart } from '../../../components/Chart.jsx';
 import { GeographyComparison } from './GeographyComparison.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
-import { groupedCosts, done } from '../domain/insights.js';
+import { groupedCosts } from '../domain/insights.js';
 import { field } from '../../../shared/data/filters.js';
-import { linkOperational } from '../../operational/domain/operational.js';
 const currency = (value) =>
   (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const metric = (value) => (value.count ? currency(value.sum) : 'Sem valor válido');
@@ -131,23 +130,10 @@ function Groups({ data, column, maintenance = false, absorbed = false }) {
     </>
   );
 }
-/** Apresenta recortes complementares de manutenção, geografia e vínculo com o parque operacional. */
-export function ExtendedInsights({ original, data, visibility, operational }) {
+/** Apresenta recortes complementares de manutenção, custos absorvidos e geografia. */
+export function ExtendedInsights({ data, visibility }) {
   const [absorbedBy, setAbsorbedBy] = useState('Razão Social'),
     [regionBy, setRegionBy] = useState('UF');
-  const links = operational ? linkOperational(operational, original) : [],
-    states = new Map();
-  for (const row of links) states.set(row.state, (states.get(row.state) || 0) + 1);
-  const selectedIds = new Set(
-    data.rows.filter((row) => done(data, row)).map((row) => row.sourceRow),
-  );
-  const linkedIds = new Set(
-    links.flatMap((row) =>
-      row.services
-        .filter((service) => selectedIds.has(service.sourceRow))
-        .map((service) => service.sourceRow),
-    ),
-  );
   return (
     <>
       <Section
@@ -202,34 +188,6 @@ export function ExtendedInsights({ original, data, visibility, operational }) {
           qualidade. Para examinar o contexto, use os filtros de tipo, motivo, cliente e região no
           topo.
         </InfoNote>
-      </Section>
-      <Section
-        title="Validação dos vínculos com o parque"
-        visible={visibility.parkLinks}
-        defaultOpen={false}
-      >
-        {!operational ? (
-          <p>Importe o operacional para revisar os vínculos.</p>
-        ) : (
-          <>
-            <p className="scope">
-              {operational.rows.length} registros no parque importado. {linkedIds.size} de{' '}
-              {selectedIds.size} atendimentos realizados do recorte têm correspondência única por
-              serial + placa. O operacional é uma fotografia de outra data; ausência de vínculo não
-              significa equipamento sem manutenção.
-            </p>
-            <Chart
-              items={[...states].map(([label, value]) => ({ label, value }))}
-              title="Cobertura dos vínculos"
-              compact
-            />
-            <InfoNote>
-              A revisão detalhada por equipamento está na página Operacional. Vínculos ambíguos não
-              recebem atendimentos. Indicadores por 100 equipamentos aguardam validação dos
-              vínculos.
-            </InfoNote>
-          </>
-        )}
       </Section>
     </>
   );

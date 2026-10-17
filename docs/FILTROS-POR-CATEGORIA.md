@@ -8,9 +8,11 @@ Versão inicial: 0.24.0. Não foi criado um novo filtro global nem uma combinaç
 
 ## Como usar
 
+Na organização 0.27.0, Regiões integra OS → Operação; Dados e revisão integra OS → Dados e relatórios; Parque integra a Visão geral de Parque e Manutenção; Manutenção e Relatórios formam uma categoria. Os painéis agrupados compartilham o recorte da categoria, sem filtros ocultos por visualização. [Localização das análises](ORGANIZACAO-DAS-ANALISES.md).
+
 1. Abra a categoria no menu lateral.
 2. Confira o alcance no topo do quadro de filtros.
-3. Nas OS, Logística e Parque → Manutenção/Relatórios, o período fica visível; Registro mais antigo usa a primeira data válida da respectiva base, independentemente dos outros filtros. No Parque, são datas de atendimento das OS vinculadas, sem reduzir o denominador de equipamentos. Todo o período limpa somente as duas datas desta categoria.
+3. Nas OS, Logística e Parque → Manutenção e relatórios, o período fica visível; Registro mais antigo usa a primeira data válida da respectiva base, independentemente dos outros filtros. No Parque, são datas de atendimento das OS vinculadas, sem reduzir o denominador de equipamentos. Todo o período limpa somente as duas datas desta categoria.
 4. Abra Filtros da página para acessar campos, buscas e filtros adicionais disponíveis no módulo. Campos ficam recolhidos inicialmente, sem ocultar as seleções ativas.
 5. As seleções aparecem em chips mesmo com os campos recolhidos. Clique no × de um chip para remover apenas aquele campo; ao selecionar várias opções no mesmo campo, o chip reúne essas opções. O conteúdo completo permanece no título e no nome acessível do controle.
 6. Limpar filtros desta categoria remove os campos e a busca somente desse espaço. Categorias vizinhas permanecem como estavam.

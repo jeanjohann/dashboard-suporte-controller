@@ -15,6 +15,7 @@ export const dashboardCategories = [
       'multiCalls',
       'interventions',
       'calls',
+      'geography',
     ],
   },
   {
@@ -27,15 +28,13 @@ export const dashboardCategories = [
   {
     key: 'equipment',
     label: 'Equipamentos',
-    sections: ['fieldLife', 'parkLinks', 'swaps', 'history', 'lifecycle', 'durationAnalysis'],
+    sections: ['fieldLife', 'swaps', 'history', 'lifecycle', 'durationAnalysis'],
   },
-  { key: 'regions', label: 'Regiões', sections: ['geography'] },
   {
     key: 'reports',
-    label: 'Relatórios personalizados',
-    sections: ['report', 'saved', 'descriptive', 'export', 'extras'],
+    label: 'Dados e relatórios',
+    sections: ['records', 'report', 'saved', 'descriptive', 'export', 'extras'],
   },
-  { key: 'data', label: 'Dados e revisão', sections: ['records'] },
 ];
 /** Combina a categoria ativa com as preferências de exibição, sem eliminar dados da sessão. */
 export function categoryVisibility(preferences, category) {

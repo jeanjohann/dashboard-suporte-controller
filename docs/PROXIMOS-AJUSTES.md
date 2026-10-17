@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Entregue em 0.27.0: consolidação dos menus e relatórios aprovada pelo proprietário, Visão geral mais direta, vínculos centralizados em Parque e grade única de Consumo com ranking complementar. [Mapa e critérios](ORGANIZACAO-DAS-ANALISES.md). A reorganização não conclui cruzamentos novos, integrações ou armazenamento compartilhado da fila.
+
 Entregue em 0.24.0: filtros independentes por categoria, quadro compacto único e indicação de campos ativos no menu. [Critérios e limites](FILTROS-POR-CATEGORIA.md). Integração Google e demais dependências abaixo permanecem com seus estados próprios.
 
 Piloto Google Sheets de OS preparado em 0.23.0, com fonte fixa e acesso exclusivo de administradores. Aba `OS 2025_26` confirmada em 16/10/2026. A configuração real será retomada quando o proprietário tiver acesso ao Google Cloud no escritório. Pendente: conferir a conta de serviço/API, credencial no Cloudflare, compartilhamento como leitor e comparação real com Excel. Ampliação a outros usuários/módulos e armazenamento compartilhado não foram ativados. [Configuração e limites](GOOGLE-SHEETS.md).

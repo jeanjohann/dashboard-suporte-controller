@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.26.0 — Equipe de suporte com cards por responsável, comparação temporal, indicadores complementares, detalhamento e exportação individual. Execução e agendamento mantêm suas próprias datas e contagens no modo Ambos. Visão geral conserva dez cards, agenda compacta e atalhos semanais. Paleta e apresentação adaptadas aos dois temas. Filtros seguem independentes por categoria. O piloto Google permanece pendente da configuração no escritório; a API do Monitoramento segue em preparação.
+**Versão:** 0.27.0 — Navegação de OS com sete categorias, relatórios relacionados agrupados em painéis com visualizações e Visão geral mais direta. Parque centraliza vínculos e reúne manutenção/exportação; Consumo usa uma única grade de acompanhamento e um ranking complementar. Filtros por categoria, cálculos, permissões e preferências mantidos. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md). O piloto Google e a API do Monitoramento continuam pendentes da configuração externa.
 
 ## Documentação do projeto
 

@@ -29,8 +29,8 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
         ['Cliente vinculado', (row) => row.link?.client || null],
         ['Placa', (row) => row.link?.plate || null],
         ['Apuração', (row) => row.start],
-        ['Consumo MB', (row) => row.ticks],
-        ['MB por dia', (row) => row.ticks / row.days],
+        ['Consumo MB', (row) => (consumptionEligible(row) ? row.ticks : null)],
+        ['MB por dia', (row) => (consumptionEligible(row) ? row.ticks / row.days : null)],
         ['Última ação', (row) => latest.get(chipKey(row))?.date || null],
         ['Acompanhamento', (row) => latest.get(chipKey(row))?.status || 'Sem acompanhamento'],
       ]
@@ -123,7 +123,7 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                   </button>
                 </th>
               ))}
-              {!followup && <th>Conferir</th>}
+              <th>Conferir</th>
             </tr>
           </thead>
           <tbody>
@@ -159,12 +159,15 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                     <td>{row.link?.plate || 'Não informada'}</td>
                     <td>{row.period}</td>
                     <td>
-                      {mb(row.ticks)}
+                      {mb(consumptionEligible(row) ? row.ticks : null)}
+                      {!consumptionEligible(row) && (
+                        <small className="line-attention">Fora dos totais</small>
+                      )}
                       {row.attention && (
                         <small className="line-attention">Investigar consumo</small>
                       )}
                     </td>
-                    <td>{mb(row.ticks / row.days)}</td>
+                    <td>{mb(consumptionEligible(row) ? row.ticks / row.days : null)}</td>
                     <td>{latest.get(chipKey(row))?.date?.split('-').reverse().join('/') || '—'}</td>
                     <td>
                       <span className="info-print">
@@ -211,11 +214,11 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                     </td>
                   </>
                 )}
-                {!followup && (
-                  <td>
-                    <button onClick={() => onView(row)}>Conferir e acompanhar</button>
-                  </td>
-                )}
+                <td>
+                  <button onClick={() => onView(row)}>
+                    {followup ? 'Conferir origem' : 'Conferir e acompanhar'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

@@ -17,15 +17,11 @@ import {
 import { dashboardData } from '../domain/dashboard.js';
 import { OverviewKpis } from './OverviewKpis.jsx';
 import { managementMetrics } from '../domain/management.js';
-import { applyFilters, field } from '../../../shared/data/filters.js';
-import { money } from '../domain/analysis.js';
-import { Chart } from '../../../components/Chart.jsx';
-import { MaintenanceSummary, ServiceProfileSummary } from './CardInsights.jsx';
-import { ContractSummary } from './ContractSummary.jsx';
+import { applyFilters } from '../../../shared/data/filters.js';
 import { RecordDetails } from './RecordDetails.jsx';
+import { useAccess } from '../../../shared/security/Access.jsx';
+import { allowsPage } from '../../../shared/security/permissions.js';
 import { chartColors } from '../../../shared/charts/palette.js';
-const currency = (v) =>
-  v == null ? '—' : (v / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const date = (v) => v?.split('-').reverse().join('/');
 function MultiChart({ items, series }) {
   return items.length ? (
@@ -55,12 +51,12 @@ function MultiChart({ items, series }) {
   );
 }
 /** Reúne indicadores de gestão e comparação temporal sobre os filtros de OS selecionados. */
-export function DashboardOverview({ original, filters, operational, onPage }) {
+export function DashboardOverview({ original, filters, onPage, onCategory }) {
+  const { user } = useAccess();
   const d = dashboardData(original, filters),
     scheduling = applyFilters(original, filters, 'Agendamento'),
     m = managementMetrics(d.selected, scheduling),
-    [detail, setDetail] = React.useState(null),
-    [selectedClient, setSelectedClient] = React.useState('');
+    [detail, setDetail] = React.useState(null);
   const agendaId = React.useId(),
     agendaDetailRef = React.useRef(null),
     agendaButtons = React.useRef({});
@@ -84,27 +80,6 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
       execution: m.execution?.find((x) => x.label === label)?.value || 0,
       scheduling: m.scheduling?.find((x) => x.label === label)?.value || 0,
     }));
-  const pairs = m.completed
-    .map((row) => ({
-      technical: money(field(original, row, 'Técnico')),
-      travel: money(field(original, row, 'Km')),
-    }))
-    .filter((pair) => pair.technical != null && pair.travel != null);
-  const composition = pairs.length
-    ? [
-        { label: 'Serviço técnico', value: pairs.reduce((sum, p) => sum + p.technical, 0) },
-        { label: 'Deslocamento', value: pairs.reduce((sum, p) => sum + p.travel, 0) },
-      ]
-    : [];
-  const op = operational?.data,
-    groups = (key) => {
-      const map = new Map();
-      for (const r of op?.rows || []) {
-        const label = r[key] || 'Não informado';
-        map.set(label, (map.get(label) || 0) + 1);
-      }
-      return [...map].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
-    };
   return (
     <section className="executive-dashboard">
       <div className="dashboard-heading">
@@ -239,178 +214,48 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
           </div>
         </article>
       </div>
-      <div className="dashboard-lower-grid">
-        <article className="panel dashboard-widget">
-          <div className="inline-help-heading">
-            <h3>Clientes com mais manutenção</h3>
-            <InfoNote label="Regras de Clientes com mais manutenção">
-              Conta Assistências Técnicas Concluída/Pago sem Motivo Visita Improdutiva por razão
-              social, seguindo os filtros de OS. O gráfico apresenta os dez maiores grupos; o
-              detalhe permite conferir as linhas. Volume alto pode refletir tamanho da frota e não
-              mede taxa de falha. O resumo mostra custos válidos e participação na base de
-              manutenções selecionadas.
-            </InfoNote>
-          </div>
-          <Chart
-            compact
-            title="Assistências técnicas realizadas"
-            items={(m.clients || []).slice(0, 10)}
-            onItemClick={(item) => setSelectedClient(item.label)}
-          />
-          <button
-            onClick={() =>
-              setDetail({
-                label: 'Manutenções realizadas',
-                rows: m.maintenance.map((r) => r.sourceRow),
-                data: d.selected,
-              })
-            }
-          >
-            Conferir atendimentos
+      <nav className="analysis-destinations" aria-label="Aprofundar a análise de OS">
+        {[
+          [
+            'operations',
+            'Operação',
+            'Entenda o volume, as visitas improdutivas, os retornos e a distribuição regional.',
+          ],
+          [
+            'clients',
+            'Clientes e custos',
+            'Compare custos de execução, componentes e responsabilidades contratuais.',
+          ],
+          [
+            'support',
+            'Equipe de suporte',
+            'Acompanhe responsáveis por execução e agendamento, com suas próprias datas.',
+          ],
+          [
+            'equipment',
+            'Equipamentos',
+            'Investigue ciclos, trocas e períodos ainda em observação.',
+          ],
+        ].map(([key, label, description]) => (
+          <button type="button" key={key} onClick={() => onCategory(key)}>
+            <strong>{label}</strong>
+            <span>{description}</span>
+            <small>Abrir análise →</small>
           </button>
-          <MaintenanceSummary
-            data={d.selected}
-            selectedClient={selectedClient}
-            onSelect={setSelectedClient}
-            onDetail={setDetail}
-          />
-        </article>
-        <article className="panel dashboard-widget">
-          <div className="inline-help-heading">
-            <h3>Perfil dos serviços realizados</h3>
-            <InfoNote label="Regras de Perfil dos serviços realizados">
-              Conta linhas Concluída/Pago por Tipo de Serviço e separa Motivo Visita Improdutiva em
-              grupo próprio. Participação = quantidade do grupo / total de visitas e atendimentos
-              registrados na seleção. Custos e médias usam Custo Total válido do grupo, incluindo
-              zero. A comparação anterior usa intervalo de mesma duração e mesmos filtros de
-              categoria; não comprova cobertura completa do histórico.
-            </InfoNote>
-          </div>
-          <Chart compact title="Participação por tipo de serviço" type="donut" items={d.types} />
-          <ServiceProfileSummary data={d.selected} previous={d.previous} onDetail={setDetail} />
-        </article>
-        <article className="panel dashboard-widget">
-          <div className="inline-help-heading">
-            <h3>Composição dos custos</h3>
-            <InfoNote label="Regras de Composição dos custos">
-              Usa somente linhas Concluída/Pago com Técnico e Km válidos simultaneamente, incluindo
-              visitas improdutivas. Soma cada componente na mesma amostra e divide pela quantidade
-              dessas linhas para calcular as médias. Km é despesa em reais. Esta soma analítica não
-              substitui Custo Total lançado; campos ausentes não são zero. Use para observar a
-              participação do serviço técnico e do deslocamento, considerando a seleção atual.
-            </InfoNote>
-          </div>
-          <p className="scope">
-            {pairs.length} atendimentos com serviço técnico e deslocamento válidos. Mesma base para
-            ambos os componentes; não substitui o Custo Total lançado.
-          </p>
-          <Chart compact title="Componentes de custo" items={composition} format={currency} />
-          <dl className="cost-summary">
-            <div>
-              <dt>Técnico + deslocamento</dt>
-              <dd>
-                {pairs.length
-                  ? currency(composition.reduce((sum, item) => sum + item.value, 0))
-                  : '—'}
-              </dd>
-            </div>
-            <div>
-              <dt>Média técnico + deslocamento</dt>
-              <dd>
-                {pairs.length
-                  ? currency(composition.reduce((sum, item) => sum + item.value, 0) / pairs.length)
-                  : '—'}
-              </dd>
-            </div>
-            <div>
-              <dt>Média de serviço técnico</dt>
-              <dd>{pairs.length ? currency(composition[0].value / pairs.length) : '—'}</dd>
-            </div>
-            <div>
-              <dt>Média de deslocamento</dt>
-              <dd>{pairs.length ? currency(composition[1].value / pairs.length) : '—'}</dd>
-            </div>
-          </dl>
-          <p className="scope">
-            Médias por atendimento, na mesma base de {pairs.length} linhas com ambos os componentes
-            válidos. Valores zero são mantidos.
-          </p>
-          <ContractSummary data={d.selected} onDetail={setDetail} />
-        </article>
-      </div>
-      <div className="operational-overview">
-        <div className="dashboard-heading">
-          <div>
-            <span className="eyebrow">BASE OPERACIONAL</span>
-            <h2>Parque registrado</h2>
-          </div>
-          <button onClick={() => onPage('operational')}>
-            {op ? 'Revisar operacional' : 'Importar operacional'}
+        ))}
+        {allowsPage(user, 'operational-analysis') && (
+          <button type="button" onClick={() => onPage('operational-analysis')}>
+            <strong>Parque e Manutenção</strong>
+            <span>
+              Consulte a fotografia operacional, a cobertura do histórico e os vínculos com OS.
+            </span>
+            <small>Abrir módulo →</small>
           </button>
-        </div>
-        {op ? (
-          <>
-            <p className="scope">
-              {operational.filename} · fotografia do arquivo completo, incluindo todas as situações.
-              Filtros e período das OS não se aplicam a este bloco; não representa parque ativo
-              histórico.
-            </p>
-            <div className="executive-cards">
-              <article>
-                <span>Registros operacionais</span>
-                <strong>{op.rows.length}</strong>
-              </article>
-              <article>
-                <span>Clientes identificados</span>
-                <strong>{new Set(op.rows.map((r) => r.client).filter(Boolean)).size}</strong>
-              </article>
-              <article>
-                <span>Registros sem serial</span>
-                <strong>{op.rows.filter((r) => !r.serial).length}</strong>
-              </article>
-            </div>
-            <div className="dashboard-chart-grid">
-              <article className="panel dashboard-widget">
-                <div className="inline-help-heading">
-                  <h3>Parque por situação</h3>
-                  <InfoNote label="Regras de Parque por situação">
-                    Conta todos os registros do arquivo operacional completo por situação, inclusive
-                    cancelados. Campos ausentes ficam em grupo próprio. Não segue período nem
-                    filtros da OS e não reconstrói parque ativo histórico. Serve para visualizar a
-                    composição da referência importada.
-                  </InfoNote>
-                </div>
-                <Chart
-                  compact
-                  title="Registros por situação"
-                  type="donut"
-                  items={groups('status')}
-                />
-              </article>
-              <article className="panel dashboard-widget">
-                <div className="inline-help-heading">
-                  <h3>Clientes com mais equipamentos registrados</h3>
-                  <InfoNote label="Regras de Clientes com mais equipamentos registrados">
-                    Conta linhas do arquivo operacional completo por cliente e apresenta os dez
-                    maiores grupos. Todas as situações entram, incluindo cancelados; cliente ausente
-                    fica como Não informado. Não aplica período nem filtros da OS, não soma
-                    mensalidades e não presume equipamentos atualmente ativos.
-                  </InfoNote>
-                </div>
-                <Chart
-                  compact
-                  title="10 maiores grupos por cliente"
-                  items={groups('client').slice(0, 10)}
-                />
-              </article>
-            </div>
-          </>
-        ) : (
-          <p className="notice">
-            Importe a planilha na página Operacional. Os dados aparecerão aqui ao retornar.
-          </p>
         )}
-      </div>
+      </nav>
+      <p className="scope">
+        Cada categoria mantém seus próprios filtros. As análises completas ficam nos destinos acima.
+      </p>
       {detail && !detail.agenda && (
         <div className="panel">
           <button onClick={() => setDetail(null)}>Fechar conferência</button>

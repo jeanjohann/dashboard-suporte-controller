@@ -18,9 +18,14 @@ import { ExtendedInsights } from './ExtendedInsights.jsx';
 import { AdvancedInsights } from './AdvancedInsights.jsx';
 import { Explorers } from './Explorers.jsx';
 import { SupportPerformance } from './SupportPerformance.jsx';
+import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
+import { allOrderStories } from '../config/reportStories.js';
+import { useAccess } from '../../../shared/security/Access.jsx';
+import { allowsPage } from '../../../shared/security/permissions.js';
 
 /** Recebe o controlador existente; não mantém outra cópia dos dados ou filtros. */
-export function OrdersReports({ session, category, visible, operational, onPage }) {
+export function OrdersReports({ session, category, visible, onPage, onCategory }) {
+  const { user } = useAccess();
   const {
     data,
     filename,
@@ -41,7 +46,7 @@ export function OrdersReports({ session, category, visible, operational, onPage 
     records,
   } = session;
   return (
-    <>
+    <ReportStories groups={allOrderStories}>
       <SupportPerformance
         original={data}
         filters={filters}
@@ -53,8 +58,8 @@ export function OrdersReports({ session, category, visible, operational, onPage 
         <DashboardOverview
           original={data}
           filters={filters}
-          operational={operational}
           onPage={onPage}
+          onCategory={onCategory}
         />
       )}
       <SummaryCards
@@ -88,12 +93,21 @@ export function OrdersReports({ session, category, visible, operational, onPage 
         filters={filters}
         visible={visible.fieldLife}
       />
-      <ExtendedInsights
-        original={data}
-        data={selected}
-        visibility={visible}
-        operational={operational?.data || operational}
-      />
+      {category === 'equipment' && allowsPage(user, 'operational-analysis') && (
+        <div className="analysis-route panel">
+          <div>
+            <strong>Conferência de vínculos com o parque</strong>
+            <p className="scope">
+              O cruzamento completo de serial + placa fica em Parque e Manutenção → Vínculos, com
+              filtros próprios.
+            </p>
+          </div>
+          <button type="button" onClick={() => onPage('operational-analysis')}>
+            Abrir Parque e Manutenção
+          </button>
+        </div>
+      )}
+      <ExtendedInsights data={selected} visibility={visible} />
       <AdvancedInsights
         original={data}
         data={selected}
@@ -121,8 +135,8 @@ export function OrdersReports({ session, category, visible, operational, onPage 
         visible={visible.lifecycle}
       />
       <OrdersSwapsPanel devices={devices} visible={visible.swaps} />
-      <OrdersFinancePanel financial={financial} visible={visible.finance} />
-      <OrdersOperationsPanel summary={summary} category={category} visible={visible.operations} />
+      <OrdersFinancePanel financial={financial} data={selected} visible={visible.finance} />
+      <OrdersOperationsPanel summary={summary} visible={visible.operations} />
       <OrdersCallsPanel summary={summary} visible={visible.calls} />
       <OrdersRecordsPanel
         data={data}
@@ -131,6 +145,6 @@ export function OrdersReports({ session, category, visible, operational, onPage 
         visible={visible.records}
         records={records}
       />
-    </>
+    </ReportStories>
   );
 }

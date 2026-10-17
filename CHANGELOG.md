@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.27.0 — 17/10/2026
+
+- OS com sete categorias: regiões incorporadas a Operação; registros, revisão e análises personalizadas reunidos em Dados e relatórios. Relatórios relacionados usam um painel com seletor Visualização, preservando títulos, regras, estado, ajuda e preferências individuais.
+- Visão geral concentra dez cards, agenda e duas tendências compactas, com atalhos aos detalhes. Resumos de concentração/perfil foram movidos para Operação; resumo contratual fica nos indicadores financeiros. Conferência completa de vínculos centralizada em Parque e Manutenção.
+- Parque reúne composição e cobertura na Visão geral; indicadores, comparações e exportação ficam em Manutenção e relatórios. Operacional permanece dedicado à conferência da fonte.
+- Consumo com uma única grade de acompanhamento e visualização de ranking sem tabela repetida. Fora dos totais conserva registros inválidos/duplicados para conferir a origem, sem somá-los; seleção CSV, notas e histórico local mantidos.
+- Filtros seguem por categoria; cálculos, populações, acesso e permissões de exportação preservados. Impressão identifica a visualização ativa. Documentação de navegação e uso atualizada; integrações externas continuam pendentes.
+
 ## 0.26.0 — 17/10/2026
 
 - Equipe de suporte com cards gerais coloridos, ajuda e comparação por indicador; faixa complementar mostra veículos identificados, percentual de improdutivas e registros por chamado. Contagens distintas e bases temporais permanecem próprias de cada papel.

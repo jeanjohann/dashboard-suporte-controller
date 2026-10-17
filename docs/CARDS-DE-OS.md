@@ -2,6 +2,8 @@
 
 Versão 0.25.2. Acesse **Ordens de Serviço → Visão geral** após carregar a base. Os dez cards respondem somente aos filtros dessa categoria; seleções de Equipamentos ou Operação não se propagam para cá. A busca de texto dos registros continua restrita à tabela.
 
+Na **0.27.0**, os dez cards e a agenda mantêm seus critérios. Abaixo ficam apenas tendências compactas e atalhos: concentração/perfil detalhado passam a Operação; valores contratuais ficam em Clientes e custos; o parque completo fica em Parque e Manutenção. [Localização e instruções](ORGANIZACAO-DAS-ANALISES.md).
+
 ## O que é contado
 
 Todos os cards partem das linhas com Status exatamente **Concluída** ou **Pago**. Pago indica pagamento ao técnico. Cancelada, Agendar e Agendado ficam fora. Cada linha é um serviço registrado: várias linhas podem pertencer ao mesmo chamado ou visita física.

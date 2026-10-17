@@ -133,7 +133,6 @@ export function Workspace() {
           active={current === 'orders'}
           onPage={setPage}
           onImport={setOrders}
-          operational={operational}
           source={orders}
         />
       </DeferredPage>

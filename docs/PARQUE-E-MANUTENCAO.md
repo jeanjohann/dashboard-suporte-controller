@@ -1,5 +1,7 @@
 # Manutenção do parque e relatórios — 0.14.0
 
+Na organização **0.27.0**, a composição do parque passa à Visão geral. As quatro análises de manutenção/exportação compartilham o painel **Manutenção e relatórios**, com período comum e seletor Visualização. **Vínculos** é o local principal da conferência completa, antes resumida também nas OS. A página Operacional continua dedicada à fonte. [Mapa e instruções atuais](ORGANIZACAO-DAS-ANALISES.md). As regras abaixo permanecem válidas; referências a seções anteriores descrevem a organização original.
+
 ## Logística — 0.18.0
 
 Nova categoria para ler Envios e Devoluções, com dados independentes da OS/Operacional, contagem de movimentações e recebimentos datados, filtros, revisão, origem e exportação local. Consertos fica fora. Consulte [o guia da logística](LOGISTICA-DE-EQUIPAMENTOS.md). Os cruzamentos logísticos citados nas propostas abaixo ainda não foram ativados.

@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Organização das análises — 0.27.0
+
+`shared/layout/ReportStories.jsx` reúne Sections existentes em painéis com visualizações, usando destinos estáveis para conservar estado e posição. A disponibilidade considera a seção realmente montada, categoria e preferências; ajuda/impressão mantêm o título original. Os catálogos `config/reportStories.js` não contêm cálculo. OS passa a sete categorias; vínculos completos ficam em Parque; Consumo usa uma única grade e separa ranking/conferência. Resumos especializados da antiga Visão geral são reaproveitados em `ServiceProfilesContext` e no painel financeiro. [Mapa de navegação, uso e critérios](ORGANIZACAO-DAS-ANALISES.md).
+
 ## Cards e pessoa do suporte — 0.26.0
 
 `supportPerformance.js` acrescenta veículos por cliente + placa, taxa de improdutivas, registros/chamado e linhas excluídas por data, mantendo contagens e papéis anteriores. `supportPerson.js` deriva a pessoa sobre os resultados já filtrados, preserva denominador da equipe, evolução e base anterior, sem reaplicar um filtro bruto ao nome aparado. `SupportMetricCards` apresenta métricas/comparações; `SupportPeople` mantém busca/limite/seleção de apresentação e abre a pessoa junto aos cards. Não há gravação nova. `supportReport.js` é compartilhado pelos arquivos gerais e individuais e conserva a união de originais em Ambos; `Section` preserva os acionadores com os nomes na impressão. `support-people.css` limita a identidade a esses componentes. [Uso e fórmulas](EQUIPE-DE-SUPORTE.md#cards-e-detalhamento-por-pessoa--0260).

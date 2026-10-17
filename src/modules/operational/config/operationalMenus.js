@@ -11,13 +11,15 @@ export const operationalMenus = [
   { key: 'review', label: 'Revisão', sections: ['Revisão manual'] },
 ];
 export const crossAnalysisMenus = [
-  { key: 'overview', label: 'Visão geral', sections: [] },
-  { key: 'park', label: 'Parque', sections: ['Parque por cliente, modelo, plano e situação'] },
-  { key: 'maintenance', label: 'Manutenção', sections: parkSections.slice(0, 3) },
+  {
+    key: 'overview',
+    label: 'Visão geral',
+    sections: ['Parque por cliente, modelo, plano e situação'],
+  },
+  { key: 'maintenance', label: 'Manutenção e relatórios', sections: parkSections },
   { key: 'monthly', label: 'Valores mensais', sections: ['Valores mensais lançados'] },
   { key: 'links', label: 'Vínculos', sections: ['Vínculos com o histórico de OS'] },
   { key: 'logistics', label: 'Logística', sections: logisticsSections },
-  { key: 'reports', label: 'Relatórios', sections: [parkSections[3]] },
 ];
 /** Define as seções visíveis conforme a categoria escolhida no operacional ou em Parque e Manutenção. */
 export function hiddenByOperationalMenu(analysis, key) {

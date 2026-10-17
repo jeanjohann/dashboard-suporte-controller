@@ -21,6 +21,7 @@ import './styles/filter-workspace.css';
 import './styles/overview-kpis.css';
 import './styles/overview-agenda.css';
 import './styles/support-people.css';
+import './styles/report-stories.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>

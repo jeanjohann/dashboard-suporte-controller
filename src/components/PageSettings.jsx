@@ -123,7 +123,9 @@ export function PageSettingsButton({ available = true }) {
           <div className="page-settings-body">
             <p id={`${id}-description`}>
               Escolha os relatórios desta categoria e como devem abrir. As preferências ficam neste
-              navegador. As alterações são confirmadas em Salvar preferências.
+              navegador. As alterações são confirmadas em Salvar preferências. Relatórios agrupados
+              aparecem no seletor Visualização do painel; cada opção mantém sua própria
+              apresentação.
             </p>
             <div className="page-settings-columns" aria-hidden="true">
               <span>Relatórios exibidos</span>

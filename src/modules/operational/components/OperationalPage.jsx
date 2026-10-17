@@ -41,6 +41,8 @@ import { PageSettingsButton } from '../../../components/PageSettings.jsx';
 import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
 import { filterChips, activeFilterEntries } from '../../../shared/filters/scopedSelection.js';
 import { FilterCount } from '../../../components/FilterPanel.jsx';
+import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
+import { parkStories } from '../config/reportStories.js';
 
 const layoutDefinitions = [
   ...new Set([...operationalMenus, ...crossAnalysisMenus].flatMap((menu) => menu.sections)),
@@ -343,7 +345,7 @@ export function OperationalPage({
                       matched={rows.length}
                       total={data.rows.length}
                       period={
-                        analysis && ['maintenance', 'reports'].includes(menuCategory) ? (
+                        analysis && menuCategory === 'maintenance' ? (
                           <PeriodFilter
                             start={filters.attendanceStart}
                             end={filters.attendanceEnd}
@@ -363,7 +365,7 @@ export function OperationalPage({
                         setOffset(0);
                       }}
                       actions={<ReportControls onExpand={setExpansion} />}
-                      help="A busca e os campos afetam somente esta categoria: registros, análises, vínculos e revisão exibidos aqui. Operacional e Parque e Manutenção mantêm seleções separadas. Em Manutenção e Relatórios, o período seleciona os atendimentos vinculados, sem reduzir o denominador de equipamentos do parque. Cards de conferência da importação representam o arquivo completo. Ausência de histórico nas OS não significa erro."
+                      help="A busca e os campos afetam somente esta categoria: registros, análises, vínculos e revisão exibidos aqui. Operacional e Parque e Manutenção mantêm seleções separadas. Em Manutenção e relatórios, o período seleciona os atendimentos vinculados, sem reduzir o denominador de equipamentos do parque. Cards de conferência da importação representam o arquivo completo. Ausência de histórico nas OS não significa erro."
                     >
                       {data ? (
                         <>
@@ -459,7 +461,7 @@ export function OperationalPage({
                         ))}
                       </section>
                       {analysis ? (
-                        <>
+                        <ReportStories groups={parkStories}>
                           <ParkInsights
                             rows={rows}
                             operational={data}
@@ -591,7 +593,7 @@ export function OperationalPage({
                               </SortableTable>
                             </div>
                           </Section>
-                        </>
+                        </ReportStories>
                       ) : (
                         <>
                           <Section title="Revisão manual">

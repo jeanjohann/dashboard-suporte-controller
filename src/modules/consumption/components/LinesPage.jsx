@@ -35,6 +35,7 @@ import { download } from '../../../shared/export/exports.js';
 import {
   VOLUME_SCALE,
   consumptionSummary,
+  consumptionEligible,
   linkConsumption,
   baselineByPeriod,
   attachBaselines,
@@ -48,6 +49,8 @@ import { LineHistoryPanel } from './LineHistoryPanel.jsx';
 import { ConsumptionArchivePanel } from './ConsumptionArchivePanel.jsx';
 import { useLineFollowup } from '../hooks/useLineFollowup.js';
 import { useConsumptionArchive } from '../hooks/useConsumptionArchive.js';
+import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
+import { consumptionStories } from '../config/reportStories.js';
 /** Coordena extratos, versões, notas e referência operacional no histórico local do navegador. */
 export function LinesPage({ onPage, operational, onOperationalChange, reloadToken = 0 }) {
   const history = useConsumptionArchive(reloadToken);
@@ -56,13 +59,15 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
   const [category, setCategory] = useState('overview'),
     [detail, setDetail] = useState(null),
     [expansion, setExpansion] = useState(null),
-    [rankMeasure, setRankMeasure] = useState('daily');
+    [rankMeasure, setRankMeasure] = useState('daily'),
+    [queueView, setQueueView] = useState('eligible');
   const { filters, setFilters, search, setSearch, resetSelections, counts } =
     useScopedSelection(category);
   useEffect(() => {
     setDetail(null);
   }, [category]);
   const historyAnchor = useRef();
+  const sourceAnchor = useRef();
   const [historyReveal, setHistoryReveal] = useState(0);
   const statements = useMemo(() => historyStatements(archive.files), [archive.files]);
   const reference = operational?.data ? operational : archive.operational;
@@ -95,6 +100,9 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     visibleSections = categories.find(([key]) => key === category)[2],
     shown = (label) => visibleSections.includes(label);
   const selectedDetail = selected.find((row) => row.id === detail);
+  useEffect(() => {
+    if (selectedDetail) sourceAnchor.current?.scrollIntoView({ block: 'nearest' });
+  }, [detail]);
   function filter(key, value) {
     setFilters((previous) => ({ ...previous, [key]: value }));
     setDetail(null);
@@ -363,45 +371,68 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   chartNote={chartNote}
                   providerStats={providerStats}
                 />
-                <Section
-                  title="Fila de acompanhamento do consumo"
-                  visible={shown('Fila de acompanhamento do consumo') && !!statements.length}
-                  help="Linhas de dados com consumo válido, respeitando operadora, apuração, busca e filtros da página. Ordem inicial: maior consumo total em MB, sem somar períodos sobrepostos. Períodos de durações diferentes devem ser comparados também por MB por dia. Clique nos títulos para ordenar todo o recorte antes de paginar; o terceiro clique restaura a ordem inicial. Acompanhamento mostra a última ação salva por data para operadora + ICCID; empates usam a última entrada. Clicar no status abre o histórico abaixo, com todas as apurações em uso do chip. Anotações são confirmadas após Salvar acompanhamento e permanecem neste navegador, sem sincronização entre usuários. Cliente e placa são da referência operacional atual; ausência de vínculo aparece como Linha não identificada. Consumo alto e status administrativo não confirmam defeito nem resolução. Registros inválidos/duplicados ficam disponíveis para conferência em Linhas para investigar."
-                >
-                  {shown('Fila de acompanhamento do consumo') && (
-                    <LineRecordsTable
-                      records={eligible}
-                      onView={viewRow}
-                      onExport={exportRecords}
-                      followup={{ notes: archive.notes, tracked, onSelect: followLine }}
-                    />
-                  )}
-                </Section>
-                <div ref={historyAnchor} className="consumption-history-anchor" />
-                <LineHistoryPanel
-                  visible={shown('Linha do tempo de consumo') && !!statements.length}
-                  revealToken={historyReveal}
-                  chartNote={chartNote}
-                  busy={busy}
-                  followup={followup}
-                  onSelect={selectTracked}
-                />
-                <ConsumptionInvestigationPanel
-                  shown={shown}
-                  hasStatements={!!statements.length}
-                  attention={attention}
-                  archive={archive}
-                  rankMeasure={rankMeasure}
-                  setRankMeasure={setRankMeasure}
-                  chartNote={chartNote}
-                  rankItems={rankItems}
-                  selected={selected}
-                  viewRow={viewRow}
-                  filter={filter}
-                  exportRecords={exportRecords}
-                  rowsTable={rowsTable}
-                  filters={filters}
-                />
+                <ReportStories groups={consumptionStories}>
+                  <Section
+                    title="Fila de acompanhamento do consumo"
+                    visible={shown('Fila de acompanhamento do consumo') && !!statements.length}
+                    help="Uma única grade para consulta, seleção e acompanhamento. Registros válidos entram nos totais; a opção Fora dos totais permite conferir dados inválidos/duplicados do mesmo recorte, sem somá-los. Respeita operadora, apuração, busca e filtros da categoria. Ordem inicial: maior consumo total em MB, sem somar períodos sobrepostos. Compare períodos de durações diferentes também por MB por dia. Clique nas colunas para ordenar o recorte antes de paginar. Acompanhamento mostra a última ação salva por data para operadora + ICCID; empates usam a última entrada. Clicar no status abre o histórico abaixo com todas as apurações em uso do chip. As notas são confirmadas em Salvar acompanhamento e ficam neste navegador. Cliente e placa vêm da referência operacional atual. Consumo alto e status administrativo não confirmam defeito nem resolução."
+                  >
+                    <label className="consumption-queue-view">
+                      Registros da grade
+                      <select
+                        aria-label="Registros da grade"
+                        value={queueView}
+                        onChange={(event) => setQueueView(event.target.value)}
+                      >
+                        <option value="eligible">Consumo válido · {eligible.length}</option>
+                        <option value="review">
+                          Fora dos totais · {selected.length - eligible.length}
+                        </option>
+                      </select>
+                    </label>
+                    <p className="scope">
+                      A exportação da seleção usa apenas as linhas marcadas nesta grade. O CSV do
+                      recorte completo continua disponível na visualização Ranking e prioridades.
+                      Fora dos totais inclui somente registros mantidos pelos filtros atuais.
+                    </p>
+                    {shown('Fila de acompanhamento do consumo') && (
+                      <LineRecordsTable
+                        records={
+                          queueView === 'eligible'
+                            ? eligible
+                            : selected.filter((row) => !consumptionEligible(row))
+                        }
+                        onView={viewRow}
+                        onExport={exportRecords}
+                        followup={{ notes: archive.notes, tracked, onSelect: followLine }}
+                      />
+                    )}
+                  </Section>
+                  <div ref={historyAnchor} className="consumption-history-anchor" />
+                  <LineHistoryPanel
+                    visible={shown('Linha do tempo de consumo') && !!statements.length}
+                    revealToken={historyReveal}
+                    chartNote={chartNote}
+                    busy={busy}
+                    followup={followup}
+                    onSelect={selectTracked}
+                  />
+                  <ConsumptionInvestigationPanel
+                    shown={shown}
+                    hasStatements={!!statements.length}
+                    attention={attention}
+                    archive={archive}
+                    rankMeasure={rankMeasure}
+                    setRankMeasure={setRankMeasure}
+                    chartNote={chartNote}
+                    rankItems={rankItems}
+                    selected={selected}
+                    viewRow={followLine}
+                    filter={filter}
+                    exportRecords={exportRecords}
+                    filters={filters}
+                  />
+                </ReportStories>
                 <ConsumptionEquipmentPanels
                   shown={shown}
                   hasStatements={!!statements.length}
@@ -431,11 +462,13 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   onSaveOperational={saveOperationalReference}
                   onChangeVersion={changeVersion}
                 />
-                <ConsumptionSourcePanel
-                  row={selectedDetail}
-                  statements={statements}
-                  onClose={() => setDetail(null)}
-                />
+                <div ref={sourceAnchor}>
+                  <ConsumptionSourcePanel
+                    row={selectedDetail}
+                    statements={statements}
+                    onClose={() => setDetail(null)}
+                  />
+                </div>
               </main>
             </div>
           </PrintContext.Provider>

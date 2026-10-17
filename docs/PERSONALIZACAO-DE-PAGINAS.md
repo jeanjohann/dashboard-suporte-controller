@@ -15,7 +15,9 @@ A partir de **0.22.0**, as escolhas de relatórios ficam na engrenagem **Persona
 
 **Cancelar**, o botão de fechar, Escape e clicar fora da janela descartam as alterações ainda não salvas. **Restaurar padrão** prepara todos os relatórios da categoria como visíveis, com sua apresentação original; também requer Salvar para confirmar. Isso não redefine filtros, categorias de outras páginas ou dados importados.
 
-A engrenagem continua disponível se todos os relatórios forem ocultados, permitindo recuperá-los. Nas visões gerais fixas de OS e Operacional/Parque, sem relatórios configuráveis, e nas páginas ainda sem a base necessária, o controle não aparece. Categorias de Consumo e relatórios de Logística seguem a disponibilidade de suas ferramentas.
+A engrenagem continua disponível se todos os relatórios forem ocultados, permitindo recuperá-los. Nas visões gerais fixas de OS e Operacional, sem relatórios configuráveis, e nas páginas ainda sem a base necessária, o controle não aparece. A Visão geral de Parque inclui um relatório configurável de composição. Categorias de Consumo e relatórios de Logística seguem a disponibilidade de suas ferramentas.
+
+Desde 0.27.0, relatórios relacionados compartilham um painel com seletor **Visualização**. Cada opção conserva sua preferência anterior; desmarcar uma delas a remove do seletor, sem alterar as vizinhas. Escolher uma opção abre seu conteúdo, conservando eventual resumo, sem regravar a apresentação inicial. A impressão inclui somente a análise ativa. [Mapa e instruções](ORGANIZACAO-DAS-ANALISES.md).
 
 ## Preferências, estado da sessão e dados
 

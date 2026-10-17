@@ -58,6 +58,10 @@ export function Explorers({ data, filename, filters, onRestoreFilters, visibilit
       <Section title="Configurações de relatório" visible={visibility.saved}>
         <section className="panel chart-panel">
           <h2>Configurações de relatório</h2>
+          <p className="scope">
+            Configuração atual: {measures[measure]} por {grouping}. Agrupamento, medida, gráfico e
+            filtros são compartilhados com a visualização Relatório personalizado.
+          </p>
           <div className="filter-grid">
             <label>
               Nome da configuração
@@ -134,6 +138,10 @@ export function Explorers({ data, filename, filters, onRestoreFilters, visibilit
       <Section title="Exportações" visible={visibility.export}>
         <section className="panel chart-panel">
           <h2>Exportar análise atual</h2>
+          <p className="scope">
+            {measures[measure]} por {grouping}. Ajuste a análise na visualização Relatório
+            personalizado antes de exportar.
+          </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <PermissionButton
               action="export"
@@ -171,47 +179,12 @@ export function Explorers({ data, filename, filters, onRestoreFilters, visibilit
             >
               Baixar barras SVG
             </PermissionButton>
-            <PermissionButton
-              action="export"
-              disabled={!events.length}
-              onClick={() =>
-                download(
-                  csv([
-                    ['Histórico de equipamentos'],
-                    ['Arquivo', filename],
-                    ['Consulta', kind, identifier],
-                    ['Filtros', JSON.stringify(filters)],
-                    [
-                      'Data',
-                      'Chamado',
-                      'Status',
-                      'Placa',
-                      'Rastreador',
-                      'Motivo',
-                      'Instruções',
-                      'Linha Excel',
-                    ],
-                    ...events.map(({ row, date }) => [
-                      date || 'Sem data válida',
-                      row.os,
-                      ...['Status', 'Placa', 'ID Rastreador', 'Motivo', 'Instruções'].map((label) =>
-                        String(field(data, row, label)?.display ?? ''),
-                      ),
-                      row.sourceRow,
-                    ]),
-                  ]),
-                  'text/csv;charset=utf-8',
-                  'historico-equipamento.csv',
-                )
-              }
-            >
-              Baixar histórico CSV
-            </PermissionButton>
           </div>
           <InfoNote>
             CSV inclui filtros e linhas de origem. SVG é uma imagem vetorial do relatório, para
-            apresentações; filtros detalhados ficam no CSV. Escolha agrupamento e medida abaixo
-            antes de exportar.
+            apresentações; filtros detalhados ficam no CSV. Agrupamento e medida são definidos na
+            visualização Relatório personalizado. A exportação do histórico fica junto à consulta em
+            Equipamentos, com os filtros daquela categoria.
           </InfoNote>
         </section>
       </Section>
@@ -339,6 +312,42 @@ export function Explorers({ data, filename, filters, onRestoreFilters, visibilit
       <Section title="Histórico de equipamentos" visible={visibility.history}>
         <section className="panel chart-panel">
           <h2>Histórico de equipamentos</h2>
+          <PermissionButton
+            action="export"
+            disabled={!events.length}
+            onClick={() =>
+              download(
+                csv([
+                  ['Histórico de equipamentos'],
+                  ['Arquivo', filename],
+                  ['Consulta', kind, identifier],
+                  ['Filtros', JSON.stringify(filters)],
+                  [
+                    'Data',
+                    'Chamado',
+                    'Status',
+                    'Placa',
+                    'Rastreador',
+                    'Motivo',
+                    'Instruções',
+                    'Linha Excel',
+                  ],
+                  ...events.map(({ row, date }) => [
+                    date || 'Sem data válida',
+                    row.os,
+                    ...['Status', 'Placa', 'ID Rastreador', 'Motivo', 'Instruções'].map((label) =>
+                      String(field(data, row, label)?.display ?? ''),
+                    ),
+                    row.sourceRow,
+                  ]),
+                ]),
+                'text/csv;charset=utf-8',
+                'historico-equipamento.csv',
+              )
+            }
+          >
+            Baixar histórico CSV
+          </PermissionButton>
           <div className="filter-grid">
             <label>
               Consultar por
@@ -371,8 +380,8 @@ export function Explorers({ data, filename, filters, onRestoreFilters, visibilit
           <InfoNote>
             Histórico dentro dos filtros atuais, por correspondência exata. Inclui todos os status
             selecionados; cancelamentos não significam atendimento executado. Eventos sem data ficam
-            ao final. A consulta por placa mostra os seriais vinculados em cada registro. Períodos
-            encerrados aparecem na seção específica abaixo.
+            ao final. A consulta por placa mostra os seriais vinculados em cada registro. Consulte
+            períodos encerrados na visualização Tempo observado em campo.
           </InfoNote>
           {identifier ? (
             <>

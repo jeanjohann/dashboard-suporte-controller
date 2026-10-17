@@ -18,7 +18,6 @@ export function ConsumptionInvestigationPanel({
   viewRow,
   filter,
   exportRecords,
-  rowsTable,
   filters,
 }) {
   return (
@@ -30,11 +29,15 @@ export function ConsumptionInvestigationPanel({
         <p className="scope">
           {attention.length} linhas acima de {archive.settings.factor}× a média geral da própria
           operadora e apuração. O destaque indica consumo para investigar; não confirma defeito ou
-          bloqueio. Todas as linhas do recorte estão na tabela.
+          bloqueio. Consulte e selecione as linhas na visualização Grade e acompanhamento.
         </p>
         <label className="chart-order-control">
           Ordenar gráfico por{' '}
-          <select value={rankMeasure} onChange={(event) => setRankMeasure(event.target.value)}>
+          <select
+            aria-label="Ordenar gráfico por"
+            value={rankMeasure}
+            onChange={(event) => setRankMeasure(event.target.value)}
+          >
             <option value="daily">Consumo por dia</option>
             <option value="volume">Consumo total do período</option>
           </select>
@@ -65,7 +68,6 @@ export function ConsumptionInvestigationPanel({
             Informe um limite não negativo com até seis casas decimais.
           </p>
         )}
-        {shown('Linhas para investigar') && rowsTable(selected)}
       </Section>
     </>
   );

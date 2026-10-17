@@ -4,13 +4,15 @@ Módulo de acompanhamento da Arqia e da Kore, integrado à identidade Addlog. O 
 
 ## Uso
 
+Desde **0.27.0**, o painel **Acompanhamento do consumo** alterna entre **Grade e acompanhamento** e **Ranking e prioridades**, sem repetir a tabela. Na grade, **Fora dos totais** permite conferir registros não elegíveis do recorte; eles não entram nas somas/ranking. O status abre a linha do tempo abaixo, e **Conferir origem** mostra o CSV original. [Mapa, seleção e exportação](ORGANIZACAO-DAS-ANALISES.md).
+
 A categoria **Acompanhamento** substitui o nome Investigação desde a versão 0.20.4. Seus relatórios, histórico e preferências mantêm os mesmos critérios; a chave interna `investigation` permanece.
 
 1. Abra **Linhas - Controle de Consumo** e clique em **Importar extratos**. Pode selecionar os dois arquivos CSV juntos.
 2. Confira a operadora, as datas e a separação entre dados, SMS e outros serviços. Clique em **Salvar no histórico**. Uma importação inválida preserva os dados guardados.
 3. Importe o operacional XLSX para conferir ICCID + MSISDN e mostrar cliente, ID do equipamento, modelo e placa. A importação pela página de linhas guarda essa referência. Se importar pela página Operacional, use **Guardar operacional atual no histórico** para incluí-la no backup.
-4. Os filtros ficam em **Personalizar o que aparece na tela**, abaixo do menu de categorias. Selecione uma apuração por operadora; a mais recente vem selecionada inicialmente. Filtros múltiplos usam OU dentro do campo e E entre os campos.
-5. Em **Acompanhamento**, consulte maiores consumos, destaques ou zeros. **Conferir e acompanhar** abre a linha CSV original e seleciona o chip na linha do tempo. Registre data, situação e anotação da ação.
+4. O quadro **Filtros**, no topo, indica a categoria afetada e reúne apurações, critérios e busca; cada categoria mantém sua seleção. Selecione uma apuração por operadora; a mais recente vem selecionada inicialmente. Filtros múltiplos usam OU dentro do campo e E entre os campos.
+5. Em **Acompanhamento**, consulte o ranking para priorizar e a grade para selecionar/exportar linhas. Clique no status de acompanhamento para abrir o histórico abaixo. Registre data, situação e anotação, confirmando em **Salvar acompanhamento**. **Conferir origem** mostra os registros originais.
 6. Em **Histórico e arquivos**, baixe o backup JSON. No outro navegador/computador, importe e confira esse backup antes de restaurar. A restauração substitui o histórico local; o cancelamento e arquivos incompatíveis preservam o histórico anterior.
 
 A OS continua carregada apenas na sessão e seus filtros são independentes. O consumo é salvo em IndexedDB, local ao navegador e ao endereço do dashboard, inclusive à porta utilizada. O backup leva os CSVs originais, suas versões, a referência operacional importada, anotações e o limite de investigação. Não há sincronização entre computadores. Trocar o endereço/navegador ou limpar seus dados exige restaurar o backup. A leitura ou gravação que falha é informada.

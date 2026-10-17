@@ -21,6 +21,7 @@ import { RecordDetails } from './RecordDetails.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import { financialFields, insightExportValues } from '../domain/insightExport.js';
 import { chartColors } from '../../../shared/charts/palette.js';
+import { ServiceProfilesContext } from './ServiceProfilesContext.jsx';
 const number = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const currency = (value) =>
@@ -670,6 +671,7 @@ export function AdvancedInsights({
                 ),
               ]}
             />
+            <ServiceProfilesContext original={original} data={data} filters={filters} />
           </>
         )}
       </Section>

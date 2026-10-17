@@ -22,7 +22,7 @@ const OrdersReports = lazy(() =>
 );
 
 /** Mantém a página montada no Workspace e conserva a ordem dos relatórios e seus identificadores. */
-export function OrdersPage({ onPage, onImport, operational, source, active = true }) {
+export function OrdersPage({ onPage, onImport, source, active = true }) {
   const [expansion, setExpansion] = useState(null);
   const [category, setCategory] = useState('overview');
   const layout = usePageLayout('orders', legacyOrderLayout);
@@ -116,8 +116,11 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                         session={session}
                         category={category}
                         visible={visible}
-                        operational={operational}
                         onPage={onPage}
+                        onCategory={(key) => {
+                          setCategory(key);
+                          setExpansion(null);
+                        }}
                       />
                     </Suspense>
                   </>

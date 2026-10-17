@@ -1,10 +1,12 @@
 /** Relatórios mensais, financeiros, operacionais e detalhamento de chamados de OS. */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { sectionLabels } from '../config/preferences.js';
 import { BarChart } from '../../../components/BarChart.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { MonthlyBreakdown } from './RecordDetails.jsx';
+import { RecordDetails } from './RecordDetails.jsx';
+import { ContractSummary } from './ContractSummary.jsx';
 const currency = (cents) =>
   (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -27,7 +29,9 @@ export function OrdersMonthlyPanel({ monthly, selected, category, visible }) {
 }
 
 /** Recebe totais em centavos; valor lançado, exclusões e divergências vêm do domínio. */
-export function OrdersFinancePanel({ financial, visible }) {
+export function OrdersFinancePanel({ financial, data, visible }) {
+  const [detail, setDetail] = useState(null);
+  useEffect(() => setDetail(null), [data]);
   return (
     <Section title={sectionLabels.finance} visible={visible}>
       {financial ? (
@@ -60,12 +64,21 @@ export function OrdersFinancePanel({ financial, visible }) {
           Indicadores financeiros indisponíveis: faltam cabeçalhos necessários.
         </div>
       )}
+      <ContractSummary data={data} onDetail={setDetail} />
+      {detail && (
+        <div className="panel">
+          <button type="button" onClick={() => setDetail(null)}>
+            Fechar conferência contratual
+          </button>
+          <RecordDetails data={detail.data} rows={detail.rows} title={detail.label} />
+        </div>
+      )}
     </Section>
   );
 }
 
 /** Contagens por status independem da busca textual da tabela original. */
-export function OrdersOperationsPanel({ summary, category, visible }) {
+export function OrdersOperationsPanel({ summary, visible }) {
   return (
     <>
       <Section title={sectionLabels.operations} visible={visible}>
@@ -88,12 +101,12 @@ export function OrdersOperationsPanel({ summary, category, visible }) {
             Indicadores operacionais indisponíveis: cabeçalho Status não encontrado.
           </div>
         )}
+        <p className="scope">
+          Contagens sobre a seleção dos filtros, independentemente da busca textual. Realizados:
+          Concluída ou Pago. Chamados com cancelamento: ao menos uma linha Cancelada na seleção.
+          Demais status inclui pendências e valores não reconhecidos.
+        </p>
       </Section>
-      <p hidden={category !== 'operations'} className="scope">
-        Contagens sobre a seleção dos filtros, independentemente da busca textual. Realizados:
-        Concluída ou Pago. Chamados com cancelamento: ao menos uma linha Cancelada na seleção.
-        Demais status inclui pendências e valores não reconhecidos.
-      </p>
     </>
   );
 }
