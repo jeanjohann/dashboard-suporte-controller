@@ -7,6 +7,10 @@
 
 # Histórico de versões
 
+## 0.28.1 — 17/10/2026
+
+- Tema claro usa texto e links pretos, navegação em tons neutros e botões principais em cinza escuro. Acentos da marca, cores dos indicadores e tema escuro preservados.
+
 ## 0.28.0 — 17/10/2026
 
 - Parque e Manutenção ganha Histórico individual e concentração no painel existente: assistências por cliente/modelo com tamanho da base, efetivos/improdutivos por equipamento, última intervenção no recorte, referência ajustável, faixas de dias e conferência das OS originais. Intervenção considera qualquer Concluída/Pago sem Visita Improdutiva; referência inicial usa a maior data realizada do arquivo. Sem histórico, sem data e posterior à referência ficam separados. Grade ordenada antes da paginação, com Último e CSV completo do recorte.

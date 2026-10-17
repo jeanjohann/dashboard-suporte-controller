@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.28.0 — Parque com histórico individual, concentração das assistências e referência ajustável; resumos ampliados nos módulos; ajustes de espaçamento e ícone da Visão geral. Preparação CSV/API e prévia OS + Zoho usam somente dados fictícios isolados. Integrações reais, armazenamento compartilhado e ativação Google continuam pendentes. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md).
+**Versão:** 0.28.1 — Tema claro com textos e links pretos, navegação neutra e botões principais em cinza escuro. Parque com histórico individual, concentração e referência ajustável; resumos ampliados. Preparação CSV/API e prévia OS + Zoho usam somente dados fictícios isolados. Integrações reais, armazenamento compartilhado e ativação Google continuam pendentes. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md).
 
 ## Documentação do projeto
 
