@@ -1,6 +1,6 @@
 # Fila de implementação e ajustes
 
-Proposta recebida em 17/10/2026: integrar **Zoho Desk** à Equipe de suporte para chamados respondidos, respostas enviadas e tempo registrado por agente, com atualização automática. Produto confirmado; indicadores, autoria/apontamentos, OAuth, plano/cotas, vínculo de agentes e armazenamento ainda precisam ser definidos. [Estudo e critérios propostos](INTEGRACAO-ZOHO-DESK.md). Integração não implementada nem ativada.
+Escopo aprovado em 17/10/2026: integrar **Zoho Desk** à Equipe de suporte para chamados respondidos, respostas enviadas, tempo de permanência por sessão e tempo apontado nos atendimentos. O [mapa de atividades](MAPA-DE-ATIVIDADES-DO-SUPORTE.md) define a sequência: CSV de disponibilidade Session → vínculo dos agentes/presença → comunicação/apontamentos autorizados → painel e automação onde suportada. Aguarda o CSV inicial e os dados do portal/plano; o proprietário poderá informar portal/plano na segunda-feira, **19/10/2026**. OAuth, fonte automática de sessões e armazenamento ainda dependem de validação. Integração não implementada nem ativada.
 
 Entregue em 0.27.0: consolidação dos menus e relatórios aprovada pelo proprietário, Visão geral mais direta, vínculos centralizados em Parque e grade única de Consumo com ranking complementar. [Mapa e critérios](ORGANIZACAO-DAS-ANALISES.md). A reorganização não conclui cruzamentos novos, integrações ou armazenamento compartilhado da fila.
 

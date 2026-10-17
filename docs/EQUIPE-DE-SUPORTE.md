@@ -2,6 +2,8 @@
 
 Disponível em **Ordens de Serviço → Equipe de suporte**, a partir de 0.21.0; cards e detalhamento individual atualizados na 0.26.0. Acesso segue a permissão de OS; exportação e impressão seguem a permissão separada existente. A planilha continua local.
 
+Em 17/10/2026 foi aprovado ampliar a visão por agente com Zoho Desk: chamados respondidos, respostas enviadas, permanência nas sessões e tempo apontado nos atendimentos. A integração ainda não está disponível na interface. O [mapa de atividades aprovado](MAPA-DE-ATIVIDADES-DO-SUPORTE.md) registra fontes, indicadores, organização e etapas; o primeiro passo depende do CSV de disponibilidade na visão Session. As regras abaixo descrevem o relatório de OS já entregue.
+
 ## O que o relatório mede
 
 Volume atribuído ao responsável registrado na OS. Não identifica o técnico prestador nem mede qualidade, SLA, tempo trabalhado ou produtividade por hora. O papel é selecionado no próprio relatório:
