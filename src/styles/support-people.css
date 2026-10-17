@@ -1,0 +1,338 @@
+/* Densidade local do suporte: síntese primeiro; evolução e originais sob demanda. */
+.support-metric-grid,
+.support-extra-metrics,
+.support-metric-values,
+.support-person-grid,
+.support-person-values,
+.support-person-role-grid,
+.support-person-breakdowns {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.support-metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.support-extra-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 10px;
+}
+.support-metric {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--ui-border);
+  border-top: 2px solid var(--support-color);
+  border-radius: 9px;
+  background: var(--support-soft);
+}
+.support-tone-service {
+  --support-color: var(--kpi-service);
+  --support-soft: var(--kpi-service-soft);
+}
+.support-tone-attention {
+  --support-color: var(--kpi-attention);
+  --support-soft: var(--kpi-attention-soft);
+}
+.support-tone-coverage {
+  --support-color: var(--kpi-coverage);
+  --support-soft: var(--kpi-coverage-soft);
+}
+.support-tone-finance {
+  --support-color: var(--kpi-finance);
+  --support-soft: var(--kpi-finance-soft);
+}
+.support-metric-heading {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 7px;
+  min-height: 30px;
+  padding-right: 25px;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.support-metric-heading > svg {
+  flex-shrink: 0;
+  color: var(--support-color);
+}
+.support-metric-heading > .info-note {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0;
+}
+.support-metric-values {
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  margin-top: 8px;
+}
+.support-metric-values > div {
+  min-width: 0;
+}
+.support-metric-values strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--ui-ink);
+  font-size: 25px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.support-extra-metrics .support-metric {
+  padding: 9px 12px;
+}
+.support-extra-metrics .support-metric-values strong {
+  font-size: 20px;
+}
+.support-role-label {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+.support-role-compact {
+  display: none;
+}
+.support-delta {
+  display: block;
+  color: var(--ui-ink);
+  font-size: 10px;
+  line-height: 1.5;
+  margin-top: 7px;
+}
+.support-delta > span {
+  display: block;
+  color: var(--ui-muted);
+}
+.support-people {
+  margin: 22px 0 16px;
+  min-width: 0;
+}
+.support-people h3 {
+  font-size: 14px;
+}
+.support-people-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: var(--ui-muted);
+}
+.support-people-controls label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.support-people-controls input {
+  width: 240px;
+  max-width: 100%;
+  min-height: 32px;
+  padding: 6px 9px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+  font-size: 12px;
+}
+.support-people-controls button,
+.support-person-export button,
+.support-person-close {
+  min-height: 30px;
+  padding: 6px 9px;
+  font-size: 11px;
+}
+.support-person-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+}
+.support-person-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+  background: var(--ui-surface);
+}
+.support-person-card.is-selected {
+  border-color: var(--ui-accent-border);
+  background: var(--ui-accent-soft);
+}
+.support-person-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0 0 10px;
+  text-align: left;
+  background: transparent;
+  color: var(--ui-ink);
+  border: 0;
+  border-radius: 0;
+}
+.support-person-trigger:hover {
+  background: transparent;
+  color: var(--ui-accent-ink);
+}
+.support-person-trigger strong {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.support-person-trigger > span {
+  flex-shrink: 0;
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+.support-person-values {
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+.support-person-values > div {
+  min-width: 0;
+}
+.support-person-values dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 10px;
+  margin: 8px 0;
+}
+.support-person-values dt {
+  color: var(--ui-muted);
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.support-person-values dd {
+  margin: 2px 0 0;
+  font-size: 18px;
+  font-weight: 650;
+  color: var(--ui-ink);
+}
+.support-person-values small {
+  font-size: 10px;
+  color: var(--ui-muted);
+}
+.support-person-detail {
+  min-width: 0;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--ui-accent-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+  scroll-margin-block: 12px;
+}
+.support-person-detail > .inline-help-heading {
+  position: relative;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-right: 30px;
+  gap: 8px;
+}
+.support-person-detail > .inline-help-heading > .info-note {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0;
+}
+.support-person-close {
+  margin-left: auto;
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+}
+.support-person-export {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+.support-person-role-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 430px), 1fr));
+  gap: 16px;
+}
+.support-person-role {
+  min-width: 0;
+}
+.support-person-role h4 {
+  margin: 0;
+  font-size: 13px;
+}
+.support-person-role h5 {
+  margin: 10px 0 6px;
+  font-size: 11px;
+}
+.support-person-role .scope {
+  font-size: 11px;
+}
+.support-person-breakdowns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.support-person-breakdowns .table-scroll {
+  max-height: 180px;
+  margin: 0;
+}
+.support-person-detail .table-scroll th,
+.support-person-detail .table-scroll td {
+  padding: 6px 8px;
+  font-size: 11px;
+}
+.support-person-detail summary,
+.support-team-details > summary {
+  padding: 9px 0;
+  font-size: 12px;
+  cursor: pointer;
+}
+.support-person-source > .record-details {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.support-team-details {
+  margin: 16px 0;
+  padding: 0 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+.support-team-details > label {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+}
+@media (max-width: 900px) {
+  .support-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 650px) {
+  /* Preserva o nome completo para leitores de tela e abrevia apenas a legenda visual estreita. */
+  .support-metric-grid .support-role-full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .support-metric-grid .support-role-compact {
+    display: inline;
+  }
+  .support-extra-metrics {
+    grid-template-columns: 1fr;
+  }
+  .support-extra-metrics .support-metric-values {
+    margin-top: 4px;
+  }
+  .support-person-detail {
+    padding: 10px;
+  }
+  .support-person-breakdowns {
+    grid-template-columns: 1fr;
+  }
+  .support-metric-heading > svg {
+    display: none;
+  }
+  .support-metric-values strong {
+    font-size: 22px;
+  }
+  .support-people-controls input {
+    width: 100%;
+  }
+}

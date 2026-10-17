@@ -17,6 +17,8 @@ import {
 } from '../domain/supportReport.js';
 import { RecordDetails } from './RecordDetails.jsx';
 import { SupportComparison } from './SupportComparison.jsx';
+import { SupportMetricCards } from './SupportMetricCards.jsx';
+import { SupportPeople } from './SupportPeople.jsx';
 
 const percent = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
@@ -173,8 +175,9 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
           ? 'Ambos · Agendamentos: Agendamento; Execuções: Data de atendimento'
           : `${result.role.label} · Data utilizada: ${result.role.date}`}{' '}
         · Período: {filters.start || 'início do histórico'} até {filters.end || 'fim do histórico'}.
-        Datas personalizadas e responsáveis: filtros da página. Os atalhos atualizam o período de
-        toda a análise de OS.
+        Datas personalizadas e responsáveis: filtros da página. Os atalhos atualizam somente a
+        categoria Equipe de suporte. Agendamento considera serviços já realizados, não a agenda
+        futura.
       </p>
       {both ? (
         <SupportComparison
@@ -191,36 +194,7 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
         <p role="status">Indisponível: faltam as colunas {result.unavailable.join(', ')}.</p>
       ) : (
         <>
-          <div className="summary-grid">
-            {[
-              [
-                'Atendimentos efetivos',
-                result.totals.productive,
-                'Concluída/Pago, sem visitas improdutivas',
-              ],
-              [
-                'Visitas improdutivas',
-                result.totals.unproductive,
-                'Realizadas, sem intervenção efetiva',
-              ],
-              [
-                'Chamados distintos',
-                result.totals.calls,
-                'Entre todas as visitas e atendimentos realizados',
-              ],
-              [
-                'Clientes identificados',
-                result.totals.clients,
-                'Razões sociais distintas nos realizados',
-              ],
-            ].map(([label, value, note]) => (
-              <article className="summary-card" key={label}>
-                <span>{label}</span>
-                <strong>{value}</strong>
-                <small>{note}</small>
-              </article>
-            ))}
-          </div>
+          <SupportMetricCards results={[result]} />
           <p className="scope" role="status">
             {result.rows.length} visitas e atendimentos · {result.missing.length} sem responsável
             válido fora do ranking · {result.missingDates} realizados sem data válida excluídos pelo
@@ -241,144 +215,85 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
             </p>
           )}
           {!result.rows.length && <p>Nenhum serviço realizado corresponde ao recorte.</p>}
-          <label>
-            Volume no ranking{' '}
-            <select value={metric} onChange={(event) => setMetric(event.target.value)}>
-              <option value="productive">Atendimentos efetivos</option>
-              <option value="unproductive">Visitas improdutivas</option>
-              <option value="visits">Todas as visitas e atendimentos</option>
-            </select>
-          </label>
-          <Chart
-            ranking
-            title={`Volume por responsável · ${result.role.label}`}
-            exportNote={`${filename}; ${result.role.date}; ${filters.start || 'início'} até ${filters.end || 'fim do histórico'}; filtros ${JSON.stringify(filters)}; medida ${metric}; somente Concluída/Pago, improdutivas separadas.`}
-            items={result.groups.map((item) => ({ label: item.label, value: item[metric] }))}
+          <SupportPeople
+            original={original}
+            results={{ [role]: result }}
+            filters={filters}
+            filename={filename}
           />
-          <div className="table-scroll">
-            <SortableTable>
-              <thead>
-                <tr>
-                  {[
-                    'Responsável',
-                    'Efetivos',
-                    'Improdutivas',
-                    'Total realizado',
-                    'Chamados',
-                    'Clientes',
-                    '% dos efetivos',
-                    'Efetivos anteriores',
-                    'Variação dos efetivos',
-                    'Origem',
-                  ].map((label) => (
-                    <th key={label}>{label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {result.groups.map((item) => (
-                  <tr key={item.label}>
-                    <td>{item.label}</td>
-                    <td>{item.productive}</td>
-                    <td>{item.unproductive}</td>
-                    <td>{item.visits}</td>
-                    <td>{item.calls}</td>
-                    <td>{item.clients}</td>
-                    <td data-sort={item.share}>{percent(item.share)}</td>
-                    <td>{item.previous ?? '—'}</td>
-                    <td
-                      data-sort={
-                        item.previous ? (item.productive - item.previous) / item.previous : null
-                      }
-                    >
-                      {item.previous
-                        ? percent((item.productive - item.previous) / item.previous)
-                        : item.previous === 0
-                          ? 'Sem base anterior'
-                          : '—'}
-                    </td>
-                    <td>
-                      <button onClick={() => setDetail({ label: item.label, rows: item.rows })}>
-                        Conferir {item.rows.length} linhas
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </SortableTable>
-          </div>
-          {result.missing.length > 0 && (
-            <button
-              onClick={() => setDetail({ label: 'Sem responsável válido', rows: result.missing })}
-            >
-              Conferir {result.missing.length} sem responsável
-            </button>
-          )}
-          {detail && (
-            <div>
-              <button data-no-print onClick={() => setDetail(null)}>
-                Fechar detalhamento
-              </button>
-              <RecordDetails
-                data={original}
-                rows={detail.rows.filter((row) =>
-                  result.rows.some((record) => record.sourceRow === row),
-                )}
-                title={detail.label}
-              />
-            </div>
-          )}
-          <EvolutionHeading dateField={result.role.date} />
-          <Chart
-            type="line"
-            title={`Evolução · ${result.role.label}`}
-            items={result.periods.map((item) => ({ label: item.label, value: item.productive }))}
-          />
-          <details className="report-details">
-            <summary>Detalhar evolução e perfil dos serviços</summary>
+          <details className="support-team-details">
+            <summary>Ranking, evolução e conferência da equipe</summary>
+            <label>
+              Volume no ranking{' '}
+              <select value={metric} onChange={(event) => setMetric(event.target.value)}>
+                <option value="productive">Atendimentos efetivos</option>
+                <option value="unproductive">Visitas improdutivas</option>
+                <option value="visits">Todas as visitas e atendimentos</option>
+              </select>
+            </label>
+            <Chart
+              ranking
+              title={`Volume por responsável · ${result.role.label}`}
+              exportNote={`${filename}; ${result.role.date}; ${filters.start || 'início'} até ${filters.end || 'fim do histórico'}; filtros ${JSON.stringify(filters)}; medida ${metric}; somente Concluída/Pago, improdutivas separadas.`}
+              items={result.groups.map((item) => ({ label: item.label, value: item[metric] }))}
+            />
             <div className="table-scroll">
               <SortableTable>
                 <thead>
                   <tr>
-                    <th>Período</th>
-                    <th>Efetivos</th>
-                    <th>Improdutivas</th>
+                    {[
+                      'Responsável',
+                      'Efetivos',
+                      'Improdutivas',
+                      'Total realizado',
+                      'Chamados',
+                      'Clientes',
+                      '% dos efetivos',
+                      'Efetivos anteriores',
+                      'Variação dos efetivos',
+                      'Veículos identificados',
+                      '% de improdutivas',
+                      'Registros por chamado',
+                      'Origem',
+                    ].map((label) => (
+                      <th key={label}>{label}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {result.periods.map((item) => (
+                  {result.groups.map((item) => (
                     <tr key={item.label}>
                       <td>{item.label}</td>
                       <td>{item.productive}</td>
                       <td>{item.unproductive}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
-            <div className="table-scroll">
-              <SortableTable>
-                <thead>
-                  <tr>
-                    <th>Responsável</th>
-                    <th>Tipo de serviço / visita</th>
-                    <th>Quantidade</th>
-                    <th>Origem</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.profiles.map((item) => (
-                    <tr key={JSON.stringify([item.owner, item.type])}>
-                      <td>{item.owner}</td>
-                      <td>{item.type}</td>
-                      <td>{item.value}</td>
+                      <td>{item.visits}</td>
+                      <td>{item.calls}</td>
+                      <td>{item.clients}</td>
+                      <td data-sort={item.share}>{percent(item.share)}</td>
+                      <td>{item.previous ?? '—'}</td>
+                      <td
+                        data-sort={
+                          item.previous ? (item.productive - item.previous) / item.previous : null
+                        }
+                      >
+                        {item.previous
+                          ? percent((item.productive - item.previous) / item.previous)
+                          : item.previous === 0
+                            ? 'Sem base anterior'
+                            : '—'}
+                      </td>
+                      <td>{item.vehicles ?? '—'}</td>
+                      <td data-sort={item.unproductiveRate}>{percent(item.unproductiveRate)}</td>
+                      <td data-sort={item.servicesPerCall}>
+                        {item.servicesPerCall == null
+                          ? '—'
+                          : item.servicesPerCall.toLocaleString('pt-BR', {
+                              maximumFractionDigits: 2,
+                            })}
+                      </td>
                       <td>
-                        <button
-                          onClick={() =>
-                            setDetail({ label: `${item.owner} · ${item.type}`, rows: item.rows })
-                          }
-                        >
-                          Conferir {item.value} linhas
+                        <button onClick={() => setDetail({ label: item.label, rows: item.rows })}>
+                          Conferir {item.rows.length} linhas
                         </button>
                       </td>
                     </tr>
@@ -386,6 +301,86 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
                 </tbody>
               </SortableTable>
             </div>
+            {result.missing.length > 0 && (
+              <button
+                onClick={() => setDetail({ label: 'Sem responsável válido', rows: result.missing })}
+              >
+                Conferir {result.missing.length} sem responsável
+              </button>
+            )}
+            {detail && (
+              <div>
+                <button data-no-print onClick={() => setDetail(null)}>
+                  Fechar detalhamento
+                </button>
+                <RecordDetails
+                  data={original}
+                  rows={detail.rows.filter((row) =>
+                    result.rows.some((record) => record.sourceRow === row),
+                  )}
+                  title={detail.label}
+                />
+              </div>
+            )}
+            <EvolutionHeading dateField={result.role.date} />
+            <Chart
+              type="line"
+              title={`Evolução · ${result.role.label}`}
+              items={result.periods.map((item) => ({ label: item.label, value: item.productive }))}
+            />
+            <details className="report-details">
+              <summary>Detalhar evolução e perfil dos serviços</summary>
+              <div className="table-scroll">
+                <SortableTable>
+                  <thead>
+                    <tr>
+                      <th>Período</th>
+                      <th>Efetivos</th>
+                      <th>Improdutivas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.periods.map((item) => (
+                      <tr key={item.label}>
+                        <td>{item.label}</td>
+                        <td>{item.productive}</td>
+                        <td>{item.unproductive}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+              <div className="table-scroll">
+                <SortableTable>
+                  <thead>
+                    <tr>
+                      <th>Responsável</th>
+                      <th>Tipo de serviço / visita</th>
+                      <th>Quantidade</th>
+                      <th>Origem</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.profiles.map((item) => (
+                      <tr key={JSON.stringify([item.owner, item.type])}>
+                        <td>{item.owner}</td>
+                        <td>{item.type}</td>
+                        <td>{item.value}</td>
+                        <td>
+                          <button
+                            onClick={() =>
+                              setDetail({ label: `${item.owner} · ${item.type}`, rows: item.rows })
+                            }
+                          >
+                            Conferir {item.value} linhas
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+            </details>
           </details>
           <div className="support-period-shortcuts">
             <PermissionButton action="export" onClick={() => exportFile('xlsx')}>

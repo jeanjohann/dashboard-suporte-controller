@@ -76,6 +76,13 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
       label.textContent = element.title || element.textContent;
       element.replaceWith(label);
     });
+    // O nome da pessoa está no acionador do card; preservá-lo antes de remover controles da impressão.
+    clone.querySelectorAll('button.support-person-trigger').forEach((element) => {
+      const heading = doc.createElement('div');
+      heading.className = 'support-person-trigger';
+      heading.textContent = element.querySelector('strong')?.textContent || element.textContent;
+      element.replaceWith(heading);
+    });
     clone
       .querySelectorAll('button,input,select,[data-no-print],.recharts-tooltip-wrapper')
       .forEach((element) => element.remove());
@@ -87,6 +94,8 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
       ' .info-print{display:block!important;margin:8px 0}.info-trigger{display:none!important}';
     style.textContent +=
       ' :root{--chart-secondary:#16a58b}.support-comparison-rows{max-height:none;overflow:visible}.support-comparison-row{display:grid;grid-template-columns:28% 1fr;gap:16px;padding:10px 0;break-inside:avoid}.support-comparison-values{display:grid;gap:10px}.support-comparison-series{display:grid;grid-template-columns:100px 1fr 46px;gap:10px;align-items:center}.support-comparison-series .readable-track>div{height:100%}.support-comparison-series strong{text-align:right}';
+    style.textContent +=
+      ' .support-metric-grid,.support-extra-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}.support-metric,.support-person-card{border:1px solid #ccd5dd;padding:10px;break-inside:avoid}.support-metric-heading{font-weight:bold}.support-metric-values,.support-person-values{display:flex;gap:20px}.support-metric-values strong{display:block;font-size:20px}.support-role-compact{display:none}.support-role-label,.support-delta{display:block;font-size:10px}.support-person-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.support-person-trigger{font-weight:bold;margin-bottom:8px}.support-person-values dl{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.support-person-values dd{margin:0;font-weight:bold}.support-person-detail{border:1px solid #ccd5dd;padding:12px;margin-top:12px}.support-person-role-grid{display:grid;grid-template-columns:1fr;gap:16px}.support-person-detail .scope{font-size:10px}';
     doc.head.append(style);
     doc.title = title;
     doc.body.append(heading, metadata, clone);

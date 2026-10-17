@@ -1,6 +1,6 @@
 # Equipe de suporte
 
-Disponível em **Ordens de Serviço → Equipe de suporte**, a partir de 0.21.0. Acesso segue a permissão de OS; exportação e impressão seguem a permissão separada existente. A planilha continua local.
+Disponível em **Ordens de Serviço → Equipe de suporte**, a partir de 0.21.0; cards e detalhamento individual atualizados na 0.26.0. Acesso segue a permissão de OS; exportação e impressão seguem a permissão separada existente. A planilha continua local.
 
 ## O que o relatório mede
 
@@ -28,7 +28,7 @@ Cada linha é uma visita/atendimento. **Atendimentos efetivos** excluem Motivo =
 - Todo o histórico: remove somente início/fim; mantém filtros de cliente, responsáveis, tipo, motivo, cidade, UF e colunas adicionais.
 - Personalizado: preencher De/Até nos filtros da página.
 
-Os atalhos alteram o **mesmo período compartilhado de OS**. Não criam uma segunda seleção invisível. Na área de suporte, agendamento usa sua própria data, enquanto o resumo geral de registros no topo da página continua baseado em Data de atendimento. A seção informa sua própria base e quantidade elegível. Os dois filtros de responsáveis continuam separados e podem ser combinados; selecionar os dois exige que a linha atenda a ambos.
+Os atalhos alteram **somente o período da categoria Equipe de suporte**, sem alterar Visão geral, Equipamentos ou outras categorias. Usam os mesmos campos De/Até desse espaço, sem criar uma segunda seleção invisível. Na área de suporte, agendamento usa sua própria data, enquanto o resumo geral de registros no topo da página continua baseado em Data de atendimento. A seção informa sua própria base e quantidade elegível. Os dois filtros de responsáveis continuam separados e podem ser combinados; selecionar os dois exige que a linha atenda a ambos.
 
 Com período ativo, realizados sem data válida são excluídos e quantificados. Sem período, continuam nos totais, mas ficam fora do gráfico temporal. Coluna obrigatória ausente torna apenas esta análise indisponível, com o nome da coluna. A linha original não é corrigida.
 
@@ -59,7 +59,37 @@ Em Ambos, CSV/XLSX identificam Responsabilidade em cada indicador e grupo. A aba
 
 Se for criada identificação por código para os responsáveis, validar a chave antes de substituir o agrupamento atual por nome. Datas de criação, conclusão, SLA ou horas trabalhadas exigem novas fontes e critérios.
 
-## Conferência da entrega
+## Cards e detalhamento por pessoa — 0.26.0
+
+O resumo principal mantém efetivos, improdutivas, chamados e clientes, com cores por indicador, ícones, ajuda e comparação anterior. A faixa complementar acrescenta:
+
+| Indicador                    | Base e limites                                                                                                                                                                                                                                                                                                                                                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Veículos identificados       | Pares distintos de razão social + placa utilizáveis nas linhas Concluída/Pago, incluindo improdutivas. Ignora espaços externos, células vazias/com erro e marcadores de placa `0`, `-`, `?`, `s/placa`, `sem placa`, `sem dados`. Não corrige grafia nem representa frota ativa. Colunas ausentes exibem indisponível; sem linhas elegíveis, zero. A legenda do detalhe informa linhas sem par utilizável. |
+| Visitas improdutivas / total | Improdutivas divididas por todas as linhas realizadas do mesmo papel e recorte. Sem visitas, percentual indisponível. A comparação usa pontos percentuais; não atribui a causa da visita ao suporte.                                                                                                                                                                                                       |
+| Registros por chamado        | Todas as linhas realizadas divididas pelos números de chamado distintos, no mesmo papel e recorte. Inclui improdutivas. Sem chamados identificados, indisponível. Não é medida de esforço ou tempo trabalhado.                                                                                                                                                                                             |
+
+Os totais distintos de clientes, veículos e chamados são calculados no conjunto, nunca somados entre pessoas. Em Ambos, cada card mostra Agendamento e Execução separadamente, com suas datas e bases. Variações não são classificadas automaticamente como boas ou ruins; base anterior zero não gera crescimento percentual e dados ausentes não viram zero.
+
+**Cards de pessoas:** um por nome utilizável do recorte atual, com efetivos, improdutivas, chamados, clientes, participação e comparação dos efetivos. A participação continua usando todos os efetivos da equipe daquele papel, inclusive sem responsável. Em Ambos, a ordem usa o maior volume individual de efetivos entre os papéis, sem soma ou pontuação de produtividade. Pessoas somente no período anterior não são adicionadas à lista atual; a comparação geral continua considerando toda a base anterior.
+
+A busca considera todos os nomes da seleção e afeta somente a apresentação dos cards; não filtra os totais, a tabela ou a exportação geral. Começa com até seis pessoas, com opção de mostrar todas. Busca sem resultado não significa que a equipe tenha zero atendimentos. Nomes com grafia diferente permanecem separados; desconsiderar acentos na busca não une seus registros.
+
+**Clicar no nome** abre o painel logo abaixo dos cards. O mesmo nome recolhe; Fechar detalhes devolve foco ao acionador. O painel mantém o período da categoria, mostra cada responsabilidade e sua data e inclui os três indicadores complementares, clientes por volume e perfil dos serviços. Perfil e clientes incluem improdutivas; participação do perfil = registros daquele tipo / total realizado da pessoa no papel. Cliente ausente aparece em grupo explícito para conferência, sem entrar na contagem de clientes identificados.
+
+Evolução e linhas originais abrem sob demanda. O gráfico usa a mesma granularidade da equipe (diária até 62 dias de intervalo completo; mensal nos demais), com a própria data do papel e sem preencher artificialmente períodos sem registros. A tabela de origem conserva colunas, valores e linhas Excel. Sem registros num papel, os valores quantitativos são zero e as razões sem denominador ficam indisponíveis. Alterar filtros, papel ou fonte encerra a investigação anterior. O ranking, suas linhas de conferência e a evolução geral continuam disponíveis em **Ranking, evolução e conferência da equipe**.
+
+**Exportação da pessoa:** Exportar responsável XLSX/CSV inclui somente o nome e os filtros escolhidos, com identificação do papel, período, base da participação, resumo, responsáveis, evolução, perfil, clientes e originais. A participação não vira 100% artificialmente ao abrir a pessoa: mantém o denominador da equipe, informado no contexto. Em Ambos, originais presentes nos dois papéis são gravados uma vez, com a coluna de responsabilidades. Os clientes permanecem separados por papel.
+
+**Exportação geral:** Exportar equipe continua abrangendo todos os responsáveis e registros elegíveis da categoria, inclusive sem responsável; abrir uma pessoa ou buscar nos cards não restringe esse arquivo. Novos campos são acrescentados à tabela Responsáveis, mantendo a posição dos campos anteriores. Resumo identifica Valor e Unidade; percentuais são frações numéricas com formato `0.0%` no XLSX, e registros/chamado usa duas casas. Indisponibilidade permanece em branco, sem fabricação de valores.
+
+Imprimir / Salvar PDF continua abrangendo a seção da equipe, incluindo o painel individual aberto com seu título, e abre os blocos de conferência na cópia. Nomes dos cards permanecem no documento; busca/limite afetam apenas quais cards estão desenhados, enquanto a tabela geral completa permanece para conferência. Para um arquivo restrito à pessoa, use os botões Exportar responsável. Permissões de exportação, fontes, regras financeiras e armazenamento não mudaram.
+
+Manutenção: `supportPerson.js` deriva o recorte individual sobre os resultados já filtrados; `SupportMetricCards.jsx` apresenta métricas e comparações; `SupportPeople.jsx` gerencia busca, seleção e painel; `support-people.css` limita o visual a essa seção. Não há identificação nova por código nem união automática de pessoas.
+
+Testes sintéticos e conferência no navegador cobrem identificações repetidas/com erro, improdutivas e denominadores, datas e base anterior, ausência de coluna versus zero elegível, filtros e nomes com espaços, exportação individual/geral e Ambos sem duplicar originais, unidades/percentuais no XLSX, impressão, teclado e apresentações clara/escura em desktop/celular. Os arquivos dos clientes não são modificados.
+
+## Conferência das entregas anteriores
 
 Testes sintéticos cobrem viradas de semana/ano, fevereiro bissexto, datas dos dois papéis, improdutivas, responsável/data ausentes, chamados compartilhados, filtro de cliente e percentuais exportados. No build de produção, a conferência local no Edge verificou atalhos, escolha de mês/ano, conferência de origem, XLSX, modo resumido e impressão, além de desktop/celular nos dois temas. Não foram usados dados reais nos testes de navegador.
 

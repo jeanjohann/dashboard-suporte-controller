@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.25.2 — Conferência compacta da agenda junto aos cards e atalhos Semana atual/anterior na Visão geral. Cores de cards e gráficos ligeiramente mais vivas nos dois temas. Visão geral de OS com dez cards: implementações efetivas, clientes e veículos identificados complementam os sete indicadores existentes. Paleta por grupo, ícones vetoriais, base de cálculo visível e comparação temporal preservada nos dois temas. Filtros seguem independentes por categoria. O piloto Google permanece pendente da configuração no escritório; a API do Monitoramento segue em preparação.
+**Versão:** 0.26.0 — Equipe de suporte com cards por responsável, comparação temporal, indicadores complementares, detalhamento e exportação individual. Execução e agendamento mantêm suas próprias datas e contagens no modo Ambos. Visão geral conserva dez cards, agenda compacta e atalhos semanais. Paleta e apresentação adaptadas aos dois temas. Filtros seguem independentes por categoria. O piloto Google permanece pendente da configuração no escritório; a API do Monitoramento segue em preparação.
 
 ## Documentação do projeto
 

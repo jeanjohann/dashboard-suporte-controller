@@ -160,6 +160,10 @@ test('efetivos e improdutivas separados; chamados compartilhados não são somad
     unproductive: 1,
     calls: 3,
     clients: 2,
+    vehicles: null,
+    vehiclesMissing: 4,
+    unproductiveRate: 1 / 4,
+    servicesPerCall: 4 / 3,
   });
   assert.equal(result.groups.find((item) => item.label === 'Ana').share, 1 / 3);
   assert.deepEqual(result.missing, [5]);

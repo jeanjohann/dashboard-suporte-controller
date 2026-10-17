@@ -20,6 +20,7 @@ import './styles/google-orders.css';
 import './styles/filter-workspace.css';
 import './styles/overview-kpis.css';
 import './styles/overview-agenda.css';
+import './styles/support-people.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>

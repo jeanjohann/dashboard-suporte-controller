@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.26.0 — 17/10/2026
+
+- Equipe de suporte com cards gerais coloridos, ajuda e comparação por indicador; faixa complementar mostra veículos identificados, percentual de improdutivas e registros por chamado. Contagens distintas e bases temporais permanecem próprias de cada papel.
+- Cards compactos por responsável com efetivos, improdutivas, chamados, clientes, participação e comparação anterior. Busca visual e limite inicial de seis pessoas não filtram os indicadores nem a exportação da equipe; nomes não são unidos por grafia semelhante.
+- Clicar na pessoa abre o detalhamento logo abaixo: novos indicadores, perfil, clientes, evolução e originais sob demanda. Em Ambos, agendamento/execução permanecem lado a lado com datas próprias, sem pontuação somada. Ranking e conferência geral passam a um bloco recolhível.
+- XLSX/CSV da pessoa incluem apenas seu recorte; em Ambos, papéis e clientes ficam identificados e originais compartilhados não são duplicados. Exportação geral incorpora indicadores, unidades e bases; percentuais são frações numéricas formatadas, razões usam duas casas.
+- Impressão preserva nomes dos cards e detalhamento aberto; acesso, permissão de exportação, fontes e regras financeiras mantidos. Documentação e testes de identificação, períodos, zero/ausência, participação e arquivos atualizados.
+
 ## 0.25.2 — 17/10/2026
 
 - Agendados e Aguardando agendamento abrem a conferência imediatamente abaixo dos cards da Visão geral, antes dos gráficos. Clicar novamente recolhe; seleção e vínculo acessível indicam o card aberto. Fechar devolve foco ao card.

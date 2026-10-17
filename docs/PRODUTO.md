@@ -1,6 +1,6 @@
 # Suporte Controller — produto e regras de negócio
 
-Atualizado em 17/10/2026. Versão atual: 0.25.2. Visão geral de OS com dez cards e paleta por grupo; bases e limites em [Cards de OS](CARDS-DE-OS.md). Filtros independentes por categoria, conforme escolha do proprietário; detalhes e exceções em [Filtros por categoria](FILTROS-POR-CATEGORIA.md). As seções de versões anteriores registram a evolução histórica.
+Atualizado em 17/10/2026. Versão atual: 0.26.0. Equipe de suporte com cards e investigação por pessoa; regras em [Equipe de suporte](EQUIPE-DE-SUPORTE.md). Visão geral de OS com dez cards e paleta por grupo; bases e limites em [Cards de OS](CARDS-DE-OS.md). Filtros independentes por categoria, conforme escolha do proprietário; detalhes e exceções em [Filtros por categoria](FILTROS-POR-CATEGORIA.md). As seções de versões anteriores registram a evolução histórica.
 
 ## Objetivo
 

@@ -2,6 +2,7 @@
 import { applyFilters, attendanceDate, field } from '../../../shared/data/filters.js';
 import { isUnproductive } from './attendanceKind.js';
 import { previousPeriod } from './dashboard.js';
+import { validPlate } from './trackerReplacements.js';
 
 export const supportRoles = {
   execution: { column: 'Resp. Execução', date: 'Data de atendimento', label: 'Execução' },
@@ -49,13 +50,18 @@ function text(data, row, label) {
 }
 function count(data, rows) {
   const calls = new Set(),
-    clients = new Set();
-  let productive = 0;
+    clients = new Set(),
+    vehicles = new Set();
+  let productive = 0,
+    vehiclesMissing = 0;
   for (const row of rows) {
     if (!isUnproductive(data, row)) productive++;
     if (row.os != null && String(row.os).trim()) calls.add(String(row.os).trim());
     const client = text(data, row, 'Razão Social');
     if (client) clients.add(client);
+    const plate = text(data, row, 'Placa');
+    if (client && validPlate(plate)) vehicles.add(JSON.stringify([client, plate]));
+    else vehiclesMissing++;
   }
   return {
     visits: rows.length,
@@ -63,6 +69,14 @@ function count(data, rows) {
     unproductive: rows.length - productive,
     calls: calls.size,
     clients: clients.size,
+    vehicles: ['Razão Social', 'Placa'].every((label) =>
+      data.columns.some((column) => column.label === label),
+    )
+      ? vehicles.size
+      : null,
+    vehiclesMissing,
+    unproductiveRate: rows.length ? (rows.length - productive) / rows.length : null,
+    servicesPerCall: calls.size ? rows.length / calls.size : null,
   };
 }
 
@@ -73,14 +87,14 @@ function summarize(data, filters, role) {
     ['Concluída', 'Pago'].includes(text(data, row, 'Status')),
   );
   const categorical = applyFilters(data, { ...filters, start: '', end: '' });
-  const missingDates =
+  const missingDateRows =
     filters.start || filters.end
       ? categorical.rows.filter(
           (row) =>
             ['Concluída', 'Pago'].includes(text(data, row, 'Status')) &&
             !attendanceDate(data, row, role.date),
-        ).length
-      : 0;
+        )
+      : [];
   const groups = new Map(),
     missing = [];
   for (const row of rows) {
@@ -98,7 +112,8 @@ function summarize(data, filters, role) {
     rows,
     totals,
     missing,
-    missingDates,
+    missingDates: missingDateRows.length,
+    missingDateRows,
     groups: [...groups]
       .map(([label, records]) => {
         const metrics = count(data, records);

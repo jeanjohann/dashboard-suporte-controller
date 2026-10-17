@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Cards e pessoa do suporte — 0.26.0
+
+`supportPerformance.js` acrescenta veículos por cliente + placa, taxa de improdutivas, registros/chamado e linhas excluídas por data, mantendo contagens e papéis anteriores. `supportPerson.js` deriva a pessoa sobre os resultados já filtrados, preserva denominador da equipe, evolução e base anterior, sem reaplicar um filtro bruto ao nome aparado. `SupportMetricCards` apresenta métricas/comparações; `SupportPeople` mantém busca/limite/seleção de apresentação e abre a pessoa junto aos cards. Não há gravação nova. `supportReport.js` é compartilhado pelos arquivos gerais e individuais e conserva a união de originais em Ambos; `Section` preserva os acionadores com os nomes na impressão. `support-people.css` limita a identidade a esses componentes. [Uso e fórmulas](EQUIPE-DE-SUPORTE.md#cards-e-detalhamento-por-pessoa--0260).
+
 ## Agenda da Visão geral — 0.25.2
 
 `DashboardOverview` mantém a seleção da agenda e abre `RecordDetails` junto ao card, com apresentação compacta opcional. Todas as colunas e a ordenação são preservadas; mudanças de base/filtros limpam a conferência anterior. `overview-agenda.css` limita a densidade à agenda. `OrdersFiltersPanel` oferece atalhos semanais somente na categoria Visão geral, reutilizando o calendário civil de `supportPeriod`; `PeriodFilter` recebe ações opcionais, sem conhecer regras de domínio. Os atalhos editam o período do espaço atual e não mudam a exceção temporal da agenda aberta. [Uso e alcance](CARDS-DE-OS.md#agenda-e-atalhos-semanais).

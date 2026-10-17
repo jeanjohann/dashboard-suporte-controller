@@ -10,6 +10,7 @@ export function supportReport(data, result, filters, filename) {
       ['Papel', result.role.label],
       ['Data utilizada', result.role.date],
       ['Filtros', JSON.stringify(filters)],
+      ...(result.person ? [['Responsável selecionado', result.person]] : []),
       [
         'Regra',
         'Somente Concluída/Pago; visitas improdutivas separadas. Volume não mede qualidade.',
@@ -18,6 +19,20 @@ export function supportReport(data, result, filters, filename) {
         'Base da participação',
         'Todos os atendimentos efetivos do recorte, inclusive sem responsável.',
       ],
+      ['Efetivos na base da participação', result.participationBase ?? result.totals.productive],
+      [
+        'Base do percentual de improdutivas',
+        'Visitas improdutivas / todas as visitas e atendimentos realizados do mesmo papel e recorte. Não atribui causa ao suporte.',
+      ],
+      [
+        'Base dos registros por chamado',
+        'Todas as linhas realizadas / números de chamado distintos. Não mede esforço ou tempo trabalhado.',
+      ],
+      [
+        'Veículos',
+        'Pares razão social + placa utilizáveis; não representa frota ativa. Sem colunas necessárias, indisponível.',
+      ],
+      ['Linhas sem cliente + placa utilizáveis', result.totals.vehiclesMissing],
       ['Sem responsável válido', result.missing.length],
       ['Sem data excluídos do período', result.missingDates],
       ['Sem data no gráfico', result.undated],
@@ -27,17 +42,23 @@ export function supportReport(data, result, filters, filename) {
           ? `${result.range.start} a ${result.range.end}`
           : 'Indisponível sem intervalo completo',
       ],
-      ['Observação', 'Chamados e clientes distintos não são aditivos entre responsáveis.'],
+      [
+        'Observação',
+        'Chamados, clientes e veículos distintos não são aditivos entre responsáveis ou papéis.',
+      ],
     ],
     Resumo: [
-      ['Indicador', 'Quantidade'],
+      ['Indicador', 'Valor', 'Unidade'],
       ...Object.entries({
         'Visitas e atendimentos': result.totals.visits,
         'Atendimentos efetivos': result.totals.productive,
         'Visitas improdutivas': result.totals.unproductive,
         'Chamados distintos': result.totals.calls,
         'Clientes identificados': result.totals.clients,
-      }),
+      }).map((row) => [...row, 'quantidade']),
+      ['Veículos identificados', result.totals.vehicles, 'quantidade'],
+      ['Visitas improdutivas / total realizado', result.totals.unproductiveRate, 'percentual'],
+      ['Registros por chamado', result.totals.servicesPerCall, 'registros/chamado'],
     ],
     Responsáveis: [
       [
@@ -50,6 +71,9 @@ export function supportReport(data, result, filters, filename) {
         'Participação dos efetivos',
         'Efetivos no período anterior',
         'Linhas Excel',
+        'Veículos identificados',
+        'Percentual de visitas improdutivas',
+        'Registros por chamado',
       ],
       ...result.groups.map((item) => [
         item.label,
@@ -61,6 +85,9 @@ export function supportReport(data, result, filters, filename) {
         item.share,
         item.previous,
         item.rows.join(', '),
+        item.vehicles,
+        item.unproductiveRate,
+        item.servicesPerCall,
       ]),
     ],
     Evolução: [
@@ -82,6 +109,14 @@ export function supportReport(data, result, filters, filename) {
         .filter((row) => included.has(row.sourceRow))
         .map((row) => [row.sourceRow, ...row.cells.map((cell) => cell.raw ?? '')]),
     ],
+    ...(result.clientGroups
+      ? {
+          Clientes: [
+            ['Cliente', 'Visitas e atendimentos', 'Linhas Excel'],
+            ...result.clientGroups.map((item) => [item.label, item.value, item.rows.join(', ')]),
+          ],
+        }
+      : {}),
   };
 }
 export const supportCsv = (tables) =>
@@ -107,7 +142,13 @@ export function supportComparisonReport(data, execution, scheduling, filters, fi
       ...reports.flatMap(([role, report]) => report.Contexto.slice(4).map((row) => [role, ...row])),
     ],
   };
-  for (const name of ['Resumo', 'Responsáveis', 'Evolução', 'Perfil'])
+  for (const name of [
+    'Resumo',
+    'Responsáveis',
+    'Evolução',
+    'Perfil',
+    ...(reports[0][1].Clientes ? ['Clientes'] : []),
+  ])
     tables[name] = [
       ['Responsabilidade', ...reports[0][1][name][0]],
       ...reports.flatMap(([role, report]) => report[name].slice(1).map((row) => [role, ...row])),
@@ -139,11 +180,27 @@ export function supportWorkbook(tables) {
   const book = XLSX.utils.book_new();
   for (const [name, rows] of Object.entries(tables)) {
     const sheet = XLSX.utils.aoa_to_sheet(rows);
-    const shareIndex = rows[0]?.indexOf('Participação dos efetivos');
-    if (name === 'Responsáveis' && shareIndex >= 0)
-      for (let row = 2; row <= rows.length; row++)
-        if (sheet[XLSX.utils.encode_cell({ r: row - 1, c: shareIndex })])
-          sheet[XLSX.utils.encode_cell({ r: row - 1, c: shareIndex })].z = '0.0%';
+    const format = (row, column, code) => {
+      const cell = sheet[XLSX.utils.encode_cell({ r: row, c: column })];
+      if (cell?.t === 'n') cell.z = code;
+    };
+    if (name === 'Responsáveis') {
+      for (const label of ['Participação dos efetivos', 'Percentual de visitas improdutivas']) {
+        const index = rows[0].indexOf(label);
+        if (index >= 0) for (let row = 1; row < rows.length; row++) format(row, index, '0.0%');
+      }
+      const ratioIndex = rows[0].indexOf('Registros por chamado');
+      if (ratioIndex >= 0)
+        for (let row = 1; row < rows.length; row++) format(row, ratioIndex, '0.00');
+    }
+    if (name === 'Resumo') {
+      const valueIndex = rows[0].indexOf('Valor'),
+        unitIndex = rows[0].indexOf('Unidade');
+      for (let row = 1; row < rows.length; row++) {
+        if (rows[row][unitIndex] === 'percentual') format(row, valueIndex, '0.0%');
+        if (rows[row][unitIndex] === 'registros/chamado') format(row, valueIndex, '0.00');
+      }
+    }
     XLSX.utils.book_append_sheet(book, sheet, name);
   }
   return XLSX.write(book, { type: 'array', bookType: 'xlsx' });

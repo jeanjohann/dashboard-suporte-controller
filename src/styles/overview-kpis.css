@@ -1,5 +1,6 @@
-/* Paleta restrita ao resumo de OS. Números continuam neutros e cores não indicam desempenho. */
-.overview-kpis {
+/* Paleta dos indicadores de OS e suporte. Números neutros; cores não indicam desempenho. */
+.overview-kpis,
+.support-metrics {
   --kpi-operation: #d77119;
   --kpi-operation-soft: #fff1e1;
   --kpi-service: #148c77;
@@ -11,7 +12,8 @@
   --kpi-finance: #8757bd;
   --kpi-finance-soft: #f2eafa;
 }
-:root[data-theme='dark'] .overview-kpis {
+:root[data-theme='dark'] .overview-kpis,
+:root[data-theme='dark'] .support-metrics {
   --kpi-operation: #ffb14e;
   --kpi-operation-soft: #3b2c21;
   --kpi-service: #62d1af;
