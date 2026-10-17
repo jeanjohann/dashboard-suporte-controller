@@ -14,6 +14,7 @@
 
 - [Equipe de suporte — indicadores e períodos](docs/EQUIPE-DE-SUPORTE.md)
 - [Integração do monitoramento — contrato técnico e ativação futura](docs/INTEGRACAO-MONITORAMENTO.md)
+- [Integrações KORE e Arqia — fila, acesso e validação do consumo](docs/INTEGRACAO-OPERADORAS.md)
 
 [Revisão técnica e refatoração gradual](docs/REVISAO-E-REFATORACAO.md): diagnóstico, etapas concluídas, verificações e sequência proposta.
 

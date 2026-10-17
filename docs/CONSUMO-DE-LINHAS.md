@@ -2,6 +2,8 @@
 
 Módulo de acompanhamento da Arqia e da Kore, integrado à identidade Addlog. O foco é encontrar consumo acima da referência, revisar vínculos com o operacional e acompanhar ações em novos períodos. Contratos, estoque e saldo de franquia ficam fora desta etapa.
 
+As integrações por API de **KORE Brasil / Saitro** e **Arqia** entraram na fila em 17/10/2026, com aprovação do proprietário. A consulta automática ainda não está implementada nem ativada; depende da documentação, liberação das contas e validação com os CSVs atuais. O [escopo das integrações](INTEGRACAO-OPERADORAS.md) registra os campos desejados, as pendências e os critérios de homologação. Importação, histórico e anotações locais continuam com as regras deste guia.
+
 ## Uso
 
 Desde **0.27.0**, o painel **Acompanhamento do consumo** alterna entre **Grade e acompanhamento** e **Ranking e prioridades**, sem repetir a tabela. Na grade, **Fora dos totais** permite conferir registros não elegíveis do recorte; eles não entram nas somas/ranking. O status abre a linha do tempo abaixo, e **Conferir origem** mostra o CSV original. [Mapa, seleção e exportação](ORGANIZACAO-DAS-ANALISES.md).
