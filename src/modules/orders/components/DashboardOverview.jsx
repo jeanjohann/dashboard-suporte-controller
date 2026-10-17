@@ -61,6 +61,23 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
     m = managementMetrics(d.selected, scheduling),
     [detail, setDetail] = React.useState(null),
     [selectedClient, setSelectedClient] = React.useState('');
+  const agendaId = React.useId(),
+    agendaDetailRef = React.useRef(null),
+    agendaButtons = React.useRef({});
+  // Conferências antigas não devem continuar exibindo outra base após alterar o recorte.
+  React.useEffect(() => setDetail(null), [original, filters]);
+  React.useEffect(() => {
+    if (detail?.agenda)
+      agendaDetailRef.current?.scrollIntoView({
+        block: 'nearest',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
+  }, [detail?.agenda]);
+  const agendaLabels = { waiting: 'Aguardando agendamento', scheduled: 'Agendados' };
+  const closeAgenda = () => {
+    agendaButtons.current[detail?.agenda]?.focus();
+    setDetail(null);
+  };
   const names = [...new Set([...(m.execution || []), ...(m.scheduling || [])].map((x) => x.label))],
     team = names.map((label) => ({
       label,
@@ -109,27 +126,40 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
         Custos: {d.current.costCount} valores válidos; valores ausentes não viram zero.
       </p>
       <div className="agenda-strip">
-        <button
-          onClick={() =>
-            setDetail({ label: 'Aguardando agendamento', rows: d.agenda.waiting, data: original })
-          }
-        >
-          <span>Aguardando agendamento</span>
-          <strong>{d.agenda.waiting.length}</strong>
-        </button>
-        <button
-          onClick={() =>
-            setDetail({ label: 'Agendados', rows: d.agenda.scheduled, data: original })
-          }
-        >
-          <span>Agendados</span>
-          <strong>{d.agenda.scheduled.length}</strong>
-        </button>
+        {Object.entries(agendaLabels).map(([key, label]) => (
+          <button
+            key={key}
+            type="button"
+            ref={(element) => {
+              agendaButtons.current[key] = element;
+            }}
+            aria-expanded={detail?.agenda === key}
+            aria-controls={detail?.agenda === key ? agendaId : undefined}
+            onClick={() =>
+              setDetail((previous) => (previous?.agenda === key ? null : { agenda: key }))
+            }
+          >
+            <span>{label}</span>
+            <strong>{d.agenda[key].length}</strong>
+          </button>
+        ))}
         <p>
           Situação registrada no arquivo importado · filtros de categoria aplicados · sem filtro de
           datas, pois a agenda pode não ter Data de atendimento.
         </p>
       </div>
+      {detail?.agenda && (
+        <div id={agendaId} ref={agendaDetailRef} className="overview-agenda-detail">
+          <RecordDetails
+            key={detail.agenda}
+            data={original}
+            rows={d.agenda[detail.agenda]}
+            title={agendaLabels[detail.agenda]}
+            compact
+            onClose={closeAgenda}
+          />
+        </div>
+      )}
       <div className="dashboard-chart-grid">
         <article className="panel dashboard-widget">
           <div className="inline-help-heading">
@@ -381,7 +411,7 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
           </p>
         )}
       </div>
-      {detail && (
+      {detail && !detail.agenda && (
         <div className="panel">
           <button onClick={() => setDetail(null)}>Fechar conferência</button>
           <RecordDetails data={detail.data} rows={detail.rows} title={detail.label} />

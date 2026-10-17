@@ -10,7 +10,7 @@ export const supportRoles = {
 const day = 86400000;
 const iso = (instant) => new Date(instant).toISOString().slice(0, 10);
 
-/** Calendário civil: últimos 7 dias incluem hoje; semana anterior vai de segunda a domingo. */
+/** Calendário civil: últimos 7 dias incluem hoje; semanas atual/anterior vão de segunda a domingo. */
 export function supportPeriod(
   preset,
   today,
@@ -21,8 +21,9 @@ export function supportPeriod(
   if (!Number.isFinite(time) || iso(time) !== today) throw Error('Data de referência inválida.');
   if (preset === 'total') return { start: '', end: '' };
   if (preset === 'last7') return { start: iso(time - 6 * day), end: today };
-  if (preset === 'previousWeek') {
+  if (preset === 'currentWeek' || preset === 'previousWeek') {
     const monday = time - ((new Date(time).getUTCDay() + 6) % 7) * day;
+    if (preset === 'currentWeek') return { start: iso(monday), end: iso(monday + 6 * day) };
     return { start: iso(monday - 7 * day), end: iso(monday - day) };
   }
   if (preset === 'month' && /^\d{4}-(0[1-9]|1[0-2])$/.test(month || '')) {

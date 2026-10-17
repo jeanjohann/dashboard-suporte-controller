@@ -18,6 +18,8 @@ Versão inicial: 0.24.0. Não foi criado um novo filtro global nem uma combinaç
 
 Período, resumo e comandos de abrir/recolher relatórios fazem parte do mesmo quadro. Cabeçalho/importação continuam acima dele. A personalização visual permanece na engrenagem; selecionar relatórios não altera os filtros.
 
+Na Visão geral de OS, Semana atual e Semana anterior preenchem De/Até com semanas de segunda a domingo, pelo calendário de São Paulo, preservando os demais campos e as outras categorias. Os cards de agenda aberta continuam sendo uma fotografia das pendências sem recorte temporal; a conferência abre junto ao card. [Detalhes de alcance](CARDS-DE-OS.md#agenda-e-atalhos-semanais).
+
 ## Alcance por módulo
 
 | Módulo              | Seleção independente                                                                                                                                    | Regras preservadas                                                                                                                                           |

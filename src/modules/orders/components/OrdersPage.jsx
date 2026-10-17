@@ -90,6 +90,7 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                     <OrdersFiltersPanel
                       data={data}
                       scope={`OS → ${menu.label}`}
+                      showWeekShortcuts={category === 'overview'}
                       search={records.search}
                       filename={filename}
                       selected={selected}

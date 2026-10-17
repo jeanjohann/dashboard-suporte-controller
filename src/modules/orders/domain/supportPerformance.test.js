@@ -3,6 +3,23 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import XLSX from 'xlsx';
 import { supportPeriod, supportPerformance } from './supportPerformance.js';
+
+test('semana atual vai de segunda a domingo, incluindo domingo e virada do ano', () => {
+  for (const today of ['2026-10-12', '2026-10-17', '2026-10-18']) {
+    assert.deepEqual(supportPeriod('currentWeek', today), {
+      start: '2026-10-12',
+      end: '2026-10-18',
+    });
+  }
+  assert.deepEqual(supportPeriod('currentWeek', '2026-01-01'), {
+    start: '2025-12-29',
+    end: '2026-01-04',
+  });
+  assert.deepEqual(supportPeriod('previousWeek', '2026-01-01'), {
+    start: '2025-12-22',
+    end: '2025-12-28',
+  });
+});
 import {
   supportReport,
   supportComparisonReport,

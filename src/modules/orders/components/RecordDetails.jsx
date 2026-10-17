@@ -7,46 +7,67 @@ import React, { useState } from 'react';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { report } from '../domain/reports.js';
 /** Mostra linhas originais selecionadas para justificar os números apresentados no relatório. */
-export function RecordDetails({ data, rows, title }) {
+export function RecordDetails({ data, rows, title, compact = false, onClose }) {
   const wanted = new Set(rows),
     records = data.rows.filter((row) => wanted.has(row.sourceRow));
   return (
-    <section className="record-details">
+    <section
+      className={`record-details${compact ? ' record-details-compact' : ''}`}
+      aria-label={title}
+    >
       <div className="inline-help-heading">
         <h3>
-          {title} · {records.length} registros
+          {title} · {records.length} {records.length === 1 ? 'registro' : 'registros'}
         </h3>
+        {onClose && (
+          <button type="button" className="record-details-close" onClick={onClose}>
+            Fechar conferência
+          </button>
+        )}
         <InfoNote>
           Registros que compõem este resultado; linha original preservada. Clique no cabeçalho para
           ordenar.
         </InfoNote>
       </div>
-      <div className="table-scroll">
-        <SortableTable>
-          <thead>
-            <tr>
-              <th>Linha Excel</th>
-              {data.columns.map((col) => (
-                <th key={col.index}>
-                  {col.letter} · {col.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {records.map((row) => (
-              <tr key={row.sourceRow}>
-                <td>{row.sourceRow}</td>
-                {row.cells.map((cell, i) => (
-                  <td key={i} data-sort={cell.issue ? null : cell.raw} title={String(cell.display)}>
-                    {cell.display}
-                  </td>
+      {compact && !records.length ? (
+        <p className="scope">Nenhum registro nesta seleção.</p>
+      ) : (
+        <div
+          className="table-scroll"
+          tabIndex={compact ? 0 : undefined}
+          role={compact ? 'region' : undefined}
+          aria-label={compact ? `Linhas de ${title}` : undefined}
+        >
+          <SortableTable>
+            <thead>
+              <tr>
+                <th>Linha Excel</th>
+                {data.columns.map((col) => (
+                  <th key={col.index}>
+                    {col.letter} · {col.label}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </SortableTable>
-      </div>
+            </thead>
+            <tbody>
+              {records.map((row) => (
+                <tr key={row.sourceRow}>
+                  <td>{row.sourceRow}</td>
+                  {row.cells.map((cell, i) => (
+                    <td
+                      key={i}
+                      data-sort={cell.issue ? null : cell.raw}
+                      title={String(cell.display)}
+                    >
+                      {cell.display}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </SortableTable>
+        </div>
+      )}
     </section>
   );
 }

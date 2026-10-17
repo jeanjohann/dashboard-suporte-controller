@@ -1,6 +1,6 @@
 # Cards da visão geral de OS
 
-Versão 0.25.1. Acesse **Ordens de Serviço → Visão geral** após carregar a base. Os dez cards respondem somente aos filtros dessa categoria; seleções de Equipamentos ou Operação não se propagam para cá. A busca de texto dos registros continua restrita à tabela.
+Versão 0.25.2. Acesse **Ordens de Serviço → Visão geral** após carregar a base. Os dez cards respondem somente aos filtros dessa categoria; seleções de Equipamentos ou Operação não se propagam para cá. A busca de texto dos registros continua restrita à tabela.
 
 ## O que é contado
 
@@ -34,6 +34,14 @@ Sem as colunas necessárias, os três novos indicadores exibem `—`, com legend
 Com início e fim válidos, o sistema compara o intervalo imediatamente anterior com a mesma quantidade de dias, incluindo as duas pontas, e os mesmos filtros categóricos. A variação é a diferença entre valores; percentual = diferença / valor absoluto da base anterior × 100. Base anterior zero não gera percentual. Valor atual ou anterior indisponível não gera comparação naquele card.
 
 Sem intervalo completo, as legendas mostram a base de cálculo e a orientação para comparar aparece uma vez abaixo do painel. O histórico disponível não comprova cobertura completa dos períodos; mudanças no perfil dos serviços ou na qualidade da base também afetam os resultados.
+
+## Agenda e atalhos semanais
+
+No quadro de filtros da Visão geral, **Semana atual** seleciona segunda a domingo da semana corrente; **Semana anterior**, a semana completa imediatamente anterior. O dia de referência usa São Paulo. Os atalhos atualizam De/Até, preservam campos categóricos e não alteram outras categorias. Selecionar datas manualmente ou Todo o período continua disponível. Com intervalo completo, a comparação dos indicadores continua usando um período anterior de igual duração.
+
+**Agendados** e **Aguardando agendamento** são uma fotografia das pendências do arquivo: seguem os campos da categoria e ignoram De/Até, pois podem não possuir Data de atendimento. Não são os agendamentos realizados da seção Equipe de suporte nem uma agenda filtrada pela data Agendamento. O aviso ao lado dos cards explicita esse alcance.
+
+Clique no card para abrir as linhas imediatamente abaixo; clique novamente ou em Fechar conferência para recolher. A tabela mantém todas as colunas e ordenação, com rolagem própria para ocupar menos altura. Abertura respeita a preferência de movimento reduzido; fechar devolve foco ao card. Mudança da base ou dos filtros fecha detalhes anteriores, evitando exibir uma conferência de outro recorte. Os demais blocos de conferência da Visão geral continuam em seus locais anteriores.
 
 ## Paleta e ajuda
 

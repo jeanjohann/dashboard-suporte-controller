@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.25.2 — 17/10/2026
+
+- Agendados e Aguardando agendamento abrem a conferência imediatamente abaixo dos cards da Visão geral, antes dos gráficos. Clicar novamente recolhe; seleção e vínculo acessível indicam o card aberto. Fechar devolve foco ao card.
+- Conferência da agenda mais compacta: título e ação na mesma faixa, linhas menores e rolagem limitada. Mantém todas as colunas, valores, linhas de origem e ordenação. Outros detalhes conservam sua apresentação; mudar base/filtros fecha a conferência antiga.
+- Semana atual e Semana anterior nos filtros da Visão geral, de segunda a domingo, pelo calendário de São Paulo. Editam somente o período dessa categoria e preservam os demais critérios. A agenda aberta continua sem recorte temporal, conforme indicação junto aos cards; nenhuma pendência é ocultada pelo atalho.
+
 ## 0.25.1 — 17/10/2026
 
 - Cores dos dez cards da Visão geral de OS um pouco mais vivas, mantendo fundos suaves, números neutros e contraste próprio nos temas claro/escuro.

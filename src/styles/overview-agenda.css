@@ -1,0 +1,86 @@
+/* Ajustes locais: a agenda abre junto ao card sem mudar a densidade de outras conferências. */
+.executive-dashboard .agenda-strip {
+  gap: 8px 12px;
+  margin: 14px 0;
+}
+.executive-dashboard .agenda-strip button {
+  min-height: 44px;
+  padding: 8px 12px;
+  gap: 16px;
+  border-radius: 8px;
+}
+.executive-dashboard .agenda-strip button span {
+  font-size: 11px;
+}
+.executive-dashboard .agenda-strip button strong {
+  font-size: 21px;
+}
+.executive-dashboard .agenda-strip button[aria-expanded='true'],
+.period-filter button[aria-pressed='true'] {
+  background: var(--ui-accent-soft);
+  border-color: var(--ui-accent-border);
+  color: var(--ui-accent-ink);
+}
+.overview-agenda-detail {
+  margin: 0 0 16px;
+  scroll-margin-block: 12px;
+}
+.overview-agenda-detail > .record-details-compact {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+}
+.record-details-compact > .inline-help-heading {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding-right: 30px;
+  margin: 0 0 8px;
+}
+.record-details-compact > .inline-help-heading > h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+.record-details-compact > .inline-help-heading > .info-note {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  margin: 0;
+}
+.record-details-compact .record-details-close {
+  margin-left: auto;
+  min-height: 28px;
+  padding: 5px 8px;
+  font-size: 11px;
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+}
+.record-details-compact > .table-scroll {
+  max-height: 250px;
+  margin: 0;
+  border: 1px solid var(--ui-line);
+  border-radius: 6px;
+}
+.record-details-compact .table-scroll th,
+.record-details-compact .table-scroll td {
+  padding: 6px 8px;
+  font-size: 11px;
+}
+.record-details-compact .sort-heading {
+  min-height: 0;
+  padding: 0;
+}
+@media (max-width: 650px) {
+  .record-details-compact > .table-scroll {
+    max-height: 220px;
+  }
+  .record-details-compact .record-details-close {
+    min-height: 32px;
+  }
+}

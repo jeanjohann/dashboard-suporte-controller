@@ -7,11 +7,14 @@ import { ReportControls } from '../../../components/ReportControls.jsx';
 import { FilterPanel } from '../../../components/FilterPanel.jsx';
 import { filterChips } from '../../../shared/filters/scopedSelection.js';
 import { filterFields, filterLabels } from '../../../shared/data/filters.js';
+import { supportPeriod } from '../domain/supportPerformance.js';
+import { todaySaoPaulo } from '../domain/lifecycle.js';
 
 export function OrdersFiltersPanel({
   data,
   filename,
   scope,
+  showWeekShortcuts = false,
   search,
   selected,
   importedPeriod,
@@ -25,6 +28,23 @@ export function OrdersFiltersPanel({
   setExpansion,
 }) {
   const labels = { ...filterLabels, start: 'De', end: 'Até' };
+  const shortcuts = showWeekShortcuts
+    ? [
+        ['currentWeek', 'Semana atual'],
+        ['previousWeek', 'Semana anterior'],
+      ].map(([preset, label]) => {
+        const range = supportPeriod(preset, todaySaoPaulo());
+        return {
+          label,
+          active: filters.start === range.start && filters.end === range.end,
+          onSelect: () => {
+            const currentRange = supportPeriod(preset, todaySaoPaulo());
+            setFilters((previous) => ({ ...previous, ...currentRange }));
+            setPage(0);
+          },
+        };
+      })
+    : [];
   data.columns.forEach((col) => {
     labels[`column:${col.index}`] = `${col.letter} · ${col.label}`;
   });
@@ -51,6 +71,7 @@ export function OrdersFiltersPanel({
           end={filters.end}
           earliest={importedPeriod.start}
           onChange={changeFilter}
+          shortcuts={shortcuts}
         />
       }
       chips={chips}
@@ -62,7 +83,7 @@ export function OrdersFiltersPanel({
         setPage(0);
       }}
       actions={<ReportControls onExpand={setExpansion} />}
-      help="Os filtros afetam somente os relatórios desta categoria. Outra categoria mantém sua própria seleção. No mesmo campo, qualquer opção marcada é aceita; entre campos, a linha precisa atender a todos. Período usa Data de atendimento, exceto agendamentos por responsável, que usam Agendamento. Suporte por execução e por agendamento consulta colunas distintas. Na vida em campo, o modo da seção define se o recorte seleciona instalações ou trocas. Sem período, registros sem data permanecem; com limite, são excluídos e contados. A busca textual é somente da tabela. Exportações e impressão seguem o contexto da categoria. Nenhuma regra de cálculo foi alterada."
+      help="Os filtros afetam somente os relatórios desta categoria. Outra categoria mantém sua própria seleção. No mesmo campo, qualquer opção marcada é aceita; entre campos, a linha precisa atender a todos. Período usa Data de atendimento, exceto agendamentos por responsável, que usam Agendamento. Suporte por execução e por agendamento consulta colunas distintas. Na vida em campo, o modo da seção define se o recorte seleciona instalações ou trocas. Sem período, registros sem data permanecem; com limite, são excluídos e contados. A busca textual é somente da tabela. Exportações e impressão seguem o contexto da categoria. Na Visão geral, os atalhos semanais usam segunda a domingo no calendário de São Paulo; os cards de agenda aberta continuam sem recorte temporal, conforme o aviso junto a eles."
       notice={
         (selected.missingDates > 0 || selected.invalidPeriod) && (
           <>

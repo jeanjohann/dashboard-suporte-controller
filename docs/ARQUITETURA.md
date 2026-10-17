@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Agenda da Visão geral — 0.25.2
+
+`DashboardOverview` mantém a seleção da agenda e abre `RecordDetails` junto ao card, com apresentação compacta opcional. Todas as colunas e a ordenação são preservadas; mudanças de base/filtros limpam a conferência anterior. `overview-agenda.css` limita a densidade à agenda. `OrdersFiltersPanel` oferece atalhos semanais somente na categoria Visão geral, reutilizando o calendário civil de `supportPeriod`; `PeriodFilter` recebe ações opcionais, sem conhecer regras de domínio. Os atalhos editam o período do espaço atual e não mudam a exceção temporal da agenda aberta. [Uso e alcance](CARDS-DE-OS.md#agenda-e-atalhos-semanais).
+
 ## Cards da visão geral — 0.25.0
 
 `modules/orders/components/OverviewKpis.jsx` apresenta os dez indicadores e a comparação fornecidos por `domain/dashboard.js`, sem recalcular dados na interface. `periodMetrics` acrescenta implementações efetivas e conjuntos de clientes/pares cliente + placa, reaproveitando `sourceText` e `validPlate` da identificação de equipamentos; não altera a origem. `config/metricHelp.js` documenta as bases. `styles/overview-kpis.css` fica restrito a esse painel e possui variáveis próprias nos dois temas. Ícones são SVG locais no componente compartilhado `Icon`. Sem alteração no servidor, armazenamento ou fontes. [Critérios de cálculo e leitura](CARDS-DE-OS.md).

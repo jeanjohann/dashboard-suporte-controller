@@ -5,6 +5,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { previousPeriod, change, dashboardData, periodMetrics } from './dashboard.js';
+
+test('agenda mantém pendências sem recorte temporal, mas segue os campos da categoria', () => {
+  const columns = ['Status', 'Razão Social', 'Data de atendimento', 'Agendamento'].map((label) => ({
+    label,
+  }));
+  const data = {
+    columns,
+    issues: [],
+    rows: [
+      ['Agendado', 'Cliente A', null, 45658],
+      ['Agendar', 'Cliente A', null, null],
+      ['Agendado', 'Cliente B', null, 45658],
+      ['Pago', 'Cliente A', 45658, 45658],
+    ].map((values, index) => ({
+      os: String(index + 1),
+      sourceRow: index + 2,
+      cells: values.map((raw) => ({ raw })),
+    })),
+  };
+  const result = dashboardData(data, {
+    start: '2026-10-12',
+    end: '2026-10-18',
+    'Razão Social': ['Cliente A'],
+  });
+  assert.deepEqual(result.agenda, { waiting: [3], scheduled: [2] });
+  assert.equal(result.current.completed, 0);
+});
 test('período anterior tem mesma duração inclusive e atravessa ano e fevereiro', () => {
   assert.deepEqual(previousPeriod({ start: '2025-01-01', end: '2025-01-31' }), {
     start: '2024-12-01',
