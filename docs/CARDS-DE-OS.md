@@ -1,6 +1,6 @@
 # Cards da visão geral de OS
 
-Versão 0.25.0. Acesse **Ordens de Serviço → Visão geral** após carregar a base. Os dez cards respondem somente aos filtros dessa categoria; seleções de Equipamentos ou Operação não se propagam para cá. A busca de texto dos registros continua restrita à tabela.
+Versão 0.25.1. Acesse **Ordens de Serviço → Visão geral** após carregar a base. Os dez cards respondem somente aos filtros dessa categoria; seleções de Equipamentos ou Operação não se propagam para cá. A busca de texto dos registros continua restrita à tabela.
 
 ## O que é contado
 
@@ -45,4 +45,4 @@ Sem intervalo completo, as legendas mostram a base de cálculo e a orientação 
 
 Fundos suaves, bordas e ícones vetoriais diferenciam os grupos, com valores principais neutros. Texto e ícone permitem reconhecer o indicador sem depender da cor. A paleta não afirma que aumento/redução seja bom ou ruim. Temas claro e escuro possuem tons próprios. O ícone de informação no canto superior direito explica base, exclusões, finalidade e limites; Escape fecha o balão.
 
-As cores se aplicam a esses dez cards, sem recolorir gráficos e relatórios dos outros módulos. Não houve mudança das fontes, do armazenamento ou das permissões.
+Na versão 0.25.1, os tons dos dez cards ficaram um pouco mais vivos. Os gráficos compartilhados também receberam séries mais nítidas, sem mudança no significado das categorias. A paleta das séries está em `src/shared/charts/palette.js`; as barras de tema usam `--chart-main` e `--chart-secondary` em `theme.css`, com valores próprios para claro e escuro. SVG utiliza as cores de impressão clara, preservando identificação de negativos. Não houve mudança das fontes, do armazenamento ou das permissões.

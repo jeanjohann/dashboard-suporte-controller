@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.25.1 — 17/10/2026
+
+- Cores dos dez cards da Visão geral de OS um pouco mais vivas, mantendo fundos suaves, números neutros e contraste próprio nos temas claro/escuro.
+- Paleta de séries compartilhada por gráficos de pizza/rosca, linhas e barras; evolução mensal, equipe e comparações geográficas usam tons mais nítidos. Barras compartilhadas, impressão e SVG acompanham a nova apresentação.
+- Legendas dos gráficos mantêm texto neutro e marcador colorido para preservar o contraste.
+- Composição mantém serviço técnico verde e deslocamento azul, alinhando o desenho à legenda. Categorias, cálculos, filtros, permissões e dados preservados.
+
 ## 0.25.0 — 16/10/2026
 
 - Visão geral de OS passa a dez cards, acrescentando Implementações realizadas, Clientes com atendimento e Veículos identificados. Os sete cálculos anteriores permanecem iguais.

@@ -1,27 +1,27 @@
 /* Paleta restrita ao resumo de OS. Números continuam neutros e cores não indicam desempenho. */
 .overview-kpis {
-  --kpi-operation: #b95b12;
-  --kpi-operation-soft: #fff6eb;
-  --kpi-service: #26766a;
-  --kpi-service-soft: #eff8f5;
-  --kpi-attention: #946916;
-  --kpi-attention-soft: #fff8e8;
-  --kpi-coverage: #456ca8;
-  --kpi-coverage-soft: #f0f5fc;
-  --kpi-finance: #7b58a5;
-  --kpi-finance-soft: #f7f3fc;
+  --kpi-operation: #d77119;
+  --kpi-operation-soft: #fff1e1;
+  --kpi-service: #148c77;
+  --kpi-service-soft: #e6f6ef;
+  --kpi-attention: #a77813;
+  --kpi-attention-soft: #fff3d9;
+  --kpi-coverage: #337fc5;
+  --kpi-coverage-soft: #e9f2ff;
+  --kpi-finance: #8757bd;
+  --kpi-finance-soft: #f2eafa;
 }
 :root[data-theme='dark'] .overview-kpis {
-  --kpi-operation: #ffb865;
-  --kpi-operation-soft: #332a23;
-  --kpi-service: #86cdb9;
-  --kpi-service-soft: #25332f;
-  --kpi-attention: #ecc374;
-  --kpi-attention-soft: #353025;
-  --kpi-coverage: #9cbdec;
-  --kpi-coverage-soft: #28303c;
-  --kpi-finance: #c7abe9;
-  --kpi-finance-soft: #302b3b;
+  --kpi-operation: #ffb14e;
+  --kpi-operation-soft: #3b2c21;
+  --kpi-service: #62d1af;
+  --kpi-service-soft: #243a32;
+  --kpi-attention: #efc35f;
+  --kpi-attention-soft: #3d3423;
+  --kpi-coverage: #83bbf5;
+  --kpi-coverage-soft: #29374a;
+  --kpi-finance: #c29bef;
+  --kpi-finance-soft: #362d46;
 }
 .kpi-operation {
   --kpi-color: var(--kpi-operation);

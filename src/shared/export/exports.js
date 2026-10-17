@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { authorizeAction } from '../security/accessClient.js';
+import { chartColors } from '../charts/palette.js';
 const safeText = (value) => {
   let text = String(value ?? '');
   if (/^[\s]*[=+@-]/.test(text)) text = "'" + text;
@@ -88,7 +89,7 @@ export function chartSvg(
       cursor += Math.max(44, lines.length * 19 + 20);
       const size = ((Math.abs(item.value) / max) * barWidth) / (signed ? 2 : 1);
       const x = signed ? labelWidth + barWidth / 2 - (item.value < 0 ? size : 0) : labelWidth;
-      return `<g><text x="24" y="${y}" font-size="13">${lines.map((line, i) => `<tspan x="24" dy="${i ? 19 : 0}">${escape(line.trim())}</tspan>`).join('')}</text><rect x="${x}" y="${y - 14}" width="${size}" height="19" fill="${escape(item.color || (item.value < 0 ? '#ba5675' : '#176b5c'))}" rx="3"/><text x="1180" y="${y}" font-size="13" text-anchor="end">${escape(format(item.value))}</text></g>`;
+      return `<g><text x="24" y="${y}" font-size="13">${lines.map((line, i) => `<tspan x="24" dy="${i ? 19 : 0}">${escape(line.trim())}</tspan>`).join('')}</text><rect x="${x}" y="${y - 14}" width="${size}" height="19" fill="${escape(item.color || (item.value < 0 ? chartColors.negative : chartColors.primary))}" rx="3"/><text x="1180" y="${y}" font-size="13" text-anchor="end">${escape(format(item.value))}</text></g>`;
     })
     .join('');
   const height = cursor + 30;

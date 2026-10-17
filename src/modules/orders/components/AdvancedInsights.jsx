@@ -20,6 +20,7 @@ import { SortableTable } from '../../../components/SortableTable.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import { financialFields, insightExportValues } from '../domain/insightExport.js';
+import { chartColors } from '../../../shared/charts/palette.js';
 const number = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const currency = (value) =>
@@ -160,14 +161,14 @@ function Stack({ items }) {
               <span
                 title={`Técnico: ${currency(item.composition.technician)}`}
                 style={{
-                  background: '#F59136',
+                  background: chartColors.teal,
                   width: (item.composition.technician / max) * 100 + '%',
                 }}
               />
               <span
                 title={`Deslocamento: ${currency(item.composition.travel)}`}
                 style={{
-                  background: '#3a7c94',
+                  background: chartColors.blue,
                   width: (item.composition.travel / max) * 100 + '%',
                 }}
               />

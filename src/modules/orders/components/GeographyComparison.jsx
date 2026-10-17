@@ -12,6 +12,7 @@ import { groupedCosts, effectiveMaintenanceRows } from '../domain/insights.js';
 import { field } from '../../../shared/data/filters.js';
 import { rankingItems } from '../../../shared/charts/chartRules.js';
 import { csv, download, chartSvg } from '../../../shared/export/exports.js';
+import { chartColors } from '../../../shared/charts/palette.js';
 
 const currency = (value) =>
   (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -28,8 +29,8 @@ const metrics = {
   travel: 'Despesa de deslocamento',
 };
 const series = [
-  { key: 'all', label: 'Total de atendimentos', color: '#357a9a' },
-  { key: 'maintenance', label: 'Manutenções', color: '#328b7d' },
+  { key: 'all', label: 'Total de atendimentos', color: chartColors.blue },
+  { key: 'maintenance', label: 'Manutenções', color: chartColors.teal },
 ];
 const amount = (group, key) => (group?.[key]?.count ? group[key].sum : null);
 const measureValue = (group, measure) =>

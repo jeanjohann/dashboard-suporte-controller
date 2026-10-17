@@ -23,6 +23,7 @@ import { Chart } from '../../../components/Chart.jsx';
 import { MaintenanceSummary, ServiceProfileSummary } from './CardInsights.jsx';
 import { ContractSummary } from './ContractSummary.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
+import { chartColors } from '../../../shared/charts/palette.js';
 const currency = (v) =>
   v == null ? '—' : (v / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const date = (v) => v?.split('-').reverse().join('/');
@@ -143,20 +144,25 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
           <MultiChart
             items={d.months}
             series={[
-              { key: 'implementation', label: 'Implementações', color: '#357a9a', stack: 'volume' },
+              {
+                key: 'implementation',
+                label: 'Implementações',
+                color: chartColors.blue,
+                stack: 'volume',
+              },
               {
                 key: 'unproductive',
                 label: 'Visitas improdutivas',
-                color: '#ad9455',
+                color: chartColors.amber,
                 stack: 'volume',
               },
               {
                 key: 'maintenance',
                 label: 'Assistências técnicas',
-                color: '#328b7d',
+                color: chartColors.teal,
                 stack: 'volume',
               },
-              { key: 'other', label: 'Outros tipos', color: '#b8b1a6', stack: 'volume' },
+              { key: 'other', label: 'Outros tipos', color: chartColors.other, stack: 'volume' },
             ]}
           />
         </article>
@@ -172,8 +178,8 @@ export function DashboardOverview({ original, filters, operational, onPage }) {
             <MultiChart
               items={team}
               series={[
-                { key: 'scheduling', label: 'Agendamentos', color: '#357a9a' },
-                { key: 'execution', label: 'Execuções', color: '#328b7d' },
+                { key: 'scheduling', label: 'Agendamentos', color: chartColors.blue },
+                { key: 'execution', label: 'Execuções', color: chartColors.teal },
               ]}
             />
           ) : (

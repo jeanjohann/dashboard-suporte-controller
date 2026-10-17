@@ -30,8 +30,8 @@
   --ui-error-bg: #fff0ed;
   --ui-error-ink: #a34435;
   --ui-chart-negative: #ba5675;
-  --chart-main: #d96212;
-  --chart-secondary: #338574;
+  --chart-main: #eb8726;
+  --chart-secondary: #16a58b;
   --addlog-background: var(--ui-background);
   --addlog-ink: var(--ui-ink);
   --addlog-border: var(--ui-border);
@@ -67,8 +67,8 @@
   --ui-error-bg: #402d30;
   --ui-error-ink: #ffafa5;
   --ui-chart-negative: #df8c9e;
-  --chart-main: #fca237;
-  --chart-secondary: #6bc2aa;
+  --chart-main: #ffad47;
+  --chart-secondary: #52cfad;
 }
 
 /* Navegação e chave de tema. */
@@ -717,6 +717,10 @@ footer button:hover:not(:disabled) {
 /* Os eixos, grades e tooltips acompanham o tema; os outros gráficos mantêm a forma. */
 .recharts-text {
   fill: var(--ui-muted);
+}
+/* Cor fica no marcador da série; nomes mantêm contraste mesmo em tons mais vivos. */
+.recharts-default-legend .recharts-legend-item-text {
+  color: var(--ui-muted) !important;
 }
 .recharts-cartesian-grid line {
   stroke: var(--ui-line);

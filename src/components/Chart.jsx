@@ -20,16 +20,7 @@ import {
 } from 'recharts';
 import { chartAvailability, rankingItems } from '../shared/charts/chartRules.js';
 import { download, chartSvg } from '../shared/export/exports.js';
-const colors = [
-  '#357a9a',
-  '#328b7d',
-  '#F59136',
-  '#7567a5',
-  '#F16435',
-  '#687e91',
-  '#ad9455',
-  '#8c6d7c',
-];
+import { categoricalColors as colors, chartColors } from '../shared/charts/palette.js';
 /** Apresenta a série calculada, controla o formato compatível e exporta o gráfico com seu contexto. */
 export function Chart({
   items,
@@ -213,7 +204,13 @@ export function Chart({
               <XAxis dataKey="label" angle={-25} textAnchor="end" height={70} />
               <YAxis width={110} tickFormatter={format} />
               <Tooltip formatter={format} />
-              <Line type="linear" dataKey="value" name="Valor" stroke="#F59136" strokeWidth={2} />
+              <Line
+                type="linear"
+                dataKey="value"
+                name="Valor"
+                stroke={chartColors.primary}
+                strokeWidth={2}
+              />
             </LineChart>
           ) : (
             <BarChart data={items} layout="vertical" margin={{ left: 20, right: 30 }}>
@@ -221,7 +218,7 @@ export function Chart({
               <XAxis type="number" />
               <YAxis dataKey="label" type="category" width={150} />
               <Tooltip formatter={format} />
-              <Bar dataKey="value" name="Valor" fill="#F59136" />
+              <Bar dataKey="value" name="Valor" fill={chartColors.primary} />
             </BarChart>
           )}
         </ResponsiveContainer>
