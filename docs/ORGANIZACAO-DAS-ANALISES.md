@@ -1,8 +1,12 @@
 # Organização das análises — 0.27.0
 
-## Apresentar gráficos na Visão geral — 0.27.1
+## Apresentar gráficos na Visão geral — 0.27.2
 
 Cada card de destino tem duas ações: **Mostrar gráficos aqui** abre um resumo na própria Visão geral; **Abrir análise** mantém o acesso à categoria completa. Várias áreas podem permanecer abertas. **Mostrar todos os gráficos** expande todas as áreas permitidas; **Recolher gráficos da apresentação** volta à apresentação compacta. Abrir individualmente aproxima o painel da área visível, respeitando a preferência de movimento reduzido.
+
+Ao abrir **Operação** e **Clientes e custos**, as telas largas voltam a apresentar os três quadros da disposição anterior: **Clientes com mais manutenção**, **Perfil dos serviços realizados** e **Composição dos custos**. Cada resumo fica logo abaixo do respectivo gráfico. A seleção de cliente permite conferir as manutenções; o perfil mantém quantidade, custos e comparação anterior. A composição mostra totais e médias de Técnico + Km na mesma amostra válida, incluindo zero; não substitui Custo Total. O ranking de Custo Total por cliente pode ser expandido no próprio quadro financeiro. Em telas menores os quadros se reorganizam em duas ou uma coluna.
+
+Suporte, equipamentos e parque continuam como apresentações complementares abaixo desses quadros. O parque também mostra registros operacionais, clientes identificados e registros sem serial, sempre na fotografia completa da fonte operacional. Mostrar/recolher conserva as seleções enquanto a Visão geral permanece aberta; ajuda e impressão ficam disponíveis por quadro.
 
 Os resumos mostram concentração/perfil dos serviços, custo por cliente e composição/valores contratuais, indicadores e rankings dos dois papéis do suporte, e duração até primeira troca por modelo. Reutilizam os cálculos existentes e **os filtros da Visão geral**, sem alterar os filtros dos destinos. O resumo do parque mantém a exceção explícita: arquivo operacional completo, sem período/filtros de OS. Só aparece para usuários com acesso a Parque e Manutenção; sua impressão identifica a fonte e o alcance próprios.
 

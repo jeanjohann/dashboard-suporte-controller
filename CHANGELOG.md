@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.27.2 — 17/10/2026
+
+- Apresentação da Visão geral retoma três quadros lado a lado em telas largas: manutenções por cliente, perfil dos serviços e composição dos custos. Resumos de concentração, quantidade/custo por tipo e médias dos componentes voltam a acompanhar seus gráficos, usando os cálculos existentes.
+- Mostrar/recolher por assunto, abertura conjunta e navegação completa mantidos. Cada quadro conserva ajuda e impressão; os controles se adaptam a telas menores. O ranking de Custo Total por cliente permanece em um bloco recolhível junto à composição.
+- Composição do parque volta a mostrar registros operacionais, clientes identificados e registros sem serial. Usa o arquivo operacional completo, com alcance explícito e permissão do módulo, sem aplicar filtros de OS.
+
 ## 0.27.1 — 17/10/2026
 
 - Cards de destino da Visão geral passam a oferecer Mostrar gráficos aqui, além do atalho para a análise completa. É possível abrir várias áreas simultaneamente ou usar Mostrar todos os gráficos e Recolher gráficos da apresentação.

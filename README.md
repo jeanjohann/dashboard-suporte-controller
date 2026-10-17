@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.27.1 — Visão geral permite abrir gráficos nos cards e mostrar várias áreas na mesma tela para apresentações, mantendo os atalhos às análises completas. Navegação consolidada, filtros por categoria, cálculos e permissões mantidos. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md). O piloto Google e a API do Monitoramento continuam pendentes da configuração externa.
+**Versão:** 0.27.2 — Visão geral recupera os três quadros lado a lado de manutenções por cliente, perfil dos serviços e composição dos custos, com os resumos junto aos gráficos. As opções de mostrar/recolher gráficos e os atalhos às análises completas continuam disponíveis. Navegação consolidada, filtros por categoria, cálculos e permissões mantidos. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md). O piloto Google e a API do Monitoramento continuam pendentes da configuração externa.
 
 ## Documentação do projeto
 

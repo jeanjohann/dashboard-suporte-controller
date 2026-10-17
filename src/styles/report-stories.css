@@ -113,6 +113,69 @@
 .overview-inline-panel {
   min-width: 0;
 }
+/* Retoma os três quadros do painel original sem misturar o alcance de cada assunto. */
+.overview-presentation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 18px;
+  margin-top: 18px;
+}
+.overview-inline-panel--operations {
+  grid-column: span 2;
+}
+.overview-operation-widgets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 18px;
+}
+.overview-inline-panel--support,
+.overview-inline-panel--equipment,
+.overview-inline-panel--park {
+  grid-column: 1 / -1;
+}
+.overview-presentation-grid .workspace-section {
+  margin: 0;
+  min-width: 0;
+}
+.overview-presentation-grid .report-heading {
+  gap: 10px;
+  padding: 14px;
+}
+.overview-presentation-grid .report-title h2 {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.overview-presentation-grid .report-heading-actions {
+  gap: 6px;
+}
+.overview-presentation-grid .report-heading-actions > button {
+  padding: 6px 8px;
+  font-size: 10px;
+}
+.overview-presentation-grid .section-body {
+  padding: 14px;
+}
+.overview-presentation-grid .readable-bar-row {
+  grid-template-columns: minmax(0, 42%) minmax(0, 1fr) auto;
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px 0;
+}
+.overview-presentation-grid .bar-name,
+.overview-presentation-grid .readable-bar-row strong {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.overview-cost-ranking {
+  margin-top: 14px;
+}
+.overview-cost-ranking > summary {
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
 .overview-inline-chart {
   min-width: 0;
   padding: 14px;
@@ -131,6 +194,10 @@
 }
 .overview-inline-metrics strong {
   font-size: 20px;
+}
+.overview-park-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 18px;
 }
 .overview-inline-category {
   display: flex;
@@ -160,7 +227,24 @@
   font-size: 12px;
   margin-bottom: 12px;
 }
+@media (max-width: 1200px) {
+  .overview-presentation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 800px) {
+  .overview-presentation-grid,
+  .overview-operation-widgets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .overview-inline-panel--operations {
+    grid-column: auto;
+  }
+}
 @media (max-width: 600px) {
+  .overview-park-metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .report-story-slot .report-title {
     width: 100%;
   }

@@ -7,7 +7,7 @@ import { fieldLife, lifeGroups, lifeStats } from '../domain/fieldLife.js';
 import { supportPerformance } from '../domain/supportPerformance.js';
 import { SupportMetricCards } from './SupportMetricCards.jsx';
 import { ContractSummary } from './ContractSummary.jsx';
-import { ServiceProfilesContext } from './ServiceProfilesContext.jsx';
+import { MaintenanceSummary, ServiceProfileSummary } from './CardInsights.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 
 const currency = (cents) =>
@@ -17,46 +17,103 @@ const currency = (cents) =>
 const number = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 
-/** Chart compacto delega o título ao contêiner; cada gráfico continua identificado na tela e na impressão. */
-function InlineChart({ title, note, ...props }) {
+/** Exportações conservam arquivo e filtros, inclusive nos quadros sem um contêiner intermediário. */
+function PresentationChart({ title, note, ...props }) {
   const context = useContext(PrintContext);
+  return (
+    <Chart
+      {...props}
+      compact
+      title={title}
+      exportNote={
+        'Arquivo: ' +
+        (context.filename || '—') +
+        ' · Filtros: ' +
+        JSON.stringify(context.filters || {}) +
+        (note ? ' · ' + note : '')
+      }
+    />
+  );
+}
+
+/** Chart compacto delega o título ao contêiner; cada gráfico continua identificado na tela e na impressão. */
+function InlineChart({ title, ...props }) {
   return (
     <article className="overview-inline-chart">
       <h3>{title}</h3>
-      <Chart
-        {...props}
-        compact
-        title={title}
-        exportNote={
-          'Arquivo: ' +
-          (context.filename || '—') +
-          ' · Filtros: ' +
-          JSON.stringify(context.filters || {}) +
-          (note ? ' · ' + note : '')
-        }
-      />
+      <PresentationChart {...props} title={title} />
     </article>
   );
 }
 
-function Operations({ original, dashboard, metrics, filters }) {
+/** Cada resumo permanece junto ao seu gráfico, como no painel anterior à reorganização. */
+function Operations({ dashboard, metrics }) {
+  const [client, setClient] = useState('');
+  const [maintenanceDetail, setMaintenanceDetail] = useState(null);
+  const [profileDetail, setProfileDetail] = useState(null);
+  useEffect(() => {
+    setMaintenanceDetail(null);
+    setProfileDetail(null);
+  }, [dashboard.selected]);
   return (
-    <>
-      <div className="dashboard-chart-grid">
-        <InlineChart
+    <div className="overview-operation-widgets">
+      <Section title="Clientes com mais manutenção · Visão geral" help={help.operations}>
+        <PresentationChart
           compact
-          title="Clientes com mais manutenção"
+          title="Assistências técnicas realizadas"
           items={(metrics.clients || []).slice(0, 10)}
+          onItemClick={(item) => setClient(item.label)}
         />
-        <InlineChart
+        <button
+          type="button"
+          onClick={() =>
+            setMaintenanceDetail({
+              label: 'Manutenções realizadas',
+              rows: metrics.maintenance.map((row) => row.sourceRow),
+            })
+          }
+        >
+          Conferir atendimentos
+        </button>
+        <MaintenanceSummary
+          data={dashboard.selected}
+          selectedClient={client}
+          onSelect={setClient}
+          onDetail={setMaintenanceDetail}
+        />
+        {maintenanceDetail && (
+          <RecordDetails
+            data={dashboard.selected}
+            rows={maintenanceDetail.rows}
+            title={maintenanceDetail.label}
+            compact
+            onClose={() => setMaintenanceDetail(null)}
+          />
+        )}
+      </Section>
+      <Section title="Perfil dos serviços realizados · Visão geral" help={help.operations}>
+        <PresentationChart
           compact
-          title="Perfil dos serviços realizados"
+          title="Participação por tipo de serviço"
           items={dashboard.types}
           type="donut"
         />
-      </div>
-      <ServiceProfilesContext original={original} data={dashboard.selected} filters={filters} />
-    </>
+        <ServiceProfileSummary
+          data={dashboard.selected}
+          previous={dashboard.previous}
+          onDetail={setProfileDetail}
+        />
+        {profileDetail && (
+          <RecordDetails
+            data={dashboard.selected}
+            rows={profileDetail.rows}
+            title={profileDetail.label}
+            compact
+            onClose={() => setProfileDetail(null)}
+          />
+        )}
+      </Section>
+    </div>
   );
 }
 
@@ -76,9 +133,44 @@ function Costs({ data }) {
   useEffect(() => setDetail(null), [data]);
   return (
     <>
-      <div className="dashboard-chart-grid">
+      <p className="scope">
+        Composição: {paired?.count || 0} realizados com Técnico e Km válidos simultaneamente. Km é
+        despesa em reais; componentes não substituem o Custo Total lançado.
+      </p>
+      <PresentationChart
+        compact
+        title="Componentes de custo"
+        format={currency}
+        items={
+          paired?.count
+            ? [
+                { label: 'Serviço técnico', value: paired.technician },
+                { label: 'Deslocamento', value: paired.travel },
+              ]
+            : []
+        }
+      />
+      <dl className="cost-summary">
+        {[
+          ['Técnico + deslocamento', paired?.technician + paired?.travel],
+          ['Média técnico + deslocamento', (paired?.technician + paired?.travel) / paired?.count],
+          ['Média de serviço técnico', paired?.technician / paired?.count],
+          ['Média de deslocamento', paired?.travel / paired?.count],
+        ].map(([label, value]) => (
+          <div key={label}>
+            <dt>{label}</dt>
+            <dd>{currency(paired?.count ? value : null)}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="scope">
+        Médias por atendimento na mesma base de {paired?.count || 0} linhas. Valores zero são
+        mantidos; campos ausentes não viram zero.
+      </p>
+      <ContractSummary data={data} onDetail={setDetail} />
+      <details className="overview-cost-ranking">
+        <summary>Custo total lançado por cliente</summary>
         <InlineChart
-          compact
           title="Custo total lançado por cliente"
           format={currency}
           items={(groups || [])
@@ -87,26 +179,8 @@ function Costs({ data }) {
             .sort((a, b) => b.value - a.value)
             .slice(0, 10)}
         />
-        <InlineChart
-          compact
-          title="Composição do custo"
-          format={currency}
-          items={
-            paired?.count
-              ? [
-                  { label: 'Serviço técnico', value: paired.technician },
-                  { label: 'Deslocamento', value: paired.travel },
-                ]
-              : []
-          }
-        />
-      </div>
-      <p className="scope">
-        Custo por cliente: Custo Total válido, incluindo zero. Composição: {paired?.count || 0}{' '}
-        realizados com Técnico e Km válidos simultaneamente. Km é despesa em reais; componentes não
-        substituem o total lançado.
-      </p>
-      <ContractSummary data={data} onDetail={setDetail} />
+        <p className="scope">Custo Total válido por cliente, incluindo zero; dez maiores grupos.</p>
+      </details>
       {detail && (
         <div className="panel">
           <button type="button" onClick={() => setDetail(null)}>
@@ -262,6 +336,18 @@ function Park({ source }) {
         as situações. Os filtros e o período das OS não se aplicam. Não representa parque ativo
         histórico.
       </p>
+      <div className="executive-cards overview-park-metrics">
+        {[
+          ['Registros operacionais', rows.length],
+          ['Clientes identificados', new Set(rows.map((row) => row.client).filter(Boolean)).size],
+          ['Registros sem serial', rows.filter((row) => !row.serial).length],
+        ].map(([label, value]) => (
+          <article key={label}>
+            <span>{label}</span>
+            <strong>{number(value)}</strong>
+          </article>
+        ))}
+      </div>
       <div className="dashboard-chart-grid">
         <InlineChart compact title="Parque por situação" items={group('status')} type="donut" />
         <InlineChart
@@ -304,20 +390,19 @@ export function OverviewInlinePanel({
   const expansion = useMemo(() => ({ open, mode: 'complete', revision }), [open, revision]);
   const content = (
     <ExpansionContext.Provider value={expansion}>
-      <Section title={`${label} · Visão geral`} help={help[topic]}>
-        {topic === 'operations' && (
-          <Operations
-            original={original}
-            dashboard={dashboard}
-            metrics={metrics}
-            filters={filters}
-          />
-        )}
-        {topic === 'clients' && <Costs key={JSON.stringify(filters)} data={dashboard.selected} />}
-        {topic === 'support' && <Team original={original} filters={filters} />}
-        {topic === 'equipment' && <Equipment original={original} data={dashboard.selected} />}
-        {topic === 'park' && <Park source={operational} />}
-      </Section>
+      {topic === 'operations' ? (
+        <Operations dashboard={dashboard} metrics={metrics} />
+      ) : (
+        <Section
+          title={`${topic === 'clients' ? 'Composição dos custos' : label} · Visão geral`}
+          help={help[topic]}
+        >
+          {topic === 'clients' && <Costs key={JSON.stringify(filters)} data={dashboard.selected} />}
+          {topic === 'support' && <Team original={original} filters={filters} />}
+          {topic === 'equipment' && <Equipment original={original} data={dashboard.selected} />}
+          {topic === 'park' && <Park source={operational} />}
+        </Section>
+      )}
     </ExpansionContext.Provider>
   );
   return topic === 'park' ? (

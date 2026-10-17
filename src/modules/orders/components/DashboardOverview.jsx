@@ -316,28 +316,30 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
         Gráficos nesta tela usam os filtros da Visão geral; o parque usa o arquivo operacional
         completo. Abrir análise leva ao destino com seus filtros próprios.
       </p>
-      {topics.map(([key, label]) => (
-        <div
-          key={key}
-          id={presentationId + '-' + key}
-          hidden={!presentations[key]}
-          className="overview-inline-panel"
-        >
-          {Object.hasOwn(presentations, key) && (
-            <OverviewInlinePanel
-              topic={key}
-              label={label}
-              open={!!presentations[key]}
-              revision={presentationRevision}
-              original={original}
-              dashboard={d}
-              metrics={m}
-              filters={filters}
-              operational={operational}
-            />
-          )}
-        </div>
-      ))}
+      <div className="overview-presentation-grid">
+        {topics.map(([key, label]) => (
+          <div
+            key={key}
+            id={presentationId + '-' + key}
+            hidden={!presentations[key]}
+            className={`overview-inline-panel overview-inline-panel--${key}`}
+          >
+            {Object.hasOwn(presentations, key) && (
+              <OverviewInlinePanel
+                topic={key}
+                label={label}
+                open={!!presentations[key]}
+                revision={presentationRevision}
+                original={original}
+                dashboard={d}
+                metrics={m}
+                filters={filters}
+                operational={operational}
+              />
+            )}
+          </div>
+        ))}
+      </div>
       {detail && !detail.agenda && (
         <div className="panel">
           <button onClick={() => setDetail(null)}>Fechar conferência</button>
