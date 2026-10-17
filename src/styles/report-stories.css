@@ -42,19 +42,21 @@
   gap: 12px;
   margin: 18px 0 10px;
 }
-.analysis-destinations > button {
+.analysis-destinations > article {
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 6px;
   text-align: left;
-  padding: 16px;
+  padding: 12px;
   color: var(--ui-ink);
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.5;
 }
-.analysis-destinations > button:hover {
+.analysis-destinations > article:hover,
+.analysis-destinations > article.is-presenting {
   border-color: var(--ui-accent);
 }
 .analysis-destinations strong {
@@ -68,6 +70,74 @@
   color: var(--ui-accent-ink);
   font-size: 11px;
   margin-top: auto;
+}
+.overview-destination-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin-top: auto;
+}
+.overview-destination-actions button {
+  font-size: 11px;
+  padding: 5px 8px;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-ink);
+  border: 1px solid var(--ui-accent-border);
+  line-height: 1.4;
+}
+.overview-destination-actions .overview-destination-link {
+  background: transparent;
+  border-color: transparent;
+  padding: 4px 0;
+  font-weight: 500;
+}
+.overview-presentation-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+  font-size: 12px;
+}
+.overview-presentation-toolbar > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.overview-presentation-toolbar button {
+  padding: 8px 10px;
+  font-size: 11px;
+}
+.overview-inline-panel {
+  min-width: 0;
+}
+.overview-inline-chart {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+.overview-inline-chart h3 {
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+.overview-inline-panel .dashboard-chart-grid {
+  margin: 0 0 14px;
+}
+.overview-inline-metrics {
+  margin: 12px 0;
+}
+.overview-inline-metrics strong {
+  font-size: 20px;
+}
+.overview-inline-category {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
 }
 .analysis-route {
   display: flex;

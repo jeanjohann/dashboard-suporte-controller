@@ -2,7 +2,7 @@
 
 Versão 0.25.2. Acesse **Ordens de Serviço → Visão geral** após carregar a base. Os dez cards respondem somente aos filtros dessa categoria; seleções de Equipamentos ou Operação não se propagam para cá. A busca de texto dos registros continua restrita à tabela.
 
-Na **0.27.0**, os dez cards e a agenda mantêm seus critérios. Abaixo ficam apenas tendências compactas e atalhos: concentração/perfil detalhado passam a Operação; valores contratuais ficam em Clientes e custos; o parque completo fica em Parque e Manutenção. [Localização e instruções](ORGANIZACAO-DAS-ANALISES.md).
+Desde **0.27.1**, os cards de destino permitem **Mostrar gráficos aqui**, além de abrir a análise completa. **Mostrar todos os gráficos** permite apresentar resumos de várias áreas na mesma tela; recolher volta à disposição compacta. Os gráficos de OS usam os filtros da Visão geral; o parque mantém a fotografia operacional completa, com aviso e permissão próprios. Os dez indicadores e a agenda preservam suas regras. [Localização e instruções](ORGANIZACAO-DAS-ANALISES.md).
 
 ## O que é contado
 

@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Gráficos incorporados na Visão geral — 0.27.1
+
+`DashboardOverview` controla a abertura temporária por tema e os atalhos aos destinos. `OverviewInlinePanels` reutiliza os domínios de custos, vida em campo e suporte, sem manter outra base de dados. As seções usam títulos exclusivos para não registrar preferências ou grupos das análises completas. A primeira abertura monta o conteúdo; ocultar mantém os controles. O Workspace só fornece a referência operacional a OS quando o usuário tem permissão de Parque; o resumo e sua impressão indicam a fotografia completa, sem filtros de OS. [Instruções de apresentação](ORGANIZACAO-DAS-ANALISES.md#apresentar-gráficos-na-visão-geral--0271).
+
 ## Organização das análises — 0.27.0
 
 `shared/layout/ReportStories.jsx` reúne Sections existentes em painéis com visualizações, usando destinos estáveis para conservar estado e posição. A disponibilidade considera a seção realmente montada, categoria e preferências; ajuda/impressão mantêm o título original. Os catálogos `config/reportStories.js` não contêm cálculo. OS passa a sete categorias; vínculos completos ficam em Parque; Consumo usa uma única grade e separa ranking/conferência. Resumos especializados da antiga Visão geral são reaproveitados em `ServiceProfilesContext` e no painel financeiro. [Mapa de navegação, uso e critérios](ORGANIZACAO-DAS-ANALISES.md).

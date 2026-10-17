@@ -22,6 +22,7 @@ import { RecordDetails } from './RecordDetails.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { allowsPage } from '../../../shared/security/permissions.js';
 import { chartColors } from '../../../shared/charts/palette.js';
+import { OverviewInlinePanel } from './OverviewInlinePanels.jsx';
 const date = (v) => v?.split('-').reverse().join('/');
 function MultiChart({ items, series }) {
   return items.length ? (
@@ -51,8 +52,46 @@ function MultiChart({ items, series }) {
   );
 }
 /** Reúne indicadores de gestão e comparação temporal sobre os filtros de OS selecionados. */
-export function DashboardOverview({ original, filters, onPage, onCategory }) {
+export function DashboardOverview({ original, filters, operational, onPage, onCategory }) {
   const { user } = useAccess();
+  const [presentations, setPresentations] = React.useState({});
+  const [presentationRevision, setPresentationRevision] = React.useState(0);
+  const [previewToReveal, setPreviewToReveal] = React.useState(null);
+  const presentationId = React.useId();
+  React.useEffect(() => {
+    if (previewToReveal)
+      document.getElementById(presentationId + '-' + previewToReveal)?.scrollIntoView({
+        block: 'nearest',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
+  }, [previewToReveal, presentationId]);
+  const topics = [
+    [
+      'operations',
+      'Operação',
+      'Entenda o volume, as visitas improdutivas, os retornos e a distribuição regional.',
+    ],
+    [
+      'clients',
+      'Clientes e custos',
+      'Compare custos de execução, componentes e responsabilidades contratuais.',
+    ],
+    [
+      'support',
+      'Equipe de suporte',
+      'Acompanhe responsáveis por execução e agendamento, com suas próprias datas.',
+    ],
+    ['equipment', 'Equipamentos', 'Investigue ciclos, trocas e períodos ainda em observação.'],
+    ...(allowsPage(user, 'operational-analysis')
+      ? [
+          [
+            'park',
+            'Parque e Manutenção',
+            'Consulte a fotografia operacional, a cobertura do histórico e os vínculos com OS.',
+          ],
+        ]
+      : []),
+  ];
   const d = dashboardData(original, filters),
     scheduling = applyFilters(original, filters, 'Agendamento'),
     m = managementMetrics(d.selected, scheduling),
@@ -214,48 +253,91 @@ export function DashboardOverview({ original, filters, onPage, onCategory }) {
           </div>
         </article>
       </div>
+      <div className="overview-presentation-toolbar" aria-label="Gráficos para apresentação">
+        <strong>Apresentar nesta tela</strong>
+        <div>
+          <button
+            type="button"
+            onClick={() => {
+              setPreviewToReveal(null);
+              setPresentations(Object.fromEntries(topics.map(([key]) => [key, true])));
+              setPresentationRevision((previous) => previous + 1);
+            }}
+          >
+            Mostrar todos os gráficos
+          </button>
+          <button
+            type="button"
+            disabled={!topics.some(([key]) => presentations[key])}
+            onClick={() => {
+              setPreviewToReveal(null);
+              setPresentations((previous) =>
+                Object.fromEntries(Object.keys(previous).map((key) => [key, false])),
+              );
+            }}
+          >
+            Recolher gráficos da apresentação
+          </button>
+        </div>
+      </div>
       <nav className="analysis-destinations" aria-label="Aprofundar a análise de OS">
-        {[
-          [
-            'operations',
-            'Operação',
-            'Entenda o volume, as visitas improdutivas, os retornos e a distribuição regional.',
-          ],
-          [
-            'clients',
-            'Clientes e custos',
-            'Compare custos de execução, componentes e responsabilidades contratuais.',
-          ],
-          [
-            'support',
-            'Equipe de suporte',
-            'Acompanhe responsáveis por execução e agendamento, com suas próprias datas.',
-          ],
-          [
-            'equipment',
-            'Equipamentos',
-            'Investigue ciclos, trocas e períodos ainda em observação.',
-          ],
-        ].map(([key, label, description]) => (
-          <button type="button" key={key} onClick={() => onCategory(key)}>
+        {topics.map(([key, label, description]) => (
+          <article key={key} className={presentations[key] ? 'is-presenting' : ''}>
             <strong>{label}</strong>
             <span>{description}</span>
-            <small>Abrir análise →</small>
-          </button>
+            <div className="overview-destination-actions">
+              <button
+                type="button"
+                aria-expanded={!!presentations[key]}
+                aria-controls={presentationId + '-' + key}
+                aria-label={
+                  (presentations[key] ? 'Recolher' : 'Mostrar') + ' gráficos de ' + label + ' aqui'
+                }
+                onClick={() => {
+                  setPreviewToReveal(presentations[key] ? null : key);
+                  setPresentations((previous) => ({ ...previous, [key]: !previous[key] }));
+                }}
+              >
+                {presentations[key] ? 'Recolher gráficos' : 'Mostrar gráficos aqui'}
+              </button>
+              <button
+                type="button"
+                className="overview-destination-link"
+                aria-label={'Abrir análise completa de ' + label}
+                onClick={() => (key === 'park' ? onPage('operational-analysis') : onCategory(key))}
+              >
+                {key === 'park' ? 'Abrir módulo →' : 'Abrir análise →'}
+              </button>
+            </div>
+          </article>
         ))}
-        {allowsPage(user, 'operational-analysis') && (
-          <button type="button" onClick={() => onPage('operational-analysis')}>
-            <strong>Parque e Manutenção</strong>
-            <span>
-              Consulte a fotografia operacional, a cobertura do histórico e os vínculos com OS.
-            </span>
-            <small>Abrir módulo →</small>
-          </button>
-        )}
       </nav>
       <p className="scope">
-        Cada categoria mantém seus próprios filtros. As análises completas ficam nos destinos acima.
+        Gráficos nesta tela usam os filtros da Visão geral; o parque usa o arquivo operacional
+        completo. Abrir análise leva ao destino com seus filtros próprios.
       </p>
+      {topics.map(([key, label]) => (
+        <div
+          key={key}
+          id={presentationId + '-' + key}
+          hidden={!presentations[key]}
+          className="overview-inline-panel"
+        >
+          {Object.hasOwn(presentations, key) && (
+            <OverviewInlinePanel
+              topic={key}
+              label={label}
+              open={!!presentations[key]}
+              revision={presentationRevision}
+              original={original}
+              dashboard={d}
+              metrics={m}
+              filters={filters}
+              operational={operational}
+            />
+          )}
+        </div>
+      ))}
       {detail && !detail.agenda && (
         <div className="panel">
           <button onClick={() => setDetail(null)}>Fechar conferência</button>

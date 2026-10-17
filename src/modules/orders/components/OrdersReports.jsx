@@ -24,7 +24,7 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { allowsPage } from '../../../shared/security/permissions.js';
 
 /** Recebe o controlador existente; não mantém outra cópia dos dados ou filtros. */
-export function OrdersReports({ session, category, visible, onPage, onCategory }) {
+export function OrdersReports({ session, category, visible, operational, onPage, onCategory }) {
   const { user } = useAccess();
   const {
     data,
@@ -57,6 +57,7 @@ export function OrdersReports({ session, category, visible, onPage, onCategory }
       {category === 'overview' && (
         <DashboardOverview
           original={data}
+          operational={operational}
           filters={filters}
           onPage={onPage}
           onCategory={onCategory}

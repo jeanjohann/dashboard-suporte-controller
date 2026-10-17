@@ -1,5 +1,13 @@
 # Organização das análises — 0.27.0
 
+## Apresentar gráficos na Visão geral — 0.27.1
+
+Cada card de destino tem duas ações: **Mostrar gráficos aqui** abre um resumo na própria Visão geral; **Abrir análise** mantém o acesso à categoria completa. Várias áreas podem permanecer abertas. **Mostrar todos os gráficos** expande todas as áreas permitidas; **Recolher gráficos da apresentação** volta à apresentação compacta. Abrir individualmente aproxima o painel da área visível, respeitando a preferência de movimento reduzido.
+
+Os resumos mostram concentração/perfil dos serviços, custo por cliente e composição/valores contratuais, indicadores e rankings dos dois papéis do suporte, e duração até primeira troca por modelo. Reutilizam os cálculos existentes e **os filtros da Visão geral**, sem alterar os filtros dos destinos. O resumo do parque mantém a exceção explícita: arquivo operacional completo, sem período/filtros de OS. Só aparece para usuários com acesso a Parque e Manutenção; sua impressão identifica a fonte e o alcance próprios.
+
+Os gráficos começam recolhidos. São montados na primeira abertura; recolher conserva controles, como a categoria do equipamento, enquanto a Visão geral permanece aberta. As escolhas são temporárias e não gravam novas preferências. Os resumos não modificam dados nem substituem as análises completas. Cada seção tem ajuda e impressão própria, sujeitas às permissões existentes. Ausência de colunas/dados é indicada; ciclos abertos não entram na média até troca e valores ausentes não viram zero.
+
 A navegação foi organizada para seguir a leitura: **resumo → pontos de atenção → comparação → detalhe e origem**. Os relatórios relacionados ocupam um painel com um seletor **Visualização**. Trocar a visualização conserva o recorte da categoria e os controles de cada análise; não soma indicadores de bases diferentes.
 
 ## Onde encontrar cada informação

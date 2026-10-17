@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.27.1 — 17/10/2026
+
+- Cards de destino da Visão geral passam a oferecer Mostrar gráficos aqui, além do atalho para a análise completa. É possível abrir várias áreas simultaneamente ou usar Mostrar todos os gráficos e Recolher gráficos da apresentação.
+- Resumos incorporados de operação, clientes/custos, suporte e equipamentos usam os filtros da Visão geral e os mesmos cálculos existentes. A composição do parque usa o arquivo operacional completo, com indicação e contexto de impressão próprios, somente para usuários com permissão de Parque e Manutenção.
+- Conteúdo é montado ao abrir cada área; recolher preserva seus controles enquanto a Visão geral permanece aberta. Ajuda, títulos e impressão por seção mantidos. A abertura das apresentações não modifica preferências nem filtros das categorias de destino.
+- Proposta de integração com Zoho Desk documentada: chamados respondidos, respostas enviadas e tempo apontado por agente. Integração permanece sem implementação/ativação; configuração, critérios finais, permissões e armazenamento dependem de validação.
+
 ## 0.27.0 — 17/10/2026
 
 - OS com sete categorias: regiões incorporadas a Operação; registros, revisão e análises personalizadas reunidos em Dados e relatórios. Relatórios relacionados usam um painel com seletor Visualização, preservando títulos, regras, estado, ajuda e preferências individuais.

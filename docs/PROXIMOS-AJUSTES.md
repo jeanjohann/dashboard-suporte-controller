@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Proposta recebida em 17/10/2026: integrar **Zoho Desk** à Equipe de suporte para chamados respondidos, respostas enviadas e tempo registrado por agente, com atualização automática. Produto confirmado; indicadores, autoria/apontamentos, OAuth, plano/cotas, vínculo de agentes e armazenamento ainda precisam ser definidos. [Estudo e critérios propostos](INTEGRACAO-ZOHO-DESK.md). Integração não implementada nem ativada.
+
 Entregue em 0.27.0: consolidação dos menus e relatórios aprovada pelo proprietário, Visão geral mais direta, vínculos centralizados em Parque e grade única de Consumo com ranking complementar. [Mapa e critérios](ORGANIZACAO-DAS-ANALISES.md). A reorganização não conclui cruzamentos novos, integrações ou armazenamento compartilhado da fila.
 
 Entregue em 0.24.0: filtros independentes por categoria, quadro compacto único e indicação de campos ativos no menu. [Critérios e limites](FILTROS-POR-CATEGORIA.md). Integração Google e demais dependências abaixo permanecem com seus estados próprios.

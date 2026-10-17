@@ -1,6 +1,6 @@
 # Suporte Controller — produto e regras de negócio
 
-Atualizado em 17/10/2026. Versão atual: 0.27.0. Menus e relatórios consolidados conforme o [mapa de análises](ORGANIZACAO-DAS-ANALISES.md): OS com sete categorias, painéis por assunto, vínculos centralizados no Parque e uma única grade de Consumo. Cálculos e filtros independentes por categoria mantidos. Equipe de suporte: [critérios](EQUIPE-DE-SUPORTE.md); cards de OS: [bases](CARDS-DE-OS.md); filtros: [alcance e exceções](FILTROS-POR-CATEGORIA.md). As seções de versões anteriores registram a evolução histórica.
+Atualizado em 17/10/2026. Versão atual: 0.27.1. A Visão geral permite apresentar gráficos de várias áreas na própria tela, individualmente ou em conjunto, mantendo os atalhos às análises completas. Organização e instruções no [mapa de análises](ORGANIZACAO-DAS-ANALISES.md). Cálculos e filtros independentes por categoria mantidos. Equipe de suporte: [critérios](EQUIPE-DE-SUPORTE.md); cards de OS: [bases](CARDS-DE-OS.md); filtros: [alcance e exceções](FILTROS-POR-CATEGORIA.md). As seções de versões anteriores registram a evolução histórica.
 
 ## Objetivo
 

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.27.0 — Navegação de OS com sete categorias, relatórios relacionados agrupados em painéis com visualizações e Visão geral mais direta. Parque centraliza vínculos e reúne manutenção/exportação; Consumo usa uma única grade de acompanhamento e um ranking complementar. Filtros por categoria, cálculos, permissões e preferências mantidos. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md). O piloto Google e a API do Monitoramento continuam pendentes da configuração externa.
+**Versão:** 0.27.1 — Visão geral permite abrir gráficos nos cards e mostrar várias áreas na mesma tela para apresentações, mantendo os atalhos às análises completas. Navegação consolidada, filtros por categoria, cálculos e permissões mantidos. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md). O piloto Google e a API do Monitoramento continuam pendentes da configuração externa.
 
 ## Documentação do projeto
 
