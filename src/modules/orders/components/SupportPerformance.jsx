@@ -19,6 +19,7 @@ import { RecordDetails } from './RecordDetails.jsx';
 import { SupportComparison } from './SupportComparison.jsx';
 import { SupportMetricCards } from './SupportMetricCards.jsx';
 import { SupportPeople } from './SupportPeople.jsx';
+import { SupportActivityPreview } from './SupportActivityPreview.jsx';
 
 const percent = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
@@ -83,296 +84,218 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
     );
   };
   return (
-    <Section
-      title="Equipe de suporte"
-      visible={visible}
-      help={help}
-      summary={
-        !result.unavailable &&
-        (!both || !scheduling.unavailable) && (
-          <ReportSummary
-            metrics={
-              both
-                ? [
-                    ['Agendamentos efetivos', scheduling.totals.productive],
-                    ['Execuções efetivas', result.totals.productive],
-                    ['Agendamentos · improdutivas', scheduling.totals.unproductive],
-                    ['Execuções · improdutivas', result.totals.unproductive],
-                  ]
-                : [
-                    ['Atendimentos efetivos', result.totals.productive],
-                    ['Visitas improdutivas', result.totals.unproductive],
-                    ['Chamados distintos', result.totals.calls],
-                    ['Clientes identificados', result.totals.clients],
-                  ]
-            }
-            note={
-              both
-                ? 'Ambos · cada papel mantém sua data e base. Não somar como atendimentos únicos.'
-                : `${result.role.label} · ${result.role.date}. Somente Concluída/Pago; não mede qualidade.`
-            }
-          />
-        )
-      }
-    >
-      <div className="support-controls" data-no-print>
-        <label>
-          Responsabilidade
-          <select
-            aria-label="Responsabilidade"
-            value={role}
-            onChange={(event) => {
-              setRole(event.target.value);
-              setDetail(null);
-            }}
-          >
-            {Object.entries(supportRoles).map(([key, item]) => (
-              <option key={key} value={key}>
-                {item.label}
-              </option>
-            ))}
-            <option value="both">Ambos</option>
-          </select>
-        </label>
-        <div className="support-period-shortcuts" aria-label="Atalhos de período do suporte">
-          {presets.map(([key, label]) => (
-            <button key={key} type="button" onClick={() => apply(key)}>
-              {label}
-            </button>
-          ))}
-        </div>
-        <label>
-          Mês de referência
-          <input
-            aria-label="Mês de referência"
-            type="month"
-            value={month}
-            onChange={(event) => {
-              setMonth(event.target.value);
-              if (/^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value))
-                apply('month', event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          Ano de referência
-          <input
-            aria-label="Ano de referência"
-            type="number"
-            min="1900"
-            max="9999"
-            value={year}
-            onChange={(event) => {
-              setYear(event.target.value);
-              if (/^\d{4}$/.test(event.target.value) && Number(event.target.value) >= 1900)
-                apply('year', month, event.target.value);
-            }}
-          />
-        </label>
-      </div>
-      <p className="scope">
-        {both
-          ? 'Ambos · Agendamentos: Agendamento; Execuções: Data de atendimento'
-          : `${result.role.label} · Data utilizada: ${result.role.date}`}{' '}
-        · Período: {filters.start || 'início do histórico'} até {filters.end || 'fim do histórico'}.
-        Datas personalizadas e responsáveis: filtros da página. Os atalhos atualizam somente a
-        categoria Equipe de suporte. Agendamento considera serviços já realizados, não a agenda
-        futura.
-      </p>
-      {both ? (
-        <SupportComparison
-          original={original}
-          execution={result}
-          scheduling={scheduling}
-          metric={metric}
-          setMetric={setMetric}
-          filename={filename}
-          filters={filters}
-          onExport={exportFile}
-        />
-      ) : result.unavailable ? (
-        <p role="status">Indisponível: faltam as colunas {result.unavailable.join(', ')}.</p>
-      ) : (
-        <>
-          <SupportMetricCards results={[result]} />
-          <p className="scope" role="status">
-            {result.rows.length} visitas e atendimentos · {result.missing.length} sem responsável
-            válido fora do ranking · {result.missingDates} realizados sem data válida excluídos pelo
-            período. {result.undated} realizados sem data fora da evolução.
-          </p>
-          {result.range ? (
-            <p className="scope">
-              Comparação: {result.range.start} até {result.range.end} ·{' '}
-              {result.past.totals.productive} efetivos → {result.totals.productive} no período
-              selecionado (
-              {result.totals.productive - result.past.totals.productive >= 0 ? '+' : ''}
-              {result.totals.productive - result.past.totals.productive}).{' '}
-              {result.past.missingDates} realizados sem data excluídos também da comparação.
-            </p>
-          ) : (
-            <p className="scope">
-              Selecione início e fim para comparar com o período anterior equivalente.
-            </p>
-          )}
-          {!result.rows.length && <p>Nenhum serviço realizado corresponde ao recorte.</p>}
-          <SupportPeople
-            original={original}
-            results={{ [role]: result }}
-            filters={filters}
-            filename={filename}
-          />
-          <details className="support-team-details">
-            <summary>Ranking, evolução e conferência da equipe</summary>
-            <label>
-              Volume no ranking{' '}
-              <select value={metric} onChange={(event) => setMetric(event.target.value)}>
-                <option value="productive">Atendimentos efetivos</option>
-                <option value="unproductive">Visitas improdutivas</option>
-                <option value="visits">Todas as visitas e atendimentos</option>
-              </select>
-            </label>
-            <Chart
-              ranking
-              title={`Volume por responsável · ${result.role.label}`}
-              exportNote={`${filename}; ${result.role.date}; ${filters.start || 'início'} até ${filters.end || 'fim do histórico'}; filtros ${JSON.stringify(filters)}; medida ${metric}; somente Concluída/Pago, improdutivas separadas.`}
-              items={result.groups.map((item) => ({ label: item.label, value: item[metric] }))}
+    <>
+      <Section
+        title="Equipe de suporte"
+        visible={visible}
+        help={help}
+        summary={
+          !result.unavailable &&
+          (!both || !scheduling.unavailable) && (
+            <ReportSummary
+              metrics={
+                both
+                  ? [
+                      ['Agendamentos efetivos', scheduling.totals.productive],
+                      ['Execuções efetivas', result.totals.productive],
+                      ['Agendamentos · improdutivas', scheduling.totals.unproductive],
+                      ['Execuções · improdutivas', result.totals.unproductive],
+                    ]
+                  : [
+                      ['Atendimentos efetivos', result.totals.productive],
+                      ['Visitas improdutivas', result.totals.unproductive],
+                      ['Chamados distintos', result.totals.calls],
+                      ['Clientes identificados', result.totals.clients],
+                    ]
+              }
+              note={
+                both
+                  ? 'Ambos · cada papel mantém sua data e base. Não somar como atendimentos únicos.'
+                  : `${result.role.label} · ${result.role.date}. Somente Concluída/Pago; não mede qualidade.`
+              }
             />
-            <div className="table-scroll">
-              <SortableTable>
-                <thead>
-                  <tr>
-                    {[
-                      'Responsável',
-                      'Efetivos',
-                      'Improdutivas',
-                      'Total realizado',
-                      'Chamados',
-                      'Clientes',
-                      '% dos efetivos',
-                      'Efetivos anteriores',
-                      'Variação dos efetivos',
-                      'Veículos identificados',
-                      '% de improdutivas',
-                      'Registros por chamado',
-                      'Origem',
-                    ].map((label) => (
-                      <th key={label}>{label}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.groups.map((item) => (
-                    <tr key={item.label}>
-                      <td>{item.label}</td>
-                      <td>{item.productive}</td>
-                      <td>{item.unproductive}</td>
-                      <td>{item.visits}</td>
-                      <td>{item.calls}</td>
-                      <td>{item.clients}</td>
-                      <td data-sort={item.share}>{percent(item.share)}</td>
-                      <td>{item.previous ?? '—'}</td>
-                      <td
-                        data-sort={
-                          item.previous ? (item.productive - item.previous) / item.previous : null
-                        }
-                      >
-                        {item.previous
-                          ? percent((item.productive - item.previous) / item.previous)
-                          : item.previous === 0
-                            ? 'Sem base anterior'
-                            : '—'}
-                      </td>
-                      <td>{item.vehicles ?? '—'}</td>
-                      <td data-sort={item.unproductiveRate}>{percent(item.unproductiveRate)}</td>
-                      <td data-sort={item.servicesPerCall}>
-                        {item.servicesPerCall == null
-                          ? '—'
-                          : item.servicesPerCall.toLocaleString('pt-BR', {
-                              maximumFractionDigits: 2,
-                            })}
-                      </td>
-                      <td>
-                        <button onClick={() => setDetail({ label: item.label, rows: item.rows })}>
-                          Conferir {item.rows.length} linhas
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
-            {result.missing.length > 0 && (
-              <button
-                onClick={() => setDetail({ label: 'Sem responsável válido', rows: result.missing })}
-              >
-                Conferir {result.missing.length} sem responsável
+          )
+        }
+      >
+        <div className="support-controls" data-no-print>
+          <label>
+            Responsabilidade
+            <select
+              aria-label="Responsabilidade"
+              value={role}
+              onChange={(event) => {
+                setRole(event.target.value);
+                setDetail(null);
+              }}
+            >
+              {Object.entries(supportRoles).map(([key, item]) => (
+                <option key={key} value={key}>
+                  {item.label}
+                </option>
+              ))}
+              <option value="both">Ambos</option>
+            </select>
+          </label>
+          <div className="support-period-shortcuts" aria-label="Atalhos de período do suporte">
+            {presets.map(([key, label]) => (
+              <button key={key} type="button" onClick={() => apply(key)}>
+                {label}
               </button>
-            )}
-            {detail && (
-              <div>
-                <button data-no-print onClick={() => setDetail(null)}>
-                  Fechar detalhamento
-                </button>
-                <RecordDetails
-                  data={original}
-                  rows={detail.rows.filter((row) =>
-                    result.rows.some((record) => record.sourceRow === row),
-                  )}
-                  title={detail.label}
-                />
-              </div>
-            )}
-            <EvolutionHeading dateField={result.role.date} />
-            <Chart
-              type="line"
-              title={`Evolução · ${result.role.label}`}
-              items={result.periods.map((item) => ({ label: item.label, value: item.productive }))}
+            ))}
+          </div>
+          <label>
+            Mês de referência
+            <input
+              aria-label="Mês de referência"
+              type="month"
+              value={month}
+              onChange={(event) => {
+                setMonth(event.target.value);
+                if (/^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value))
+                  apply('month', event.target.value);
+              }}
             />
-            <details className="report-details">
-              <summary>Detalhar evolução e perfil dos serviços</summary>
+          </label>
+          <label>
+            Ano de referência
+            <input
+              aria-label="Ano de referência"
+              type="number"
+              min="1900"
+              max="9999"
+              value={year}
+              onChange={(event) => {
+                setYear(event.target.value);
+                if (/^\d{4}$/.test(event.target.value) && Number(event.target.value) >= 1900)
+                  apply('year', month, event.target.value);
+              }}
+            />
+          </label>
+        </div>
+        <p className="scope">
+          {both
+            ? 'Ambos · Agendamentos: Agendamento; Execuções: Data de atendimento'
+            : `${result.role.label} · Data utilizada: ${result.role.date}`}{' '}
+          · Período: {filters.start || 'início do histórico'} até{' '}
+          {filters.end || 'fim do histórico'}. Datas personalizadas e responsáveis: filtros da
+          página. Os atalhos atualizam somente a categoria Equipe de suporte. Agendamento considera
+          serviços já realizados, não a agenda futura.
+        </p>
+        {both ? (
+          <SupportComparison
+            original={original}
+            execution={result}
+            scheduling={scheduling}
+            metric={metric}
+            setMetric={setMetric}
+            filename={filename}
+            filters={filters}
+            onExport={exportFile}
+          />
+        ) : result.unavailable ? (
+          <p role="status">Indisponível: faltam as colunas {result.unavailable.join(', ')}.</p>
+        ) : (
+          <>
+            <SupportMetricCards results={[result]} />
+            <p className="scope" role="status">
+              {result.rows.length} visitas e atendimentos · {result.missing.length} sem responsável
+              válido fora do ranking · {result.missingDates} realizados sem data válida excluídos
+              pelo período. {result.undated} realizados sem data fora da evolução.
+            </p>
+            {result.range ? (
+              <p className="scope">
+                Comparação: {result.range.start} até {result.range.end} ·{' '}
+                {result.past.totals.productive} efetivos → {result.totals.productive} no período
+                selecionado (
+                {result.totals.productive - result.past.totals.productive >= 0 ? '+' : ''}
+                {result.totals.productive - result.past.totals.productive}).{' '}
+                {result.past.missingDates} realizados sem data excluídos também da comparação.
+              </p>
+            ) : (
+              <p className="scope">
+                Selecione início e fim para comparar com o período anterior equivalente.
+              </p>
+            )}
+            {!result.rows.length && <p>Nenhum serviço realizado corresponde ao recorte.</p>}
+            <SupportPeople
+              original={original}
+              results={{ [role]: result }}
+              filters={filters}
+              filename={filename}
+            />
+            <details className="support-team-details">
+              <summary>Ranking, evolução e conferência da equipe</summary>
+              <label>
+                Volume no ranking{' '}
+                <select value={metric} onChange={(event) => setMetric(event.target.value)}>
+                  <option value="productive">Atendimentos efetivos</option>
+                  <option value="unproductive">Visitas improdutivas</option>
+                  <option value="visits">Todas as visitas e atendimentos</option>
+                </select>
+              </label>
+              <Chart
+                ranking
+                title={`Volume por responsável · ${result.role.label}`}
+                exportNote={`${filename}; ${result.role.date}; ${filters.start || 'início'} até ${filters.end || 'fim do histórico'}; filtros ${JSON.stringify(filters)}; medida ${metric}; somente Concluída/Pago, improdutivas separadas.`}
+                items={result.groups.map((item) => ({ label: item.label, value: item[metric] }))}
+              />
               <div className="table-scroll">
                 <SortableTable>
                   <thead>
                     <tr>
-                      <th>Período</th>
-                      <th>Efetivos</th>
-                      <th>Improdutivas</th>
+                      {[
+                        'Responsável',
+                        'Efetivos',
+                        'Improdutivas',
+                        'Total realizado',
+                        'Chamados',
+                        'Clientes',
+                        '% dos efetivos',
+                        'Efetivos anteriores',
+                        'Variação dos efetivos',
+                        'Veículos identificados',
+                        '% de improdutivas',
+                        'Registros por chamado',
+                        'Origem',
+                      ].map((label) => (
+                        <th key={label}>{label}</th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {result.periods.map((item) => (
+                    {result.groups.map((item) => (
                       <tr key={item.label}>
                         <td>{item.label}</td>
                         <td>{item.productive}</td>
                         <td>{item.unproductive}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </SortableTable>
-              </div>
-              <div className="table-scroll">
-                <SortableTable>
-                  <thead>
-                    <tr>
-                      <th>Responsável</th>
-                      <th>Tipo de serviço / visita</th>
-                      <th>Quantidade</th>
-                      <th>Origem</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.profiles.map((item) => (
-                      <tr key={JSON.stringify([item.owner, item.type])}>
-                        <td>{item.owner}</td>
-                        <td>{item.type}</td>
-                        <td>{item.value}</td>
+                        <td>{item.visits}</td>
+                        <td>{item.calls}</td>
+                        <td>{item.clients}</td>
+                        <td data-sort={item.share}>{percent(item.share)}</td>
+                        <td>{item.previous ?? '—'}</td>
+                        <td
+                          data-sort={
+                            item.previous ? (item.productive - item.previous) / item.previous : null
+                          }
+                        >
+                          {item.previous
+                            ? percent((item.productive - item.previous) / item.previous)
+                            : item.previous === 0
+                              ? 'Sem base anterior'
+                              : '—'}
+                        </td>
+                        <td>{item.vehicles ?? '—'}</td>
+                        <td data-sort={item.unproductiveRate}>{percent(item.unproductiveRate)}</td>
+                        <td data-sort={item.servicesPerCall}>
+                          {item.servicesPerCall == null
+                            ? '—'
+                            : item.servicesPerCall.toLocaleString('pt-BR', {
+                                maximumFractionDigits: 2,
+                              })}
+                        </td>
                         <td>
-                          <button
-                            onClick={() =>
-                              setDetail({ label: `${item.owner} · ${item.type}`, rows: item.rows })
-                            }
-                          >
-                            Conferir {item.value} linhas
+                          <button onClick={() => setDetail({ label: item.label, rows: item.rows })}>
+                            Conferir {item.rows.length} linhas
                           </button>
                         </td>
                       </tr>
@@ -380,18 +303,107 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
                   </tbody>
                 </SortableTable>
               </div>
+              {result.missing.length > 0 && (
+                <button
+                  onClick={() =>
+                    setDetail({ label: 'Sem responsável válido', rows: result.missing })
+                  }
+                >
+                  Conferir {result.missing.length} sem responsável
+                </button>
+              )}
+              {detail && (
+                <div>
+                  <button data-no-print onClick={() => setDetail(null)}>
+                    Fechar detalhamento
+                  </button>
+                  <RecordDetails
+                    data={original}
+                    rows={detail.rows.filter((row) =>
+                      result.rows.some((record) => record.sourceRow === row),
+                    )}
+                    title={detail.label}
+                  />
+                </div>
+              )}
+              <EvolutionHeading dateField={result.role.date} />
+              <Chart
+                type="line"
+                title={`Evolução · ${result.role.label}`}
+                items={result.periods.map((item) => ({
+                  label: item.label,
+                  value: item.productive,
+                }))}
+              />
+              <details className="report-details">
+                <summary>Detalhar evolução e perfil dos serviços</summary>
+                <div className="table-scroll">
+                  <SortableTable>
+                    <thead>
+                      <tr>
+                        <th>Período</th>
+                        <th>Efetivos</th>
+                        <th>Improdutivas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.periods.map((item) => (
+                        <tr key={item.label}>
+                          <td>{item.label}</td>
+                          <td>{item.productive}</td>
+                          <td>{item.unproductive}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </SortableTable>
+                </div>
+                <div className="table-scroll">
+                  <SortableTable>
+                    <thead>
+                      <tr>
+                        <th>Responsável</th>
+                        <th>Tipo de serviço / visita</th>
+                        <th>Quantidade</th>
+                        <th>Origem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.profiles.map((item) => (
+                        <tr key={JSON.stringify([item.owner, item.type])}>
+                          <td>{item.owner}</td>
+                          <td>{item.type}</td>
+                          <td>{item.value}</td>
+                          <td>
+                            <button
+                              onClick={() =>
+                                setDetail({
+                                  label: `${item.owner} · ${item.type}`,
+                                  rows: item.rows,
+                                })
+                              }
+                            >
+                              Conferir {item.value} linhas
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </SortableTable>
+                </div>
+              </details>
             </details>
-          </details>
-          <div className="support-period-shortcuts">
-            <PermissionButton action="export" onClick={() => exportFile('xlsx')}>
-              Exportar equipe XLSX
-            </PermissionButton>
-            <PermissionButton action="export" onClick={() => exportFile('csv')}>
-              Exportar equipe CSV
-            </PermissionButton>
-          </div>
-        </>
-      )}
-    </Section>
+            <div className="support-period-shortcuts">
+              <PermissionButton action="export" onClick={() => exportFile('xlsx')}>
+                Exportar equipe XLSX
+              </PermissionButton>
+              <PermissionButton action="export" onClick={() => exportFile('csv')}>
+                Exportar equipe CSV
+              </PermissionButton>
+            </div>
+          </>
+        )}
+      </Section>
+      <SupportActivityPreview visible={visible} />
+    </>
   );
 }

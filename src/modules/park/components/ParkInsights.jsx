@@ -8,6 +8,8 @@ import React, { useMemo, useState } from 'react';
 import { Section, PrintContext } from '../../../components/Section.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { Chart } from '../../../components/Chart.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
+import { ParkHistoryPanel } from './ParkHistoryPanel.jsx';
 import { download, csv } from '../../../shared/export/exports.js';
 import {
   parkAnalysis,
@@ -118,7 +120,19 @@ export function ParkInsights({
         },
       }}
     >
-      <Section visible title={parkSections[0]}>
+      <Section
+        visible
+        title={parkSections[0]}
+        summary={
+          !result.unavailable &&
+          !result.invalidPeriod && (
+            <ReportSummary
+              metrics={cards.slice(0, 4).map(([label, value]) => [label, number(value)])}
+              note={`Base vinculável: ${result.base} de ${result.total} registros. OS realizadas no período ${start || 'sem limite'} a ${end || 'sem limite'}; fotografia operacional, sem inferir frota ativa ou falha.`}
+            />
+          )
+        }
+      >
         {result.unavailable ? (
           <p className="notice">
             Importe a OS com Status, ID Rastreador, Placa, Tipo de Serviço, Motivo e Data de
@@ -170,7 +184,22 @@ export function ParkInsights({
       </Section>
       {!result.unavailable && !result.invalidPeriod && (
         <>
-          <Section visible title={parkSections[1]}>
+          <ParkHistoryPanel result={result} orders={orders} context={context} />
+          <Section
+            visible
+            title={parkSections[1]}
+            summary={
+              <ReportSummary
+                metrics={[
+                  ['Grupos na comparação', result.items.length],
+                  ['Base vinculável', result.base],
+                  ['Assistências', result.assistance],
+                  ['Com assistência', result.withAssistance],
+                ]}
+                note="Mesmo agrupamento e período da análise completa. Assistências são serviços; base e equipamentos com assistência são registros operacionais distintos."
+              />
+            }
+          >
             <div className="filter-grid">
               <label>
                 Agrupar por
@@ -264,7 +293,26 @@ export function ParkInsights({
               </SortableTable>
             </div>
           </Section>
-          <Section visible title={parkSections[2]} defaultOpen={false}>
+          <Section
+            visible
+            title={parkSections[2]}
+            defaultOpen={false}
+            summary={
+              <ReportSummary
+                metrics={[
+                  ['Serviços realizados', result.services.length],
+                  ['Tipos / categorias', result.categories.length],
+                  ['Assistências efetivas', result.assistance],
+                  [
+                    'Visitas improdutivas',
+                    result.categories.find((item) => item.label === 'Visita Improdutiva')?.value ||
+                      0,
+                  ],
+                ]}
+                note="Concluída/Pago no recorte. Improdutivas ficam separadas; trocas são subconjuntos, não categorias adicionais para somar."
+              />
+            }
+          >
             <Chart
               title="Tipos de serviço realizados"
               items={result.categories}

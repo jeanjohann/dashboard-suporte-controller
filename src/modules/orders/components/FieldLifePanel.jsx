@@ -10,6 +10,7 @@ import { fieldLifeSummaryRows } from '../domain/fieldLifeSummary.js';
 import { FieldLifeCards } from './FieldLifeCards.jsx';
 import { Section, PrintContext } from '../../../components/Section.jsx';
 import { Chart } from '../../../components/Chart.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
@@ -157,7 +158,31 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
         },
       }}
     >
-      <Section title="Vida em campo até primeira troca" visible={visible} defaultOpen={true}>
+      <Section
+        title="Vida em campo até primeira troca"
+        visible={visible}
+        defaultOpen={true}
+        summary={
+          !result.unavailable &&
+          (category === 'Rastreador' ? result.trackerAvailable : result.accessoryAvailable) && (
+            <ReportSummary
+              metrics={[
+                ['Ciclos identificados', stats.total],
+                ['Primeiras trocas confirmadas', stats.complete],
+                [
+                  'Média até primeira troca',
+                  stats.mean == null ? '—' : number(stats.mean) + ' dias',
+                ],
+                [
+                  'Tempo médio acompanhado',
+                  stats.followup.mean == null ? '—' : number(stats.followup.mean) + ' dias',
+                ],
+              ]}
+              note={`${category} · ${basis === 'initial' ? 'instalação inicial' : 'entrada em troca anterior'} · filtros na ${scope === 'installation' ? 'instalação' : 'troca/encerramento'} · limite ${result.reference || 'indisponível'}. Média até troca usa somente trocas confirmadas; tempo acompanhado inclui outros encerramentos e observações. Não é vida útil concluída de toda a base.`}
+            />
+          )
+        }
+      >
         <div className="life-panel">
           <div className="life-categories" role="group" aria-label="Categoria de equipamento">
             {[

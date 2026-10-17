@@ -141,7 +141,7 @@
 }
 .overview-presentation-grid .report-heading {
   gap: 10px;
-  padding: 14px;
+  padding: 14px 56px 14px 14px;
 }
 .overview-presentation-grid .report-title h2 {
   font-size: 14px;
@@ -150,7 +150,7 @@
 .overview-presentation-grid .report-heading-actions {
   gap: 6px;
 }
-.overview-presentation-grid .report-heading-actions > button {
+.overview-presentation-grid .report-heading-actions > button:not(.info-trigger) {
   padding: 6px 8px;
   font-size: 10px;
 }
@@ -188,6 +188,9 @@
 }
 .overview-inline-panel .dashboard-chart-grid {
   margin: 0 0 14px;
+}
+.overview-inline-panel .support-metrics + .dashboard-chart-grid {
+  margin-top: 18px;
 }
 .overview-inline-metrics {
   margin: 12px 0;

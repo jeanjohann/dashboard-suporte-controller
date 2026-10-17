@@ -1,6 +1,7 @@
 /** Relatórios de consumo por assunto. Recebem o recorte e preservam o domínio e contexto de impressão da página. */
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { Chart } from '../../../components/Chart.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { formatMB as mb } from '../utils/consumptionFormatting.js';
@@ -25,6 +26,17 @@ export function ConsumptionInvestigationPanel({
       <Section
         title="Linhas para investigar"
         visible={shown('Linhas para investigar') && hasStatements}
+        summary={
+          <ReportSummary
+            metrics={[
+              ['Linhas acima da referência', attention.length],
+              ['Referência relativa', `${archive.settings.factor}× a média`],
+              ['Registros no recorte', selected.length],
+              ['Limite absoluto MB', filters.minimumMB || 'Não definido'],
+            ]}
+            note="Mesmo recorte da visão completa. Referência por operadora e apuração, calculada antes dos filtros. Consumo alto indica investigação, não defeito ou excedente faturado."
+          />
+        }
       >
         <p className="scope">
           {attention.length} linhas acima de {archive.settings.factor}× a média geral da própria

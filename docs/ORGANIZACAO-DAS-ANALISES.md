@@ -1,5 +1,7 @@
 # Organização das análises — 0.27.0
 
+**Ampliação em 0.28.0:** Manutenção e relatórios do Parque acrescenta a visualização **Histórico individual e concentração**, usando os mesmos filtros da categoria. Em Consumo → Histórico e arquivos, **Fontes de consumo e preparação das APIs** apresenta a origem atual e laboratório fictício isolado. Em OS → Equipe de suporte, a prévia OS + Zoho fica em quadro próprio, inicialmente recolhido e identificado como demonstração. Os painéis analíticos de OS, Parque, Consumo, Logística e Monitoramento receberam resumos com suas bases existentes; controles, revisão e originais continuam disponíveis na visão completa. [Parque](APROFUNDAMENTO-DO-PARQUE.md), [fontes de consumo](PREPARACAO-FONTES-DE-CONSUMO.md) e [mapa de atividades](MAPA-DE-ATIVIDADES-DO-SUPORTE.md).
+
 ## Apresentar gráficos na Visão geral — 0.27.2
 
 Cada card de destino tem duas ações: **Mostrar gráficos aqui** abre um resumo na própria Visão geral; **Abrir análise** mantém o acesso à categoria completa. Várias áreas podem permanecer abertas. **Mostrar todos os gráficos** expande todas as áreas permitidas; **Recolher gráficos da apresentação** volta à apresentação compacta. Abrir individualmente aproxima o painel da área visível, respeitando a preferência de movimento reduzido.

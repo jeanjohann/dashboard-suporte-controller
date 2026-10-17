@@ -27,6 +27,7 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { Section, PrintContext, ExpansionContext } from '../../../components/Section.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { ReportControls } from '../../../components/ReportControls.jsx';
 import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
 import { FilterCount } from '../../../components/FilterPanel.jsx';
@@ -47,6 +48,7 @@ import {
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { LineHistoryPanel } from './LineHistoryPanel.jsx';
 import { ConsumptionArchivePanel } from './ConsumptionArchivePanel.jsx';
+import { ConsumptionSourcesPanel } from './ConsumptionSourcesPanel.jsx';
 import { useLineFollowup } from '../hooks/useLineFollowup.js';
 import { useConsumptionArchive } from '../hooks/useConsumptionArchive.js';
 import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
@@ -375,6 +377,22 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   <Section
                     title="Fila de acompanhamento do consumo"
                     visible={shown('Fila de acompanhamento do consumo') && !!statements.length}
+                    summary={
+                      <ReportSummary
+                        metrics={[
+                          [
+                            'Registros na grade',
+                            queueView === 'eligible'
+                              ? eligible.length
+                              : selected.length - eligible.length,
+                          ],
+                          ['Consumo válido no recorte', eligible.length],
+                          ['Fora dos totais no recorte', selected.length - eligible.length],
+                          ['Acima da referência', attention.length],
+                        ]}
+                        note={`Visualização: ${queueView === 'eligible' ? 'consumo válido' : 'fora dos totais'}. Mesmas apurações, busca e filtros da grade; registros inválidos/duplicados não entram no consumo. Notas locais não confirmam resolução.`}
+                      />
+                    }
                     help="Uma única grade para consulta, seleção e acompanhamento. Registros válidos entram nos totais; a opção Fora dos totais permite conferir dados inválidos/duplicados do mesmo recorte, sem somá-los. Respeita operadora, apuração, busca e filtros da categoria. Ordem inicial: maior consumo total em MB, sem somar períodos sobrepostos. Compare períodos de durações diferentes também por MB por dia. Clique nas colunas para ordenar o recorte antes de paginar. Acompanhamento mostra a última ação salva por data para operadora + ICCID; empates usam a última entrada. Clicar no status abre o histórico abaixo com todas as apurações em uso do chip. As notas são confirmadas em Salvar acompanhamento e ficam neste navegador. Cliente e placa vêm da referência operacional atual. Consumo alto e status administrativo não confirmam defeito nem resolução."
                   >
                     <label className="consumption-queue-view">
@@ -461,6 +479,10 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   onCancel={() => setBackup(null)}
                   onSaveOperational={saveOperationalReference}
                   onChangeVersion={changeVersion}
+                />
+                <ConsumptionSourcesPanel
+                  archive={archive}
+                  visible={shown('Fontes de consumo e preparação das APIs')}
                 />
                 <div ref={sourceAnchor}>
                   <ConsumptionSourcePanel

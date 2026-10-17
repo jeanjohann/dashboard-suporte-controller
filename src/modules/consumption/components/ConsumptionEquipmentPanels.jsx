@@ -3,6 +3,7 @@ import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { Chart } from '../../../components/Chart.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { VOLUME_SCALE } from '../domain/lineConsumption.js';
 import { formatMB as mb } from '../utils/consumptionFormatting.js';
 export function ConsumptionEquipmentPanels({
@@ -18,6 +19,17 @@ export function ConsumptionEquipmentPanels({
       <Section
         title="Consumo por cliente e equipamento"
         visible={shown('Consumo por cliente e equipamento') && hasStatements}
+        summary={
+          <ReportSummary
+            metrics={[
+              ['Grupos no gráfico', clientGroups.size],
+              ['Registros no recorte', selected.length],
+              ['Vínculos confirmados', selected.filter((row) => row.link).length],
+              ['Sem vínculo confirmado', selected.filter((row) => !row.link).length],
+            ]}
+            note="Vínculo por ICCID e número, na referência operacional atual. Grupos incluem identificações não vinculadas; não comprova alocação histórica."
+          />
+        }
       >
         <InfoNote>
           Vínculos confirmados por ICCID e MSISDN no mesmo registro do operacional. Casos sem
@@ -41,6 +53,15 @@ export function ConsumptionEquipmentPanels({
         title="Revisão dos vínculos"
         visible={shown('Revisão dos vínculos') && hasStatements}
         defaultOpen={false}
+        summary={
+          <ReportSummary
+            metrics={[
+              ['Sem confirmação', selected.filter((row) => !row.link).length],
+              ['Com confirmação', selected.filter((row) => row.link).length],
+            ]}
+            note="Registros da seleção atual. Correspondência parcial ou ambígua não é atribuída automaticamente a um cliente."
+          />
+        }
       >
         <p className="scope">
           {selected.filter((row) => !row.link).length} registros do recorte sem confirmação pelos

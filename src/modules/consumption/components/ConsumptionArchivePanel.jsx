@@ -1,6 +1,7 @@
 /** Gestão visual de arquivos e backups. As ações são autorizadas e persistidas pelo coordenador da página. */
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { importLineStatement } from '../domain/lineConsumption.js';
@@ -19,7 +20,21 @@ export function ConsumptionArchivePanel({
   onChangeVersion,
 }) {
   return (
-    <Section title="Arquivos e histórico" visible={visible}>
+    <Section
+      title="Arquivos e histórico"
+      visible={visible}
+      summary={
+        <ReportSummary
+          metrics={[
+            ['Arquivos guardados', archive.files.length],
+            ['Versões em uso', archive.files.filter((file) => file.active !== false).length],
+            ['Anotações salvas', archive.notes.length],
+            ['Referência operacional', archive.operational?.filename || 'Não guardada'],
+          ]}
+          note="Histórico local completo deste navegador, independente dos filtros de consumo. Não há sincronização entre usuários; o backup mantém versões e anotações."
+        />
+      }
+    >
       <p className="scope">
         Os arquivos originais, a referência operacional e as anotações ficam neste navegador e
         endereço do dashboard. Exporte um backup para levar a outro computador ou proteger o

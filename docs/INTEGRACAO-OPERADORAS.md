@@ -4,6 +4,8 @@
 
 O proprietário buscará documentação e liberação de acesso na segunda-feira, **19/10/2026**. Essa data é a previsão de obtenção das informações, não um compromisso de entrada em produção. As duas integrações podem ser homologadas separadamente, conforme o acesso disponível.
 
+**Preparação entregue em 0.28.0:** o [laboratório CSV/API](PREPARACAO-FONTES-DE-CONSUMO.md) demonstra revisões, repetição, escolha de fonte e falha parcial com dados fictícios. A política interna testada não foi aplicada ao histórico real nem implementa endpoints, adaptadores das operadoras ou coleta. Os próximos passos abaixo continuam necessários para ativação.
+
 ## Operadoras e situação confirmada
 
 | Fila  | Operadora / portal informado                                    | Evidência e pendência                                                                                                                                                                                                                                                                             |

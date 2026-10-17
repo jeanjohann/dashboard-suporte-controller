@@ -1,6 +1,7 @@
 /** Tabela dos ciclos observados, situação e referência; recebe vínculos já calculados. */
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { sectionLabels } from '../config/preferences.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
@@ -17,7 +18,31 @@ export function OrdersLifecyclePanel({
   visible,
 }) {
   return (
-    <Section title={sectionLabels.lifecycle} visible={visible}>
+    <Section
+      title={sectionLabels.lifecycle}
+      visible={visible}
+      summary={
+        !lifecycle.unavailable &&
+        !lifecycle.invalidReference && (
+          <ReportSummary
+            metrics={[
+              ['Períodos exibidos', displayedPeriods.length],
+              [
+                'Encerrados no recorte exibido',
+                displayedPeriods.filter((period) => period.state === 'Encerrado').length,
+              ],
+              [
+                'Sem retirada no recorte exibido',
+                displayedPeriods.filter((period) => period.state === 'Sem retirada registrada')
+                  .length,
+              ],
+              ['Períodos antes do filtro de situação', lifecycle.periods.length],
+            ]}
+            note={`Situação: ${cycleState}. Referência ${referenceDate || 'indisponível'} para ciclos sem retirada. Encerrado significa retirada registrada, não necessariamente troca ou fim de vida útil. Mesmos filtros da tabela completa.`}
+          />
+        )
+      }
+    >
       <section className="panel chart-panel">
         <h2>Tempo observado em campo</h2>
         <div className="lifecycle-controls" data-no-print>

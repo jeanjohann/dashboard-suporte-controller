@@ -7,13 +7,28 @@ import { SortableTable } from '../../../components/SortableTable.jsx';
 import { MonthlyBreakdown } from './RecordDetails.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { ContractSummary } from './ContractSummary.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 const currency = (cents) =>
   (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 /** Mantém a contagem mensal e a consulta das linhas que compõem cada mês. */
 export function OrdersMonthlyPanel({ monthly, selected, category, visible }) {
   return (
-    <Section title={sectionLabels.monthly} visible={visible}>
+    <Section
+      title={sectionLabels.monthly}
+      visible={visible}
+      summary={
+        monthly && (
+          <ReportSummary
+            metrics={[
+              ['Meses com registros', monthly.items.length],
+              ['Realizados sem data válida', monthly.missingDates],
+            ]}
+            note="Concluída/Pago por Data de atendimento. Meses sem registros não são preenchidos; várias linhas podem pertencer ao mesmo chamado."
+          />
+        )
+      }
+    >
       {monthly ? (
         <BarChart
           title="Visitas e atendimentos registrados por mês"
@@ -33,7 +48,23 @@ export function OrdersFinancePanel({ financial, data, visible }) {
   const [detail, setDetail] = useState(null);
   useEffect(() => setDetail(null), [data]);
   return (
-    <Section title={sectionLabels.finance} visible={visible}>
+    <Section
+      title={sectionLabels.finance}
+      visible={visible}
+      summary={
+        financial && (
+          <ReportSummary
+            metrics={[
+              ['Custo total realizado', currency(financial.totals.cost)],
+              ['Valor contratual · Cliente', currency(financial.totals.client)],
+              ['Valor contratual · Addlog', currency(financial.totals.absorbed)],
+              ['Custo ausente/incompatível', financial.excluded.cost],
+            ]}
+            note={`${financial.eligible} linhas Concluída/Pago. Valores contratuais têm base própria e não comprovam recebimento ou lucro. Custo lançado mantido.`}
+          />
+        )
+      }
+    >
       {financial ? (
         <>
           <section className="cards financial-cards" style={{ marginBottom: 18 }}>
@@ -81,7 +112,23 @@ export function OrdersFinancePanel({ financial, data, visible }) {
 export function OrdersOperationsPanel({ summary, visible }) {
   return (
     <>
-      <Section title={sectionLabels.operations} visible={visible}>
+      <Section
+        title={sectionLabels.operations}
+        visible={visible}
+        summary={
+          summary && (
+            <ReportSummary
+              metrics={[
+                ['Realizados', summary.completed],
+                ['Cancelados', summary.canceled],
+                ['Chamados com cancelamento', summary.canceledCalls],
+                ['Demais status', summary.other],
+              ]}
+              note="Mesma seleção da análise completa. Realizados são linhas Concluída/Pago; chamados com cancelamento têm ao menos uma linha Cancelada."
+            />
+          )
+        }
+      >
         {summary ? (
           <section className="cards" style={{ marginBottom: 18 }}>
             {[
@@ -114,7 +161,23 @@ export function OrdersOperationsPanel({ summary, visible }) {
 /** Um chamado reúne as linhas de serviço presentes na seleção dos filtros. */
 export function OrdersCallsPanel({ summary, visible }) {
   return (
-    <Section title={sectionLabels.calls} visible={visible}>
+    <Section
+      title={sectionLabels.calls}
+      visible={visible}
+      summary={
+        summary && (
+          <ReportSummary
+            metrics={[
+              ['Chamados na seleção', summary.calls.length],
+              ['Linhas realizadas', summary.completed],
+              ['Linhas canceladas', summary.canceled],
+              ['Linhas em demais status', summary.other],
+            ]}
+            note="Um chamado reúne várias linhas e pode ter situações diferentes. Não classifica o chamado inteiro como concluído."
+          />
+        )
+      }
+    >
       {summary && (
         <details className="panel" style={{ marginBottom: 18 }}>
           <summary style={{ padding: 18, cursor: 'pointer' }}>

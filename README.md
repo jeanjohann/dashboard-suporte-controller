@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.27.2 — Visão geral recupera os três quadros lado a lado de manutenções por cliente, perfil dos serviços e composição dos custos, com os resumos junto aos gráficos. As opções de mostrar/recolher gráficos e os atalhos às análises completas continuam disponíveis. Navegação consolidada, filtros por categoria, cálculos e permissões mantidos. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md). O piloto Google e a API do Monitoramento continuam pendentes da configuração externa.
+**Versão:** 0.28.0 — Parque com histórico individual, concentração das assistências e referência ajustável; resumos ampliados nos módulos; ajustes de espaçamento e ícone da Visão geral. Preparação CSV/API e prévia OS + Zoho usam somente dados fictícios isolados. Integrações reais, armazenamento compartilhado e ativação Google continuam pendentes. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md).
 
 ## Documentação do projeto
 
@@ -15,6 +15,9 @@
 - [Equipe de suporte — indicadores e períodos](docs/EQUIPE-DE-SUPORTE.md)
 - [Integração do monitoramento — contrato técnico e ativação futura](docs/INTEGRACAO-MONITORAMENTO.md)
 - [Integrações KORE e Arqia — fila, acesso e validação do consumo](docs/INTEGRACAO-OPERADORAS.md)
+- [CSV e APIs — preparação e laboratório de consumo](docs/PREPARACAO-FONTES-DE-CONSUMO.md)
+- [Parque — histórico individual, concentração e última intervenção](docs/APROFUNDAMENTO-DO-PARQUE.md)
+- [Mapa de atividades — OS e futura integração Zoho](docs/MAPA-DE-ATIVIDADES-DO-SUPORTE.md)
 
 [Revisão técnica e refatoração gradual](docs/REVISAO-E-REFATORACAO.md): diagnóstico, etapas concluídas, verificações e sequência proposta.
 

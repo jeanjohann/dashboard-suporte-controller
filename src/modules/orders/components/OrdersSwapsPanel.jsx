@@ -5,11 +5,29 @@ import { sectionLabels } from '../config/preferences.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { BarChart } from '../../../components/BarChart.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 
 /** Apresenta o recorte e as ações recebidas; a base original permanece no controlador. */
 export function OrdersSwapsPanel({ devices, visible }) {
   return (
-    <Section title={sectionLabels.swaps} visible={visible}>
+    <Section
+      title={sectionLabels.swaps}
+      visible={visible}
+      summary={
+        <ReportSummary
+          metrics={[
+            ['Trocas de rastreador', devices.trackerAvailable ? devices.swaps.length : null],
+            [
+              'Coletoras / terminais',
+              devices.accessoryAvailable ? devices.accessories.Coletora : null,
+            ],
+            ['RFID', devices.accessoryAvailable ? devices.accessories.RFID : null],
+            ['Acessórios sem troca/categoria confirmada', devices.excludedAccessories ?? null],
+          ]}
+          note="Pares de rastreador e acessórios usam critérios próprios, com Concluída/Pago. Não somar categorias como se fossem a mesma unidade. Campos indisponíveis ficam sem valor; origens continuam na visão completa."
+        />
+      }
+    >
       <section className="panel chart-panel">
         <div className="inline-help-heading">
           <h2>Trocas de equipamentos</h2>

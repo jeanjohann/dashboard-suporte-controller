@@ -1,0 +1,104 @@
+/* Controles locais dos novos aprofundamentos; não modificam a densidade dos demais módulos. */
+.park-history-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
+  font-size: 12px;
+}
+.park-history-controls label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.park-history-controls input {
+  width: auto;
+}
+.park-history-secondary {
+  display: block;
+  color: var(--ui-muted);
+  margin-top: 5px;
+}
+.park-history-charts {
+  margin: 18px 0;
+  align-items: start;
+}
+.park-history-groups > summary {
+  font-size: 12px;
+  cursor: pointer;
+  margin: 12px 0;
+}
+.park-history-group-table {
+  max-height: 300px;
+}
+.section-content > .park-history-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 520px;
+  width: min(100%, 520px);
+  align-items: stretch;
+  margin: 18px 0 10px;
+  font-size: 12px;
+}
+.section-content > .park-history-search > input[type='search'] {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+.park-history-detail {
+  margin-top: 18px;
+}
+.integration-preview {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+}
+.integration-preview > summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.integration-preview .summary-grid {
+  margin: 16px 0;
+}
+.integration-preview .summary-card {
+  min-width: 0;
+}
+.integration-preview .summary-card strong {
+  font-size: 22px;
+}
+.integration-preview-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin: 16px 0;
+}
+.integration-preview-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+.integration-preview-controls .integration-preview-toggle {
+  flex-direction: row;
+  align-items: center;
+  max-width: 100%;
+  line-height: 1.5;
+}
+.integration-preview h3 {
+  font-size: 14px;
+}
+.integration-preview-status {
+  display: inline-block;
+  color: var(--ui-accent-ink);
+  background: var(--ui-accent-soft);
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-size: 11px;
+}

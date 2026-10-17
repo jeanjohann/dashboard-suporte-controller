@@ -22,6 +22,7 @@ import './styles/overview-kpis.css';
 import './styles/overview-agenda.css';
 import './styles/support-people.css';
 import './styles/report-stories.css';
+import './styles/next-analysis.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>

@@ -1,5 +1,7 @@
 # Manutenção do parque e relatórios — 0.14.0
 
+**Aprofundamento em 0.28.0:** a visualização **Histórico individual e concentração** reúne concentração das assistências, última intervenção efetiva no recorte, referência ajustável do arquivo, faixas de dias, grade com ordenação/paginação e conferência dos originais. Os três painéis analíticos anteriores passam a oferecer Resumo. [Uso e critérios confirmados](APROFUNDAMENTO-DO-PARQUE.md).
+
 Na organização **0.27.0**, a composição do parque passa à Visão geral. As quatro análises de manutenção/exportação compartilham o painel **Manutenção e relatórios**, com período comum e seletor Visualização. **Vínculos** é o local principal da conferência completa, antes resumida também nas OS. A página Operacional continua dedicada à fonte. [Mapa e instruções atuais](ORGANIZACAO-DAS-ANALISES.md). As regras abaixo permanecem válidas; referências a seções anteriores descrevem a organização original.
 
 ## Logística — 0.18.0
@@ -8,7 +10,7 @@ Nova categoria para ler Envios e Devoluções, com dados independentes da OS/Ope
 
 ## Propostas de aprofundamento — análise em 12/10/2026
 
-As propostas abaixo ainda não são funcionalidades implementadas. A versão 0.17.9 refina a apresentação, sem modificar os cálculos do parque. Já existem contagens de base vinculável, equipamentos com assistência, assistências por 100 registros, retornos 30/60/90 e trocas. As próximas análises devem complementar esses indicadores.
+As três primeiras propostas abaixo foram atendidas pelo aprofundamento 0.28.0, com os limites documentados acima. Composição financeira por equipamento, matriz modelo × motivo e evolução financeira continuam pendentes. Os indicadores anteriores de base vinculável, equipamentos com assistência, assistências por 100 registros, retornos 30/60/90 e trocas permanecem.
 
 | Proposta                                          | Cálculo ou informação                                                                                           | Apresentação sugerida                                           | Condição para implementar                                                                                                 |
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |

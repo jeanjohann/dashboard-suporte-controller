@@ -8,6 +8,7 @@ import {
 } from '../../../shared/security/accessClient.js';
 import { allowsSource } from '../../../shared/security/permissions.js';
 import { Section, PrintContext } from '../../../components/Section.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { PagePersonalization, ReportControls } from '../../../components/ReportControls.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
@@ -235,6 +236,17 @@ export function LogisticsPanel({ source, onImport, filters, setFilters, onExpand
           <Section
             title={logisticsSections[0]}
             visible
+            summary={
+              <ReportSummary
+                metrics={[
+                  ['Envios registrados', selected.shipments],
+                  ['Envios com recebimento datado', selected.shipmentsReceived],
+                  ['Devoluções registradas', selected.returns],
+                  ['Devoluções com recebimento datado', selected.returnsReceived],
+                ]}
+                note="Mesmos filtros da Logística. Cada linha é movimentação; recebimento de envio é no destinatário e de devolução é na Addlog. Sem data não significa pendência."
+              />
+            }
             help="Cada linha preenchida é uma movimentação, mesmo com ID ausente ou kit. Envios com recebimento datado significa chegada ao destinatário; Devoluções com recebimento datado significa chegada à Addlog. Datas precisam ser válidas; recebimento anterior ao envio fica para revisão e não confirma recebimento. Sem data não significa material pendente. Situação é preservada, sem classificar defeito, estoque ou cobrança. Os filtros locais se aplicam aos cards, à tabela, ao CSV e à impressão. Repetições apontadas não são excluídas automaticamente."
           >
             <div className="summary-grid">
@@ -340,6 +352,18 @@ export function LogisticsPanel({ source, onImport, filters, setFilters, onExpand
           <Section
             title={logisticsSections[1]}
             visible
+            summary={
+              <ReportSummary
+                metrics={[
+                  ['Pontos para conferência', selected.issues.length],
+                  [
+                    'Movimentações apontadas',
+                    new Set(selected.issues.map((issue) => issue.key)).size,
+                  ],
+                ]}
+                note="Uma movimentação pode ter vários pontos. Indicação para revisão, sem exclusão ou correção automática."
+              />
+            }
             help="Mostra campos ausentes, datas incompatíveis/invertidas, identificadores que exigem conferência e possíveis duplicidades. Mesma aba + ID numérico único + data da movimentação é sinalizada; reaparecer em outra data é permitido. A indicação usa o arquivo completo e permanece após filtrar. Uma linha pode ter vários pontos. Nenhuma correção é automática; ajuste a origem e reimporte. Situação e consertos não são usados para classificar defeitos nesta etapa."
           >
             <p className="scope">

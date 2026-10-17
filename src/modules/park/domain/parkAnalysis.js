@@ -15,6 +15,7 @@ export const parkSections = [
   'Manutenção por cliente e modelo',
   'Perfil das intervenções vinculadas',
   'Relatório do parque e atendimentos',
+  'Histórico individual do parque',
 ];
 export const parkColumns = {
   withServices: 'Com atendimento realizado',

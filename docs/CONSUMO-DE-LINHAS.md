@@ -6,6 +6,8 @@ As integrações por API de **KORE Brasil / Saitro** e **Arqia** entraram na fil
 
 ## Uso
 
+Desde **0.28.0**, Visão geral, Comparativos, Clientes/equipamentos, Revisão dos vínculos, Mensalidades e Arquivos/histórico oferecem **Resumo**, com as mesmas bases e filtros da visão completa. Em Histórico e arquivos, [Fontes de consumo e preparação das APIs](PREPARACAO-FONTES-DE-CONSUMO.md) identifica as conexões ainda pendentes e permite testar, com dados fictícios isolados, revisões de acumulados, repetição, CSV/API e falha parcial. O histórico real e seu formato de backup não foram alterados.
+
 Desde **0.27.0**, o painel **Acompanhamento do consumo** alterna entre **Grade e acompanhamento** e **Ranking e prioridades**, sem repetir a tabela. Na grade, **Fora dos totais** permite conferir registros não elegíveis do recorte; eles não entram nas somas/ranking. O status abre a linha do tempo abaixo, e **Conferir origem** mostra o CSV original. [Mapa, seleção e exportação](ORGANIZACAO-DAS-ANALISES.md).
 
 A categoria **Acompanhamento** substitui o nome Investigação desde a versão 0.20.4. Seus relatórios, histórico e preferências mantêm os mesmos critérios; a chave interna `investigation` permanece.

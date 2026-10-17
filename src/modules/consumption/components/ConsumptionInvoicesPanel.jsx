@@ -1,6 +1,7 @@
 /** Relatórios de consumo por assunto. Recebem o recorte e preservam o domínio e contexto de impressão da página. */
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { formatCurrency as currency } from '../utils/consumptionFormatting.js';
@@ -22,6 +23,36 @@ export function ConsumptionInvoicesPanel({
         title="Mensalidades dos extratos"
         visible={shown('Mensalidades dos extratos') && hasStatements}
         defaultOpen={false}
+        summary={
+          <ReportSummary
+            metrics={[
+              [
+                'Valor Total · dados',
+                currency(
+                  sumMoney(
+                    invoiceRows.filter((row) => row.service === 'dados'),
+                    'totalCents',
+                  ),
+                ),
+              ],
+              [
+                'Valor Total · SMS',
+                currency(
+                  sumMoney(
+                    invoiceRows.filter((row) => row.service === 'sms'),
+                    'totalCents',
+                  ),
+                ),
+              ],
+              ['Outros serviços · extratos completos', currency(sumMoney(fees, 'totalCents'))],
+              [
+                'Valores totais válidos · dados/SMS',
+                invoiceRows.filter((row) => row.totalCents != null).length,
+              ],
+            ]}
+            note="Dados e SMS acompanham os chips filtrados; outros serviços usam os extratos completos selecionados, sem rateio. Arqia não informa preços no CSV atual. Ausência não vira zero; valores não comprovam pagamento."
+          />
+        }
       >
         <InfoNote>
           Valores da Kore separados por serviço. Arqia não informa preços neste formato. Valor

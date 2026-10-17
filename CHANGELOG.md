@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.28.0 — 17/10/2026
+
+- Parque e Manutenção ganha Histórico individual e concentração no painel existente: assistências por cliente/modelo com tamanho da base, efetivos/improdutivos por equipamento, última intervenção no recorte, referência ajustável, faixas de dias e conferência das OS originais. Intervenção considera qualquer Concluída/Pago sem Visita Improdutiva; referência inicial usa a maior data realizada do arquivo. Sem histórico, sem data e posterior à referência ficam separados. Grade ordenada antes da paginação, com Último e CSV completo do recorte.
+- Resumos ampliados em OS, Parque, Consumo, Logística e Monitoramento, com filtros, população, exclusões e limites próprios. Cabeçalhos da apresentação reservam espaço para o ícone de informação; cards de suporte ficam separados dos gráficos abaixo.
+- Histórico e arquivos do Consumo apresenta as fontes atuais e laboratório fictício de coexistência CSV/API. Política interna testada evita somar acumulados revisados/repetidos e exige conferência entre fontes e períodos sobrepostos. Sem chamadas externas, gravação, migração ou mudança dos totais reais.
+- Equipe de suporte inclui prévia recolhível OS + Zoho, com agentes fictícios, filtros próprios, tickets deduplicados na equipe, autoria, sessões de permanência e tempo apontado separados. Fonte indisponível não vira zero; impressão identifica demonstração. CSV real, OAuth e APIs continuam pendentes.
+
 ## 0.27.2 — 17/10/2026
 
 - Apresentação da Visão geral retoma três quadros lado a lado em telas largas: manutenções por cliente, perfil dos serviços e composição dos custos. Resumos de concentração, quantidade/custo por tipo e médias dos componentes voltam a acompanhar seus gráficos, usando os cálculos existentes.

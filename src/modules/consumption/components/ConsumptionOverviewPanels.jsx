@@ -3,6 +3,7 @@ import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { Chart } from '../../../components/Chart.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { VOLUME_SCALE } from '../domain/lineConsumption.js';
 import {
@@ -24,6 +25,17 @@ export function ConsumptionOverviewPanels({
       <Section
         title="Visão geral do consumo"
         visible={shown('Visão geral do consumo') && hasStatements}
+        summary={
+          <ReportSummary
+            metrics={[
+              ['Chips no recorte', number(summary.lines)],
+              ['Consumo total', volume(summary.ticks)],
+              ['Linhas com tráfego', number(summary.active)],
+              ['Registros com consumo zero', number(summary.zero)],
+            ]}
+            note={`${summary.samples} registros de dados válidos; ${summary.excluded} excluídos. Mesmas apurações e filtros da visão completa; períodos podem ter durações diferentes.`}
+          />
+        }
       >
         <div className="summary-grid line-cards">
           {[
@@ -102,6 +114,22 @@ export function ConsumptionOverviewPanels({
       <Section
         title="Comparativos por operadora"
         visible={shown('Comparativos por operadora') && hasStatements}
+        summary={
+          <ReportSummary
+            metrics={providerStats.map((item) => [
+              `${item.operator} · MB por dia`,
+              volume(
+                item.ticks == null || !item.period?.days ? null : item.ticks / item.period.days,
+              ),
+            ])}
+            note={
+              providerStats
+                .map((item) => `${item.operator}: ${item.period?.label || 'sem apuração'}`)
+                .join(' · ') +
+              '. Cada operadora conserva sua janela. Não calcula saldo de franquia.'
+            }
+          />
+        }
       >
         <InfoNote>
           Compare MB por dia e média por linha; cada operadora tem seu tamanho de base e sua

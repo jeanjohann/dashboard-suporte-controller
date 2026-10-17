@@ -11,7 +11,15 @@ export const consumptionCategories = [
     'Clientes e equipamentos',
     ['Consumo por cliente e equipamento', 'Revisão dos vínculos'],
   ],
-  ['history', 'Histórico e arquivos', ['Arquivos e histórico', 'Mensalidades dos extratos']],
+  [
+    'history',
+    'Histórico e arquivos',
+    [
+      'Arquivos e histórico',
+      'Mensalidades dos extratos',
+      'Fontes de consumo e preparação das APIs',
+    ],
+  ],
 ];
 export const consumptionLayoutDefinitions = [
   ...new Set(consumptionCategories.flatMap(([, , titles]) => titles)),

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Chart } from '../../../components/Chart.jsx';
 import { Section } from '../../../components/Section.jsx';
+import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { monitoringDuration, monitoringStages } from '../domain/monitoring.js';
 import { monitoringAnalytics } from '../domain/monitoringAnalytics.js';
@@ -81,6 +82,17 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
     <div hidden={!visible}>
       <Section
         title="Indicadores do monitoramento"
+        summary={
+          <ReportSummary
+            metrics={[
+              ['Veículos no retrato', result.totals.fleet],
+              [`${threshold} h ou mais`, analysis.alerts],
+              ['Bases afetadas', analysis.affectedBases],
+              ['Sem classificação utilizável', analysis.unknown],
+            ]}
+            note={`${result.demonstration ? 'DEMONSTRAÇÃO · dados fictícios. ' : ''}Mesmo retrato e bases da visão completa. Limite ${threshold} h; acompanhamento administrativo não comprova recuperação.`}
+          />
+        }
         help="Todos os cards usam a frota identificada das bases selecionadas, independentemente dos filtros da fila. Alertas significam tempo desde o último registro acima do limite, com coleta válida e recente, sem confirmar defeito. Status administrativos usam apenas atualizações salvas nesta sessão. Em acompanhamento inclui Em análise, Aguardando contato e Manutenção agendada; seu percentual divide esse número pelo total de veículos acima do limite. Encerrados não contam como recuperados. Clique em um card para abrir a fila correspondente; busca, situação e status anteriores da fila serão limpos, mantendo as bases e o limite."
       >
         <div className="cards monitoring-cards">
@@ -106,6 +118,12 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
       <div className="monitoring-charts">
         <Section
           title="Tempo sem comunicação"
+          summary={
+            <ReportSummary
+              metrics={result.buckets.map((item) => [item.label, item.value])}
+              note={`${result.demonstration ? 'DEMONSTRAÇÃO. ' : ''}Faixas exclusivas, fixas a partir de 48 h, com coleta utilizável. Não representa histórico de interrupções.`}
+            />
+          }
           help="Faixas exclusivas com datas válidas e coleta utilizável: 48 a menos de 72 h, 72 a menos de 96 h e 96 h ou mais. Abaixo de 48 h fica fora das barras. O limite selecionado não altera estas faixas fixas; não se trata de histórico de interrupções."
         >
           <Chart
@@ -117,6 +135,12 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
         </Section>
         <Section
           title="Tratamento dos veículos acima do limite"
+          summary={
+            <ReportSummary
+              metrics={analysis.stages.map((item) => [item.label, item.value])}
+              note={`${result.demonstration ? 'DEMONSTRAÇÃO. ' : ''}Último status administrativo salvo dos veículos acima do limite. Encerrado não significa comunicando.`}
+            />
+          }
           help="Distribuição do último status administrativo salvo de cada veículo acima do limite escolhido. Cada veículo aparece uma vez. Sem atualização salva equivale a Não iniciado; rascunhos não entram na contagem. Encerrado não significa comunicação recuperada."
         >
           <Chart
@@ -129,6 +153,16 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
       </div>
       <Section
         title="Alertas por base"
+        summary={
+          <ReportSummary
+            metrics={[
+              ['Bases no recorte', result.groups.length],
+              ['Bases afetadas', analysis.affectedBases],
+              ['Veículos acima do limite', analysis.alerts],
+            ]}
+            note={`${result.demonstration ? 'DEMONSTRAÇÃO. ' : ''}Compare alertas com o tamanho da frota de cada base; não é taxa de defeitos nem disponibilidade histórica.`}
+          />
+        }
         help="Quantidade de veículos acima do limite por base, com coleta utilizável. Percentuais usam todos os veículos identificados da base, incluindo os sem posição e os de coleta desatualizada. Compare quantidade e tamanho da frota ao interpretar percentuais. Não é taxa de defeitos nem disponibilidade histórica."
       >
         <Chart

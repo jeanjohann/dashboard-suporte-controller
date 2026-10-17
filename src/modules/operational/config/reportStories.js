@@ -13,6 +13,7 @@ export const parkStories = [
         'Comparação por cliente e modelo',
         'Perfil das intervenções',
         'Relatório e exportação',
+        'Histórico individual e concentração',
       ][index],
     })),
   },
