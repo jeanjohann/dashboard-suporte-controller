@@ -17,6 +17,27 @@ A alternativa npm foi adotada após impedimento do hipervisor no Docker/WSL. A i
 
 Referência: [Instalar via npm](https://docs.n8n.io/deploy/host-n8n/install-options/install-with-npm).
 
+## Acervo local — primeiro fluxo de consulta
+
+O acervo inicial aprovado é a pasta **`import/`**, nome que já existe no projeto (referida na conversa como “imports”). A seleção é explícita: `Ordens de Serviços 2025_26.xlsx`, `Operacional 08-05-2026.xlsx` e `Envios_Recebimentos.xlsx`. A OS legada e outros anexos não entram automaticamente. Renomear ou substituir uma fonte por outro nome exige atualizar `sources` em `scripts/local-acervo.mjs`.
+
+O serviço reaproveita os três leitores do dashboard. Lê novamente os arquivos a cada consulta, identifica alterações durante a leitura e retorna manifesto com nome, abas, atualização, SHA-256, registros e apontamentos. Não corrige nem salva planilhas. Apontamentos de revisão continuam visíveis; a base não é apresentada como saneada. A aba Consertos permanece fora da logística.
+
+A primeira ferramenta calcula o último mês com **Concluída/Pago e Data de atendimento válida**, aplicando `applyFilters` e `periodMetrics`, os mesmos serviços do painel. Retorna realizados, efetivos, improdutivos, chamados distintos, linhas Excel e chamados que sustentam a contagem, além da quantidade de realizados sem data válida no acervo. O mês mais recente pode estar incompleto: não representa necessariamente um mês fechado. Agendamentos futuros não determinam esse recorte. As outras quatro perguntas do roteiro ainda não estão implementadas.
+
+### Executar e conferir
+
+1. Inicie o n8n pelo inicializador já instalado em `%LOCALAPPDATA%\Addlog\n8n-lab`.
+2. Inicie o acervo com `powershell -ExecutionPolicy Bypass -File .\scripts\start-local-acervo.ps1` a partir da pasta do projeto. O serviço roda em segundo plano; não tem inicialização automática no Windows.
+3. Abra [LAB · Acervo local · Volume de atendimentos](http://localhost:5678/workflow/labAcervoLocal01) e execute manualmente.
+4. Confira a saída do segundo nó: `manifest` contém a origem e `attendance` contém período, indicadores, critérios e evidências. Para comparar no dashboard, importe a mesma OS e selecione exatamente o início/fim retornados, sem outros filtros.
+
+O serviço escuta somente `127.0.0.1:5680`, aceita apenas `GET /v1/acervo/atendimentos`, exige token e rejeita chamadas com Origin de navegador. Não é uma API de produção nem uma autorização por usuário do dashboard. O token fica no runtime local `acervo-token.txt` e na credencial **LAB · Acervo local (somente leitura)** do n8n; não deve ser publicado ou compartilhado. O fluxo referencia a credencial, sem incluir o token nos parâmetros. Banco, token e logs devem ser protegidos pelo acesso à conta Windows. As execuções do n8n agora contêm resultados reais do acervo e seguem a retenção local de sete dias.
+
+O script `node scripts/local-acervo.mjs` permite diagnosticar a leitura sem n8n, imprimindo o resultado no terminal; evite redirecioná-lo para arquivos versionados. Os logs do serviço e seu PID ficam no runtime local (`acervo.log`, `acervo-error.log`, `acervo-process.json`). Para encerrar, confira o PID e seu horário de início antes de interromper somente esse processo. Se a porta estiver ocupada ou uma fonte falhar, a consulta falha explicitamente, sem entregar um resultado vazio como sucesso.
+
+Não há modelo de IA, MCP, automação agendada ou conexão com o Assistente do dashboard nesta etapa. O fluxo é um teste manual local de leitura real.
+
 O proprietário aprovou desenvolver o assistente em um módulo separado, oculto enquanto amadurece. A estrutura inicial foi entregue em 0.31.0; MCP, IA, consultas reais e ações continuam pendentes. Os exemplos abaixo são propostas de funcionalidades futuras, não autorização para executar ações sobre as fontes.
 
 ## Página experimental — 0.31.0
