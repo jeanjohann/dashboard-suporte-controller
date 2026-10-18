@@ -135,7 +135,7 @@ export function OrdersReports({ session, category, visible, operational, onPage,
         setReferenceDate={setReferenceDate}
         visible={visible.lifecycle}
       />
-      <OrdersSwapsPanel devices={devices} visible={visible.swaps} />
+      <OrdersSwapsPanel data={data} devices={devices} visible={visible.swaps} />
       <OrdersFinancePanel financial={financial} data={selected} visible={visible.finance} />
       <OrdersOperationsPanel summary={summary} visible={visible.operations} />
       <OrdersCallsPanel summary={summary} visible={visible.calls} />

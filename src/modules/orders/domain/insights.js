@@ -7,6 +7,7 @@ import { field, attendanceDate } from '../../../shared/data/filters.js';
 import { money } from './analysis.js';
 import { trackerMotives } from './equipment.js';
 import { trackerModel } from './trackerModels.js';
+import { customerIdentity } from './customerIdentity.js';
 export const done = (data, row) => ['Pago', 'Concluída'].includes(field(data, row, 'Status')?.raw);
 /** Subconjunto efetivo de manutenção. O volume/custo total de visitas continua em base própria. */
 export function effectiveMaintenanceRows(data) {
@@ -19,6 +20,10 @@ export function effectiveMaintenanceRows(data) {
 }
 const value = (data, row, label) => {
   if (!row) return null;
+  if (label === 'Razão Social') {
+    const client = customerIdentity(data, row);
+    return client.label === 'Sem cliente' ? null : client.label;
+  }
   const cell = field(data, row, label);
   return cell?.issue || cell?.raw == null || cell.raw === '' ? null : String(cell.raw);
 };
@@ -89,8 +94,10 @@ export function groupedCosts(data, groupBy = 'Razão Social') {
   const groups = new Map();
   for (const row of data.rows) {
     if (!done(data, row)) continue;
-    const key = value(data, row, groupBy) || 'Sem dados';
-    if (!groups.has(key)) groups.set(key, { ...financialGroup(key), names: new Set() });
+    const identity = groupBy === 'Razão Social' ? customerIdentity(data, row) : null;
+    const key = identity?.key || value(data, row, groupBy) || 'Sem dados';
+    if (!groups.has(key))
+      groups.set(key, { ...financialGroup(identity?.label || key), names: new Set() });
     const group = groups.get(key);
     if (groupBy === 'Cód.') {
       group.names.add(value(data, row, 'Nome do Técnico') || 'Sem nome');
@@ -146,7 +153,7 @@ export function recurringVisits(original, selected, mode = 'productive') {
       if (selectedRows.has(row.sourceRow)) missingIdentifier++;
       continue;
     }
-    const key = JSON.stringify([client, plate]);
+    const key = JSON.stringify([customerIdentity(original, row).key, plate]);
     if (!groups.has(key))
       groups.set(key, {
         key,
@@ -214,8 +221,9 @@ export function interventionProfiles(data, devices) {
     source = new Map(data.rows.map((row) => [row.sourceRow, row]));
   const get = (row) => {
     const label = value(data, row, 'Razão Social') || 'Sem cliente';
-    if (!groups.has(label))
-      groups.set(label, {
+    const key = customerIdentity(data, row).key;
+    if (!groups.has(key))
+      groups.set(key, {
         label,
         rows: [],
         implementation: 0,
@@ -225,8 +233,11 @@ export function interventionProfiles(data, devices) {
         trackers: 0,
         collector: 0,
         rfid: 0,
+        withoutReplacement: 0,
+        collectorWithoutReplacement: 0,
+        rfidWithoutReplacement: 0,
       });
-    return groups.get(label);
+    return groups.get(key);
   };
   for (const row of data.rows)
     if (done(data, row)) {
@@ -242,9 +253,22 @@ export function interventionProfiles(data, devices) {
       if (trackerMotives.removal.includes(value(data, row, 'Motivo'))) group.removal++;
     }
   for (const swap of devices?.swaps || []) {
-    const row = source.get(swap.installationRow);
+    if ('client' in swap && !swap.client) continue;
+    const row = source.get(swap.installationRow ?? swap.rows?.[0]);
     if (row) get(row).trackers++;
   }
+  for (const item of devices?.withoutReplacement || []) {
+    const row = source.get(item.rows[0]);
+    if (row) get(row).withoutReplacement++;
+  }
+  for (const [category, key] of [
+    ['Coletora', 'collectorWithoutReplacement'],
+    ['RFID', 'rfidWithoutReplacement'],
+  ])
+    for (const id of devices?.accessoryWithoutReplacement?.[category] || []) {
+      const row = source.get(id);
+      if (row) get(row)[key]++;
+    }
   for (const [category, key] of [
     ['Coletora', 'collector'],
     ['RFID', 'rfid'],

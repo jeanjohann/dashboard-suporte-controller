@@ -6,6 +6,7 @@ import { isUnproductive } from './attendanceKind.js';
 import { applyFilters, field, attendanceDate } from '../../../shared/data/filters.js';
 import { money } from './analysis.js';
 import { sourceText, validPlate } from './trackerReplacements.js';
+import { customerIdentity } from './customerIdentity.js';
 /** Constrói o intervalo anterior com a mesma duração inclusiva do período selecionado. */
 export function previousPeriod(filters) {
   const valid = (value) => {
@@ -36,10 +37,11 @@ export function periodMetrics(data) {
   for (const row of completed) {
     const client = sourceText(data, row, 'Razão Social');
     const plate = sourceText(data, row, 'Placa');
-    if (client) clients.add(client);
+    const clientKey = customerIdentity(data, row).key;
+    if (client) clients.add(clientKey);
     else clientsMissing++;
     // Mesmo critério conservador de identificação: não presume veículo a partir de placa provisória.
-    if (client && validPlate(plate)) vehicles.add(JSON.stringify([client, plate]));
+    if (client && validPlate(plate)) vehicles.add(JSON.stringify([clientKey, plate]));
     else vehiclesMissing++;
   }
   return {

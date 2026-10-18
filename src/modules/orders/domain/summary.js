@@ -58,7 +58,9 @@ export function summaryMetrics(data, financial, devices) {
       label: 'Trocas de rastreadores',
       value: devices?.trackerAvailable ? devices.swaps.length : null,
       note: 'Eventos de troca · duas linhas por evento',
-      rows: devices?.swaps.flatMap((swap) => [swap.removalRow, swap.installationRow]) ?? [],
+      rows:
+        devices?.swaps.flatMap((swap) => swap.rows ?? [swap.removalRow, swap.installationRow]) ??
+        [],
     },
     {
       key: 'collector',

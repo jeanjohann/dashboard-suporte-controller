@@ -304,12 +304,12 @@ function Equipment({ original, data }) {
               .map((group) => ({ label: group.label, value: group.mean }))}
           />
           <p className="scope">
-            Categoria: {category}. Instalação inicial explícita; filtros da Visão geral na
-            instalação. Limite do histórico: {result.reference || '—'}. Média até troca usa somente{' '}
-            {stats.complete} trocas confirmadas. Tempo acompanhado inclui troca, cancelamento ou
-            limite, em {stats.followup.count} ciclos com duração válida. {stats.observed} sem troca,{' '}
-            {stats.canceled} cancelamentos e {stats.review} em revisão. Não é vida útil concluída de
-            toda a frota.
+            Categoria: {category}. Implementação ou instalação explícita da categoria; filtros da
+            Visão geral na instalação. Limite do histórico: {result.reference || '—'}. Média até
+            troca usa somente {stats.complete} trocas confirmadas. Tempo acompanhado inclui troca,
+            cancelamento ou limite, em {stats.followup.count} ciclos com duração válida.{' '}
+            {stats.observed} sem troca, {stats.canceled} cancelamentos e {stats.review} em revisão.
+            Não é vida útil concluída de toda a frota.
           </p>
         </>
       )}
@@ -370,7 +370,7 @@ const help = {
   support:
     'Filtros da Visão geral. Usa as mesmas regras da Equipe de suporte: execução pela Data de atendimento e agendamento pela data Agendamento, somente Concluída/Pago. Intervenções efetivas excluem visitas improdutivas. Papéis têm bases próprias e não devem ser somados; volume não mede qualidade ou produtividade por hora.',
   equipment:
-    'Mesmas regras da vida em campo: início por instalação explícita e primeira troca confirmada. A seleção da Visão geral é aplicada à instalação; vínculos usam o arquivo completo. A média até troca inclui somente trocas confirmadas com duração válida; tempo acompanhado também inclui ciclos sem troca e cancelamentos. Revisão fica fora das durações. Não presume atividade nem vida útil final dos ciclos abertos.',
+    'Mesmas regras da vida em campo: implementação ou instalação explícita da categoria e primeira troca confirmada. A seleção da Visão geral é aplicada ao início; vínculos usam o arquivo completo. A média até troca inclui somente trocas com duração válida; tempo acompanhado também inclui ciclos sem troca e cancelamentos. Manutenção sem troca não reinicia o ciclo. Revisão fica fora das durações. Não presume atividade nem vida útil final dos ciclos abertos.',
   park: 'Fotografia do arquivo operacional completo, em todas as situações, inclusive cancelados. Uma linha é um registro operacional. Não aplica filtros nem período de OS, não reconstrói parque ativo histórico e não atribui custos ou titularidade histórica. A conferência de vínculos continua na análise completa.',
 };
 

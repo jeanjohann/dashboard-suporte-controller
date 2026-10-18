@@ -1,5 +1,7 @@
 # Manutenção do parque e relatórios — 0.14.0
 
+**Atualização 0.29.0:** classificação de manutenção sem troca, modelo pelo serial e critérios de vida em campo foram confirmados em 18/10/2026. [Regras atuais e rankings de trocas](CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md). As notas históricas abaixo não substituem esses critérios.
+
 **Aprofundamento em 0.28.0:** a visualização **Histórico individual e concentração** reúne concentração das assistências, última intervenção efetiva no recorte, referência ajustável do arquivo, faixas de dias, grade com ordenação/paginação e conferência dos originais. Os três painéis analíticos anteriores passam a oferecer Resumo. [Uso e critérios confirmados](APROFUNDAMENTO-DO-PARQUE.md).
 
 Na organização **0.27.0**, a composição do parque passa à Visão geral. As quatro análises de manutenção/exportação compartilham o painel **Manutenção e relatórios**, com período comum e seletor Visualização. **Vínculos** é o local principal da conferência completa, antes resumida também nas OS. A página Operacional continua dedicada à fonte. [Mapa e instruções atuais](ORGANIZACAO-DAS-ANALISES.md). As regras abaixo permanecem válidas; referências a seções anteriores descrevem a organização original.
@@ -21,7 +23,7 @@ As três primeiras propostas abaixo foram atendidas pelo aprofundamento 0.28.0, 
 | Matriz modelo × motivo                            | Contagens de assistências efetivas vinculadas, agrupadas por modelo operacional e motivo da OS                  | Matriz com quantitativos, percentuais e linhas de origem        | Modelo é da fotografia operacional; revisar modelo e titularidade históricos antes de afirmar causalidade                 |
 | Evolução das intervenções vinculadas              | Quantidade e custo dos serviços vinculados por mês de atendimento                                               | Volume/custo mensais com identificação dos vínculos             | A fotografia atual não é o tamanho histórico do parque; evitar taxa mensal de falhas ou disponibilidade                   |
 
-Sugestão de sequência: concentração das assistências e histórico individual primeiro; composição financeira após validar a atribuição de custo. Manutenção sem troca continua dependendo da classificação anteriormente adiada.
+Concentração, histórico individual e classificação de manutenção sem troca estão disponíveis. Composição financeira por equipamento ainda exige validar a atribuição de custo.
 
 ### Base futura de envios e recebimentos
 
@@ -38,7 +40,7 @@ Esta entrega aprofunda os indicadores e as exportações da página **Operaciona
 1. Carregue o operacional e a OS nas respectivas páginas.
 2. Na personalização da página de análises, combine cliente, modelo, plano e situação operacional. Vários itens no mesmo campo usam OU; campos diferentes usam E. A busca textual combina com essas seleções.
 3. Em **Indicadores de manutenção do parque**, escolha o período dos atendimentos. Sem limite, utiliza todo o histórico disponível. O período afeta somente as novas análises; as seções anteriores de parque, valores lançados e cobertura continuam representando a seleção operacional.
-4. Compare as contagens, taxas e percentuais por cliente, modelo, plano ou situação em **Manutenção por cliente e modelo**. Estes campos vêm da fotografia operacional.
+4. Compare as contagens, taxas e percentuais por cliente, modelo, plano ou situação em **Manutenção por cliente e modelo**. Cliente/plano/situação vêm da fotografia operacional; modelo vem do prefixo do serial.
 5. Consulte o perfil de intervenções, as trocas identificadas e as linhas de origem nas tabelas ordenáveis.
 6. Em **Relatório do parque e atendimentos**, escolha as colunas do resumo e se quer os originais no XLSX. Grupo e denominador sempre permanecem. XLSX inclui Resumo, Indicadores e Critérios; originais são opcionais. CSVs separados permitem manipular resumo, operacional e OS/contexto de trocas.
 
@@ -52,7 +54,7 @@ As quatro seções novas participam da personalização e dos controles de abrir
 - Inclui todas as situações operacionais selecionadas, inclusive cancelados. Não é base ativa calculada nem parque médio do período. O denominador não muda automaticamente conforme a data do atendimento.
 - Serviços elegíveis são somente Concluída/Pago vinculados pelo mesmo serial e placa. Cancelada e demais status não entram. Serviços são contados por linha; equipamentos com atendimento são contados uma vez.
 - Assistência significa tipo de serviço **Assistência Técnica**, sem supor que houve troca ou falha.
-- Cliente, modelo e plano dos rankings são os lançados no operacional atual. O vínculo não confirma o contrato ou cliente à época do atendimento. A comparação é exploratória entre o histórico disponível e a fotografia importada, não uma taxa histórica de confiabilidade.
+- Cliente e plano dos rankings são os lançados no operacional atual; modelo é identificado pelo serial. O vínculo não confirma o contrato ou cliente à época do atendimento. A comparação é exploratória entre o histórico disponível e a fotografia importada, não uma taxa histórica de confiabilidade.
 
 ## Indicadores
 

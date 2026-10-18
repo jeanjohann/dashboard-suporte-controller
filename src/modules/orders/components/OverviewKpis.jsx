@@ -30,7 +30,7 @@ function baseLabel(key, current) {
       ? 'Identificação de clientes indisponível'
       : current.clientsMissing
         ? `${number(current.clientsMissing)} ${current.clientsMissing === 1 ? 'linha sem cliente utilizável' : 'linhas sem cliente utilizável'}`
-        : 'Razões sociais distintas';
+        : 'Clientes / filiais distintos';
   if (key === 'vehicles')
     return current.vehicles == null
       ? 'Identificação de veículos indisponível'

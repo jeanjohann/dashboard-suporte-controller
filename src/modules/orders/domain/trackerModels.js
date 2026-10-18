@@ -4,6 +4,11 @@
  */
 // Regras de classificação fornecidas pelo usuário; não alteram o ID original.
 export const trackerModelPrefixes = {
+  81: 'MXT-141',
+  82: 'MXT-141',
+  83: 'MXT-141',
+  84: 'MXT-141',
+  85: 'MXT-141',
   162: 'MXT-162',
   144: 'MXT-130v2',
   130: 'MXT-130v1',
@@ -19,5 +24,6 @@ export function trackerModel(cell) {
     return null;
   const id = String(cell.raw).trim();
   if (!/^\d{3,}$/.test(id)) return null;
-  return trackerModelPrefixes[id.slice(0, 3)] || null;
+  // Prefixos de três dígitos têm precedência; 81–85 são prefixos de dois dígitos.
+  return trackerModelPrefixes[id.slice(0, 3)] || trackerModelPrefixes[id.slice(0, 2)] || null;
 }

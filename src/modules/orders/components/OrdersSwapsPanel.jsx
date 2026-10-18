@@ -6,9 +6,10 @@ import { InfoNote } from '../../../components/InfoNote.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { BarChart } from '../../../components/BarChart.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
+import { ReplacementRankings } from './ReplacementRankings.jsx';
 
 /** Apresenta o recorte e as ações recebidas; a base original permanece no controlador. */
-export function OrdersSwapsPanel({ devices, visible }) {
+export function OrdersSwapsPanel({ data, devices, visible }) {
   return (
     <Section
       title={sectionLabels.swaps}
@@ -22,7 +23,21 @@ export function OrdersSwapsPanel({ devices, visible }) {
               devices.accessoryAvailable ? devices.accessories.Coletora : null,
             ],
             ['RFID', devices.accessoryAvailable ? devices.accessories.RFID : null],
-            ['Acessórios sem troca/categoria confirmada', devices.excludedAccessories ?? null],
+            [
+              'Manutenção sem troca · rastreador/kit',
+              devices.trackerAvailable ? devices.withoutReplacement.length : null,
+            ],
+            [
+              'Coletoras sem troca',
+              devices.accessoryAvailable
+                ? devices.accessoryWithoutReplacement.Coletora.length
+                : null,
+            ],
+            [
+              'RFID sem troca',
+              devices.accessoryAvailable ? devices.accessoryWithoutReplacement.RFID.length : null,
+            ],
+            ['Acessórios para revisão', devices.excludedAccessories ?? null],
           ]}
           note="Pares de rastreador e acessórios usam critérios próprios, com Concluída/Pago. Não somar categorias como se fossem a mesma unidade. Campos indisponíveis ficam sem valor; origens continuam na visão completa."
         />
@@ -34,9 +49,43 @@ export function OrdersSwapsPanel({ devices, visible }) {
           <InfoNote>
             Troca/trocar explícito nas instruções, somente Assistência Técnica / Manutenção de
             Acessório Concluída/Pago. Coletora, teclado e terminal pertencem à mesma categoria. Uma
-            linha = um acessório. Categoria ausente ou ambígua e manutenção sem troca confirmada
-            ficam na revisão.
+            linha = um acessório. Sem troca explícita, a manutenção fica separada das substituições;
+            categoria ausente ou ambígua continua na revisão. Uma linha/ID de rastreador no chamado
+            e veículo confirma manutenção sem troca; duas linhas com IDs distintos confirmam um
+            evento.
           </InfoNote>
+        </div>
+        <div className="summary-grid">
+          {[
+            [
+              'Rastreador/kit sem troca',
+              devices.trackerAvailable ? devices.withoutReplacement.length : null,
+              'Uma linha com um ID válido por chamado e placa.',
+            ],
+            [
+              'Trocas de rastreador/kit',
+              devices.trackerAvailable ? devices.swaps.length : null,
+              'Duas linhas com IDs válidos distintos por chamado e placa; um evento.',
+            ],
+            [
+              'Coletoras sem troca',
+              devices.accessoryAvailable
+                ? devices.accessoryWithoutReplacement.Coletora.length
+                : null,
+              'Manutenção de Acessório, categoria coletora/teclado/terminal, sem troca explícita.',
+            ],
+            [
+              'RFID sem troca',
+              devices.accessoryAvailable ? devices.accessoryWithoutReplacement.RFID.length : null,
+              'Manutenção de Acessório, categoria RFID, sem troca explícita.',
+            ],
+          ].map(([label, value, note]) => (
+            <article className="summary-card" key={label}>
+              <span>{label}</span>
+              <strong>{value ?? '—'}</strong>
+              <small>{note}</small>
+            </article>
+          ))}
         </div>
         {devices.accessoryAvailable ? (
           <BarChart
@@ -54,7 +103,7 @@ export function OrdersSwapsPanel({ devices, visible }) {
           <>
             <BarChart
               title="Trocas de rastreador por mês"
-              description={`${devices.swaps.length} trocas identificadas; ${devices.missingMonthlyDate} sem data da instalação no gráfico. O par é identificado na importação completa e só entra se ambas as linhas atenderem aos filtros. Reinstalações entram somente quando há o par completo de retirada/entrada, na mesma data e cliente, com seriais diferentes.`}
+              description={`${devices.swaps.length} eventos confirmados no arquivo completo; ${devices.missingMonthlyDate} sem data comum ficam fora do gráfico mensal. Ambas as linhas devem atender aos filtros. A direção retirada/entrada é mostrada somente quando os motivos a identificam; isso não é inferido pela ordem das linhas.`}
               items={devices.months}
             />
             <details className="report-details">
@@ -67,19 +116,52 @@ export function OrdersSwapsPanel({ devices, visible }) {
                       <th>Placa</th>
                       <th>Retirado</th>
                       <th>Instalado</th>
+                      <th>IDs registrados</th>
+                      <th>Vida em campo</th>
                       <th>Linhas Excel</th>
                     </tr>
                   </thead>
                   <tbody>
                     {devices.swaps.map((swap) => (
-                      <tr key={swap.installationRow}>
+                      <tr key={swap.rows.join('-')}>
                         <td>{swap.os}</td>
                         <td>{swap.plate}</td>
-                        <td>{swap.oldSerial}</td>
-                        <td>{swap.newSerial}</td>
+                        <td>{swap.oldSerial || 'Não definido'}</td>
+                        <td>{swap.newSerial || 'Não definido'}</td>
+                        <td>{swap.serials.join(' / ')}</td>
                         <td>
-                          {swap.removalRow} → {swap.installationRow}
+                          {swap.lifecycleEligible
+                            ? 'Direção e data utilizáveis'
+                            : 'Requer direção, cliente e data comuns'}
                         </td>
+                        <td>{swap.rows.join(', ')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+            </details>
+            <details className="report-details">
+              <summary>
+                Conferir manutenção sem troca · rastreador/kit ({devices.withoutReplacement.length})
+              </summary>
+              <div className="table-scroll">
+                <SortableTable>
+                  <thead>
+                    <tr>
+                      <th>Chamado</th>
+                      <th>Placa</th>
+                      <th>ID rastreador</th>
+                      <th>Linha Excel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {devices.withoutReplacement.map((item) => (
+                      <tr key={item.rows[0]}>
+                        <td>{item.os}</td>
+                        <td>{item.plate}</td>
+                        <td>{item.serial}</td>
+                        <td>{item.rows.join(', ')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -94,6 +176,7 @@ export function OrdersSwapsPanel({ devices, visible }) {
           Períodos encerrados aparecem na seção Tempo observado em campo. Períodos sem retirada usam
           a referência escolhida na seção Tempo observado em campo.
         </InfoNote>
+        <ReplacementRankings data={data} events={devices.replacementEvents} />
       </section>
     </Section>
   );

@@ -4,6 +4,7 @@
  */
 import { parseCsv, parseMB, consumptionDate, displayDate, MB_SCALE } from './consumption.js';
 import { operationalCell } from '../../operational/domain/operational.js';
+import { trackerModel } from '../../orders/domain/trackerModels.js';
 
 // MB and KB are summed exactly, without rounding each CSV row.
 export const VOLUME_SCALE = MB_SCALE * 1024;
@@ -293,7 +294,10 @@ export function linkConsumption(rows, source) {
       candidates,
       client: link?.client || 'Não vinculado',
       serial: link?.serial || 'Não informado',
-      model: link?.model || 'Não informado',
+      model: link
+        ? trackerModel({ raw: link.serial, issue: operationalCell(link, 'serial')?.error }) ||
+          'Modelo não identificado pelo serial'
+        : 'Não informado',
     };
   });
 }

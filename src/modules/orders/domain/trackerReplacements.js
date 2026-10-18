@@ -3,6 +3,8 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { field, attendanceDate } from '../../../shared/data/filters.js';
+import { isUnproductive } from './attendanceKind.js';
+import { customerIdentity } from './customerIdentity.js';
 export const trackerMotives = {
   installation: [
     'Instalação Business 2.0',
@@ -25,8 +27,12 @@ export const trackerMotives = {
 };
 export const completed = (data, row) =>
   ['Concluída', 'Pago'].includes(field(data, row, 'Status')?.raw);
-/** Lê texto utilizável da origem; célula com erro ou ausência não vira um identificador válido. */
+/** Cliente usa a identidade analítica por CNPJ; os demais textos preservam o conteúdo utilizável da origem. */
 export function sourceText(data, row, label) {
+  if (label === 'Razão Social')
+    return customerIdentity(data, row).label === 'Sem cliente'
+      ? ''
+      : customerIdentity(data, row).label;
   const cell = field(data, row, label);
   return !cell || cell.issue || cell.raw == null ? '' : String(cell.raw).trim();
 }
@@ -58,26 +64,19 @@ export function trackerKind(data, row) {
         ? 'reinstallation'
         : null;
 }
-/** Procura retirada e instalação compatíveis no mesmo chamado e contexto; associações ambíguas são encaminhadas à revisão. */
+/** Classifica no arquivo completo: uma linha/ID é sem troca; duas linhas/IDs distintos confirmam um evento. */
 export function trackerReplacementPairs(data) {
-  const required = [
-    'Status',
-    'Tipo de Serviço',
-    'Motivo',
-    'Razão Social',
-    'Placa',
-    'ID Rastreador',
-    'Data de atendimento',
-  ];
+  const required = ['Status', 'Tipo de Serviço', 'Motivo', 'Placa', 'ID Rastreador'];
   if (required.some((label) => !data.columns.some((c) => c.label === label)))
-    return { available: false, pairs: [], issues: [] };
+    return { available: false, pairs: [], withoutReplacement: [], issues: [] };
   const groups = new Map(),
     pairs = [],
+    withoutReplacement = [],
     issues = [];
   const flag = (row, label, reason) => {
     const col = data.columns.find((c) => c.label === label);
     issues.push({
-      address: `${col.letter || ''}${row.sourceRow}`,
+      address: col ? `${col.letter || ''}${row.sourceRow}` : '—',
       row: row.sourceRow,
       column: label,
       value: String(field(data, row, label)?.display ?? ''),
@@ -85,54 +84,51 @@ export function trackerReplacementPairs(data) {
     });
   };
   for (const row of data.rows) {
-    if (!completed(data, row) || sourceText(data, row, 'Tipo de Serviço') !== 'Assistência Técnica')
+    if (
+      !completed(data, row) ||
+      isUnproductive(data, row) ||
+      sourceText(data, row, 'Tipo de Serviço') !== 'Assistência Técnica' ||
+      sourceText(data, row, 'Motivo') === 'Manutenção de Acessório'
+    )
       continue;
-    const kind = trackerKind(data, row);
-    if (!kind) continue;
-    const client = sourceText(data, row, 'Razão Social'),
-      plate = sourceText(data, row, 'Placa'),
-      date = attendanceDate(data, row);
-    if (!client || !validPlate(plate) || !date) {
+    const plate = sourceText(data, row, 'Placa');
+    if (!validPlate(plate) || !String(row.os ?? '').trim()) {
       flag(
         row,
-        !client ? 'Razão Social' : !validPlate(plate) ? 'Placa' : 'Data de atendimento',
-        'Troca de rastreador: cliente, placa e data válidos são necessários para confirmar o par.',
+        'Placa',
+        'Manutenção: chamado e placa válidos são necessários para classificar a intervenção.',
       );
       continue;
     }
-    const key = JSON.stringify([row.os, client, plate, date]);
-    if (!groups.has(key)) groups.set(key, { client, plate, date, installation: [], removal: [] });
-    groups.get(key)[kind === 'removal' ? 'removal' : 'installation'].push(row);
+    const key = JSON.stringify([String(row.os).trim(), plate]);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
   }
-  for (const group of groups.values()) {
-    const rows = [...group.installation, ...group.removal];
-    if (group.installation.length !== 1 || group.removal.length !== 1) {
-      rows.forEach((row) =>
-        flag(
-          row,
-          'Motivo',
-          !group.installation.length || !group.removal.length
-            ? 'Troca de rastreador: par completo não encontrado no mesmo chamado, cliente, placa e data.'
-            : 'Troca de rastreador: múltiplas retiradas/entradas no mesmo chamado, cliente, placa e data; vínculo ambíguo.',
-        ),
-      );
-      continue;
-    }
-    const outgoing = group.removal[0],
-      incoming = group.installation[0];
-    if (!validSerial(data, outgoing) || !validSerial(data, incoming)) {
+  for (const rows of groups.values()) {
+    if (rows.length > 2 || rows.some((row) => !validSerial(data, row))) {
       rows.forEach((row) =>
         flag(
           row,
           'ID Rastreador',
-          'Troca de rastreador: serial ausente, não numérico ou incompatível.',
+          rows.length > 2
+            ? 'Manutenção: mais de duas linhas no mesmo chamado e veículo; revisar os eventos.'
+            : 'Manutenção: identificador ausente ou incompatível; não presumir ausência de troca.',
         ),
       );
       continue;
     }
-    const oldSerial = sourceText(data, outgoing, 'ID Rastreador'),
-      newSerial = sourceText(data, incoming, 'ID Rastreador');
-    if (oldSerial === newSerial) {
+    if (rows.length === 1) {
+      const row = rows[0];
+      withoutReplacement.push({
+        os: row.os,
+        plate: sourceText(data, row, 'Placa'),
+        serial: sourceText(data, row, 'ID Rastreador'),
+        rows: [row.sourceRow],
+      });
+      continue;
+    }
+    const serials = rows.map((row) => sourceText(data, row, 'ID Rastreador'));
+    if (serials[0] === serials[1]) {
       rows.forEach((row) =>
         flag(
           row,
@@ -142,21 +138,53 @@ export function trackerReplacementPairs(data) {
       );
       continue;
     }
+    const removals = rows.filter((row) => trackerKind(data, row) === 'removal');
+    const installations = rows.filter((row) =>
+      ['installation', 'reinstallation'].includes(trackerKind(data, row)),
+    );
+    const directed = removals.length === 1 && installations.length === 1;
+    const outgoing = directed ? removals[0] : null,
+      incoming = directed ? installations[0] : null;
+    const dates = rows.map((row) => attendanceDate(data, row));
+    const date = dates.every((d) => d && d === dates[0]) ? dates[0] : null;
+    if (!date) {
+      rows.forEach((row) =>
+        flag(
+          row,
+          'Data de atendimento',
+          'Troca de rastreador: as duas linhas precisam ter a mesma data válida de atendimento.',
+        ),
+      );
+      continue;
+    }
+    const clients = rows.map((row) => customerIdentity(data, row));
+    const client = clients.every((c) => c.key !== 'Sem cliente' && c.key === clients[0].key)
+      ? clients[0].label
+      : null;
+    // A confirmação de troca não autoriza inventar direção, cliente histórico ou data.
+    const lifecycleEligible = Boolean(directed && date && client);
     pairs.push({
-      os: incoming.os,
-      client: group.client,
-      plate: group.plate,
-      date: group.date,
-      oldSerial,
-      newSerial,
-      removalRow: outgoing.sourceRow,
-      installationRow: incoming.sourceRow,
-      rows: [outgoing.sourceRow, incoming.sourceRow],
+      os: rows[0].os,
+      client,
+      clientKey: client ? clients[0].key : null,
+      plate: sourceText(data, rows[0], 'Placa'),
+      date,
+      dates,
+      serials,
+      lifecycleEligible,
+      oldSerial: outgoing ? sourceText(data, outgoing, 'ID Rastreador') : null,
+      newSerial: incoming ? sourceText(data, incoming, 'ID Rastreador') : null,
+      removalRow: outgoing?.sourceRow ?? null,
+      installationRow: incoming?.sourceRow ?? null,
+      rows: directed ? [outgoing.sourceRow, incoming.sourceRow] : rows.map((row) => row.sourceRow),
     });
   }
   return {
     available: true,
-    pairs: pairs.sort((a, b) => a.date.localeCompare(b.date) || a.removalRow - b.removalRow),
+    pairs: pairs.sort(
+      (a, b) => (a.date || '').localeCompare(b.date || '') || a.rows[0] - b.rows[0],
+    ),
+    withoutReplacement,
     issues,
   };
 }

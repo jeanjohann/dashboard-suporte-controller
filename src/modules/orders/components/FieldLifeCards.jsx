@@ -33,7 +33,7 @@ export function FieldLifeCards({ stats, category, basis, scope, unmeasured }) {
         ? 'Entradas por troca identificadas'
         : category === 'Rastreador'
           ? 'Implementações identificadas'
-          : 'Instalações identificadas';
+          : 'Inícios de acompanhamento identificados';
   const denominator =
     cycles(stats.total) + (stats.total === 1 ? ' identificado' : ' identificados');
   return (
@@ -46,10 +46,12 @@ export function FieldLifeCards({ stats, category, basis, scope, unmeasured }) {
         Total dos ciclos identificados na categoria, início, filtros e limite escolhidos. Inclui
         primeira troca, sem troca registrada, cancelamento e revisão. Na instalação inicial,
         rastreadores usam Implementação realizada com motivo de instalação reconhecido; acessórios
-        exigem instalação explícita da categoria. No modo por evento, este total representa os
-        ciclos cujo encerramento atende aos filtros, não todas as implementações. Registros
-        posteriores ao limite e instalações sem os critérios de início não entram. Não é o tamanho
-        de todo o parque.
+        usam a implementação do cliente/placa quando a categoria aparece nos atendimentos, ou uma
+        instalação explícita mais precisa. Após a primeira troca, a mesma categoria usa sua troca
+        anterior como início; manutenção sem troca não reinicia o ciclo. No modo por evento, este
+        total representa os ciclos cujo encerramento atende aos filtros, não todas as
+        implementações. Registros posteriores ao limite e instalações sem os critérios de início não
+        entram. Não é o tamanho de todo o parque.
       </LifeCard>
       <LifeCard
         title="Primeiras trocas registradas"

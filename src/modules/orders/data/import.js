@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import XLSX from 'xlsx';
+import { importCustomerRegistry } from './customerRegistry.js';
 
 export const ordersSheetNames = ['OS 2025_26', 'OS 2025'];
 
@@ -30,7 +31,10 @@ export function importWorkbook(buffer) {
     throw new Error(
       'Nenhuma aba de OS foi encontrada. O arquivo deve conter a aba “OS 2025_26” ou “OS 2025”.',
     );
-  return importOrdersSheet(sheet, sheetName, Boolean(workbook.Workbook?.WBProps?.date1904));
+  return {
+    ...importOrdersSheet(sheet, sheetName, Boolean(workbook.Workbook?.WBProps?.date1904)),
+    customerRegistry: importCustomerRegistry(workbook),
+  };
 }
 
 /** Entrada comum para Excel e Google: mesmas posições, critérios e apontamentos, sem serializar outro arquivo. */

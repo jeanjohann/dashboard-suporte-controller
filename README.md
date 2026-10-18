@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.28.1 — Tema claro com textos e links pretos, navegação neutra e botões principais em cinza escuro. Parque com histórico individual, concentração e referência ajustável; resumos ampliados. Preparação CSV/API e prévia OS + Zoho usam somente dados fictícios isolados. Integrações reais, armazenamento compartilhado e ativação Google continuam pendentes. [Mapa das análises e instruções](docs/ORGANIZACAO-DAS-ANALISES.md).
+**Versão:** 0.29.0 — Manutenção sem troca, rankings de substituições por cliente/placa e ciclos de acessórios pela implementação ou troca anterior. Identificação por CNPJ completo da coluna C com Base clientes e modelo pelo serial, incluindo prefixos 81–85. [Critérios confirmados](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md). Integrações externas continuam pendentes.
 
 ## Documentação do projeto
 

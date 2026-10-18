@@ -4,6 +4,7 @@ import { isUnproductive } from './attendanceKind.js';
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { field } from '../../../shared/data/filters.js';
+import { customerIdentity } from './customerIdentity.js';
 /** Resume realizados e agenda, permitindo uma base própria para previsões sem misturá-las aos custos realizados. */
 export function managementMetrics(data, schedulingData = data) {
   const completed = data.rows.filter((row) =>
@@ -19,13 +20,17 @@ export function managementMetrics(data, schedulingData = data) {
     const groups = new Map();
     for (const row of rows) {
       const cell = field(data, row, label);
-      const name = cell?.issue
-        ? 'Valor com erro'
-        : String(cell?.raw ?? '').trim() || 'Sem responsável / identificação';
-      const item = groups.get(name) || { label: name, value: 0, rows: [] };
+      const identity = label === 'Razão Social' ? customerIdentity(data, row) : null;
+      const name =
+        identity?.label ||
+        (cell?.issue
+          ? 'Valor com erro'
+          : String(cell?.raw ?? '').trim() || 'Sem responsável / identificação');
+      const key = identity?.key || name;
+      const item = groups.get(key) || { label: name, value: 0, rows: [] };
       item.value++;
       item.rows.push(row.sourceRow);
-      groups.set(name, item);
+      groups.set(key, item);
     }
     return [...groups.values()].sort(
       (a, b) => b.value - a.value || a.label.localeCompare(b.label, 'pt-BR'),

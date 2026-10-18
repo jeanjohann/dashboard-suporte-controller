@@ -12,6 +12,8 @@ const text = (value) =>
 const done = (data, row) => ['Concluída', 'Pago'].includes(field(data, row, 'Status')?.raw);
 export { trackerMotives } from './trackerReplacements.js';
 import { trackerReplacementPairs } from './trackerReplacements.js';
+import { customerIdentity } from './customerIdentity.js';
+import { trackerModel } from './trackerModels.js';
 /** Classifica Coletora/Teclado/Terminal ou RFID pelas instruções. Categoria ausente ou ambígua retorna null. */
 export function accessoryCategory(cell) {
   if (!cell || cell.issue || cell.raw == null) return null;
@@ -22,7 +24,14 @@ export function accessoryCategory(cell) {
 }
 /** Exige indicação textual explícita de troca nas instruções; o critério fica centralizado para futuras mudanças. */
 export function explicitAccessoryReplacement(cell) {
-  return Boolean(cell && !cell.issue && /\b(troca|trocar)\b/.test(text(cell.raw)));
+  return Boolean(
+    cell &&
+    !cell.issue &&
+    /\b(troca|trocar)\b/.test(text(cell.raw)) &&
+    !/\b(sem|nao)\s+(?:houve\s+|realizar\s+|necessidade de\s+)?(?:troca|trocar)\b|\btroca\s+nao\s+(?:realizada|efetuada)\b/.test(
+      text(cell.raw),
+    ),
+  );
 }
 /** Identifica trocas no histórico completo e aplica a seleção depois, exigindo que as duas linhas do par estejam selecionadas. */
 export function equipment(data, selected) {
@@ -35,6 +44,11 @@ export function equipment(data, selected) {
     swaps = [],
     accessories = { Coletora: 0, RFID: 0 },
     accessoryRows = { Coletora: [], RFID: [] };
+  const withoutReplacement = replacement.withoutReplacement.filter((item) =>
+    item.rows.every((id) => selectedRows.has(id)),
+  );
+  const accessoryWithoutReplacement = { Coletora: [], RFID: [] };
+  const accessoryEvents = [];
   let excludedAccessories = 0,
     missingMonthlyDate = 0;
   const months = new Map();
@@ -62,7 +76,7 @@ export function equipment(data, selected) {
       const instruction = text(instructionCell?.raw);
       const collector = /\b(coletora|teclado|terminal de jornada)\b/.test(instruction);
       const rfid = /\brfid\b/.test(instruction);
-      if (!category || !explicitAccessoryReplacement(instructionCell)) {
+      if (!category) {
         excludedAccessories++;
         flag(
           row,
@@ -75,12 +89,32 @@ export function equipment(data, selected) {
         );
         continue;
       }
+      if (!explicitAccessoryReplacement(instructionCell)) {
+        accessoryWithoutReplacement[category].push(row.sourceRow);
+        continue;
+      }
       accessories[category]++;
       accessoryRows[category].push(row.sourceRow);
+      const client = customerIdentity(data, row);
+      accessoryEvents.push({
+        key: `${category}:${row.sourceRow}`,
+        category,
+        os: row.os,
+        plate: String(field(data, row, 'Placa')?.raw ?? '').trim(),
+        client: client.label,
+        clientKey: client.key === 'Sem cliente' ? null : client.key,
+        date: attendanceDate(data, row),
+        description: String(instructionCell.raw),
+        rows: [row.sourceRow],
+      });
     }
   for (const pair of replacement.pairs) {
     if (!pair.rows.every((id) => selectedRows.has(id))) continue;
     swaps.push(pair);
+    if (!pair.date) {
+      missingMonthlyDate++;
+      continue;
+    }
     const month = pair.date.slice(0, 7);
     months.set(month, (months.get(month) || 0) + 1);
   }
@@ -90,6 +124,24 @@ export function equipment(data, selected) {
     swaps,
     accessories,
     accessoryRows,
+    withoutReplacement,
+    accessoryWithoutReplacement,
+    replacementEvents: [
+      ...swaps.map((pair) => ({
+        key: `Rastreador:${pair.rows.join('-')}`,
+        category: 'Rastreador/kit',
+        os: pair.os,
+        plate: pair.plate,
+        client: pair.client || 'Cliente do evento não resolvido',
+        clientKey: pair.clientKey,
+        date: pair.date,
+        description: pair.oldSerial
+          ? `${pair.oldSerial} (${trackerModel({ raw: pair.oldSerial }) || 'modelo desconhecido'}) → ${pair.newSerial} (${trackerModel({ raw: pair.newSerial }) || 'modelo desconhecido'})`
+          : `IDs ${pair.serials.join(' / ')}; direção não definida`,
+        rows: pair.rows,
+      })),
+      ...accessoryEvents,
+    ],
     excludedAccessories,
     issues,
     missingMonthlyDate,

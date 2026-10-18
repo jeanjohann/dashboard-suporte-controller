@@ -82,6 +82,8 @@ test('layout compacto preserva campos, endereços e vínculos sem importar resum
     rows: [{ cells: [{ raw: '00162' }, { raw: 'ABC1D23' }] }],
   };
   assert.equal(linkOperational(data, orders)[0].services.length, 1);
+  assert.equal(linkOperational(data, orders)[0].model, 'Modelo não identificado pelo serial');
+  assert.equal(linkOperational(data, orders)[0].declaredModel, 'Modelo original');
   const consumption = [{ iccid: row.iccid, number: row.phone }];
   assert.equal(linkConsumption(consumption, { data })[0].link.serial, '00162');
   const backup = { ...emptyHistory(), operational: { filename: 'teste.xlsx', data } };
@@ -108,6 +110,18 @@ test('layout compacto bloqueia cabeçalhos ausentes, erros no serial e vínculos
       (issue) => issue.address === 'BC2' && issue.category === 'Possível divergência',
     ),
   );
+});
+test('modelo pelo serial prevalece na apresentação e no consumo, mantendo modelo original para backup', () => {
+  const book = XLSX.read(compactWorkbook(), { type: 'array' });
+  book.Sheets.Equipamentos.BC2 = { t: 's', v: '811234567' };
+  book.Sheets.Equipamentos.BE2 = { t: 's', v: 'MXT-162 lançado' };
+  const data = importOperational(XLSX.write(book, { type: 'array', bookType: 'xlsx' }));
+  const row = data.rows[0];
+  assert.equal(row.model, 'MXT-162 lançado');
+  assert.equal(linkOperational(data, null)[0].model, 'MXT-141');
+  const [line] = linkConsumption([{ iccid: row.iccid, number: row.phone }], { data });
+  assert.equal(line.model, 'MXT-141');
+  assert.equal(line.link.model, 'MXT-162 lançado');
 });
 function workbook(records) {
   const sheet = {

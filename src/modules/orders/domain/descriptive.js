@@ -253,14 +253,18 @@ export function descriptiveReport(
         ['trackers', 'Trocas de rastreador', 'eventos'],
         ['collector', 'Trocas de coletora', 'trocas'],
         ['rfid', 'Trocas de RFID', 'trocas'],
+        ['withoutReplacement', 'Manutenção sem troca · rastreador/kit', 'intervenções'],
+        ['collectorWithoutReplacement', 'Coletora sem troca', 'serviços'],
+        ['rfidWithoutReplacement', 'RFID sem troca', 'serviços'],
       ];
       for (const [field, label, unit] of fields) {
-        const available =
-          field === 'trackers'
-            ? devices?.trackerAvailable
-            : ['collector', 'rfid'].includes(field)
-              ? devices?.accessoryAvailable
-              : true;
+        const available = ['trackers', 'withoutReplacement'].includes(field)
+          ? devices?.trackerAvailable
+          : ['collector', 'rfid', 'collectorWithoutReplacement', 'rfidWithoutReplacement'].includes(
+                field,
+              )
+            ? devices?.accessoryAvailable
+            : true;
         const total = available ? groups.reduce((s, g) => s + g[field], 0) : null;
         for (const g of groups)
           emit(
@@ -271,7 +275,7 @@ export function descriptiveReport(
             available ? g[field] : null,
             unit,
             total,
-            'Percentual entre clientes para esta categoria. Categorias se sobrepõem e não devem ser somadas como serviços. Troca de rastreador = evento com duas linhas. Manutenção sem troca não classificada.',
+            'Percentual entre clientes para esta categoria. Categorias se sobrepõem. Troca de rastreador = duas linhas/IDs distintos no mesmo chamado e placa; sem troca = uma linha/ID. Acessórios seguem motivo e instrução. CNPJ completo da coluna C separa clientes/filiais quando utilizável.',
             g.rows,
           );
       }

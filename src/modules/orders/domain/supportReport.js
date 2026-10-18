@@ -30,7 +30,7 @@ export function supportReport(data, result, filters, filename) {
       ],
       [
         'Veículos',
-        'Pares razão social + placa utilizáveis; não representa frota ativa. Sem colunas necessárias, indisponível.',
+        'Pares cliente/filial + placa utilizáveis. CNPJ completo da coluna C identifica o cliente quando disponível; sem CNPJ, nome original. Não representa frota ativa.',
       ],
       ['Linhas sem cliente + placa utilizáveis', result.totals.vehiclesMissing],
       ['Sem responsável válido', result.missing.length],

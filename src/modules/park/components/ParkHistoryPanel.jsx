@@ -13,7 +13,7 @@ const pct = (value) =>
   value == null ? '—' : (value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
 export const parkHistoryTitle = 'Histórico individual do parque';
 const rules =
-  'Somente pares serial + placa já vinculáveis, no recorte de Parque e Manutenção. Intervenção efetiva é qualquer linha Concluída/Pago sem Visita Improdutiva; várias linhas no mesmo chamado são serviços distintos. Última intervenção usa a maior Data de atendimento válida desses efetivos no recorte. Dias = referência − última data, sem inferir atraso, falha, atividade atual ou necessidade de manutenção. Ausência de histórico não comprova ausência de intervenção. Cliente/modelo são da fotografia operacional atual. Concentração usa assistências técnicas efetivas vinculadas, com grupos não identificados incluídos; não mede taxa de falha.';
+  'Somente pares serial + placa já vinculáveis, no recorte de Parque e Manutenção. Intervenção efetiva é qualquer linha Concluída/Pago sem Visita Improdutiva; várias linhas no mesmo chamado são serviços distintos. Última intervenção usa a maior Data de atendimento válida desses efetivos no recorte. Dias = referência − última data, sem inferir atraso, falha, atividade atual ou necessidade de manutenção. Ausência de histórico não comprova ausência de intervenção. Cliente vem da fotografia operacional; modelo é identificado pelo serial, com a coluna original preservada. Concentração usa assistências técnicas efetivas vinculadas, com grupos não identificados incluídos; não mede taxa de falha.';
 
 export function ParkHistoryPanel({ result, orders, context }) {
   const defaultReference = parkHistoryReference(orders);
@@ -71,7 +71,7 @@ export function ParkHistoryPanel({ result, orders, context }) {
         [],
         [
           'Cliente operacional',
-          'Modelo operacional',
+          'Modelo pelo serial',
           'Serial',
           'Placa',
           'Efetivos',
@@ -153,7 +153,7 @@ export function ParkHistoryPanel({ result, orders, context }) {
               Concentração das assistências
               <select value={dimension} onChange={(event) => setDimension(event.target.value)}>
                 <option value="clients">Por cliente operacional</option>
-                <option value="models">Por modelo operacional</option>
+                <option value="models">Por modelo pelo serial</option>
               </select>
             </label>
             <p className="scope">

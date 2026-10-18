@@ -66,6 +66,11 @@ export function ParkInsights({
     }
   }
   const cards = [
+    [
+      'Rastreador/kit sem troca',
+      result.devices?.trackerAvailable ? result.devices.withoutReplacement.length : null,
+      'Uma linha/ID no chamado e placa; assistência efetiva vinculada',
+    ],
     ['Base vinculável', result.base, 'Registros com serial + placa válidos e sem ambiguidade'],
     [
       'Com atendimento realizado',
@@ -177,7 +182,8 @@ export function ParkInsights({
               {result.recurringAvailable ? result.intervals : '—'} intervalos entre visitas
               consecutivas dentro da seleção. Serviços no mesmo dia formam uma visita. Nova
               intervenção não confirma falha. {result.devices?.excludedAccessories ?? 0} manutenções
-              de acessório sem troca/categoria confirmada ficaram fora da contagem de substituições.
+              de acessório com categoria não confirmada ficaram para revisão. Manutenções sem troca
+              ficam separadas das substituições.
             </p>
           </>
         )}
@@ -206,7 +212,7 @@ export function ParkInsights({
                 <select value={group} onChange={(e) => setGroup(e.target.value)}>
                   {[
                     ['client', 'Cliente operacional'],
-                    ['model', 'Modelo operacional'],
+                    ['model', 'Modelo pelo serial'],
                     ['plan', 'Plano operacional'],
                     ['status', 'Situação operacional'],
                   ].map(([value, label]) => (
@@ -241,7 +247,8 @@ export function ParkInsights({
               </label>
             </div>
             <InfoNote>
-              Cliente, modelo e plano são os lançados no operacional atual; não confirmam a
+              Cliente e plano são os lançados no operacional atual; modelo vem do prefixo do serial.
+              O modelo lançado continua nos dados originais. Esses campos não confirmam a
               titularidade ou o contrato à época do serviço. Nenhum custo é atribuído ao contrato
               atual.
             </InfoNote>
@@ -365,9 +372,11 @@ export function ParkInsights({
                       <tr key={pair.rows.join('-')}>
                         <td>{pair.os}</td>
                         <td>{pair.plate}</td>
-                        <td>{pair.oldSerial}</td>
-                        <td>{pair.newSerial}</td>
-                        <td>{pair.date}</td>
+                        <td>
+                          {pair.oldSerial || `Direção não definida: ${pair.serials.join(' / ')}`}
+                        </td>
+                        <td>{pair.newSerial || 'Direção não definida'}</td>
+                        <td>{pair.date || 'Sem data comum'}</td>
                         <td>{pair.rows.join(', ')}</td>
                       </tr>
                     ))}
@@ -394,7 +403,7 @@ export function ParkInsights({
               <select value={group} onChange={(e) => setGroup(e.target.value)}>
                 {[
                   ['client', 'Cliente operacional'],
-                  ['model', 'Modelo operacional'],
+                  ['model', 'Modelo pelo serial'],
                   ['plan', 'Plano operacional'],
                   ['status', 'Situação operacional'],
                 ].map(([value, label]) => (

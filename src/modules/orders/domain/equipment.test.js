@@ -68,7 +68,7 @@ test('ambiguidade original não desaparece ao filtrar e par parcial não entra',
   const pair = data([removal, installation]);
   assert.equal(equipment(pair, { ...pair, rows: pair.rows.slice(0, 1) }).swaps.length, 0);
 });
-test('seriais iguais, ausentes e reinstalações sem par vão para revisão', () => {
+test('seriais iguais e ausentes exigem revisão; uma reinstalação com um ID é sem troca', () => {
   const same = data([removal, [...installation.slice(0, 4), 123, ...installation.slice(5)]]);
   assert.equal(equipment(same, same).issues.length, 2);
   const absent = data([removal, [...installation.slice(0, 4), null, ...installation.slice(5)]]);
@@ -77,7 +77,8 @@ test('seriais iguais, ausentes e reinstalações sem par vão para revisão', ()
   const re = data([
     ['#1', 'Pago', 'Reinstalação Business 2.1', 'ABC', 123, 'Assistência Técnica', '', 45000],
   ]);
-  assert.equal(equipment(re, re).issues.length, 1);
+  assert.equal(equipment(re, re).issues.length, 0);
+  assert.equal(equipment(re, re).withoutReplacement.length, 1);
 });
 test('acessórios exigem troca ou trocar explícito, preservam sinônimos e revisam conflitos', () => {
   const d = data(
@@ -102,17 +103,20 @@ test('acessórios exigem troca ou trocar explícito, preservam sinônimos e revi
   );
   const result = equipment(d, d);
   assert.deepEqual(result.accessories, { Coletora: 2, RFID: 1 });
-  assert.equal(result.excludedAccessories, 5);
+  assert.equal(result.excludedAccessories, 2);
+  assert.deepEqual(result.accessoryWithoutReplacement, { Coletora: [9], RFID: [7, 8] });
 });
 
-test('reinstalação com par confirma troca, mas datas e clientes diferentes não confirmam', () => {
+test('datas distintas revisam o par; clientes diferentes impedem duração automática', () => {
   const re = [...installation];
   re[2] = 'Reinstalação Business 2.1';
   const d = data([removal, re]);
   assert.equal(equipment(d, d).swaps.length, 1);
   const dated = data([removal, [...installation.slice(0, 7), 45001]]);
   assert.equal(equipment(dated, dated).swaps.length, 0);
+  assert.equal(equipment(dated, dated).issues.length, 2);
   const other = data([removal, installation]);
   other.rows[1].cells[7] = { raw: 'Outro cliente' };
-  assert.equal(equipment(other, other).swaps.length, 0);
+  assert.equal(equipment(other, other).swaps.length, 1);
+  assert.equal(equipment(other, other).swaps[0].lifecycleEligible, false);
 });

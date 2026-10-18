@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.29.0 — 18/10/2026
+
+- Classifica Assistência Técnica efetiva por chamado/placa no arquivo completo: uma linha/ID é manutenção sem troca; duas linhas com IDs distintos e mesma data confirmam um evento. Filtrar uma ponta não muda a classificação. Acessórios separam troca explícita de manutenção sem troca, preservando revisão de categoria incerta e todos os custos válidos.
+- Vida em campo dos acessórios usa a implementação do cliente/placa como referência inicial, com prioridade para instalação explícita mais precisa. Ciclos seguintes começam na troca anterior da mesma categoria; revisão sem troca não reinicia o intervalo. Origem aparece na tabela e no CSV; direção/data/cliente incertos impedem duração automática de rastreador.
+- Ranking de ocorrências de troca por cliente/placa e cliente/filial no relatório existente, separado por rastreador/kit, coletora e RFID, com detalhe de datas, IDs/modelos, instruções, origens e CSV.
+- OS manual lê CNPJ e razão social da Base clientes. Coluna C identifica cliente/filial pelo CNPJ completo; AK não participa da identidade. Custos, cards e suporte preservam filiais, nomes originais e conferência do cadastro. Google continua lendo somente OS.
+- Modelo prioriza o serial nos painéis operacionais, Parque e referência do Consumo. Prefixos 81, 82, 83, 84 e 85 passam a MXT-141; coluna Modelo original e backups permanecem intactos.
+
 ## 0.28.1 — 17/10/2026
 
 - Tema claro usa texto e links pretos, navegação em tons neutros e botões principais em cinza escuro. Acentos da marca, cores dos indicadores e tema escuro preservados.

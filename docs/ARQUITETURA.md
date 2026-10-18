@@ -1,5 +1,11 @@
 # Arquitetura e organização do código
 
+## Critérios confirmados em 0.29.0
+
+`orders/domain/trackerReplacements.js` classifica o chamado/placa no arquivo completo: uma linha/ID é manutenção sem troca; duas linhas/IDs distintos na mesma data confirmam um evento. Duração exige direção e cliente comuns. `fieldLife.js` mantém rastreador por serial e acrescenta referência inicial dos acessórios pela implementação do cliente/placa, com prioridade para instalação explícita mais precisa; ciclos seguintes usam a troca anterior da categoria. Revisões sem troca não reiniciam intervalos. `equipment.js` expõe contagens e ocorrências; `replacementRankings.js` calcula rankings, sem duplicar o evento pelo número de linhas do par.
+
+`data/customerRegistry.js` lê somente CNPJ e razão social da Base clientes. `domain/customerIdentity.js` usa o CNPJ completo da coluna C, preserva a origem e distingue cadastro ausente/divergente; AK não define identidade. Custos, cards, suporte e vínculos de vida em campo usam a identidade analítica. Google continua com consulta apenas à OS. `trackerModels.js` centraliza prefixos; o operacional armazenado conserva `model` original e `linkOperational` deriva modelo pelo serial para a apresentação. Isso mantém a integridade dos backups anteriores. [Regras e utilização](CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md).
+
 ## Gráficos incorporados na Visão geral — 0.27.1
 
 `DashboardOverview` controla a abertura temporária por tema e os atalhos aos destinos. `OverviewInlinePanels` reutiliza os domínios de custos, vida em campo e suporte, sem manter outra base de dados. As seções usam títulos exclusivos para não registrar preferências ou grupos das análises completas. A primeira abertura monta o conteúdo; ocultar mantém os controles. O Workspace só fornece a referência operacional a OS quando o usuário tem permissão de Parque; o resumo e sua impressão indicam a fotografia completa, sem filtros de OS. [Instruções de apresentação](ORGANIZACAO-DAS-ANALISES.md#apresentar-gráficos-na-visão-geral--0271).

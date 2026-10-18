@@ -14,6 +14,8 @@ import {
   completed,
 } from './trackerReplacements.js';
 import { trackerModel } from './trackerModels.js';
+import { customerIdentity } from './customerIdentity.js';
+import { isUnproductive } from './attendanceKind.js';
 const normalized = (value) =>
   String(value ?? '')
     .normalize('NFD')
@@ -150,14 +152,22 @@ export function fieldLife(
     };
   const limit = referenceDate && referenceDate < latest ? referenceDate : latest;
   const chosen = new Set(selected.rows.map((row) => row.sourceRow));
+  const unchangedRows = new Set(replacement.withoutReplacement.flatMap((item) => item.rows));
+  const unresolvedPairs = new Map(
+    replacement.pairs
+      .filter((p) => !p.lifecycleEligible)
+      .flatMap((pair) => pair.rows.map((id) => [id, pair])),
+  );
+  const uncertainInterventions = new Set(replacement.issues.map((issue) => issue.row));
   const entries = realized.map((row) => ({
     row,
     id: row.sourceRow,
     client: sourceText(original, row, 'Razão Social'),
+    clientKey: customerIdentity(original, row).key,
     plate: sourceText(original, row, 'Placa'),
     serial: sourceText(original, row, 'ID Rastreador'),
     date: attendanceDate(original, row),
-    kind: trackerKind(original, row),
+    kind: unchangedRows.has(row.sourceRow) ? null : trackerKind(original, row),
     type: sourceText(original, row, 'Tipo de Serviço'),
     category: accessoryCategory(field(original, row, 'Instruções')),
     accessoryInstallation: explicitAccessoryInstallation(original, row),
@@ -166,8 +176,9 @@ export function fieldLife(
       sourceText(original, row, 'Motivo') === 'Manutenção de Acessório' &&
       explicitAccessoryReplacement(field(original, row, 'Instruções')),
   }));
-  const byRemoval = new Map(replacement.pairs.map((p) => [p.removalRow, p])),
-    byIncoming = new Map(replacement.pairs.map((p) => [p.installationRow, p]));
+  const datedPairs = replacement.pairs.filter((p) => p.lifecycleEligible);
+  const byRemoval = new Map(datedPairs.map((p) => [p.removalRow, p])),
+    byIncoming = new Map(datedPairs.map((p) => [p.installationRow, p]));
   const starts = [];
   for (const e of entries) {
     if (
@@ -190,8 +201,60 @@ export function fieldLife(
       ((basis === 'initial' && e.accessoryInstallation) ||
         (basis === 'replacement' && e.accessorySwap))
     )
-      starts.push({ ...e, equipment: e.category, model: e.category });
+      starts.push({
+        ...e,
+        equipment: e.category,
+        model: e.category,
+        origin: basis === 'replacement' ? 'Troca anterior' : 'Instalação explícita',
+      });
   }
+  // Quando a categoria aparece no histórico do veículo, a implementação é a
+  // referência inicial aprovada. Uma instalação explícita anterior ao primeiro
+  // atendimento da categoria tem prioridade, pois fornece uma data mais precisa.
+  if (accessoryAvailable && basis === 'initial')
+    for (const e of entries) {
+      if (
+        e.type !== 'Implementação' ||
+        isUnproductive(original, e.row) ||
+        !e.date ||
+        !e.client ||
+        !validPlate(e.plate)
+      )
+        continue;
+      for (const category of ['Coletora', 'RFID']) {
+        const related = entries
+          .filter(
+            (event) =>
+              event.clientKey === e.clientKey &&
+              event.plate === e.plate &&
+              event.category === category &&
+              sourceText(original, event.row, 'Motivo') === 'Manutenção de Acessório' &&
+              event.type === 'Assistência Técnica' &&
+              event.date &&
+              event.date >= e.date &&
+              event.date <= limit,
+          )
+          .sort((a, b) => a.date.localeCompare(b.date) || a.id - b.id);
+        if (!related.length) continue;
+        const explicit = entries.some(
+          (event) =>
+            event.accessoryInstallation &&
+            event.category === category &&
+            event.clientKey === e.clientKey &&
+            event.plate === e.plate &&
+            event.date &&
+            event.date >= e.date &&
+            event.date <= related[0].date,
+        );
+        if (!explicit)
+          starts.push({
+            ...e,
+            equipment: category,
+            model: category,
+            origin: 'Implementação do veículo',
+          });
+      }
+    }
   const byIdDate = (id) => entries.find((e) => e.id === id)?.date;
   const allPeriods = [],
     review = [];
@@ -211,6 +274,9 @@ export function fieldLife(
       replacementRow: null,
       rows: [start.id],
       basis,
+      origin:
+        start.origin ||
+        (basis === 'replacement' ? 'Troca anterior' : 'Implementação do rastreador'),
     };
     if (start.date && start.date > limit) continue;
     let state = 'observed',
@@ -236,7 +302,7 @@ export function fieldLife(
               .filter(
                 (e) =>
                   e.id !== start.id &&
-                  e.client === start.client &&
+                  e.clientKey === start.clientKey &&
                   e.plate === start.plate &&
                   e.date &&
                   e.date < start.date &&
@@ -244,7 +310,8 @@ export function fieldLife(
                     ? e.serial === start.serial && e.kind
                     : (e.category === start.equipment &&
                         (e.accessoryInstallation || e.accessorySwap)) ||
-                      (e.kind === 'removal' && e.type === 'Cancelamento')),
+                      (e.kind === 'removal' && e.type === 'Cancelamento') ||
+                      (start.origin === 'Implementação do veículo' && e.type === 'Implementação')),
               )
               .sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id)[0]
           : null;
@@ -260,10 +327,31 @@ export function fieldLife(
           (event.date && (event.date < start.date || event.date > limit))
         )
           continue;
-        const sameVehicle = event.client === start.client && event.plate === start.plate;
+        const sameVehicle = event.clientKey === start.clientKey && event.plate === start.plate;
         let candidate = null;
         if (start.equipment === 'Rastreador') {
           const sameSerial = event.serial === start.serial && validSerial(original, event.row);
+          if (uncertainInterventions.has(event.id) && (sameVehicle || sameSerial)) {
+            candidates.push({
+              state: 'review',
+              reason:
+                'Evento de manutenção com identificação ou data para revisão; duração inconclusiva.',
+              event,
+            });
+            continue;
+          }
+          if (
+            unresolvedPairs.has(event.id) &&
+            (sameVehicle || unresolvedPairs.get(event.id).serials.includes(start.serial))
+          ) {
+            candidates.push({
+              state: 'review',
+              reason:
+                'Troca confirmada no chamado, mas direção, cliente ou data insuficientes para encerrar este ciclo.',
+              event,
+            });
+            continue;
+          }
           if (!event.kind) continue;
           if (sameSerial && !sameVehicle)
             candidate = {
@@ -322,10 +410,14 @@ export function fieldLife(
                   reason:
                     'Troca de acessório sem categoria inequívoca antes do encerramento deste ciclo.',
                 };
-          else if (event.accessoryInstallation && event.category === start.equipment)
+          else if (
+            (event.accessoryInstallation && event.category === start.equipment) ||
+            event.type === 'Implementação'
+          )
             candidate = {
               state: 'review',
-              reason: 'Outra instalação da mesma categoria sem troca intermediária; revisar ciclo.',
+              reason:
+                'Outra instalação/implementação na mesma placa sem troca intermediária; revisar ciclo.',
             };
           else if (event.kind === 'removal' && event.type === 'Cancelamento')
             candidate = {
@@ -409,12 +501,16 @@ export function fieldLife(
       });
   const unmeasured = [];
   const events = [
-    ...replacement.pairs.map((pair) => ({
+    ...datedPairs.map((pair) => ({
       category: 'Rastreador',
       date: pair.date,
       row: pair.removalRow,
       rows: pair.rows,
       client: pair.client,
+      clientKey: customerIdentity(
+        original,
+        original.rows.find((row) => row.sourceRow === pair.removalRow),
+      ).key,
       plate: pair.plate,
       serial: pair.oldSerial,
     })),
@@ -426,6 +522,7 @@ export function fieldLife(
         row: e.id,
         rows: [e.id],
         client: e.client,
+        clientKey: e.clientKey,
         plate: e.plate,
         serial: '',
       })),
@@ -442,7 +539,7 @@ export function fieldLife(
     const candidates = starts.filter(
       (s) =>
         s.equipment === event.category &&
-        s.client === event.client &&
+        s.clientKey === event.clientKey &&
         s.plate === event.plate &&
         (event.category !== 'Rastreador' || s.serial === event.serial) &&
         s.date &&

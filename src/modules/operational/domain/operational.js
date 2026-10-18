@@ -4,6 +4,7 @@
  */
 import XLSX from 'xlsx';
 import { field } from '../../../shared/data/filters.js';
+import { trackerModel } from '../../orders/domain/trackerModels.js';
 export const operationalFields = {
   number: 'A',
   document: 'B',
@@ -269,6 +270,16 @@ export function linkOperational(data, orders) {
             : services.length
               ? 'Com histórico disponível'
               : 'Sem atendimento no histórico disponível';
-    return { ...row, services: state === 'Com histórico disponível' ? services : [], state };
+    return {
+      ...row,
+      declaredModel: row.model,
+      model:
+        trackerModel({
+          ...operationalCell(row, 'serial'),
+          issue: operationalCell(row, 'serial')?.error,
+        }) || 'Modelo não identificado pelo serial',
+      services: state === 'Com histórico disponível' ? services : [],
+      state,
+    };
   });
 }

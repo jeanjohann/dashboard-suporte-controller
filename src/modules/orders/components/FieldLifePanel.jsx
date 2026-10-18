@@ -58,7 +58,9 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
         ['Categoria', category],
         [
           'Início',
-          basis === 'initial' ? 'Instalação inicial explícita' : 'Entrada em uma troca anterior',
+          basis === 'initial'
+            ? 'Implementação ou instalação explícita da categoria'
+            : 'Troca anterior da mesma categoria',
         ],
         [
           'Seleção',
@@ -117,6 +119,7 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
           'Categoria',
           'Modelo',
           'Serial',
+          'Início utilizado',
           'Instalação',
           'Troca / limite',
           'Situação',
@@ -130,6 +133,7 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
           p.category,
           p.model,
           p.serial,
+          p.origin,
           p.start || '',
           p.end || '',
           lifeStates[p.state],
@@ -204,7 +208,7 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
             <label>
               Início do ciclo
               <select value={basis} onChange={(e) => change(setBasis, e.target.value)}>
-                <option value="initial">Instalação inicial até primeira troca</option>
+                <option value="initial">Implementação / instalação até primeira troca</option>
                 <option value="replacement">Entrada em uma troca até próxima troca</option>
               </select>
             </label>
@@ -230,6 +234,9 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
             </label>
           </div>
           <p className="scope life-method">
+            Acessórios: primeira troca desde a implementação do cliente/placa, ou instalação
+            explícita mais precisa. Depois, desde a troca anterior da mesma categoria. Manutenção
+            sem troca não reinicia o ciclo.{' '}
             {scope === 'installation'
               ? 'O período e os demais filtros selecionam as instalações. A troca pode ocorrer depois do período selecionado, até o limite do histórico.'
               : 'O período e os demais filtros selecionam a retirada do rastreador ou a troca do acessório. A instalação é procurada no histórico completo.'}{' '}
@@ -529,6 +536,7 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                           'Placa',
                           'Modelo / categoria',
                           'Serial',
+                          'Início utilizado',
                           'Instalação',
                           'Troca / limite',
                           'Situação',
@@ -546,6 +554,7 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
                           <td>{p.plate || 'Sem placa'}</td>
                           <td>{p.model}</td>
                           <td>{p.serial || 'Não utilizado'}</td>
+                          <td>{p.origin}</td>
                           <td data-sort={p.start}>{date(p.start)}</td>
                           <td data-sort={p.end}>{date(p.end)}</td>
                           <td title={p.reason}>
@@ -643,9 +652,10 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
           <details className="life-details">
             <summary>Critérios usados nesta análise</summary>
             <InfoNote>
-              Critério conservador desta etapa: instalação explícita dos acessórios e par de
-              rastreador no mesmo chamado e data. Instalações antigas e vínculos adicionais poderão
-              ampliar a base após validação.
+              Critérios confirmados: acessórios iniciam pela implementação do cliente/placa ou
+              instalação explícita mais precisa; próximos ciclos usam a troca anterior da categoria.
+              Rastreadores usam retirada e instalação no mesmo chamado, placa e data, com IDs
+              diferentes.
             </InfoNote>
             <InfoNote>
               Rastreador inicial: Implementação com motivo de instalação e serial válido. Troca:
@@ -655,11 +665,13 @@ export function FieldLifePanel({ original, data, filename, filters, visible }) {
               troca posterior.
             </InfoNote>
             <InfoNote>
-              Acessório inicial: Instalação de Acessório com instalação explícita e categoria
-              identificada nas instruções. Troca: Assistência Técnica / Manutenção de Acessório com
-              troca/trocar explícito da mesma categoria, cliente e placa. Coletora, teclado e
-              terminal compartilham categoria. Serial não é utilizado. Implementação do rastreador
-              não presume instalação de acessórios pelo plano.
+              Acessório inicial: implementação do cliente/placa como referência, com categoria
+              identificada no histórico; instalação explícita anterior ao primeiro atendimento tem
+              prioridade. Troca: Assistência Técnica / Manutenção de Acessório com troca/trocar
+              explícito da mesma categoria, cliente e placa. Coletora, teclado e terminal
+              compartilham categoria. Serial do acessório não é utilizado. A referência da
+              implementação não prova a instalação física diária; manutenção sem troca não reinicia
+              o ciclo.
             </InfoNote>
             <InfoNote>
               Instalações na mesma data do encerramento, duplicidades, identificação incompatível e

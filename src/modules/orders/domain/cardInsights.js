@@ -5,10 +5,12 @@ import { isUnproductive } from './attendanceKind.js';
  */
 import { field } from '../../../shared/data/filters.js';
 import { money } from './analysis.js';
+import { customerIdentity } from './customerIdentity.js';
 const completed = (data, row) => ['Concluída', 'Pago'].includes(field(data, row, 'Status')?.raw);
 function groupRows(data, rows, label) {
   const map = new Map();
   for (const row of rows) {
+    const identity = label === 'Razão Social' ? customerIdentity(data, row) : null;
     const cell = field(data, row, label),
       name =
         label === 'Tipo de Serviço' && isUnproductive(data, row)
@@ -16,16 +18,19 @@ function groupRows(data, rows, label) {
           : cell?.issue
             ? 'Valor com erro'
             : String(cell?.raw ?? '').trim() || 'Não informado';
-    let group = map.get(name);
+    const key = identity?.key || name;
+    let group = map.get(key);
     if (!group) {
       group = {
-        label: name,
-        identified: !cell?.issue && Boolean(String(cell?.raw ?? '').trim()),
+        label: identity?.label || name,
+        identified: identity
+          ? identity.key !== 'Sem cliente'
+          : !cell?.issue && Boolean(String(cell?.raw ?? '').trim()),
         rows: [],
         costRows: [],
         costSum: 0,
       };
-      map.set(name, group);
+      map.set(key, group);
     }
     group.rows.push(row.sourceRow);
     const cost = money(field(data, row, 'Custo Total'));

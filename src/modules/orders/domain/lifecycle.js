@@ -4,6 +4,7 @@
  */
 import { field, attendanceDate } from '../../../shared/data/filters.js';
 import { trackerMotives } from './equipment.js';
+import { trackerReplacementPairs } from './trackerReplacements.js';
 /** Obtém a data de referência no fuso de São Paulo para os ciclos sem retirada registrada. */
 export function todaySaoPaulo(now = new Date()) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -36,6 +37,26 @@ export function observedPeriods(data, selected, referenceDate = todaySaoPaulo())
     groups = new Map(),
     review = [],
     periods = [];
+  const interventions = trackerReplacementPairs(data);
+  const unchangedRows = new Set(interventions.withoutReplacement.flatMap((item) => item.rows));
+  const unresolved = interventions.pairs.filter((pair) => !pair.lifecycleEligible);
+  const issueRows = new Set(interventions.issues.map((issue) => issue.row));
+  const uncertainRows = data.rows.filter((row) => issueRows.has(row.sourceRow));
+  const uncertainInterval = (start, end) =>
+    unresolved.some(
+      (pair) =>
+        pair.plate === start.plate &&
+        pair.serials.includes(start.serial) &&
+        (pair.dates.some((date) => !date) ||
+          pair.dates.some((date) => date >= start.date && date <= end)),
+    ) ||
+    uncertainRows.some(
+      (row) =>
+        String(field(data, row, 'Placa')?.raw ?? '').trim() === start.plate &&
+        String(field(data, row, 'ID Rastreador')?.raw ?? '').trim() === start.serial &&
+        (!attendanceDate(data, row) ||
+          (attendanceDate(data, row) >= start.date && attendanceDate(data, row) <= end)),
+    );
   const flag = (row, reason) => {
     if (!selection.has(row.sourceRow)) return;
     const col = data.columns.find((col) => col.label === 'Data de atendimento');
@@ -48,6 +69,7 @@ export function observedPeriods(data, selected, referenceDate = todaySaoPaulo())
     });
   };
   for (const row of data.rows) {
+    if (unchangedRows.has(row.sourceRow)) continue;
     if (!['Pago', 'Concluída'].includes(field(data, row, 'Status')?.raw)) continue;
     const motive = field(data, row, 'Motivo')?.raw;
     const kind = trackerMotives.installation.includes(motive)
@@ -94,6 +116,14 @@ export function observedPeriods(data, selected, referenceDate = todaySaoPaulo())
         continue;
       }
       const start = installations[0];
+      if (uncertainInterval(start, event.date)) {
+        flag(
+          start.row,
+          'Tempo observado: troca confirmada sem direção, cliente ou data comuns; duração inconclusiva.',
+        );
+        installations = [];
+        continue;
+      }
       if (field(data, start.row, 'Tipo de Serviço')?.raw !== 'Implementação') {
         flag(
           event.row,
@@ -133,6 +163,13 @@ export function observedPeriods(data, selected, referenceDate = todaySaoPaulo())
         flag(
           start.row,
           'Tempo observado: Implementação posterior à referência; período não calculado.',
+        );
+        continue;
+      }
+      if (uncertainInterval(start, referenceDate)) {
+        flag(
+          start.row,
+          'Tempo observado: troca confirmada sem direção, cliente ou data comuns; duração inconclusiva.',
         );
         continue;
       }

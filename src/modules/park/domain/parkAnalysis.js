@@ -29,7 +29,7 @@ export const parkColumns = {
 };
 const labels = {
   client: 'Cliente operacional',
-  model: 'Modelo operacional',
+  model: 'Modelo pelo serial',
   plan: 'Plano operacional',
   status: 'Situação operacional',
 };
@@ -238,7 +238,7 @@ export function parkReportTables(result, operational, orders, context = {}) {
     ],
     [
       'Titularidade',
-      'Agrupamento utiliza cliente/modelo/plano do operacional atual, sem confirmar o cliente ou contrato à época do serviço.',
+      'Cliente/plano vêm do operacional atual; modelo é identificado pelo prefixo do serial. A coluna Modelo original é preservada. Não confirma cliente ou contrato à época do serviço.',
     ],
     ['Realizados', 'Somente Concluída ou Pago; Cancelada excluída.'],
     [
@@ -284,6 +284,25 @@ export function parkReportTables(result, operational, orders, context = {}) {
     ['Base vinculável', result.base, 'registros'],
     ['Com assistência', result.withAssistance, 'registros'],
     ['Assistências realizadas', result.assistance, 'serviços'],
+    [
+      'Manutenção sem troca · rastreador/kit',
+      result.devices?.trackerAvailable ? result.devices.withoutReplacement.length : null,
+      'intervenções',
+    ],
+    [
+      'Coletora sem troca',
+      result.devices?.accessoryAvailable
+        ? result.devices.accessoryWithoutReplacement.Coletora.length
+        : null,
+      'serviços',
+    ],
+    [
+      'RFID sem troca',
+      result.devices?.accessoryAvailable
+        ? result.devices.accessoryWithoutReplacement.RFID.length
+        : null,
+      'serviços',
+    ],
     ['Assistências por 100 registros', result.rate, 'por 100'],
     [
       'Trocas de rastreador',

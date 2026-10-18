@@ -81,7 +81,7 @@ export function OperationalPage({
   const scopeLabel = `${page === 'operational-analysis' ? 'Parque e Manutenção' : 'Operacional'} → ${(page === 'operational-analysis' ? crossAnalysisMenus : operationalMenus).find((menu) => menu.key === menuCategory)?.label}`;
   const filterLabels = {
     client: 'Cliente operacional',
-    model: 'Modelo operacional',
+    model: 'Modelo pelo serial',
     plan: 'Plano operacional',
     status: 'Situação operacional',
     reviewCategory: 'Categoria da revisão',
@@ -383,7 +383,7 @@ export function OperationalPage({
                             <div className="filter-grid">
                               {[
                                 ['client', 'Cliente operacional'],
-                                ['model', 'Modelo operacional'],
+                                ['model', 'Modelo pelo serial'],
                                 ['plan', 'Plano operacional'],
                                 ['status', 'Situação operacional'],
                               ].map(([key, label]) => (
@@ -392,7 +392,7 @@ export function OperationalPage({
                                   label={label}
                                   values={filters[key] || []}
                                   options={[
-                                    ...new Set(data.rows.map((row) => row[key] || 'Não informado')),
+                                    ...new Set(linked.map((row) => row[key] || 'Não informado')),
                                   ].sort((a, b) => a.localeCompare(b, 'pt-BR'))}
                                   onChange={(values) => {
                                     setFilters((previous) => ({ ...previous, [key]: values }));
@@ -643,6 +643,11 @@ export function OperationalPage({
                             </div>
                           </Section>
                           <Section title="Registros operacionais">
+                            <p className="scope">
+                              Modelo identificado pelo prefixo do serial. A coluna Modelo da
+                              planilha permanece disponível em Original; não substitui um serial
+                              desconhecido.
+                            </p>
                             <div className="table-scroll">
                               <SortableTable
                                 sort={recordSort}
@@ -657,7 +662,7 @@ export function OperationalPage({
                                     <th>Cliente</th>
                                     <th>Serial</th>
                                     <th>Placa</th>
-                                    <th>Modelo</th>
+                                    <th>Modelo pelo serial</th>
                                     <th>Situação</th>
                                     <th>Original</th>
                                   </tr>
@@ -669,7 +674,11 @@ export function OperationalPage({
                                       <td>{r.client}</td>
                                       <td>{r.serial}</td>
                                       <td>{r.plate}</td>
-                                      <td>{r.model}</td>
+                                      <td
+                                        title={`Modelo lançado: ${r.declaredModel || 'Não informado'}`}
+                                      >
+                                        {r.model}
+                                      </td>
                                       <td>{r.status}</td>
                                       <td>
                                         <button onClick={() => setDetail(r)}>

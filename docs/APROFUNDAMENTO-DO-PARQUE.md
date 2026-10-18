@@ -6,7 +6,7 @@ Abra **Parque e Manutenção → Manutenção e relatórios → Visualização �
 
 ## Base e datas
 
-A análise recebe os mesmos pares serial + placa vinculáveis das análises de manutenção do parque. Registros ambíguos ou incompatíveis continuam fora da atribuição automática. Cliente/modelo são os da fotografia operacional atual, sem comprovar titularidade na época do serviço.
+A análise recebe os mesmos pares serial + placa vinculáveis das análises de manutenção do parque. Registros ambíguos ou incompatíveis continuam fora da atribuição automática. Cliente vem da fotografia operacional atual; desde 0.29.0, modelo é identificado pelo prefixo do serial, preservando a coluna original. Não comprova titularidade na época do serviço.
 
 Definições confirmadas pelo proprietário em 17/10/2026:
 
@@ -31,6 +31,6 @@ A busca da grade considera cliente, modelo, serial, placa e situação da data. 
 
 O CSV do histórico contém toda a grade filtrada, referências de origem, filtros, busca e data de referência. Não se limita à página exibida. Impressão/PDF mantém os gráficos, a página exibida e o detalhe aberto, com a referência temporal correta. Ambas as ações respeitam a permissão de exportação.
 
-Custos por equipamento, classificação de manutenção sem troca, matriz modelo × motivo e titularidade histórica continuam nas definições pendentes. A entrega não atribui custos do mesmo atendimento a vários equipamentos.
+Manutenção sem troca foi classificada em 0.29.0 conforme [regras confirmadas](CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md). Custos por equipamento, matriz modelo × motivo e titularidade histórica continuam pendentes. A entrega não atribui custos do mesmo atendimento a vários equipamentos.
 
 Arquivos: `modules/park/domain/parkHistory.js` calcula os indicadores; `components/ParkHistoryPanel.jsx` apresenta busca, paginação, origem e CSV. A análise recebe o resultado existente de `parkAnalysis`, sem criar outro mecanismo de vínculo.

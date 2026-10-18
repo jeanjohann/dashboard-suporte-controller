@@ -178,6 +178,50 @@ test('categoria acessório e cliente/placa não se misturam, serial não é usad
   assert.equal(p.state, 'replaced');
   assert.equal(p.days, 19);
 });
+test('acessório começa na implementação e segue a troca anterior da mesma categoria, sem reiniciar em revisões', () => {
+  const d = fixture([
+    initial('2025-01-01'),
+    accessory('2025-01-10', 'Verificar teclado'),
+    accessory('2025-01-20', 'Troca RFID'),
+    accessory('2025-02-01', 'Troca coletora'),
+    accessory('2025-02-10', 'Revisar terminal'),
+    accessory('2025-03-01', 'Troca teclado'),
+  ]);
+  const first = fieldLife(d, d);
+  const collector = first.periods.find((p) => p.category === 'Coletora');
+  assert.equal(collector.state, 'replaced');
+  assert.equal(collector.days, 31);
+  assert.equal(collector.origin, 'Implementação do veículo');
+  assert.deepEqual(collector.rows, [2, 5]);
+  assert.equal(first.periods.find((p) => p.category === 'RFID').days, 19);
+  const next = fieldLife(d, d, { basis: 'replacement' }).periods.find(
+    (p) => p.category === 'Coletora' && p.installationRow === 5,
+  );
+  assert.equal(next.days, 28);
+  assert.equal(next.origin, 'Troca anterior');
+  assert.deepEqual(next.rows, [5, 7]);
+  assert.equal(
+    d.rows[0].cells.find((c) => c.raw === 'Instalação de Acessório'),
+    undefined,
+  );
+});
+test('implementação de outro cliente/placa não cria origem do acessório; implementação duplicada fica em revisão', () => {
+  const other = fixture([
+    initial('2025-01-01', { 'Razão Social': 'Outro cliente' }),
+    accessory('2025-02-01', 'Troca RFID'),
+  ]);
+  assert.equal(fieldLife(other, other).periods.filter((p) => p.category === 'RFID').length, 0);
+  const duplicate = fixture([
+    initial('2025-01-01'),
+    initial('2025-01-05'),
+    accessory('2025-02-01', 'Troca RFID'),
+  ]);
+  assert.ok(
+    fieldLife(duplicate, duplicate)
+      .periods.filter((p) => p.category === 'RFID')
+      .every((p) => p.state === 'review'),
+  );
+});
 test('ciclo iniciado em troca anterior é separado da instalação inicial', () => {
   const d = fixture([
     initial(),

@@ -3,6 +3,7 @@ import { applyFilters, attendanceDate, field } from '../../../shared/data/filter
 import { isUnproductive } from './attendanceKind.js';
 import { previousPeriod } from './dashboard.js';
 import { validPlate } from './trackerReplacements.js';
+import { customerIdentity } from './customerIdentity.js';
 
 export const supportRoles = {
   execution: { column: 'Resp. Execução', date: 'Data de atendimento', label: 'Execução' },
@@ -45,6 +46,10 @@ export function supportPeriod(
 
 /** Dados ausentes não viram uma pessoa fictícia, cliente ou chamado contado no ranking. */
 function text(data, row, label) {
+  if (label === 'Razão Social') {
+    const identity = customerIdentity(data, row);
+    return identity.key === 'Sem cliente' ? '' : identity.key;
+  }
   const cell = field(data, row, label);
   return cell?.issue ? '' : String(cell?.raw ?? '').trim();
 }

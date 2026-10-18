@@ -22,6 +22,7 @@ import { csv, download } from '../../../shared/export/exports.js';
 import { financialFields, insightExportValues } from '../domain/insightExport.js';
 import { chartColors } from '../../../shared/charts/palette.js';
 import { ServiceProfilesContext } from './ServiceProfilesContext.jsx';
+import { CustomerIdentityNote } from './CustomerIdentityNote.jsx';
 const number = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const currency = (value) =>
@@ -225,6 +226,9 @@ export function AdvancedInsights({
     collector: 'Trocas de coletora',
     rfid: 'Trocas de RFID',
     unproductive: 'Visitas improdutivas',
+    withoutReplacement: 'Manutenção sem troca · rastreador/kit',
+    collectorWithoutReplacement: 'Coletora sem troca',
+    rfidWithoutReplacement: 'RFID sem troca',
   };
   return (
     <>
@@ -256,10 +260,12 @@ export function AdvancedInsights({
         ) : (
           <>
             <InfoNote>
-              Somente Concluída/Pago. Razão social identifica o cliente nesta etapa. Contratual não
-              é recebimento ou lucro. Custo total em cobranças Addlog usa Custo Total; Contratual
-              Addlog usa Valor a cobrar.
+              Somente Concluída/Pago. Cliente/filial usa o CNPJ completo da coluna C e a Base
+              clientes, quando disponíveis; sem CNPJ utilizável, conserva o nome original.
+              Contratual não é recebimento ou lucro. Custo total em cobranças Addlog usa Custo
+              Total; Contratual Addlog usa Valor a cobrar.
             </InfoNote>
+            <CustomerIdentityNote data={data} />
             <div className="summary-grid">
               {totals.map((item) => (
                 <div className="summary-card" key={item.label}>
@@ -619,9 +625,10 @@ export function AdvancedInsights({
               Implementações e assistências usam Tipo de Serviço. Retiradas usam os motivos
               explícitos de desinstalação de rastreadores. Troca de rastreador é um evento com duas
               linhas; acessórios seguem as regras aprovadas. Categorias se sobrepõem e não devem ser
-              somadas como total de atendimentos. Manutenção sem troca continua sem classificação.
-              Trocas são atribuídas ao cliente da instalação; pares entre clientes diferentes exigem
-              conferência.
+              somadas como total de atendimentos. Uma linha com um ID válido no mesmo chamado e
+              placa confirma manutenção sem troca de rastreador/kit; duas linhas com IDs distintos
+              confirmam um evento de troca. Acessórios usam Manutenção de Acessório e troca/trocar
+              nas instruções. Pares sem direção ou cliente comum não autorizam cálculo de vida útil.
             </InfoNote>
             <label>
               Intervenção no gráfico{' '}
@@ -636,9 +643,15 @@ export function AdvancedInsights({
                 ))}
               </select>
             </label>
-            {((profileMetric === 'collector' || profileMetric === 'rfid') &&
+            {([
+              'collector',
+              'rfid',
+              'collectorWithoutReplacement',
+              'rfidWithoutReplacement',
+            ].includes(profileMetric) &&
               !devices?.accessoryAvailable) ||
-            (profileMetric === 'trackers' && !devices?.trackerAvailable) ? (
+            (['trackers', 'withoutReplacement'].includes(profileMetric) &&
+              !devices?.trackerAvailable) ? (
               <p>Categoria indisponível: faltam colunas de equipamentos.</p>
             ) : (
               <Chart
@@ -647,9 +660,15 @@ export function AdvancedInsights({
                 items={profiles.map((item) => ({
                   label: item.label,
                   value:
-                    ((profileMetric === 'collector' || profileMetric === 'rfid') &&
+                    ([
+                      'collector',
+                      'rfid',
+                      'collectorWithoutReplacement',
+                      'rfidWithoutReplacement',
+                    ].includes(profileMetric) &&
                       !devices?.accessoryAvailable) ||
-                    (profileMetric === 'trackers' && !devices?.trackerAvailable)
+                    (['trackers', 'withoutReplacement'].includes(profileMetric) &&
+                      !devices?.trackerAvailable)
                       ? 0
                       : item[profileMetric],
                 }))}
@@ -664,8 +683,14 @@ export function AdvancedInsights({
                 item.label,
                 item.rows.length,
                 ...Object.keys(profileLabels).map((key) =>
-                  ((key === 'collector' || key === 'rfid') && !devices?.accessoryAvailable) ||
-                  (key === 'trackers' && !devices?.trackerAvailable)
+                  ([
+                    'collector',
+                    'rfid',
+                    'collectorWithoutReplacement',
+                    'rfidWithoutReplacement',
+                  ].includes(key) &&
+                    !devices?.accessoryAvailable) ||
+                  (['trackers', 'withoutReplacement'].includes(key) && !devices?.trackerAvailable)
                     ? 'Indisponível'
                     : item[key],
                 ),
@@ -723,12 +748,12 @@ export function AdvancedInsights({
             <InfoNote>
               Mediana e distribuição usam somente ciclos encerrados vinculados pelas regras
               aprovadas. Modelo identificado pelo prefixo do ID Rastreador da Implementação: 162 →
-              MXT-162; 144 → MXT-130v2; 130/137 → MXT-130v1; 141/142/143 → MXT-141. Modelo original
-              e cliente também podem ser usados para comparação. IDs sem prefixo reconhecido ficam
-              em grupo separado e não são excluídos dos ciclos. Sem retirada registrada aparece
-              separado e não entra na mediana. Retirada pode ser cancelamento; não representa
-              automaticamente falha ou vida útil. Os filtros existentes também limitam os ciclos
-              elegíveis.
+              MXT-162; 144 → MXT-130v2; 130/137 → MXT-130v1; 141/142/143 e 81–85 → MXT-141. Modelo
+              original e cliente também podem ser usados para comparação. IDs sem prefixo
+              reconhecido ficam em grupo separado e não são excluídos dos ciclos. Sem retirada
+              registrada aparece separado e não entra na mediana. Retirada pode ser cancelamento;
+              não representa automaticamente falha ou vida útil. Os filtros existentes também
+              limitam os ciclos elegíveis.
             </InfoNote>
             <div className="summary-grid">
               {[

@@ -50,3 +50,9 @@ test('duração usa modelo por prefixo e mantém desconhecidos, originais e cicl
   assert.ok(result.items.some((g) => g.label === 'Modelo não identificado pelo ID'));
   assert.equal(durationInsights(data, { periods }, 'Modelo').items[0].label, 'Original');
 });
+test('prefixos 81 a 85 identificam MXT-141 por dois dígitos, sem retirar zeros iniciais ou confiar no modelo lançado', () => {
+  for (const prefix of ['81', '82', '83', '84', '85'])
+    assert.equal(trackerModel({ raw: prefix + '1234567' }), 'MXT-141');
+  assert.equal(trackerModel({ raw: '0811234567' }), null);
+  assert.equal(trackerModel({ raw: '861234567' }), null);
+});

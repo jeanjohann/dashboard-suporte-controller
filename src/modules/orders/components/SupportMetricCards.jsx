@@ -35,14 +35,14 @@ const metrics = [
     label: 'Clientes identificados',
     icon: 'building',
     tone: 'finance',
-    help: 'Razões sociais utilizáveis distintas nas linhas Concluída/Pago, incluindo improdutivas. Exclui nomes vazios/com erro e ignora espaços externos. Não une grafias, filiais ou CNPJs. Não somar clientes entre pessoas ou papéis.',
+    help: 'Clientes/filiais distintos nas linhas Concluída/Pago, incluindo improdutivas. Usa o CNPJ completo da coluna C e a Base clientes quando disponíveis; sem CNPJ utilizável, conserva o nome original. Não une filiais pela raiz nem soma clientes entre pessoas ou papéis.',
   },
   {
     key: 'vehicles',
     label: 'Veículos identificados',
     icon: 'vehicle',
     tone: 'coverage',
-    help: 'Pares utilizáveis de razão social + placa nas linhas realizadas, incluindo improdutivas. Mesmo par conta uma vez; a mesma placa em clientes diferentes conta em cada par. Exclui células vazias/com erro e placas 0, -, ?, s/placa, sem placa e sem dados. Não valida toda a grafia nem representa frota ativa. Sem as colunas necessárias, fica indisponível.',
+    help: 'Pares utilizáveis de cliente/filial + placa nas linhas realizadas, incluindo improdutivas. CNPJ completo da coluna C diferencia filiais; sem CNPJ, usa nome original. Mesmo par conta uma vez; placas provisórias ou com erro ficam fora. Não representa frota ativa.',
   },
   {
     key: 'unproductiveRate',
