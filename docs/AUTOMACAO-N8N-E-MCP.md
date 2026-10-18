@@ -2,7 +2,20 @@
 
 ## Situação em 18/10/2026
 
-O proprietário solicitou incluir o n8n na fila junto às integrações. O escopo atual é planejar e homologar sua utilização como coordenador das coletas e automações. Não houve instalação, criação de conta, configuração de credenciais, envio de dados nem ativação de coleta.
+O proprietário solicitou incluir o n8n na fila junto às integrações. O escopo é planejar e homologar sua utilização como coordenador das coletas e automações. Em 18/10/2026 foi instalado um laboratório local via npm no Windows, descrito abaixo. A criação da conta aguarda o proprietário; não foram configuradas credenciais de fontes, IA, MCP ou coleta real.
+
+## Laboratório Windows via npm — instalado em 18/10/2026
+
+- **Versão:** n8n 2.43.7, fixa; Node.js 24.15.0. O requisito do pacote publicado é Node >=24, confirmado antes da instalação.
+- **Instalação e dados:** `%LOCALAPPDATA%\Addlog\n8n-lab`, fora do OneDrive e das dependências do dashboard. A subpasta `data` contém os dados persistentes; banco e chave de criptografia devem ser preservados juntos em um futuro backup.
+- **Acesso:** `http://localhost:5678`, publicado somente em `127.0.0.1`. Saúde, prontidão do banco e interface responderam HTTP 200; a tela `/setup` de criação da conta foi conferida sem preencher dados.
+- **Execução:** processo local em segundo plano, sem serviço do Windows nem inicialização automática no boot. O arquivo `Iniciar-n8n.ps1` fica junto à instalação; verifica o processo registrado para evitar uma segunda inicialização do mesmo laboratório. Fuso de São Paulo, diagnóstico/telemetria desativado e limpeza das execuções após sete dias.
+- **Estado inicial:** nenhum fluxo ou fonte real conectado. O proprietário deve criar sua conta diretamente na página local; senhas e chaves não devem ser enviadas pelo chat.
+- **Limites:** o n8n Assistant de criação de fluxos não está disponível pela instalação npm; isso é distinto do futuro agente de consultas do sistema. O executor Python não foi configurado. A documentação informa descontinuação da instalação npm a partir da versão 3; esta versão fixa 2.x é um laboratório, não uma decisão de infraestrutura de produção.
+
+A alternativa npm foi adotada após impedimento do hipervisor no Docker/WSL. A investigação de firmware ficou separada; não houve atualização de BIOS, desativação de proteções ou exposição pública do laboratório. O módulo Assistente do dashboard permanece uma prévia sem conexão com este serviço.
+
+Referência: [Instalar via npm](https://docs.n8n.io/deploy/host-n8n/install-options/install-with-npm).
 
 O proprietário aprovou desenvolver o assistente em um módulo separado, oculto enquanto amadurece. A estrutura inicial foi entregue em 0.31.0; MCP, IA, consultas reais e ações continuam pendentes. Os exemplos abaixo são propostas de funcionalidades futuras, não autorização para executar ações sobre as fontes.
 
