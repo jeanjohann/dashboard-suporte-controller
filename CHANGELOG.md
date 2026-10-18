@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.31.0 — 18/10/2026
+
+- Cria módulo separado Assistente de suporte, oculto do menu e acessível somente a administradores ativos pelo endereço `#assistente-laboratorio`.
+- Estrutura inicial com sugestões de perguntas, rascunho na sessão e recursos futuros identificados. Consulta desabilitada; sem acesso às bases, IA, MCP ou n8n. Página/CSS carregados apenas ao abrir o laboratório.
+- Retorno ao sistema preserva o funcionamento das páginas e remove o fragmento experimental. Documentação e fila atualizadas; consulta real e integrações seguem pendentes.
+
 ## 0.30.0 — 18/10/2026
 
 - Agrupamento analítico por Cliente consolidado ou CNPJ / filial, independente por categoria de OS. Razões sociais exatamente iguais na Base clientes são consolidadas por padrão, conforme autorização do proprietário; a opção pode ser desativada.

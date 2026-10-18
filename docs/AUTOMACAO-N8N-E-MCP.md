@@ -4,7 +4,17 @@
 
 O proprietário solicitou incluir o n8n na fila junto às integrações. O escopo atual é planejar e homologar sua utilização como coordenador das coletas e automações. Não houve instalação, criação de conta, configuração de credenciais, envio de dados nem ativação de coleta.
 
-O uso de MCP foi levantado para análise. Os exemplos abaixo são propostas de funcionalidades futuras, não recursos implementados ou autorização para executar ações sobre as fontes.
+O proprietário aprovou desenvolver o assistente em um módulo separado, oculto enquanto amadurece. A estrutura inicial foi entregue em 0.31.0; MCP, IA, consultas reais e ações continuam pendentes. Os exemplos abaixo são propostas de funcionalidades futuras, não autorização para executar ações sobre as fontes.
+
+## Página experimental — 0.31.0
+
+**Assistente de suporte** fica fora do menu, da busca de navegação e das permissões distribuíveis aos usuários comuns. Para conferir a prévia, entre como administrador ativo e abra o sistema com o fragmento `#assistente-laboratorio`: [abrir laboratório](https://dashboard-suporte-controller.jean-johann.workers.dev/#assistente-laboratorio).
+
+A página possui sugestões por assunto, campo de pergunta e indicação de desenvolvimento. Clicar em uma sugestão preenche o rascunho; o botão de consulta permanece desabilitado. Não recebe planilhas, não acessa dados do navegador, não possui endpoints de consulta e não envia conteúdo a serviços externos. O texto permanece na memória ao navegar, sendo descartado ao recarregar/sair da sessão. O botão Voltar ao sistema remove o fragmento do endereço.
+
+O módulo e seu CSS são carregados somente na primeira abertura autorizada. O acesso é conferido antes de montar a página e também no componente. O fragmento é apenas o endereço; não concede permissão. Usuários comuns permanecem nas páginas autorizadas, sem carregar o módulo experimental. A autenticação do sistema permanece obrigatória.
+
+Arquivos em `src/modules/assistant/`; entrada explícita coordenada pelo Workspace. Para consultas reais, a autorização precisará existir também no serviço de servidor que vier a ser implementado. A barreira atual protege uma prévia visual, sem ferramentas ou acesso a dados.
 
 ## Automação das integrações — A18
 

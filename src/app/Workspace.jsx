@@ -5,8 +5,19 @@
 import { useAccess } from '../shared/security/Access.jsx';
 import { allowsPage, allowsSource } from '../shared/security/permissions.js';
 import { authorizeAction, accessUser } from '../shared/security/accessClient.js';
-import React, { lazy, useState } from 'react';
+import React, { lazy, useEffect, useState } from 'react';
 import { DeferredPage } from './DeferredPage.jsx';
+import {
+  assistantPreviewHash,
+  canOpenAssistantPreview,
+  requestsAssistantPreview,
+} from '../modules/assistant/domain/previewAccess.js';
+
+const AssistantPage = lazy(() =>
+  import('../modules/assistant/components/AssistantPage.jsx').then((module) => ({
+    default: module.AssistantPage,
+  })),
+);
 
 // Declarações estáveis: recriar lazy dentro do Workspace reiniciaria os estados das páginas.
 const UsersPage = lazy(() =>
@@ -42,12 +53,33 @@ const MonitoringPage = lazy(() =>
 /** Mantém as bases da sessão e coordena páginas autorizadas e importações conjuntas. */
 export function Workspace() {
   const { user } = useAccess();
-  const allowed = (key) => allowsPage(user, key);
-  const [page, setPage] = useState('orders'),
+  const allowed = (key) =>
+    key === 'assistant-lab' ? canOpenAssistantPreview(user) : allowsPage(user, key);
+  const [page, setPage] = useState(() =>
+      requestsAssistantPreview(user, window.location.hash) ? 'assistant-lab' : 'orders',
+    ),
     [orders, setOrders] = useState(null),
     [operational, setOperational] = useState(null),
     [logistics, setLogistics] = useState(null),
     [consumptionRevision, setConsumptionRevision] = useState(0);
+  // Entrada explícita de laboratório; nunca é adicionada ao menu ou às permissões de usuários comuns.
+  useEffect(() => {
+    const syncPreview = () => {
+      if (requestsAssistantPreview(user, window.location.hash)) setPage('assistant-lab');
+      else setPage((current) => (current === 'assistant-lab' ? 'orders' : current));
+    };
+    window.addEventListener('hashchange', syncPreview);
+    return () => window.removeEventListener('hashchange', syncPreview);
+  }, [user]);
+  function navigate(key) {
+    if (key !== 'assistant-lab' && window.location.hash === assistantPreviewHash)
+      window.history.replaceState(
+        window.history.state,
+        '',
+        window.location.pathname + window.location.search,
+      );
+    setPage(key);
+  }
   // A autorização é reconsultada antes de aplicar o lote; ocultar um botão não basta.
   async function applyBatch(batch) {
     if (!(await authorizeAction('import'))) throw Error('Importação não autorizada.');
@@ -90,30 +122,38 @@ export function Workspace() {
   return (
     <>
       <DeferredPage
+        active={current === 'assistant-lab'}
+        allowed={canOpenAssistantPreview(user)}
+        page="assistant-lab"
+        onPage={navigate}
+      >
+        <AssistantPage onPage={navigate} />
+      </DeferredPage>
+      <DeferredPage
         active={current === 'users'}
         allowed={allowed('users')}
         page="users"
-        onPage={setPage}
+        onPage={navigate}
         keepMounted={false}
       >
-        <UsersPage onPage={setPage} />
+        <UsersPage onPage={navigate} />
       </DeferredPage>
       <DeferredPage
         active={current === 'monitoring'}
         allowed={allowed('monitoring')}
         page="monitoring"
-        onPage={setPage}
+        onPage={navigate}
       >
-        <MonitoringPage onPage={setPage} />
+        <MonitoringPage onPage={navigate} />
       </DeferredPage>
       <DeferredPage
         active={current === 'imports'}
         allowed={allowed('imports')}
         page="imports"
-        onPage={setPage}
+        onPage={navigate}
       >
         <ImportPage
-          onPage={setPage}
+          onPage={navigate}
           onApply={applyBatch}
           orders={allowed('orders') || allowed('operational-analysis') ? orders : null}
           operational={
@@ -126,13 +166,13 @@ export function Workspace() {
         active={current === 'orders'}
         allowed={allowed('orders')}
         page="orders"
-        onPage={setPage}
+        onPage={navigate}
       >
         {/* Manter a página permitida montada conserva filtros; sem permissão, ela não é criada. */}
         <OrdersPage
           active={current === 'orders'}
           operational={allowed('operational-analysis') ? operational : null}
-          onPage={setPage}
+          onPage={navigate}
           onImport={setOrders}
           source={orders}
         />
@@ -141,10 +181,10 @@ export function Workspace() {
         active={current === 'lines'}
         allowed={allowed('lines')}
         page="lines"
-        onPage={setPage}
+        onPage={navigate}
       >
         <LinesPage
-          onPage={setPage}
+          onPage={navigate}
           operational={operational}
           onOperationalChange={setOperational}
           reloadToken={consumptionRevision}
@@ -160,7 +200,7 @@ export function Workspace() {
               ? 'operational'
               : 'operational-analysis'
         }
-        onPage={setPage}
+        onPage={navigate}
       >
         <OperationalPage
           page={
@@ -170,7 +210,7 @@ export function Workspace() {
                 ? 'operational'
                 : 'operational-analysis'
           }
-          onPage={setPage}
+          onPage={navigate}
           orders={orders}
           source={operational}
           setSource={setOperational}

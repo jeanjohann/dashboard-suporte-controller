@@ -1,0 +1,115 @@
+/* Estilos exclusivos do laboratório, carregados somente na primeira abertura da página. */
+.assistant-lab main {
+  min-width: 0;
+}
+.assistant-lab header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.assistant-development {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  border: 1px solid var(--ui-border);
+  border-left: 3px solid var(--ui-accent-ink);
+  border-radius: 10px;
+  background: var(--ui-soft);
+  font-size: 12px;
+}
+.assistant-query,
+.assistant-next {
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.assistant-heading,
+.assistant-query-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.assistant-badge {
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-ink);
+  font-size: 11px;
+}
+.assistant-suggestions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+.assistant-suggestions button {
+  display: grid;
+  gap: 7px;
+  text-align: left;
+  padding: 14px;
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+  border: 1px solid var(--ui-border);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.assistant-suggestions button:hover {
+  border-color: var(--ui-accent-ink);
+}
+.assistant-suggestions span,
+.assistant-development span {
+  color: var(--ui-muted);
+}
+.assistant-query label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.assistant-query textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  font: inherit;
+  font-size: 13px;
+  padding: 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+}
+.assistant-query-footer {
+  margin-top: 10px;
+}
+.assistant-query-footer button {
+  padding: 9px 12px;
+  font-size: 12px;
+}
+.assistant-response-plan {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 16px 0;
+}
+.assistant-response-plan h3 {
+  font-size: 13px;
+}
+.assistant-response-plan p {
+  color: var(--ui-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+@media (max-width: 700px) {
+  .assistant-suggestions,
+  .assistant-response-plan {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .assistant-query,
+  .assistant-next {
+    padding: 14px;
+  }
+}

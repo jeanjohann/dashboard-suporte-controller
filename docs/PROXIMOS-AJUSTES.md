@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Entregue em 0.31.0: estrutura inicial do [Assistente de suporte experimental](AUTOMACAO-N8N-E-MCP.md), em página separada e oculta, restrita a administradores. Sugestões e rascunho disponíveis; consultas reais, MCP, IA e n8n não foram conectados.
+
 Entregue em 0.30.0: [clientes consolidados e filiais](AGRUPAMENTO-DE-CLIENTES.md), com razões sociais idênticas agrupadas por padrão, coluna explícita opcional e visão por CNPJ. Preserva vínculos e ciclos originais.
 
 Entregue em 0.29.0: manutenção sem troca, origem e próximos ciclos dos acessórios, rankings de trocas, identificação por CNPJ completo e modelos pelo serial. [Regras confirmadas e utilização](CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md).
@@ -18,7 +20,7 @@ Piloto Google Sheets de OS preparado em 0.23.0, com fonte fixa e acesso exclusiv
 
 Atualizada em 18/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
 
-Incluído pelo proprietário em 18/10/2026: **n8n como candidato à coordenação das integrações**, junto ao Monitoramento, KORE/Arqia, Zoho e Google Sheets. Hospedagem, coleta, autenticação com o sistema e armazenamento dependem de projeto e homologação. O uso de **MCP para um assistente de consultas** está em avaliação, sem implementação ou ativação aprovada nesta etapa. [Escopo e proposta](AUTOMACAO-N8N-E-MCP.md).
+Incluído pelo proprietário em 18/10/2026: **n8n como candidato à coordenação das integrações**, junto ao Monitoramento, KORE/Arqia, Zoho e Google Sheets. Hospedagem, coleta, autenticação com o sistema e armazenamento dependem de projeto e homologação. O uso de **MCP para um assistente de consultas** tem sua estrutura visual oculta aprovada e entregue em 0.31.0; integração e ativação real continuam pendentes. [Escopo e proposta](AUTOMACAO-N8N-E-MCP.md).
 
 | Código | Item                                                                                                                 | Situação / dependência                                                                                                                       | Prioridade |
 | ------ | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -46,10 +48,10 @@ Incluído pelo proprietário em 18/10/2026: **n8n como candidato à coordenaçã
 
 Pendências adicionais de automação:
 
-| Código  | Item                              | Situação / dependência                                                                                                                                                                                                                                             | Prioridade   |
-| ------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
-| A18     | n8n — coordenação das integrações | Incluído na fila em 18/10/2026. Definir hospedagem, conexões autenticadas, armazenamento, frequência, tratamento de falhas e piloto com uma base do Monitoramento. Relacionado a A12–A15, Zoho e Google. Nenhuma instância ou coleta ativada.                      | A definir    |
-| A18-MCP | Assistente de consultas por MCP   | Proposta em avaliação. Definir ferramentas de consulta, cliente/IA, acesso aos dados no servidor e permissões por usuário/base. Um chat dentro do sistema exige interface e integração próprias. Não habilitar administração geral do n8n para usuários do painel. | Em avaliação |
+| Código  | Item                              | Situação / dependência                                                                                                                                                                                                                                                        | Prioridade   |
+| ------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| A18     | n8n — coordenação das integrações | Incluído na fila em 18/10/2026. Definir hospedagem, conexões autenticadas, armazenamento, frequência, tratamento de falhas e piloto com uma base do Monitoramento. Relacionado a A12–A15, Zoho e Google. Nenhuma instância ou coleta ativada.                                 | A definir    |
+| A18-MCP | Assistente de consultas por MCP   | Prévia oculta entregue em 0.31.0. Definir ferramentas de consulta, cliente/IA, acesso aos dados no servidor e permissões por usuário/base. Um chat dentro do sistema exige interface e integração próprias. Não habilitar administração geral do n8n para usuários do painel. | Em avaliação |
 
 ## Já entregues — não recolocar na fila
 
