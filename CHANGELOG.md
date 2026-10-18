@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.33.0 — 18/10/2026
+
+- Adiciona campo de perguntas e sugestões ao Assistente do laboratório, ligado ao nó AI Agent 3.1 do n8n com Gemini. Instruções fixas ficam no agente e a pergunta digitada é enviada separadamente.
+- Disponibiliza a ferramenta somente leitura `consultar_atendimentos`, limitada aos totais do último mês com realizados na OS. O agente pode consultar números/critérios e deve explicar a limitação para filtros e assuntos indisponíveis.
+- Contexto efêmero por execução e snapshot único; cards e fonte só aparecem quando a ferramenta é chamada. Sem memória entre perguntas, MCP, comandos dinâmicos, alteração de planilhas ou acesso livre a arquivos.
+- Mantém a autenticação do piloto local, limita tamanho do pedido e restringe o uso da ferramenta. Perguntas digitadas seguem para o Gemini; os resultados automáticos continuam sem identificadores dos clientes.
+
 ## 0.32.0 — 18/10/2026
 
 - Conecta o Assistente do laboratório à consulta fixa de volume de atendimentos do acervo local e à explicação do Gemini pelo n8n. Cards mostram os cálculos do sistema; fonte, período, revisão e critérios ficam disponíveis para conferência.

@@ -1,5 +1,7 @@
 /** A asserção Access permanece na memória e só segue para o serviço loopback fixo. */
-export async function queryLocalAssistant(fetcher = fetch) {
+export async function queryLocalAssistant(question, fetcher = fetch) {
+  if (typeof question !== 'string' || question.trim().length < 3 || question.length > 1000)
+    throw new Error('Escreva uma pergunta entre 3 e 1.000 caracteres.');
   const session = await fetcher('/api/assistant/local-session', {
     method: 'POST',
     credentials: 'same-origin',
@@ -16,7 +18,8 @@ export async function queryLocalAssistant(fetcher = fetch) {
       method: 'POST',
       credentials: 'omit',
       cache: 'no-store',
-      headers: { Authorization: `Bearer ${auth.assertion}` },
+      headers: { Authorization: `Bearer ${auth.assertion}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: question.trim() }),
       signal: AbortSignal.timeout(150000),
     });
   } catch {
@@ -26,7 +29,11 @@ export async function queryLocalAssistant(fetcher = fetch) {
   }
   const result = await response.json();
   if (!response.ok) throw new Error(result.error || 'Consulta indisponível.');
-  if (!result.metrics || !result.period || !result.source || typeof result.answer !== 'string')
+  if (
+    typeof result.answer !== 'string' ||
+    typeof result.consulted !== 'boolean' ||
+    (result.consulted && (!result.metrics || !result.period || !result.source))
+  )
     throw new Error('O serviço local retornou um resultado incompleto.');
   return result;
 }
