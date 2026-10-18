@@ -1,6 +1,6 @@
 # Equipe de suporte
 
-Em 0.29.0, identificação de clientes/filiais usa CNPJ completo da coluna C; não une filiais pela raiz. [Regras e limites do cadastro](CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md).
+Desde 0.30.0, contagens de clientes seguem o [agrupamento da categoria](AGRUPAMENTO-DE-CLIENTES.md): Cliente consolidado por padrão ou CNPJ / filial. Veículos continuam por cliente/filial original + placa. Nenhum agrupamento usa a raiz do CNPJ.
 
 Disponível em **Ordens de Serviço → Equipe de suporte**, a partir de 0.21.0; cards e detalhamento individual atualizados na 0.26.0. Acesso segue a permissão de OS; exportação e impressão seguem a permissão separada existente. A planilha continua local.
 
@@ -38,7 +38,7 @@ Com período ativo, realizados sem data válida são excluídos e quantificados.
 
 ## Indicadores e comparação
 
-Cards: atendimentos efetivos, visitas improdutivas, chamados distintos e clientes identificados. Chamados usam número da OS; clientes usam o CNPJ completo da coluna C, com Base clientes quando disponível; sem CNPJ utilizável, conservam o nome original. Chamados/clientes distintos são contados no conjunto, não somados entre pessoas, pois podem aparecer em mais de um grupo.
+Cards: atendimentos efetivos, visitas improdutivas, chamados distintos e clientes identificados. Chamados usam número da OS; clientes seguem Cliente consolidado ou CNPJ / filial conforme escolha da categoria. Sem cadastro/CNPJ utilizável, aplicam-se as alternativas descritas no agrupamento. Chamados/clientes distintos são contados no conjunto, não somados entre pessoas, pois podem aparecer em mais de um grupo.
 
 Ranking: nomes registrados, efetivos, improdutivas, total realizado, chamados, clientes, participação, efetivos anteriores e variação. A participação divide os efetivos da pessoa por **todos os efetivos do recorte**, inclusive os sem responsável. Nomes vazios ou com erro ficam fora do ranking e podem ser conferidos em botão específico. Somente espaços externos são desconsiderados; nomes parecidos não são unidos automaticamente.
 

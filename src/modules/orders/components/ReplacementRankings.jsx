@@ -6,6 +6,7 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { PrintContext } from '../../../components/Section.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import { RecordDetails } from './RecordDetails.jsx';
+import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 /** Rankings complementam o relatório existente; o detalhe conserva cada substituição e suas origens. */
 export function ReplacementRankings({ data, events }) {
   const [by, setBy] = useState('vehicle'),
@@ -16,7 +17,7 @@ export function ReplacementRankings({ data, events }) {
     setChosen('');
     setDetail(null);
   }, [data]);
-  const result = replacementRankings(events, by);
+  const result = replacementRankings(events, by, data);
   const selected = result.groups.find((group) => group.key === chosen);
   const details =
     selected?.events ||
@@ -35,15 +36,16 @@ export function ReplacementRankings({ data, events }) {
             setDetail(null);
           }}
         >
-          <option value="vehicle">Cliente e placa</option>
-          <option value="client">Cliente / filial</option>
+          <option value="vehicle">CNPJ / filial e placa</option>
+          <option value="client">{customerGroupingLabel(data)}</option>
         </select>
       </label>
       <p className="scope">
         Uma ocorrência por troca de rastreador/kit ou linha de troca de acessório.{' '}
         {result.unidentified} sem identificação suficiente ficam fora do ranking, mas permanecem no
         detalhe completo. Quantidade não mede taxa de falha: tamanho da frota e tempo de
-        acompanhamento podem diferir.
+        acompanhamento podem diferir. Totais por cliente seguem o agrupamento da categoria; por
+        veículo mantém CNPJ/filial + placa. Os detalhes preservam o CNPJ original.
       </p>
       <Chart
         title={by === 'vehicle' ? 'Veículos com mais trocas' : 'Clientes com mais trocas'}
@@ -92,6 +94,8 @@ export function ReplacementRankings({ data, events }) {
               ['Arquivo', context.filename || ''],
               ['Filtros', JSON.stringify(context.filters || {})],
               ['Grupo', selected?.label || 'Todos'],
+              ['Agrupamento de clientes', customerGroupingLabel(data)],
+              ['Critério de clientes', customerGroupingRule(data)],
               [
                 'Regra',
                 'Ocorrências de troca, não quantidade física de equipamentos ou taxa de falha',

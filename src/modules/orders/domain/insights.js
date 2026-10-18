@@ -7,7 +7,7 @@ import { field, attendanceDate } from '../../../shared/data/filters.js';
 import { money } from './analysis.js';
 import { trackerMotives } from './equipment.js';
 import { trackerModel } from './trackerModels.js';
-import { customerIdentity } from './customerIdentity.js';
+import { customerIdentity, customerAnalysisIdentity } from './customerIdentity.js';
 export const done = (data, row) => ['Pago', 'Concluída'].includes(field(data, row, 'Status')?.raw);
 /** Subconjunto efetivo de manutenção. O volume/custo total de visitas continua em base própria. */
 export function effectiveMaintenanceRows(data) {
@@ -94,7 +94,7 @@ export function groupedCosts(data, groupBy = 'Razão Social') {
   const groups = new Map();
   for (const row of data.rows) {
     if (!done(data, row)) continue;
-    const identity = groupBy === 'Razão Social' ? customerIdentity(data, row) : null;
+    const identity = groupBy === 'Razão Social' ? customerAnalysisIdentity(data, row) : null;
     const key = identity?.key || value(data, row, groupBy) || 'Sem dados';
     if (!groups.has(key))
       groups.set(key, { ...financialGroup(identity?.label || key), names: new Set() });
@@ -220,8 +220,7 @@ export function interventionProfiles(data, devices) {
   const groups = new Map(),
     source = new Map(data.rows.map((row) => [row.sourceRow, row]));
   const get = (row) => {
-    const label = value(data, row, 'Razão Social') || 'Sem cliente';
-    const key = customerIdentity(data, row).key;
+    const { key, label } = customerAnalysisIdentity(data, row);
     if (!groups.has(key))
       groups.set(key, {
         label,

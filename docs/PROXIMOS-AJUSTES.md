@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Entregue em 0.30.0: [clientes consolidados e filiais](AGRUPAMENTO-DE-CLIENTES.md), com razões sociais idênticas agrupadas por padrão, coluna explícita opcional e visão por CNPJ. Preserva vínculos e ciclos originais.
+
 Entregue em 0.29.0: manutenção sem troca, origem e próximos ciclos dos acessórios, rankings de trocas, identificação por CNPJ completo e modelos pelo serial. [Regras confirmadas e utilização](CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md).
 
 Entregue em 0.28.0: [histórico individual e concentração do parque](APROFUNDAMENTO-DO-PARQUE.md), com última intervenção efetiva e referência ajustável conforme definição do proprietário; resumos ampliados em OS, Parque, Consumo, Logística e Monitoramento; correção do cabeçalho/ícone e separação entre cards e gráficos na Visão geral. [Preparação CSV/APIs](PREPARACAO-FONTES-DE-CONSUMO.md) e prévia OS + Zoho disponíveis apenas como laboratório fictício, sem conexão, gravação ou alteração dos dados reais. Operadoras, Zoho, coleta e armazenamento compartilhado continuam pendentes de suas fontes e configurações.

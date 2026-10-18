@@ -22,6 +22,7 @@ import { csv, download } from '../../../shared/export/exports.js';
 import { financialFields, insightExportValues } from '../domain/insightExport.js';
 import { chartColors } from '../../../shared/charts/palette.js';
 import { ServiceProfilesContext } from './ServiceProfilesContext.jsx';
+import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 import { CustomerIdentityNote } from './CustomerIdentityNote.jsx';
 const number = (value) =>
   value == null ? '—' : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
@@ -43,6 +44,8 @@ function InsightTable({ title, headers, items, values, exportKind, data, filenam
             csv([
               ['Análise', title],
               ['Arquivo', filename],
+              ['Agrupamento de clientes', customerGroupingLabel(data)],
+              ['Critério de clientes', customerGroupingRule(data)],
               ['Filtros', JSON.stringify(filters)],
               ['Regra', 'Somente realizados; valores contratuais não são recebimentos'],
               ...(exportKind
@@ -260,10 +263,11 @@ export function AdvancedInsights({
         ) : (
           <>
             <InfoNote>
-              Somente Concluída/Pago. Cliente/filial usa o CNPJ completo da coluna C e a Base
-              clientes, quando disponíveis; sem CNPJ utilizável, conserva o nome original.
-              Contratual não é recebimento ou lucro. Custo total em cobranças Addlog usa Custo
-              Total; Contratual Addlog usa Valor a cobrar.
+              Somente Concluída/Pago. Clientes seguem o agrupamento escolhido nesta categoria. A
+              Base clientes define a consolidação; a conferência mantém cada CNPJ da coluna C.
+              Chamados distintos são recalculados no cliente inteiro, sem somar subtotais de
+              filiais. Contratual não é recebimento ou lucro. Custo total em cobranças Addlog usa
+              Custo Total; Contratual Addlog usa Valor a cobrar.
             </InfoNote>
             <CustomerIdentityNote data={data} />
             <div className="summary-grid">

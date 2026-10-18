@@ -5,12 +5,12 @@ import { isUnproductive } from './attendanceKind.js';
  */
 import { field } from '../../../shared/data/filters.js';
 import { money } from './analysis.js';
-import { customerIdentity } from './customerIdentity.js';
+import { customerAnalysisIdentity } from './customerIdentity.js';
 const completed = (data, row) => ['Concluída', 'Pago'].includes(field(data, row, 'Status')?.raw);
 function groupRows(data, rows, label) {
   const map = new Map();
   for (const row of rows) {
-    const identity = label === 'Razão Social' ? customerIdentity(data, row) : null;
+    const identity = label === 'Razão Social' ? customerAnalysisIdentity(data, row) : null;
     const cell = field(data, row, label),
       name =
         label === 'Tipo de Serviço' && isUnproductive(data, row)

@@ -66,3 +66,42 @@ export function customerIdentity(data, row) {
     sourceRows: entries.map((r) => r.sourceRow),
   };
 }
+
+export function customerGroupingLabel(data) {
+  return data.customerGrouping === 'consolidated' ? 'Cliente consolidado' : 'CNPJ / filial';
+}
+
+export function customerGroupingRule(data) {
+  return data.customerGrouping !== 'consolidated'
+    ? 'CNPJ completo da coluna C; sem CNPJ utilizável, nome original'
+    : data.consolidateIdenticalNames
+      ? 'Cliente consolidado explícito; sem preenchimento, razões sociais exatamente iguais na Base clientes'
+      : 'Somente Cliente consolidado explícito na Base clientes; demais CNPJs separados';
+}
+
+/** Camada de apresentação: jamais substitui a identidade por CNPJ usada nos vínculos e ciclos. */
+export function customerAnalysisIdentity(data, row) {
+  const branch = customerIdentity(data, row);
+  if (data.customerGrouping !== 'consolidated' || !branch.cnpj) return branch;
+  const entries = (data.customerRegistry?.rows || []).filter((r) => r.cnpj === branch.cnpj);
+  if (entries.some((r) => r.groupingInvalid)) return branch;
+  const groups = [...new Set(entries.map((r) => r.group).filter(Boolean))];
+  // Um cadastro contraditório ou parcialmente preenchido permanece separado para conferência.
+  if (groups.length > 1 || (groups.length && entries.some((r) => !r.group))) return branch;
+  if (groups.length === 1)
+    return {
+      ...branch,
+      key: `group:${groups[0]}`,
+      label: groups[0],
+      groupingSource: 'Cadastro explícito',
+    };
+  const names = [...new Set(entries.map((r) => r.name).filter(Boolean))];
+  if (data.consolidateIdenticalNames && names.length === 1)
+    return {
+      ...branch,
+      key: `group:${names[0]}`,
+      label: names[0],
+      groupingSource: 'Razão social idêntica na Base clientes',
+    };
+  return branch;
+}

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.29.0 — Manutenção sem troca, rankings de substituições por cliente/placa e ciclos de acessórios pela implementação ou troca anterior. Identificação por CNPJ completo da coluna C com Base clientes e modelo pelo serial, incluindo prefixos 81–85. [Critérios confirmados](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md). Integrações externas continuam pendentes.
+**Versão:** 0.30.0 — [Clientes consolidados e filiais](docs/AGRUPAMENTO-DE-CLIENTES.md): razões sociais idênticas reunidas por padrão, cadastro explícito opcional e escolha por categoria. Atendimentos/custos somados e chamados distintos recalculados no grupo; vínculos e ciclos preservam o CNPJ original. [Critérios de manutenção](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md). Integrações externas continuam pendentes.
 
 ## Documentação do projeto
 

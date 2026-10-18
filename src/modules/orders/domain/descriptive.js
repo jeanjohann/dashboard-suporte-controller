@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import XLSX from 'xlsx';
+import { customerGroupingLabel, customerGroupingRule } from './customerIdentity.js';
 import {
   groupedCosts,
   callInsights,
@@ -42,7 +43,9 @@ export function descriptiveReport(
   selection = Object.keys(descriptiveAnalyses),
 ) {
   const records = [],
-    notes = [];
+    notes = [
+      `Agrupamento de clientes: ${customerGroupingLabel(data)}. ${customerGroupingRule(data)}. Vínculos, ciclos e reincidência preservam o cliente/filial original.`,
+    ];
   const emit = (analysis, grouping, group, indicator, value, unit, base, description, rows = []) =>
     records.push({
       analysis,
@@ -91,7 +94,7 @@ export function descriptiveReport(
         for (const g of groups) {
           emit(
             title,
-            'Razão Social',
+            customerGroupingLabel(data),
             g.label,
             'Atendimentos realizados',
             g.rows.length,
@@ -102,7 +105,7 @@ export function descriptiveReport(
           );
           emit(
             title,
-            'Razão Social',
+            customerGroupingLabel(data),
             g.label,
             'Chamados distintos',
             g.calls.size,
@@ -115,7 +118,7 @@ export function descriptiveReport(
             const { total, negative } = financialBases[field];
             emit(
               title,
-              'Razão Social',
+              customerGroupingLabel(data),
               g.label,
               label,
               g[field].count ? g[field].sum / 100 : null,
@@ -127,7 +130,7 @@ export function descriptiveReport(
           }
           emit(
             title,
-            'Razão Social',
+            customerGroupingLabel(data),
             g.label,
             'Custo médio válido',
             g.cost.count ? g.cost.sum / g.cost.count / 100 : null,
@@ -147,7 +150,7 @@ export function descriptiveReport(
           ])
             emit(
               title,
-              'Razão Social',
+              customerGroupingLabel(data),
               g.label,
               label,
               c.count ? c[field] / 100 : null,
@@ -269,13 +272,13 @@ export function descriptiveReport(
         for (const g of groups)
           emit(
             title,
-            'Razão Social',
+            customerGroupingLabel(data),
             g.label,
             label,
             available ? g[field] : null,
             unit,
             total,
-            'Percentual entre clientes para esta categoria. Categorias se sobrepõem. Troca de rastreador = duas linhas/IDs distintos no mesmo chamado e placa; sem troca = uma linha/ID. Acessórios seguem motivo e instrução. CNPJ completo da coluna C separa clientes/filiais quando utilizável.',
+            'Percentual entre clientes para esta categoria. Categorias se sobrepõem. Troca de rastreador = duas linhas/IDs distintos no mesmo chamado e placa; sem troca = uma linha/ID. Acessórios seguem motivo e instrução. Clientes seguem o agrupamento da categoria; vínculos e ciclos preservam o CNPJ original.',
             g.rows,
           );
       }
@@ -455,6 +458,8 @@ export function descriptiveWorkbook(
     ['Campo', 'Valor'],
     ['Arquivo', filename],
     ['Filtros', JSON.stringify(filters)],
+    ['Agrupamento de clientes', customerGroupingLabel(data)],
+    ['Critério de clientes', customerGroupingRule(data)],
     ['Referência dos ciclos abertos', referenceDate],
     ['Regra', 'Somente Concluída/Pago nos indicadores; Cancelada sem custo'],
     [

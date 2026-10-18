@@ -8,22 +8,22 @@ Desde **0.27.1**, os cards de destino permitem **Mostrar gráficos aqui**, além
 
 Todos os cards partem das linhas com Status exatamente **Concluída** ou **Pago**. Pago indica pagamento ao técnico. Cancelada, Agendar e Agendado ficam fora. Cada linha é um serviço registrado: várias linhas podem pertencer ao mesmo chamado ou visita física.
 
-| Card                      | Cálculo e interpretação                                                                                                                                                              |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Visitas e atendimentos    | Quantidade de linhas realizadas, incluindo visitas improdutivas. Não é uma contagem de visitas físicas únicas.                                                                       |
-| Intervenções executadas   | Linhas realizadas sem Motivo Visita Improdutiva; abrange os tipos de serviço, não apenas manutenção. Motivo ausente não confirma produtividade.                                      |
-| Visitas improdutivas      | Linhas realizadas com Motivo Visita Improdutiva, conforme reconhecimento vigente do motivo. Seus custos válidos continuam nos cards financeiros.                                     |
-| Manutenções realizadas    | Linhas realizadas com Tipo de Serviço exatamente Assistência Técnica, excluindo Visita Improdutiva. Não equivale a trocas de equipamentos.                                           |
-| Implementações realizadas | Linhas realizadas com Tipo de Serviço exatamente Implementação, excluindo Visita Improdutiva. Conta serviços, não equipamentos únicos nem parque instalado.                          |
-| Chamados atendidos        | Quantidade de números de chamado distintos com pelo menos uma linha realizada no recorte.                                                                                            |
-| Clientes com atendimento  | Clientes/filiais distintos por CNPJ completo da coluna C, com nome original como alternativa quando o CNPJ não é utilizável. Inclui improdutivas. Não representa a carteira inteira. |
-| Veículos identificados    | Pares distintos e utilizáveis cliente/filial + placa nas linhas realizadas, incluindo improdutivas. Não representa a frota ativa.                                                    |
-| Custo total lançado       | Soma válida de Custo Total nas linhas realizadas. O valor lançado prevalece mesmo com divergência entre Técnico + Km. Não comprova pagamento ou lucro.                               |
-| Custo médio válido        | Custo total válido dividido pela quantidade de linhas realizadas com Custo Total válido; zeros permanecem, ausências e valores incompatíveis ficam fora do numerador e denominador.  |
+| Card                      | Cálculo e interpretação                                                                                                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Visitas e atendimentos    | Quantidade de linhas realizadas, incluindo visitas improdutivas. Não é uma contagem de visitas físicas únicas.                                                                      |
+| Intervenções executadas   | Linhas realizadas sem Motivo Visita Improdutiva; abrange os tipos de serviço, não apenas manutenção. Motivo ausente não confirma produtividade.                                     |
+| Visitas improdutivas      | Linhas realizadas com Motivo Visita Improdutiva, conforme reconhecimento vigente do motivo. Seus custos válidos continuam nos cards financeiros.                                    |
+| Manutenções realizadas    | Linhas realizadas com Tipo de Serviço exatamente Assistência Técnica, excluindo Visita Improdutiva. Não equivale a trocas de equipamentos.                                          |
+| Implementações realizadas | Linhas realizadas com Tipo de Serviço exatamente Implementação, excluindo Visita Improdutiva. Conta serviços, não equipamentos únicos nem parque instalado.                         |
+| Chamados atendidos        | Quantidade de números de chamado distintos com pelo menos uma linha realizada no recorte.                                                                                           |
+| Clientes com atendimento  | Clientes distintos conforme agrupamento da categoria: Cliente consolidado ou CNPJ / filial. Inclui improdutivas. Não representa a carteira inteira.                                 |
+| Veículos identificados    | Pares distintos e utilizáveis cliente/filial + placa nas linhas realizadas, incluindo improdutivas. Não representa a frota ativa.                                                   |
+| Custo total lançado       | Soma válida de Custo Total nas linhas realizadas. O valor lançado prevalece mesmo com divergência entre Técnico + Km. Não comprova pagamento ou lucro.                              |
+| Custo médio válido        | Custo total válido dividido pela quantidade de linhas realizadas com Custo Total válido; zeros permanecem, ausências e valores incompatíveis ficam fora do numerador e denominador. |
 
 ## Identificações e qualidade da base
 
-Desde 0.29.0, a identidade usa o CNPJ completo da coluna C e a Base clientes quando disponíveis. Filiais não são unidas pela raiz. Sem CNPJ utilizável, conserva o nome original. [Critérios e limites](CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md). A mesma placa no mesmo cliente conta uma vez, independentemente de chamados ou seriais; a mesma placa em clientes diferentes conta em cada par.
+Desde 0.30.0, a contagem de clientes segue o [agrupamento da categoria](AGRUPAMENTO-DE-CLIENTES.md). A contagem de veículos mantém CNPJ completo da coluna C + placa, com nome original como alternativa sem CNPJ utilizável. Filiais não são unidas pela raiz. A mesma placa na mesma identidade original conta uma vez, independentemente de chamados ou seriais; a mesma placa em CNPJs diferentes conta em cada par.
 
 Sem CNPJ ou nome original utilizável, a linha não identifica cliente. Para veículos, também ficam fora placas com marcadores conhecidos, sem distinção entre maiúsculas/minúsculas: `0`, `-`, `?`, `s/placa`, `sem placa` e `sem dados`. Isso não é validação completa da placa nem comprovação de vínculo atual.
 

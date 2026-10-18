@@ -2,6 +2,7 @@
  * Interface de Ordens de Serviço: apresenta análises, contexto e registros de origem sem modificar a planilha.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useState } from 'react';
@@ -31,7 +32,15 @@ export function DescriptiveReport({
   const [selection, setSelection] = useState(Object.keys(descriptiveAnalyses)),
     [error, setError] = useState('');
   const result = descriptiveReport(original, data, devices, lifecycle, selection),
-    context = { filename, filters, referenceDate };
+    context = {
+      filename,
+      filters: {
+        ...filters,
+        agrupamentoClientes: customerGroupingLabel(data),
+        criterioClientes: customerGroupingRule(data),
+      },
+      referenceDate,
+    };
   function exportXlsx() {
     setError('');
     try {

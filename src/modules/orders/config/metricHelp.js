@@ -3,7 +3,7 @@ export const metricHelp = {
   implementations:
     'Conta linhas Concluída ou Pago com Tipo de Serviço exatamente Implementação, excluindo Motivo Visita Improdutiva. Conta serviços, não equipamentos únicos nem tamanho do parque. Agendar, Agendado e Cancelada ficam fora. Se a coluna necessária estiver ausente, o card fica indisponível. Use para acompanhar a entrada de serviços de implementação registrada no recorte.',
   clients:
-    'Conta clientes/filiais distintos nas linhas Concluída ou Pago, incluindo visitas improdutivas. Usa o CNPJ completo da coluna C e a Base clientes quando disponíveis; sem CNPJ utilizável, conserva o nome original. Não une filiais pela raiz nem altera a origem. Informa linhas sem identificação utilizável. Não representa a carteira completa de clientes.',
+    'Conta clientes distintos nas linhas Concluída ou Pago, incluindo visitas improdutivas, conforme o agrupamento desta categoria. A consolidação usa a Base clientes; sem definição segura mantém o CNPJ/filial original. Sem CNPJ utilizável, conserva o nome da OS. Não une filiais pela raiz nem altera os registros. Informa linhas sem identificação utilizável. Não representa a carteira completa de clientes.',
   vehicles:
     'Conta pares distintos de cliente/filial + placa nas linhas Concluída ou Pago, incluindo visitas improdutivas. Usa o CNPJ completo da coluna C; sem documento utilizável, conserva o nome. Repetições do par contam uma vez, mesmo com vários chamados ou seriais. Exclui identificação indisponível e placas vazias/com erro ou provisórias, como 0, -, ?, s/placa, sem placa e sem dados. Não comprova frota ativa. Informa linhas sem par utilizável.',
   productive:

@@ -1,5 +1,7 @@
 # Filtros independentes por categoria
 
+Na 0.30.0, cada categoria de OS também mantém sua escolha de **Cliente consolidado / CNPJ / filial** e a opção de consolidar razões sociais idênticas. É uma escolha de agrupamento, sem excluir linhas; limpar filtros não a altera. O contexto visível e os relatórios exportados identificam a escolha. [Utilização](AGRUPAMENTO-DE-CLIENTES.md).
+
 ## Critério aprovado
 
 Em 16/10/2026, o proprietário escolheu filtros **por aba/categoria**, não por relatório individual. Dentro da categoria, os relatórios utilizam o mesmo recorte, respeitando suas bases de cálculo próprias. Exemplo: selecionar Cliente A em OS → Equipamentos não altera OS → Operação, que pode continuar mostrando todos os clientes.

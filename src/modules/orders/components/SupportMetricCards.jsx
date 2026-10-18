@@ -35,7 +35,7 @@ const metrics = [
     label: 'Clientes identificados',
     icon: 'building',
     tone: 'finance',
-    help: 'Clientes/filiais distintos nas linhas Concluída/Pago, incluindo improdutivas. Usa o CNPJ completo da coluna C e a Base clientes quando disponíveis; sem CNPJ utilizável, conserva o nome original. Não une filiais pela raiz nem soma clientes entre pessoas ou papéis.',
+    help: 'Clientes distintos nas linhas Concluída/Pago, incluindo improdutivas, conforme o agrupamento desta categoria. Consolidação usa a Base clientes; sem definição segura mantém CNPJ/filial. Não soma clientes entre pessoas ou papéis.',
   },
   {
     key: 'vehicles',

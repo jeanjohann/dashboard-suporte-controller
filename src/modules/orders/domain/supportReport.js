@@ -1,5 +1,6 @@
 /** Exportações do suporte: percentuais numéricos e registros originais, sem duplicar cálculos. */
 import XLSX from 'xlsx';
+import { customerGroupingLabel, customerGroupingRule } from './customerIdentity.js';
 import { csv } from '../../../shared/export/exports.js';
 
 export function supportReport(data, result, filters, filename) {
@@ -7,6 +8,8 @@ export function supportReport(data, result, filters, filename) {
   return {
     Contexto: [
       ['Arquivo', filename],
+      ['Agrupamento de clientes', customerGroupingLabel(data)],
+      ['Critério de clientes', customerGroupingRule(data)],
       ['Papel', result.role.label],
       ['Data utilizada', result.role.date],
       ['Filtros', JSON.stringify(filters)],

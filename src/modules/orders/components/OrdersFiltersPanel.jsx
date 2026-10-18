@@ -9,9 +9,14 @@ import { filterChips } from '../../../shared/filters/scopedSelection.js';
 import { filterFields, filterLabels } from '../../../shared/data/filters.js';
 import { supportPeriod } from '../domain/supportPerformance.js';
 import { todaySaoPaulo } from '../domain/lifecycle.js';
+import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 
 export function OrdersFiltersPanel({
   data,
+  customerGrouping,
+  setCustomerGrouping,
+  consolidateIdenticalNames,
+  setConsolidateIdenticalNames,
   filename,
   scope,
   showWeekShortcuts = false,
@@ -107,9 +112,44 @@ export function OrdersFiltersPanel({
           <strong>{filename}</strong>
           <span>Aba {data.sheetName || 'OS 2025'}</span>
           <span>Somente leitura</span>
+          <span title={customerGroupingRule(data)}>
+            Clientes: {customerGroupingLabel(data)}
+            {data.customerGrouping === 'consolidated' && data.consolidateIdenticalNames
+              ? ' · nomes idênticos habilitados'
+              : ''}
+          </span>
         </div>
       }
     >
+      <div className="customer-grouping-controls">
+        <label>
+          Agrupar clientes por{' '}
+          <select
+            aria-label="Agrupar clientes por"
+            value={customerGrouping}
+            onChange={(event) => setCustomerGrouping(event.target.value)}
+          >
+            <option value="consolidated">Cliente consolidado</option>
+            <option value="cnpj">CNPJ / filial</option>
+          </select>
+        </label>
+        {customerGrouping === 'consolidated' && (
+          <label>
+            <input
+              type="checkbox"
+              checked={consolidateIdenticalNames}
+              onChange={(event) => setConsolidateIdenticalNames(event.target.checked)}
+            />{' '}
+            Consolidar razões sociais idênticas da Base clientes
+          </label>
+        )}
+      </div>
+      <p className="scope">
+        Agrupamento próprio desta categoria. Consolidação usa a coluna opcional Cliente consolidado
+        da Base clientes e, quando habilitado, razões sociais exatamente iguais. Sem definição
+        segura, mantém o CNPJ separado. Histórico e vida em campo continuam por cliente/filial
+        original.
+      </p>
       <div className="filter-grid">
         {filterFields.map((label) => {
           const index = data.columns.findIndex((col) => col.label === label);

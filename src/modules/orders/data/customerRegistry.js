@@ -6,7 +6,7 @@ const normalize = (value) =>
     .replace(/[\u0300-\u036f]/g, '')
     .trim()
     .toLowerCase();
-/** Lê somente CNPJ e razão social; tabelas de preços e demais campos do cadastro não são importados. */
+/** Lê identidade e agrupamento opcional; preços e demais campos do cadastro não são importados. */
 export function importCustomerRegistry(book) {
   const found = book.SheetNames.filter((n) => normalize(n) === 'base clientes');
   const empty = { available: false, sheetName: found[0] || null, rows: [], issues: [] };
@@ -32,6 +32,13 @@ export function importCustomerRegistry(book) {
     };
   const rows = [],
     issues = [];
+  const groupColumns = headers
+    .map((name, index) => (name === 'cliente consolidado' ? index : -1))
+    .filter((i) => i >= 0);
+  if (groupColumns.length > 1)
+    issues.push({
+      reason: 'Mais de uma coluna Cliente consolidado; agrupamento explícito não importado.',
+    });
   for (let i = 1; i < values.length; i++) {
     const ci = headers.indexOf('cnpj'),
       ni = headers.indexOf('razao social');
@@ -45,7 +52,19 @@ export function importCustomerRegistry(book) {
       issues.push({ row: i + 1, reason: 'CNPJ ou razão social ausente/incompatível no cadastro.' });
       continue;
     }
-    rows.push({ cnpj, name, sourceRow: i + 1 });
+    const gi = groupColumns.length === 1 ? groupColumns[0] : -1;
+    const groupCell = gi < 0 ? null : sheet[XLSX.utils.encode_cell({ r: i, c: gi })];
+    const group =
+      gi < 0 || groupCell?.t === 'e' ? null : String(values[i][gi] ?? '').trim() || null;
+    if (groupCell?.t === 'e')
+      issues.push({ row: i + 1, reason: 'Cliente consolidado com erro; CNPJ mantido separado.' });
+    rows.push({
+      cnpj,
+      name,
+      group,
+      groupingInvalid: groupColumns.length > 1 || groupCell?.t === 'e',
+      sourceRow: i + 1,
+    });
   }
   const byCnpj = new Map();
   for (const row of rows) byCnpj.set(row.cnpj, [...(byCnpj.get(row.cnpj) || []), row]);
@@ -55,5 +74,14 @@ export function importCustomerRegistry(book) {
         row: group[0].sourceRow,
         reason: `Mesmo CNPJ com razões sociais diferentes nas linhas ${group.map((row) => row.sourceRow).join(', ')}; nenhum nome escolhido automaticamente.`,
       });
+  for (const entries of byCnpj.values()) {
+    const groups = new Set(entries.map((r) => r.group));
+    if (groups.size > 1)
+      issues.push({
+        row: entries[0].sourceRow,
+        reason:
+          'Mesmo CNPJ com Cliente consolidado divergente ou parcialmente preenchido; mantido separado.',
+      });
+  }
   return { available: true, sheetName: found[0], rows, issues };
 }

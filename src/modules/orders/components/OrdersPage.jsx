@@ -16,6 +16,7 @@ import { OrdersFiltersPanel } from './OrdersFiltersPanel.jsx';
 import { OrdersCategories } from './OrdersReportMenu.jsx';
 import { useGoogleOrders } from '../hooks/useGoogleOrders.js';
 import { OrdersGooglePanel } from './OrdersGooglePanel.jsx';
+import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 // Identidade estável para conservar o estado dos relatórios após a primeira importação.
 const OrdersReports = lazy(() =>
   import('./OrdersReports.jsx').then((module) => ({ default: module.OrdersReports })),
@@ -63,7 +64,12 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
           <PrintContext.Provider
             value={{
               filename,
-              filters: { ...filters, alcance: `OS → ${menu.label}` },
+              filters: {
+                ...filters,
+                alcance: `OS → ${menu.label}`,
+                agrupamentoClientes: data ? customerGroupingLabel(data) : '',
+                criterioClientes: data ? customerGroupingRule(data) : '',
+              },
               referenceDate,
             }}
           >
@@ -89,6 +95,10 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                     />
                     <OrdersFiltersPanel
                       data={data}
+                      customerGrouping={session.customerGrouping}
+                      setCustomerGrouping={session.setCustomerGrouping}
+                      consolidateIdenticalNames={session.consolidateIdenticalNames}
+                      setConsolidateIdenticalNames={session.setConsolidateIdenticalNames}
                       scope={`OS → ${menu.label}`}
                       showWeekShortcuts={category === 'overview'}
                       search={records.search}

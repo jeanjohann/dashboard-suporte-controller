@@ -3,7 +3,7 @@ import { applyFilters, attendanceDate, field } from '../../../shared/data/filter
 import { isUnproductive } from './attendanceKind.js';
 import { previousPeriod } from './dashboard.js';
 import { validPlate } from './trackerReplacements.js';
-import { customerIdentity } from './customerIdentity.js';
+import { customerIdentity, customerAnalysisIdentity } from './customerIdentity.js';
 
 export const supportRoles = {
   execution: { column: 'Resp. Execução', date: 'Data de atendimento', label: 'Execução' },
@@ -63,7 +63,7 @@ function count(data, rows) {
     if (!isUnproductive(data, row)) productive++;
     if (row.os != null && String(row.os).trim()) calls.add(String(row.os).trim());
     const client = text(data, row, 'Razão Social');
-    if (client) clients.add(client);
+    if (client) clients.add(customerAnalysisIdentity(data, row).key);
     const plate = text(data, row, 'Placa');
     if (client && validPlate(plate)) vehicles.add(JSON.stringify([client, plate]));
     else vehiclesMissing++;

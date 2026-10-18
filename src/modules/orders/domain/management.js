@@ -4,7 +4,7 @@ import { isUnproductive } from './attendanceKind.js';
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { field } from '../../../shared/data/filters.js';
-import { customerIdentity } from './customerIdentity.js';
+import { customerAnalysisIdentity } from './customerIdentity.js';
 /** Resume realizados e agenda, permitindo uma base própria para previsões sem misturá-las aos custos realizados. */
 export function managementMetrics(data, schedulingData = data) {
   const completed = data.rows.filter((row) =>
@@ -20,7 +20,7 @@ export function managementMetrics(data, schedulingData = data) {
     const groups = new Map();
     for (const row of rows) {
       const cell = field(data, row, label);
-      const identity = label === 'Razão Social' ? customerIdentity(data, row) : null;
+      const identity = label === 'Razão Social' ? customerAnalysisIdentity(data, row) : null;
       const name =
         identity?.label ||
         (cell?.issue

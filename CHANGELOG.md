@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.30.0 — 18/10/2026
+
+- Agrupamento analítico por Cliente consolidado ou CNPJ / filial, independente por categoria de OS. Razões sociais exatamente iguais na Base clientes são consolidadas por padrão, conforme autorização do proprietário; a opção pode ser desativada.
+- Coluna opcional Cliente consolidado permite reunir nomes diferentes ou separar exceções. Divergências permanecem para revisão; sem cadastro utilizável mantém CNPJ original. Não infere grupos por nomes semelhantes ou raiz de documento.
+- Custos, atendimentos, perfil de intervenções, contagens de clientes e ranking de trocas por cliente usam o agrupamento escolhido. Chamados únicos são recalculados no conjunto, sem somar subtotais de filiais. Conferência, exportações e impressão explicam o critério.
+- Veículos, reincidência, ciclos e vida em campo preservam cliente/filial original. Nenhuma planilha de origem ou integração externa foi alterada. [Uso e critérios](docs/AGRUPAMENTO-DE-CLIENTES.md).
+
 ## 0.29.0 — 18/10/2026
 
 - Classifica Assistência Técnica efetiva por chamado/placa no arquivo completo: uma linha/ID é manutenção sem troca; duas linhas com IDs distintos e mesma data confirmam um evento. Filtrar uma ponta não muda a classificação. Acessórios separam troca explícita de manutenção sem troca, preservando revisão de categoria incerta e todos os custos válidos.

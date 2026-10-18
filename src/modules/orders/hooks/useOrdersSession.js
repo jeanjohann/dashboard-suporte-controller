@@ -1,5 +1,5 @@
 /** Estado da base de OS: importação autorizada, filtros, busca/paginação, referência e resultados. */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { authorizeAction } from '../../../shared/security/accessClient.js';
 import { importWorkbook } from '../data/import.js';
 import { summarize, finance } from '../domain/analysis.js';
@@ -15,7 +15,19 @@ export function useOrdersSession({ source, onImport, scope = 'overview' }) {
   const input = useRef();
   const previousSource = useRef(source);
   const [recordSort, setRecordSort] = useState(null);
-  const data = source?.data || null,
+  const [customerGroupings, setCustomerGroupings] = useState({});
+  const [identicalNamesByScope, setIdenticalNamesByScope] = useState({});
+  const customerGrouping = customerGroupings[scope] || 'consolidated';
+  const consolidateIdenticalNames = identicalNamesByScope[scope] ?? true;
+  const setCustomerGrouping = (mode) =>
+    setCustomerGroupings((previous) => ({ ...previous, [scope]: mode }));
+  const setConsolidateIdenticalNames = (enabled) =>
+    setIdenticalNamesByScope((previous) => ({ ...previous, [scope]: enabled }));
+  // Apenas o contexto analítico recebe a opção; planilha e identidade física continuam intactas.
+  const data = useMemo(
+      () => (source?.data ? { ...source.data, customerGrouping, consolidateIdenticalNames } : null),
+      [source?.data, customerGrouping, consolidateIdenticalNames],
+    ),
     filename = source?.filename || '';
   const [error, setError] = useState(''),
     [busy, setBusy] = useState(false);
@@ -118,6 +130,10 @@ export function useOrdersSession({ source, onImport, scope = 'overview' }) {
   return {
     input,
     data,
+    customerGrouping,
+    setCustomerGrouping,
+    consolidateIdenticalNames,
+    setConsolidateIdenticalNames,
     filename,
     error,
     busy,
