@@ -132,9 +132,11 @@
   outline: 2px solid var(--ui-accent-ink);
   outline-offset: 3px;
 }
-/* Rodapé discreto: separação visual, mantendo somente a ferramenta de tema existente. */
+/* Ferramentas discretas; o atalho experimental aparece somente para administradores. */
 .sidebar-footer {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   flex-shrink: 0;
   align-items: center;
   border-top: 1px solid var(--ui-line);
@@ -142,6 +144,10 @@
 }
 .sidebar-collapsed .sidebar-footer {
   justify-content: center;
+}
+.app-navigation button.assistant-lab-shortcut[aria-pressed='true'] {
+  color: var(--ui-accent-ink);
+  background: var(--ui-accent-soft);
 }
 @media (max-width: 1050px) {
   .app > aside.app-navigation {

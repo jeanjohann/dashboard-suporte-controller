@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.31.0 — [Assistente de suporte experimental](docs/AUTOMACAO-N8N-E-MCP.md): módulo separado, oculto do menu e restrito a administradores. Estrutura visual com sugestões e rascunho; consultas reais, MCP e n8n ainda pendentes. [Clientes consolidados e filiais](docs/AGRUPAMENTO-DE-CLIENTES.md) e [critérios de manutenção](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md) preservados.
+**Versão:** 0.31.1 — [Assistente de suporte experimental](docs/AUTOMACAO-N8N-E-MCP.md): módulo separado, oculto do menu e restrito a administradores. Estrutura visual com sugestões e rascunho; consultas reais, MCP e n8n ainda pendentes. [Clientes consolidados e filiais](docs/AGRUPAMENTO-DE-CLIENTES.md) e [critérios de manutenção](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md) preservados.
 
 ## Documentação do projeto
 

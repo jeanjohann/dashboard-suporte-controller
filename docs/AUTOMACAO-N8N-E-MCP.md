@@ -12,6 +12,8 @@ O proprietário aprovou desenvolver o assistente em um módulo separado, oculto 
 
 A página possui sugestões por assunto, campo de pergunta e indicação de desenvolvimento. Clicar em uma sugestão preenche o rascunho; o botão de consulta permanece desabilitado. Não recebe planilhas, não acessa dados do navegador, não possui endpoints de consulta e não envia conteúdo a serviços externos. O texto permanece na memória ao navegar, sendo descartado ao recarregar/sair da sessão. O botão Voltar ao sistema remove o fragmento do endereço.
 
+Desde 0.31.1, administradores também podem abrir a página pelo botão com ícone de laboratório ao lado do seletor de tema, no rodapé da barra lateral. O atalho continua disponível com o menu recolhido e não é exibido para usuários comuns. O módulo permanece fora da lista principal de páginas.
+
 O módulo e seu CSS são carregados somente na primeira abertura autorizada. O acesso é conferido antes de montar a página e também no componente. O fragmento é apenas o endereço; não concede permissão. Usuários comuns permanecem nas páginas autorizadas, sem carregar o módulo experimental. A autenticação do sistema permanece obrigatória.
 
 Arquivos em `src/modules/assistant/`; entrada explícita coordenada pelo Workspace. Para consultas reais, a autorização precisará existir também no serviço de servidor que vier a ser implementado. A barreira atual protege uma prévia visual, sem ferramentas ou acesso a dados.

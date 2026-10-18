@@ -7,6 +7,10 @@
 
 # Histórico de versões
 
+## 0.31.1 — 18/10/2026
+
+- Adiciona atalho do Assistente de suporte ao lado do seletor de tema, com ícone de laboratório, nome acessível e indicação de página ativa. Visível somente para administradores ativos, inclusive com menu recolhido; consultas permanecem desativadas.
+
 ## 0.31.0 — 18/10/2026
 
 - Cria módulo separado Assistente de suporte, oculto do menu e acessível somente a administradores ativos pelo endereço `#assistente-laboratorio`.

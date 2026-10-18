@@ -8,6 +8,10 @@ import { Icon } from '../components/Icon.jsx';
 import React, { useEffect, useState } from 'react';
 import { ThemeToggle } from './Theme.jsx';
 import { SidePanelTarget } from './SidePanel.jsx';
+import {
+  assistantPreviewHash,
+  canOpenAssistantPreview,
+} from '../modules/assistant/domain/previewAccess.js';
 const pages = [
   ['orders', 'Ordens de Serviço'],
   ['operational', 'Operacional'],
@@ -112,6 +116,21 @@ export function Navigation({ page, onPage }) {
       </nav>
       <div className="sidebar-footer">
         <ThemeToggle />
+        {canOpenAssistantPreview(user) && (
+          <button
+            type="button"
+            className="theme-toggle assistant-lab-shortcut"
+            aria-label="Assistente de suporte · laboratório"
+            title="Assistente de suporte · laboratório"
+            aria-pressed={page === 'assistant-lab'}
+            onClick={() => {
+              window.location.hash = assistantPreviewHash;
+              onPage('assistant-lab');
+            }}
+          >
+            <Icon name="laboratory" size={18} />
+          </button>
+        )}
       </div>
     </aside>
   );

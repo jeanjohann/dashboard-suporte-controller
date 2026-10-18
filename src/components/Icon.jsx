@@ -4,6 +4,12 @@
  */
 import React from 'react';
 const paths = {
+  laboratory: (
+    <>
+      <path d="M9 3h6M10 3v6l-6 10a1.4 1.4 0 0 0 1.2 2h13.6a1.4 1.4 0 0 0 1.2-2L14 9V3M7.5 15h9" />
+      <path d="M10 18h.01M14 17h.01" />
+    </>
+  ),
   implementation: (
     <>
       <path d="M12 3v12M7 8l5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5" />
