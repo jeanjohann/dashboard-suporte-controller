@@ -23,7 +23,7 @@ O fluxo real é `labAssistantLive01`, gerado por `scripts/assistant-live-workflo
 
 Para encerrar a ponte, confira PID/horário em `%LOCALAPPDATA%\Addlog\n8n-lab\assistant-process.json` e interrompa somente o processo registrado. Logs `assistant.log` e `assistant-error.log` não registram requisições nem respostas analíticas. Histórico de execução do n8n contém totais reais e segue a retenção local configurada. Inicialização automática no boot e serviço de produção não foram criados.
 
-O proprietário solicitou incluir o n8n na fila junto às integrações. O escopo é planejar e homologar sua utilização como coordenador das coletas e automações. Em 18/10/2026 foi instalado um laboratório local via npm no Windows, descrito abaixo. O proprietário concluiu o cadastro da conta; um fluxo manual fictício foi importado e executado com sucesso. Não foram configuradas credenciais de fontes, IA, MCP ou coleta real.
+O proprietário solicitou incluir o n8n na fila junto às integrações. O escopo é planejar e homologar sua utilização como coordenador das coletas e automações. Em 18/10/2026 foi instalado um laboratório local via npm no Windows, descrito abaixo. O proprietário concluiu o cadastro da conta; um fluxo manual fictício foi importado e executado com sucesso. A credencial Gemini e as consultas reais locais foram adicionadas nas etapas seguintes. Integrações de fontes externas e MCP continuam pendentes.
 
 ## Laboratório Windows via npm — instalado em 18/10/2026
 
@@ -34,7 +34,7 @@ O proprietário solicitou incluir o n8n na fila junto às integrações. O escop
 - **Conta e primeiro teste:** cadastro concluído pelo proprietário. O fluxo inativo `LAB · Primeiro teste de monitoramento (dados fictícios)` contém gatilho manual e cálculo JavaScript de três veículos de demonstração, com referência fixa de 18/10/2026. Foi executado com sucesso: os registros têm 0, 3 e 6 dias completos sem comunicação. Não acessa fontes externas nem dados reais. O modelo de IA e seu provedor ainda dependem de definição; senhas e chaves devem ser cadastradas diretamente no n8n, sem envio pelo chat.
 - **Limites:** o n8n Assistant de criação de fluxos não está disponível pela instalação npm; isso é distinto do futuro agente de consultas do sistema. O executor Python não foi configurado. A documentação informa descontinuação da instalação npm a partir da versão 3; esta versão fixa 2.x é um laboratório, não uma decisão de infraestrutura de produção.
 
-A alternativa npm foi adotada após impedimento do hipervisor no Docker/WSL. A investigação de firmware ficou separada; não houve atualização de BIOS, desativação de proteções ou exposição pública do laboratório. O módulo Assistente do dashboard permanece uma prévia sem conexão com este serviço.
+A alternativa npm foi adotada após impedimento do hipervisor no Docker/WSL. A investigação de firmware ficou separada; não houve atualização de BIOS, desativação de proteções ou exposição pública do laboratório. O módulo Assistente foi conectado ao piloto local na versão 0.32.0, conforme descrito acima.
 
 Referência: [Instalar via npm](https://docs.n8n.io/deploy/host-n8n/install-options/install-with-npm).
 
@@ -69,7 +69,7 @@ O script `node scripts/local-acervo.mjs` permite diagnosticar a leitura sem n8n,
 
 Não há modelo de IA, MCP, automação agendada ou conexão com o Assistente do dashboard nesta etapa. O fluxo é um teste manual local de leitura real.
 
-O proprietário aprovou desenvolver o assistente em um módulo separado, oculto enquanto amadurece. A estrutura inicial foi entregue em 0.31.0; MCP, IA, consultas reais e ações continuam pendentes. Os exemplos abaixo são propostas de funcionalidades futuras, não autorização para executar ações sobre as fontes.
+O proprietário aprovou desenvolver o assistente em um módulo separado, oculto enquanto amadurece. A estrutura inicial foi entregue em 0.31.0; a primeira consulta local com IA foi conectada em 0.32.0. MCP e ações de escrita continuam pendentes. Os exemplos abaixo são propostas de funcionalidades futuras, não autorização para executar ações sobre as fontes.
 
 ## Página experimental — 0.31.0
 
