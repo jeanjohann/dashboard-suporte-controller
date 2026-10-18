@@ -96,6 +96,20 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
+      // Piloto local vinculado ao proprietário: a asserção assinada só segue para o seu loopback.
+      if (url.pathname === '/api/assistant/local-session') {
+        if (user.role !== 'admin' || email !== owner)
+          return reply(
+            { error: 'O piloto local está disponível somente para o administrador principal.' },
+            403,
+          );
+        if (request.method !== 'POST') return reply({ error: 'Método não permitido.' }, 405);
+        if (request.headers.get('Origin') !== url.origin)
+          return reply({ error: 'Origem não permitida.' }, 403);
+        const assertion = request.headers.get('Cf-Access-Jwt-Assertion');
+        if (!assertion) return reply({ error: 'Sessão Access ausente.' }, 401);
+        return reply({ assertion });
+      }
       if (['/api/orders/google/status', '/api/orders/google/snapshot'].includes(url.pathname)) {
         if (user.role !== 'admin')
           return reply(

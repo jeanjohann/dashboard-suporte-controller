@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.32.0 — 18/10/2026
+
+- Conecta o Assistente do laboratório à consulta fixa de volume de atendimentos do acervo local e à explicação do Gemini pelo n8n. Cards mostram os cálculos do sistema; fonte, período, revisão e critérios ficam disponíveis para conferência.
+- Piloto exclusivo do administrador principal, com sessão Cloudflare Access verificada no serviço loopback. Origem e rotas fixas, sem comandos, caminhos de arquivo ou perguntas livres recebidos do navegador.
+- O Gemini recebe somente totais, período e critérios. Identificadores, linhas, nomes dos arquivos e credenciais não entram no prompt. Sem exposição pública do n8n, agendamento ou dependência dos filtros das outras páginas.
+- Requer os serviços locais ligados; indisponibilidade, sessão recusada e consultas simultâneas têm mensagens explícitas. Adiciona inicializador e documentação do laboratório.
+
 ## 0.31.1 — 18/10/2026
 
 - Adiciona atalho do Assistente de suporte ao lado do seletor de tema, com ícone de laboratório, nome acessível e indicação de página ativa. Visível somente para administradores ativos, inclusive com menu recolhido; consultas permanecem desativadas.

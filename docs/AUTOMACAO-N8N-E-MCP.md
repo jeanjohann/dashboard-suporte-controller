@@ -2,6 +2,27 @@
 
 ## Situação em 18/10/2026
 
+**Atualização 0.32.0:** o Assistente agora executa a primeira consulta real por uma ponte loopback neste computador. A consulta de atendimentos e a explicação do Gemini estão ligadas; MCP, perguntas livres e as outras quatro consultas continuam pendentes. Os testes fictícios e a instalação abaixo permanecem como histórico de homologação.
+
+## Usar o Assistente no sistema — piloto 0.32.0
+
+1. No computador onde estão a pasta `import/` e o laboratório n8n, execute `powershell -ExecutionPolicy Bypass -File .\scripts\start-assistant-lab.ps1` a partir da pasta do projeto. O inicializador sobe o leitor (5680) e a ponte do Assistente (5681), ambos apenas em `127.0.0.1`. A credencial e o fluxo `labAssistantLive01` já devem estar configurados no laboratório.
+2. Entre no sistema publicado com o administrador principal e abra o laboratório pelo ícone junto ao tema, ou pelo endereço `#assistente-laboratorio`.
+3. Clique em **Consultar atendimentos**. Se o navegador solicitar acesso à rede local, a permissão é necessária para o site conversar com este computador. Outros computadores não usam o acervo desta máquina.
+4. Aguarde até dois minutos. Confira os cards calculados, a explicação e “Fonte, critérios e limitações”. O recorte é o último mês com realizados na OS do acervo; não usa arquivos importados no navegador nem filtros de outras categorias.
+
+### Caminho e limites do piloto
+
+**Página autenticada → sessão do proprietário → ponte local → fluxo fixo n8n → totais do leitor local → Gemini → cards e explicação na página.** Não há túnel ou endpoint público do n8n. A ponte usa o executável n8n instalado para disparar um fluxo manual fixo, com executor separado e uma consulta por vez. Este mecanismo é de laboratório, não infraestrutura multiusuário.
+
+O Worker verifica sessão e cadastro ativo, exige proprietário + administrador + POST da mesma origem em `/api/assistant/local-session`. A asserção assinada do Cloudflare Access retorna somente a essa sessão e permanece na memória do navegador, sendo enviada exclusivamente para `http://127.0.0.1:5681`. A ponte valida assinatura RS256, emissor, audiência, expiração e e-mail fixo do administrador principal; não aceita um e-mail ou papel declarado pelo navegador. Não encaminha a asserção ao n8n, Gemini ou logs. O proprietário não pode ser suspenso/rebaixado no cadastro atual; para revogar este piloto, encerre a ponte e revogue a sessão Access. Não distribua essa integração como permissão geral para outros administradores.
+
+A ponte confere origem/Host, rejeita corpos e rotas inesperados e limita consultas consecutivas a pelo menos 15 segundos. Não aceita texto livre, comandos, URL, caminhos ou nomes de fluxo do cliente. A API interna do acervo continua com token independente. Tokens e chaves não ficam no Git. O novo nó “Totais locais de OS” recebe somente um contrato reduzido; o prompt usa exclusivamente período, métricas, critérios e quantidade de realizados sem data. Fonte, hash e revisão são usados para conferência na página, sem entrar no prompt. Nenhuma linha, chamado, placa, CNPJ ou nome de cliente é enviado ao Gemini.
+
+O fluxo real é `labAssistantLive01`, gerado por `scripts/assistant-live-workflow.mjs`. O resultado usa um único snapshot dessa execução, evitando misturar cards de uma leitura com explicação de outra. Falhas do n8n/provedor não viram zeros ou respostas fictícias. A explicação continua sujeita a erro e aparece ao lado dos números autoritativos. Custos/limites e condições do projeto Gemini se aplicam às chamadas manuais; não há cobrança ou plano ativado automaticamente.
+
+Para encerrar a ponte, confira PID/horário em `%LOCALAPPDATA%\Addlog\n8n-lab\assistant-process.json` e interrompa somente o processo registrado. Logs `assistant.log` e `assistant-error.log` não registram requisições nem respostas analíticas. Histórico de execução do n8n contém totais reais e segue a retenção local configurada. Inicialização automática no boot e serviço de produção não foram criados.
+
 O proprietário solicitou incluir o n8n na fila junto às integrações. O escopo é planejar e homologar sua utilização como coordenador das coletas e automações. Em 18/10/2026 foi instalado um laboratório local via npm no Windows, descrito abaixo. O proprietário concluiu o cadastro da conta; um fluxo manual fictício foi importado e executado com sucesso. Não foram configuradas credenciais de fontes, IA, MCP ou coleta real.
 
 ## Laboratório Windows via npm — instalado em 18/10/2026

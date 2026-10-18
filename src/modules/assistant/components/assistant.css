@@ -91,12 +91,27 @@
 }
 .assistant-response-plan {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
   margin: 16px 0;
 }
 .assistant-response-plan h3 {
   font-size: 13px;
+}
+.assistant-answer {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 13px;
+}
+.assistant-hash {
+  overflow-wrap: anywhere;
+}
+.assistant-next details {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.assistant-response-plan strong {
+  font-size: 26px;
 }
 .assistant-response-plan p {
   color: var(--ui-muted);

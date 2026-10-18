@@ -53,6 +53,46 @@ const input = {
   canExport: false,
   version: 0,
 };
+
+test('sessão do Assistente local exige proprietário ativo, POST e mesma origem', async () => {
+  const db = database();
+  try {
+    const e = env(db),
+      admin = createHandler(async () => owner);
+    await admin(request('PUT', input), e);
+    const path = '/api/assistant/local-session';
+    assert.equal(
+      (await createHandler(async () => input.email)(request('POST', null, path), e)).status,
+      403,
+    );
+    assert.equal((await admin(request('GET', null, path), e)).status, 405);
+    assert.equal(
+      (
+        await admin(
+          new Request('https://app.example' + path, {
+            method: 'POST',
+            headers: { Origin: 'https://evil.example' },
+          }),
+          e,
+        )
+      ).status,
+      403,
+    );
+    assert.equal((await admin(request('POST', null, path), e)).status, 401);
+    const response = await admin(
+      new Request('https://app.example' + path, {
+        method: 'POST',
+        headers: { Origin: 'https://app.example', 'Cf-Access-Jwt-Assertion': 'signed-test-token' },
+      }),
+      e,
+    );
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { assertion: 'signed-test-token' });
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  } finally {
+    db.close();
+  }
+});
 test('Google Sheets exige sessão ativa e administrador mesmo para consultar configuração', async () => {
   const db = database();
   try {

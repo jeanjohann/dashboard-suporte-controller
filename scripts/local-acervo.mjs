@@ -93,6 +93,27 @@ export async function readArchive() {
   return { generatedAt: new Date().toISOString(), manifest, attendance: attendanceQuery(orders) };
 }
 
+/** Contrato mínimo: sem linhas, chamados, clientes, placas, CNPJs ou identificadores de equipamentos. */
+export function assistantPayload(archive) {
+  const { period, metrics, criteria, completedWithoutValidDate } = archive.attendance;
+  const source = archive.manifest.find((item) => item.kind === 'orders');
+  return {
+    period,
+    metrics,
+    criteria,
+    completedWithoutValidDate,
+    generatedAt: archive.generatedAt,
+    source: {
+      filename: source.filename,
+      sheets: source.sheets,
+      modifiedAt: source.modifiedAt,
+      sha256: source.sha256,
+      issues: source.issues,
+      skipped: source.skipped,
+    },
+  };
+}
+
 /** Interface restrita ao computador; token fica na configuração local, nunca no repositório. */
 export function archiveServer(token) {
   if (!token || token.length < 32)
@@ -110,12 +131,20 @@ export function archiveServer(token) {
       response.writeHead(403).end(JSON.stringify({ error: 'Acesso negado.' }));
       return;
     }
-    if (request.method !== 'GET' || request.url !== '/v1/acervo/atendimentos') {
+    if (
+      request.method !== 'GET' ||
+      !['/v1/acervo/atendimentos', '/v1/acervo/assistant-payload'].includes(request.url)
+    ) {
       response.writeHead(404).end(JSON.stringify({ error: 'Consulta não disponível.' }));
       return;
     }
     try {
-      response.end(JSON.stringify(await readArchive()));
+      const archive = await readArchive();
+      response.end(
+        JSON.stringify(
+          request.url.endsWith('assistant-payload') ? assistantPayload(archive) : archive,
+        ),
+      );
     } catch {
       response.writeHead(503).end(
         JSON.stringify({
