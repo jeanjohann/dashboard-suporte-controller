@@ -18,6 +18,8 @@ Piloto Google Sheets de OS preparado em 0.23.0, com fonte fixa e acesso exclusiv
 
 Atualizada em 18/10/2026. Esta é a fila consolidada atual; observações de versões antigas em outros documentos podem descrever itens já entregues. Prioridades serão definidas pelo usuário. Uma ideia na fila não autoriza automaticamente ativar integrações ou enviar dados ao servidor.
 
+Incluído pelo proprietário em 18/10/2026: **n8n como candidato à coordenação das integrações**, junto ao Monitoramento, KORE/Arqia, Zoho e Google Sheets. Hospedagem, coleta, autenticação com o sistema e armazenamento dependem de projeto e homologação. O uso de **MCP para um assistente de consultas** está em avaliação, sem implementação ou ativação aprovada nesta etapa. [Escopo e proposta](AUTOMACAO-N8N-E-MCP.md).
+
 | Código | Item                                                                                                                 | Situação / dependência                                                                                                                       | Prioridade |
 | ------ | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | A01    | Separar visitas improdutivas dos indicadores de manutenção, com modos no relatório por veículo e ranking de técnicos | Entregue em 0.17.6; manter custos válidos de ambas as categorias                                                                             | Concluído  |
@@ -39,6 +41,15 @@ Atualizada em 18/10/2026. Esta é a fila consolidada atual; observações de ver
 | A15-A  | Arqia — linhas e consumo                                                                                             | API anunciada para a Plataforma de Gestão; aguarda documentação técnica, liberação da conta, limites e condições de uso                      | A definir  |
 | A16    | Ampliar conciliação entre operacional, OS e consumo                                                                  | Vínculos básicos já existem. Cruzamento histórico consumo × manutenção depende de titularidade no tempo e critérios de divergência           | A definir  |
 | A17    | Revisão contínua de layout e documentação                                                                            | Harmonizar telas/impressão/responsividade e remover ambiguidades de notas históricas; não esconder bases relevantes                          | A definir  |
+
+## Automação e assistente — pendências
+
+Pendências adicionais de automação:
+
+| Código  | Item                              | Situação / dependência                                                                                                                                                                                                                                             | Prioridade   |
+| ------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
+| A18     | n8n — coordenação das integrações | Incluído na fila em 18/10/2026. Definir hospedagem, conexões autenticadas, armazenamento, frequência, tratamento de falhas e piloto com uma base do Monitoramento. Relacionado a A12–A15, Zoho e Google. Nenhuma instância ou coleta ativada.                      | A definir    |
+| A18-MCP | Assistente de consultas por MCP   | Proposta em avaliação. Definir ferramentas de consulta, cliente/IA, acesso aos dados no servidor e permissões por usuário/base. Um chat dentro do sistema exige interface e integração próprias. Não habilitar administração geral do n8n para usuários do painel. | Em avaliação |
 
 ## Já entregues — não recolocar na fila
 
