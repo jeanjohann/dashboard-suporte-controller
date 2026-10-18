@@ -19,6 +19,16 @@ Referência: [Instalar via npm](https://docs.n8n.io/deploy/host-n8n/install-opti
 
 ## Acervo local — primeiro fluxo de consulta
 
+### Gemini — conexão homologada com dados fictícios
+
+Em 18/10/2026, a credencial `googlePalmApi` cadastrada pelo proprietário foi vinculada ao fluxo manual [LAB · Gemini · Consulta fictícia de atendimentos](http://localhost:5678/workflow/labGeminiDemo01). O fluxo foi importado e executado com sucesso. Usa Basic LLM Chain com Google Gemini Chat Model (`models/gemini-flash-latest`); o alias pode mudar de versão no provedor. O gerador sem credenciais está em `scripts/gemini-demo-workflow.mjs`; a referência à credencial é preenchida somente no laboratório local, sem exportar a chave.
+
+O exemplo fixa 20 realizados, 18 efetivos, 2 improdutivos e 15 chamados distintos em maio/2026, com última data em 08/05. A resposta foi conferida: preservou os números, identificou demonstração, fonte, período, exclusão por data e mês incompleto. Isso homologa apenas essa conexão e esse exemplo; não é validação geral das respostas do modelo.
+
+O fluxo não lê arquivos e não chama o serviço do acervo. A pergunta e os dados são fixos no nó “Explicar indicadores fictícios”, podendo ser conferidos antes de executar. Não há agendamento, ferramentas autônomas, chat ou conexão ao Assistente do dashboard. O próximo passo é preparar o recorte mínimo e definir quais dados reais poderão ser enviados ao Gemini, considerando as condições do projeto gratuito. As consultas reais locais permanecem no fluxo separado abaixo. Não exporte credenciais nem compartilhe capturas de seus campos preenchidos.
+
+Referências: [Google Gemini Chat Model no n8n](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatgooglegemini) e [modelos Gemini](https://ai.google.dev/gemini-api/docs/models).
+
 O acervo inicial aprovado é a pasta **`import/`**, nome que já existe no projeto (referida na conversa como “imports”). A seleção é explícita: `Ordens de Serviços 2025_26.xlsx`, `Operacional 08-05-2026.xlsx` e `Envios_Recebimentos.xlsx`. A OS legada e outros anexos não entram automaticamente. Renomear ou substituir uma fonte por outro nome exige atualizar `sources` em `scripts/local-acervo.mjs`.
 
 O serviço reaproveita os três leitores do dashboard. Lê novamente os arquivos a cada consulta, identifica alterações durante a leitura e retorna manifesto com nome, abas, atualização, SHA-256, registros e apontamentos. Não corrige nem salva planilhas. Apontamentos de revisão continuam visíveis; a base não é apresentada como saneada. A aba Consertos permanece fora da logística.
