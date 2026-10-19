@@ -110,6 +110,35 @@
   font-size: 12px;
   line-height: 1.7;
 }
+.assistant-consultation {
+  border-top: 1px solid var(--ui-border);
+  margin-top: 14px;
+  padding-top: 12px;
+}
+.assistant-data {
+  margin: 12px 0;
+}
+.assistant-table-scroll {
+  overflow-x: auto;
+  max-height: 340px;
+}
+.assistant-data table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.assistant-data th,
+.assistant-data td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--ui-border);
+  white-space: nowrap;
+}
+.assistant-data th {
+  position: sticky;
+  top: 0;
+  background: var(--ui-surface);
+}
 .assistant-response-plan strong {
   font-size: 26px;
 }

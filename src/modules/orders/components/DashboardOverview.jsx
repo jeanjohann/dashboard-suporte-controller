@@ -254,7 +254,7 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
           </div>
         </article>
       </div>
-      <SupportZohoOverview />
+      <SupportZohoOverview onOpen={() => onCategory('support')} />
       <div className="overview-presentation-toolbar" aria-label="Gráficos para apresentação">
         <strong>Apresentar nesta tela</strong>
         <div>

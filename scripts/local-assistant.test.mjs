@@ -270,5 +270,55 @@ test('perguntas inválidas não viram parâmetros e agente sem ferramenta não r
   const workflow = assistantAgentWorkflow({ id: 'g', name: 'Gemini' }, { id: 'a', name: 'Acervo' });
   assert.equal(workflow.nodes.filter((node) => node.type.endsWith('.agent')).length, 1);
   assert.equal(workflow.nodes.filter((node) => node.type.endsWith('httpRequestTool')).length, 1);
-  assert.equal(workflow.connections.consultar_atendimentos.ai_tool[0][0].node, 'Agente de suporte');
+  assert.equal(workflow.connections.consultar_acervo.ai_tool[0][0].node, 'Agente de suporte');
+});
+
+test('amostras exibem o recorte efetivamente consultado e erros não criam indicadores', async () => {
+  let session;
+  session = createAssistantSession({
+    token: 'q'.repeat(48),
+    cooldown: 0,
+    readSnapshot: async () => ({
+      catalog: { profile: 'demo' },
+      queryDemo: (params) => {
+        if (params.tipo === 'inválido') throw Error('Tipo inválido');
+        return {
+          profile: 'demo',
+          metrics: { total: 7 },
+          period: { start: '2026-01-01' },
+          source: { filename: 'LOCAL' },
+          sources: [],
+          cards: [['Equipamentos', 7]],
+        };
+      },
+    }),
+    query: async () => {
+      assert.equal(session.input().catalog.profile, 'demo');
+      const result = session.tool('atendimentos', { tipo: 'parque' });
+      assert.equal(result.source, undefined);
+      assert.equal(result.sources, undefined);
+      return { answer: '7 equipamentos fictícios' };
+    },
+  });
+  const result = await session.run('Quantos equipamentos?');
+  assert.equal(result.consulted, true);
+  assert.equal(result.metrics.total, 7);
+  assert.equal(result.source.filename, 'LOCAL');
+  assert.equal(result.consultations.length, 1);
+  assert.equal(result.toolName, 'consultar_acervo');
+  session = createAssistantSession({
+    token: 'q'.repeat(48),
+    readSnapshot: async () => ({
+      queryDemo: () => {
+        throw Error('Filtro inválido');
+      },
+    }),
+    query: async () => {
+      assert.equal(session.tool('atendimentos', { tipo: 'inválido' }).consulted, false);
+      return { answer: 'Filtro inválido' };
+    },
+  });
+  const invalid = await session.run('Consulta inválida');
+  assert.equal(invalid.consulted, false);
+  assert.equal(invalid.metrics, undefined);
 });

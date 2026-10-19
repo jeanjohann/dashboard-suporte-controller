@@ -11,11 +11,29 @@ import { field, attendanceDate, applyFilters } from '../src/shared/data/filters.
 import { periodMetrics } from '../src/modules/orders/domain/dashboard.js';
 
 export const archiveRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../import');
-const sources = [
+const realSources = [
   ['orders', 'Ordens de Serviços 2025_26.xlsx', importWorkbook],
   ['operational', 'Operacional 08-05-2026.xlsx', importOperational],
   ['logistics', 'Envios_Recebimentos.xlsx', importLogistics],
 ];
+const demoSources = [
+  ['orders', 'DEMO-Ordens-de-Servico-1000.xlsx', importWorkbook],
+  ['operational', 'DEMO-Operacional-1000.xlsx', importOperational],
+];
+
+/** Perfil local explícito; nenhum caminho ou nome de arquivo vem da pergunta do agente. */
+export async function archiveProfile() {
+  try {
+    const config = JSON.parse(
+      await readFile(resolve(archiveRoot, 'assistant-source.json'), 'utf8'),
+    );
+    if (!['real', 'demo'].includes(config.profile)) throw new Error('Perfil inválido.');
+    return config.profile;
+  } catch (error) {
+    if (error.code === 'ENOENT') return 'real';
+    throw error;
+  }
+}
 
 /** O mês de referência vem dos realizados, nunca de agendamentos futuros. */
 export function attendanceQuery(data) {
@@ -60,12 +78,15 @@ export function attendanceQuery(data) {
   };
 }
 
-/** Só os três arquivos aprovados; nomes legados e outros anexos não entram no lote. */
-export async function readArchive() {
+/** Fontes fixas por perfil. Dados detalhados ficam apenas no contexto local quando solicitados. */
+export async function readArchive({ profile, includeData = false } = {}) {
+  profile ??= await archiveProfile();
+  if (!['real', 'demo'].includes(profile)) throw new Error('Perfil de acervo inválido.');
   const root = await realpath(archiveRoot);
   const manifest = [];
+  const datasets = {};
   let orders;
-  for (const [kind, filename, parse] of sources) {
+  for (const [kind, filename, parse] of profile === 'demo' ? demoSources : realSources) {
     const path = await realpath(resolve(root, filename));
     if (!path.startsWith(root + sep)) throw new Error('Fonte fora da pasta autorizada.');
     const before = await stat(path);
@@ -75,6 +96,7 @@ export async function readArchive() {
       throw new Error('Uma fonte mudou durante a leitura. Tente novamente.');
     const parsed = parse(bytes);
     if (kind === 'orders') orders = parsed;
+    if (includeData) datasets[kind] = parsed;
     manifest.push({
       kind,
       filename,
@@ -90,7 +112,13 @@ export async function readArchive() {
       skipped: parsed.skipped ?? null,
     });
   }
-  return { generatedAt: new Date().toISOString(), manifest, attendance: attendanceQuery(orders) };
+  return {
+    profile,
+    generatedAt: new Date().toISOString(),
+    manifest,
+    attendance: attendanceQuery(orders),
+    ...(includeData ? { datasets } : {}),
+  };
 }
 
 /** Contrato mínimo: sem linhas, chamados, clientes, placas, CNPJs ou identificadores de equipamentos. */
@@ -98,6 +126,7 @@ export function assistantPayload(archive) {
   const { period, metrics, criteria, completedWithoutValidDate } = archive.attendance;
   const source = archive.manifest.find((item) => item.kind === 'orders');
   return {
+    profile: archive.profile,
     period,
     metrics,
     criteria,

@@ -7,6 +7,20 @@
 
 # Histórico de versões
 
+## 0.38.0 — 19/10/2026
+
+- Reorganiza o Zoho na Visão geral em quatro cards, gráfico por agente e tabela compacta, usando a última coleta concluída e mantendo seu período próprio.
+- Concentra a consulta e os detalhes do Zoho na página Equipe de suporte. O botão do cabeçalho e o atalho do resumo levam ao mesmo painel, disponível também antes de importar OS.
+- Recolhe vínculos com OS, respostas, métricas por chamado, apontamentos e conferência da conexão. Mostra primeiro os indicadores e mantém pendências como “A conferir”.
+- Reutiliza a mesma apresentação e cálculo nas duas telas, com cores dos temas e ordenação numérica de tempos e contagens. A navegação preserva a coleta na sessão.
+
+## Ajustes locais preservados — Assistente
+
+- Conecta o agente às duas amostras fictícias de 1.000 registros por perfil local explícito, sem misturar as fontes reais ou a logística no teste.
+- Amplia a ferramenta para atendimentos por período, execução/agendamento, cliente e placa, custos, trocas e fotografia do parque. Cálculos usam as mesmas regras do painel, com parâmetros validados e resultados limitados.
+- Mostra cards, rankings, detalhes e fontes de cada consulta efetivamente realizada. Períodos relativos usam a última data realizada do arquivo e ficam identificados no resultado.
+- Restringe a leitura detalhada às amostras, mantém o acervo real no contrato anterior e preserva autenticação, contexto por pergunta e limite de duas chamadas à ferramenta.
+
 ## 0.37.1 — 19/10/2026
 
 - Dá largura completa ao gráfico Zoho do suporte na Visão geral, abaixo dos gráficos de OS, para acomodar a tabela sem comprimir as colunas nem deixar um painel vizinho vazio. Mantém a mesma coleta e critérios da versão anterior.

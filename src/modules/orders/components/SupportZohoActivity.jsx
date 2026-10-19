@@ -5,13 +5,8 @@ import { supportPerformance } from '../domain/supportPerformance.js';
 import { loadZohoActivity } from '../data/zohoActivityClient.js';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { useZohoSession } from '../hooks/ZohoSession.jsx';
+import { ZohoActivitySummary, zohoDuration as duration } from './ZohoActivitySummary.jsx';
 
-const duration = (seconds) => {
-  if (seconds == null) return '—';
-  const rounded = Math.round(seconds);
-  return `${Math.floor(rounded / 3600)}h ${String(Math.floor((rounded % 3600) / 60)).padStart(2, '0')}min ${String(rounded % 60).padStart(2, '0')}s`;
-};
-const value = (number) => (number == null ? 'A conferir' : number);
 const date = (text) =>
   text ? new Date(text).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : '—';
 export function SupportZohoActivity({ active, ordersData }) {
@@ -103,11 +98,6 @@ export function SupportZohoActivity({ active, ordersData }) {
   if (!active) return null;
   return (
     <section className="zoho-activity" aria-label="Atividade Zoho de Eduardo e Jean">
-      <h3>Atividade e tempos · Eduardo e Jean</h3>
-      <p>
-        Período próprio, em Brasília. Inclui apenas Eduardo Oliveira e Jean Johann, conforme
-        definido. Contas compartilhadas e outros agentes ficam fora dos totais.
-      </p>
       <div className="orders-google-actions">
         <label>
           De{' '}
@@ -131,10 +121,7 @@ export function SupportZohoActivity({ active, ordersData }) {
           </button>
         )}
       </div>
-      <small>
-        Até 31 dias por consulta. A pesquisa considera chamados modificados desde o início do
-        período, incluindo chamados antigos.
-      </small>
+      <small>Até 31 dias por consulta · datas em Brasília.</small>
       {error && (
         <p className="error" role="alert">
           {error}
@@ -142,39 +129,19 @@ export function SupportZohoActivity({ active, ordersData }) {
       )}
       {data && summary && (
         <>
-          <p role="status">
+          <p role="status" className="zoho-read-status">
             Leitura concluída: {data.period.start} a {data.period.end} · {data.ticketIds.length}{' '}
             chamados conferidos · {date(data.readAt)} (Brasília).
           </p>
-          <p className="scope">
-            {data.coverage} Arquivados não são consultados. Refaça a leitura para refletir
-            alterações posteriores.
-          </p>
-          <div className="zoho-metrics">
-            {[
-              ['Tempo válido registrado', duration(summary.totals.seconds)],
-              ['Chamados com tempo registrado', summary.totals.ticketsWithTime],
-              ['Média por chamado com apontamento', duration(summary.totals.meanSeconds)],
-              ['Respostas enviadas', value(summary.totals.replies)],
-              ['Chamados respondidos', value(summary.totals.ticketsReplied)],
-            ].map(([label, result]) => (
-              <div key={label}>
-                <span>{label}</span>
-                <strong>{result}</strong>
-              </div>
-            ))}
-          </div>
-          <p className="scope">
-            Tempo apontado inclui faturável e não faturável. Apontamentos simultâneos podem se
-            sobrepor; a soma não equivale a jornada. Sem apontamento não significa ausência de
-            trabalho. O total de chamados da equipe é deduplicado.
-          </p>
+          <ZohoActivitySummary summary={summary} />
           {!!summary.pendingReplies.length && (
-            <div className="notice">
+            <details className="zoho-review-notice">
+              <summary>
+                Respostas aguardando conferência · {summary.pendingReplies.length} interações
+              </summary>
               <p>
-                {summary.pendingReplies.length} saídas públicas têm data baseada na criação da
-                interação e/ou automação não informada. Os indicadores de respostas ficam “A
-                conferir” até validar esses critérios no Zoho.
+                Data de envio e/ou automação não confirmadas na origem. Os indicadores de respostas
+                ficam “A conferir” até validar os critérios no Zoho.
               </p>
               <label>
                 <input
@@ -188,83 +155,75 @@ export function SupportZohoActivity({ active, ordersData }) {
               {reviewedReplies && (
                 <p>Critérios confirmados pelo administrador nesta sessão, para esta coleta.</p>
               )}
-            </div>
+            </details>
           )}
-          <h4>Pessoas e vínculo explícito com as OS</h4>
-          {!ordersData && (
-            <p className="scope">
-              Carregue a base de OS pelo Google Sheets ou pela importação de Excel para escolher os
-              responsáveis de execução e agendamento nesta seção.
-            </p>
-          )}
-          <div className="table-scroll">
-            <SortableTable aria-label="Atividade de Eduardo e Jean">
-              <thead>
-                <tr>
-                  <th>Agente Zoho</th>
-                  <th>Respostas</th>
-                  <th>Chamados respondidos</th>
-                  <th>Tempo apontado</th>
-                  <th>Chamados com tempo</th>
-                  <th>Média por chamado</th>
-                  <th>Responsável de execução nas OS</th>
-                  <th>OS efetivas</th>
-                  <th>Responsável de agendamento nas OS</th>
-                  <th>Agendamentos efetivos</th>
-                </tr>
-              </thead>
-              <tbody>
-                {summary.agents.map((agent) => (
-                  <tr key={agent.id}>
-                    <td>{agent.name}</td>
-                    <td>{value(agent.replies)}</td>
-                    <td>{value(agent.ticketsReplied)}</td>
-                    <td>{duration(agent.seconds)}</td>
-                    <td>{agent.ticketsWithTime}</td>
-                    <td>{duration(agent.meanSeconds)}</td>
-                    {['execution', 'scheduling'].map((role) => (
-                      <React.Fragment key={role}>
-                        <td>
-                          <select
-                            aria-label={`${role === 'execution' ? 'Execução' : 'Agendamento'} OS de ${agent.name}`}
-                            value={mapping[`${agent.id}:${role}`] || ''}
-                            onChange={(e) =>
-                              setMapping((old) => ({
-                                ...old,
-                                [`${agent.id}:${role}`]: e.target.value,
-                              }))
-                            }
-                          >
-                            <option value="">Sem vínculo confirmado</option>
-                            {(names?.[role] || []).map((name) => (
-                              <option key={name} value={name}>
-                                {name}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td>
-                          {!names?.[role]?.includes(mapping[`${agent.id}:${role}`]) ||
-                          !os?.[role] ||
-                          os[role].unavailable
-                            ? '—'
-                            : (os[role].groups.find(
-                                (group) => group.label === mapping[`${agent.id}:${role}`],
-                              )?.productive ?? 0)}
-                        </td>
-                      </React.Fragment>
-                    ))}
+          <details className="zoho-detail-group">
+            <summary>Vínculos dos agentes com as Ordens de Serviço</summary>
+            {!ordersData && (
+              <p className="scope">
+                Carregue a base de OS pelo Google Sheets ou pela importação de Excel para escolher
+                os responsáveis de execução e agendamento nesta seção.
+              </p>
+            )}
+            <div className="table-scroll">
+              <SortableTable aria-label="Atividade de Eduardo e Jean">
+                <thead>
+                  <tr>
+                    <th>Agente Zoho</th>
+                    <th>Responsável de execução nas OS</th>
+                    <th>OS efetivas</th>
+                    <th>Responsável de agendamento nas OS</th>
+                    <th>Agendamentos efetivos</th>
                   </tr>
-                ))}
-              </tbody>
-            </SortableTable>
-          </div>
-          <p className="scope">
-            O vínculo vale somente nesta sessão e usa a grafia exata selecionada. OS usam o mesmo
-            período: Execução pela data de atendimento; Agendamento pela data de agendamento de
-            serviços já realizados. Outros filtros das OS não se aplicam aqui. Não são somados
-            chamados de OS e Zoho.
-          </p>
+                </thead>
+                <tbody>
+                  {summary.agents.map((agent) => (
+                    <tr key={agent.id}>
+                      <td>{agent.name}</td>
+                      {['execution', 'scheduling'].map((role) => (
+                        <React.Fragment key={role}>
+                          <td>
+                            <select
+                              aria-label={`${role === 'execution' ? 'Execução' : 'Agendamento'} OS de ${agent.name}`}
+                              value={mapping[`${agent.id}:${role}`] || ''}
+                              onChange={(e) =>
+                                setMapping((old) => ({
+                                  ...old,
+                                  [`${agent.id}:${role}`]: e.target.value,
+                                }))
+                              }
+                            >
+                              <option value="">Sem vínculo confirmado</option>
+                              {(names?.[role] || []).map((name) => (
+                                <option key={name} value={name}>
+                                  {name}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                          <td>
+                            {!names?.[role]?.includes(mapping[`${agent.id}:${role}`]) ||
+                            !os?.[role] ||
+                            os[role].unavailable
+                              ? '—'
+                              : (os[role].groups.find(
+                                  (group) => group.label === mapping[`${agent.id}:${role}`],
+                                )?.productive ?? 0)}
+                          </td>
+                        </React.Fragment>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </SortableTable>
+            </div>
+            <p className="scope">
+              O vínculo vale somente nesta sessão e usa a grafia exata selecionada. OS usam o mesmo
+              período: Execução pela data de atendimento; Agendamento pela data de agendamento de
+              serviços já realizados. Outros filtros das OS não se aplicam aqui. Não são somados
+              chamados de OS e Zoho.
+            </p>
+          </details>
           <details>
             <summary>Respostas e candidatas · conferir origem e critérios</summary>
             <div className="table-scroll">
@@ -294,7 +253,7 @@ export function SupportZohoActivity({ active, ordersData }) {
               </SortableTable>
             </div>
           </details>
-          <details open>
+          <details>
             <summary>Tempo por chamado e métricas do Zoho</summary>
             <p className="scope">
               Tempo registrado nesta tabela usa apenas os apontamentos de Eduardo e Jean executados
@@ -391,6 +350,24 @@ export function SupportZohoActivity({ active, ordersData }) {
                 </tbody>
               </SortableTable>
             </div>
+          </details>
+          <details className="zoho-detail-group">
+            <summary>Fonte, cobertura e critérios da coleta</summary>
+            <p>
+              {data.coverage} Arquivados não são consultados. A pesquisa considera chamados
+              modificados desde o início do período, incluindo chamados antigos. Refaça a leitura
+              para refletir alterações posteriores.
+            </p>
+            <p>
+              Tempo apontado inclui faturável e não faturável. Apontamentos simultâneos podem se
+              sobrepor; a soma não equivale a jornada. Sem apontamento não significa ausência de
+              trabalho. O total de chamados da equipe é deduplicado.
+            </p>
+            <p>
+              Responsável atual do chamado não identifica quem enviou respostas. Contas
+              compartilhadas e outros agentes ficam fora dos totais. Sessões de presença ainda não
+              estão disponíveis.
+            </p>
           </details>
         </>
       )}

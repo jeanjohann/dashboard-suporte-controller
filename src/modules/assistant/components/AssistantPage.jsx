@@ -7,6 +7,151 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { queryLocalAssistant } from '../data/assistantClient.js';
 import './assistant.css';
 
+const tableLabels = {
+  label: 'Grupo',
+  total: 'Total',
+  efetivos: 'Efetivos',
+  improdutivos: 'Improdutivos',
+  chamados: 'Chamados',
+  custoReais: 'Custo (R$)',
+  placa: 'Placa',
+  cliente: 'Cliente',
+  rastreador: 'Rastreador',
+  modelo: 'Modelo',
+  situacao: 'Situação',
+  atendimentosEfetivos: 'OS efetivas',
+  chamado: 'Chamado',
+  data: 'Data',
+  responsavel: 'Responsável',
+  motivo: 'Motivo',
+  categoria: 'Categoria',
+  rastreadores: 'Rastreadores',
+  rfid: 'RFID',
+  coletoras: 'Coletoras',
+};
+function QueryTable({ value, title }) {
+  if (!value) return null;
+  const columns = Object.keys(value.rows[0] || {});
+  return (
+    <details className="assistant-data" open>
+      <summary>
+        {title} · {value.total} {value.truncated ? `(exibindo ${value.rows.length})` : ''}
+      </summary>
+      {value.rows.length ? (
+        <div className="assistant-table-scroll">
+          <table>
+            <thead>
+              <tr>
+                {columns.map((key) => (
+                  <th key={key}>{tableLabels[key] || key}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {value.rows.map((row, index) => (
+                <tr key={index}>
+                  {columns.map((key) => (
+                    <td key={key}>
+                      {row[key] == null
+                        ? '—'
+                        : typeof row[key] === 'number' && key === 'custoReais'
+                          ? row[key].toLocaleString('pt-BR', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })
+                          : String(row[key])}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p>Nenhum registro neste recorte.</p>
+      )}
+    </details>
+  );
+}
+function Consultation({ result }) {
+  const cards = result.cards || [
+    ['Visitas e atendimentos', result.metrics.completed],
+    ['Atendimentos efetivos', result.metrics.productive],
+    ['Visitas improdutivas', result.metrics.unproductive],
+    ['Chamados distintos', result.metrics.distinctCompletedCalls],
+  ];
+  const filters = result.appliedFilters;
+  return (
+    <div className="assistant-consultation">
+      {result.query && (
+        <h3>
+          {
+            {
+              atendimentos: 'Atendimentos',
+              trocas: 'Trocas e ciclos',
+              parque: 'Parque operacional',
+            }[result.query.tipo]
+          }
+          {result.profile === 'demo' ? ' · Dados fictícios' : ''}
+        </h3>
+      )}
+      <p>
+        {result.query?.tipo === 'parque'
+          ? `Fotografia operacional · referência: ${result.period.referenceDate}`
+          : `Período: ${result.period.start} a ${result.period.end} · último realizado: ${result.period.latestCompletedDate}`}
+      </p>
+      {filters && (
+        <p className="scope">
+          {[
+            filters.cliente && `Cliente: ${filters.cliente}`,
+            filters.responsavel &&
+              `Responsável (${filters.papel === 'agendamento' ? 'agendamento' : 'execução'}): ${filters.responsavel}`,
+            filters.placa && `Placa: ${filters.placa}`,
+            result.query.situacao && `Situação: ${result.query.situacao}`,
+            result.query.semHistorico && 'Sem OS efetiva vinculada',
+          ]
+            .filter(Boolean)
+            .join(' · ') || 'Sem filtros por cliente, responsável ou placa.'}
+        </p>
+      )}
+      <div className="assistant-response-plan">
+        {cards.map(([label, value]) => (
+          <article key={label}>
+            <h3>{label}</h3>
+            <strong>{value == null ? '—' : value.toLocaleString('pt-BR')}</strong>
+          </article>
+        ))}
+      </div>
+      <QueryTable
+        value={result.ranking}
+        title={`Ranking${result.query?.tipo === 'atendimentos' ? ` por ${{ total: 'visitas totais', efetivos: 'atendimentos efetivos', improdutivos: 'visitas improdutivas', custo: 'custo lançado' }[result.query.ordenar || 'total']}` : ''}`}
+      />
+      <QueryTable value={result.details} title="Registros da consulta" />
+      <details>
+        <summary>Fonte, critérios e limitações</summary>
+        {(result.sources || [result.source]).map((source) => (
+          <p key={source.filename}>
+            {source.filename} · aba {source.sheets.join(', ')} ·{' '}
+            {source.records != null ? `${source.records} registros · ` : ''}modificado em{' '}
+            {new Date(source.modifiedAt).toLocaleString('pt-BR')}
+            <br />
+            SHA-256: <code className="assistant-hash">{source.sha256}</code>
+          </p>
+        ))}
+        <p>Consulta em {new Date(result.generatedAt).toLocaleString('pt-BR')}</p>
+        <ul>
+          {result.criteria.map((criterion) => (
+            <li key={criterion}>{criterion}</li>
+          ))}
+        </ul>
+        {result.completedWithoutValidDate != null && (
+          <p>Realizados sem data válida no acervo: {result.completedWithoutValidDate}.</p>
+        )}
+      </details>
+    </div>
+  );
+}
+
 export function AssistantPage({ onPage }) {
   const { user } = useAccess();
   const [busy, setBusy] = useState(false);
@@ -54,7 +199,7 @@ export function AssistantPage({ onPage }) {
           <section className="panel assistant-query" aria-labelledby="assistant-query-title">
             <div className="assistant-heading">
               <h2 id="assistant-query-title">Pergunte ao agente de suporte</h2>
-              <span className="assistant-badge">Consulta real · somente leitura</span>
+              <span className="assistant-badge">Amostras fictícias · somente leitura</span>
             </div>
             <p className="scope">
               <a
@@ -66,15 +211,17 @@ export function AssistantPage({ onPage }) {
               </a>
             </p>
             <p className="scope">
-              Ferramenta disponível: totais de atendimentos do último mês com realizados na OS.
-              Outros períodos, clientes, responsáveis e assuntos ainda não têm ferramentas de
-              consulta.
+              Acervo de teste: 1.000 linhas de OS e 1.000 equipamentos fictícios. Consulte períodos,
+              responsáveis, clientes, placas, custos, trocas e parque. Datas relativas usam a última
+              data realizada do arquivo, informada no resultado.
             </p>
             <div className="assistant-suggestions">
               {[
                 'Quantos atendimentos efetivos, improdutivos e chamados distintos temos no último mês disponível?',
-                'Qual é o critério para separar visitas improdutivas?',
-                'Qual período está disponível e quais são as limitações dos dados?',
+                'Liste os atendimentos executados pelo Jean na semana anterior.',
+                'Quais clientes tiveram mais visitas e atendimentos em todo o histórico?',
+                'Quais placas tiveram mais trocas em todo o histórico e quais foram elas?',
+                'Quantos equipamentos ativos não têm OS efetiva nesta amostra? Agrupe por modelo.',
               ].map((text) => (
                 <button key={text} type="button" disabled={busy} onClick={() => setQuestion(text)}>
                   {text}
@@ -93,9 +240,9 @@ export function AssistantPage({ onPage }) {
             />
             <div className="assistant-query-footer">
               <span id="assistant-query-status" className="scope">
-                Sua pergunta é enviada ao Gemini. Evite incluir dados sensíveis. A ferramenta envia
-                somente totais, período e critérios, sem linhas ou identificadores dos clientes.
-                Cada pergunta é independente, sem memória de conversa.
+                Sua pergunta e os resultados solicitados são enviados ao Gemini. Neste piloto, as
+                ferramentas ampliadas usam somente as amostras fictícias. Não inclua dados reais
+                sensíveis na pergunta. Cada pergunta é independente, sem memória de conversa.
               </span>
               <button type="button" onClick={consult} disabled={busy || question.trim().length < 3}>
                 {busy ? 'Consultando agente…' : 'Enviar pergunta'}
@@ -120,64 +267,20 @@ export function AssistantPage({ onPage }) {
               </p>
               <p className="scope">
                 {result.consulted
-                  ? 'Ferramenta utilizada: consultar_atendimentos.'
+                  ? `Ferramenta utilizada: ${result.toolName || 'consultar_atendimentos'}.`
                   : 'O agente respondeu sem consultar os dados. Nenhum indicador foi calculado para esta resposta.'}
               </p>
-              {result.consulted && (
-                <>
-                  <p>
-                    Período: {result.period.start} a {result.period.end} · último realizado:{' '}
-                    {result.period.latestCompletedDate}
-                  </p>
-                  <div className="assistant-response-plan">
-                    {[
-                      ['Visitas e atendimentos', result.metrics.completed],
-                      ['Atendimentos efetivos', result.metrics.productive],
-                      ['Visitas improdutivas', result.metrics.unproductive],
-                      ['Chamados distintos', result.metrics.distinctCompletedCalls],
-                    ].map(([label, value]) => (
-                      <article key={label}>
-                        <h3>{label}</h3>
-                        <strong>{value}</strong>
-                      </article>
-                    ))}
-                  </div>
-                </>
-              )}
+              {result.consulted &&
+                (result.consultations || [result]).map((consultation, index) => (
+                  <Consultation key={index} result={consultation} />
+                ))}
               <h3>Resposta do agente</h3>
               <p className="assistant-answer">{result.answer}</p>
               {result.consulted && (
-                <>
-                  <p className="scope">
-                    Os cards vêm do cálculo do sistema. A explicação gerada por IA deve ser
-                    conferida com esses totais.
-                  </p>
-                  <details>
-                    <summary>Fonte, critérios e limitações</summary>
-                    <p>
-                      {result.source.filename} · aba {result.source.sheets.join(', ')} · modificado
-                      em {new Date(result.source.modifiedAt).toLocaleString('pt-BR')}
-                    </p>
-                    <p>
-                      Consulta em {new Date(result.generatedAt).toLocaleString('pt-BR')} · SHA-256:{' '}
-                      <code className="assistant-hash">{result.source.sha256}</code>
-                    </p>
-                    <ul>
-                      {result.criteria.map((criterion) => (
-                        <li key={criterion}>{criterion}</li>
-                      ))}
-                    </ul>
-                    <p>
-                      Realizados sem data válida no acervo: {result.completedWithoutValidDate}.
-                      Apontamentos do leitor na OS: {result.source.issues}. Linhas sem número de OS
-                      ignoradas pelo leitor: {result.source.skipped}.
-                    </p>
-                    <p>
-                      O mês pode estar incompleto. Os totais exibidos correspondem somente ao
-                      recorte retornado pela ferramenta.
-                    </p>
-                  </details>
-                </>
+                <p className="scope">
+                  Os cards vêm do cálculo do sistema. A explicação gerada por IA deve ser conferida
+                  com esses totais.
+                </p>
               )}
             </section>
           )}

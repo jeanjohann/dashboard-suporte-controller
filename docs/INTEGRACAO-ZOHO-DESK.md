@@ -1,5 +1,11 @@
 # Zoho Desk na Equipe de suporte — escopo aprovado
 
+## Apresentação consolidada — 0.38.0
+
+A **Visão geral** mostra somente o resumo da última coleta: chamados respondidos, tempo apontado, chamados com tempo e média por chamado, seguidos de comparação por agente e tabela compacta. O atalho **Detalhar na equipe** abre a página **Equipe de suporte** e o painel do Zoho. O período e o horário da coleta permanecem identificados e não são alterados pelos filtros de OS.
+
+Na **Equipe de suporte**, o mesmo painel reúne período, consulta, cards, gráfico e tabela por agente. Vínculos explícitos com OS, conferências de respostas, métricas por chamado, apontamentos e conexão ficam recolhidos até solicitação. O botão **Zoho Desk** do cabeçalho também leva a esse painel, inclusive sem base de OS. Navegar para outras categorias não mantém o painel detalhado acima da Visão geral. A coleta permanece na sessão; os cálculos e as regras de autoria não foram alterados.
+
 ## Gráfico do suporte na Visão geral — 0.37.0
 
 **OS → Visão geral → Atuação da equipe de suporte** inclui gráfico Zoho de Eduardo e Jean, com seletor de tempo apontado, média por chamado com apontamento, chamados com tempo, respostas e chamados respondidos. Tempos aparecem em minutos no eixo e em horas/minutos/segundos na tabela e no tooltip. Quantidades e durações mantêm gráficos separados dos agendamentos/execuções de OS; não há soma ou associação automática entre as fontes.

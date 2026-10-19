@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { timingSafeEqual } from 'node:crypto';
 import { readArchive, assistantPayload } from './local-acervo.mjs';
+import { createDemoQueries } from './assistant-demo-queries.mjs';
 
 export const assistantOrigin = 'https://dashboard-suporte-controller.jean-johann.workers.dev';
 const issuer = 'https://small-grass-95ae.cloudflareaccess.com';
@@ -20,7 +21,7 @@ const failureMessages = {
   AI_UNAVAILABLE:
     'O Gemini informou indisponibilidade ou alta demanda. Aguarde alguns minutos e tente novamente.',
   ACERVO_READ:
-    'Não foi possível ler o acervo local. Confira os três arquivos da pasta import e suas abas.',
+    'Não foi possível ler o acervo local. Confira o perfil selecionado, os arquivos da pasta import e suas abas.',
   AI_LIMIT:
     'O Gemini informou um limite de uso ou cota. Aguarde a renovação do limite e confira o uso no Google AI Studio.',
   AI_AUTH: 'O Gemini recusou a credencial. Confira a credencial Google Gemini no n8n.',
@@ -174,11 +175,20 @@ export function validateQuestion(input) {
   return question;
 }
 
+/** Dados detalhados só entram na ferramenta ampliada se todo o lote for fictício. */
+export async function readAssistantSnapshot() {
+  const archive = await readArchive({ includeData: true });
+  const snapshot = assistantPayload(archive);
+  if (archive.profile !== 'demo') return snapshot;
+  const demo = createDemoQueries(archive);
+  return { ...snapshot, catalog: demo.catalog, queryDemo: demo.query };
+}
+
 /** Um contexto por execução: a ferramenta vê o mesmo snapshot exibido nos cards. */
 export function createAssistantSession({
   token,
   query = runLocalAssistant,
-  readSnapshot = async () => assistantPayload(await readArchive()),
+  readSnapshot = readAssistantSnapshot,
   cooldown = 15000,
 } = {}) {
   if (!token || token.length < 32) throw new Error('Token interno do acervo necessário.');
@@ -193,13 +203,31 @@ export function createAssistantSession({
     },
     input() {
       if (!active) throw new Error('Não há pergunta em execução.');
-      return { question: active.question };
+      return {
+        question: active.question,
+        ...(active.snapshot.catalog ? { catalog: active.snapshot.catalog } : {}),
+      };
     },
-    tool(consulta) {
+    tool(consulta, parameters = {}) {
       if (!active || consulta !== 'atendimentos' || active.toolCalls >= 2)
         throw new Error('Consulta não disponível.');
       active.toolCalls++;
+      if (active.snapshot.queryDemo) {
+        try {
+          const result = active.snapshot.queryDemo(parameters);
+          active.results.push(result);
+          const { source, sources, generatedAt, ...payload } = result;
+          return payload;
+        } catch (error) {
+          return { error: error.message, consulted: false };
+        }
+      }
+      if (
+        Object.keys(parameters).some((key) => key !== 'tipo' || parameters.tipo !== 'atendimentos')
+      )
+        return { error: 'Filtros ampliados exigem as duas amostras fictícias.', consulted: false };
       const { period, metrics, criteria, completedWithoutValidDate } = active.snapshot;
+      active.results.push({ legacy: true });
       return { source: 'Acervo local de OS', period, metrics, criteria, completedWithoutValidDate };
     },
     async run(question) {
@@ -221,13 +249,18 @@ export function createAssistantSession({
           error.assistantCode = 'ACERVO_READ';
           throw error;
         }
-        active = { question, snapshot, toolCalls: 0 };
+        active = { question, snapshot, toolCalls: 0, results: [] };
         const answer = await query();
+        const consulted = active.results.length > 0;
+        const display = snapshot.queryDemo ? active.results.at(-1) : snapshot;
         return {
           ...answer,
           question,
-          consulted: active.toolCalls > 0,
-          ...(active.toolCalls ? active.snapshot : {}),
+          consulted,
+          ...(consulted ? display : {}),
+          ...(snapshot.queryDemo && consulted
+            ? { consultations: active.results, toolName: 'consultar_acervo' }
+            : {}),
         };
       } finally {
         active = null;
@@ -260,11 +293,21 @@ export function localAssistantServer({ verify = verifyLocalSession, session } = 
           send(200, session.input());
         } else {
           if (
-            [...internalUrl.searchParams.keys()].some((key) => key !== 'consulta') ||
-            internalUrl.searchParams.getAll('consulta').length !== 1
+            [...internalUrl.searchParams.keys()].some(
+              (key) => !['consulta', 'parametros'].includes(key),
+            ) ||
+            internalUrl.searchParams.getAll('consulta').length !== 1 ||
+            internalUrl.searchParams.getAll('parametros').length > 1 ||
+            (internalUrl.searchParams.get('parametros')?.length || 0) > 2000
           )
             throw Error();
-          send(200, session.tool(internalUrl.searchParams.get('consulta')));
+          send(
+            200,
+            session.tool(
+              internalUrl.searchParams.get('consulta'),
+              JSON.parse(internalUrl.searchParams.get('parametros') || '{}'),
+            ),
+          );
         }
       } catch {
         send(409, { error: 'Consulta interna indisponível.' });

@@ -1,6 +1,24 @@
 # Automação com n8n e proposta de MCP
 
-## Situação em 18/10/2026
+## Situação em 19/10/2026 — 0.34.0
+
+O agente usa o perfil local definido em `import/assistant-source.json`: `{"profile":"demo"}` seleciona exclusivamente `DEMO-Ordens-de-Servico-1000.xlsx` e `DEMO-Operacional-1000.xlsx`. Cada arquivo tem 1.000 linhas de dados fictícios. O perfil `real`, ou a ausência da configuração, mantém as três fontes originais e somente o contrato de totais legado. Configuração inválida interrompe a leitura em vez de escolher outra base. Não há descoberta automática de arquivos nem escolha de caminhos pelo modelo.
+
+O fluxo `labAssistantAgent01` foi atualizado com a ferramenta `consultar_acervo`. O n8n envia filtros estruturados em JSON pela função [$fromAI](https://docs.n8n.io/advanced-ai/examples/using-the-fromai-function/), validados no serviço local. Os arquivos completos não são enviados ao Gemini. No perfil fictício, o modelo recebe o catálogo de nomes fictícios e os resultados solicitados, podendo incluir até 20 detalhes ou grupos. Fonte, hash e metadados locais não entram no resultado da ferramenta.
+
+- **Atendimentos realizados:** totais, efetivos, improdutivos, chamados distintos, custos em reais, ranking e detalhes. Filtros por período, responsável de execução ou agendamento, cliente consolidado e placa. Ranking ordenável por visitas totais, efetivos, improdutivas ou custo, antes de aplicar o limite de exibição.
+- **Trocas:** eventos de rastreador, RFID e coletora, ranking por placa/cliente/responsável e detalhes. Estatísticas desde implementação e desde a troca anterior, somente para ciclos encerrados e separadas por categoria.
+- **Parque:** fotografia operacional, ativos/cancelados, modelos inferidos pelo serial e equipamentos sem OS efetiva vinculada na amostra. Filtro por cliente, placa e situação. Não aceita período de OS ou responsável. Ausência de histórico na amostra não comprova ausência de manutenção.
+
+Os períodos disponíveis são último mês com realizados, semana atual, semana calendário anterior, últimos sete dias, intervalo personalizado e total. Todos os relativos usam a última data realizada do arquivo (19/10/2026 nestas amostras), informada como referência, para testes reproduzíveis. Semanas começam na segunda-feira. Datas inválidas, campos desconhecidos, responsáveis/clientes ambíguos e combinações incompatíveis são recusados. Totais consideram todo o recorte, mesmo quando detalhes ou ranking estão truncados.
+
+Cada pergunta captura uma única leitura das duas bases. As duas chamadas permitidas usam esse mesmo snapshot. A tela mostra cada consulta com seus filtros, cards, ranking, detalhes, fontes e limites, inclusive quando houver comparação entre dois recortes. Erros de parâmetros não criam cards de sucesso. O contexto é descartado ao final. A autenticação e as restrições de loopback continuam iguais às descritas abaixo.
+
+Para retornar às fontes reais, altere o perfil para `real`. A ferramenta ampliada deixa de ser disponibilizada, evitando expor linhas reais pelo caminho fictício. Para reproduzir o piloto, mantenha os dois arquivos DEMO na pasta `import`, configure o perfil e importe o fluxo gerado por `scripts/assistant-agent-workflow.mjs` com as referências das credenciais existentes. [Exportação/importação do n8n](https://docs.n8n.io/hosting/cli-commands/) preserva um backup antes da atualização. Arquivos de amostra, configurações locais e cópias de fluxo não entram no Git.
+
+Consultas ainda limitadas: sem memória entre perguntas, sem livre execução de consultas/código, sem Zoho, M2M, logística ou monitoramento neste acervo. Agenda pendente ainda não está implementada. O modelo deve explicar essas limitações, não tratar outro recorte como equivalente.
+
+### Histórico do piloto anterior — 0.33.x
 
 **Correção em 19/10/2026 — 0.33.1:** uma consulta reproduziu timeout; o diagnóstico direto do modelo `gemini-flash-latest` retornou HTTP 503 `UNAVAILABLE`, informando alta demanda. A autenticação respondeu HTTP 200. O agente atual foi alterado para `models/gemini-3.5-flash-lite`, com a mesma credencial, e a consulta real foi validada novamente. Não houve ativação de cobrança. Referências: [indisponibilidade e retentativas do Gemini](https://ai.google.dev/gemini-api/docs/troubleshooting) e [modelo Flash-Lite](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite).
 

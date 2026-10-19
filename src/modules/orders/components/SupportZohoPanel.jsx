@@ -21,6 +21,14 @@ export function SupportZohoPanel({ active, onClose, ordersData }) {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const pending = useRef(null);
+  const section = useRef(null);
+  useEffect(() => {
+    if (active && allowed)
+      section.current?.scrollIntoView({
+        block: 'start',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
+  }, [active, allowed]);
   useEffect(() => {
     setBusy(false);
     return () => {
@@ -64,23 +72,25 @@ export function SupportZohoPanel({ active, onClose, ordersData }) {
   const agents = new Map((snapshot?.agents || []).map((agent) => [agent.id, agent]));
   return (
     <section
+      id="zoho-desk"
+      ref={section}
       className="orders-google-panel zoho-connection"
       aria-label="Zoho Desk · atividades e tempos"
     >
       <div className="orders-google-heading">
-        <h2>Zoho Desk · atividades e tempos</h2>
+        <div>
+          <span className="eyebrow">EQUIPE DE SUPORTE</span>
+          <h2>Zoho Desk · atendimentos e tempo</h2>
+        </div>
         {onClose && (
           <button type="button" onClick={onClose} aria-label="Fechar conexão Zoho Desk">
             Fechar
           </button>
         )}
       </div>
-      <p>Indicadores reais de Eduardo e Jean, com consulta por período e vínculo com as OS.</p>
-      <small>
-        Fonte independente das OS. Os filtros desta página não se aplicam ao Zoho. Responsável atual
-        do chamado não identifica quem enviou respostas. A atividade tem período próprio. Sessões de
-        presença ainda não estão disponíveis.
-      </small>
+      <p className="scope">
+        Eduardo Oliveira e Jean Johann · período próprio do Zoho, independente dos filtros de OS.
+      </p>
       <SupportZohoActivity key={user?.email} active={active && allowed} ordersData={ordersData} />
       <details className="zoho-connection-details">
         <summary>Conexão, agentes e chamados recentes · conferência</summary>
@@ -148,7 +158,7 @@ export function SupportZohoPanel({ active, onClose, ordersData }) {
                 semelhantes não são agrupados.
               </p>
             </details>
-            <details open>
+            <details>
               <summary>Chamados recentes do Zoho · conferência</summary>
               <div className="table-scroll">
                 <SortableTable aria-label="Chamados recentes do Zoho">
