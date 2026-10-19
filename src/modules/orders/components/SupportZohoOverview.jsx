@@ -40,8 +40,12 @@ export function SupportZohoOverview() {
   };
   if (!managed || !user?.active || user.role !== 'admin') return null;
   return (
-    <section className="support-zoho-overview" aria-label="Zoho na Visão geral do suporte">
-      <h4>Zoho Desk · Eduardo e Jean</h4>
+    <section
+      className="panel dashboard-widget support-zoho-overview"
+      aria-label="Zoho na Visão geral do suporte"
+    >
+      <h3>Atuação da equipe de suporte · Zoho Desk</h3>
+      <p className="scope">Eduardo Oliveira e Jean Johann</p>
       {!data ? (
         <p className="scope">
           Consulte a atividade na seção Zoho Desk para exibir os indicadores reais aqui.
@@ -88,6 +92,7 @@ export function SupportZohoOverview() {
                       dataKey="value"
                       name={metrics[metric]}
                       fill={chartColors.blue}
+                      maxBarSize={90}
                       isAnimationActive={false}
                     />
                   </BarChart>

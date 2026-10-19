@@ -7,6 +7,10 @@
 
 # Histórico de versões
 
+## 0.37.1 — 19/10/2026
+
+- Dá largura completa ao gráfico Zoho do suporte na Visão geral, abaixo dos gráficos de OS, para acomodar a tabela sem comprimir as colunas nem deixar um painel vizinho vazio. Mantém a mesma coleta e critérios da versão anterior.
+
 ## 0.37.0 — 19/10/2026
 
 - Inclui os dados reais do Zoho no quadro **Atuação da equipe de suporte** da Visão geral, com gráfico por Eduardo/Jean e escolha entre tempo apontado, média por chamado, chamados com tempo, respostas e chamados respondidos. Durações usam eixo em minutos e os valores completos ficam na tabela.

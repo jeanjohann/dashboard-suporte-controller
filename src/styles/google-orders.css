@@ -89,9 +89,7 @@
   margin-top: 8px;
 }
 .support-zoho-overview {
-  border-top: 1px solid var(--ui-border);
-  margin-top: 18px;
-  padding-top: 14px;
+  margin: 16px 0;
 }
 .support-zoho-chart-control {
   display: flex;
