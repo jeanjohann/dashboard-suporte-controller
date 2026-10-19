@@ -51,12 +51,52 @@ const book = () => ({
     },
   ],
 });
+
+test('diagnóstico distingue chave, autenticação, acesso e formato sem expor respostas privadas', async () => {
+  const request = new Request('https://app.example/api/orders/google/snapshot');
+  const cases = [
+    { credentials: 'json quebrado', code: 'GOOGLE_CREDENTIALS' },
+    { credentials: 'null', code: 'GOOGLE_CREDENTIALS' },
+    { authStatus: 400, code: 'GOOGLE_AUTH' },
+    { authStatus: 302, code: 'GOOGLE_AUTH' },
+    { sheetStatus: 302, code: 'GOOGLE_SHEETS_302' },
+    { sheetStatus: 403, code: 'GOOGLE_SHEETS_403' },
+    { sheetStatus: 404, code: 'GOOGLE_SHEETS_404' },
+    { sheetStatus: 400, code: 'GOOGLE_SHEETS_400' },
+    { invalidHeaders: true, code: 'GOOGLE_FORMAT' },
+  ];
+  for (const scenario of cases) {
+    let calls = 0;
+    const response = await googleOrdersResponse(request, env, () =>
+      readGoogleOrders(
+        { ...env, GOOGLE_SHEETS_CREDENTIALS: scenario.credentials ?? credentials },
+        {
+          fetchImpl: async () => {
+            calls++;
+            const status = calls === 1 ? scenario.authStatus : scenario.sheetStatus;
+            if (status) return new Response('private-response-secret', { status });
+            if (calls === 1) return Response.json({ access_token: 'private-token' });
+            const data = book();
+            if (scenario.invalidHeaders) data.sheets[0].data[0].rowData[0] = {};
+            return Response.json(data);
+          },
+        },
+      ),
+    );
+    const body = await response.json();
+    assert.equal(response.status, 502);
+    assert.equal(body.code, scenario.code);
+    assert.match(body.error, /A base anterior foi mantida/);
+    assert.doesNotMatch(JSON.stringify(body), /private-response-secret|private-token|PRIVATE KEY/);
+    if (scenario.credentials) assert.equal(calls, 0);
+  }
+});
 test('assina JWT somente leitura e consulta apenas aba fixa; não devolve token/chave/comentários', async () => {
   const calls = [];
   const result = await readGoogleOrders(env, {
     fetchImpl: async (url, options) => {
       calls.push(String(url));
-      assert.equal(options.redirect, 'error');
+      assert.equal(options.redirect, 'manual');
       if (calls.length === 1) {
         const jwt = decodeJwt(options.body.get('assertion'));
         assert.equal(jwt.scope, 'https://www.googleapis.com/auth/spreadsheets.readonly');
@@ -68,7 +108,10 @@ test('assina JWT somente leitura e consulta apenas aba fixa; não devolve token/
       assert.equal(target.origin, 'https://sheets.googleapis.com');
       assert.equal(target.searchParams.get('ranges'), "'OS 2025_26'");
       assert.equal(options.headers.Authorization, 'Bearer private-access-token');
-      return Response.json(book());
+      const data = book();
+      data.sheets.unshift({ properties: { title: 'Base clientes' } });
+      data.sheets.push({ properties: { title: 'Guia de testes' } });
+      return Response.json(data);
     },
   });
   assert.equal(calls.length, 2);
