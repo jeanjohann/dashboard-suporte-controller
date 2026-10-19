@@ -1,4 +1,4 @@
-/** Primeira conferência real do Zoho. Nenhuma associação automática às pessoas das OS. */
+/** Seção Zoho: atividade real, vínculos de OS e conferência da conexão em um único lugar. */
 import React, { useEffect, useRef, useState } from 'react';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { api } from '../../../shared/security/accessClient.js';
@@ -65,121 +65,127 @@ export function SupportZohoPanel({ active, onClose, ordersData }) {
   return (
     <section
       className="orders-google-panel zoho-connection"
-      aria-label="Zoho Desk · conexão de leitura"
+      aria-label="Zoho Desk · atividades e tempos"
     >
       <div className="orders-google-heading">
-        <strong>Zoho Desk · conexão e atividade</strong>
-        <button type="button" onClick={load} disabled={busy}>
-          {busy
-            ? 'Consultando Zoho…'
-            : snapshot
-              ? 'Atualizar leitura do Zoho'
-              : 'Consultar Zoho Desk'}
-        </button>
+        <h2>Zoho Desk · atividades e tempos</h2>
         {onClose && (
           <button type="button" onClick={onClose} aria-label="Fechar conexão Zoho Desk">
             Fechar
           </button>
         )}
       </div>
-      <p>
-        Piloto disponível para o administrador principal. Consulta manual de agentes e até 50
-        chamados mais recentes por data de criação.
-      </p>
+      <p>Indicadores reais de Eduardo e Jean, com consulta por período e vínculo com as OS.</p>
       <small>
         Fonte independente das OS. Os filtros desta página não se aplicam ao Zoho. Responsável atual
-        do chamado não identifica quem enviou respostas. A atividade abaixo tem período próprio.
-        Sessões de presença ainda não estão disponíveis.
+        do chamado não identifica quem enviou respostas. A atividade tem período próprio. Sessões de
+        presença ainda não estão disponíveis.
       </small>
-      {error && (
-        <p role="alert" className="error">
-          {error}
-        </p>
-      )}
       <SupportZohoActivity key={user?.email} active={active && allowed} ordersData={ordersData} />
-      {snapshot && (
-        <>
-          <p role="status">
-            Conexão confirmada · {snapshot.organization.name} · organização{' '}
-            {snapshot.organization.id} · leitura em {date(snapshot.readAt)} (Brasília).
+      <details className="zoho-connection-details">
+        <summary>Conexão, agentes e chamados recentes · conferência</summary>
+        <p>
+          Consulta complementar de agentes e até 50 chamados mais recentes por criação. Esta amostra
+          tem leitura independente dos indicadores por período acima.
+        </p>
+        <button type="button" onClick={load} disabled={busy}>
+          {busy
+            ? 'Consultando Zoho…'
+            : snapshot
+              ? 'Atualizar conferência da conexão'
+              : 'Conferir conexão e chamados recentes'}
+        </button>
+        {error && (
+          <p role="alert" className="error">
+            {error}
           </p>
-          <p className="scope">
-            {snapshot.agents.length} agentes nesta leitura
-            {snapshot.coverage.agentsComplete
-              ? ' · fim da listagem confirmado'
-              : ' · limite de 200 atingido; listagem parcial'}
-            . {snapshot.tickets.length} chamados nesta leitura
-            {snapshot.coverage.ticketsComplete
-              ? ' · fim da listagem acessível confirmado'
-              : ' · amostra limitada aos 50 mais recentes'}
-            . Acesso limitado à cobertura da conta Zoho autorizada. Esta leitura não representa
-            indicadores de chamados respondidos nem histórico completo de atividade.
-          </p>
-          <details>
-            <summary>Agentes do Zoho · conferir identificação</summary>
-            <div className="table-scroll">
-              <SortableTable aria-label="Agentes do Zoho">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>ID Zoho</th>
-                    <th>Situação</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {snapshot.agents.map((agent) => (
-                    <tr key={agent.id}>
-                      <td>{agent.name}</td>
-                      <td>{agent.email || 'Indisponível'}</td>
-                      <td>{agent.id}</td>
-                      <td>{agent.status || 'Indisponível'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
-            {!snapshot.agents.length && <p>Nenhum agente foi retornado pela conta autorizada.</p>}
-            <p className="scope">
-              O vínculo com os responsáveis das OS será conferido explicitamente; nomes semelhantes
-              não são agrupados.
+        )}
+        {snapshot && (
+          <>
+            <p role="status">
+              Conexão confirmada · {snapshot.organization.name} · organização{' '}
+              {snapshot.organization.id} · leitura em {date(snapshot.readAt)} (Brasília).
             </p>
-          </details>
-          <details open>
-            <summary>Chamados recentes do Zoho · conferência</summary>
-            <div className="table-scroll">
-              <SortableTable aria-label="Chamados recentes do Zoho">
-                <thead>
-                  <tr>
-                    <th>Chamado</th>
-                    <th>Assunto</th>
-                    <th>Situação</th>
-                    <th>Responsável atual</th>
-                    <th>Criação (Brasília)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {snapshot.tickets.map((ticket) => (
-                    <tr key={ticket.id}>
-                      <td>{ticket.number || ticket.id}</td>
-                      <td>{ticket.subject || 'Indisponível'}</td>
-                      <td>{ticket.status || 'Indisponível'}</td>
-                      <td>
-                        {ticket.assigneeId
-                          ? agents.get(ticket.assigneeId)?.name ||
-                            `Agente ${ticket.assigneeId} (fora desta leitura)`
-                          : 'Não informado'}
-                      </td>
-                      <td>{date(ticket.createdTime)}</td>
+            <p className="scope">
+              {snapshot.agents.length} agentes nesta leitura
+              {snapshot.coverage.agentsComplete
+                ? ' · fim da listagem confirmado'
+                : ' · limite de 200 atingido; listagem parcial'}
+              . {snapshot.tickets.length} chamados nesta leitura
+              {snapshot.coverage.ticketsComplete
+                ? ' · fim da listagem acessível confirmado'
+                : ' · amostra limitada aos 50 mais recentes'}
+              . Acesso limitado à cobertura da conta Zoho autorizada. Esta leitura não representa
+              indicadores de chamados respondidos nem histórico completo de atividade.
+            </p>
+            <details>
+              <summary>Agentes do Zoho · conferir identificação</summary>
+              <div className="table-scroll">
+                <SortableTable aria-label="Agentes do Zoho">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>E-mail</th>
+                      <th>ID Zoho</th>
+                      <th>Situação</th>
                     </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
-            {!snapshot.tickets.length && <p>Nenhum chamado foi retornado pela conta autorizada.</p>}
-          </details>
-        </>
-      )}
+                  </thead>
+                  <tbody>
+                    {snapshot.agents.map((agent) => (
+                      <tr key={agent.id}>
+                        <td>{agent.name}</td>
+                        <td>{agent.email || 'Indisponível'}</td>
+                        <td>{agent.id}</td>
+                        <td>{agent.status || 'Indisponível'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+              {!snapshot.agents.length && <p>Nenhum agente foi retornado pela conta autorizada.</p>}
+              <p className="scope">
+                O vínculo com os responsáveis das OS será conferido explicitamente; nomes
+                semelhantes não são agrupados.
+              </p>
+            </details>
+            <details open>
+              <summary>Chamados recentes do Zoho · conferência</summary>
+              <div className="table-scroll">
+                <SortableTable aria-label="Chamados recentes do Zoho">
+                  <thead>
+                    <tr>
+                      <th>Chamado</th>
+                      <th>Assunto</th>
+                      <th>Situação</th>
+                      <th>Responsável atual</th>
+                      <th>Criação (Brasília)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {snapshot.tickets.map((ticket) => (
+                      <tr key={ticket.id}>
+                        <td>{ticket.number || ticket.id}</td>
+                        <td>{ticket.subject || 'Indisponível'}</td>
+                        <td>{ticket.status || 'Indisponível'}</td>
+                        <td>
+                          {ticket.assigneeId
+                            ? agents.get(ticket.assigneeId)?.name ||
+                              `Agente ${ticket.assigneeId} (fora desta leitura)`
+                            : 'Não informado'}
+                        </td>
+                        <td>{date(ticket.createdTime)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+              {!snapshot.tickets.length && (
+                <p>Nenhum chamado foi retornado pela conta autorizada.</p>
+              )}
+            </details>
+          </>
+        )}
+      </details>
     </section>
   );
 }

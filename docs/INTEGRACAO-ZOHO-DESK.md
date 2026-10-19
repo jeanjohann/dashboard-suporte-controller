@@ -1,5 +1,11 @@
 # Zoho Desk na Equipe de suporte — escopo aprovado
 
+## Seção consolidada — 0.36.1
+
+O acesso único é **OS → Zoho Desk**, no cabeçalho. A seção **Zoho Desk · atividades e tempos** concentra os indicadores reais por período, tempos por chamado, conferência das respostas/apontamentos e vínculos explícitos com as OS. O quadro recolhível **Conexão, agentes e chamados recentes · conferência** reúne a leitura complementar da organização, agentes e amostra recente; não substitui a coleta por período. Não exige importar OS para consultar o Zoho; os vínculos exigem carregar essa base.
+
+A prévia fictícia foi retirada dos relatórios de Equipe de suporte. O modelo de domínio de demonstração permanece apenas nos testes, sem renderização na aplicação. Após renovar a autorização incluindo pesquisa, a consulta real foi concluída em 19/10/2026 com apontamentos e métricas por chamado. A comparação independente com o Zoho e a revisão de candidatas a respostas permanecem necessárias; sessões ainda não têm fonte conectada. Os registros das versões anteriores abaixo descrevem o estado na respectiva entrega.
+
 ## Atividade e tempos — 0.36.0
 
 Conexão inicial confirmada pelo proprietário em 19/10/2026: organização Addlog `57912045`, seis agentes e 50 chamados recentes. Por decisão expressa, os novos indicadores incluem **somente Eduardo Oliveira e Jean Johann**, pelos IDs conferidos na leitura real. As contas compartilhadas e demais agentes ficam fora dos totais.

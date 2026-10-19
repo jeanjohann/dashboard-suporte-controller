@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.36.1 — 19/10/2026
+
+- Centraliza o mapa real de atividades e tempos, o vínculo com as OS e a conferência de conexão na seção **OS → Zoho Desk**. Indicadores e período ficam em primeiro plano; agentes e amostra de chamados recentes ficam em um quadro complementar recolhível.
+- Retira dos relatórios de Equipe de suporte a prévia com dados fictícios, substituída pela seção real. Orienta carregar as OS quando a base necessária aos vínculos ainda não estiver disponível.
+- Consulta real por período confirmada após renovação da autorização de pesquisa: apontamentos e métricas por chamado recebidos. Respostas com critérios incompletos continuam em conferência; permanência por sessões continua indisponível.
+
 ## 0.36.0 — 19/10/2026
 
 - Adiciona consulta manual de atividade e tempos do Zoho para Eduardo Oliveira e Jean Johann, com período próprio de até 31 dias em Brasília. Pesquisa chamados modificados, incluindo chamados criados antes do período, e aplica a leitura somente após concluir a paginação.

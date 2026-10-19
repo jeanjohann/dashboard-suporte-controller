@@ -19,7 +19,6 @@ import { RecordDetails } from './RecordDetails.jsx';
 import { SupportComparison } from './SupportComparison.jsx';
 import { SupportMetricCards } from './SupportMetricCards.jsx';
 import { SupportPeople } from './SupportPeople.jsx';
-import { SupportActivityPreview } from './SupportActivityPreview.jsx';
 
 const percent = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
@@ -403,7 +402,6 @@ export function SupportPerformance({ original, filters, setFilters, filename, vi
           </>
         )}
       </Section>
-      <SupportActivityPreview visible={visible} />
     </>
   );
 }

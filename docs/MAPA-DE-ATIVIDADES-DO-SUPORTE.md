@@ -16,7 +16,7 @@ Tempo de permanência, tempo apontado e quantidade de respostas são medidas dis
 
 ## Organização da tela
 
-**Prévia entregue em 0.28.0:** em OS → Equipe de suporte, o quadro recolhível **Prévia do mapa de atividades · OS e Zoho** usa agentes, OS, tickets e durações inteiramente fictícios. Possui período e agente próprios, resumo, impressão identificada e simulação de comunicação indisponível. Não usa responsáveis/OS reais e não altera os indicadores existentes. Demonstra tickets distintos da equipe versus por autor, permanência por sessões e tempo apontado separado. Sessões sobrepostas são unidas por agente e recortadas no período; tempo apontado inclui registros não faturáveis. A prévia não implementa importação CSV, OAuth nem API real e não conclui as etapas de homologação abaixo.
+**Seção real em 0.36.1:** o quadro fictício de 0.28.0 foi retirado dos relatórios da Equipe de suporte. O mapa atual fica em **OS → Zoho Desk**, com atividade real de Eduardo e Jean, tempos por chamado, métricas acumuladas e vínculo manual com responsáveis das OS. Consulta real da API concluída em 19/10/2026 após renovar a autorização de pesquisa. Respostas com critérios incompletos exigem conferência. Permanência por sessões, CSV Session, persistência e automação continuam pendentes; não são preenchidos com dados de demonstração. [Critérios e cobertura](INTEGRACAO-ZOHO-DESK.md).
 
 1. **Contexto e filtros:** período, agente e alcance de cada fonte. Manter os atalhos de semana, mês e ano e a independência da categoria Equipe de suporte.
 2. **Resumo da equipe:** blocos identificados de OS, comunicação Zoho e tempos, com última atualização/cobertura das fontes externas. Indisponibilidade aparece como pendência, não como zero.

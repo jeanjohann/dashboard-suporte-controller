@@ -191,6 +191,12 @@ export function SupportZohoActivity({ active, ordersData }) {
             </div>
           )}
           <h4>Pessoas e vínculo explícito com as OS</h4>
+          {!ordersData && (
+            <p className="scope">
+              Carregue a base de OS pelo Google Sheets ou pela importação de Excel para escolher os
+              responsáveis de execução e agendamento nesta seção.
+            </p>
+          )}
           <div className="table-scroll">
             <SortableTable aria-label="Atividade de Eduardo e Jean">
               <thead>

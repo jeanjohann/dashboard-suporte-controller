@@ -1,6 +1,6 @@
 # Fila de implementação e ajustes
 
-Preparado em 0.36.0: atividade e tempos do Zoho para **Eduardo e Jean**, com apontamentos por chamado, médias, métricas acumuladas de primeira resposta/resolução, respostas com critérios auditáveis e vínculo manual com OS. Aguarda comparação dos novos indicadores com o Zoho real. Primeira conexão de 0.35.0 confirmada pelo proprietário: seis agentes e 50 chamados. Sessões, persistência e automação continuam pendentes. [Escopo e limites](INTEGRACAO-ZOHO-DESK.md).
+Entregue em 0.36.1: seção única **OS → Zoho Desk**, com atividade e tempos de **Eduardo e Jean**, apontamentos por chamado, médias, métricas acumuladas de primeira resposta/resolução, respostas com critérios auditáveis e vínculo manual com OS. Leitura real por período concluída após renovar a autorização; comparação independente e revisão das respostas ainda necessárias. Prévia fictícia retirada da Equipe de suporte. Sessões, persistência e automação continuam pendentes. [Escopo e limites](INTEGRACAO-ZOHO-DESK.md).
 
 Confirmado pelo proprietário em 0.34.0: leitura Google Sheets do Operacional, com aba fixa `Equipamentos`, mesma credencial técnica e origem independente. Somente administradores; não ativa armazenamento compartilhado. [Configuração](GOOGLE-SHEETS.md).
 
