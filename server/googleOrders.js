@@ -123,7 +123,7 @@ function googleCell(cell) {
   };
 }
 
-/** Consulta única da aba inteira. Sem cache de conteúdo, delegação de domínio, escrita ou retorno de tokens. */
+/** Leitura da área preenchida, sem cache, escrita ou retorno de tokens. */
 export async function readGoogleOrders(env, { fetchImpl = fetch } = {}) {
   const config = googleOrdersConfig(env);
   if (!config) throw Error('Conexão com o Google ainda não configurada.');
@@ -176,22 +176,45 @@ export async function readGoogleOrders(env, { fetchImpl = fetch } = {}) {
   if (typeof auth.access_token !== 'string' || !auth.access_token)
     throw new GoogleOrdersError('GOOGLE_TOKEN', 'O Google não retornou um token de acesso válido.');
   const url = new URL(`https://sheets.googleapis.com/v4/spreadsheets/${config.id}`);
-  url.searchParams.set('ranges', `'${config.sheetName}'`);
+  // Values omite as linhas/colunas vazias no final; formatação aplicada à aba inteira
+  // não deve gerar uma resposta de grade enorme. Nunca limita silenciosamente os dados.
+  const valuesUrl = new URL(`${url}/values/${encodeURIComponent(`'${config.sheetName}'`)}`);
+  valuesUrl.searchParams.set('valueRenderOption', 'UNFORMATTED_VALUE');
+  valuesUrl.searchParams.set('fields', 'values');
+  valuesUrl.searchParams.set('prettyPrint', 'false');
+  const options = {
+    headers: { Authorization: `Bearer ${auth.access_token}` },
+    redirect: 'manual',
+    signal,
+  };
+  const extent = await readJson(
+    await googleRequest(fetchImpl, valuesUrl.toString(), options, 'sheets'),
+    googleOrdersLimits.bytes,
+    'SHEETS',
+  );
+  const rows = extent?.values;
+  if (
+    !Array.isArray(rows) ||
+    rows.length < 2 ||
+    rows.length > googleOrdersLimits.rows ||
+    rows.some((row) => !Array.isArray(row) || row.length > googleOrdersLimits.columns)
+  )
+    throw new GoogleOrdersError(
+      'GOOGLE_EXTENT',
+      'A área preenchida da aba está vazia ou excede os limites de linhas e colunas.',
+    );
+  const columns = rows.reduce((max, row) => Math.max(max, row.length), 1);
+  let columnName = '';
+  for (let n = columns; n > 0; n = Math.floor((n - 1) / 26))
+    columnName = String.fromCharCode(65 + ((n - 1) % 26)) + columnName;
+  url.searchParams.set('ranges', `'${config.sheetName}'!A1:${columnName}${rows.length}`);
+  url.searchParams.set('prettyPrint', 'false');
   url.searchParams.set(
     'fields',
     'sheets(properties(title),data(startRow,startColumn,rowData(values(effectiveValue,formattedValue,effectiveFormat(numberFormat)))))',
   );
   const book = await readJson(
-    await googleRequest(
-      fetchImpl,
-      url.toString(),
-      {
-        headers: { Authorization: `Bearer ${auth.access_token}` },
-        redirect: 'manual',
-        signal,
-      },
-      'sheets',
-    ),
+    await googleRequest(fetchImpl, url.toString(), options, 'sheets'),
     googleOrdersLimits.bytes,
     'SHEETS',
   );

@@ -14,6 +14,9 @@ const env = {
   GOOGLE_SHEETS_CREDENTIALS: credentials,
 };
 const str = (v) => ({ effectiveValue: { stringValue: v }, formattedValue: v });
+const extent = {
+  values: [['#', 'Status', 'Data de atendimento'], ['#1', 'Pago', 45678], [], ['#2', '#REF!']],
+};
 const book = () => ({
   sheets: [
     {
@@ -82,6 +85,7 @@ test('diagnóstico distingue chave, autenticação, acesso e formato sem expor r
                 headers: { 'Content-Type': 'application/json' },
               });
             if (calls === 1) return Response.json({ access_token: 'private-token' });
+            if (calls === 2) return Response.json(extent);
             const data = book();
             if (scenario.invalidHeaders) data.sheets[0].data[0].rowData[0] = {};
             return Response.json(data);
@@ -112,15 +116,23 @@ test('assina JWT somente leitura e consulta apenas aba fixa; não devolve token/
       }
       const target = new URL(url);
       assert.equal(target.origin, 'https://sheets.googleapis.com');
-      assert.equal(target.searchParams.get('ranges'), "'OS 2025_26'");
       assert.equal(options.headers.Authorization, 'Bearer private-access-token');
+      if (calls.length === 2) {
+        assert.equal(
+          decodeURIComponent(target.pathname),
+          "/v4/spreadsheets/synthetic-spreadsheet-id-123/values/'OS 2025_26'",
+        );
+        assert.equal(target.searchParams.get('valueRenderOption'), 'UNFORMATTED_VALUE');
+        return Response.json(extent);
+      }
+      assert.equal(target.searchParams.get('ranges'), "'OS 2025_26'!A1:C4");
       const data = book();
       data.sheets.unshift({ properties: { title: 'Base clientes' } });
       data.sheets.push({ properties: { title: 'Guia de testes' } });
       return Response.json(data);
     },
   });
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 3);
   assert.equal(result.rows[1][2].raw, 45678);
   assert.equal(result.rows[1][2].display, '21/01/2025');
   assert.deepEqual(result.rows[2], []);
@@ -144,9 +156,29 @@ test('falha, aba incorreta e limite de corpo impedem substituição parcial e va
     let n = 0;
     await assert.rejects(() =>
       readGoogleOrders(env, {
-        fetchImpl: async () => (++n === 1 ? Response.json({ access_token: 'token' }) : invalid()),
+        fetchImpl: async () =>
+          ++n === 1
+            ? Response.json({ access_token: 'token' })
+            : n === 2
+              ? Response.json(extent)
+              : invalid(),
       }),
     );
+  }
+});
+
+test('área preenchida acima dos limites é recusada antes da grade, sem truncar registros', async () => {
+  for (const values of [Array.from({ length: 50001 }, () => []), [Array(201).fill('x'), ['#1']]]) {
+    let calls = 0;
+    await assert.rejects(
+      () =>
+        readGoogleOrders(env, {
+          fetchImpl: async () =>
+            ++calls === 1 ? Response.json({ access_token: 'token' }) : Response.json({ values }),
+        }),
+      (error) => error.code === 'GOOGLE_EXTENT',
+    );
+    assert.equal(calls, 2);
   }
 });
 test('configuração ausente não consulta Google; status não informa credenciais e métodos não GET são recusados', async () => {

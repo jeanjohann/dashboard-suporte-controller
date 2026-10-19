@@ -28,6 +28,8 @@ O escopo é `spreadsheets.readonly`, sem escrita. Ele não se restringe a uma ab
 
 ## Leitura, limites e falhas
 
+A leitura primeiro identifica a área preenchida por `values.get` e depois solicita valores e formatos dessa área por `spreadsheets.get`, com JSON compacto. Assim, formatação em linhas/colunas vazias no final não infla a resposta. Linhas vazias internas e posições das células são preservadas. As duas consultas não constituem uma transação: evite editar a fonte durante a comparação com o Excel. Os limites de dados continuam sendo verificados, sem truncar a área preenchida.
+
 A resposta traz apenas valores brutos, textos exibidos, formatos numéricos e erros; sem comentários, outras abas ou credenciais. O adaptador reaproveita o leitor comum do Excel: mesmas posições, vazios, cabeçalhos repetidos e linhas de origem. Fórmulas não são executadas no navegador; seus resultados e erros são preservados. Identificadores textuais mantêm zeros, mas dados que já perderam precisão na planilha não são recuperáveis. Datas em texto incompatível continuam para revisão, sem correção automática.
 
 O contrato exige cabeçalho na primeira linha, primeira coluna preenchida, Status e Data de atendimento, além de registros com número de OS. Usa datas numéricas do Google, calendário padrão sem `date1904`; nenhuma conversão de fuso é aplicada às datas de atendimento. O horário de leitura é mostrado em Brasília. A base alimenta também os cruzamentos existentes com a Operacional.
