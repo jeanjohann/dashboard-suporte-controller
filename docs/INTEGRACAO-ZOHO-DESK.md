@@ -1,5 +1,13 @@
 # Zoho Desk na Equipe de suporte — escopo aprovado
 
+## Preparação OAuth — 19/10/2026
+
+Portal informado: `https://suporte.addlog.com.br`, plano Enterprise, organização `57912045`. O portal encaminhou a autenticação para `accounts.zoho.com`. Client ID e Client Secret foram cadastrados como segredos `ZOHO_CLIENT_ID` e `ZOHO_CLIENT_SECRET` no Cloudflare; seus valores não foram lidos nem validados pelo agente.
+
+O auxiliar local `scripts/setup-zoho.ps1` recebe Client ID, Client Secret e código temporário por campos ocultos. Troca o código no endpoint fixo `https://accounts.zoho.com/oauth/v2/token`, via POST sem redirecionamento, e encaminha o refresh token diretamente à entrada padrão de `wrangler secret put ZOHO_REFRESH_TOKEN`. Não grava credenciais em arquivo nem as recebe como argumentos. Requer a ferramenta local autenticada no Cloudflare. Se a gravação falhar, permite tentar novamente enquanto a janela estiver aberta. Não publicar o código temporário nem os tokens no chat ou no Git.
+
+Gerar o código no Autocliente com `Desk.tickets.READ,Desk.basic.READ` e selecionar o portal Addlog. Essa etapa prepara a autenticação; não implementa nem comprova coleta de chamados, mensagens, Time Entries ou sessões. O teste real da conexão e as fontes de cada indicador continuam pendentes.
+
 Em 17/10/2026, o proprietário confirmou **Zoho Desk** e aprovou o acompanhamento conjunto de OS, chamados/respostas do Zoho, tempo de permanência no sistema e tempo apontado nos atendimentos. O objetivo é apresentar o mapa de atividades de cada agente. A integração **não está implementada nem ativada**: a primeira leitura depende de um arquivo real de disponibilidade; a automação também depende da configuração da conta. O [mapa funcional e a sequência de entrega](MAPA-DE-ATIVIDADES-DO-SUPORTE.md) consolidam o que foi aprovado. Os campos e a cobertura precisam ser validados com a fonte.
 
 ## Chamados e respostas
