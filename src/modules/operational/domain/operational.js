@@ -95,6 +95,10 @@ export function operationalDate(value, date1904 = false) {
 export function importOperational(buffer) {
   const book = XLSX.read(buffer, { type: 'array', cellNF: true, cellText: true }),
     sheet = book.Sheets.Equipamentos;
+  return importOperationalSheet(sheet, Boolean(book.Workbook?.WBProps?.date1904));
+}
+
+export function importOperationalSheet(sheet, date1904 = false) {
   if (!sheet?.['!ref']) throw new Error('A aba “Equipamentos” não foi encontrada ou está vazia.');
   const headers = Array.from({ length: 77 }, (_, index) => ({
     letter: XLSX.utils.encode_col(index),
@@ -106,8 +110,7 @@ export function importOperational(buffer) {
     const letter = XLSX.utils.encode_col(index);
     return { index, letter, label: clean(sheet[letter + '1']?.v) || letter };
   });
-  const date1904 = Boolean(book.Workbook?.WBProps?.date1904),
-    rows = [],
+  const rows = [],
     issues = [];
   const issue = (row, letter, reason, category = 'Conferência') =>
     issues.push({

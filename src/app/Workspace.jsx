@@ -203,6 +203,7 @@ export function Workspace() {
         onPage={navigate}
       >
         <OperationalPage
+          active={current === 'operational'}
           page={
             ['operational', 'operational-analysis'].includes(current)
               ? current

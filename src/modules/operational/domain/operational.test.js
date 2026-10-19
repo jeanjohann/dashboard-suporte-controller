@@ -6,6 +6,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import XLSX from 'xlsx';
 import { importOperational, linkOperational, operationalDate } from './operational.js';
+import { importGoogleOperational } from './googleOperational.js';
 import { linkConsumption } from '../../consumption/domain/lineConsumption.js';
 import { emptyHistory, validateBackup } from '../../consumption/data/consumptionHistory.js';
 
@@ -61,6 +62,28 @@ function compactWorkbook({ serialError = false, duplicate = false, missing = fal
   XLSX.utils.book_append_sheet(book, sheet, 'Equipamentos');
   return XLSX.write(book, { type: 'array', bookType: 'xlsx' });
 }
+
+test('Google Operacional conserva dados, zeros, datas, custos e revisão do mesmo arquivo Excel', () => {
+  const buffer = compactWorkbook();
+  const sheet = XLSX.read(buffer, { type: 'array', cellNF: true, cellText: true }).Sheets
+    .Equipamentos;
+  const rows = Array.from({ length: 4 }, (_, r) =>
+    Array.from({ length: 80 }, (_, c) => {
+      const cell = sheet[XLSX.utils.encode_cell({ r, c })];
+      return cell
+        ? { type: cell.t, raw: cell.v, display: cell.w ?? String(cell.v), format: cell.z || '' }
+        : null;
+    }),
+  );
+  const snapshot = { version: 1, sheetName: 'Equipamentos', readAt: '2026-10-19T16:00:00Z', rows };
+  const imported = importGoogleOperational(snapshot);
+  assert.deepEqual(imported.data, importOperational(buffer));
+  assert.equal(imported.origin, 'google');
+  assert.throws(() => importGoogleOperational({ ...snapshot, sheetName: 'OS 2025_26' }));
+  const invalid = structuredClone(snapshot);
+  invalid.rows[0][35] = null;
+  assert.throws(() => importGoogleOperational(invalid), /cabeçalhos/);
+});
 
 test('layout compacto preserva campos, endereços e vínculos sem importar resumos auxiliares', async () => {
   const data = importOperational(compactWorkbook());

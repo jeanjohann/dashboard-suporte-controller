@@ -48,12 +48,13 @@ async function googleRequest(fetchImpl, url, options, stage) {
 }
 
 /** A origem é fixa no servidor: o navegador não pode indicar uma URL ou outra planilha. */
-export function googleOrdersConfig(env) {
-  const id = env.GOOGLE_ORDERS_SPREADSHEET_ID;
-  const sheetName = env.GOOGLE_ORDERS_SHEET || 'OS 2025_26';
+export function googleOrdersConfig(env, kind = 'orders') {
+  const operational = kind === 'operational';
+  const id = operational ? env.GOOGLE_OPERATIONAL_SPREADSHEET_ID : env.GOOGLE_ORDERS_SPREADSHEET_ID;
+  const sheetName = operational ? 'Equipamentos' : env.GOOGLE_ORDERS_SHEET || 'OS 2025_26';
   if (
     !/^[a-zA-Z0-9_-]{20,120}$/.test(id || '') ||
-    !['OS 2025_26', 'OS 2025'].includes(sheetName) ||
+    !(operational ? ['Equipamentos'] : ['OS 2025_26', 'OS 2025']).includes(sheetName) ||
     !env.GOOGLE_SHEETS_CREDENTIALS
   )
     return null;
@@ -124,8 +125,8 @@ function googleCell(cell) {
 }
 
 /** Leitura da área preenchida, sem cache, escrita ou retorno de tokens. */
-export async function readGoogleOrders(env, { fetchImpl = fetch } = {}) {
-  const config = googleOrdersConfig(env);
+export async function readGoogleOrders(env, { fetchImpl = fetch, kind = 'orders' } = {}) {
+  const config = googleOrdersConfig(env, kind);
   if (!config) throw Error('Conexão com o Google ainda não configurada.');
   let credentials, key;
   try {
@@ -234,37 +235,42 @@ export async function readGoogleOrders(env, { fetchImpl = fetch } = {}) {
   )
     throw new GoogleOrdersError(
       'GOOGLE_GRID',
-      'O Google respondeu, mas os dados da aba de OS estão ausentes, incompletos ou excedem o limite de linhas.',
+      'O Google respondeu, mas os dados da aba estão ausentes, incompletos ou excedem o limite de linhas.',
     );
   try {
-    return validateGoogleOrdersSnapshot({
-      version: 1,
-      sheetName: config.sheetName,
-      readAt: new Date().toISOString(),
-      rows: grid.rowData.map((row) => (row.values || []).map(googleCell)),
-    });
+    return validateGoogleOrdersSnapshot(
+      {
+        version: 1,
+        sheetName: config.sheetName,
+        readAt: new Date().toISOString(),
+        rows: grid.rowData.map((row) => (row.values || []).map(googleCell)),
+      },
+      kind,
+    );
   } catch {
     throw new GoogleOrdersError(
       'GOOGLE_FORMAT',
-      'A aba foi lida, mas não tem o formato de OS esperado. Confira os limites e o cabeçalho na primeira linha: número da OS, Status e Data de atendimento.',
+      kind === 'operational'
+        ? 'A aba foi lida, mas os dados do Operacional são inválidos ou excedem os limites. Confira a aba Equipamentos.'
+        : 'A aba foi lida, mas não tem o formato de OS esperado. Confira os limites e o cabeçalho na primeira linha: número da OS, Status e Data de atendimento.',
     );
   }
 }
 
 /** Chamado somente depois da autenticação e da autorização de administrador no roteador. */
-export async function googleOrdersResponse(request, env, read = readGoogleOrders) {
+export async function googleOrdersResponse(request, env, read = readGoogleOrders, kind = 'orders') {
   const headers = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' };
   const reply = (body, status = 200) => Response.json(body, { status, headers });
   if (request.method !== 'GET') return reply({ error: 'Método não permitido.' }, 405);
   if (new URL(request.url).pathname.endsWith('/status'))
     return reply({
-      configured: !!googleOrdersConfig(env),
-      sheetName: env.GOOGLE_ORDERS_SHEET || 'OS 2025_26',
+      configured: !!googleOrdersConfig(env, kind),
+      sheetName: kind === 'operational' ? 'Equipamentos' : env.GOOGLE_ORDERS_SHEET || 'OS 2025_26',
     });
-  if (!googleOrdersConfig(env))
+  if (!googleOrdersConfig(env, kind))
     return reply({ error: 'Conexão com o Google ainda não configurada no servidor.' }, 503);
   try {
-    return reply(await read(env));
+    return reply(await read(env, { kind }));
   } catch (error) {
     // Nunca devolver corpo do Google, detalhes da chave ou tokens ao navegador ou ao log.
     // Apenas a posição no código, sem a mensagem/primeira linha da pilha (que pode conter segredos).

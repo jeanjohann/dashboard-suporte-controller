@@ -6,7 +6,14 @@ import { importGoogleOrders } from '../data/googleOrders.js';
 
 export const googleRefreshInterval = 15 * 60 * 1000;
 
-export function useGoogleOrders({ source, onImport, active, manualBusy }) {
+export function useGoogleOrders({
+  source,
+  onImport,
+  active,
+  manualBusy,
+  endpoint = '/api/orders/google',
+  importer = importGoogleOrders,
+}) {
   const { user, managed } = useAccess();
   const allowed = managed && user?.active && user.role === 'admin';
   const [open, setOpen] = useState(false);
@@ -37,12 +44,12 @@ export function useGoogleOrders({ source, onImport, active, manualBusy }) {
     if (!latest.current.allowed) return;
     setError('');
     try {
-      const result = await api('/api/orders/google/status', { signal: AbortSignal.timeout(10000) });
+      const result = await api(`${endpoint}/status`, { signal: AbortSignal.timeout(10000) });
       if (latest.current.allowed) setStatus(result);
     } catch {
       if (latest.current.allowed) setError('Não foi possível conferir a conexão. Tente novamente.');
     }
-  }, []);
+  }, [endpoint]);
 
   const refresh = useCallback(async () => {
     const start = latest.current;
@@ -53,8 +60,8 @@ export function useGoogleOrders({ source, onImport, active, manualBusy }) {
     setBusy(true);
     setError('');
     try {
-      const snapshot = await api('/api/orders/google/snapshot', { signal: controller.signal });
-      const next = importGoogleOrders(snapshot);
+      const snapshot = await api(`${endpoint}/snapshot`, { signal: controller.signal });
+      const next = importer(snapshot);
       const current = latest.current;
       if (
         request.current === controller &&
@@ -79,7 +86,7 @@ export function useGoogleOrders({ source, onImport, active, manualBusy }) {
         setBusy(false);
       }
     }
-  }, []);
+  }, [endpoint, importer]);
 
   useEffect(() => {
     if (open && active && allowed) checkStatus();

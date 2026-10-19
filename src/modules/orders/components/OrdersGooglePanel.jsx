@@ -2,12 +2,12 @@
 import React from 'react';
 import { Icon } from '../../../components/Icon.jsx';
 
-export function OrdersGooglePanel({ google, manualBusy }) {
+export function OrdersGooglePanel({ google, manualBusy, operational = false }) {
   if (!google.allowed || !google.open) return null;
   return (
     <section className="orders-google-panel" aria-label="Conexão Google Sheets">
       <div className="orders-google-heading">
-        <strong>Google Sheets · piloto de OS</strong>
+        <strong>Google Sheets · piloto {operational ? 'do Operacional' : 'de OS'}</strong>
         <button
           type="button"
           aria-label="Fechar conexão Google Sheets"
@@ -41,8 +41,12 @@ export function OrdersGooglePanel({ google, manualBusy }) {
               {google.busy
                 ? 'Consultando Google…'
                 : google.connected
-                  ? 'Atualizar OS agora'
-                  : 'Carregar OS do Google'}
+                  ? operational
+                    ? 'Atualizar Operacional agora'
+                    : 'Atualizar OS agora'
+                  : operational
+                    ? 'Carregar Operacional do Google'
+                    : 'Carregar OS do Google'}
             </button>
             <label>
               <input
@@ -50,7 +54,8 @@ export function OrdersGooglePanel({ google, manualBusy }) {
                 checked={google.automatic}
                 onChange={(event) => google.setAutomatic(event.target.checked)}
               />
-              Atualizar a cada 15 min enquanto as OS estiverem abertas
+              Atualizar a cada 15 min enquanto{' '}
+              {operational ? 'o Operacional estiver aberto' : 'as OS estiverem abertas'}
             </label>
           </>
         )}
@@ -61,9 +66,10 @@ export function OrdersGooglePanel({ google, manualBusy }) {
         )}
       </div>
       <small>
-        A leitura substitui a base de OS da sessão após a validação. Os filtros são preservados nas
-        próximas atualizações do Google. Fechar este quadro não pausa a atualização; desmarque a
-        opção acima para pausar. Importar um arquivo local desliga a conexão automática.
+        A leitura substitui a base {operational ? 'do Operacional' : 'de OS'} da sessão após a
+        validação. Os filtros são preservados nas próximas atualizações do Google. Fechar este
+        quadro não pausa a atualização; desmarque a opção acima para pausar. Importar um arquivo
+        local desliga a conexão automática.
       </small>
       {google.error && (
         <p role="alert" className="error">

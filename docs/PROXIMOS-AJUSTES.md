@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Preparado em 0.34.0: piloto Google Sheets do Operacional, com aba fixa `Equipamentos`, mesma credencial técnica e origem independente. Aguarda link da planilha, compartilhamento como Leitor e validação real contra Excel. Somente administradores; não ativa armazenamento compartilhado. [Configuração](GOOGLE-SHEETS.md).
+
 Entregue em 0.33.0: campo de perguntas do [Assistente de suporte experimental](AUTOMACAO-N8N-E-MCP.md), conectado ao AI Agent do n8n com Gemini e ferramenta de totais de atendimentos. Piloto restrito ao administrador principal neste computador, sem memória de conversa. Novas ferramentas, filtros por período/cliente/responsável e MCP permanecem pendentes.
 
 Entregue em 0.30.0: [clientes consolidados e filiais](AGRUPAMENTO-DE-CLIENTES.md), com razões sociais idênticas agrupadas por padrão, coluna explícita opcional e visão por CNPJ. Preserva vínculos e ciclos originais.

@@ -43,6 +43,9 @@ import { filterChips, activeFilterEntries } from '../../../shared/filters/scoped
 import { FilterCount } from '../../../components/FilterPanel.jsx';
 import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
 import { parkStories } from '../config/reportStories.js';
+import { useGoogleOrders } from '../../orders/hooks/useGoogleOrders.js';
+import { OrdersGooglePanel } from '../../orders/components/OrdersGooglePanel.jsx';
+import { importGoogleOperational } from '../domain/googleOperational.js';
 
 const layoutDefinitions = [
   ...new Set([...operationalMenus, ...crossAnalysisMenus].flatMap((menu) => menu.sections)),
@@ -53,6 +56,7 @@ const money = (value) =>
 const Section = (props) => <BaseSection visible={true} {...props} />;
 /** Compartilha a base operacional entre revisão e Parque e Manutenção, mantendo filtros e categorias da página. */
 export function OperationalPage({
+  active = true,
   page,
   onPage,
   orders,
@@ -121,9 +125,22 @@ export function OperationalPage({
     [chartType, setChartType] = useState('bars'),
     [detail, setDetail] = useState(null);
   const [recordSort, setRecordSort] = useState(null);
+  const google = useGoogleOrders({
+    source,
+    onImport: setSource,
+    active: active && page === 'operational',
+    manualBusy: busy,
+    endpoint: '/api/operational/google',
+    importer: importGoogleOperational,
+  });
+  const previousSource = useRef(source);
   useEffect(() => {
-    resetSelections();
-    setRecordSort(null);
+    const preserve = previousSource.current?.origin === 'google' && source?.origin === 'google';
+    previousSource.current = source;
+    if (!preserve) {
+      resetSelections();
+      setRecordSort(null);
+    }
     setOffset(0);
     setDetail(null);
   }, [source]);
@@ -324,6 +341,11 @@ export function OperationalPage({
                       </p>
                     </div>
                     <div className="page-header-actions">
+                      {page === 'operational' && google.allowed && (
+                        <button type="button" onClick={() => google.setOpen((open) => !open)}>
+                          Google Sheets
+                        </button>
+                      )}
                       {!logisticsView && (
                         <PermissionButton
                           className="header-import-action"
@@ -338,6 +360,9 @@ export function OperationalPage({
                     </div>
                     <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
                   </header>
+                  {page === 'operational' && (
+                    <OrdersGooglePanel google={google} manualBusy={busy} operational />
+                  )}
                   {!logisticsView && data && (analysis || menuCategory !== 'overview') && (
                     <PagePersonalization
                       scope={scopeLabel}

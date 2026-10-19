@@ -1,5 +1,13 @@
 # Google Sheets — piloto de ordens de serviço
 
+## Piloto do Operacional
+
+O Operacional também oferece Google Sheets, restrito a administradores ativos. Usa a mesma credencial `GOOGLE_SHEETS_CREDENTIALS`, porém exige uma origem independente em `GOOGLE_OPERATIONAL_SPREADSHEET_ID`, com aba fixa `Equipamentos`. Compartilhe somente a planilha escolhida como Leitor com a conta de serviço. A origem do Operacional não reutiliza automaticamente a planilha de OS.
+
+Na página Operacional, abrir **Google Sheets** confere a configuração. O botão **Carregar Operacional do Google** lê a base com o mesmo importador e validação de cabeçalhos do Excel (layouts compacto e legado). Resultados, valores, datas, zeros e revisão preservam o contrato existente. A base alimenta os cruzamentos já existentes com Parque e Consumo.
+
+A atualização opcional ocorre a cada 15 minutos somente com a página Operacional ativa e visível. Atualizações Google → Google preservam filtros, busca e ordenação; reiniciam paginação e detalhe aberto. Trocar por arquivo local desliga a conexão automática. Falhas mantêm a base anterior. Sem armazenamento compartilhado, escrita na planilha ou restauração automática ao recarregar o navegador. A ativação real depende do link escolhido, compartilhamento e comparação com o Excel da mesma origem.
+
 ## Situação e privacidade
 
 Versão 0.23.0: leitura privada preparada; **ativação e comparação com a planilha real pendentes**. O proprietário forneceu o link, confirmou a aba `OS 2025_26` e autorizou somente administradores ativos em 16/10/2026. Informou que já possui a estrutura no Google Cloud, mas só terá acesso no escritório na semana seguinte. Até essa configuração, a integração permanece inativa e a importação manual continua funcionando.

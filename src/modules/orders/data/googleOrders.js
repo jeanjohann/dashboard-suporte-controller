@@ -5,6 +5,19 @@ import { importOrdersSheet } from './import.js';
 
 export function importGoogleOrders(input) {
   const snapshot = validateGoogleOrdersSnapshot(input);
+  const sheet = googleSnapshotToSheet(snapshot);
+  const data = importOrdersSheet(sheet, snapshot.sheetName);
+  if (!data.rows.length)
+    throw Error('Nenhum atendimento com número de OS foi encontrado no Google.');
+  return {
+    data,
+    filename: `Google Sheets · ${snapshot.sheetName}`,
+    googleReadAt: snapshot.readAt,
+    origin: 'google',
+  };
+}
+
+export function googleSnapshotToSheet(snapshot) {
   const sheet = {};
   let lastColumn = 0;
   snapshot.rows.forEach((row, r) => {
@@ -23,13 +36,5 @@ export function importGoogleOrders(input) {
     s: { r: 0, c: 0 },
     e: { r: snapshot.rows.length - 1, c: lastColumn },
   });
-  const data = importOrdersSheet(sheet, snapshot.sheetName);
-  if (!data.rows.length)
-    throw Error('Nenhum atendimento com número de OS foi encontrado no Google.');
-  return {
-    data,
-    filename: `Google Sheets · ${snapshot.sheetName}`,
-    googleReadAt: snapshot.readAt,
-    origin: 'google',
-  };
+  return sheet;
 }

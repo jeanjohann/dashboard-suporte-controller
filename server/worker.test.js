@@ -100,7 +100,12 @@ test('Google Sheets exige sessão ativa e administrador mesmo para consultar con
       admin = createHandler(async () => owner);
     await admin(request('PUT', input), e);
     const member = createHandler(async () => input.email);
-    for (const path of ['/api/orders/google/status', '/api/orders/google/snapshot']) {
+    for (const path of [
+      '/api/orders/google/status',
+      '/api/orders/google/snapshot',
+      '/api/operational/google/status',
+      '/api/operational/google/snapshot',
+    ]) {
       assert.equal((await member(request('GET', null, path), e)).status, 403);
       assert.equal(
         (await createHandler(async () => 'unknown@company.com')(request('GET', null, path), e))

@@ -2,16 +2,18 @@
 export const googleOrdersLimits = { rows: 50000, columns: 200, bytes: 10 * 1024 * 1024 };
 
 /** Recusa respostas incompletas ou grandes demais; nunca corta silenciosamente linhas/colunas. */
-export function validateGoogleOrdersSnapshot(snapshot) {
+export function validateGoogleOrdersSnapshot(snapshot, kind = 'orders') {
   if (
     snapshot?.version !== 1 ||
-    !['OS 2025_26', 'OS 2025'].includes(snapshot.sheetName) ||
+    !(kind === 'operational' ? ['Equipamentos'] : ['OS 2025_26', 'OS 2025']).includes(
+      snapshot.sheetName,
+    ) ||
     !Number.isFinite(Date.parse(snapshot.readAt)) ||
     !Array.isArray(snapshot.rows) ||
     snapshot.rows.length < 2 ||
     snapshot.rows.length > googleOrdersLimits.rows
   )
-    throw Error('A leitura do Google não contém uma aba de OS completa no formato esperado.');
+    throw Error('A leitura do Google não contém uma aba completa no formato esperado.');
   for (const row of snapshot.rows) {
     if (!Array.isArray(row) || row.length > googleOrdersLimits.columns)
       throw Error('A leitura do Google excede o limite de colunas ou tem linhas inválidas.');
@@ -31,9 +33,10 @@ export function validateGoogleOrdersSnapshot(snapshot) {
   }
   const headers = snapshot.rows[0];
   if (
-    !headers[0]?.display.trim() ||
-    !headers.some((cell) => cell?.display.trim() === 'Status') ||
-    !headers.some((cell) => cell?.display.trim() === 'Data de atendimento')
+    kind !== 'operational' &&
+    (!headers[0]?.display.trim() ||
+      !headers.some((cell) => cell?.display.trim() === 'Status') ||
+      !headers.some((cell) => cell?.display.trim() === 'Data de atendimento'))
   )
     throw Error(
       'Confira o cabeçalho na primeira linha: número da OS, Status e Data de atendimento.',

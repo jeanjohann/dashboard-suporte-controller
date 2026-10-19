@@ -110,13 +110,25 @@ export function createHandler(authenticate = authenticatedEmail) {
         if (!assertion) return reply({ error: 'Sessão Access ausente.' }, 401);
         return reply({ assertion });
       }
-      if (['/api/orders/google/status', '/api/orders/google/snapshot'].includes(url.pathname)) {
+      if (
+        [
+          '/api/orders/google/status',
+          '/api/orders/google/snapshot',
+          '/api/operational/google/status',
+          '/api/operational/google/snapshot',
+        ].includes(url.pathname)
+      ) {
         if (user.role !== 'admin')
           return reply(
             { error: 'O piloto Google Sheets está disponível apenas para administradores.' },
             403,
           );
-        return googleOrdersResponse(request, env);
+        return googleOrdersResponse(
+          request,
+          env,
+          undefined,
+          url.pathname.startsWith('/api/operational/') ? 'operational' : 'orders',
+        );
       }
       if (url.pathname === '/api/monitoring/snapshot') {
         if (user.role !== 'admin' && !user.pages.includes('monitoring'))

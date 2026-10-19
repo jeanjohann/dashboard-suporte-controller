@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.34.0 — 19/10/2026
+
+- Prepara leitura privada do Operacional pelo Google Sheets, com aba fixa Equipamentos e identificador independente das OS. Ativação real aguarda a planilha escolhida e a comparação com Excel.
+- Reutiliza a leitura compacta da área preenchida e o importador operacional existente, preservando layouts, identificadores, datas, valores e revisão.
+- Oferece carregamento explícito e atualização opcional de 15 minutos para administradores na página Operacional. Atualizações preservam filtros, busca e ordenação; falhas mantêm a base anterior. Importação local desliga a fonte Google.
+
 ## 0.33.1 — 19/10/2026
 
 - Troca o alias Gemini Flash Latest por `gemini-3.5-flash-lite` no agente após reprodução de timeout e resposta 503 de alta demanda do modelo anterior. Credencial preservada, com consulta real validada usando a ferramenta.

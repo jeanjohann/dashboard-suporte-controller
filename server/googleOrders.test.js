@@ -219,3 +219,31 @@ test('configuração ausente não consulta Google; status não informa credencia
   );
   assert.equal(called, false);
 });
+
+test('Operacional usa configuração independente e aba fixa, sem reutilizar a origem de OS', async () => {
+  assert.equal(googleOrdersConfig(env, 'operational'), null);
+  const operationalEnv = {
+    ...env,
+    GOOGLE_OPERATIONAL_SPREADSHEET_ID: 'operational-spreadsheet-123',
+  };
+  assert.deepEqual(googleOrdersConfig(operationalEnv, 'operational'), {
+    id: 'operational-spreadsheet-123',
+    sheetName: 'Equipamentos',
+  });
+  const calls = [];
+  const result = await readGoogleOrders(operationalEnv, {
+    kind: 'operational',
+    fetchImpl: async (url) => {
+      calls.push(String(url));
+      if (calls.length === 1) return Response.json({ access_token: 'token' });
+      assert.match(String(url), /operational-spreadsheet-123/);
+      assert.doesNotMatch(String(url), /synthetic-spreadsheet/);
+      if (calls.length === 2) return Response.json(extent);
+      assert.equal(new URL(url).searchParams.get('ranges'), "'Equipamentos'!A1:C4");
+      const data = book();
+      data.sheets[0].properties.title = 'Equipamentos';
+      return Response.json(data);
+    },
+  });
+  assert.equal(result.sheetName, 'Equipamentos');
+});
