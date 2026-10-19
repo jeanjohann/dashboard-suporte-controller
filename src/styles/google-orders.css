@@ -41,3 +41,16 @@
   color: var(--ui-muted);
   line-height: 1.6;
 }
+/* O piloto não entra na impressão dos relatórios de OS. */
+@media print {
+  .zoho-connection {
+    display: none !important;
+  }
+}
+.zoho-connection details {
+  margin-top: 12px;
+}
+.zoho-connection .table-scroll {
+  max-height: 420px;
+  overflow: auto;
+}

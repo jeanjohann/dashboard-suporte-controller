@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.35.0 — 19/10/2026
+
+- Adiciona primeira conexão Zoho Desk em OS → Equipe de suporte, com consulta manual da organização, agentes paginados e amostra de até 50 chamados recentes por criação. A cobertura da conta e os limites ficam explícitos.
+- Renova OAuth somente no servidor e restringe as rotas ao administrador principal ativo. Destinos fixos, redirecionamentos recusados, resposta limitada e erros sem segredos. Falhas preservam a leitura anterior.
+- Mantém Zoho separado dos indicadores de OS, sem associação automática de pessoas nem atribuição da autoria ao responsável atual. Respostas, tempos, sessões, histórico e automação ainda aguardam validação. Leitura real pendente na página autenticada.
+
 ## 0.34.0 — 19/10/2026
 
 - Prepara leitura privada do Operacional pelo Google Sheets, com aba fixa Equipamentos e identificador independente das OS. Ativação real aguarda a planilha escolhida e a comparação com Excel.

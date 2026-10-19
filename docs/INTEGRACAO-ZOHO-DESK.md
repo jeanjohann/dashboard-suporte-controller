@@ -8,7 +8,15 @@ O auxiliar local `scripts/setup-zoho.ps1` recebe Client ID, Client Secret e cód
 
 Gerar o código no Autocliente com `Desk.tickets.READ,Desk.basic.READ` e selecionar o portal Addlog. Essa etapa prepara a autenticação; não implementa nem comprova coleta de chamados, mensagens, Time Entries ou sessões. O teste real da conexão e as fontes de cada indicador continuam pendentes.
 
-Em 17/10/2026, o proprietário confirmou **Zoho Desk** e aprovou o acompanhamento conjunto de OS, chamados/respostas do Zoho, tempo de permanência no sistema e tempo apontado nos atendimentos. O objetivo é apresentar o mapa de atividades de cada agente. A integração **não está implementada nem ativada**: a primeira leitura depende de um arquivo real de disponibilidade; a automação também depende da configuração da conta. O [mapa funcional e a sequência de entrega](MAPA-DE-ATIVIDADES-DO-SUPORTE.md) consolidam o que foi aprovado. Os campos e a cobertura precisam ser validados com a fonte.
+## Primeira conexão — 0.35.0
+
+O quadro **OS → Equipe de suporte → Zoho Desk · primeira conexão** permite consulta manual de agentes e chamados recentes. Exige identidade Access válida e administrador principal ativo, inclusive nas rotas `/api/zoho/status` e `/api/zoho/snapshot`. A presença das quatro configurações pode ser conferida sem consultar o Zoho; seus valores nunca são retornados. O segredo `ZOHO_REFRESH_TOKEN` foi cadastrado no Cloudflare pelo auxiliar local. A leitura real ainda precisa ser confirmada na página autenticada.
+
+O Worker renova o acesso em `accounts.zoho.com` e consulta somente `desk.zoho.com/api/v1`: organização configurada, agentes e chamados. Destinos, métodos e limites são fixos; não segue redirecionamentos. Tokens ficam em memória no servidor até perto da expiração, com renovação compartilhada entre chamadas concorrentes e invalidação ao trocar credenciais. Cada leitura tem prazo de 25 segundos e limite de 2 MiB por resposta. Não grava conteúdo no D1 ou nos logs; o navegador mantém somente a leitura da sessão. Nenhuma descrição, corpo de mensagem, anexo ou contato de ticket é devolvido. O assunto e o responsável atual são mostrados para conferência.
+
+Agentes têm paginação de até quatro páginas de 50, com cobertura parcial explícita quando o limite é atingido. Chamados são uma amostra de até 50, ordenada por criação decrescente, respeitando o acesso da conta Zoho autorizada. Falha em qualquer etapa impede substituir a leitura anterior. Não há atualização automática, exportação deste quadro, filtro por período, associação às pessoas das OS ou indicadores de respostas/tempo. O responsável atual de um ticket não é tratado como autor de uma resposta. O quadro não entra na impressão dos relatórios de OS.
+
+O escopo aprovado em 17/10/2026 permanece mais amplo: acompanhamento conjunto de OS, chamados/respostas do Zoho, tempo de permanência por sessão e tempo apontado. O [mapa funcional e a sequência de entrega](MAPA-DE-ATIVIDADES-DO-SUPORTE.md) consolidam essas etapas futuras. Disponibilidade ainda depende do CSV Session; autoria das respostas, apontamentos, vínculos de agentes, histórico, armazenamento e automação continuam pendentes de validação própria.
 
 ## Chamados e respostas
 

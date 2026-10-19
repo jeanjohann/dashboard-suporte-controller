@@ -130,6 +130,38 @@ test('Google Sheets exige sessão ativa e administrador mesmo para consultar con
     db.close();
   }
 });
+
+test('piloto Zoho exige proprietário ativo autenticado; nem outros administradores recebem dados', async () => {
+  const db = database();
+  try {
+    const e = env(db),
+      admin = createHandler(async () => owner);
+    await admin(request('PUT', input), e);
+    await admin(request('PUT', { ...input, email: 'other@company.com', role: 'admin' }), e);
+    for (const path of ['/api/zoho/status', '/api/zoho/snapshot']) {
+      for (const email of [input.email, 'other@company.com', 'unknown@company.com'])
+        assert.equal(
+          (await createHandler(async () => email)(request('GET', null, path), e)).status,
+          403,
+        );
+      assert.equal(
+        (
+          await createHandler(async () => {
+            throw Error('expired');
+          })(request('GET', null, path), e)
+        ).status,
+        401,
+      );
+    }
+    assert.deepEqual(await (await admin(request('GET', null, '/api/zoho/status'), e)).json(), {
+      configured: false,
+    });
+    assert.equal((await admin(request('GET', null, '/api/zoho/snapshot'), e)).status, 503);
+    assert.equal((await admin(request('POST', null, '/api/zoho/snapshot'), e)).status, 405);
+  } finally {
+    db.close();
+  }
+});
 test('JWT confirma assinatura, audiência, emissor e expiração; cabeçalho de e-mail não autoriza', async () => {
   const { privateKey, publicKey } = await generateKeyPair('RS256');
   const make = (audience = aud, expires = '1h') =>

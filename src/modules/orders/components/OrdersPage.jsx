@@ -16,6 +16,7 @@ import { OrdersFiltersPanel } from './OrdersFiltersPanel.jsx';
 import { OrdersCategories } from './OrdersReportMenu.jsx';
 import { useGoogleOrders } from '../hooks/useGoogleOrders.js';
 import { OrdersGooglePanel } from './OrdersGooglePanel.jsx';
+import { SupportZohoPanel } from './SupportZohoPanel.jsx';
 import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 // Identidade estável para conservar o estado dos relatórios após a primeira importação.
 const OrdersReports = lazy(() =>
@@ -113,6 +114,9 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                       setSearch={setSearch}
                       setPage={setPage}
                       setExpansion={setExpansion}
+                    />
+                    <SupportZohoPanel
+                      active={active && category === 'support' && visible.supportPerformance}
                     />
                     <Suspense
                       fallback={

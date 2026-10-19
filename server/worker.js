@@ -6,6 +6,7 @@
 import { usersSchema } from './schema.js';
 import { monitoringResponse } from './monitoring.js';
 import { googleOrdersResponse } from './googleOrders.js';
+import { zohoResponse } from './zoho.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
   normalizeEmail,
@@ -96,6 +97,14 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
+      if (['/api/zoho/status', '/api/zoho/snapshot'].includes(url.pathname)) {
+        if (user.role !== 'admin' || email !== owner)
+          return reply(
+            { error: 'O piloto Zoho está disponível somente para o administrador principal.' },
+            403,
+          );
+        return zohoResponse(request, env);
+      }
       // Piloto local vinculado ao proprietário: a asserção assinada só segue para o seu loopback.
       if (url.pathname === '/api/assistant/local-session') {
         if (user.role !== 'admin' || email !== owner)
