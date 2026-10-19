@@ -32,7 +32,7 @@ try {
 
     Write-Host ''
     Write-Host 'No Autocliente do Zoho, abra Generate Code / Gerar codigo.'
-    Write-Host 'Escopos: Desk.tickets.READ,Desk.basic.READ'
+    Write-Host 'Escopos: Desk.tickets.READ,Desk.basic.READ,Desk.search.READ'
     Write-Host 'Selecione o portal Addlog e gere um codigo temporario novo.'
     $zohoGrantCode = Read-ZohoPrivateValue 'Cole o codigo temporario e pressione Enter'
     if (!$zohoGrantCode) { throw 'SETUP_EMPTY' }

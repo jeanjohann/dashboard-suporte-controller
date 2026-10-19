@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { api } from '../../../shared/security/accessClient.js';
 import { SortableTable } from '../../../components/SortableTable.jsx';
+import { SupportZohoActivity } from './SupportZohoActivity.jsx';
 
 const date = (value) =>
   value
@@ -13,7 +14,7 @@ const date = (value) =>
       }).format(new Date(value))
     : 'Indisponível';
 
-export function SupportZohoPanel({ active, onClose }) {
+export function SupportZohoPanel({ active, onClose, ordersData }) {
   const { user, managed } = useAccess();
   const allowed = Boolean(managed && user?.active && user.role === 'admin');
   const [snapshot, setSnapshot] = useState(null);
@@ -67,7 +68,7 @@ export function SupportZohoPanel({ active, onClose }) {
       aria-label="Zoho Desk · conexão de leitura"
     >
       <div className="orders-google-heading">
-        <strong>Zoho Desk · primeira conexão</strong>
+        <strong>Zoho Desk · conexão e atividade</strong>
         <button type="button" onClick={load} disabled={busy}>
           {busy
             ? 'Consultando Zoho…'
@@ -87,14 +88,15 @@ export function SupportZohoPanel({ active, onClose }) {
       </p>
       <small>
         Fonte independente das OS. Os filtros desta página não se aplicam ao Zoho. Responsável atual
-        do chamado não identifica quem enviou respostas. Respostas por agente, apontamentos de tempo
-        e sessões ainda não estão disponíveis.
+        do chamado não identifica quem enviou respostas. A atividade abaixo tem período próprio.
+        Sessões de presença ainda não estão disponíveis.
       </small>
       {error && (
         <p role="alert" className="error">
           {error}
         </p>
       )}
+      <SupportZohoActivity key={user?.email} active={active && allowed} ordersData={ordersData} />
       {snapshot && (
         <>
           <p role="status">

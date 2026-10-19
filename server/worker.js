@@ -97,7 +97,7 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
-      if (['/api/zoho/status', '/api/zoho/snapshot'].includes(url.pathname)) {
+      if (['/api/zoho/status', '/api/zoho/snapshot', '/api/zoho/activity'].includes(url.pathname)) {
         if (user.role !== 'admin' || email !== owner)
           return reply(
             { error: 'O piloto Zoho está disponível somente para o administrador principal.' },

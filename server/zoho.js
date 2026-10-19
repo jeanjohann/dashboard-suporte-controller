@@ -1,4 +1,5 @@
 /** Piloto Zoho somente leitura. Segredos e tokens permanecem no Worker. */
+import { activityParameters, collectZohoActivityBatch, ZohoActivityError } from './zohoActivity.js';
 const accountUrl = 'https://accounts.zoho.com/oauth/v2/token';
 const apiRoot = 'https://desk.zoho.com/api/v1';
 const idPattern = /^\d{1,40}$/;
@@ -85,7 +86,9 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
           : response.status === 401
             ? 'O Zoho recusou a autenticação. Confira cliente, token de renovação e região da conta.'
             : response.status === 403
-              ? 'O Zoho recusou a leitura. Confira as permissões do token e o acesso à organização.'
+              ? stage === 'SEARCH'
+                ? 'O Zoho recusou a pesquisa por período. Renove o token incluindo Desk.search.READ, além de Desk.tickets.READ e Desk.basic.READ.'
+                : 'O Zoho recusou a leitura. Confira as permissões do token e o acesso à organização.'
               : response.status === 404
                 ? 'O recurso não foi encontrado no Zoho. Confira organização e região da conta.'
                 : `O Zoho não concluiu a consulta (HTTP ${response.status}).`;
@@ -145,7 +148,7 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
       state.pending = null;
     }
   }
-  return async function readZoho(env) {
+  const readZoho = async function (env) {
     if (!zohoConfigured(env))
       throw failure('CONFIG', 'A conexão Zoho ainda precisa ser configurada no servidor.');
     const signal = AbortSignal.timeout(25000);
@@ -245,6 +248,40 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
       },
     };
   };
+  readZoho.activity = async (env, params) => {
+    let parameters;
+    try {
+      parameters = activityParameters(params, now());
+    } catch (error) {
+      throw error instanceof ZohoActivityError
+        ? error
+        : new ZohoActivityError('Selecione um período válido de até 31 dias.', 400);
+    }
+    const signal = AbortSignal.timeout(25000);
+    const token = await accessToken(env, signal);
+    const options = {
+      method: 'GET',
+      signal,
+      headers: { Authorization: `Zoho-oauthtoken ${token}`, orgId: env.ZOHO_ORG_ID },
+    };
+    const organization = await request(
+      `${apiRoot}/organizations/${env.ZOHO_ORG_ID}`,
+      options,
+      'ORGANIZATION',
+    );
+    if (id(organization?.id) !== env.ZOHO_ORG_ID)
+      throw failure('ORGANIZATION', 'A organização da coleta não corresponde à configurada.');
+    return collectZohoActivityBatch(
+      (path) =>
+        request(
+          `${apiRoot}${path}`,
+          options,
+          path.startsWith('/tickets/search') ? 'SEARCH' : 'ACTIVITY',
+        ),
+      parameters,
+    );
+  };
+  return readZoho;
 }
 const readZoho = createZohoReader();
 export async function zohoResponse(request, env, read = readZoho) {
@@ -262,14 +299,21 @@ export async function zohoResponse(request, env, read = readZoho) {
       503,
     );
   try {
-    return reply(await read(env));
+    return reply(
+      new URL(request.url).pathname === '/api/zoho/activity'
+        ? await read.activity(env, new URL(request.url).searchParams)
+        : await read(env),
+    );
   } catch (error) {
     return reply(
       {
-        code: error instanceof ZohoError ? error.code : 'ZOHO_UNKNOWN',
-        error: `${error instanceof ZohoError ? error.message : 'Não foi possível concluir a consulta ao Zoho.'} A leitura anterior foi mantida.`,
+        code:
+          error instanceof ZohoError || error instanceof ZohoActivityError
+            ? error.code
+            : 'ZOHO_UNKNOWN',
+        error: `${error instanceof ZohoError || error instanceof ZohoActivityError ? error.message : 'Não foi possível concluir a consulta ao Zoho.'} A leitura anterior foi mantida.`,
       },
-      502,
+      error instanceof ZohoActivityError ? error.status : 502,
     );
   }
 }

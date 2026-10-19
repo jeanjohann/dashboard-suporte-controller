@@ -215,3 +215,47 @@ test('troca de credencial invalida o cache e falha na renovação permite nova t
   await read({ ...env, ZOHO_REFRESH_TOKEN: 'private-refreshed' });
   assert.equal(tries, 3);
 });
+
+test('rota de atividade valida período antes da rede, renova OAuth e exige a organização correta', async () => {
+  let calls = 0;
+  let denied = false;
+  let wrongOrg = false;
+  const reader = createZohoReader({
+    now: () => Date.parse('2026-10-19T21:00:00Z'),
+    fetchImpl: async (url, options) => {
+      calls++;
+      assert.equal(options.redirect, 'manual');
+      const parsed = new URL(url);
+      if (parsed.hostname === 'accounts.zoho.com')
+        return Response.json({ access_token: 'private-access', expires_in: 3600 });
+      assert.equal(parsed.origin, 'https://desk.zoho.com');
+      assert.equal(options.headers.orgId, env.ZOHO_ORG_ID);
+      if (parsed.pathname.includes('/organizations/'))
+        return Response.json({ id: wrongOrg ? '999' : 57912045 });
+      assert.equal(parsed.pathname, '/api/v1/tickets/search');
+      assert.equal(parsed.searchParams.get('limit'), '10');
+      assert.equal(
+        parsed.searchParams.get('modifiedTimeRange'),
+        '2026-10-19T03:00:00.000Z,2026-10-19T21:00:00.000Z',
+      );
+      return denied ? new Response('private-error', { status: 403 }) : Response.json({ data: [] });
+    },
+  });
+  const path = '/api/zoho/activity?start=2026-10-19&end=2026-10-19';
+  const invalid = await zohoResponse(request('GET', '/api/zoho/activity?start=bad'), env, reader);
+  assert.equal(invalid.status, 400);
+  assert.equal(calls, 0);
+  const success = await zohoResponse(request('GET', path), env, reader);
+  assert.equal(success.status, 200);
+  assert.equal((await success.json()).next, null);
+  denied = true;
+  const failure = await zohoResponse(request('GET', path), env, reader);
+  assert.equal(failure.status, 502);
+  const body = await failure.json();
+  assert.match(body.error, /Desk.search.READ/);
+  assert.doesNotMatch(JSON.stringify(body), /private-/);
+  wrongOrg = true;
+  const mismatch = await zohoResponse(request('GET', path), env, reader);
+  assert.equal(mismatch.status, 502);
+  assert.equal((await mismatch.json()).code, 'ZOHO_ORGANIZATION');
+});

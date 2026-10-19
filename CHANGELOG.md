@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.36.0 — 19/10/2026
+
+- Adiciona consulta manual de atividade e tempos do Zoho para Eduardo Oliveira e Jean Johann, com período próprio de até 31 dias em Brasília. Pesquisa chamados modificados, incluindo chamados criados antes do período, e aplica a leitura somente após concluir a paginação.
+- Mostra tempo apontado por pessoa e chamado, chamados com apontamento e média por chamado, com autoria pelo responsável do apontamento e data de execução. Primeira resposta e resolução permanecem métricas acumuladas do chamado, separadas das horas trabalhadas.
+- Conta respostas públicas enviadas pelo autor e chamados distintos, com revisão explícita quando a fonte não comprova data de envio ou ausência de automação. Permite selecionar os vínculos exatos dos dois agentes com execução/agendamento das OS, somente na sessão.
+- Mantém acesso exclusivo do administrador principal e preserva a leitura anterior em erros ou cancelamentos. Sessões, armazenamento e atualização automática continuam pendentes. Conexão inicial confirmada pelo proprietário com seis agentes e 50 chamados; os novos indicadores aguardam comparação real com o Zoho.
+
 ## 0.35.0 — 19/10/2026
 
 - Normaliza identificadores Zoho retornados como número inteiro seguro ou texto, incluindo organização e vínculo entre responsável/agente. Mantém recusa de números sem precisão e de organizações divergentes, com diagnóstico específico.

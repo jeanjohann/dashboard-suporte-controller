@@ -1,5 +1,20 @@
 # Zoho Desk na Equipe de suporte — escopo aprovado
 
+## Atividade e tempos — 0.36.0
+
+Conexão inicial confirmada pelo proprietário em 19/10/2026: organização Addlog `57912045`, seis agentes e 50 chamados recentes. Por decisão expressa, os novos indicadores incluem **somente Eduardo Oliveira e Jean Johann**, pelos IDs conferidos na leitura real. As contas compartilhadas e demais agentes ficam fora dos totais.
+
+Em **OS → Zoho Desk → Atividade e tempos**, selecionar até 31 dias e consultar. `/api/zoho/activity` tem a mesma proteção do administrador principal. O período usa Brasília; cada coleta mantém sua referência e só substitui a anterior depois de concluir todas as páginas. Cancelamentos, duplicidades ou limites excedidos preservam a leitura anterior. A nova leitura ainda requer comparação com o Zoho real.
+
+A pesquisa consulta tickets acessíveis modificados desde o início do período até a referência da coleta, para encontrar também tickets antigos ou com lançamentos posteriores. O Zoho pode atrasar a indexação; arquivados e itens fora da cobertura da conta não entram. Não se trata de um histórico integral. São dez tickets por lote, menos de 500 por coleta, até quatro páginas de 100 threads/apontamentos por ticket e no máximo 42 chamadas de fonte por lote. A coleta falha integralmente ao ultrapassar esses limites. Todas as chamadas têm destinos fixos e prazo de 25 segundos por lote.
+
+- **Tempo apontado:** `ownerId`, data `executedTime`, duração explícita em horas/minutos/segundos, ticket correspondente e exclusão informada. Inclui faturável e não faturável; não usa criador nem data de cadastro como substitutos. Registros incompletos ficam na conferência. Soma por agente/ticket, média sobre tickets distintos com apontamento. Ausência de apontamento não comprova ausência de trabalho; sobreposições não viram jornada.
+- **Primeira resposta, resposta acumulada e resolução:** valores do endpoint de métricas, mostrados por chamado conforme fornecidos pelo Zoho. São acumulados, sem atribuição de esforço ao responsável atual nem recorte de tempo trabalhado no período.
+- **Respostas:** somente saídas públicas com envio bem-sucedido e autor agente. Encaminhamentos, descrição inicial e automações identificadas são excluídos. Quando data de envio/automação não são comprovadas, os totais ficam “A conferir”; o administrador pode confirmar as candidatas após conferir os registros no Zoho. Datas ausentes continuam pendentes. Totais da equipe deduplicam chamados compartilhados.
+- **OS:** o administrador escolhe a grafia exata para execução e agendamento de cada agente; não há associação automática pelo nome. Vínculo só na sessão, mesmo período da coleta, sem aplicar os demais filtros das OS e sem somar chamados das duas fontes.
+
+O token existente pode permitir pesquisa; se retornar recusa de escopo, gerar novo código do Autocliente com `Desk.search.READ,Desk.tickets.READ,Desk.basic.READ` e renovar pelo auxiliar local. Segredos nunca são mostrados ou publicados. Nenhum corpo de mensagem, contato, nota ou valor financeiro de apontamento é enviado ao navegador. Sessões continuam dependentes do CSV Session; não há persistência ou atualização automática de atividade.
+
 ## Preparação OAuth — 19/10/2026
 
 Portal informado: `https://suporte.addlog.com.br`, plano Enterprise, organização `57912045`. O portal encaminhou a autenticação para `accounts.zoho.com`. Client ID e Client Secret foram cadastrados como segredos `ZOHO_CLIENT_ID` e `ZOHO_CLIENT_SECRET` no Cloudflare; seus valores não foram lidos nem validados pelo agente.

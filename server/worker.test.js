@@ -138,7 +138,7 @@ test('piloto Zoho exige proprietário ativo autenticado; nem outros administrado
       admin = createHandler(async () => owner);
     await admin(request('PUT', input), e);
     await admin(request('PUT', { ...input, email: 'other@company.com', role: 'admin' }), e);
-    for (const path of ['/api/zoho/status', '/api/zoho/snapshot']) {
+    for (const path of ['/api/zoho/status', '/api/zoho/snapshot', '/api/zoho/activity']) {
       for (const email of [input.email, 'other@company.com', 'unknown@company.com'])
         assert.equal(
           (await createHandler(async () => email)(request('GET', null, path), e)).status,

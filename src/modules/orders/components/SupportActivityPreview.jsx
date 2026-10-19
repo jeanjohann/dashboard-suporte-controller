@@ -63,9 +63,9 @@ export function SupportActivityPreview({ visible }) {
         }
       >
         <p className="notice">
-          <strong>PRÉVIA COM DADOS FICTÍCIOS.</strong> API Zoho ainda não conectada. Este exemplo
-          não utiliza os nomes nem as OS importadas e não altera os indicadores da equipe acima. Use
-          os controles próprios abaixo.
+          <strong>PRÉVIA COM DADOS FICTÍCIOS.</strong> Consulte a fonte real pelo botão Zoho Desk no
+          cabeçalho das OS. Este exemplo não utiliza os nomes nem as OS importadas e não altera os
+          indicadores da equipe acima. Use os controles próprios abaixo.
         </p>
         <div className="integration-preview-controls">
           <label>

@@ -1,8 +1,8 @@
 # Fila de implementação e ajustes
 
-Preparado em 0.35.0: primeira conexão Zoho Desk, restrita ao administrador principal, com renovação OAuth no servidor e consulta manual de agentes/até 50 chamados recentes. Portal Enterprise e organização informados; credenciais cadastradas. Aguarda primeira leitura real no quadro de Equipe de suporte. Indicadores de respostas, Time Entries, sessões, vínculos com OS e coleta histórica continuam pendentes. [Escopo e limites](INTEGRACAO-ZOHO-DESK.md).
+Preparado em 0.36.0: atividade e tempos do Zoho para **Eduardo e Jean**, com apontamentos por chamado, médias, métricas acumuladas de primeira resposta/resolução, respostas com critérios auditáveis e vínculo manual com OS. Aguarda comparação dos novos indicadores com o Zoho real. Primeira conexão de 0.35.0 confirmada pelo proprietário: seis agentes e 50 chamados. Sessões, persistência e automação continuam pendentes. [Escopo e limites](INTEGRACAO-ZOHO-DESK.md).
 
-Preparado em 0.34.0: piloto Google Sheets do Operacional, com aba fixa `Equipamentos`, mesma credencial técnica e origem independente. Aguarda link da planilha, compartilhamento como Leitor e validação real contra Excel. Somente administradores; não ativa armazenamento compartilhado. [Configuração](GOOGLE-SHEETS.md).
+Confirmado pelo proprietário em 0.34.0: leitura Google Sheets do Operacional, com aba fixa `Equipamentos`, mesma credencial técnica e origem independente. Somente administradores; não ativa armazenamento compartilhado. [Configuração](GOOGLE-SHEETS.md).
 
 Entregue em 0.33.0: campo de perguntas do [Assistente de suporte experimental](AUTOMACAO-N8N-E-MCP.md), conectado ao AI Agent do n8n com Gemini e ferramenta de totais de atendimentos. Piloto restrito ao administrador principal neste computador, sem memória de conversa. Novas ferramentas, filtros por período/cliente/responsável e MCP permanecem pendentes.
 

@@ -89,7 +89,11 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                   onToggleZoho={() => setZohoOpen((open) => !open)}
                 />
                 <OrdersGooglePanel google={google} manualBusy={busy} />
-                <SupportZohoPanel active={active && zohoOpen} onClose={() => setZohoOpen(false)} />
+                <SupportZohoPanel
+                  active={active && zohoOpen}
+                  onClose={() => setZohoOpen(false)}
+                  ordersData={data}
+                />
                 {data && (
                   <>
                     <OrdersCategories
