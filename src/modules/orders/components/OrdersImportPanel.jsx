@@ -4,7 +4,16 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { PageSettingsButton } from '../../../components/PageSettings.jsx';
 
 /** Apresenta o recorte e as ações recebidas; a base original permanece no controlador. */
-export function OrdersImportPanel({ input, busy, error, data, load, google }) {
+export function OrdersImportPanel({
+  input,
+  busy,
+  error,
+  data,
+  load,
+  google,
+  zohoOpen,
+  onToggleZoho,
+}) {
   return (
     <>
       <header>
@@ -14,6 +23,11 @@ export function OrdersImportPanel({ input, busy, error, data, load, google }) {
           <p>Importe sua planilha e confira os atendimentos antes de analisar.</p>
         </div>
         <div className="page-header-actions">
+          {google?.allowed && (
+            <button type="button" onClick={onToggleZoho} aria-expanded={!!zohoOpen}>
+              Zoho Desk
+            </button>
+          )}
           {google?.allowed && (
             <button
               type="button"

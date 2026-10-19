@@ -13,7 +13,7 @@ const date = (value) =>
       }).format(new Date(value))
     : 'Indisponível';
 
-export function SupportZohoPanel({ active }) {
+export function SupportZohoPanel({ active, onClose }) {
   const { user, managed } = useAccess();
   const allowed = Boolean(managed && user?.active && user.role === 'admin');
   const [snapshot, setSnapshot] = useState(null);
@@ -75,6 +75,11 @@ export function SupportZohoPanel({ active }) {
               ? 'Atualizar leitura do Zoho'
               : 'Consultar Zoho Desk'}
         </button>
+        {onClose && (
+          <button type="button" onClick={onClose} aria-label="Fechar conexão Zoho Desk">
+            Fechar
+          </button>
+        )}
       </div>
       <p>
         Piloto disponível para o administrador principal. Consulta manual de agentes e até 50

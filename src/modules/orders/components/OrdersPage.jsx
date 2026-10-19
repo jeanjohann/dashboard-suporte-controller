@@ -26,6 +26,7 @@ const OrdersReports = lazy(() =>
 /** Mantém a página montada no Workspace e conserva a ordem dos relatórios e seus identificadores. */
 export function OrdersPage({ onPage, onImport, operational, source, active = true }) {
   const [expansion, setExpansion] = useState(null);
+  const [zohoOpen, setZohoOpen] = useState(false);
   const [category, setCategory] = useState('overview');
   const layout = usePageLayout('orders', legacyOrderLayout);
   const preferences = cleanPreferences(
@@ -84,8 +85,11 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                   data={data}
                   load={load}
                   google={google}
+                  zohoOpen={zohoOpen}
+                  onToggleZoho={() => setZohoOpen((open) => !open)}
                 />
                 <OrdersGooglePanel google={google} manualBusy={busy} />
+                <SupportZohoPanel active={active && zohoOpen} onClose={() => setZohoOpen(false)} />
                 {data && (
                   <>
                     <OrdersCategories
@@ -114,9 +118,6 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                       setSearch={setSearch}
                       setPage={setPage}
                       setExpansion={setExpansion}
-                    />
-                    <SupportZohoPanel
-                      active={active && category === 'support' && visible.supportPerformance}
                     />
                     <Suspense
                       fallback={

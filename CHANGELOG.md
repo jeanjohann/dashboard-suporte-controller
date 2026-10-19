@@ -9,6 +9,8 @@
 
 ## 0.35.0 — 19/10/2026
 
+- Correção de acesso ao piloto: botão Zoho Desk no cabeçalho das OS, ao lado de Google Sheets, independente da categoria, das preferências dos relatórios e da importação de planilha. Quadro abre por ação explícita e preserva a leitura ao fechar.
+
 - Adiciona primeira conexão Zoho Desk em OS → Equipe de suporte, com consulta manual da organização, agentes paginados e amostra de até 50 chamados recentes por criação. A cobertura da conta e os limites ficam explícitos.
 - Renova OAuth somente no servidor e restringe as rotas ao administrador principal ativo. Destinos fixos, redirecionamentos recusados, resposta limitada e erros sem segredos. Falhas preservam a leitura anterior.
 - Mantém Zoho separado dos indicadores de OS, sem associação automática de pessoas nem atribuição da autoria ao responsável atual. Respostas, tempos, sessões, histórico e automação ainda aguardam validação. Leitura real pendente na página autenticada.
