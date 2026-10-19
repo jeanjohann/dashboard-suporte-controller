@@ -57,6 +57,15 @@ export function AssistantPage({ onPage }) {
               <span className="assistant-badge">Consulta real · somente leitura</span>
             </div>
             <p className="scope">
+              <a
+                href="http://localhost:5678/workflow/labAssistantAgent01"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Abrir fluxo atual do agente no n8n
+              </a>
+            </p>
+            <p className="scope">
               Ferramenta disponível: totais de atendimentos do último mês com realizados na OS.
               Outros períodos, clientes, responsáveis e assuntos ainda não têm ferramentas de
               consulta.

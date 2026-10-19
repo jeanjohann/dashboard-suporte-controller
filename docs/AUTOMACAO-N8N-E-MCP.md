@@ -2,6 +2,10 @@
 
 ## Situação em 18/10/2026
 
+**Correção em 19/10/2026 — 0.33.1:** uma consulta reproduziu timeout; o diagnóstico direto do modelo `gemini-flash-latest` retornou HTTP 503 `UNAVAILABLE`, informando alta demanda. A autenticação respondeu HTTP 200. O agente atual foi alterado para `models/gemini-3.5-flash-lite`, com a mesma credencial, e a consulta real foi validada novamente. Não houve ativação de cobrança. Referências: [indisponibilidade e retentativas do Gemini](https://ai.google.dev/gemini-api/docs/troubleshooting) e [modelo Flash-Lite](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite).
+
+A página oferece “Abrir fluxo atual do agente no n8n”, apontando para `labAssistantAgent01`. Esse fluxo substitui o uso de `labAssistantLive01` pelo sistema; os fluxos antigos não foram sobrescritos e continuam disponíveis para consulta. A resposta da ponte agora identifica categorias de falha, sem enviar diagnósticos brutos ao navegador. O arquivo local `assistant-last-error.json` registra apenas horário e código. O leitor do stdout aceita mensagens posteriores ao JSON da execução, sem incluí-las na resposta do usuário. Timeouts continuam limitados a dois minutos; indisponibilidade do provedor não é garantia de recuperação automática.
+
 **Atualização 0.33.0:** o campo de perguntas está ligado ao nó AI Agent do n8n com Gemini e à ferramenta `consultar_atendimentos`. O piloto local permite perguntas sobre os totais e critérios disponíveis. Novas ferramentas, filtros de período/cliente/responsável, memória de conversa e MCP continuam pendentes. Os fluxos anteriores permanecem como histórico de homologação.
 
 ## Usar o Assistente no sistema — piloto 0.33.0

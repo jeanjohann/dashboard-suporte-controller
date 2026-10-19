@@ -5,6 +5,9 @@ export const assistantSystemPrompt = `Você é o assistente de suporte da Addlog
 /** Agente com ferramentas restritas. Pergunta chega por contexto efêmero autenticado no loopback. */
 export function assistantAgentWorkflow(geminiCredential, archiveCredential) {
   const model = geminiDemoWorkflow(geminiCredential).nodes[2];
+  // Versão explícita para evitar mudanças do alias e a sobrecarga observada em flash-latest.
+  model.parameters.modelName = 'models/gemini-3.5-flash-lite';
+  delete model.parameters.options.temperature;
   model.position = [680, 480];
   return {
     id: 'labAssistantAgent01',

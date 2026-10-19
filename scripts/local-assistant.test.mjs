@@ -8,6 +8,7 @@ import {
   parseAssistantExecution,
   createAssistantSession,
   validateQuestion,
+  assistantFailure,
 } from './local-assistant.mjs';
 import { assistantPayload } from './local-acervo.mjs';
 import { assistantLiveWorkflow } from './assistant-live-workflow.mjs';
@@ -181,9 +182,35 @@ test('extrai somente saída de sucesso; falha não vira resposta vazia nem revel
       2,
     );
   assert.equal(parseAssistantExecution(stdout).answer, 'Duas visitas');
+  assert.equal(
+    parseAssistantExecution(stdout + '\nAviso do processo após a execução\n').answer,
+    'Duas visitas',
+  );
   assert.equal(JSON.stringify(parseAssistantExecution(stdout)).includes('SEGREDO'), false);
   assert.throws(() => parseAssistantExecution(stdout.replace('success', 'error')));
   assert.throws(() => parseAssistantExecution('{}'));
+});
+
+test('diagnósticos são específicos e não devolvem chave, pergunta ou erro bruto', () => {
+  const quota = assistantFailure({ stdout: 'RESOURCE_EXHAUSTED 429 key=SEGREDO pergunta=PRIVADA' });
+  assert.equal(quota.code, 'AI_LIMIT');
+  assert.equal(JSON.stringify(quota).includes('SEGREDO'), false);
+  assert.equal(JSON.stringify(quota).includes('PRIVADA'), false);
+  assert.equal(assistantFailure({ killed: true }).code, 'TIMEOUT');
+  assert.equal(assistantFailure({ message: '503 UNAVAILABLE high demand' }).code, 'AI_UNAVAILABLE');
+  assert.equal(assistantFailure({ message: 'API key reported as leaked' }).code, 'AI_AUTH');
+  assert.equal(assistantFailure({ message: 'ECONNREFUSED' }).code, 'LOCAL_CONNECTION');
+  assert.equal(assistantFailure({ assistantCode: 'não suportado' }).code, 'EXECUTION_FAILED');
+  assert.equal(
+    assistantFailure({
+      stdout: JSON.stringify(
+        { data: { resultData: { error: { message: 'Falha interna' }, question: '503 429' } } },
+        null,
+        2,
+      ),
+    }).code,
+    'EXECUTION_FAILED',
+  );
 });
 
 test('contexto só existe durante a pergunta e ferramenta usa snapshot único sem fonte identificável', async () => {

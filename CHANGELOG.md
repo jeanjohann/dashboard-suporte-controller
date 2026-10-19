@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.33.1 — 19/10/2026
+
+- Troca o alias Gemini Flash Latest por `gemini-3.5-flash-lite` no agente após reprodução de timeout e resposta 503 de alta demanda do modelo anterior. Credencial preservada, com consulta real validada usando a ferramenta.
+- Acrescenta link direto para o fluxo atual do agente na página; fluxos antigos de teste permanecem separados.
+- Mostra diagnósticos específicos para limite, indisponibilidade, credencial, conexão, timeout, acervo e resultado incompleto. O registro local de falhas contém somente código e horário, sem chaves, perguntas ou erro bruto.
+- Torna a leitura do resultado da execução tolerante a mensagens do processo após o JSON.
+
 ## 0.33.0 — 18/10/2026
 
 - Adiciona campo de perguntas e sugestões ao Assistente do laboratório, ligado ao nó AI Agent 3.1 do n8n com Gemini. Instruções fixas ficam no agente e a pergunta digitada é enviada separadamente.

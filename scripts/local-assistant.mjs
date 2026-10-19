@@ -1,6 +1,6 @@
 /** Ponte do piloto: loopback, origem fixa, JWT Access verificado e proprietário fixo. Sem tokens em logs. */
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { join, resolve } from 'node:path';
@@ -16,6 +16,55 @@ const owner = 'jeancjohann@gmail.com';
 const keys = createRemoteJWKSet(new URL(issuer + '/cdn-cgi/access/certs'));
 const execute = promisify(execFile);
 
+const failureMessages = {
+  AI_UNAVAILABLE:
+    'O Gemini informou indisponibilidade ou alta demanda. Aguarde alguns minutos e tente novamente.',
+  ACERVO_READ:
+    'Não foi possível ler o acervo local. Confira os três arquivos da pasta import e suas abas.',
+  AI_LIMIT:
+    'O Gemini informou um limite de uso ou cota. Aguarde a renovação do limite e confira o uso no Google AI Studio.',
+  AI_AUTH: 'O Gemini recusou a credencial. Confira a credencial Google Gemini no n8n.',
+  LOCAL_CONNECTION:
+    'Uma conexão necessária à consulta falhou. Confira os serviços locais e a conexão com a internet.',
+  RUNNER_BUSY: 'O executor local do n8n está ocupado. Aguarde e tente novamente.',
+  TIMEOUT:
+    'O agente não concluiu dentro de dois minutos. A consulta foi interrompida; tente novamente e confira o histórico no n8n.',
+  INVALID_RESULT:
+    'O n8n não retornou uma resposta completa do agente. Confira o fluxo atual e sua última execução.',
+  EXECUTION_FAILED: 'A execução do agente falhou. Confira a última execução no fluxo atual do n8n.',
+};
+
+/** Classificação limitada: nunca devolve stdout, pergunta, URL com chave ou erro bruto ao navegador. */
+export function assistantFailure(error) {
+  let diagnostic = [error?.stdout, error?.stderr, error?.message].filter(Boolean).join('\n');
+  try {
+    const execution = extractExecution(error?.stdout || '');
+    // Classifique o erro, não o texto da pergunta que pode aparecer no histórico bruto.
+    diagnostic = JSON.stringify(execution.data?.resultData?.error || {});
+  } catch {
+    /* Falhas anteriores à execução podem conter apenas mensagens do processo. */
+  }
+  const code =
+    error?.assistantCode ||
+    (/RESOURCE_EXHAUSTED|\b429\b|quota.exceeded/i.test(diagnostic)
+      ? 'AI_LIMIT'
+      : /API_KEY_INVALID|API key.*(?:invalid|leaked|blocked)/i.test(diagnostic)
+        ? 'AI_AUTH'
+        : /\b503\b|\bUNAVAILABLE\b|high demand/i.test(diagnostic)
+          ? 'AI_UNAVAILABLE'
+          : /EADDRINUSE/.test(diagnostic)
+            ? 'RUNNER_BUSY'
+            : /ECONNREFUSED|ENOTFOUND|EAI_AGAIN|ETIMEDOUT|ECONNABORTED/.test(diagnostic)
+              ? 'LOCAL_CONNECTION'
+              : error?.killed || /timed?\s*out|timeout/i.test(diagnostic)
+                ? 'TIMEOUT'
+                : 'EXECUTION_FAILED');
+  return {
+    code: Object.hasOwn(failureMessages, code) ? code : 'EXECUTION_FAILED',
+    message: failureMessages[code] || failureMessages.EXECUTION_FAILED,
+  };
+}
+
 export async function verifyLocalSession(token, keySet = keys) {
   const { payload } = await jwtVerify(token, keySet, {
     issuer,
@@ -27,16 +76,57 @@ export async function verifyLocalSession(token, keySet = keys) {
     throw new Error('Proprietário necessário.');
 }
 
+/** Localiza o JSON da execução sem confundir mensagens posteriores do processo com a resposta. */
+export function extractExecution(stdout) {
+  const start = stdout.search(/^\{\s*$/m);
+  if (start < 0) {
+    const error = new Error('Resposta do n8n ausente.');
+    error.assistantCode = 'INVALID_RESULT';
+    throw error;
+  }
+  let end = -1,
+    depth = 0,
+    quoted = false,
+    escaped = false;
+  for (let index = start; index < stdout.length; index++) {
+    const character = stdout[index];
+    if (quoted) {
+      if (escaped) escaped = false;
+      else if (character === '\\') escaped = true;
+      else if (character === '"') quoted = false;
+    } else if (character === '"') quoted = true;
+    else if (character === '{') depth++;
+    else if (character === '}' && --depth === 0) {
+      end = index + 1;
+      break;
+    }
+  }
+  let execution;
+  try {
+    execution = JSON.parse(stdout.slice(start, end < 0 ? undefined : end));
+  } catch {
+    const error = new Error('Resposta inválida do n8n.');
+    error.assistantCode = 'INVALID_RESULT';
+    throw error;
+  }
+  return execution;
+}
+
 /** Retorna só o resultado esperado; stdout bruto pode conter metadados internos e nunca sai da ponte. */
 export function parseAssistantExecution(stdout) {
-  const start = stdout.search(/^\{\s*$/m);
-  if (start < 0) throw new Error('Resposta do n8n ausente.');
-  const execution = JSON.parse(stdout.slice(start).trim());
+  const execution = extractExecution(stdout);
   const result = execution.data?.resultData;
-  if (execution.status !== 'success' || result?.error) throw new Error('Consulta não concluída.');
+  if (execution.status !== 'success' || result?.error) {
+    const error = new Error('Consulta não concluída.');
+    error.stdout = stdout;
+    throw error;
+  }
   const text = result.runData?.['Agente de suporte']?.at(-1)?.data?.main?.[0]?.[0]?.json?.output;
-  if (typeof text !== 'string' || !text.trim() || text.length > 12000)
-    throw new Error('Resultado incompleto.');
+  if (typeof text !== 'string' || !text.trim() || text.length > 12000) {
+    const error = new Error('Resultado incompleto.');
+    error.assistantCode = 'INVALID_RESULT';
+    throw error;
+  }
   return { answer: text };
 }
 
@@ -123,7 +213,15 @@ export function createAssistantSession({
       busy = true;
       lastStarted = Date.now();
       try {
-        active = { question, snapshot: await readSnapshot(), toolCalls: 0 };
+        let snapshot;
+        try {
+          snapshot = await readSnapshot();
+        } catch {
+          const error = new Error(failureMessages.ACERVO_READ);
+          error.assistantCode = 'ACERVO_READ';
+          throw error;
+        }
+        active = { question, snapshot, toolCalls: 0 };
         const answer = await query();
         return {
           ...answer,
@@ -223,11 +321,21 @@ export function localAssistantServer({ verify = verifyLocalSession, session } = 
     try {
       send(200, await session.run(question));
     } catch (error) {
+      const failure = assistantFailure(error);
+      if (error.status !== 429) {
+        // Apenas código e horário; conteúdo das perguntas e credenciais não são registrados.
+        const runtime =
+          process.env.LOCALAPPDATA &&
+          join(process.env.LOCALAPPDATA, 'Addlog/n8n-lab/assistant-last-error.json');
+        if (runtime)
+          await writeFile(
+            runtime,
+            JSON.stringify({ at: new Date().toISOString(), code: failure.code }),
+          ).catch(() => {});
+      }
       send(error.status === 429 ? 429 : 503, {
-        error:
-          error.status === 429
-            ? error.message
-            : 'Não foi possível concluir a consulta. Confira o acervo, o n8n e a disponibilidade do Gemini.',
+        error: error.status === 429 ? error.message : failure.message,
+        ...(error.status !== 429 ? { code: failure.code } : {}),
       });
     }
   });
