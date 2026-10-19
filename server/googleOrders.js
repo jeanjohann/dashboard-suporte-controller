@@ -244,13 +244,16 @@ export async function googleOrdersResponse(request, env, read = readGoogleOrders
     return reply(await read(env));
   } catch (error) {
     // Nunca devolver corpo do Google, detalhes da chave ou tokens ao navegador ou ao log.
+    // Apenas a posição no código, sem a mensagem/primeira linha da pilha (que pode conter segredos).
+    const position = String(error?.stack || '').match(/(?:worker|googleOrders)\.js:(\d+):(\d+)/);
+    const diagnostic = position ? `L${position[1]}:${position[2]}` : 'sem posição';
     return reply(
       {
         code: error instanceof GoogleOrdersError ? error.code : 'GOOGLE_UNKNOWN',
         error:
           error instanceof GoogleOrdersError
             ? `${error.message} A base anterior foi mantida.`
-            : 'Não foi possível atualizar as OS pelo Google. Confira a configuração, a permissão de leitura e o nome da aba. A base anterior foi mantida.',
+            : `Falha interna na consulta Google [G2 ${diagnostic}]. A base anterior foi mantida.`,
       },
       502,
     );
