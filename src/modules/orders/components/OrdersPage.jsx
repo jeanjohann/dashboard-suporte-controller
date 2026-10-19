@@ -17,6 +17,7 @@ import { OrdersCategories } from './OrdersReportMenu.jsx';
 import { useGoogleOrders } from '../hooks/useGoogleOrders.js';
 import { OrdersGooglePanel } from './OrdersGooglePanel.jsx';
 import { SupportZohoPanel } from './SupportZohoPanel.jsx';
+import { ZohoSessionProvider, useZohoSession } from '../hooks/ZohoSession.jsx';
 import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 // Identidade estável para conservar o estado dos relatórios após a primeira importação.
 const OrdersReports = lazy(() =>
@@ -25,8 +26,15 @@ const OrdersReports = lazy(() =>
 
 /** Mantém a página montada no Workspace e conserva a ordem dos relatórios e seus identificadores. */
 export function OrdersPage({ onPage, onImport, operational, source, active = true }) {
+  return (
+    <ZohoSessionProvider>
+      <OrdersWorkspace {...{ onPage, onImport, operational, source, active }} />
+    </ZohoSessionProvider>
+  );
+}
+function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
   const [expansion, setExpansion] = useState(null);
-  const [zohoOpen, setZohoOpen] = useState(false);
+  const { open: zohoOpen, setOpen: setZohoOpen } = useZohoSession();
   const [category, setCategory] = useState('overview');
   const layout = usePageLayout('orders', legacyOrderLayout);
   const preferences = cleanPreferences(
@@ -89,11 +97,13 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
                   onToggleZoho={() => setZohoOpen((open) => !open)}
                 />
                 <OrdersGooglePanel google={google} manualBusy={busy} />
-                <SupportZohoPanel
-                  active={active && zohoOpen}
-                  onClose={() => setZohoOpen(false)}
-                  ordersData={data}
-                />
+                <div id="zoho-desk">
+                  <SupportZohoPanel
+                    active={active && zohoOpen}
+                    onClose={() => setZohoOpen(false)}
+                    ordersData={data}
+                  />
+                </div>
                 {data && (
                   <>
                     <OrdersCategories

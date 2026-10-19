@@ -23,6 +23,7 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { allowsPage } from '../../../shared/security/permissions.js';
 import { chartColors } from '../../../shared/charts/palette.js';
 import { OverviewInlinePanel } from './OverviewInlinePanels.jsx';
+import { SupportZohoOverview } from './SupportZohoOverview.jsx';
 const date = (v) => v?.split('-').reverse().join('/');
 function MultiChart({ items, series }) {
   return items.length ? (
@@ -251,6 +252,7 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
               </button>
             ))}
           </div>
+          <SupportZohoOverview />
         </article>
       </div>
       <div className="overview-presentation-toolbar" aria-label="Gráficos para apresentação">

@@ -88,3 +88,21 @@
   font-size: 20px;
   margin-top: 8px;
 }
+.support-zoho-overview {
+  border-top: 1px solid var(--ui-border);
+  margin-top: 18px;
+  padding-top: 14px;
+}
+.support-zoho-chart-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.support-zoho-chart-control select {
+  max-width: 100%;
+}
+.support-zoho-overview .table-scroll {
+  overflow: auto;
+  margin: 12px 0;
+}

@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.37.0 — 19/10/2026
+
+- Inclui os dados reais do Zoho no quadro **Atuação da equipe de suporte** da Visão geral, com gráfico por Eduardo/Jean e escolha entre tempo apontado, média por chamado, chamados com tempo, respostas e chamados respondidos. Durações usam eixo em minutos e os valores completos ficam na tabela.
+- Reaproveita a última coleta concluída na seção Zoho, sem consulta automática. Mostra período próprio e horário da leitura; filtros de OS não alteram os dados do Zoho. Indicadores pendentes continuam em conferência, sem virar zero.
+- Conserva leitura, revisão e vínculos em memória ao fechar a seção ou navegar entre categorias; troca de identidade/permissão limpa a sessão. O acesso aos detalhes abre a seção Zoho a partir do gráfico.
+
 ## 0.36.1 — 19/10/2026
 
 - Centraliza o mapa real de atividades e tempos, o vínculo com as OS e a conferência de conexão na seção **OS → Zoho Desk**. Indicadores e período ficam em primeiro plano; agentes e amostra de chamados recentes ficam em um quadro complementar recolhível.

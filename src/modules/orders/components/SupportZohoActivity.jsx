@@ -4,6 +4,7 @@ import { todaySaoPaulo } from '../domain/lifecycle.js';
 import { supportPerformance } from '../domain/supportPerformance.js';
 import { loadZohoActivity } from '../data/zohoActivityClient.js';
 import { SortableTable } from '../../../components/SortableTable.jsx';
+import { useZohoSession } from '../hooks/ZohoSession.jsx';
 
 const duration = (seconds) => {
   if (seconds == null) return '—';
@@ -14,15 +15,14 @@ const value = (number) => (number == null ? 'A conferir' : number);
 const date = (text) =>
   text ? new Date(text).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : '—';
 export function SupportZohoActivity({ active, ordersData }) {
+  const { data, setData, reviewedReplies, setReviewedReplies, mapping, setMapping } =
+    useZohoSession();
   const today = todaySaoPaulo();
-  const [start, setStart] = useState(today),
-    [end, setEnd] = useState(today);
-  const [data, setData] = useState(null),
-    [error, setError] = useState(''),
+  const [start, setStart] = useState(data?.period.start || today),
+    [end, setEnd] = useState(data?.period.end || today);
+  const [error, setError] = useState(''),
     [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(0);
-  const [reviewedReplies, setReviewedReplies] = useState(false),
-    [mapping, setMapping] = useState({});
   const pending = useRef(null);
   useEffect(() => {
     setBusy(false);

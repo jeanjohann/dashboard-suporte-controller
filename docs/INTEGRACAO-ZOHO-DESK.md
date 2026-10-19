@@ -1,5 +1,11 @@
 # Zoho Desk na Equipe de suporte — escopo aprovado
 
+## Gráfico do suporte na Visão geral — 0.37.0
+
+**OS → Visão geral → Atuação da equipe de suporte** inclui gráfico Zoho de Eduardo e Jean, com seletor de tempo apontado, média por chamado com apontamento, chamados com tempo, respostas e chamados respondidos. Tempos aparecem em minutos no eixo e em horas/minutos/segundos na tabela e no tooltip. Quantidades e durações mantêm gráficos separados dos agendamentos/execuções de OS; não há soma ou associação automática entre as fontes.
+
+Usa exclusivamente a última coleta completa da seção Zoho na mesma sessão, com período e horário próprios visíveis. Filtros de OS não recortam essa coleta nem sugerem uma comparação entre períodos diferentes. Sem leitura, orienta consultar o Zoho; indicadores pendentes permanecem “A conferir”, sem barras artificiais de zero. A seção Zoho continua concentrando consulta e detalhes. Fechar a seção preserva a leitura, a revisão e os vínculos; atualizar a página ou trocar identidade/permissão elimina o estado em memória. O gráfico não dispara consultas adicionais, gravação ou atualização automática.
+
 ## Seção consolidada — 0.36.1
 
 O acesso único é **OS → Zoho Desk**, no cabeçalho. A seção **Zoho Desk · atividades e tempos** concentra os indicadores reais por período, tempos por chamado, conferência das respostas/apontamentos e vínculos explícitos com as OS. O quadro recolhível **Conexão, agentes e chamados recentes · conferência** reúne a leitura complementar da organização, agentes e amostra recente; não substitui a coleta por período. Não exige importar OS para consultar o Zoho; os vínculos exigem carregar essa base.
