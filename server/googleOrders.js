@@ -61,7 +61,26 @@ export function googleOrdersConfig(env) {
 }
 
 /** Limita também a leitura do corpo, inclusive quando o servidor não informa Content-Length. */
-async function readJson(response, limit) {
+async function readJson(response, limit, stage) {
+  try {
+    return await readLimitedJson(response, limit);
+  } catch (error) {
+    const reason =
+      error.message === 'Resposta muito grande.'
+        ? 'A resposta excede o limite permitido.'
+        : error.message === 'Resposta indisponível.'
+          ? 'O Google não retornou uma resposta JSON válida.'
+          : error instanceof SyntaxError
+            ? 'O conteúdo retornado não pôde ser interpretado como JSON.'
+            : 'Falha ao ler o corpo da resposta no servidor.';
+    throw new GoogleOrdersError(
+      `GOOGLE_${stage}_RESPONSE`,
+      `${stage === 'AUTH' ? 'Autenticação' : 'Leitura da planilha'}: ${reason}`,
+    );
+  }
+}
+
+async function readLimitedJson(response, limit) {
   if (!response.ok || !response.headers.get('Content-Type')?.includes('application/json'))
     throw Error('Resposta indisponível.');
   if (Number(response.headers.get('Content-Length')) > limit) throw Error('Resposta muito grande.');
@@ -123,13 +142,18 @@ export async function readGoogleOrders(env, { fetchImpl = fetch } = {}) {
       'O segredo GOOGLE_SHEETS_CREDENTIALS não contém uma chave JSON válida de conta de serviço. Cadastre o conteúdo completo do arquivo JSON.',
     );
   }
-  const assertion = await new SignJWT({ scope })
-    .setProtectedHeader({ alg: 'RS256' })
-    .setIssuer(credentials.client_email)
-    .setAudience(tokenUrl)
-    .setIssuedAt()
-    .setExpirationTime('5m')
-    .sign(key);
+  let assertion;
+  try {
+    assertion = await new SignJWT({ scope })
+      .setProtectedHeader({ alg: 'RS256' })
+      .setIssuer(credentials.client_email)
+      .setAudience(tokenUrl)
+      .setIssuedAt()
+      .setExpirationTime('5m')
+      .sign(key);
+  } catch {
+    throw new GoogleOrdersError('GOOGLE_SIGN', 'Falha ao assinar a autenticação no servidor.');
+  }
   const signal = AbortSignal.timeout(25000);
   const auth = await readJson(
     await googleRequest(
@@ -147,9 +171,10 @@ export async function readGoogleOrders(env, { fetchImpl = fetch } = {}) {
       'auth',
     ),
     32 * 1024,
+    'AUTH',
   );
   if (typeof auth.access_token !== 'string' || !auth.access_token)
-    throw Error('Token não disponível.');
+    throw new GoogleOrdersError('GOOGLE_TOKEN', 'O Google não retornou um token de acesso válido.');
   const url = new URL(`https://sheets.googleapis.com/v4/spreadsheets/${config.id}`);
   url.searchParams.set('ranges', `'${config.sheetName}'`);
   url.searchParams.set(
@@ -168,6 +193,7 @@ export async function readGoogleOrders(env, { fetchImpl = fetch } = {}) {
       'sheets',
     ),
     googleOrdersLimits.bytes,
+    'SHEETS',
   );
   // ranges restringe os dados, mas o Google pode retornar os metadados das demais abas.
   const matchingSheets = book.sheets?.filter(

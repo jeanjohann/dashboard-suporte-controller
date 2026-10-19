@@ -64,6 +64,8 @@ test('diagnóstico distingue chave, autenticação, acesso e formato sem expor r
     { sheetStatus: 404, code: 'GOOGLE_SHEETS_404' },
     { sheetStatus: 400, code: 'GOOGLE_SHEETS_400' },
     { invalidHeaders: true, code: 'GOOGLE_FORMAT' },
+    { brokenAuth: true, code: 'GOOGLE_AUTH_RESPONSE' },
+    { brokenSheet: true, code: 'GOOGLE_SHEETS_RESPONSE' },
   ];
   for (const scenario of cases) {
     let calls = 0;
@@ -75,6 +77,10 @@ test('diagnóstico distingue chave, autenticação, acesso e formato sem expor r
             calls++;
             const status = calls === 1 ? scenario.authStatus : scenario.sheetStatus;
             if (status) return new Response('private-response-secret', { status });
+            if ((calls === 1 && scenario.brokenAuth) || (calls === 2 && scenario.brokenSheet))
+              return new Response('private-response-secret', {
+                headers: { 'Content-Type': 'application/json' },
+              });
             if (calls === 1) return Response.json({ access_token: 'private-token' });
             const data = book();
             if (scenario.invalidHeaders) data.sheets[0].data[0].rowData[0] = {};
