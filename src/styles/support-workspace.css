@@ -1,0 +1,538 @@
+/* Página da equipe: hierarquia e densidade próprias, sem alterar a Visão geral. */
+.support-workspace,
+.zoho-connection {
+  min-width: 0;
+  --support-radius: 10px;
+}
+.support-source-tag {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  line-height: 1.5;
+}
+.support-toolbar {
+  display: grid;
+  grid-template-columns: minmax(170px, 1fr) auto;
+  gap: 14px 24px;
+  align-items: end;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ui-line);
+}
+.support-source-heading p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.support-workspace .support-controls {
+  gap: 12px;
+  margin: 0;
+}
+.support-workspace .support-controls label,
+.zoho-connection .zoho-period-toolbar label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.support-workspace .support-controls input,
+.support-workspace .support-controls select,
+.zoho-connection .zoho-period-toolbar input {
+  min-height: 38px;
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+  font: inherit;
+  font-size: 12px;
+}
+.support-period-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--ui-ink);
+  font-size: 11px;
+}
+.support-period-caption span {
+  color: var(--ui-muted);
+}
+.support-workspace .support-metric-grid {
+  gap: 14px;
+}
+.support-workspace .support-metric,
+.zoho-connection .zoho-kpi {
+  padding: 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--support-radius);
+  background: var(--ui-surface);
+}
+.support-workspace .support-metric-heading {
+  min-height: 28px;
+  font-size: 12px;
+}
+.support-workspace .support-metric-heading > svg {
+  color: var(--support-color);
+}
+.support-workspace .support-metric-values {
+  margin-top: 10px;
+  gap: 14px;
+}
+.support-workspace .support-metric-values strong,
+.zoho-connection .zoho-kpi strong {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+.support-workspace .support-delta {
+  color: var(--ui-muted);
+  line-height: 1.6;
+}
+.support-workspace .support-delta > span {
+  font-size: 10px;
+}
+.support-workspace .support-secondary-metrics,
+.support-workspace .support-context {
+  margin-top: 12px;
+  border-bottom: 1px solid var(--ui-line);
+  padding-bottom: 10px;
+}
+.support-workspace .support-secondary-metrics > summary,
+.support-workspace .support-context > summary {
+  padding: 6px 0;
+  color: var(--ui-muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+.support-secondary-metrics > summary > span {
+  margin-left: 12px;
+  font-size: 10px;
+}
+.support-workspace .support-extra-metrics .support-metric {
+  padding: 12px;
+  background: var(--ui-soft);
+  border-color: transparent;
+}
+.support-workspace .support-extra-metrics .support-metric-values strong {
+  font-size: 21px;
+}
+.support-context-flag {
+  display: inline-block;
+  margin-left: 12px;
+  color: var(--ui-warning-ink);
+  font-size: 10px;
+}
+.support-context-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 12px 24px;
+}
+.support-context-grid h4 {
+  margin: 8px 0;
+  font-size: 12px;
+}
+.support-workspace .support-role-note {
+  color: var(--ui-muted);
+  font-size: 11px;
+  margin: 10px 0 0;
+}
+.support-workspace .support-people {
+  margin-top: 28px;
+}
+.support-workspace .support-people h3 {
+  margin: 0;
+  font-size: 15px;
+}
+.support-workspace .support-people-controls {
+  margin-top: 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+.support-workspace .support-people-controls label {
+  flex: 1;
+}
+.support-workspace .support-people-controls input {
+  width: min(100%, 320px);
+  min-height: 36px;
+}
+.support-workspace .support-people-controls > span {
+  max-width: 280px;
+  font-size: 10px;
+  text-align: right;
+}
+.support-workspace .support-person-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 14px;
+}
+.support-workspace .support-person-card {
+  padding: 16px;
+  border-radius: var(--support-radius);
+}
+.support-workspace .support-person-card.is-selected {
+  background: var(--ui-surface);
+  box-shadow: inset 0 2px 0 var(--ui-accent);
+}
+.support-workspace .support-person-trigger {
+  min-height: 38px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--ui-line);
+}
+.support-workspace .support-person-trigger strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+.support-workspace .support-person-trigger > svg {
+  color: var(--ui-muted);
+}
+.support-workspace .support-person-values {
+  gap: 20px;
+}
+.support-workspace .support-person-values dl {
+  gap: 10px;
+  margin: 12px 0;
+}
+.support-workspace .support-person-values dd {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.support-workspace .support-person-values dl > div:first-child dd {
+  font-size: 25px;
+}
+.support-workspace .support-person-values dt {
+  font-size: 11px;
+}
+.support-workspace .support-team-details {
+  margin-top: 24px;
+  padding: 4px 16px;
+}
+.support-workspace .support-team-details > summary {
+  padding: 12px 0;
+  font-weight: 550;
+}
+.support-workspace .support-period-shortcuts {
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+.support-workspace .support-period-shortcuts button,
+.support-workspace .support-person-export button {
+  min-height: 36px;
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+  border: 1px solid var(--ui-border);
+  font-size: 11px;
+}
+.support-workspace .support-period-shortcuts button:hover,
+.support-workspace .support-person-export button:hover {
+  background: var(--ui-accent-soft);
+}
+/* Apenas a coleta detalhada do Zoho recebe estes estilos. */
+.zoho-connection {
+  padding: 22px;
+  margin-bottom: 24px;
+}
+.zoho-connection .orders-google-heading h2 {
+  margin-top: 5px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.zoho-connection .orders-google-heading button {
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+  font-size: 11px;
+}
+.zoho-connection .zoho-period-toolbar {
+  align-items: end;
+  gap: 12px;
+  margin: 18px 0 6px;
+}
+.zoho-connection .zoho-period-toolbar > button {
+  min-height: 38px;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+.zoho-connection .zoho-period-toolbar > button:not(:last-child) {
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+}
+.zoho-connection .zoho-period-hint {
+  font-size: 10px;
+}
+.zoho-connection .zoho-empty-state {
+  margin: 24px 0;
+  padding: 24px;
+  background: var(--ui-soft);
+  border-radius: var(--support-radius);
+  color: var(--ui-muted);
+}
+.zoho-empty-state strong {
+  color: var(--ui-ink);
+  font-size: 14px;
+}
+.zoho-connection .zoho-period-changed {
+  color: var(--ui-warning-ink);
+  background: var(--ui-warning-bg);
+  padding: 9px 12px;
+  border-radius: 7px;
+}
+.zoho-connection .zoho-read-status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px 16px;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--ui-line);
+  font-size: 10px;
+}
+.zoho-read-status strong {
+  font-size: 12px;
+  color: var(--ui-ink);
+  font-weight: 550;
+}
+.zoho-connection .zoho-kpis {
+  gap: 14px;
+  margin: 14px 0 20px;
+}
+.zoho-connection .zoho-kpi-heading {
+  font-size: 12px;
+  min-height: 28px;
+}
+.zoho-connection .zoho-kpi {
+  border-top: 2px solid var(--support-color);
+}
+.zoho-connection .zoho-summary:not(.zoho-summary-compact) .zoho-summary-grid {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 20px;
+  padding: 18px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--support-radius);
+}
+.zoho-connection .zoho-agent-chart {
+  padding-right: 20px;
+  border-right: 1px solid var(--ui-line);
+}
+.zoho-connection .zoho-plot {
+  height: 140px;
+}
+.zoho-connection .zoho-agent-table h4,
+.zoho-connection .zoho-subheading h4 {
+  font-weight: 600;
+  font-size: 13px;
+}
+.zoho-connection .zoho-subheading select {
+  font-size: 11px;
+}
+.zoho-connection .zoho-agent-table .table-scroll {
+  border: 0;
+  border-radius: 0;
+}
+.zoho-table-hint {
+  display: none;
+}
+.zoho-connection .zoho-agent-table td:first-child {
+  min-width: 115px;
+  max-width: 150px;
+  white-space: normal;
+  font-weight: 550;
+}
+.zoho-connection .zoho-agent-table th {
+  background: var(--ui-surface);
+  font-weight: 500;
+}
+.zoho-connection .zoho-agent-table th,
+.zoho-connection .zoho-agent-table td {
+  font-size: 11px;
+  padding: 10px 8px;
+}
+.zoho-connection .zoho-activity > details,
+.zoho-connection .zoho-connection-details {
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--ui-line);
+  border-radius: 0;
+}
+.zoho-connection .zoho-activity > details > summary,
+.zoho-connection .zoho-connection-details > summary {
+  padding: 16px 0;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--ui-ink);
+}
+.zoho-connection .zoho-activity > details[open],
+.zoho-connection .zoho-connection-details[open] {
+  padding-bottom: 16px;
+}
+.zoho-connection .zoho-evidence-group > summary > span {
+  display: inline-block;
+  margin-left: 12px;
+  font-size: 10px;
+  color: var(--ui-muted);
+}
+.zoho-connection .zoho-evidence-group > details {
+  margin-left: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+}
+.zoho-connection .zoho-review-notice {
+  background: var(--ui-warning-bg);
+  padding-inline: 12px !important;
+  border-radius: 7px !important;
+  margin: 16px 0 4px !important;
+}
+.zoho-connection .zoho-review-notice > summary {
+  color: var(--ui-warning-ink) !important;
+}
+@media (max-width: 1250px) {
+  .support-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .zoho-connection .zoho-summary:not(.zoho-summary-compact) .zoho-summary-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .zoho-connection .zoho-agent-chart {
+    padding: 0 0 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--ui-line);
+  }
+}
+@media (max-width: 650px) {
+  .support-toolbar {
+    gap: 16px;
+  }
+  .support-workspace .support-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .support-workspace .support-controls input,
+  .support-workspace .support-controls select {
+    width: 100%;
+  }
+  .support-workspace .support-metric-grid,
+  .zoho-connection .zoho-kpis {
+    gap: 10px;
+  }
+  .zoho-connection .zoho-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .support-workspace .support-metric,
+  .zoho-connection .zoho-kpi {
+    padding: 12px;
+  }
+  .support-workspace .support-metric-heading {
+    font-size: 11px;
+  }
+  .support-workspace .support-metric-values strong,
+  .zoho-connection .zoho-kpi strong {
+    font-size: 23px;
+  }
+  .support-workspace .support-metric-values {
+    gap: 10px;
+  }
+  .support-workspace .support-secondary-metrics > summary > span,
+  .support-context-flag {
+    display: block;
+    margin: 6px 0 0 14px;
+  }
+  .support-workspace .support-people-controls > span {
+    max-width: none;
+    text-align: left;
+  }
+  .support-workspace .support-people-controls label {
+    flex-basis: 100%;
+  }
+  .support-workspace .support-people-controls input {
+    width: 100%;
+  }
+  .support-workspace .support-person-card {
+    padding: 14px;
+  }
+  .support-workspace .support-person-values {
+    gap: 14px;
+  }
+  .support-workspace .support-person-values:has(> div:nth-child(2)) dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .support-workspace .support-person-values:has(> div:nth-child(2)) dl > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .support-workspace .support-person-values:has(> div:nth-child(2)) dt {
+    font-size: 10px;
+  }
+  .support-workspace .support-period-shortcuts {
+    justify-content: flex-start;
+  }
+  .zoho-connection {
+    padding: 16px;
+  }
+  .zoho-connection .orders-google-heading {
+    align-items: flex-start;
+  }
+  .zoho-connection .orders-google-heading h2 {
+    font-size: 17px;
+  }
+  .zoho-connection .zoho-period-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .zoho-connection .zoho-period-toolbar input {
+    width: 100%;
+  }
+  .zoho-connection .zoho-period-toolbar > button {
+    grid-column: 1 / -1;
+  }
+  .zoho-connection .zoho-summary-grid {
+    padding: 12px;
+  }
+  .zoho-connection .zoho-kpi-heading {
+    font-size: 11px;
+  }
+  .zoho-connection .zoho-evidence-group > summary > span {
+    display: block;
+    margin: 5px 0 0 14px;
+  }
+  .zoho-connection .zoho-table-hint {
+    display: block;
+    font-size: 10px;
+    color: var(--ui-muted);
+  }
+}
+@media (max-width: 450px) {
+  .support-workspace .support-metric-grid .support-metric-values:has(> div:nth-child(2)) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .support-workspace .support-metric-grid .support-metric-values:has(> div:nth-child(2)) > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px;
+    align-items: baseline;
+  }
+  .support-workspace .support-metric-grid .support-metric-values:has(> div:nth-child(2)) strong {
+    margin: 0;
+    font-size: 22px;
+  }
+  .support-workspace
+    .support-metric-grid
+    .support-metric-values:has(> div:nth-child(2))
+    .support-delta {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+}

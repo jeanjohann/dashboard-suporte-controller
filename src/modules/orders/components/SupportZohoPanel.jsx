@@ -79,17 +79,17 @@ export function SupportZohoPanel({ active, onClose, ordersData }) {
     >
       <div className="orders-google-heading">
         <div>
-          <span className="eyebrow">EQUIPE DE SUPORTE</span>
-          <h2>Zoho Desk · atendimentos e tempo</h2>
+          <span className="support-source-tag">ZOHO DESK</span>
+          <h2>Atendimentos e tempo registrado</h2>
         </div>
         {onClose && (
           <button type="button" onClick={onClose} aria-label="Fechar conexão Zoho Desk">
-            Fechar
+            Recolher Zoho
           </button>
         )}
       </div>
       <p className="scope">
-        Eduardo Oliveira e Jean Johann · período próprio do Zoho, independente dos filtros de OS.
+        Eduardo Oliveira e Jean Johann · consulta por agente, com período independente das OS.
       </p>
       <SupportZohoActivity key={user?.email} active={active && allowed} ordersData={ordersData} />
       <details className="zoho-connection-details">

@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.38.1 — 19/10/2026
+
+- Simplifica a página Equipe de suporte, com identificação das fontes Zoho/OS, cards mais sóbrios, alinhamento dos controles e comparação por agente ao lado da tabela em telas amplas.
+- Reúne os períodos das OS em um seletor com mês, ano e datas personalizadas, usando os mesmos filtros da categoria. Preserva Execução, Agendamento e Ambos com suas próprias datas.
+- Mantém os quatro indicadores principais em destaque; veículos, proporção de improdutivas, registros por chamado, bases e comparações ficam em blocos expansíveis. Cards por pessoa, ranking, origens, exportação e impressão continuam disponíveis.
+- Organiza a conferência do Zoho em grupos e informa quando as datas foram alteradas sem refazer a consulta. A coleta anterior permanece identificada por seu período original.
+- Ajusta os dois temas e a leitura em celular, sem mudar a apresentação da Visão geral ou as regras de cálculo.
+
 ## 0.38.0 — 19/10/2026
 
 - Reorganiza o Zoho na Visão geral em quatro cards, gráfico por agente e tabela compacta, usando a última coleta concluída e mantendo seu período próprio.

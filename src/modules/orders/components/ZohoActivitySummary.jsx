@@ -172,7 +172,10 @@ export function ZohoActivitySummary({ summary, compact = false }) {
         </div>
         <div className="zoho-agent-table">
           <h4 id={id}>Resumo por agente</h4>
-          <div className="table-scroll">
+          {!compact && (
+            <p className="zoho-table-hint">Deslize a tabela para ver todos os indicadores →</p>
+          )}
+          <div className="table-scroll" tabIndex={compact ? undefined : 0}>
             <SortableTable
               aria-labelledby={id}
               aria-label={`Resumo Zoho por agente${compact ? ' na Visão geral' : ' na equipe'}`}

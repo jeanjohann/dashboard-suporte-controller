@@ -7,6 +7,7 @@ import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { RecordDetails } from './RecordDetails.jsx';
 import { SupportMetricCards } from './SupportMetricCards.jsx';
 import { SupportPeople } from './SupportPeople.jsx';
+import { SupportContext } from './SupportContext.jsx';
 
 const percent = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
@@ -36,34 +37,11 @@ export function SupportComparison({
   const note = `${filename}; Ambos; Agendamento usa Agendamento, Execução usa Data de atendimento; filtros ${JSON.stringify(filters)}; medida ${metric}; somente Concluída/Pago; não somar papéis como atendimentos únicos.`;
   return (
     <>
-      <SupportMetricCards results={[scheduling, execution]} />
-      <p className="scope">
-        São duas responsabilidades do mesmo serviço. Uma pessoa pode agendar e executar; os valores
-        aparecem separados e não devem ser somados como total de atendimentos.
+      <SupportMetricCards results={[scheduling, execution]} collapsible />
+      <p className="support-role-note">
+        Agendamento e execução são responsabilidades separadas; não somar como atendimentos únicos.
       </p>
-      {supportSeries.map(({ key, label }) => (
-        <div key={key}>
-          <p className="scope">
-            {label}: {results[key].rows.length} visitas e atendimentos ·{' '}
-            {results[key].missing.length} sem responsável válido fora do ranking ·{' '}
-            {results[key].missingDates} realizados sem data válida excluídos pelo período ·{' '}
-            {results[key].undated} sem data fora da evolução.
-          </p>
-          {results[key].range ? (
-            <p className="scope">
-              {label} · comparação de efetivos: {results[key].range.start} até{' '}
-              {results[key].range.end}: {results[key].past.totals.productive} →{' '}
-              {results[key].totals.productive} no período selecionado.{' '}
-              {results[key].past.missingDates} realizados sem data excluídos também da comparação.
-            </p>
-          ) : null}
-        </div>
-      ))}
-      {!execution.range && (
-        <p className="scope">
-          Selecione início e fim para comparar cada papel com o período anterior equivalente.
-        </p>
-      )}
+      <SupportContext results={[scheduling, execution]} />
       <SupportPeople original={original} results={results} filters={filters} filename={filename} />
       <details className="support-team-details">
         <summary>Ranking, evolução e conferência da equipe</summary>

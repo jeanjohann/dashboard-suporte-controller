@@ -76,7 +76,7 @@ export function SupportDelta({ current, previous, unit }) {
   );
 }
 
-export function SupportMetricCards({ results, extraOnly = false }) {
+export function SupportMetricCards({ results, extraOnly = false, collapsible = false }) {
   const render = (metric) => (
     <article
       key={metric.key}
@@ -129,7 +129,17 @@ export function SupportMetricCards({ results, extraOnly = false }) {
       }
     >
       {!extraOnly && <div className="support-metric-grid">{metrics.slice(0, 4).map(render)}</div>}
-      <div className="support-extra-metrics">{metrics.slice(4).map(render)}</div>
+      {collapsible ? (
+        <details className="support-secondary-metrics">
+          <summary>
+            Mais indicadores{' '}
+            <span>Veículos, proporção de improdutivas e registros por chamado</span>
+          </summary>
+          <div className="support-extra-metrics">{metrics.slice(4).map(render)}</div>
+        </details>
+      ) : (
+        <div className="support-extra-metrics">{metrics.slice(4).map(render)}</div>
+      )}
     </div>
   );
 }

@@ -98,11 +98,12 @@ export function SupportZohoActivity({ active, ordersData }) {
   if (!active) return null;
   return (
     <section className="zoho-activity" aria-label="Atividade Zoho de Eduardo e Jean">
-      <div className="orders-google-actions">
+      <div className="orders-google-actions zoho-period-toolbar">
         <label>
           De{' '}
           <input
             type="date"
+            aria-label="Início do período do Zoho"
             value={start}
             onChange={(e) => setStart(e.target.value)}
             disabled={busy}
@@ -110,7 +111,13 @@ export function SupportZohoActivity({ active, ordersData }) {
         </label>
         <label>
           Até{' '}
-          <input type="date" value={end} onChange={(e) => setEnd(e.target.value)} disabled={busy} />
+          <input
+            type="date"
+            aria-label="Fim do período do Zoho"
+            value={end}
+            onChange={(e) => setEnd(e.target.value)}
+            disabled={busy}
+          />
         </label>
         <button type="button" onClick={load} disabled={busy}>
           {busy ? `Conferindo ${progress} chamados…` : 'Consultar atividade e tempos'}
@@ -121,7 +128,23 @@ export function SupportZohoActivity({ active, ordersData }) {
           </button>
         )}
       </div>
-      <small>Até 31 dias por consulta · datas em Brasília.</small>
+      <small className="zoho-period-hint">
+        Até 31 dias por consulta · datas em Brasília · não altera os filtros das OS.
+      </small>
+      {data && (start !== period.start || end !== period.end) && (
+        <p role="status" className="zoho-period-changed">
+          Período alterado. Consulte novamente para atualizar os indicadores abaixo.
+        </p>
+      )}
+      {!data && !busy && !error && (
+        <div className="zoho-empty-state">
+          <strong>Como a equipe está atendendo?</strong>
+          <p>
+            Escolha um período e consulte os chamados respondidos, o tempo apontado e a comparação
+            entre os agentes.
+          </p>
+        </div>
+      )}
       {error && (
         <p className="error" role="alert">
           {error}
@@ -130,8 +153,13 @@ export function SupportZohoActivity({ active, ordersData }) {
       {data && summary && (
         <>
           <p role="status" className="zoho-read-status">
-            Leitura concluída: {data.period.start} a {data.period.end} · {data.ticketIds.length}{' '}
-            chamados conferidos · {date(data.readAt)} (Brasília).
+            <strong>
+              {data.period.start.split('-').reverse().join('/')} a{' '}
+              {data.period.end.split('-').reverse().join('/')}
+            </strong>
+            <span>
+              {data.ticketIds.length} chamados conferidos · coleta em {date(data.readAt)} (Brasília)
+            </span>
           </p>
           <ZohoActivitySummary summary={summary} />
           {!!summary.pendingReplies.length && (
@@ -224,132 +252,139 @@ export function SupportZohoActivity({ active, ordersData }) {
               chamados de OS e Zoho.
             </p>
           </details>
-          <details>
-            <summary>Respostas e candidatas · conferir origem e critérios</summary>
-            <div className="table-scroll">
-              <SortableTable aria-label="Origens das respostas Zoho">
-                <thead>
-                  <tr>
-                    <th>Agente</th>
-                    <th>Chamado / interação</th>
-                    <th>Data usada (Brasília)</th>
-                    <th>Canal</th>
-                    <th>Conferência</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {summary.candidates.map((reply) => (
-                    <tr key={`${reply.ticketId}:${reply.id}`}>
-                      <td>{zohoTeam.find((agent) => agent.id === reply.agentId)?.name}</td>
-                      <td>
-                        {reply.ticketId} / {reply.id}
-                      </td>
-                      <td>{date(reply.timestamp)}</td>
-                      <td>{reply.channel}</td>
-                      <td>{reply.review.join('; ') || 'Campos de envio e automação informados'}</td>
+          <details className="zoho-evidence-group">
+            <summary>
+              Conferência dos atendimentos <span>Respostas, tempos e registros de origem</span>
+            </summary>
+            <details>
+              <summary>Respostas e candidatas · conferir origem e critérios</summary>
+              <div className="table-scroll">
+                <SortableTable aria-label="Origens das respostas Zoho">
+                  <thead>
+                    <tr>
+                      <th>Agente</th>
+                      <th>Chamado / interação</th>
+                      <th>Data usada (Brasília)</th>
+                      <th>Canal</th>
+                      <th>Conferência</th>
                     </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
-          </details>
-          <details>
-            <summary>Tempo por chamado e métricas do Zoho</summary>
-            <p className="scope">
-              Tempo registrado nesta tabela usa apenas os apontamentos de Eduardo e Jean executados
-              no período. Primeira resposta e resolução são métricas acumuladas do chamado
-              fornecidas pelo Zoho, sem recorte por agente ou período; não representam horas
-              trabalhadas.
-            </p>
-            <div className="table-scroll">
-              <SortableTable aria-label="Tempos por chamado Zoho">
-                <thead>
-                  <tr>
-                    <th>Chamado</th>
-                    <th>Tempo apontado no período</th>
-                    <th>Primeira resposta (Zoho)</th>
-                    <th>Resposta acumulada (Zoho)</th>
-                    <th>Resolução (Zoho)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ticketMetrics.map((metric) => (
-                    <tr key={metric.ticketId}>
-                      <td>
-                        {metric.number} · ID {metric.ticketId}
-                      </td>
-                      <td>
-                        {duration(
-                          summary.tickets.find((ticket) => ticket.ticketId === metric.ticketId)
-                            ?.seconds ?? null,
-                        )}
-                      </td>
-                      <td>{metric.firstResponse || 'Indisponível'}</td>
-                      <td>{metric.totalResponse || 'Indisponível'}</td>
-                      <td>{metric.resolution || 'Indisponível'}</td>
+                  </thead>
+                  <tbody>
+                    {summary.candidates.map((reply) => (
+                      <tr key={`${reply.ticketId}:${reply.id}`}>
+                        <td>{zohoTeam.find((agent) => agent.id === reply.agentId)?.name}</td>
+                        <td>
+                          {reply.ticketId} / {reply.id}
+                        </td>
+                        <td>{date(reply.timestamp)}</td>
+                        <td>{reply.channel}</td>
+                        <td>
+                          {reply.review.join('; ') || 'Campos de envio e automação informados'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+            </details>
+            <details>
+              <summary>Tempo por chamado e métricas do Zoho</summary>
+              <p className="scope">
+                Tempo registrado nesta tabela usa apenas os apontamentos de Eduardo e Jean
+                executados no período. Primeira resposta e resolução são métricas acumuladas do
+                chamado fornecidas pelo Zoho, sem recorte por agente ou período; não representam
+                horas trabalhadas.
+              </p>
+              <div className="table-scroll">
+                <SortableTable aria-label="Tempos por chamado Zoho">
+                  <thead>
+                    <tr>
+                      <th>Chamado</th>
+                      <th>Tempo apontado no período</th>
+                      <th>Primeira resposta (Zoho)</th>
+                      <th>Resposta acumulada (Zoho)</th>
+                      <th>Resolução (Zoho)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
-          </details>
-          <details>
-            <summary>Apontamentos válidos · {summary.entries.length} registros</summary>
-            <div className="table-scroll">
-              <SortableTable aria-label="Apontamentos de tempo Zoho">
-                <thead>
-                  <tr>
-                    <th>Agente</th>
-                    <th>Chamado / apontamento</th>
-                    <th>Execução (Brasília)</th>
-                    <th>Duração</th>
-                    <th>Modo</th>
-                    <th>Faturável</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {summary.entries.map((entry) => (
-                    <tr key={`${entry.ticketId}:${entry.id}`}>
-                      <td>{zohoTeam.find((agent) => agent.id === entry.agentId)?.name}</td>
-                      <td>
-                        {entry.ticketId} / {entry.id}
-                      </td>
-                      <td>{date(entry.executedTime)}</td>
-                      <td>{duration(entry.seconds)}</td>
-                      <td>{entry.mode}</td>
-                      <td>
-                        {entry.billable == null ? 'Indisponível' : entry.billable ? 'Sim' : 'Não'}
-                      </td>
+                  </thead>
+                  <tbody>
+                    {ticketMetrics.map((metric) => (
+                      <tr key={metric.ticketId}>
+                        <td>
+                          {metric.number} · ID {metric.ticketId}
+                        </td>
+                        <td>
+                          {duration(
+                            summary.tickets.find((ticket) => ticket.ticketId === metric.ticketId)
+                              ?.seconds ?? null,
+                          )}
+                        </td>
+                        <td>{metric.firstResponse || 'Indisponível'}</td>
+                        <td>{metric.totalResponse || 'Indisponível'}</td>
+                        <td>{metric.resolution || 'Indisponível'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+            </details>
+            <details>
+              <summary>Apontamentos válidos · {summary.entries.length} registros</summary>
+              <div className="table-scroll">
+                <SortableTable aria-label="Apontamentos de tempo Zoho">
+                  <thead>
+                    <tr>
+                      <th>Agente</th>
+                      <th>Chamado / apontamento</th>
+                      <th>Execução (Brasília)</th>
+                      <th>Duração</th>
+                      <th>Modo</th>
+                      <th>Faturável</th>
                     </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
-          </details>
-          <details>
-            <summary>Registros excluídos ou pendentes · {data.review.length}</summary>
-            <div className="table-scroll">
-              <SortableTable aria-label="Conferência de registros Zoho">
-                <thead>
-                  <tr>
-                    <th>Chamado</th>
-                    <th>Registro</th>
-                    <th>Fonte</th>
-                    <th>Motivo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.review.map((row, index) => (
-                    <tr key={index}>
-                      <td>{row.ticketId}</td>
-                      <td>{row.id || 'Sem ID'}</td>
-                      <td>{row.kind === 'entry' ? 'Apontamento' : 'Interação'}</td>
-                      <td>{row.reason}</td>
+                  </thead>
+                  <tbody>
+                    {summary.entries.map((entry) => (
+                      <tr key={`${entry.ticketId}:${entry.id}`}>
+                        <td>{zohoTeam.find((agent) => agent.id === entry.agentId)?.name}</td>
+                        <td>
+                          {entry.ticketId} / {entry.id}
+                        </td>
+                        <td>{date(entry.executedTime)}</td>
+                        <td>{duration(entry.seconds)}</td>
+                        <td>{entry.mode}</td>
+                        <td>
+                          {entry.billable == null ? 'Indisponível' : entry.billable ? 'Sim' : 'Não'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+            </details>
+            <details>
+              <summary>Registros excluídos ou pendentes · {data.review.length}</summary>
+              <div className="table-scroll">
+                <SortableTable aria-label="Conferência de registros Zoho">
+                  <thead>
+                    <tr>
+                      <th>Chamado</th>
+                      <th>Registro</th>
+                      <th>Fonte</th>
+                      <th>Motivo</th>
                     </tr>
-                  ))}
-                </tbody>
-              </SortableTable>
-            </div>
+                  </thead>
+                  <tbody>
+                    {data.review.map((row, index) => (
+                      <tr key={index}>
+                        <td>{row.ticketId}</td>
+                        <td>{row.id || 'Sem ID'}</td>
+                        <td>{row.kind === 'entry' ? 'Apontamento' : 'Interação'}</td>
+                        <td>{row.reason}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </SortableTable>
+              </div>
+            </details>
           </details>
           <details className="zoho-detail-group">
             <summary>Fonte, cobertura e critérios da coleta</summary>

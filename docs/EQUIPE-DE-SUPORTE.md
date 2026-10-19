@@ -4,7 +4,13 @@ Desde 0.30.0, contagens de clientes seguem o [agrupamento da categoria](AGRUPAME
 
 Disponível em **Ordens de Serviço → Equipe de suporte**, a partir de 0.21.0; cards e detalhamento individual atualizados na 0.26.0. Acesso segue a permissão de OS; exportação e impressão seguem a permissão separada existente. A planilha continua local.
 
-Em 17/10/2026 foi aprovado ampliar a visão por agente com Zoho Desk: chamados respondidos, respostas enviadas, permanência nas sessões e tempo apontado nos atendimentos. A integração ainda não está disponível na interface. O [mapa de atividades aprovado](MAPA-DE-ATIVIDADES-DO-SUPORTE.md) registra fontes, indicadores, organização e etapas; o primeiro passo depende do CSV de disponibilidade na visão Session. As regras abaixo descrevem o relatório de OS já entregue.
+Em 17/10/2026 foi aprovado ampliar a visão por agente com Zoho Desk: chamados respondidos, respostas enviadas, permanência nas sessões e tempo apontado nos atendimentos. A consulta manual de atividade e tempo está disponível ao administrador na seção Zoho; permanência por sessões continua pendente. O [mapa de atividades aprovado](MAPA-DE-ATIVIDADES-DO-SUPORTE.md) registra fontes, indicadores, organização e etapas. As regras de OS abaixo permanecem independentes da coleta Zoho.
+
+## Organização visual — 0.38.1
+
+A página identifica separadamente as fontes **Zoho Desk** e **Ordens de Serviço**, preservando seus períodos independentes. A Visão geral mantém sua apresentação. No Zoho, consulta e quatro indicadores antecedem a comparação por agente; em telas amplas, gráfico e tabela ficam lado a lado. Vínculos com OS, conferência dos atendimentos, critérios e conexão abrem sob demanda. Pendências continuam visíveis como “A conferir”; editar as datas sem consultar novamente exibe aviso e conserva o período da última coleta nos resultados.
+
+Nas OS, **Período das OS** reúne os atalhos existentes. Mês e Ano mostram seu campo de referência; Personalizado mostra De/Até, que editam os mesmos filtros da categoria. Os demais filtros são preservados. Quatro indicadores principais e cards por responsável permanecem em destaque, enquanto **Mais indicadores** abre veículos, proporção de improdutivas e registros por chamado. **Base de cálculo e comparação** conserva as quantidades sem responsável/data e o período anterior; uma indicação no título sinaliza registros para conferir. Ranking, evolução, origens, exportação e impressão conservam todo o conteúdo. As mudanças tratam da apresentação, sem alterar critérios ou unir papéis/fontes.
 
 ## O que o relatório mede
 
