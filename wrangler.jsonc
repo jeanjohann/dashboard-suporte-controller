@@ -15,6 +15,7 @@
     // Origem fixa do piloto. Compartilhar esta planilha como leitor com a conta de serviço.
     "GOOGLE_ORDERS_SPREADSHEET_ID": "12H1PU9SJQT5LwN3nWRNGd30aiOFHSHmmUll7oMitWzk",
     "GOOGLE_ORDERS_SHEET": "OS 2025_26",
+    "GOOGLE_OPERATIONAL_SPREADSHEET_ID": "1cHu3p6KaXTc0MIet_U--TWxsDtdJWhpuTBSYJPVLRew",
   },
   "d1_databases": [
     {
