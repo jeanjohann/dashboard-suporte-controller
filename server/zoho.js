@@ -21,7 +21,13 @@ export function zohoConfigured(env) {
 }
 const failure = (stage, message) => new ZohoError(`ZOHO_${stage}`, message);
 const text = (value, limit = 200) => (typeof value === 'string' ? value.slice(0, limit) : '');
-const id = (value) => (typeof value === 'string' && idPattern.test(value) ? value : null);
+// A API documenta IDs como long e pode serializá-los como texto ou número.
+// Números fora da faixa segura são recusados: converter não recupera precisão perdida.
+const id = (value) => {
+  if (typeof value === 'number')
+    return Number.isSafeInteger(value) && value >= 0 ? String(value) : null;
+  return typeof value === 'string' && idPattern.test(value) ? value : null;
+};
 
 async function readJson(response, stage) {
   if (!response.headers.get('Content-Type')?.includes('application/json') || !response.body)
@@ -154,10 +160,16 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
       options,
       'ORGANIZATION',
     );
-    if (!organization || id(organization.id) !== env.ZOHO_ORG_ID)
+    const organizationId = id(organization?.id);
+    if (!organizationId)
       throw failure(
         'ORGANIZATION',
-        'A organização retornada pelo Zoho não corresponde à configurada.',
+        'O Zoho respondeu sem um identificador de organização válido no formato esperado.',
+      );
+    if (organizationId !== env.ZOHO_ORG_ID)
+      throw failure(
+        'ORGANIZATION',
+        `A organização retornada pelo Zoho (${organizationId}) não corresponde à configurada (${env.ZOHO_ORG_ID}).`,
       );
     const agents = new Map();
     let agentsComplete = false;
@@ -170,13 +182,14 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
       if (!Array.isArray(result?.data) || result.data.length > pageSize)
         throw failure('AGENTS', 'A listagem de agentes do Zoho está em formato inesperado.');
       for (const agent of result.data) {
-        if (!agent || !id(agent.id) || agents.has(agent.id))
+        const agentId = id(agent?.id);
+        if (!agentId || agents.has(agentId))
           throw failure(
             'AGENTS',
             'A listagem de agentes contém identificadores inválidos ou repetidos. Tente novamente.',
           );
-        agents.set(agent.id, {
-          id: agent.id,
+        agents.set(agentId, {
+          id: agentId,
           name:
             [text(agent.firstName), text(agent.lastName)].filter(Boolean).join(' ') ||
             'Nome indisponível',
@@ -198,13 +211,14 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
       throw failure('TICKETS', 'A listagem de chamados do Zoho está em formato inesperado.');
     const tickets = new Map();
     for (const ticket of result.data) {
-      if (!ticket || !id(ticket.id) || tickets.has(ticket.id))
+      const ticketId = id(ticket?.id);
+      if (!ticketId || tickets.has(ticketId))
         throw failure(
           'TICKETS',
           'A listagem de chamados contém identificadores inválidos ou repetidos. Tente novamente.',
         );
-      tickets.set(ticket.id, {
-        id: ticket.id,
+      tickets.set(ticketId, {
+        id: ticketId,
         number: text(ticket.ticketNumber, 50),
         subject: text(ticket.subject, 300),
         status: text(ticket.status),

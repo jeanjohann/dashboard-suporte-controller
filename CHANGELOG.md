@@ -9,6 +9,8 @@
 
 ## 0.35.0 — 19/10/2026
 
+- Normaliza identificadores Zoho retornados como número inteiro seguro ou texto, incluindo organização e vínculo entre responsável/agente. Mantém recusa de números sem precisão e de organizações divergentes, com diagnóstico específico.
+
 - Correção de acesso ao piloto: botão Zoho Desk no cabeçalho das OS, ao lado de Google Sheets, independente da categoria, das preferências dos relatórios e da importação de planilha. Quadro abre por ação explícita e preserva a leitura ao fechar.
 
 - Adiciona primeira conexão Zoho Desk em OS → Equipe de suporte, com consulta manual da organização, agentes paginados e amostra de até 50 chamados recentes por criação. A cobertura da conta e os limites ficam explícitos.

@@ -120,6 +120,34 @@ test('agentes são paginados e cobertura é parcial ao atingir o limite; chamado
   assert.equal(complete.coverage.agentsComplete, true);
 });
 
+test('IDs numéricos seguros e textuais preservam identidade; números imprecisos e organizações diferentes são recusados', async () => {
+  const f = fixture({
+    org: () => Response.json({ id: 57912045, companyName: 'Empresa teste' }),
+    agents: () => Response.json({ data: [{ ...agent(1), id: 101 }] }),
+    tickets: () =>
+      Response.json({ data: [{ ...ticket, id: 500, assigneeId: 101, departmentId: 900 }] }),
+  });
+  const result = await createZohoReader({ fetchImpl: f.fetchImpl })(env);
+  assert.equal(result.organization.id, '57912045');
+  assert.equal(result.agents[0].id, result.tickets[0].assigneeId);
+  assert.equal(result.tickets[0].id, '500');
+  for (const value of [57912046, Number.MAX_SAFE_INTEGER + 1, 57912045.5, null]) {
+    const invalid = fixture({ org: () => Response.json({ id: value }) });
+    await assert.rejects(
+      () => createZohoReader({ fetchImpl: invalid.fetchImpl })(env),
+      (error) => error.code === 'ZOHO_ORGANIZATION',
+    );
+    assert.equal(invalid.calls.length, 2);
+  }
+  const duplicate = fixture({
+    agents: () => Response.json({ data: [{ ...agent(1), id: 101 }, agent(1)] }),
+  });
+  await assert.rejects(
+    () => createZohoReader({ fetchImpl: duplicate.fetchImpl })(env),
+    (error) => error.code === 'ZOHO_AGENTS',
+  );
+});
+
 test('falhas de autenticação, rede, permissões e limites não retornam base parcial nem segredos', async () => {
   const scenarios = [
     { auth: () => Response.json({ error: 'invalid_client', description: 'private-secret' }) },
