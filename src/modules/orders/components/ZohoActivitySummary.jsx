@@ -24,12 +24,12 @@ export function zohoDuration(seconds, compact = false) {
 }
 const metrics = {
   seconds: 'Tempo apontado',
-  ticketsReplied: 'Chamados respondidos',
-  replies: 'Respostas enviadas',
+  confirmedTicketsReplied: 'Chamados com resposta confirmada',
+  confirmedReplies: 'Respostas confirmadas',
   ticketsWithTime: 'Chamados com tempo',
   meanSeconds: 'Média por chamado com tempo',
 };
-export function ZohoActivitySummary({ summary, compact = false }) {
+export function ZohoActivitySummary({ summary, compact = false, onReview }) {
   const [metric, setMetric] = useState('seconds');
   const id = useId();
   const time = metric === 'seconds' || metric === 'meanSeconds';
@@ -43,9 +43,9 @@ export function ZohoActivitySummary({ summary, compact = false }) {
   const cards = [
     [
       'Chamados respondidos',
-      totals.ticketsReplied,
+      totals.confirmedTicketsReplied,
       'coverage',
-      'Chamados distintos com resposta pública válida no período. Pendências de conferência ficam sem total confirmado.',
+      'Chamados distintos com resposta pública validada no período da coleta. Havendo pendências, mostra somente os confirmados. Um chamado pode ter respostas confirmadas e pendentes; não somar esses grupos.',
     ],
     [
       'Tempo apontado',
@@ -68,8 +68,8 @@ export function ZohoActivitySummary({ summary, compact = false }) {
   ];
   const columns = [
     ['name', 'Agente'],
-    ['ticketsReplied', 'Respondidos'],
-    ...(!compact ? [['replies', 'Respostas']] : []),
+    ['confirmedTicketsReplied', 'Respondidos confirmados'],
+    ...(!compact ? [['confirmedReplies', 'Respostas confirmadas']] : []),
     ['seconds', 'Tempo apontado'],
     ...(!compact ? [['ticketsWithTime', 'Com tempo']] : []),
     ['meanSeconds', 'Média/chamado'],
@@ -94,9 +94,49 @@ export function ZohoActivitySummary({ summary, compact = false }) {
             >
               {result ?? 'A conferir'}
             </strong>
+            {label === 'Chamados respondidos' && (
+              <small>
+                {totals.pendingReplyCount ? 'Confirmados · total parcial' : 'Confirmados na coleta'}
+              </small>
+            )}
           </article>
         ))}
       </div>
+      {totals.pendingReplyCount > 0 && (
+        <div className="zoho-confirmation-status" role="status">
+          <div>
+            <strong>
+              {totals.pendingReplyCount}{' '}
+              {totals.pendingReplyCount === 1 ? 'interação pendente' : 'interações pendentes'} de
+              conferência
+            </strong>
+            <span>
+              Em {totals.pendingTicketCount}{' '}
+              {totals.pendingTicketCount === 1 ? 'chamado' : 'chamados'}. Podem incluir chamados já
+              contados entre os confirmados.
+            </span>
+          </div>
+          <details>
+            <summary>Por que há pendências?</summary>
+            <ul>
+              {totals.reviewReasons.map(({ reason, count }) => (
+                <li key={reason}>
+                  {reason}: {count}
+                </li>
+              ))}
+            </ul>
+            <p>
+              Uma interação pode ter mais de um motivo. Os tempos apontados são calculados
+              separadamente.
+            </p>
+          </details>
+          {onReview && (
+            <button type="button" onClick={onReview}>
+              Conferir interações
+            </button>
+          )}
+        </div>
+      )}
       <div className="zoho-summary-grid">
         <div className="zoho-agent-chart">
           <div className="zoho-subheading">
@@ -209,6 +249,14 @@ export function ZohoActivitySummary({ summary, compact = false }) {
                           : ['seconds', 'meanSeconds'].includes(key)
                             ? zohoDuration(agent[key], true)
                             : (agent[key] ?? 'A conferir')}
+                        {key === 'confirmedTicketsReplied' && agent.pendingReplyCount > 0 && (
+                          <small className="zoho-pending-agent">
+                            {agent.pendingReplyCount}{' '}
+                            {agent.pendingReplyCount === 1
+                              ? 'interação pendente'
+                              : 'interações pendentes'}
+                          </small>
+                        )}
                       </td>
                     ))}
                   </tr>

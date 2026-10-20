@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.42.0 — 20/10/2026
+
+- Mostra respostas e chamados confirmados no Zoho mesmo quando a coleta contém pendências. Informa interações/chamados pendentes, motivos por contagem e acesso à conferência; datas não identificadas continuam sem confirmação. Preserva os totais finais, os tempos apontados e a deduplicação da equipe.
+- Adiciona visões favoritas locais por usuário e categoria aos filtros de OS, Consumo, Operacional, Parque/Logística e Monitoramento. Salva filtros/busca, apresentação dos relatórios registrados e grupos da Visão geral de OS, com criar, aplicar, atualizar, renomear e remover. Sem aplicação automática, consultas novas ou sincronização; semanas relativas são recalculadas ao aplicar em OS.
+- Inclui “O que merece atenção” nas Visões gerais de OS e Consumo, com limites ajustáveis e acesso à origem. Aponta trocas repetidas por cliente/filial e placa, concentração de improdutivas por cliente e aumentos de MB/dia do mesmo chip/operadora sobre apuração anterior não sobreposta.
+- Recusa fonte de OS incompatível e apuração/base ausente ao aplicar favoritos. Releitura e revisões protegem alterações entre abas; falhas de armazenamento preservam os favoritos anteriores. Comparações ambíguas ou com referência zero ficam explícitas, sem percentual inventado.
+
 ## 0.41.2 — 20/10/2026
 
 - Alinha a altura dos três quadros iniciais de apresentação na Visão geral e permite rolar seus conteúdos mais longos, com cabeçalhos acessíveis e recolhimento preservados. Evita lacunas antes dos relatórios seguintes.

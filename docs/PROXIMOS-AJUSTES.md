@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+**Atualização em 20/10/2026 — 0.42.0:** entregues os três itens priorizados: conferência parcial transparente do Zoho, visões favoritas locais por usuário/categoria e destaques auditáveis em OS/Consumo. [Funcionamento e limites](VISOES-E-DESTAQUES.md). Matriz modelo × motivo, backup/restauração de lembretes e ampliação da avaliação do assistente ficam para depois, conforme o proprietário. Sessões do Zoho aguardam CSV Session do escritório; nenhuma nova integração ou infraestrutura foi ativada nesta rodada.
+
+As notas históricas abaixo mantêm o contexto original. Para o estado das entregas mais recentes, consultar o histórico de versões; a integração de tickets/tempos Zoho e Google Sheets já possui leitura real, sem equivaler a sessões ou armazenamento compartilhado.
+
 Rodada **A17 entregue em 0.40.0**: Consumo e Parque com indicadores principais/complementares, tabelas com rolagem identificada e teclado, números/identificadores alinhados, ações compactas dos relatórios, mensagens de estado e impressão com contexto legível. Responsividade e temas conferidos; dados, cálculos e configurações externas preservados. [Mudanças e limites da rodada](REFINAMENTO-VISUAL.md).
 
 Preparação entregue em **0.39.0**: contrato de persistência versionado, concorrência, paginação, exclusão lógica, ponte read/write e adaptador SQL para futuro banco de negócio separado. Importação conjunta usa o mesmo repositório do consumo. **Não conclui A10/A13**: nenhum dado foi migrado e armazenamento remoto/compartilhado, rotas, retenção e automação continuam pendentes. [Limites e roteiro de ativação](PREPARACAO-BANCO-DE-DADOS.md).

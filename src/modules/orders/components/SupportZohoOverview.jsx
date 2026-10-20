@@ -33,7 +33,7 @@ export function SupportZohoOverview({ onOpen }) {
       </div>
       {summary ? (
         <>
-          <ZohoActivitySummary summary={summary} compact />
+          <ZohoActivitySummary summary={summary} compact onReview={onOpen} />
           <p className="scope zoho-summary-note">
             Última coleta:{' '}
             {new Date(data.readAt).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}. Os

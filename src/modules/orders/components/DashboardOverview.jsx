@@ -24,6 +24,8 @@ import { allowsPage } from '../../../shared/security/permissions.js';
 import { chartColors } from '../../../shared/charts/palette.js';
 import { OverviewInlinePanel } from './OverviewInlinePanels.jsx';
 import { SupportZohoOverview } from './SupportZohoOverview.jsx';
+import { AttentionPanel } from '../../../components/AttentionPanel.jsx';
+import { orderAttention } from '../domain/orderAttention.js';
 const date = (v) => v?.split('-').reverse().join('/');
 function MultiChart({ items, series }) {
   return items.length ? (
@@ -53,9 +55,19 @@ function MultiChart({ items, series }) {
   );
 }
 /** Reúne indicadores de gestão e comparação temporal sobre os filtros de OS selecionados. */
-export function DashboardOverview({ original, filters, operational, onPage, onCategory }) {
+export function DashboardOverview({
+  original,
+  filters,
+  operational,
+  onPage,
+  onCategory,
+  presentations,
+  setPresentations,
+  devices,
+  attentionLimits,
+  setAttentionLimits,
+}) {
   const { user } = useAccess();
-  const [presentations, setPresentations] = React.useState({});
   const [presentationRevision, setPresentationRevision] = React.useState(0);
   const [previewToReveal, setPreviewToReveal] = React.useState(null);
   const presentationId = React.useId();
@@ -97,11 +109,20 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
     scheduling = applyFilters(original, filters, 'Agendamento'),
     m = managementMetrics(d.selected, scheduling),
     [detail, setDetail] = React.useState(null);
+  const highlights = orderAttention(d.selected, devices, attentionLimits);
   const agendaId = React.useId(),
     agendaDetailRef = React.useRef(null),
+    attentionDetailRef = React.useRef(null),
     agendaButtons = React.useRef({});
   // Conferências antigas não devem continuar exibindo outra base após alterar o recorte.
   React.useEffect(() => setDetail(null), [original, filters]);
+  React.useEffect(() => {
+    if (detail?.attention)
+      attentionDetailRef.current?.scrollIntoView({
+        block: 'nearest',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
+  }, [detail?.attention, detail?.id]);
   React.useEffect(() => {
     if (detail?.agenda)
       agendaDetailRef.current?.scrollIntoView({
@@ -218,6 +239,58 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
           : 'A comparação exige um intervalo válido com início e fim.'}{' '}
         Custos: {d.current.costCount} valores válidos; valores ausentes não viram zero.
       </p>
+      <AttentionPanel
+        scope="OS · filtros da Visão geral"
+        findings={highlights.findings}
+        coverage={highlights.coverage}
+        onInspect={(finding) =>
+          setDetail({
+            ...finding,
+            label: finding.kind + ' · ' + finding.title,
+            data: original,
+            attention: true,
+          })
+        }
+      >
+        {[
+          ['replacements', 'Mínimo de eventos de troca por cliente/filial e placa', 2, 100],
+          ['unproductive', 'Mínimo de registros improdutivos por cliente', 1, 1000],
+          ['share', 'Participação mínima de improdutivas (%)', 1, 100],
+        ].map(([key, label, min, max]) => (
+          <label key={key}>
+            {label}
+            <input
+              type="number"
+              min={min}
+              max={max}
+              aria-label={label}
+              value={attentionLimits[key]}
+              onChange={(e) => {
+                const n = e.target.valueAsNumber;
+                if (Number.isInteger(n) && n >= min && n <= max) {
+                  setAttentionLimits((old) => ({ ...old, [key]: n }));
+                  if (detail?.attention) setDetail(null);
+                }
+              }}
+            />
+          </label>
+        ))}
+        <p className="scope">
+          Trocas não são somadas entre filiais nem placas diferentes. A concentração de improdutivas
+          segue o agrupamento de clientes escolhido nos filtros.
+        </p>
+      </AttentionPanel>
+      {detail?.attention && (
+        <div ref={attentionDetailRef}>
+          <RecordDetails
+            data={original}
+            rows={detail.rows}
+            title={detail.label}
+            compact
+            onClose={() => setDetail(null)}
+          />
+        </div>
+      )}
       <div className="agenda-strip">
         {Object.entries(agendaLabels).map(([key, label]) => (
           <button
@@ -357,7 +430,7 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
           </div>
         ))}
       </div>
-      {detail && !detail.agenda && (
+      {detail && !detail.agenda && !detail.attention && (
         <div className="panel">
           <button onClick={() => setDetail(null)}>Fechar conferência</button>
           <RecordDetails data={detail.data} rows={detail.rows} title={detail.label} />

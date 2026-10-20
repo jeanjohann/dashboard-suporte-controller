@@ -144,6 +144,20 @@ export function summarizeZohoActivity(data, { reviewedReplies = false } = {}) {
     const pending =
       uncertainDates ||
       (!reviewedReplies && pendingReplies.some((row) => agentIds.has(row.agentId)));
+    const awaiting = unique([
+      ...(!reviewedReplies ? pendingReplies.filter((row) => agentIds.has(row.agentId)) : []),
+      ...(data.review || []).filter(
+        (row) =>
+          row.kind === 'reply' &&
+          agentIds.has(row.agentId) &&
+          (row.reason === 'Data de envio não identificada' ||
+            (!reviewedReplies && row.reason === 'Data de envio ausente; criação fora do período')),
+      ),
+    ]);
+    const reasons = new Map();
+    for (const row of awaiting)
+      for (const reason of new Set(row.review?.length ? row.review : [row.reason]))
+        if (reason) reasons.set(reason, (reasons.get(reason) || 0) + 1);
     const seconds = e.reduce((sum, row) => sum + row.seconds, 0);
     const ticketsWithTime = new Set(e.map((row) => row.ticketId)).size;
     return {
@@ -153,6 +167,11 @@ export function summarizeZohoActivity(data, { reviewedReplies = false } = {}) {
       meanSeconds: ticketsWithTime ? seconds / ticketsWithTime : null,
       replies: pending ? null : r.length,
       ticketsReplied: pending ? null : new Set(r.map((row) => row.ticketId)).size,
+      confirmedReplies: r.length,
+      confirmedTicketsReplied: new Set(r.map((row) => row.ticketId)).size,
+      pendingReplyCount: awaiting.length,
+      pendingTicketCount: new Set(awaiting.map((row) => row.ticketId)).size,
+      reviewReasons: [...reasons].map(([reason, count]) => ({ reason, count })),
     };
   };
   return {

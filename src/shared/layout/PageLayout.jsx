@@ -1,6 +1,7 @@
 /** Estado visual compartilhado: gravação explícita, registro de capacidades e revelação temporária de relatórios. */
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { readLayout, mergeLayout } from './pageLayout.js';
+import { SavedViewsContext } from '../filters/SavedViewsContext.jsx';
 
 export const PageLayoutContext = createContext(null);
 
@@ -37,13 +38,24 @@ export function usePageLayout(page, legacy) {
     (id) => setRevealed((previous) => ({ ...previous, [id]: { visible: true, mode: 'complete' } })),
     [],
   );
-  return { reports, effective, save, reveal };
+  const apply = useCallback((patch) => setRevealed((previous) => mergeLayout(previous, patch)), []);
+  return { reports, effective, save, reveal, apply };
 }
 
 /** Definições são estáticas; a capacidade de resumo vem da Section realmente montada, sem inferência pelo título. */
-export function PageLayoutProvider({ layout, definitions, activeIds, scope, children }) {
+export function PageLayoutProvider({ layout, definitions, activeIds, scope, savedView, children }) {
   const [capabilities, setCapabilities] = useState({});
+  const [displayModes, setDisplayModes] = useState({});
   const knownTitles = useMemo(() => new Set(definitions.map((item) => item.title)), [definitions]);
+  const recordPresentation = useCallback(
+    (title, mode) => {
+      if (!knownTitles.has(title)) return;
+      setDisplayModes((previous) =>
+        previous[title] === mode ? previous : { ...previous, [title]: mode },
+      );
+    },
+    [knownTitles],
+  );
   const register = useCallback(
     (title, hasSummary) => {
       if (!knownTitles.has(title)) return;
@@ -67,9 +79,37 @@ export function PageLayoutProvider({ layout, definitions, activeIds, scope, chil
     [definitions, layout.effective],
   );
   const value = useMemo(
-    () => ({ layout, definitions, activeIds, scope, capabilities, entries, register }),
-    [layout, definitions, activeIds, scope, capabilities, entries, register],
+    () => ({
+      layout,
+      definitions,
+      activeIds,
+      scope,
+      capabilities,
+      entries,
+      register,
+      recordPresentation,
+    }),
+    [layout, definitions, activeIds, scope, capabilities, entries, register, recordPresentation],
   );
-  return <PageLayoutContext.Provider value={value}>{children}</PageLayoutContext.Provider>;
+  return (
+    <PageLayoutContext.Provider value={value}>
+      <SavedViewsContext.Provider
+        value={
+          savedView
+            ? {
+                ...savedView,
+                layout,
+                activeIds,
+                currentModes: Object.fromEntries(
+                  definitions.map(({ id, title }) => [id, displayModes[title]]),
+                ),
+              }
+            : null
+        }
+      >
+        {children}
+      </SavedViewsContext.Provider>
+    </PageLayoutContext.Provider>
+  );
 }
 export const useLayoutContext = () => useContext(PageLayoutContext);

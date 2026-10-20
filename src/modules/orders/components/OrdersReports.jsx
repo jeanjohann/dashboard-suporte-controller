@@ -24,7 +24,18 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { allowsPage } from '../../../shared/security/permissions.js';
 
 /** Recebe o controlador existente; não mantém outra cópia dos dados ou filtros. */
-export function OrdersReports({ session, category, visible, operational, onPage, onCategory }) {
+export function OrdersReports({
+  session,
+  category,
+  visible,
+  operational,
+  onPage,
+  onCategory,
+  presentations,
+  setPresentations,
+  attentionLimits,
+  setAttentionLimits,
+}) {
   const { user } = useAccess();
   const {
     data,
@@ -61,6 +72,11 @@ export function OrdersReports({ session, category, visible, operational, onPage,
           filters={filters}
           onPage={onPage}
           onCategory={onCategory}
+          presentations={presentations}
+          setPresentations={setPresentations}
+          devices={devices}
+          attentionLimits={attentionLimits}
+          setAttentionLimits={setAttentionLimits}
         />
       )}
       <SummaryCards

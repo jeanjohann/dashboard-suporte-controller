@@ -290,6 +290,19 @@ export function OperationalPage({
           )?.sections || []
         }
         scope={`${analysis ? 'Parque e Manutenção' : 'Operacional'} · ${(analysis ? crossAnalysisMenus : operationalMenus).find((menu) => menu.key === menuCategory)?.label}`}
+        savedView={{
+          scopeKey: `${page}:${menuCategory}`,
+          state: logisticsView ? { filters: logisticsFilters } : { filters, search },
+          onApply: (view) => {
+            if (logisticsView) setLogisticsFilters(view.filters || {});
+            else {
+              setFilters(view.filters || {});
+              setSearch(view.search || '');
+              setOffset(0);
+            }
+            setExpansion(null);
+          },
+        }}
       >
         <HiddenSectionsContext.Provider value={hiddenByOperationalMenu(analysis, menuCategory)}>
           <ExpansionContext.Provider value={expansion}>

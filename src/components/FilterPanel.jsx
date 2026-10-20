@@ -1,6 +1,7 @@
 /** Um único quadro reúne alcance, período, filtros recolhíveis, seleções ativas e ações dos relatórios. */
 import React from 'react';
 import { InfoNote } from './InfoNote.jsx';
+import { SavedViews } from '../shared/filters/SavedViews.jsx';
 
 export function FilterPanel({
   scope,
@@ -14,6 +15,7 @@ export function FilterPanel({
   help,
   notice,
   source,
+  savedView,
 }) {
   return (
     <section className="filter-workspace" aria-label={`Filtros · ${scope || 'categoria atual'}`}>
@@ -25,6 +27,7 @@ export function FilterPanel({
         {period && <div className="filter-workspace-period">{period}</div>}
         {help && <InfoNote label={`Alcance dos filtros · ${scope}`}>{help}</InfoNote>}
       </div>
+      <SavedViews config={savedView} />
       <details className="filter-workspace-editor compact-filters" key={scope}>
         <summary>Filtros da página</summary>
         <div className="filter-workspace-fields">{children}</div>

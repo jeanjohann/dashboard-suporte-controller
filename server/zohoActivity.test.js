@@ -240,3 +240,38 @@ test('cliente só aplica coleta completa e preserva a referência ao paginar; fa
   );
   assert.equal(called, false);
 });
+
+test('resumo parcial expõe confirmados e motivos sem somar pendências aos chamados ou alterar tempos', () => {
+  const confirmed = normalizeZohoReply(reply(), '5', period);
+  const pending = normalizeZohoReply(reply({ id: '101', isAutomated: undefined }), '5', period);
+  const unknown = {
+    id: '102',
+    ticketId: '6',
+    agentId: jean.id,
+    kind: 'reply',
+    reason: 'Data de envio não identificada',
+  };
+  const data = {
+    replies: [confirmed, pending, pending],
+    entries: [normalizeZohoEntry(entry(), '5', period)],
+    review: [unknown, unknown],
+  };
+  const result = summarizeZohoActivity(data);
+  assert.equal(result.totals.ticketsReplied, null);
+  assert.equal(result.totals.confirmedTicketsReplied, 1);
+  assert.equal(result.totals.confirmedReplies, 1);
+  assert.equal(result.totals.pendingReplyCount, 2);
+  assert.equal(result.totals.pendingTicketCount, 2);
+  assert.deepEqual(result.totals.reviewReasons, [
+    { reason: 'Automação não informada', count: 1 },
+    { reason: 'Data de envio não identificada', count: 1 },
+  ]);
+  assert.equal(result.totals.seconds, 9015);
+  const reviewed = summarizeZohoActivity(data, { reviewedReplies: true });
+  assert.equal(reviewed.totals.confirmedReplies, 2);
+  assert.equal(reviewed.totals.confirmedTicketsReplied, 1);
+  assert.equal(reviewed.totals.pendingReplyCount, 1);
+  assert.equal(reviewed.totals.ticketsReplied, null);
+  assert.equal(result.agents[0].confirmedReplies, 1);
+  assert.equal(result.agents[1].pendingReplyCount, 1);
+});

@@ -259,3 +259,38 @@
     font-size: 20px;
   }
 }
+
+.zoho-kpi > small {
+  font-size: 10px;
+  color: var(--ui-muted);
+  line-height: 1.5;
+}
+.zoho-confirmation-status {
+  padding: 10px 12px;
+  border: 1px solid var(--ui-accent-border);
+  border-radius: 8px;
+  background: var(--ui-accent-soft);
+  margin: 12px 0;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.zoho-confirmation-status > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.zoho-confirmation-status details {
+  margin: 5px 0;
+}
+.zoho-confirmation-status summary {
+  cursor: pointer;
+}
+.zoho-confirmation-status button {
+  padding: 6px 9px;
+  font-size: 11px;
+}
+.zoho-pending-agent {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 10px;
+}

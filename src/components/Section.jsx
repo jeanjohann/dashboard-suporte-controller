@@ -43,6 +43,13 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
     context = useContext(PrintContext);
   const hiddenSections = useContext(HiddenSectionsContext);
   const available = visible && !hiddenSections.includes(title) && preference?.visible !== false;
+  const recordPresentation = layout?.recordPresentation;
+  useEffect(() => {
+    recordPresentation?.(
+      title,
+      open ? (compact && hasSummary ? 'summary' : 'complete') : 'collapsed',
+    );
+  }, [recordPresentation, title, open, compact, hasSummary]);
   const story = useReportStory(title, available);
   // Escolher uma visualização é uma abertura explícita; o modo inicial salvo continua valendo ao entrar.
   useEffect(() => {

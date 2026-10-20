@@ -19,6 +19,11 @@ export function SupportZohoActivity({ active, ordersData }) {
     [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(0);
   const pending = useRef(null);
+  const reviewAnchor = useRef(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  useEffect(() => {
+    if (reviewOpen) reviewAnchor.current?.scrollIntoView({ block: 'nearest' });
+  }, [reviewOpen]);
   useEffect(() => {
     setBusy(false);
     return () => {
@@ -161,25 +166,40 @@ export function SupportZohoActivity({ active, ordersData }) {
               {data.ticketIds.length} chamados conferidos · coleta em {date(data.readAt)} (Brasília)
             </span>
           </p>
-          <ZohoActivitySummary summary={summary} />
-          {!!summary.pendingReplies.length && (
-            <details className="zoho-review-notice">
+          <ZohoActivitySummary summary={summary} onReview={() => setReviewOpen(true)} />
+          {!!(summary.totals.pendingReplyCount || reviewedReplies) && (
+            <details
+              className="zoho-review-notice"
+              ref={reviewAnchor}
+              open={reviewOpen}
+              onToggle={(event) => setReviewOpen(event.currentTarget.open)}
+            >
               <summary>
-                Respostas aguardando conferência · {summary.pendingReplies.length} interações
+                {summary.totals.pendingReplyCount ? (
+                  <>
+                    Respostas aguardando conferência · {summary.totals.pendingReplyCount}{' '}
+                    {summary.totals.pendingReplyCount === 1 ? 'interação' : 'interações'}
+                  </>
+                ) : (
+                  'Conferência das respostas · confirmada nesta sessão'
+                )}
               </summary>
               <p>
-                Data de envio e/ou automação não confirmadas na origem. Os indicadores de respostas
-                ficam “A conferir” até validar os critérios no Zoho.
+                Os indicadores mostram somente as respostas confirmadas. Confira os motivos acima e
+                as origens em “Respostas e candidatas” e “Registros para revisão”. Datas não
+                identificadas continuam pendentes.
               </p>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={reviewedReplies}
-                  onChange={(e) => setReviewedReplies(e.target.checked)}
-                />{' '}
-                Conferi as interações abaixo no Zoho: a data corresponde ao envio e não há
-                automações/encaminhamentos entre as candidatas.
-              </label>
+              {!!summary.pendingReplies.length && (
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={reviewedReplies}
+                    onChange={(e) => setReviewedReplies(e.target.checked)}
+                  />{' '}
+                  Conferi as interações abaixo no Zoho: a data corresponde ao envio e não há
+                  automações/encaminhamentos entre as candidatas.
+                </label>
+              )}
               {reviewedReplies && (
                 <p>Critérios confirmados pelo administrador nesta sessão, para esta coleta.</p>
               )}

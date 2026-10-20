@@ -208,6 +208,21 @@ export function MonitoringPage({ onPage }) {
             ) : (
               <>
                 <FilterPanel
+                  savedView={{
+                    scopeKey: `monitoring:${demo ? 'demo' : 'real'}:${category}`,
+                    state: { filters },
+                    validate: (view) =>
+                      (view.filters?.clients || []).some(
+                        (id) => !bases.some((base) => base.id === id),
+                      )
+                        ? 'Uma base desta visão não está disponível nesta fonte. Atualize a visão antes de aplicar.'
+                        : '',
+                    onApply: (view) => {
+                      setFilters({ ...initialFilters(), ...view.filters });
+                      setPage(0);
+                      setSelected(null);
+                    },
+                  }}
                   scope={scopeLabel}
                   chips={chips}
                   matched={category === 'overview' ? result.totals.fleet : queue.rows.length}

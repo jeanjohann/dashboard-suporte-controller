@@ -54,10 +54,22 @@ import { useConsumptionArchive } from '../hooks/useConsumptionArchive.js';
 import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
 import { consumptionStories } from '../config/reportStories.js';
 import { ViewState } from '../../../components/ViewState.jsx';
+import { AttentionPanel } from '../../../components/AttentionPanel.jsx';
+import {
+  consumptionAttention,
+  defaultConsumptionAttention,
+} from '../domain/consumptionAttention.js';
 /** Coordena extratos, versões, notas e referência operacional no histórico local do navegador. */
-export function LinesPage({ onPage, operational, onOperationalChange, reloadToken = 0 }) {
-  const history = useConsumptionArchive(reloadToken);
+export function LinesPage({
+  onPage,
+  operational,
+  onOperationalChange,
+  reloadToken = 0,
+  repository,
+}) {
+  const history = useConsumptionArchive(reloadToken, repository);
   const layout = usePageLayout('consumption');
+  const [attentionLimits, setAttentionLimits] = useState(defaultConsumptionAttention);
   const { archive, ready, busy, error, message, setError, commit } = history;
   const [category, setCategory] = useState('overview'),
     [detail, setDetail] = useState(null),
@@ -103,6 +115,10 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
     visibleSections = categories.find(([key]) => key === category)[2],
     shown = (label) => visibleSections.includes(label);
   const selectedDetail = selected.find((row) => row.id === detail);
+  const highlights = useMemo(
+    () => consumptionAttention(allRows, selected, attentionLimits),
+    [allRows, selected, attentionLimits],
+  );
   useEffect(() => {
     if (selectedDetail) sourceAnchor.current?.scrollIntoView({ block: 'nearest' });
   }, [detail]);
@@ -245,6 +261,32 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
         definitions={consumptionLayoutDefinitions}
         activeIds={visibleSections}
         scope={`Consumo M2M · ${categories.find(([key]) => key === category)[1]}`}
+        savedView={{
+          scopeKey: `consumption:${category}`,
+          state: {
+            filters: { ...filters, periods },
+            search,
+            rankMeasure,
+            queueView,
+            attentionLimits,
+          },
+          validate: (view) =>
+            Object.entries(view.filters?.periods || {}).some(
+              ([operator, key]) =>
+                !periodOptions(statements, operator).some((option) => option.key === key),
+            )
+              ? 'Uma apuração desta visão não está disponível. Importe a fonte ou atualize a visão antes de aplicar.'
+              : '',
+          onApply: (view) => {
+            setFilters(view.filters || {});
+            setSearch(view.search || '');
+            setDetail(null);
+            setRankMeasure(view.rankMeasure || 'daily');
+            setQueueView(view.queueView || 'eligible');
+            setExpansion(null);
+            setAttentionLimits(view.attentionLimits || defaultConsumptionAttention);
+          },
+        }}
       >
         <ExpansionContext.Provider value={expansion}>
           <PrintContext.Provider
@@ -391,6 +433,53 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                     Confira a apuração, os filtros e a busca. Os arquivos e as anotações do
                     histórico permanecem guardados.
                   </ViewState>
+                )}
+                {category === 'overview' && ready && !!statements.length && (
+                  <AttentionPanel
+                    scope="Consumo · apurações e filtros atuais"
+                    findings={highlights.findings}
+                    coverage={highlights.coverage}
+                    onInspect={(finding) => {
+                      setCategory('investigation');
+                      followLine(finding.row);
+                    }}
+                  >
+                    <label>
+                      Aumento mínimo de MB/dia (%)
+                      <input
+                        type="number"
+                        min="1"
+                        max="10000"
+                        aria-label="Aumento mínimo de consumo (%)"
+                        value={attentionLimits.increase}
+                        onChange={(e) => {
+                          const n = e.target.valueAsNumber;
+                          if (Number.isFinite(n) && n >= 1 && n <= 10000)
+                            setAttentionLimits((old) => ({ ...old, increase: n }));
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Consumo mínimo atual (MB/dia)
+                      <input
+                        type="number"
+                        min="0"
+                        max="1000000"
+                        aria-label="Consumo mínimo atual em MB por dia"
+                        value={attentionLimits.minimumDailyMB}
+                        onChange={(e) => {
+                          const n = e.target.valueAsNumber;
+                          if (Number.isFinite(n) && n >= 0 && n <= 1000000)
+                            setAttentionLimits((old) => ({ ...old, minimumDailyMB: n }));
+                        }}
+                      />
+                    </label>
+                    <p className="scope">
+                      A referência é a apuração anterior mais recente e não sobreposta do mesmo
+                      chip/operadora. O histórico de referência não recebe os filtros de
+                      cliente/plano da apuração atual. Referência zero não gera percentual.
+                    </p>
+                  </AttentionPanel>
                 )}
                 <ConsumptionOverviewPanels
                   shown={shown}

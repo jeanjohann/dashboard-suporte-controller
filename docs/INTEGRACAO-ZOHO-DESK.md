@@ -120,3 +120,9 @@ Webhooks são uma alternativa posterior para receber novas respostas com menor a
 - [Configuração oficial de Time Tracking](https://help.zoho.com/portal/en/kb/desk/ticket-management/time-tracking/articles/setting-up-time-tracking-and-billing-preferences-in-tickets): modos manual/automático, ações registradas e possibilidade de timers simultâneos. A documentação de webhooks também descreve inclusão, edição e exclusão de Time Entries.
 - [Relatório oficial de disponibilidade](https://help.zoho.com/portal/en/kb/desk/reports-and-dashboards/reports/articles/understanding-agent-availability-report): sessões, horas, critérios de entrada/saída, visões e exportação.
 - [Timeout de inatividade](https://help.zoho.com/portal/en/kb/desk/customization/general-settings/articles/configuring-idle-timeout-for-agents): configuração que afeta a disponibilidade registrada.
+
+## Contagem confirmada e pendências — 0.42.0
+
+Cards, gráfico e tabela usam os chamados/respostas já confirmados, identificando o total como parcial quando houver pendências. As contagens finais continuam indisponíveis enquanto há incerteza; não foram convertidas em zero. O quadro de motivos discrimina as interações aguardando confirmação e os chamados afetados. Um mesmo chamado pode aparecer nos grupos confirmado e pendente: não somá-los. Motivos também podem se sobrepor na mesma interação.
+
+Conferência manual das candidatas continua explícita e vale apenas para a sessão/coleta atual. Interações sem data identificada não são confirmadas por essa marcação. Tempo apontado e denominadores dos indicadores de tempo permanecem independentes. Visões favoritas de OS não restauram credenciais, coleta, período ou confirmação do Zoho.

@@ -18,6 +18,7 @@ import { useGoogleOrders } from '../hooks/useGoogleOrders.js';
 import { OrdersGooglePanel } from './OrdersGooglePanel.jsx';
 import { ZohoSessionProvider, useZohoSession } from '../hooks/ZohoSession.jsx';
 import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
+import { defaultOrderAttention } from '../domain/orderAttention.js';
 // Identidade estável para conservar o estado dos relatórios após a primeira importação.
 const OrdersReports = lazy(() =>
   import('./OrdersReports.jsx').then((module) => ({ default: module.OrdersReports })),
@@ -38,6 +39,8 @@ function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
   const [expansion, setExpansion] = useState(null);
   const { open: zohoOpen, setOpen: setZohoOpen } = useZohoSession();
   const [category, setCategory] = useState('overview');
+  const [presentations, setPresentations] = useState({});
+  const [attentionLimits, setAttentionLimits] = useState(defaultOrderAttention);
   const layout = usePageLayout('orders', legacyOrderLayout);
   const preferences = cleanPreferences(
     Object.fromEntries(Object.entries(layout.effective).map(([id, item]) => [id, item.visible])),
@@ -86,6 +89,39 @@ function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
         definitions={orderLayoutDefinitions}
         activeIds={category === 'overview' ? [] : menu.sections}
         scope={`Ordens de Serviço · ${menu.label}`}
+        savedView={{
+          scopeKey: `orders:${category}`,
+          schema: data
+            ? JSON.stringify(data.columns.map(({ label, index }) => [index, label]))
+            : '',
+          allowRelativePeriod: true,
+          state: {
+            filters,
+            search: records.search,
+            extraColumns,
+            customerGrouping: session.customerGrouping,
+            consolidateIdenticalNames: session.consolidateIdenticalNames,
+            referenceDate,
+            cycleState: session.cycleState,
+            attentionLimits,
+            presentations: category === 'overview' ? presentations : {},
+          },
+          onApply: (view) => {
+            setFilters(view.filters || {});
+            setSearch(view.search || '');
+            setExtraColumns(view.extraColumns || []);
+            setPage(0);
+            session.setCustomerGrouping(view.customerGrouping || 'consolidated');
+            session.setConsolidateIdenticalNames(view.consolidateIdenticalNames !== false);
+            if (view.referenceDate) session.setReferenceDate(view.referenceDate);
+            session.setCycleState(view.cycleState || 'Todos');
+            setExpansion(null);
+            if (category === 'overview') {
+              setPresentations(view.presentations || {});
+              setAttentionLimits(view.attentionLimits || defaultOrderAttention);
+            }
+          },
+        }}
       >
         <ExpansionContext.Provider value={expansion}>
           <PrintContext.Provider
@@ -164,6 +200,10 @@ function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
                         visible={visible}
                         onPage={onPage}
                         onCategory={changeCategory}
+                        presentations={presentations}
+                        setPresentations={setPresentations}
+                        attentionLimits={attentionLimits}
+                        setAttentionLimits={setAttentionLimits}
                       />
                     </Suspense>
                   </>
