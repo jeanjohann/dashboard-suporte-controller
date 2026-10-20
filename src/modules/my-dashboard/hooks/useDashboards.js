@@ -2,12 +2,21 @@ import { useEffect, useState } from 'react';
 import { localId } from '../../../shared/data/localId.js';
 import { emptyDashboardDocument } from '../domain/layout.js';
 import { dashboardRepository } from '../data/dashboardRepository.js';
+import { appendDashboards, copyDashboard } from '../domain/boardActions.js';
 
 const freshBoard = (name = 'Meu primeiro painel') => ({ id: localId(), name, widgets: [] });
 /** Edição em memória, gravação explícita e cópia anterior intacta se o navegador falhar. */
 export function useDashboards(owner, repository = dashboardRepository) {
   const [document, setDocument] = useState(emptyDashboardDocument);
-  const [draft, setDraft] = useState(() => freshBoard());
+  const [edition, setEdition] = useState(() => ({ draft: freshBoard(), past: [] }));
+  const { draft, past } = edition;
+  const resetDraft = (next) => setEdition({ draft: next, past: [] });
+  const setDraft = (update) =>
+    setEdition((old) => {
+      const next = typeof update === 'function' ? update(old.draft) : update;
+      if (JSON.stringify(next) === JSON.stringify(old.draft)) return old;
+      return { draft: next, past: [...old.past, old.draft].slice(-30) };
+    });
   const [ready, setReady] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
@@ -19,7 +28,7 @@ export function useDashboards(owner, repository = dashboardRepository) {
       .then((next) => {
         if (!cancelled) {
           setDocument(next);
-          setDraft(next.dashboards[0] || freshBoard());
+          resetDraft(next.dashboards[0] || freshBoard());
           setReady(true);
         }
       })
@@ -61,36 +70,83 @@ export function useDashboards(owner, repository = dashboardRepository) {
     message,
     dirty,
     saved,
+    canUndo: past.length > 0,
+    undo() {
+      setEdition((old) =>
+        old.past.length
+          ? {
+              draft: old.past.at(-1),
+              past: old.past.slice(0, -1),
+            }
+          : old,
+      );
+    },
+    reportError(value) {
+      setError(value);
+      setMessage('');
+    },
+    notify(value) {
+      setMessage(value);
+      setError('');
+    },
     async save() {
-      return commit({
-        ...document,
-        dashboards: saved
-          ? document.dashboards.map((board) => (board.id === draft.id ? draft : board))
-          : [...document.dashboards, draft],
-      });
+      return commit(
+        {
+          ...document,
+          dashboards: saved
+            ? document.dashboards.map((board) => (board.id === draft.id ? draft : board))
+            : [...document.dashboards, draft],
+        },
+        () => setEdition((old) => ({ ...old, past: [] })),
+      );
     },
     newBoard() {
-      setDraft(freshBoard('Novo painel'));
+      resetDraft(freshBoard('Novo painel'));
       setMessage('');
       setError('');
     },
     open(id) {
       const board = document.dashboards.find((row) => row.id === id);
       if (board) {
-        setDraft(board);
+        resetDraft(board);
         setMessage('');
       }
     },
     discard() {
-      setDraft(saved || freshBoard());
+      resetDraft(saved || freshBoard());
       setMessage('Alterações descartadas.');
     },
     async remove() {
       return commit(
         { ...document, dashboards: document.dashboards.filter((row) => row.id !== draft.id) },
-        (next) => setDraft(next.dashboards[0] || freshBoard()),
+        (next) => resetDraft(next.dashboards[0] || freshBoard()),
         'Painel excluído dos salvos neste navegador.',
       );
+    },
+    duplicate() {
+      if (document.dashboards.length >= 12) return setError('Limite de 12 painéis atingido.');
+      resetDraft(
+        copyDashboard(
+          draft,
+          document.dashboards.map((b) => b.name),
+          localId,
+        ),
+      );
+      setMessage('Cópia criada a partir da edição atual. Salve para guardar o novo painel.');
+      setError('');
+    },
+    async importBoards(boards, user) {
+      try {
+        const next = appendDashboards(document, boards, user, localId);
+        return commit(
+          next,
+          (result) => resetDraft(result.dashboards[document.dashboards.length]),
+          'Backup importado como novas cópias. Os painéis anteriores foram preservados.',
+        );
+      } catch (error) {
+        setError(error.message);
+        return false;
+      }
     },
     async reload() {
       setBusy(true);

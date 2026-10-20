@@ -1,16 +1,34 @@
 # Meu Dashboard
 
-Entregue em **0.44.0, 20/10/2026**. Página própria no menu para montar painéis com indicadores dos módulos existentes. Começa em branco; o catálogo oferece 55 indicadores, conforme as permissões do usuário.
+Entregue em **0.44.0** e ampliado em **0.45.0, 20/10/2026**. Página própria no menu para montar painéis com indicadores dos módulos existentes. Começa em branco; o catálogo oferece 55 indicadores, conforme as permissões do usuário.
 
 ## Como usar
 
 1. Carregar ou atualizar as bases nos módulos de origem. A página não dispara consultas nem importa arquivos automaticamente.
 2. Abrir **Meu Dashboard → Adicionar indicador**. Buscar uma informação ou filtrar o catálogo por módulo.
 3. Escolher título, apresentação, tamanho e recorte do bloco. Indicadores individuais admitem cartão/tabela; séries admitem gráfico de barras/tabela.
-4. Organizar pelas setas de cada bloco e escolher tamanho pequeno, médio ou largura total. A grade se adapta à largura da tela.
+4. Ativar **Organizar painel**. Arrastar pelo símbolo ⠿ ou usar as setas; puxar o canto ◢ para ajustar largura e altura. O editor também permite tamanho pequeno, médio ou largura total e altura automática ou entre 320 e 960 px. A grade se adapta à largura da tela.
 5. Nomear e clicar em **Salvar painel**. Usar **Novo painel** para outra composição e **Abrir painel salvo** para alternar. Há até 12 painéis com 40 blocos cada.
 
 O usuário pode editar ou remover blocos, renomear, descartar alterações e excluir um painel. A troca de painel com edição pendente pede descarte explícito. Remover um bloco só se torna definitivo ao salvar; excluir um painel exige confirmação na interface.
+
+## Organização e apresentação — 0.45.0
+
+Fora do modo Organizar, os controles de edição dos blocos ficam ocultos. O arraste encaixa a ordem na grade e o redimensionamento usa as três larguras; no celular, os blocos continuam em uma coluna. Um gesto altera o rascunho somente ao soltar; Escape cancela. O botão Desfazer reverte até 30 alterações desde a abertura ou último salvamento. Salvar, abrir outro painel, descartar ou criar uma cópia inicia uma nova sequência de edição.
+
+Duplicar um bloco copia seus filtros, formato e tamanho com identidade independente. **Duplicar painel** cria uma cópia da edição atual, sem substituir o original; é necessário salvar o novo painel. Permanecem os limites de 12 painéis e 40 blocos por painel.
+
+**Apresentar** oculta menu, configuração e ações de edição, preservando valores, filtros, fonte, horário e critérios de cada bloco. Mostra a edição atual e indica quando não está salva. **Tela cheia** é opcional, conforme suporte/permissão do navegador; a apresentação funciona na própria janela. Sair da apresentação retorna à edição sem modificar sua configuração. Escape também permite sair; o navegador pode consumir o primeiro Escape para abandonar a tela cheia.
+
+**Imprimir / Salvar PDF** usa o diálogo do navegador, respeitando a permissão de exportação. Inclui título, horário de Brasília, condição de rascunho e critérios expandidos. Tabelas imprimem todas as linhas do resultado, mesmo quando paginadas na tela; gráficos mantêm o limite indicado de 20 itens. A altura fixa e a rolagem não cortam as tabelas na impressão. Ajustar papel/orientação/escala no diálogo quando necessário. Não gera nem envia PDF automaticamente.
+
+## Backup das configurações — 0.45.0
+
+**Exportar painéis salvos** baixa JSON com títulos, ordem, dimensões, indicadores e filtros de todos os painéis salvos. Alterações não salvas ficam fora do arquivo. Não contém fontes, resultados, credenciais ou identidade; títulos e filtros podem conter nomes que o usuário configurou.
+
+Para transportar a organização, importar o JSON no outro navegador/computador. A prévia informa os painéis antes de confirmar. A importação é aditiva: novos IDs, nomes repetidos diferenciados e nenhuma substituição dos painéis existentes. O lote inteiro deve caber no limite de 12; falhas de validação, permissão ou revisão não gravam uma parte do lote. Salvar ou descartar a edição atual antes de importar. Recarregar as bases nos módulos de origem para preencher os blocos.
+
+Backup e impressão respeitam exportação; a importação exige a permissão correspondente e acesso a todos os módulos presentes no arquivo. O repositório continua local ao usuário/origem e protege gravações concorrentes. Não há sincronização automática entre computadores.
 
 ## Catálogo e critérios
 

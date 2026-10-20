@@ -125,6 +125,23 @@ export function WidgetEditor({ metricId, widget, sources, user, onClose, onApply
             </select>
           </label>
         </div>
+        <label className="md-height-field">
+          Altura do bloco (px; vazio = automática)
+          <input
+            type="number"
+            min="320"
+            max="960"
+            step="20"
+            value={draft.height ?? ''}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDraft((old) => {
+                const { height, ...rest } = old;
+                return value === '' ? rest : { ...rest, height: Number(value) };
+              });
+            }}
+          />
+        </label>
         <fieldset>
           <legend>Recorte deste bloco</legend>
           <div className="md-form-grid">

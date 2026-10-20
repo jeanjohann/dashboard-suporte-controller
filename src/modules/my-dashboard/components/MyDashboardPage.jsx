@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { Icon } from '../../../components/Icon.jsx';
@@ -6,6 +6,13 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { useDashboardSources } from '../hooks/DashboardSources.jsx';
 import { useDashboards } from '../hooks/useDashboards.js';
 import { moveWidget } from '../domain/layout.js';
+import { copyWidget, dashboardBackup, readDashboardBackup } from '../domain/boardActions.js';
+import { localId } from '../../../shared/data/localId.js';
+import { allowsAction } from '../../../shared/security/permissions.js';
+import { authorizeAction, accessUser } from '../../../shared/security/accessClient.js';
+import { download } from '../../../shared/export/exports.js';
+import { useDashboardArrangement } from '../hooks/useDashboardArrangement.js';
+import { useDashboardPresentation } from '../hooks/useDashboardPresentation.js';
 import { DashboardCatalog } from './DashboardCatalog.jsx';
 import { WidgetEditor } from './WidgetEditor.jsx';
 import { DashboardWidget } from './DashboardWidget.jsx';
@@ -19,9 +26,60 @@ export function MyDashboardPage({ onPage, repository }) {
     { draft, setDraft } = state;
   const [catalog, setCatalog] = useState(false),
     [editor, setEditor] = useState(null),
-    [pending, setPending] = useState(null);
+    [pending, setPending] = useState(null),
+    [organizing, setOrganizing] = useState(false),
+    [reading, setReading] = useState(false);
+  const pageRoot = useRef(null),
+    fileInput = useRef(null);
+  const presentation = useDashboardPresentation(pageRoot);
+  const working = state.busy || reading;
   const available = Object.values(sources).filter(Boolean).length;
   const editWidgets = (update) => setDraft((old) => ({ ...old, widgets: update(old.widgets) }));
+  const arrangement = useDashboardArrangement({
+    enabled: organizing && !working && !presentation.presenting,
+    widgets: draft.widgets,
+    onChange: (widgets) => editWidgets(() => widgets),
+  });
+  async function exportBackup() {
+    setReading(true);
+    try {
+      if (!(await authorizeAction('export')) || !pageRoot.current) return;
+      await download(
+        dashboardBackup(state.document, accessUser() || user),
+        'application/json',
+        'addlog-meus-dashboards.json',
+      );
+      state.notify(
+        'Backup dos painéis salvos exportado. Alterações ainda não salvas não entram no arquivo.',
+      );
+    } catch (error) {
+      state.reportError(error.message);
+    } finally {
+      setReading(false);
+    }
+  }
+  async function chooseBackup(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setReading(true);
+    try {
+      if (state.dirty) throw Error('Salve ou descarte a edição atual antes de importar um backup.');
+      if (!(await authorizeAction('import')) || !pageRoot.current) return;
+      if (file.size > 4000000) throw Error('O arquivo de backup excede o limite de 4 MB.');
+      const boards = readDashboardBackup(await file.text(), accessUser() || user);
+      if (state.document.dashboards.length + boards.length > 12)
+        throw Error('O backup ultrapassaria o limite de 12 painéis. Nenhum painel foi alterado.');
+      if (pageRoot.current) setPending({ kind: 'import', boards });
+    } catch (error) {
+      state.reportError(error.message);
+    } finally {
+      setReading(false);
+    }
+  }
+  async function printPanel() {
+    if (await authorizeAction('export')) presentation.print();
+  }
   function request(action) {
     if (state.dirty) setPending({ kind: 'switch', action });
     else action();
@@ -31,12 +89,47 @@ export function MyDashboardPage({ onPage, repository }) {
       editor.widget ? rows.map((row) => (row.id === widget.id ? widget : row)) : [...rows, widget],
     );
     setEditor(null);
+    setOrganizing(true);
   }
   return (
     <SidePanelProvider>
-      <div className="app my-dashboard-page">
+      <div
+        ref={pageRoot}
+        className={`app my-dashboard-page ${presentation.presenting ? 'md-presenting' : ''} ${organizing && !presentation.presenting ? 'md-organizing' : ''}`}
+      >
         <Navigation page="my-dashboard" onPage={onPage} />
         <main>
+          {presentation.presenting && (
+            <header className="md-presentation-toolbar">
+              <div>
+                <span className="md-eyebrow">APRESENTAÇÃO</span>
+                <h1>{draft.name}</h1>
+                <p>
+                  {state.dirty || !state.saved
+                    ? 'Prévia da edição atual · ainda não salva'
+                    : 'Painel salvo'}{' '}
+                  · Esc para sair
+                </p>
+              </div>
+              <div>
+                <button onClick={presentation.fullscreen}>Tela cheia</button>
+                <button onClick={printPanel} disabled={!allowsAction(user, 'export')}>
+                  Imprimir / Salvar PDF
+                </button>
+                <button onClick={presentation.exit}>Sair da apresentação</button>
+              </div>
+            </header>
+          )}
+          <div className="md-print-header">
+            <h1>{draft.name}</h1>
+            <p>
+              Meu Dashboard ·{' '}
+              <time data-dashboard-print-time>
+                {new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}
+              </time>{' '}
+              (Brasília) · {state.dirty || !state.saved ? 'Edição não salva' : 'Painel salvo'}
+            </p>
+          </div>
           <SidebarContent>
             <div className="md-sidebar-note">
               Seu espaço de acompanhamento. Escolha os indicadores que importam para você.
@@ -48,13 +141,35 @@ export function MyDashboardPage({ onPage, repository }) {
               <h1>Meu Dashboard</h1>
               <p>As informações que você precisa, do seu jeito.</p>
             </div>
-            <button
-              className="md-primary md-add-button"
-              onClick={() => setCatalog(true)}
-              disabled={draft.widgets.length >= 40 || state.busy || !state.ready}
-            >
-              <span aria-hidden="true">＋</span> Adicionar indicador
-            </button>
+            <div className="md-page-actions">
+              <button
+                className={organizing ? 'md-primary' : ''}
+                onClick={() => {
+                  arrangement.cancel();
+                  setOrganizing(!organizing);
+                }}
+                aria-pressed={organizing}
+                disabled={working || !state.ready}
+              >
+                {organizing ? 'Concluir organização' : 'Organizar painel'}
+              </button>
+              <button
+                onClick={() => {
+                  arrangement.cancel();
+                  presentation.enter();
+                }}
+                disabled={!draft.widgets.length || working}
+              >
+                Apresentar
+              </button>
+              <button
+                className="md-primary md-add-button"
+                onClick={() => setCatalog(true)}
+                disabled={draft.widgets.length >= 40 || working || !state.ready}
+              >
+                <span aria-hidden="true">＋</span> Adicionar indicador
+              </button>
+            </div>
           </header>
           <section className="md-board-controls" aria-label="Configurações do dashboard">
             <div className="md-board-name">
@@ -64,7 +179,7 @@ export function MyDashboardPage({ onPage, repository }) {
                   value={draft.name}
                   maxLength={60}
                   onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-                  disabled={state.busy || !state.ready}
+                  disabled={working || !state.ready}
                 />
               </label>
               <span className={`md-save-status ${state.dirty ? 'md-unsaved' : ''}`}>
@@ -81,27 +196,36 @@ export function MyDashboardPage({ onPage, repository }) {
               <button
                 onClick={() => state.save()}
                 className="md-primary"
-                disabled={!state.ready || state.busy}
+                disabled={!state.ready || working}
               >
                 {state.busy ? 'Aguarde…' : 'Salvar painel'}
               </button>
               <button
                 onClick={() => request(() => state.newBoard())}
-                disabled={state.busy || !state.ready || state.document.dashboards.length >= 12}
+                disabled={working || !state.ready || state.document.dashboards.length >= 12}
               >
                 Novo painel
               </button>
               <button
                 onClick={() => setPending({ kind: 'discard', action: state.discard })}
-                disabled={!state.dirty || state.busy}
+                disabled={!state.dirty || working}
               >
                 Descartar edição
               </button>
               <button
                 onClick={() => setPending({ kind: 'delete', action: () => state.remove() })}
-                disabled={!state.saved || state.busy}
+                disabled={!state.saved || working}
               >
                 Excluir painel
+              </button>
+              <button
+                onClick={state.duplicate}
+                disabled={working || !state.ready || state.document.dashboards.length >= 12}
+              >
+                Duplicar painel
+              </button>
+              <button onClick={state.undo} disabled={working || !state.canUndo}>
+                Desfazer
               </button>
             </div>
             <label className="md-saved-select">
@@ -112,7 +236,7 @@ export function MyDashboardPage({ onPage, repository }) {
                   const id = e.target.value;
                   if (id) request(() => state.open(id));
                 }}
-                disabled={!state.ready || state.busy}
+                disabled={!state.ready || working}
               >
                 <option value="" disabled>
                   Selecione um painel
@@ -125,10 +249,51 @@ export function MyDashboardPage({ onPage, repository }) {
               </select>
             </label>
           </section>
+          <div className="md-backup-actions">
+            <button
+              onClick={exportBackup}
+              disabled={
+                working ||
+                !state.ready ||
+                !state.document.dashboards.length ||
+                !allowsAction(user, 'export')
+              }
+            >
+              Exportar painéis salvos
+            </button>
+            <button
+              onClick={() => fileInput.current?.click()}
+              disabled={working || !state.ready || state.dirty || !allowsAction(user, 'import')}
+              title={
+                state.dirty
+                  ? 'Salve ou descarte a edição antes de importar'
+                  : 'Importar configurações como novas cópias'
+              }
+            >
+              Importar backup
+            </button>
+            <input
+              ref={fileInput}
+              type="file"
+              accept=".json,application/json"
+              className="sr-only"
+              aria-label="Arquivo de backup dos dashboards"
+              onChange={chooseBackup}
+            />
+            <span>
+              Backup de configurações e filtros. As planilhas são carregadas separadamente.
+            </span>
+          </div>
+          {organizing && (
+            <p className="md-arrangement-help">
+              Arraste pelo símbolo ⠿ para mover; pelo canto ◢ para ajustar tamanho. As setas também
+              movem os blocos. Use Desfazer para reverter e Salvar painel para guardar.
+            </p>
+          )}
           {state.error && (
             <div className="md-error" role="alert">
               <p>{state.error}</p>
-              <button disabled={state.busy} onClick={() => state.reload()}>
+              <button disabled={working} onClick={() => state.reload()}>
                 Recarregar painéis salvos
               </button>
             </div>
@@ -163,7 +328,7 @@ export function MyDashboardPage({ onPage, repository }) {
               <button
                 className="md-primary"
                 onClick={() => setCatalog(true)}
-                disabled={!state.ready || state.busy}
+                disabled={!state.ready || working}
               >
                 ＋ Escolher meus indicadores
               </button>
@@ -180,7 +345,7 @@ export function MyDashboardPage({ onPage, repository }) {
               </div>
             </section>
           ) : (
-            <div className="md-grid">
+            <div className="md-grid" ref={arrangement.grid} {...arrangement.handlers}>
               {draft.widgets.map((widget, index) => (
                 <DashboardWidget
                   key={widget.id}
@@ -198,6 +363,21 @@ export function MyDashboardPage({ onPage, repository }) {
                     )
                   }
                   onPage={onPage}
+                  organizing={organizing && !presentation.presenting}
+                  disabled={working}
+                  onDuplicate={() =>
+                    editWidgets((rows) =>
+                      rows.length < 40
+                        ? [
+                            ...rows.slice(0, index + 1),
+                            copyWidget(widget, localId),
+                            ...rows.slice(index + 1),
+                          ]
+                        : rows,
+                    )
+                  }
+                  onGesture={(event, kind) => arrangement.start(event, widget.id, kind)}
+                  preview={arrangement.preview}
                 />
               ))}
             </div>
@@ -231,27 +411,63 @@ export function MyDashboardPage({ onPage, repository }) {
               title={
                 pending.kind === 'delete'
                   ? 'Excluir este painel?'
-                  : pending.kind === 'discard'
-                    ? 'Descartar alterações?'
-                    : 'Há alterações não salvas'
+                  : pending.kind === 'import'
+                    ? 'Importar painéis do backup?'
+                    : pending.kind === 'discard'
+                      ? 'Descartar alterações?'
+                      : 'Há alterações não salvas'
               }
-              onClose={() => setPending(null)}
+              onClose={() => {
+                if (!working) setPending(null);
+              }}
             >
               <p>
-                {pending.kind === 'delete'
-                  ? `O painel “${state.saved?.name}” será removido dos salvos neste navegador.`
-                  : 'As alterações desta edição serão descartadas. Você pode voltar e salvar o painel antes de continuar.'}
+                {pending.kind === 'import'
+                  ? `${pending.boards.length} painel(is) serão adicionados como novas cópias. Nomes repetidos serão diferenciados; os painéis existentes não serão substituídos. As fontes não estão no backup.`
+                  : pending.kind === 'delete'
+                    ? `O painel “${state.saved?.name}” será removido dos salvos neste navegador.`
+                    : 'As alterações desta edição serão descartadas. Você pode voltar e salvar o painel antes de continuar.'}
               </p>
+              {pending.kind === 'import' && (
+                <ul>
+                  {pending.boards.map((board) => (
+                    <li key={board.id}>
+                      {board.name} · {board.widgets.length} blocos
+                    </li>
+                  ))}
+                </ul>
+              )}
               <footer>
-                <button onClick={() => setPending(null)}>Voltar</button>
+                <button disabled={working} onClick={() => setPending(null)}>
+                  Voltar
+                </button>
                 <button
                   className="md-primary"
-                  onClick={() => {
-                    pending.action();
-                    setPending(null);
+                  disabled={working}
+                  onClick={async () => {
+                    if (pending.kind === 'import') {
+                      setReading(true);
+                      try {
+                        if ((await authorizeAction('import')) && pageRoot.current) {
+                          await state.importBoards(pending.boards, accessUser() || user);
+                          setPending(null);
+                        }
+                      } catch (error) {
+                        state.reportError(error.message);
+                      } finally {
+                        setReading(false);
+                      }
+                    } else {
+                      pending.action();
+                      setPending(null);
+                    }
                   }}
                 >
-                  {pending.kind === 'delete' ? 'Excluir painel' : 'Descartar e continuar'}
+                  {pending.kind === 'import'
+                    ? 'Adicionar cópias'
+                    : pending.kind === 'delete'
+                      ? 'Excluir painel'
+                      : 'Descartar e continuar'}
                 </button>
               </footer>
             </DashboardDialog>

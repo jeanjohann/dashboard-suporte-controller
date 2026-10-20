@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Organização e apresentação do Meu Dashboard — 0.45.0
+
+`domain/boardActions.js` reúne reordenação por destino, dimensões limitadas, cópias e backup estrito de configurações. O contrato v1 admite altura opcional, preservando layouts anteriores. `useDashboards` mantém histórico limitado do rascunho e confirma importação aditiva pelo mesmo repositório com revisão. `useDashboardArrangement` trata Pointer Events e confirma um único ajuste por gesto; cancelamento não altera o documento. `useDashboardPresentation` controla leitura/tela cheia e impressão, restaurando a abertura dos critérios depois de imprimir. Não há dependência nova, mudança nos cálculos ou persistência remota.
+
 ## Meu Dashboard — 0.44.0
 
 `modules/my-dashboard/` reúne catálogo e adaptadores de avaliação em `domain/`, registro de fontes e edição em `hooks/`, repositório local transacional em `data/` e página/construtor em `components/`. `DashboardSourcesProvider` envolve o Workspace e remonta a sessão quando identidade ou permissões mudam. Workspace publica OS/Operacional/Logística; sessões dos módulos publicam Zoho, Consumo e Monitoramento com referências estáveis. Nenhuma leitura externa é disparada pelo painel. O avaliador confere permissões antes de ler a fonte e reutiliza os domínios dos módulos. A página é carregada sob demanda. IndexedDB separado guarda somente configuração validada por identidade, com revisão concorrente. Não utiliza nem ativa o futuro banco de negócio. [Uso, critérios e limites](MEU-DASHBOARD.md).

@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.45.0 — 20/10/2026
+
+- Acrescenta modo Organizar no Meu Dashboard: mover por arraste, toque/caneta ou setas, ajustar largura/altura e desfazer até 30 alterações da edição. Cada gesto é confirmado ao soltar; Escape cancela o gesto. Salvar painel continua explícito.
+- Permite duplicar blocos e criar uma cópia da edição atual como novo painel, com IDs independentes e nomes diferenciados.
+- Exporta configurações dos painéis salvos e importa JSON validado como novas cópias, com prévia, permissões, limites e revisão transacional. Não transporta planilhas, valores calculados, credenciais ou identidade. Configurações antigas sem altura continuam válidas.
+- Adiciona apresentação sem menu/controles de edição, tela cheia opcional, saída por botão/Escape e impressão/PDF com título, contexto, critérios e todas as linhas das tabelas do recorte. Demonstração e indisponibilidade permanecem identificadas.
+
 ## 0.44.0 — 20/10/2026
 
 - Entrega **Meu Dashboard**: página em branco com catálogo pesquisável de 55 indicadores de OS, Zoho, Consumo M2M, Operacional, Parque, Logística e Monitoramento, conforme permissões existentes.

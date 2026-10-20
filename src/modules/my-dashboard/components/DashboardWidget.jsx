@@ -18,9 +18,17 @@ function ValuesTable({ rows, unit }) {
               <th scope="col">Valor</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="md-screen-rows">
             {rows.slice(current * 10, current * 10 + 10).map((row, index) => (
               <tr key={`${row.label}:${index}`}>
+                <th scope="row">{row.label}</th>
+                <td>{formatMetric(row.value, unit)}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tbody className="md-print-rows">
+            {rows.map((row, index) => (
+              <tr key={index}>
                 <th scope="row">{row.label}</th>
                 <td>{formatMetric(row.value, unit)}</td>
               </tr>
@@ -103,6 +111,11 @@ export function DashboardWidget({
   onMove,
   onResize,
   onPage,
+  organizing = false,
+  disabled = false,
+  onDuplicate,
+  onGesture,
+  preview,
 }) {
   const metric = dashboardMetric(widget.metric);
   const result = useMemo(
@@ -110,9 +123,13 @@ export function DashboardWidget({
     [widget, sources, user],
   );
   const restricted = result.status === 'restricted';
+  const dimensions = preview?.kind === 'resize' && preview.id === widget.id ? preview : widget;
+  const target = preview?.target === widget.id && preview.id !== widget.id;
   return (
     <article
-      className={`md-widget md-size-${widget.size} md-module-${metric?.module}`}
+      className={`md-widget md-size-${dimensions.size} md-module-${metric?.module} ${target ? (preview.after ? 'md-drop-after' : 'md-drop-before') : ''} ${preview?.id === widget.id ? 'md-gesture-active' : ''}`}
+      data-widget-id={widget.id}
+      style={dimensions.height ? { height: dimensions.height } : undefined}
       aria-label={restricted ? 'Indicador sem acesso' : widget.title}
     >
       <header>
@@ -122,94 +139,142 @@ export function DashboardWidget({
           </span>
           <h2>{restricted ? 'Indicador sem acesso' : widget.title}</h2>
         </div>
-        <div className="md-widget-actions">
-          <button
-            type="button"
-            onClick={() => onMove(-1)}
-            disabled={!index}
-            aria-label={`Mover ${widget.title} para antes`}
-            title="Mover para antes"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            onClick={() => onMove(1)}
-            disabled={index === total - 1}
-            aria-label={`Mover ${widget.title} para depois`}
-            title="Mover para depois"
-          >
-            →
-          </button>
-          <button
-            type="button"
-            onClick={onEdit}
-            disabled={restricted}
-            aria-label={`Editar ${widget.title}`}
-            title="Editar bloco"
-          >
-            ✎
-          </button>
-          <button
-            type="button"
-            onClick={onRemove}
-            aria-label={`Remover ${widget.title}`}
-            title="Remover bloco"
-          >
-            ✕
-          </button>
-        </div>
-      </header>
-      {result.status === 'ready' ? (
-        <>
-          {result.demonstration && <p className="md-demo">Demonstração · dados fictícios</p>}
-          <WidgetValue widget={widget} result={result} />
-          <div className="md-widget-meta">
-            {result.scope && (
-              <p>
-                <strong>Recorte:</strong> {result.scope}
-              </p>
-            )}
-            <p>
-              <strong>Período:</strong> {result.period}
-            </p>
-            <p>
-              <strong>Fonte:</strong> {result.source}
-            </p>
-            <p>
-              <strong>{result.updateLabel}:</strong>{' '}
-              {result.collectionLabel || timestampLabel(result.updatedAt)}
-              {!result.collectionLabel ? ' (Brasília)' : ''}
-            </p>
-            <details>
-              <summary>Critérios do indicador</summary>
-              <p>{result.note}</p>
-            </details>
+        {organizing && (
+          <div className="md-widget-actions">
+            <button
+              type="button"
+              className="md-drag-handle"
+              disabled={disabled}
+              aria-label={`Arrastar ${widget.title}`}
+              title="Arrastar; setas do teclado também movem"
+              onPointerDown={(e) => onGesture(e, 'move')}
+              onKeyDown={(e) => {
+                if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].includes(e.key)) {
+                  e.preventDefault();
+                  onMove(['ArrowLeft', 'ArrowUp'].includes(e.key) ? -1 : 1);
+                }
+              }}
+            >
+              ⠿
+            </button>
+            <button
+              type="button"
+              onClick={() => onMove(-1)}
+              disabled={disabled || !index}
+              aria-label={`Mover ${widget.title} para antes`}
+              title="Mover para antes"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => onMove(1)}
+              disabled={disabled || index === total - 1}
+              aria-label={`Mover ${widget.title} para depois`}
+              title="Mover para depois"
+            >
+              →
+            </button>
+            <button
+              type="button"
+              onClick={onEdit}
+              disabled={disabled || restricted}
+              aria-label={`Editar ${widget.title}`}
+              title="Editar bloco"
+            >
+              ✎
+            </button>
+            <button
+              type="button"
+              onClick={onDuplicate}
+              disabled={disabled || restricted || total >= 40}
+              aria-label={`Duplicar ${widget.title}`}
+              title="Duplicar bloco"
+            >
+              ⧉
+            </button>
+            <button
+              type="button"
+              onClick={onRemove}
+              disabled={disabled}
+              aria-label={`Remover ${widget.title}`}
+              title="Remover bloco"
+            >
+              ✕
+            </button>
           </div>
-        </>
-      ) : (
-        <div className="md-widget-empty">
-          <p>{result.message}</p>
-        </div>
-      )}
+        )}
+      </header>
+      <div className="md-widget-content">
+        {result.status === 'ready' ? (
+          <>
+            {result.demonstration && <p className="md-demo">Demonstração · dados fictícios</p>}
+            <WidgetValue widget={widget} result={result} />
+            <div className="md-widget-meta">
+              {result.scope && (
+                <p>
+                  <strong>Recorte:</strong> {result.scope}
+                </p>
+              )}
+              <p>
+                <strong>Período:</strong> {result.period}
+              </p>
+              <p>
+                <strong>Fonte:</strong> {result.source}
+              </p>
+              <p>
+                <strong>{result.updateLabel}:</strong>{' '}
+                {result.collectionLabel || timestampLabel(result.updatedAt)}
+                {!result.collectionLabel ? ' (Brasília)' : ''}
+              </p>
+              <details>
+                <summary>Critérios do indicador</summary>
+                <p>{result.note}</p>
+              </details>
+            </div>
+          </>
+        ) : (
+          <div className="md-widget-empty">
+            <p>{result.message}</p>
+          </div>
+        )}
+      </div>
       <footer>
-        <label>
-          <span className="sr-only">Tamanho de {widget.title}</span>
-          <select
-            aria-label={`Tamanho de ${widget.title}`}
-            value={widget.size}
-            onChange={(e) => onResize(e.target.value)}
-          >
-            {Object.entries(sizeLabels).map(([key, label]) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
+        {organizing && (
+          <label>
+            <span className="sr-only">Tamanho de {widget.title}</span>
+            <select
+              aria-label={`Tamanho de ${widget.title}`}
+              value={widget.size}
+              onChange={(e) => onResize(e.target.value)}
+              disabled={disabled}
+            >
+              {Object.entries(sizeLabels).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         {result.page && (
           <button type="button" className="md-source-link" onClick={() => onPage(result.page)}>
             Abrir módulo ↗
+          </button>
+        )}
+        {organizing && (
+          <button
+            type="button"
+            className="md-resize-handle"
+            disabled={disabled}
+            onPointerDown={(e) => onGesture(e, 'resize')}
+            onClick={(e) => {
+              if (e.detail === 0) onEdit();
+            }}
+            aria-label={`Redimensionar ${widget.title}`}
+            title="Arraste para ajustar largura e altura; Enter abre o editor"
+          >
+            ◢
           </button>
         )}
       </footer>

@@ -36,9 +36,9 @@ export function validateDashboardDocument(value) {
     names.add(board.name.trim().toLocaleLowerCase('pt-BR'));
     const widgets = new Set();
     for (const widget of board.widgets) {
-      const metric = dashboardMetric(widget.metric);
+      const metric = dashboardMetric(widget?.metric);
       if (
-        !keys(widget, ['id', 'metric', 'title', 'kind', 'size', 'filters']) ||
+        !keys(widget, ['id', 'metric', 'title', 'kind', 'size', 'height', 'filters']) ||
         !id(widget.id) ||
         widgets.has(widget.id) ||
         !metric ||
@@ -46,6 +46,8 @@ export function validateDashboardDocument(value) {
         widget.title.length > 100 ||
         !metric.kinds.includes(widget.kind) ||
         !['small', 'medium', 'wide'].includes(widget.size) ||
+        (widget.height !== undefined &&
+          (!Number.isInteger(widget.height) || widget.height < 320 || widget.height > 960)) ||
         !keys(widget.filters, [
           'start',
           'end',

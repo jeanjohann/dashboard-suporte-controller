@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.44.0 — [Meu Dashboard](docs/MEU-DASHBOARD.md): painéis personalizados com indicadores dos módulos, formatos, filtros e organização dos blocos. Configurações salvas por usuário neste navegador; fontes na sessão. Fechamentos/tempos do Zoho e as integrações existentes preservados, sem armazenamento remoto novo.
+**Versão:** 0.45.0 — [Meu Dashboard](docs/MEU-DASHBOARD.md): organização por arraste, largura/altura, desfazer, duplicação de blocos/painéis, backup transportável de configurações e apresentação com tela cheia e impressão/PDF. Salvamento local por usuário; fontes e critérios continuam nos módulos de origem.
 
 ## Documentação do projeto
 

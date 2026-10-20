@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Primeira rodada de evolução do **Meu Dashboard entregue em 0.45.0**: arraste/redimensionamento, modo Organizar com desfazer, duplicação, backup de configurações e apresentação/tela cheia/impressão. Seções/modelos, central de fontes, filtros de painel, comparações e detalhamento no próprio painel permanecem para as próximas rodadas. [Uso e limites](MEU-DASHBOARD.md).
+
 ## A19 — Meu Dashboard: primeira entrega concluída
 
 Incluído pelo proprietário em **20/10/2026**, com importância estratégica. **Entregue em 0.44.0**: página própria, catálogo com 55 indicadores dos sete grupos de fontes, cartões/gráficos/tabelas, filtros por bloco, tamanhos e reordenação. Até 12 painéis por usuário, salvos neste navegador com proteção de revisão concorrente. [Funcionamento e limites](MEU-DASHBOARD.md).
