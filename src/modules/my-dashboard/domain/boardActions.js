@@ -1,15 +1,18 @@
 import { validateDashboardDocument } from './layout.js';
 import { canUseDashboardModule, dashboardMetric } from './catalog.js';
+import { widgetParts } from './presentation.js';
 
 /** Reordena pelo destino, sem alterar o original nem os filtros dos blocos. */
 export function placeWidget(widgets, id, target, after = false) {
   if (id === target || !widgets.some((w) => w.id === id) || !widgets.some((w) => w.id === target))
     return widgets;
   const next = widgets.filter((w) => w.id !== id);
+  const moved = widgets.find((w) => w.id === id);
+  const section = widgets.find((w) => w.id === target)?.section || '';
   next.splice(
     next.findIndex((w) => w.id === target) + Number(after),
     0,
-    widgets.find((w) => w.id === id),
+    (moved.section || '') === section ? moved : { ...moved, section },
   );
   return next.every((w, i) => w === widgets[i]) ? widgets : next;
 }
@@ -35,20 +38,28 @@ function uniqueName(name, names, limit) {
 }
 
 export function copyWidget(widget, makeId) {
-  return { ...clone(widget), id: makeId(), title: `Cópia de ${widget.title}`.slice(0, 100) };
+  return { ...clonePart(widget, makeId), title: `Cópia de ${widget.title}`.slice(0, 100) };
+}
+
+function clonePart(widget, makeId) {
+  const next = { ...clone(widget), id: makeId() };
+  if (next.companions) next.companions = next.companions.map((w) => clonePart(w, makeId));
+  if (next.comparison) next.comparison = clonePart(next.comparison, makeId);
+  return next;
 }
 
 export function copyDashboard(board, names, makeId, label = `Cópia de ${board.name}`) {
   return {
     id: makeId(),
     name: uniqueName(label, names, 60),
-    widgets: board.widgets.map((w) => ({ ...clone(w), id: makeId() })),
+    ...(board.filters ? { filters: clone(board.filters) } : {}),
+    widgets: board.widgets.map((w) => clonePart(w, makeId)),
   };
 }
 
 function checkModules(boards, user) {
   for (const board of boards)
-    for (const widget of board.widgets)
+    for (const widget of board.widgets.flatMap(widgetParts))
       if (!canUseDashboardModule(user, dashboardMetric(widget.metric)?.module))
         throw Error('O backup contém indicadores de módulos sem permissão para este usuário.');
 }

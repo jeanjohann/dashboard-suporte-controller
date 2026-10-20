@@ -5,8 +5,14 @@ import { Icon } from '../../../components/Icon.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { useDashboardSources } from '../hooks/DashboardSources.jsx';
 import { useDashboards } from '../hooks/useDashboards.js';
-import { moveWidget } from '../domain/layout.js';
-import { copyWidget, dashboardBackup, readDashboardBackup } from '../domain/boardActions.js';
+import {
+  copyWidget,
+  dashboardBackup,
+  readDashboardBackup,
+  placeWidget,
+} from '../domain/boardActions.js';
+import { organizeSections } from '../domain/presentation.js';
+import { DashboardTemplates, DashboardSources, DashboardFilters } from './DashboardTools.jsx';
 import { localId } from '../../../shared/data/localId.js';
 import { allowsAction } from '../../../shared/security/permissions.js';
 import { authorizeAction, accessUser } from '../../../shared/security/accessClient.js';
@@ -28,13 +34,15 @@ export function MyDashboardPage({ onPage, repository }) {
     [editor, setEditor] = useState(null),
     [pending, setPending] = useState(null),
     [organizing, setOrganizing] = useState(false),
-    [reading, setReading] = useState(false);
+    [reading, setReading] = useState(false),
+    [tool, setTool] = useState(null);
   const pageRoot = useRef(null),
     fileInput = useRef(null);
   const presentation = useDashboardPresentation(pageRoot);
   const working = state.busy || reading;
   const available = Object.values(sources).filter(Boolean).length;
-  const editWidgets = (update) => setDraft((old) => ({ ...old, widgets: update(old.widgets) }));
+  const editWidgets = (update) =>
+    setDraft((old) => ({ ...old, widgets: organizeSections(update(old.widgets)) }));
   const arrangement = useDashboardArrangement({
     enabled: organizing && !working && !presentation.presenting,
     widgets: draft.widgets,
@@ -251,6 +259,16 @@ export function MyDashboardPage({ onPage, repository }) {
           </section>
           <div className="md-backup-actions">
             <button
+              type="button"
+              disabled={working || !state.ready || state.document.dashboards.length >= 12}
+              onClick={() => setTool('templates')}
+            >
+              Usar modelo
+            </button>
+            <button type="button" onClick={() => setTool('sources')}>
+              Fontes de dados
+            </button>
+            <button
               onClick={exportBackup}
               disabled={
                 working ||
@@ -284,6 +302,12 @@ export function MyDashboardPage({ onPage, repository }) {
               Backup de configurações e filtros. As planilhas são carregadas separadamente.
             </span>
           </div>
+          <DashboardFilters
+            filters={draft.filters}
+            widgets={draft.widgets}
+            disabled={working || !state.ready}
+            onChange={(filters) => setDraft((old) => ({ ...old, filters }))}
+          />
           {organizing && (
             <p className="md-arrangement-help">
               Arraste pelo símbolo ⠿ para mover; pelo canto ◢ para ajustar tamanho. As setas também
@@ -347,45 +371,76 @@ export function MyDashboardPage({ onPage, repository }) {
           ) : (
             <div className="md-grid" ref={arrangement.grid} {...arrangement.handlers}>
               {draft.widgets.map((widget, index) => (
-                <DashboardWidget
-                  key={widget.id}
-                  widget={widget}
-                  index={index}
-                  total={draft.widgets.length}
-                  sources={sources}
-                  user={user}
-                  onEdit={() => setEditor({ widget })}
-                  onRemove={() => editWidgets((rows) => rows.filter((row) => row.id !== widget.id))}
-                  onMove={(step) => editWidgets((rows) => moveWidget(rows, widget.id, step))}
-                  onResize={(size) =>
-                    editWidgets((rows) =>
-                      rows.map((row) => (row.id === widget.id ? { ...row, size } : row)),
-                    )
-                  }
-                  onPage={onPage}
-                  organizing={organizing && !presentation.presenting}
-                  disabled={working}
-                  onDuplicate={() =>
-                    editWidgets((rows) =>
-                      rows.length < 40
-                        ? [
-                            ...rows.slice(0, index + 1),
-                            copyWidget(widget, localId),
-                            ...rows.slice(index + 1),
-                          ]
-                        : rows,
-                    )
-                  }
-                  onGesture={(event, kind) => arrangement.start(event, widget.id, kind)}
-                  preview={arrangement.preview}
-                />
+                <React.Fragment key={widget.id}>
+                  {widget.section && widget.section !== draft.widgets[index - 1]?.section && (
+                    <h2 className="md-section-title">{widget.section}</h2>
+                  )}
+                  <DashboardWidget
+                    key={widget.id}
+                    widget={widget}
+                    index={index}
+                    total={draft.widgets.length}
+                    sources={sources}
+                    user={user}
+                    boardFilters={draft.filters}
+                    onEdit={() => setEditor({ widget })}
+                    onRemove={() =>
+                      editWidgets((rows) => rows.filter((row) => row.id !== widget.id))
+                    }
+                    onMove={(step) =>
+                      editWidgets((rows) =>
+                        placeWidget(rows, widget.id, rows[index + step]?.id, step > 0),
+                      )
+                    }
+                    onResize={(size) =>
+                      editWidgets((rows) =>
+                        rows.map((row) => (row.id === widget.id ? { ...row, size } : row)),
+                      )
+                    }
+                    onPage={onPage}
+                    organizing={organizing && !presentation.presenting}
+                    disabled={working}
+                    onDuplicate={() =>
+                      editWidgets((rows) =>
+                        rows.length < 40
+                          ? [
+                              ...rows.slice(0, index + 1),
+                              copyWidget(widget, localId),
+                              ...rows.slice(index + 1),
+                            ]
+                          : rows,
+                      )
+                    }
+                    onGesture={(event, kind) => arrangement.start(event, widget.id, kind)}
+                    preview={arrangement.preview}
+                  />
+                </React.Fragment>
               ))}
             </div>
           )}
           <p className="md-bottom-note">
-            Cada bloco tem seus próprios filtros e critérios. Os dados das fontes permanecem na
-            sessão; salvar o painel guarda sua organização e suas escolhas.
+            Cada indicador tem seus próprios filtros e critérios; o recorte do painel é opcional. Os
+            dados das fontes permanecem na sessão; salvar o painel guarda sua organização e suas
+            escolhas.
           </p>
+          {tool === 'templates' && (
+            <DashboardTemplates
+              user={user}
+              onClose={() => setTool(null)}
+              onSelect={(template) => {
+                setTool(null);
+                request(() => state.newBoard(template));
+              }}
+            />
+          )}
+          {tool === 'sources' && (
+            <DashboardSources
+              sources={sources}
+              user={user}
+              onPage={onPage}
+              onClose={() => setTool(null)}
+            />
+          )}
           {catalog && (
             <DashboardCatalog
               user={user}
@@ -400,6 +455,7 @@ export function MyDashboardPage({ onPage, repository }) {
           {editor && (
             <WidgetEditor
               {...editor}
+              sections={[...new Set(draft.widgets.map((w) => w.section).filter(Boolean))]}
               sources={sources}
               user={user}
               onClose={() => setEditor(null)}

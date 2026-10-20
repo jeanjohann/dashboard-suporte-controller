@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Composição e visualização do Meu Dashboard — 0.46.0
+
+`domain/presentation.js` limita os formatos por natureza do indicador, associa séries por rótulo exato, preserva nulos, agrega a cauda da rosca e resolve herança opcional do recorte. `domain/templates.js` fornece composições apenas com métricas permitidas. `WidgetVisualization` observa o espaço real com ResizeObserver e adapta gráfico/rótulos; a ampliação reutiliza o mesmo resultado com tabela completa. Cartões complementares e comparação são configurações validadas de um nível, avaliadas separadamente pelas regras/permissões existentes. `DashboardTools` reúne modelos, status das fontes e recorte opcional. Seções/recorte/partes são preservados na cópia e backup, sem novas consultas, dados persistidos ou infraestrutura.
+
 ## Organização e apresentação do Meu Dashboard — 0.45.0
 
 `domain/boardActions.js` reúne reordenação por destino, dimensões limitadas, cópias e backup estrito de configurações. O contrato v1 admite altura opcional, preservando layouts anteriores. `useDashboards` mantém histórico limitado do rascunho e confirma importação aditiva pelo mesmo repositório com revisão. `useDashboardArrangement` trata Pointer Events e confirma um único ajuste por gesto; cancelamento não altera o documento. `useDashboardPresentation` controla leitura/tela cheia e impressão, restaurando a abertura dos critérios depois de imprimir. Não há dependência nova, mudança nos cálculos ou persistência remota.

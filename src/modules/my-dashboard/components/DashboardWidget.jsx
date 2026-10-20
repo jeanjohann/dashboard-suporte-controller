@@ -1,103 +1,35 @@
 import React, { useMemo, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { dashboardMetric, dashboardModules } from '../domain/catalog.js';
-import { evaluateDashboardWidget, formatMetric, timestampLabel } from '../domain/evaluate.js';
-import { sizeLabels } from './WidgetEditor.jsx';
+import { evaluateDashboardWidget, timestampLabel, formatMetric } from '../domain/evaluate.js';
+import { effectiveWidget, sizeLabels } from '../domain/presentation.js';
+import { WidgetVisualization } from './WidgetVisualization.jsx';
+import { DashboardDialog } from './DashboardDialog.jsx';
 
-function ValuesTable({ rows, unit }) {
-  const [page, setPage] = useState(0),
-    last = Math.max(0, Math.ceil(rows.length / 10) - 1),
-    current = Math.min(page, last);
+export function WidgetContext({ result, title }) {
   return (
-    <>
-      <div className="md-table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Informação</th>
-              <th scope="col">Valor</th>
-            </tr>
-          </thead>
-          <tbody className="md-screen-rows">
-            {rows.slice(current * 10, current * 10 + 10).map((row, index) => (
-              <tr key={`${row.label}:${index}`}>
-                <th scope="row">{row.label}</th>
-                <td>{formatMetric(row.value, unit)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tbody className="md-print-rows">
-            {rows.map((row, index) => (
-              <tr key={index}>
-                <th scope="row">{row.label}</th>
-                <td>{formatMetric(row.value, unit)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {rows.length > 10 && (
-        <div className="md-pagination">
-          <button type="button" disabled={!current} onClick={() => setPage(current - 1)}>
-            Anterior
-          </button>
-          <span>
-            {current + 1} de {last + 1} · {rows.length} itens
-          </span>
-          <button type="button" disabled={current === last} onClick={() => setPage(current + 1)}>
-            Próxima
-          </button>
-        </div>
-      )}
-    </>
-  );
-}
-function WidgetValue({ widget, result }) {
-  if (widget.kind === 'card')
-    return <div className="md-widget-value">{formatMetric(result.value, result.unit)}</div>;
-  const rows = result.series || [{ label: widget.title, value: result.value }];
-  if (!rows.length)
-    return <p className="md-widget-empty">Nenhum registro corresponde a este recorte.</p>;
-  if (widget.kind === 'table') return <ValuesTable rows={rows} unit={result.unit} />;
-  const visible = rows.slice(0, 20);
-  return (
-    <>
-      <div
-        className="md-chart"
-        role="img"
-        aria-label={`${widget.title}. ${visible.map((row) => `${row.label}: ${formatMetric(row.value, result.unit)}`).join('; ')}`}
-      >
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={visible}
-            layout="vertical"
-            margin={{ top: 8, right: 20, bottom: 8, left: 5 }}
-            accessibilityLayer
-          >
-            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis
-              type="number"
-              allowDecimals={false}
-              tickFormatter={(value) => formatMetric(value, result.unit)}
-            />
-            <YAxis type="category" dataKey="label" width={115} tick={{ fontSize: 11 }} />
-            <Tooltip
-              formatter={(value) => [formatMetric(value, result.unit), widget.title]}
-              cursor={{ fill: 'var(--md-soft)' }}
-            />
-            <Bar dataKey="value" fill="var(--md-accent)" radius={[0, 4, 4, 0]} maxBarSize={26} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      {rows.length > 20 && (
-        <p className="md-muted">
-          Primeiros 20 de {rows.length} itens. Edite para usar a tabela e conferir todos.
+    <div className="md-widget-meta">
+      {title && <strong>{title}</strong>}
+      {result.scope && (
+        <p>
+          <strong>Recorte:</strong> {result.scope}
         </p>
       )}
-      {rows.some((row) => row.value == null) && (
-        <p className="md-muted">Valores indisponíveis não são representados como zero.</p>
-      )}
-    </>
+      <p>
+        <strong>Período:</strong> {result.period}
+      </p>
+      <details>
+        <summary>Fonte e critérios</summary>
+        <p>
+          <strong>Fonte:</strong> {result.source}
+        </p>
+        <p>
+          <strong>{result.updateLabel}:</strong>{' '}
+          {result.collectionLabel || timestampLabel(result.updatedAt)}
+          {!result.collectionLabel ? ' (Brasília)' : ''}
+        </p>
+        <p>{result.note}</p>
+      </details>
+    </div>
   );
 }
 export function DashboardWidget({
@@ -116,18 +48,96 @@ export function DashboardWidget({
   onDuplicate,
   onGesture,
   preview,
+  boardFilters,
 }) {
   const metric = dashboardMetric(widget.metric);
   const result = useMemo(
-    () => evaluateDashboardWidget(widget, sources, user),
-    [widget, sources, user],
+    () => evaluateDashboardWidget(effectiveWidget(widget, boardFilters), sources, user),
+    [widget, boardFilters, sources, user],
+  );
+  const [expanded, setExpanded] = useState(false),
+    [asTable, setAsTable] = useState(false);
+  const extras = useMemo(
+    () =>
+      (widget.companions || []).map((part) => ({
+        widget: part,
+        result: evaluateDashboardWidget(effectiveWidget(part, boardFilters), sources, user),
+      })),
+    [widget.companions, boardFilters, sources, user],
+  );
+  const comparison = useMemo(
+    () =>
+      widget.comparison
+        ? evaluateDashboardWidget(effectiveWidget(widget.comparison, boardFilters), sources, user)
+        : null,
+    [widget.comparison, boardFilters, sources, user],
   );
   const restricted = result.status === 'restricted';
+  const comparisonReady = comparison?.status === 'ready' ? comparison : null;
+  const showContent =
+    result.status === 'ready' ||
+    (widget.kind === 'card' && extras.some((item) => item.result.status === 'ready'));
+  const content = (zoom = false) => (
+    <>
+      {result.demonstration && <p className="md-demo">Demonstração · dados fictícios</p>}
+      <div
+        className={
+          widget.kind === 'card' && extras.length ? 'md-combined-values' : 'md-widget-visual'
+        }
+      >
+        <div className={extras.length ? 'md-combined-item' : 'md-primary-visual'}>
+          {extras.length > 0 && (
+            <strong>{restricted ? 'Indicador sem acesso' : widget.title}</strong>
+          )}
+          <WidgetVisualization
+            widget={widget}
+            result={result}
+            comparison={comparisonReady}
+            asTable={zoom && asTable}
+            expanded={zoom}
+          />
+          {result.status !== 'ready' && <p className="md-chart-note">{result.message}</p>}
+          {extras.length > 0 && result.status === 'ready' && (
+            <p className="md-chart-note">{result.period}</p>
+          )}
+        </div>
+        {extras.map(({ widget: part, result: item }) => (
+          <div className="md-combined-item" key={part.id}>
+            <strong>{item.status === 'restricted' ? 'Indicador sem acesso' : part.title}</strong>
+            <div className="md-widget-value">
+              {item.status === 'ready' ? formatMetric(item.value, item.unit) : 'Indisponível'}
+            </div>
+            <p className="md-chart-note">{item.status === 'ready' ? item.period : item.message}</p>
+            {item.demonstration && <span className="md-demo">Dados fictícios</span>}
+          </div>
+        ))}
+      </div>
+      {comparison && !comparisonReady && (
+        <p className="md-chart-note">
+          Comparação indisponível: {comparison.message}. A série principal foi preservada.
+        </p>
+      )}
+      <div className="md-contexts">
+        {result.status === 'ready' && (
+          <WidgetContext
+            result={result}
+            title={extras.length || comparison ? widget.title : undefined}
+          />
+        )}
+        {extras.map(({ widget: part, result: item }) =>
+          item.status === 'ready' ? (
+            <WidgetContext key={part.id} result={item} title={part.title} />
+          ) : null,
+        )}
+        {comparisonReady && <WidgetContext result={comparison} title={widget.comparison.title} />}
+      </div>
+    </>
+  );
   const dimensions = preview?.kind === 'resize' && preview.id === widget.id ? preview : widget;
   const target = preview?.target === widget.id && preview.id !== widget.id;
   return (
     <article
-      className={`md-widget md-size-${dimensions.size} md-module-${metric?.module} ${target ? (preview.after ? 'md-drop-after' : 'md-drop-before') : ''} ${preview?.id === widget.id ? 'md-gesture-active' : ''}`}
+      className={`md-widget md-kind-${widget.kind} ${dimensions.height ? 'md-fixed-height' : ''} md-size-${dimensions.size} md-module-${metric?.module} ${target ? (preview.after ? 'md-drop-after' : 'md-drop-before') : ''} ${preview?.id === widget.id ? 'md-gesture-active' : ''}`}
       data-widget-id={widget.id}
       style={dimensions.height ? { height: dimensions.height } : undefined}
       aria-label={restricted ? 'Indicador sem acesso' : widget.title}
@@ -139,100 +149,88 @@ export function DashboardWidget({
           </span>
           <h2>{restricted ? 'Indicador sem acesso' : widget.title}</h2>
         </div>
-        {organizing && (
-          <div className="md-widget-actions">
+        <div className="md-widget-header-tools">
+          {showContent && (
             <button
               type="button"
-              className="md-drag-handle"
-              disabled={disabled}
-              aria-label={`Arrastar ${widget.title}`}
-              title="Arrastar; setas do teclado também movem"
-              onPointerDown={(e) => onGesture(e, 'move')}
-              onKeyDown={(e) => {
-                if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].includes(e.key)) {
-                  e.preventDefault();
-                  onMove(['ArrowLeft', 'ArrowUp'].includes(e.key) ? -1 : 1);
-                }
-              }}
+              className="md-expand"
+              aria-label={`Ampliar ${widget.title}`}
+              title="Ampliar e conferir valores"
+              onClick={() => setExpanded(true)}
             >
-              ⠿
+              ⛶
             </button>
-            <button
-              type="button"
-              onClick={() => onMove(-1)}
-              disabled={disabled || !index}
-              aria-label={`Mover ${widget.title} para antes`}
-              title="Mover para antes"
-            >
-              ←
-            </button>
-            <button
-              type="button"
-              onClick={() => onMove(1)}
-              disabled={disabled || index === total - 1}
-              aria-label={`Mover ${widget.title} para depois`}
-              title="Mover para depois"
-            >
-              →
-            </button>
-            <button
-              type="button"
-              onClick={onEdit}
-              disabled={disabled || restricted}
-              aria-label={`Editar ${widget.title}`}
-              title="Editar bloco"
-            >
-              ✎
-            </button>
-            <button
-              type="button"
-              onClick={onDuplicate}
-              disabled={disabled || restricted || total >= 40}
-              aria-label={`Duplicar ${widget.title}`}
-              title="Duplicar bloco"
-            >
-              ⧉
-            </button>
-            <button
-              type="button"
-              onClick={onRemove}
-              disabled={disabled}
-              aria-label={`Remover ${widget.title}`}
-              title="Remover bloco"
-            >
-              ✕
-            </button>
-          </div>
-        )}
+          )}
+          {organizing && (
+            <div className="md-widget-actions">
+              <button
+                type="button"
+                className="md-drag-handle"
+                disabled={disabled}
+                aria-label={`Arrastar ${widget.title}`}
+                title="Arrastar; setas do teclado também movem"
+                onPointerDown={(e) => onGesture(e, 'move')}
+                onKeyDown={(e) => {
+                  if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].includes(e.key)) {
+                    e.preventDefault();
+                    onMove(['ArrowLeft', 'ArrowUp'].includes(e.key) ? -1 : 1);
+                  }
+                }}
+              >
+                ⠿
+              </button>
+              <button
+                type="button"
+                onClick={() => onMove(-1)}
+                disabled={disabled || !index}
+                aria-label={`Mover ${widget.title} para antes`}
+                title="Mover para antes"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => onMove(1)}
+                disabled={disabled || index === total - 1}
+                aria-label={`Mover ${widget.title} para depois`}
+                title="Mover para depois"
+              >
+                →
+              </button>
+              <button
+                type="button"
+                onClick={onEdit}
+                disabled={disabled || restricted}
+                aria-label={`Editar ${widget.title}`}
+                title="Editar bloco"
+              >
+                ✎
+              </button>
+              <button
+                type="button"
+                onClick={onDuplicate}
+                disabled={disabled || restricted || total >= 40}
+                aria-label={`Duplicar ${widget.title}`}
+                title="Duplicar bloco"
+              >
+                ⧉
+              </button>
+              <button
+                type="button"
+                onClick={onRemove}
+                disabled={disabled}
+                aria-label={`Remover ${widget.title}`}
+                title="Remover bloco"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+        </div>
       </header>
       <div className="md-widget-content">
-        {result.status === 'ready' ? (
-          <>
-            {result.demonstration && <p className="md-demo">Demonstração · dados fictícios</p>}
-            <WidgetValue widget={widget} result={result} />
-            <div className="md-widget-meta">
-              {result.scope && (
-                <p>
-                  <strong>Recorte:</strong> {result.scope}
-                </p>
-              )}
-              <p>
-                <strong>Período:</strong> {result.period}
-              </p>
-              <p>
-                <strong>Fonte:</strong> {result.source}
-              </p>
-              <p>
-                <strong>{result.updateLabel}:</strong>{' '}
-                {result.collectionLabel || timestampLabel(result.updatedAt)}
-                {!result.collectionLabel ? ' (Brasília)' : ''}
-              </p>
-              <details>
-                <summary>Critérios do indicador</summary>
-                <p>{result.note}</p>
-              </details>
-            </div>
-          </>
+        {showContent ? (
+          content()
         ) : (
           <div className="md-widget-empty">
             <p>{result.message}</p>
@@ -278,6 +276,29 @@ export function DashboardWidget({
           </button>
         )}
       </footer>
+      {expanded && showContent && (
+        <DashboardDialog
+          title={widget.title}
+          className="md-expanded-dialog"
+          onClose={() => setExpanded(false)}
+        >
+          {!['card', 'table'].includes(widget.kind) && (
+            <div className="md-detail-actions">
+              <button type="button" aria-pressed={!asTable} onClick={() => setAsTable(false)}>
+                Gráfico
+              </button>
+              <button type="button" aria-pressed={asTable} onClick={() => setAsTable(true)}>
+                Tabela completa
+              </button>
+            </div>
+          )}
+          <div className="md-expanded-content">{content(true)}</div>
+          <p className="md-muted">
+            Valores do recorte calculado pelo sistema. Os filtros e a organização do painel são
+            preservados.
+          </p>
+        </DashboardDialog>
+      )}
     </article>
   );
 }

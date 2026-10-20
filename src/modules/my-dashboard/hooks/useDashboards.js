@@ -100,8 +100,17 @@ export function useDashboards(owner, repository = dashboardRepository) {
         () => setEdition((old) => ({ ...old, past: [] })),
       );
     },
-    newBoard() {
-      resetDraft(freshBoard('Novo painel'));
+    newBoard(template) {
+      resetDraft(
+        template
+          ? copyDashboard(
+              template,
+              document.dashboards.map((b) => b.name),
+              localId,
+              template.name,
+            )
+          : freshBoard('Novo painel'),
+      );
       setMessage('');
       setError('');
     },

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.45.0 — [Meu Dashboard](docs/MEU-DASHBOARD.md): organização por arraste, largura/altura, desfazer, duplicação de blocos/painéis, backup transportável de configurações e apresentação com tela cheia e impressão/PDF. Salvamento local por usuário; fontes e critérios continuam nos módulos de origem.
+**Versão:** 0.46.0 — [Meu Dashboard](docs/MEU-DASHBOARD.md): conteúdo adaptável, novos gráficos, ampliação/tabelas, indicadores no mesmo card, comparação de séries, seções/modelos e recorte opcional do painel. Configurações locais por usuário; fontes e critérios preservados.
 
 ## Documentação do projeto
 

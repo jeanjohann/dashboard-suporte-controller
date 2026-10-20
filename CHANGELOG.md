@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.46.0 — 20/10/2026
+
+- Corrige conteúdo dos blocos redimensionados: gráficos usam o espaço disponível, tipografia proporcional com limites de legibilidade e rótulos/categorias ajustados, com aviso e acesso à tabela completa. Ampliação em janela própria preserva o recorte e a organização.
+- Acrescenta colunas, linhas para evolução mensal e roscas para partições válidas, com cauda agrupada sem perder o total; mantém barras horizontais e tabelas. Categorias indisponíveis não viram zero.
+- Permite até quatro indicadores complementares no mesmo card e comparação de duas séries com eixo/unidade compatíveis. Cada fonte conserva seus filtros, período e critérios; não há soma automática nem associação de nomes diferentes.
+- Adiciona seções, quatro modelos editáveis, central de fontes e recorte optativo de período/cliente por indicador. Preserva permissões, salvamento explícito, backups, desfazer e layouts anteriores.
+- Registra na fila a futura troca para a logo branca antiga e renovação das paletas clara/escura solicitadas pelo proprietário; essa rodada visual ainda não foi aplicada.
+
 ## 0.45.0 — 20/10/2026
 
 - Acrescenta modo Organizar no Meu Dashboard: mover por arraste, toque/caneta ou setas, ajustar largura/altura e desfazer até 30 alterações da edição. Cada gesto é confirmado ao soltar; Escape cancela o gesto. Salvar painel continua explícito.
