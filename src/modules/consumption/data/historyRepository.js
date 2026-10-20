@@ -7,8 +7,8 @@ export function createHistoryRepository(adapter) {
     throw new Error('O armazenamento precisa fornecer leitura e gravação.');
   }
   return Object.freeze({
-    read: () => adapter.read(),
-    write: (history) => adapter.write(history),
+    read: (options) => adapter.read(options),
+    write: (history, options) => adapter.write(history, options),
   });
 }
 

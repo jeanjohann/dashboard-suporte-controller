@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.33.1 — [Assistente de suporte experimental](docs/AUTOMACAO-N8N-E-MCP.md): campo de perguntas ligado ao AI Agent do n8n com Gemini e ferramenta de leitura dos totais de atendimentos. Piloto local do administrador principal, sem memória de conversa. Novas ferramentas, filtros e MCP continuam pendentes. [Clientes consolidados e filiais](docs/AGRUPAMENTO-DE-CLIENTES.md) e [critérios de manutenção](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md) preservados.
+**Versão:** 0.39.0 — [Preparação para banco de dados](docs/PREPARACAO-BANCO-DE-DADOS.md): contratos versionados, controle de concorrência e adaptador SQL isolado, sem ativar armazenamento remoto. Interface da equipe simplificada na 0.38.1. [Clientes consolidados e filiais](docs/AGRUPAMENTO-DE-CLIENTES.md) e [critérios de manutenção](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md) preservados.
 
 ## Documentação do projeto
+
+- [Banco de dados — preparação, limites e roteiro de migração](docs/PREPARACAO-BANCO-DE-DADOS.md)
 
 - [Cards da visão geral — contagens, bases e cores](docs/CARDS-DE-OS.md)
 

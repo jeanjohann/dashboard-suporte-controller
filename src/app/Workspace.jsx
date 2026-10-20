@@ -88,13 +88,13 @@ export function Workspace() {
         throw Error('Você não tem permissão para importar esta base.');
     if (batch.consumption.length) {
       // Dependências do lote são carregadas somente quando há consumo a gravar.
-      const [history, { mergeBulkHistory }] = await Promise.all([
-        import('../modules/consumption/data/consumptionHistory.js'),
+      const [{ consumptionHistoryRepository }, { mergeBulkHistory }] = await Promise.all([
+        import('../modules/consumption/data/historyRepository.js'),
         import('../modules/imports/domain/bulkImport.js'),
       ]);
       // Confirma a gravação local antes de atualizar as outras bases e avisar a tela de consumo.
-      const archive = await history.readConsumptionHistory();
-      await history.writeConsumptionHistory(mergeBulkHistory(archive, batch));
+      const archive = await consumptionHistoryRepository.read();
+      await consumptionHistoryRepository.write(mergeBulkHistory(archive, batch));
       setConsumptionRevision((value) => value + 1);
     }
     if (batch.orders) setOrders(batch.orders);

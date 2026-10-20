@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Preparação entregue em **0.39.0**: contrato de persistência versionado, concorrência, paginação, exclusão lógica, ponte read/write e adaptador SQL para futuro banco de negócio separado. Importação conjunta usa o mesmo repositório do consumo. **Não conclui A10/A13**: nenhum dado foi migrado e armazenamento remoto/compartilhado, rotas, retenção e automação continuam pendentes. [Limites e roteiro de ativação](PREPARACAO-BANCO-DE-DADOS.md).
+
 Entregue em 0.37.0: indicadores do Zoho também no gráfico do suporte da Visão geral, reaproveitando a última coleta completa de Eduardo e Jean. Seletor de quantidades/tempos, período próprio explícito e tabela com valores; leitura preservada ao fechar a seção, sem consultas automáticas.
 
 Entregue em 0.36.1: seção única **OS → Zoho Desk**, com atividade e tempos de **Eduardo e Jean**, apontamentos por chamado, médias, métricas acumuladas de primeira resposta/resolução, respostas com critérios auditáveis e vínculo manual com OS. Leitura real por período concluída após renovar a autorização; comparação independente e revisão das respostas ainda necessárias. Prévia fictícia retirada da Equipe de suporte. Sessões, persistência e automação continuam pendentes. [Escopo e limites](INTEGRACAO-ZOHO-DESK.md).

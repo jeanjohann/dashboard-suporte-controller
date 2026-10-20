@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Preparação de persistência — 0.39.0
+
+`shared/persistence/` define documentos versionados, revisão obrigatória, paginação, exclusão lógica e adaptador de memória de referência. `server/persistence/` prepara um adaptador SQL e migração isolada para futuro banco de negócio, sem binding ou rotas ativas. O consumo conserva seu IndexedDB e backup; importação conjunta e página usam o mesmo repositório. Fontes na sessão não são gravadas automaticamente. [Contratos, limites e sequência de ativação](PREPARACAO-BANCO-DE-DADOS.md).
+
 ## Critérios confirmados em 0.29.0
 
 `orders/domain/trackerReplacements.js` classifica o chamado/placa no arquivo completo: uma linha/ID é manutenção sem troca; duas linhas/IDs distintos na mesma data confirmam um evento. Duração exige direção e cliente comuns. `fieldLife.js` mantém rastreador por serial e acrescenta referência inicial dos acessórios pela implementação do cliente/placa, com prioridade para instalação explícita mais precisa; ciclos seguintes usam a troca anterior da categoria. Revisões sem troca não reiniciam intervalos. `equipment.js` expõe contagens e ocorrências; `replacementRankings.js` calcula rankings, sem duplicar o evento pelo número de linhas do par.

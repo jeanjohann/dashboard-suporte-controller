@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { emptyHistory } from '../data/consumptionHistory.js';
 import { consumptionHistoryRepository } from '../data/historyRepository.js';
-export function useConsumptionArchive(reloadToken) {
+export function useConsumptionArchive(reloadToken, repository = consumptionHistoryRepository) {
   const [archive, setArchive] = useState(emptyHistory),
     [ready, setReady] = useState(false),
     [busy, setBusy] = useState(false),
@@ -12,7 +12,7 @@ export function useConsumptionArchive(reloadToken) {
     // Uma resposta de leitura antiga não deve sobrescrever a recarga disparada pela importação em lote.
     let live = true;
     setReady(false);
-    consumptionHistoryRepository
+    repository
       .read()
       .then((value) => {
         if (live) {
@@ -32,13 +32,13 @@ export function useConsumptionArchive(reloadToken) {
     return () => {
       live = false;
     };
-  }, [reloadToken]);
+  }, [reloadToken, repository]);
   async function commit(next, success) {
     setBusy(true);
     setError('');
     try {
       // Só apresenta o novo histórico depois de o armazenamento confirmar a transação.
-      await consumptionHistoryRepository.write(next);
+      await repository.write(next);
       setArchive(next);
       setMessage(success);
     } catch (e) {

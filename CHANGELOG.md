@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.39.0 — 19/10/2026
+
+- Prepara contrato de persistência independente do banco, com revisão obrigatória, isolamento por espaço/coleção, conteúdo versionado, paginação, fontes imutáveis e exclusão lógica.
+- Inclui adaptador de referência em memória, ponte read/write e adaptador SQL com migração isolada do banco de usuários. Sem ativar banco de negócio, rotas remotas, sincronização ou envio de dados.
+- Centraliza o acesso ao histórico de consumo pelo repositório existente, inclusive na importação conjunta; permite injeção no hook. IndexedDB e backup versão 1 preservados.
+- Documenta o mapa dos módulos, limites de tamanho, validação das fontes, autorização e roteiro de migração/homologação. Testes usam memória e SQLite local com o mesmo contrato.
+
 ## 0.38.1 — 19/10/2026
 
 - Simplifica a página Equipe de suporte, com identificação das fontes Zoho/OS, cards mais sóbrios, alinhamento dos controles e comparação por agente ao lado da tabela em telas amplas.
