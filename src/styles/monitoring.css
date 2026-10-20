@@ -233,7 +233,7 @@
   background: var(--ui-warning-ink);
 }
 .monitoring-tone-high {
-  background: var(--ui-accent-ink);
+  background: var(--ui-coral);
 }
 .monitoring-tone-critical {
   background: var(--ui-error-ink);

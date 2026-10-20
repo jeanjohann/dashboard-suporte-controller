@@ -1,6 +1,7 @@
 /** Complemento da cópia isolada de impressão: texto integral, tabelas e tema claro. */
+import { chartPrintVariables } from '../charts/palette.js';
 export const reportPrintStyles = `
-:root{color-scheme:light;--ui-background:#fff;--ui-surface:#fff;--ui-soft:#f4f5f7;--ui-ink:#192c43;--ui-muted:#526477;--ui-border:#ccd5dd;--ui-line:#e5e9ee;--ui-accent:#eb8726;--ui-accent-ink:#97501a;--chart-main:#eb8726;--chart-secondary:#16a58b}
+:root{color-scheme:light;--ui-background:#fff;--ui-surface:#fff;--ui-soft:#eef3f1;--ui-ink:#1c3035;--ui-muted:#52676c;--ui-border:#ccd8d3;--ui-line:#e0e8e4;--ui-accent:#147b72;--ui-accent-ink:#12685f;--chart-main:var(--chart-primary);--chart-secondary:var(--chart-blue);--ui-chart-negative:var(--chart-negative);${chartPrintVariables}}
 body{margin:0;line-height:1.45}h1,h2,h3,h4,summary{break-after:avoid}h3{font-size:13px}.print-metadata{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 18px;margin:12px 0 16px;color:#526477;font-size:10px}.print-metadata>div{display:flex;gap:6px;min-width:0}.print-metadata dt{font-weight:bold;white-space:nowrap}.print-metadata dd{margin:0;overflow-wrap:anywhere}
 table{table-layout:auto}thead{display:table-header-group}tr{break-inside:avoid}th,td{font-size:10px;overflow-wrap:anywhere}th{text-align:left;background:#f4f5f7}
 [data-cell-type=number]{text-align:right;font-variant-numeric:tabular-nums}.cell-identifier{font-family:Consolas,monospace}

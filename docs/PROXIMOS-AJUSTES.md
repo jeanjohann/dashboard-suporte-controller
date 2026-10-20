@@ -2,14 +2,14 @@
 
 Primeira rodada de evolução do **Meu Dashboard entregue em 0.45.0**: arraste/redimensionamento, modo Organizar com desfazer, duplicação, backup de configurações e apresentação/tela cheia/impressão. Segunda rodada preparada em **0.46.0**: conteúdo adaptável, colunas/linhas/rosca conforme o indicador, ampliação e tabela completa, composição de até quatro indicadores no mesmo card, comparação de duas séries compatíveis, seções/modelos, central de fontes e recorte opcional do painel. Publicação/homologação descritas na entrega. [Uso e limites](MEU-DASHBOARD.md).
 
-## A20 — Identidade e temas: próxima rodada visual
+## A20 — Identidade e temas: implementado em 0.47.0
 
-Solicitado pelo proprietário em **20/10/2026**, para a fila após a rodada atual do Meu Dashboard:
+Solicitado e autorizado pelo proprietário em **20/10/2026**. [Rodada visual e validação](REFINAMENTO-VISUAL.md):
 
 - Restaurar a logo branca antiga preservada em `import/Logo branca horizontal.svg`, conferindo contraste nos dois temas e estados do menu.
 - Renovar a escala do tema claro para uma aparência mais agradável e moderna, com liberdade para sair da paleta original Addlog.
 - Dar mais destaque às cores no tema escuro, mantendo legibilidade de textos, gráficos, botões e estados.
-- Conferir menu, cards, tabelas, gráficos, foco/seleção e impressão nos dois temas. A troca de identidade/paleta ainda não foi aplicada nesta rodada.
+- Menu, cards, tabelas, gráficos, foco/seleção e cores de impressão conferidos nos dois temas; sem alteração dos cálculos e critérios dos módulos.
 
 ## A19 — Meu Dashboard: primeira entrega concluída
 

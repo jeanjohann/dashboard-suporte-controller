@@ -1,4 +1,16 @@
-# Refinamento visual — 0.40.0
+# Refinamento visual
+
+## Identidade e paletas — 0.47.0
+
+Rodada A20 solicitada e autorizada em 20/10/2026. Tema claro com fundo mineral suave, superfícies brancas, verde petróleo nos destaques e tons complementares azuis/violetas. Tema escuro com superfícies grafite e cores mais luminosas nas séries e nos cards. Números e texto principal mantêm cor neutra; as cores distinguem categorias e estados, sem representar pontuação ou produtividade.
+
+Logo branca original de `import/Logo branca horizontal.svg` copiada como ativo público próprio, sem modificar o original. Base escura discreta garante contraste nos dois temas; símbolo recortado do próprio SVG no menu recolhido e favicon. Clique/teclado continuam controlando o menu. As marcas anteriores permanecem preservadas nos arquivos.
+
+`theme.css` centraliza superfícies, texto, estados e séries; KPIs e Meu Dashboard derivam suas cores desses tokens. `palette.js` expõe cores por variável CSS para atualização imediata ao alternar o tema. SVGs baixados usam cores concretas próprias para fundo branco; cópias isoladas de impressão recebem todos os tokens das séries, sem depender da página original. Atenção, atraso elevado e crítico continuam distintos no Monitoramento.
+
+Validação: 22 pares de texto/fundo dos dois temas acima de 5:1 (mínimo 5,09:1). Conferência das páginas reais de OS/Meu Dashboard com dados fictícios, menu aberto/recolhido, gráficos e tabelas. Ajuste local do valor financeiro dos KPIs para evitar quebra desnecessária. Sem novas consultas, dependências, migração ou mudanças nos cálculos. O diálogo nativo de impressão/PDF não faz parte da conferência visual automatizada; estilos e cores portáteis têm verificação própria.
+
+## Rodada anterior — 0.40.0
 
 Rodada A17 executada na ordem: Consumo e Parque, tabelas, filtros/ações, impressão e telas menores. Usa as fontes, cálculos, permissões e armazenamento existentes. Não exige configuração externa.
 

@@ -7,8 +7,8 @@
   min-height: 100vh;
 }
 .app > aside.app-navigation {
-  --navigation-text: #171717;
-  --navigation-icon: #525252;
+  --navigation-text: var(--ui-ink);
+  --navigation-icon: var(--ui-muted);
   position: sticky;
   top: 0;
   display: flex;
@@ -25,8 +25,8 @@
   background: var(--ui-surface);
 }
 :root[data-theme='dark'] .app > aside.app-navigation {
-  --navigation-text: #b8bfcc;
-  --navigation-icon: #8f9caf;
+  --navigation-text: var(--ui-ink);
+  --navigation-icon: var(--ui-muted);
 }
 .app > main {
   width: auto;
@@ -312,15 +312,19 @@
   min-height: 36px;
   max-width: 100%;
   flex: 0 1 auto;
-  padding: 2px 0;
+  padding: 7px 10px;
   border: 0;
-  border-radius: 6px;
-  background: transparent;
+  border-radius: 9px;
+  background: var(--brand-surface);
   box-shadow: none;
 }
 .app > aside.app-navigation .logo:hover {
-  background: transparent;
-  opacity: 0.85;
+  background: var(--brand-surface);
+  opacity: 0.9;
+}
+.app > aside.app-navigation .logo:focus-visible {
+  outline: 2px solid var(--ui-accent-ink);
+  outline-offset: 3px;
 }
 .app-navigation .sidebar-brand-row .brand-image {
   display: block;
@@ -403,13 +407,14 @@
   justify-content: center;
 }
 .app > aside.sidebar-collapsed .logo {
-  flex: 0 0 36px;
+  flex: 0 0 42px;
+  padding: 7px;
 }
 .app > aside.sidebar-collapsed .brand-image {
   width: 28px;
   height: 28px;
   mask: none;
-  background-image: url('/brand/addlog-symbol.svg');
+  background-image: var(--brand-symbol-url);
 }
 .app > aside.sidebar-collapsed .navigation-label,
 .sidebar-collapsed .navigation-chevron {

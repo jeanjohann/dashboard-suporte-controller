@@ -1,11 +1,11 @@
 .my-dashboard-page,
 .md-dialog {
-  --md-accent: #106b60;
-  --md-soft: #edf6f3;
-  --md-border: #dce5e6;
-  --md-muted: #596b75;
-  --md-surface: #fff;
-  color: #172d36;
+  --md-accent: var(--ui-accent-ink);
+  --md-soft: var(--ui-accent-soft);
+  --md-border: var(--ui-border);
+  --md-muted: var(--ui-muted);
+  --md-surface: var(--ui-surface);
+  color: var(--ui-ink);
 }
 .my-dashboard-page main {
   min-width: 0;
@@ -60,7 +60,7 @@
 .md-dialog .md-primary {
   background: var(--md-accent);
   border-color: var(--md-accent);
-  color: white;
+  color: var(--ui-on-accent);
 }
 .my-dashboard-page main button:hover:not(:disabled),
 .md-dialog button:hover:not(:disabled) {
@@ -130,7 +130,7 @@
   margin-top: 7px;
 }
 .md-unsaved {
-  color: #94600a;
+  color: var(--ui-warning-ink);
 }
 .md-board-buttons {
   display: flex;
@@ -475,16 +475,16 @@
   grid-column: 1/-1;
 }
 .md-module-zoho {
-  border-top-color: #5b63ad;
+  border-top-color: var(--chart-purple);
 }
 .md-module-orders {
-  border-top-color: #c87122;
+  border-top-color: var(--chart-primary);
 }
 .md-module-consumption {
-  border-top-color: #4275b6;
+  border-top-color: var(--chart-blue);
 }
 .md-module-monitoring {
-  border-top-color: #a46478;
+  border-top-color: var(--chart-rose);
 }
 .md-widget > header {
   display: flex;
@@ -628,8 +628,8 @@
   font-size: 10px;
 }
 .md-demo {
-  background: #fff0d9;
-  color: #875712;
+  background: var(--ui-warning-bg);
+  color: var(--ui-warning-ink);
   padding: 8px;
   border-radius: 5px;
   font-size: 11px;
@@ -642,9 +642,9 @@
 }
 .md-error {
   padding: 13px 16px;
-  color: #a63224;
-  background: #fff0ed;
-  border: 1px solid #f4d9d2;
+  color: var(--ui-error-ink);
+  background: var(--ui-error-bg);
+  border: 1px solid var(--ui-error-ink);
   border-radius: 8px;
   font-size: 12px;
   margin: 14px 0;
@@ -767,19 +767,6 @@
   font-size: 20px;
   padding: 2px 6px;
 }
-[data-theme='dark'] .my-dashboard-page,
-[data-theme='dark'] .md-dialog {
-  --md-accent: #65c5af;
-  --md-soft: #243f3b;
-  --md-border: #3c4d55;
-  --md-muted: #b2c0c7;
-  --md-surface: #222d34;
-  color: #e3edf0;
-}
-[data-theme='dark'] .my-dashboard-page .md-primary,
-[data-theme='dark'] .md-dialog .md-primary {
-  color: #102b25;
-}
 @media (min-width: 1600px) {
   .my-dashboard-page main {
     padding: 40px 44px;
@@ -838,7 +825,7 @@
 .md-widget {
   box-sizing: border-box;
   container-type: inline-size;
-  --md-compare: #657bc8;
+  --md-compare: var(--chart-purple);
 }
 .md-widget-content,
 .md-widget-visual,

@@ -376,10 +376,10 @@
     --ui-link: #192c43;
     --ui-border: #ccd5dd;
     --ui-line: #e5e9ee;
-    --ui-accent-soft: #fff4e7;
-    --ui-accent-ink: #97501a;
-    --chart-main: #eb8726;
-    --chart-secondary: #16a58b;
+    --ui-accent-soft: #e3f2ed;
+    --ui-accent-ink: #12685f;
+    --chart-main: var(--chart-primary);
+    --chart-secondary: var(--chart-blue);
   }
   body {
     background: #fff;

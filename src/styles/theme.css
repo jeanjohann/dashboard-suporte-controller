@@ -2,36 +2,52 @@
 /* Paleta compartilhada: superfícies, texto e controles. */
 :root {
   color-scheme: light;
-  --brand-logo-url: url('/brand/addlog.svg');
-  --ui-background: #f6f7f9;
+  --brand-logo-url: url('/brand/addlog-white.svg');
+  --brand-symbol-url: url('/brand/addlog-symbol-white.svg');
+  --brand-surface: #263d42;
+  --ui-background: #f3f6f5;
   --ui-surface: #ffffff;
-  --ui-soft: #f0f2f5;
-  --ui-ink: #171717;
-  --ui-muted: #525252;
-  --ui-border: #dce0e7;
-  --ui-line: #e9ecf1;
-  --ui-shadow: #20242c10;
-  --ui-button-bg: #303030;
+  --ui-soft: #eaf0ee;
+  --ui-ink: #1c3035;
+  --ui-muted: #52676c;
+  --ui-border: #d4dfdc;
+  --ui-line: #e4ebe8;
+  --ui-shadow: #203c3510;
+  --ui-button-bg: #2e4248;
   --ui-button-text: #ffffff;
-  --ui-button-hover: #454545;
-  --ui-accent: #fca237;
-  --ui-on-accent: #281c13;
-  --ui-accent-hover: #ffb456;
-  --ui-accent-ink: #b44500;
-  --ui-accent-soft: #fff4e7;
-  --ui-accent-border: #f6d7b2;
-  --ui-coral: #f05a00;
-  --ui-link: #171717;
-  --ui-success-bg: #edf6f2;
-  --ui-success-ink: #276654;
-  --ui-success-border: #d1e4dd;
-  --ui-warning-bg: #fff4df;
-  --ui-warning-ink: #855916;
-  --ui-error-bg: #fff0ed;
-  --ui-error-ink: #a34435;
-  --ui-chart-negative: #ba5675;
-  --chart-main: #eb8726;
-  --chart-secondary: #16a58b;
+  --ui-button-hover: #405a62;
+  --ui-accent: #147b72;
+  --ui-on-accent: #ffffff;
+  --ui-accent-hover: #10665e;
+  --ui-accent-ink: #12685f;
+  --ui-accent-soft: #e3f2ed;
+  --ui-accent-border: #a9d5c9;
+  --ui-coral: #bb573c;
+  --ui-link: #245c63;
+  --ui-success-bg: #e6f4ec;
+  --ui-success-ink: #25694a;
+  --ui-success-border: #bbdbc8;
+  --ui-warning-bg: #fff3dc;
+  --ui-warning-ink: #815511;
+  --ui-error-bg: #fceceb;
+  --ui-error-ink: #a53e4a;
+  --ui-info-bg: #e8f1fb;
+  --ui-info-ink: #35659b;
+  --ui-violet-bg: #f1eafa;
+  --ui-violet-ink: #7951a2;
+  --chart-primary: #158579;
+  --chart-blue: #3c7cc4;
+  --chart-teal: #169d8c;
+  --chart-purple: #8b62c0;
+  --chart-coral: #d4764e;
+  --chart-slate: #648399;
+  --chart-amber: #b18720;
+  --chart-rose: #ba5e8a;
+  --chart-other: #85968f;
+  --chart-negative: #b75470;
+  --ui-chart-negative: var(--chart-negative);
+  --chart-main: var(--chart-primary);
+  --chart-secondary: var(--chart-blue);
   --addlog-background: var(--ui-background);
   --addlog-ink: var(--ui-ink);
   --addlog-border: var(--ui-border);
@@ -40,35 +56,47 @@
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --brand-logo-url: url('/brand/addlog-dark.svg');
-  --ui-background: #191a1e;
-  --ui-surface: #22242a;
-  --ui-soft: #2a2d34;
-  --ui-ink: #f0f1f4;
-  --ui-muted: #b2b7c2;
-  --ui-border: #3c4049;
-  --ui-line: #32363e;
+  --brand-surface: #152225;
+  --ui-background: #181c21;
+  --ui-surface: #232930;
+  --ui-soft: #2c343d;
+  --ui-ink: #f0f5f5;
+  --ui-muted: #b7c7cb;
+  --ui-border: #3c4953;
+  --ui-line: #333f49;
   --ui-shadow: #00000024;
-  --ui-button-bg: #363a44;
-  --ui-button-text: #f0f1f4;
-  --ui-button-hover: #454a56;
-  --ui-accent: #fca237;
-  --ui-accent-hover: #ffb456;
-  --ui-accent-ink: #ffb865;
-  --ui-accent-soft: #3d2b20;
-  --ui-accent-border: #835332;
-  --ui-coral: #ff997a;
-  --ui-link: #8dc5e8;
-  --ui-success-bg: #243a32;
-  --ui-success-ink: #91dab9;
-  --ui-success-border: #3f6857;
-  --ui-warning-bg: #3c3425;
-  --ui-warning-ink: #f0cb87;
-  --ui-error-bg: #402d30;
-  --ui-error-ink: #ffafa5;
-  --ui-chart-negative: #df8c9e;
-  --chart-main: #ffad47;
-  --chart-secondary: #52cfad;
+  --ui-button-bg: #394954;
+  --ui-button-text: #f0f5f5;
+  --ui-button-hover: #4a606c;
+  --ui-accent: #58dfbd;
+  --ui-on-accent: #102e28;
+  --ui-accent-hover: #83edcf;
+  --ui-accent-ink: #80efd0;
+  --ui-accent-soft: #203f38;
+  --ui-accent-border: #3b8471;
+  --ui-coral: #ffa781;
+  --ui-link: #8bc8f8;
+  --ui-success-bg: #203f32;
+  --ui-success-ink: #8be5af;
+  --ui-success-border: #448663;
+  --ui-warning-bg: #453822;
+  --ui-warning-ink: #ffd17a;
+  --ui-error-bg: #482d37;
+  --ui-error-ink: #ffabb8;
+  --ui-info-bg: #253c58;
+  --ui-info-ink: #a1caff;
+  --ui-violet-bg: #3d3058;
+  --ui-violet-ink: #d3b7ff;
+  --chart-primary: #58dfbd;
+  --chart-blue: #7db7ff;
+  --chart-teal: #45dbc5;
+  --chart-purple: #ba98ff;
+  --chart-coral: #ffa16f;
+  --chart-slate: #90b4cf;
+  --chart-amber: #f4c45f;
+  --chart-rose: #f592c0;
+  --chart-other: #9aaca6;
+  --chart-negative: #f28aa6;
 }
 
 /* Navegação e chave de tema. */
@@ -158,6 +186,10 @@ button.theme-toggle:hover {
 body {
   background: var(--ui-background);
   color: var(--ui-ink);
+}
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--ui-accent);
 }
 .app > main {
   max-width: 1440px;
@@ -843,5 +875,43 @@ footer button:hover:not(:disabled) {
   button,
   .theme-track > span {
     transition: none;
+  }
+}
+/* Papel usa cores próprias, mesmo quando a tela está no tema escuro. */
+@media print {
+  :root,
+  :root[data-theme='dark'] {
+    color-scheme: light;
+    --ui-background: #fff;
+    --ui-surface: #fff;
+    --ui-soft: #eef3f1;
+    --ui-ink: #1c3035;
+    --ui-muted: #52676c;
+    --ui-border: #ccd8d3;
+    --ui-line: #e0e8e4;
+    --ui-accent: #147b72;
+    --ui-on-accent: #fff;
+    --ui-accent-ink: #12685f;
+    --ui-accent-soft: #e3f2ed;
+    --ui-success-bg: #e6f4ec;
+    --ui-success-ink: #25694a;
+    --ui-warning-bg: #fff3dc;
+    --ui-warning-ink: #815511;
+    --ui-error-bg: #fceceb;
+    --ui-error-ink: #a53e4a;
+    --ui-info-bg: #e8f1fb;
+    --ui-info-ink: #35659b;
+    --ui-violet-bg: #f1eafa;
+    --ui-violet-ink: #7951a2;
+    --chart-primary: #158579;
+    --chart-blue: #3c7cc4;
+    --chart-teal: #169d8c;
+    --chart-purple: #8b62c0;
+    --chart-coral: #d4764e;
+    --chart-slate: #648399;
+    --chart-amber: #b18720;
+    --chart-rose: #ba5e8a;
+    --chart-other: #85968f;
+    --chart-negative: #b75470;
   }
 }

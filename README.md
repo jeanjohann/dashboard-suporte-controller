@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.46.0 — [Meu Dashboard](docs/MEU-DASHBOARD.md): conteúdo adaptável, novos gráficos, ampliação/tabelas, indicadores no mesmo card, comparação de séries, seções/modelos e recorte opcional do painel. Configurações locais por usuário; fontes e critérios preservados.
+**Versão:** 0.47.0 — [Nova identidade visual](docs/REFINAMENTO-VISUAL.md): logo branca, tema claro em verde petróleo com superfícies suaves e tema escuro em grafite com cores mais destacadas. Gráficos, cards, controles e exportações acompanham a paleta. [Meu Dashboard](docs/MEU-DASHBOARD.md) conserva composição e organização.
 
 ## Documentação do projeto
 

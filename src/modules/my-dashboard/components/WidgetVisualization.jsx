@@ -16,8 +16,9 @@ import {
 import { formatMetric } from '../domain/evaluate.js';
 import { compareSeries, donutSeries } from '../domain/presentation.js';
 import { VOLUME_SCALE } from '../../consumption/domain/lineConsumption.js';
+import { categoricalColors } from '../../../shared/charts/palette.js';
 
-const colors = ['#dd7427', '#218b83', '#527fd1', '#9671cc', '#c95e7e', '#849746'];
+const colors = categoricalColors;
 export function ValuesTable({ rows, unit, titles }) {
   const [page, setPage] = useState(0),
     last = Math.max(0, Math.ceil(rows.length / 10) - 1),

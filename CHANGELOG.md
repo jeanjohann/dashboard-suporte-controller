@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.47.0 — 20/10/2026
+
+- Renova o tema claro com superfícies suaves, verde petróleo, azul e violeta; no escuro, usa grafite e séries mais luminosas. Menus, filtros, botões, cards, tabelas e Meu Dashboard compartilham os tokens do tema.
+- Restaura a logo branca antiga, com base escura para contraste, símbolo no menu recolhido e favicon correspondente. Mantém o clique na marca para expandir/recolher.
+- Faz as cores das séries acompanharem o tema e preserva cores concretas em SVGs exportados e nas cópias isoladas de impressão. Estados de atenção/críticos conservam distinção semântica; limites, valores e cálculos permanecem iguais.
+- Confere 22 pares de texto/fundo, todos acima de 5:1, e evita quebra excessiva dos valores financeiros nos cards da Visão geral.
+
 ## 0.46.0 — 20/10/2026
 
 - Corrige conteúdo dos blocos redimensionados: gráficos usam o espaço disponível, tipografia proporcional com limites de legibilidade e rótulos/categorias ajustados, com aviso e acesso à tabela completa. Ampliação em janela própria preserva o recorte e a organização.
