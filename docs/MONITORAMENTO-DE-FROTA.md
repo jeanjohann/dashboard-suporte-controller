@@ -14,6 +14,8 @@ Somente **lembretes e seu histórico** ficam no IndexedDB `addlog-monitoring-rem
 
 Notas de **tratamento** continuam somente na sessão. A persistência de lembretes não ativa API de fornecedor, coleta automática, banco remoto ou armazenamento de telemetria. As seções de versões anteriores abaixo são históricas; referências a ausência de gravação/agendamento não incluem os lembretes locais adicionados nesta versão.
 
+**Destino aprovado dos lembretes:** a futura integração com o banco deverá salvar nele a agenda e todo o histórico, tornando-os disponíveis em outros computadores autorizados. A entrega inclui adaptar o repositório/API e migrar os registros reais dos navegadores de origem, preservando datas, observações, resultados e eventos; criar o banco sozinho não ativa essa troca. Dados de demonstração não serão migrados para a agenda real. Compartilhamento e permissões serão definidos antes da ativação. Critérios completos em [Preparação para banco de dados](PREPARACAO-BANCO-DE-DADOS.md#requisito-aprovado-lembretes-do-monitoramento-no-banco).
+
 ## Organização atual — 0.21.0
 
 A página inicia em **Acompanhamento**: filtros no topo, busca por placa/rastreador/cliente/perfil/responsável, seleção de situação técnica, status administrativo e recorte, seguidos da fila e do histórico selecionado. **Visão analítica** contém somente indicadores e gráficos; **Relatórios** contém as exportações. As descrições de fila junto da análise em versões abaixo são históricas e foram substituídas por esta organização.

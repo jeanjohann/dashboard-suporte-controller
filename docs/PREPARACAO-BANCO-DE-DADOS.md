@@ -70,6 +70,16 @@ Essas unidades são um mapa para os adaptadores de domínio, não tabelas de neg
 
 ## Acesso, compartilhamento e migração
 
+### Requisito aprovado: lembretes do Monitoramento no banco
+
+Os lembretes e todo seu histórico **fazem parte obrigatória da futura integração com o banco de negócio**. IndexedDB é a solução provisória; a entrega da integração do Monitoramento deve incluir leitura e gravação no servidor, não apenas a criação/configuração de um banco. Conectar o banco não troca automaticamente o repositório atual.
+
+Preservar base/ID do veículo, data/hora, observação, situação, resultado da conferência e eventos de criação, reagendamento, cancelamento e conferência. O servidor deve fornecer identidade, horário de gravação e controle de revisão, respeitando permissões e evitando mais de um lembrete ativo para o mesmo veículo no espaço autorizado. Quem compartilha a agenda e quais bases cada usuário pode acessar serão definidos antes de ativar esse acesso.
+
+Na ativação, migrar os lembretes reais existentes de cada navegador de origem mediante conferência, incluindo os encerrados e seu histórico. Não enviar demonstração para a agenda real. Reconhecer reenvio do mesmo registro e tratar agendas locais divergentes sem duplicar eventos ou substituir dados silenciosamente; conservar a cópia local até confirmar a migração. A migração exige acesso ao navegador que contém os dados e não recupera registros já apagados.
+
+Após a ativação, o banco será a fonte oficial da agenda: outro computador autorizado consulta os mesmos registros conforme as permissões. Falha do servidor deve ser explícita, sem anunciar gravação concluída nem cair em outra agenda local. A operação continua mostrando os vencidos ao abrir o sistema; notificações com página fechada permanecem fora do pedido atual. A homologação deve testar migração, recarga em outro navegador autorizado, isolamento de acesso, preservação dos eventos, conflitos e falhas de gravação.
+
 O servidor futuro deverá validar a sessão e as permissões antes de construir o repositório. `scope`, `actor`, coleção permitida e relógio não podem ser aceitos livremente do navegador. A chave de escopo prepara isolamento, mas não implementa multiempresa, compartilhamento ou autorização. O comportamento atual de OS/Parque e o acesso mais restrito ao Zoho devem ser respeitados. Não adicionar uma rota genérica que permita consultar qualquer coleção pelo nome.
 
 Sequência de ativação:
