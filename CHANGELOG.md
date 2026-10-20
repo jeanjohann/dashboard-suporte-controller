@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.40.0 — 19/10/2026
+
+- Aplica apresentação mais enxuta em Consumo e Parque, destacando indicadores principais e mantendo médias, extremos, trocas, taxas, bases e critérios em blocos expansíveis.
+- Identifica tabelas com rolagem horizontal e permite navegação por teclado nas grades principais e origens. Alinha valores numéricos e preserva identificadores textuais completos, seleção, ordenação, paginação e exportações.
+- Compacta ações de abrir/resumir/recolher em ícones acessíveis junto à limpeza de filtros. Acrescenta aviso de período invertido e mensagens para fonte ausente, carregamento e recorte vazio.
+- Melhora impressão com contexto legível, apurações próprias, detalhes complementares, cabeçalhos e textos integrais. Mantém a página atual das grades paginadas e as exportações completas existentes.
+- Confere temas claro/escuro e telas de 320 a 1440 px, sem exigir banco, APIs ou novas configurações. Regras analíticas, dados e armazenamento preservados.
+
 ## 0.39.0 — 19/10/2026
 
 - Prepara contrato de persistência independente do banco, com revisão obrigatória, isolamento por espaço/coleção, conteúdo versionado, paginação, fontes imutáveis e exclusão lógica.

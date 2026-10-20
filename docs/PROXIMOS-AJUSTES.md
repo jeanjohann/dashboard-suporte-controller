@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Rodada **A17 entregue em 0.40.0**: Consumo e Parque com indicadores principais/complementares, tabelas com rolagem identificada e teclado, números/identificadores alinhados, ações compactas dos relatórios, mensagens de estado e impressão com contexto legível. Responsividade e temas conferidos; dados, cálculos e configurações externas preservados. [Mudanças e limites da rodada](REFINAMENTO-VISUAL.md).
+
 Preparação entregue em **0.39.0**: contrato de persistência versionado, concorrência, paginação, exclusão lógica, ponte read/write e adaptador SQL para futuro banco de negócio separado. Importação conjunta usa o mesmo repositório do consumo. **Não conclui A10/A13**: nenhum dado foi migrado e armazenamento remoto/compartilhado, rotas, retenção e automação continuam pendentes. [Limites e roteiro de ativação](PREPARACAO-BANCO-DE-DADOS.md).
 
 Entregue em 0.37.0: indicadores do Zoho também no gráfico do suporte da Visão geral, reaproveitando a última coleta completa de Eduardo e Jean. Seletor de quantidades/tempos, período próprio explícito e tabela com valores; leitura preservada ao fechar a seção, sem consultas automáticas.
@@ -50,7 +52,7 @@ Incluído pelo proprietário em 18/10/2026: **n8n como candidato à coordenaçã
 | A15-K  | KORE Brasil / Saitro — linhas e consumo                                                                              | Aguarda documentação e liberação da conta no portal kore.saitro.com; compatibilidade com a API Super SIM não confirmada                      | A definir  |
 | A15-A  | Arqia — linhas e consumo                                                                                             | API anunciada para a Plataforma de Gestão; aguarda documentação técnica, liberação da conta, limites e condições de uso                      | A definir  |
 | A16    | Ampliar conciliação entre operacional, OS e consumo                                                                  | Vínculos básicos já existem. Cruzamento histórico consumo × manutenção depende de titularidade no tempo e critérios de divergência           | A definir  |
-| A17    | Revisão contínua de layout e documentação                                                                            | Harmonizar telas/impressão/responsividade e remover ambiguidades de notas históricas; não esconder bases relevantes                          | A definir  |
+| A17    | Revisão contínua de layout e documentação                                                                            | Rodada 0.40.0 entregue: Consumo/Parque, tabelas, filtros/ações, impressão e responsividade; revisão continua para futuras telas              | Contínuo   |
 
 ## Automação e assistente — pendências
 

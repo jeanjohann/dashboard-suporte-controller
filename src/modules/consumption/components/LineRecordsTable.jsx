@@ -2,6 +2,7 @@
  * Interface de consumo M2M: importação, histórico local, filtros, conferência e exportação.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React, { useEffect, useState } from 'react';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { compareValues } from '../../../shared/data/sorting.js';
@@ -69,14 +70,14 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
     shown = ordered.slice(offset, offset + size);
   return (
     <div className={`line-records${followup ? ' consumption-followup-queue' : ''}`}>
-      <div className="line-actions" data-no-print>
+      <div className="line-actions table-selection-actions" data-no-print>
         <button onClick={() => setChecked(records.map((row) => row.id))} disabled={!records.length}>
           Selecionar todas as linhas filtradas
         </button>
         <button onClick={() => setChecked([])} disabled={!selected.length}>
           Limpar seleção
         </button>
-        <span className="scope">{selected.length} linhas selecionadas</span>
+        <span className="scope selection-count">{selected.length} linhas selecionadas</span>
         <PermissionButton
           action="export"
           disabled={!selected.length}
@@ -90,14 +91,19 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
         registros. A ordenação considera o recorte completo; o CSV inclui todos os registros
         filtrados.
       </p>
-      <div className="table-scroll">
+      <TableScroll label="Registros de consumo">
         <table>
           <thead>
             <tr>
-              <th>Selecionar</th>
+              <th data-no-print>Selecionar</th>
               {columns.map(([label], index) => (
                 <th
                   key={label}
+                  data-cell-type={
+                    ['Consumo MB', 'MB por dia', 'Vezes a média'].includes(label)
+                      ? 'number'
+                      : undefined
+                  }
                   aria-sort={
                     sort?.index === index
                       ? sort.direction === 'asc'
@@ -123,13 +129,13 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                   </button>
                 </th>
               ))}
-              <th>Conferir</th>
+              <th data-no-print>Conferir</th>
             </tr>
           </thead>
           <tbody>
             {shown.map((row) => (
               <tr key={row.id}>
-                <td>
+                <td data-no-print>
                   <input
                     type="checkbox"
                     aria-label={`Selecionar linha ${row.operator} ${row.number} ${row.iccid}`}
@@ -144,8 +150,8 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                   />
                 </td>
                 <td>{row.operator}</td>
-                <td>{row.number}</td>
-                <td>{row.iccid}</td>
+                <td className="cell-identifier">{row.number}</td>
+                <td className="cell-identifier">{row.iccid}</td>
                 {followup ? (
                   <>
                     <td>
@@ -158,7 +164,7 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                     </td>
                     <td>{row.link?.plate || 'Não informada'}</td>
                     <td>{row.period}</td>
-                    <td>
+                    <td data-cell-type="number">
                       {mb(consumptionEligible(row) ? row.ticks : null)}
                       {!consumptionEligible(row) && (
                         <small className="line-attention">Fora dos totais</small>
@@ -167,7 +173,9 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                         <small className="line-attention">Investigar consumo</small>
                       )}
                     </td>
-                    <td>{mb(consumptionEligible(row) ? row.ticks / row.days : null)}</td>
+                    <td data-cell-type="number">
+                      {mb(consumptionEligible(row) ? row.ticks / row.days : null)}
+                    </td>
                     <td>{latest.get(chipKey(row))?.date?.split('-').reverse().join('/') || '—'}</td>
                     <td>
                       <span className="info-print">
@@ -191,10 +199,14 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                         {row.link?.client || 'Não vinculado'}
                       </span>
                     </td>
-                    <td>{row.link?.serial || 'Não informado'}</td>
-                    <td>{mb(consumptionEligible(row) ? row.ticks : null)}</td>
-                    <td>{mb(consumptionEligible(row) ? row.ticks / row.days : null)}</td>
-                    <td>
+                    <td className="cell-identifier">{row.link?.serial || 'Não informado'}</td>
+                    <td data-cell-type="number">
+                      {mb(consumptionEligible(row) ? row.ticks : null)}
+                    </td>
+                    <td data-cell-type="number">
+                      {mb(consumptionEligible(row) ? row.ticks / row.days : null)}
+                    </td>
+                    <td data-cell-type="number">
                       {row.ratio == null
                         ? '—'
                         : row.ratio.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + '×'}
@@ -214,7 +226,7 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
                     </td>
                   </>
                 )}
-                <td>
+                <td data-no-print>
                   <button onClick={() => onView(row)}>
                     {followup ? 'Conferir origem' : 'Conferir e acompanhar'}
                   </button>
@@ -223,8 +235,13 @@ export function LineRecordsTable({ records, onView, onExport, followup }) {
             ))}
           </tbody>
         </table>
-      </div>
-      <div className="line-actions">
+      </TableScroll>
+      <div
+        className="line-actions table-pagination"
+        role="navigation"
+        aria-label="Paginação dos registros de consumo"
+        data-no-print
+      >
         <button disabled={offset === 0} onClick={() => setPage(Math.max(0, page - 1))}>
           Anterior
         </button>

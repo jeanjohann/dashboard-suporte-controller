@@ -1,4 +1,5 @@
 /** Conferência das células originais, revisão e tabela paginada/ordenada de OS. */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { sectionLabels } from '../config/preferences.js';
@@ -72,7 +73,7 @@ export function OrdersRecordsPanel({ data, selected, review, visible, records })
         </div>
         {view === 'records' ? (
           <>
-            <div className="table-scroll">
+            <TableScroll label="Registros e revisão das OS">
               <table>
                 <thead>
                   <tr>
@@ -156,7 +157,7 @@ export function OrdersRecordsPanel({ data, selected, review, visible, records })
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableScroll>
             <footer>
               <span>
                 {filtered.length.toLocaleString('pt-BR')} atendimentos · ordem original da planilha
@@ -178,7 +179,7 @@ export function OrdersRecordsPanel({ data, selected, review, visible, records })
             </footer>
           </>
         ) : (
-          <div className="table-scroll">
+          <TableScroll label="Registros e revisão das OS">
             <SortableTable>
               <thead>
                 <tr>
@@ -205,7 +206,7 @@ export function OrdersRecordsPanel({ data, selected, review, visible, records })
                 completa do cadastro ou das regras de negócio.
               </p>
             )}
-          </div>
+          </TableScroll>
         )}
       </section>
       <InfoNote>

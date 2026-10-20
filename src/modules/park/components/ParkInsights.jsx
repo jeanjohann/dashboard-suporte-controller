@@ -2,6 +2,7 @@
  * Interface dos cruzamentos entre o parque operacional e o histórico de Ordens de Serviço.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useMemo, useState } from 'react';
@@ -10,6 +11,8 @@ import { SortableTable } from '../../../components/SortableTable.jsx';
 import { Chart } from '../../../components/Chart.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { ParkHistoryPanel } from './ParkHistoryPanel.jsx';
+import { AnalysisMetrics } from '../../../components/AnalysisMetrics.jsx';
+import { ViewState } from '../../../components/ViewState.jsx';
 import { download, csv } from '../../../shared/export/exports.js';
 import {
   parkAnalysis,
@@ -106,6 +109,14 @@ export function ParkInsights({
       'Mesmos critérios atuais das OS; não inclui categorias ambíguas',
     ],
   ];
+  const primaryCards = [cards[1], cards[2], cards[3], cards[4]];
+  const secondaryCards = [cards[0], ...cards.slice(5)];
+  const displayCards = (items) =>
+    items.map(([label, value, note]) => [
+      label,
+      value == null ? '—' : typeof value === 'number' ? number(value) : value,
+      note,
+    ]);
   const items = result.items
     .map((item) => ({ label: item.label, value: item[measure] }))
     .filter((item) => item.value != null)
@@ -132,59 +143,67 @@ export function ParkInsights({
           !result.unavailable &&
           !result.invalidPeriod && (
             <ReportSummary
-              metrics={cards.slice(0, 4).map(([label, value]) => [label, number(value)])}
+              metrics={primaryCards.map(([label, value]) => [label, number(value)])}
               note={`Base vinculável: ${result.base} de ${result.total} registros. OS realizadas no período ${start || 'sem limite'} a ${end || 'sem limite'}; fotografia operacional, sem inferir frota ativa ou falha.`}
             />
           )
         }
       >
         {result.unavailable ? (
-          <p className="notice">
+          <ViewState title="Carregue as Ordens de Serviço para cruzar os dados">
             Importe a OS com Status, ID Rastreador, Placa, Tipo de Serviço, Motivo e Data de
             atendimento para habilitar estes indicadores.
-          </p>
+          </ViewState>
         ) : result.invalidPeriod ? (
           <p className="error" role="alert">
             A data inicial deve ser anterior ou igual à final.
           </p>
         ) : (
           <>
-            <p className="notice">
-              {result.base} de {result.total} registros operacionais selecionados podem ser
-              vinculados. Os demais ficam fora desta base. Registros sem atendimento disponível
-              permanecem no denominador; isso não comprova ausência de manutenção. A taxa compara os
-              serviços observados à fotografia importada do parque, não mede probabilidade de falha
-              ou disponibilidade.
+            <p className="analysis-context">
+              {result.base} de {result.total} registros operacionais vinculáveis ·{' '}
+              {result.total - result.base} fora desta base. Fotografia do parque; não representa
+              taxa de falha.
             </p>
-            <p className="scope">
-              Período solicitado: {start || 'sem limite inicial'} até {end || 'sem limite final'}.
-              Datas dos serviços incluídos: {result.period?.start || '—'} a{' '}
-              {result.period?.end || '—'}. {result.missingDates} realizados excluídos por data
-              ausente/inválida com período ativo; {result.undated} incluídos sem data quando não há
-              limite de período.
-            </p>
-            <div className="summary-grid">
-              {cards.map(([label, value, note]) => (
-                <article className="summary-card" key={label}>
-                  <span>{label}</span>
-                  <strong>
-                    {value == null ? '—' : typeof value === 'number' ? number(value) : value}
-                  </strong>
-                  <small>{note}</small>
-                </article>
-              ))}
-            </div>
-            <p className="scope">
-              Retornos cumulativos: até 30 dias{' '}
-              {result.recurringAvailable ? result.returns[30] : '—'}, até 60 dias{' '}
-              {result.recurringAvailable ? result.returns[60] : '—'}, até 90 dias{' '}
-              {result.recurringAvailable ? result.returns[90] : '—'}; base:{' '}
-              {result.recurringAvailable ? result.intervals : '—'} intervalos entre visitas
-              consecutivas dentro da seleção. Serviços no mesmo dia formam uma visita. Nova
-              intervenção não confirma falha. {result.devices?.excludedAccessories ?? 0} manutenções
-              de acessório com categoria não confirmada ficaram para revisão. Manutenções sem troca
-              ficam separadas das substituições.
-            </p>
+            <AnalysisMetrics
+              items={displayCards(primaryCards)}
+              label="Indicadores principais do parque"
+            />
+            <details className="analysis-secondary">
+              <summary>Trocas, retornos e indicadores complementares</summary>
+              <AnalysisMetrics
+                items={displayCards(secondaryCards)}
+                label="Indicadores complementares do parque"
+              />
+            </details>
+            <details className="analysis-context-details">
+              <summary>Base, período e critérios dos indicadores</summary>
+              <p className="notice">
+                {result.base} de {result.total} registros operacionais selecionados podem ser
+                vinculados. Os demais ficam fora desta base. Registros sem atendimento disponível
+                permanecem no denominador; isso não comprova ausência de manutenção. A taxa compara
+                os serviços observados à fotografia importada do parque, não mede probabilidade de
+                falha ou disponibilidade.
+              </p>
+              <p className="scope">
+                Período solicitado: {start || 'sem limite inicial'} até {end || 'sem limite final'}.
+                Datas dos serviços incluídos: {result.period?.start || '—'} a{' '}
+                {result.period?.end || '—'}. {result.missingDates} realizados excluídos por data
+                ausente/inválida com período ativo; {result.undated} incluídos sem data quando não
+                há limite de período.
+              </p>
+              <p className="scope">
+                Retornos cumulativos: até 30 dias{' '}
+                {result.recurringAvailable ? result.returns[30] : '—'}, até 60 dias{' '}
+                {result.recurringAvailable ? result.returns[60] : '—'}, até 90 dias{' '}
+                {result.recurringAvailable ? result.returns[90] : '—'}; base:{' '}
+                {result.recurringAvailable ? result.intervals : '—'} intervalos entre visitas
+                consecutivas dentro da seleção. Serviços no mesmo dia formam uma visita. Nova
+                intervenção não confirma falha. {result.devices?.excludedAccessories ?? 0}{' '}
+                manutenções de acessório com categoria não confirmada ficaram para revisão.
+                Manutenções sem troca ficam separadas das substituições.
+              </p>
+            </details>
           </>
         )}
       </Section>
@@ -267,7 +286,7 @@ export function ParkInsights({
                 exportNote="Base vinculável da fotografia operacional; OS com histórico limitado. Não representa taxa de falhas."
               />
             )}
-            <div className="table-scroll">
+            <TableScroll label="Análise do parque e registros de origem">
               <SortableTable>
                 <thead>
                   <tr>
@@ -298,7 +317,7 @@ export function ParkInsights({
                   ))}
                 </tbody>
               </SortableTable>
-            </div>
+            </TableScroll>
           </Section>
           <Section
             visible
@@ -327,7 +346,7 @@ export function ParkInsights({
               ranking
               exportNote="Somente Concluída/Pago vinculados ao parque selecionado."
             />
-            <div className="table-scroll">
+            <TableScroll label="Análise do parque e registros de origem">
               <SortableTable>
                 <thead>
                   <tr>
@@ -352,10 +371,10 @@ export function ParkInsights({
                   ))}
                 </tbody>
               </SortableTable>
-            </div>
+            </TableScroll>
             <details>
               <summary>Conferir trocas de rastreador ({result.swaps.length})</summary>
-              <div className="table-scroll">
+              <TableScroll label="Análise do parque e registros de origem">
                 <SortableTable>
                   <thead>
                     <tr>
@@ -382,7 +401,7 @@ export function ParkInsights({
                     ))}
                   </tbody>
                 </SortableTable>
-              </div>
+              </TableScroll>
             </details>
             <InfoNote>
               Trocas são subconjuntos dos tipos de serviço, não categorias adicionais para somar.

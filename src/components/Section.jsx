@@ -11,6 +11,8 @@ import { reportHelpFor } from './reportHelp.js';
 import { useLayoutContext } from '../shared/layout/PageLayout.jsx';
 import { availableLayoutMode } from '../shared/layout/pageLayout.js';
 import { useReportStory, StoryPortal, StoryViewControl } from '../shared/layout/ReportStories.jsx';
+import { reportPrintStyles } from '../shared/export/reportPrintStyles.js';
+import { printContextEntries } from '../shared/export/printContext.js';
 export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
@@ -59,8 +61,17 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
     const doc = frame.contentDocument;
     const heading = doc.createElement('h1');
     heading.textContent = story ? `${story.title} · ${title}` : title;
-    const metadata = doc.createElement('p');
-    metadata.textContent = `Arquivo: ${context.filename || '—'} | Filtros: ${JSON.stringify(context.filters || {})} | Referência temporal: ${context.referenceDate || '—'}`;
+    const metadata = doc.createElement('dl');
+    metadata.className = 'print-metadata';
+    for (const [label, value] of printContextEntries(context)) {
+      const item = doc.createElement('div'),
+        name = doc.createElement('dt'),
+        content = doc.createElement('dd');
+      name.textContent = label;
+      content.textContent = value;
+      item.append(name, content);
+      metadata.append(item);
+    }
     const clone = section.current.cloneNode(true);
     clone.querySelectorAll('.summary-card').forEach((element) => {
       const card = doc.createElement('div');
@@ -103,6 +114,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
       ' :root{--chart-secondary:#16a58b}.support-comparison-rows{max-height:none;overflow:visible}.support-comparison-row{display:grid;grid-template-columns:28% 1fr;gap:16px;padding:10px 0;break-inside:avoid}.support-comparison-values{display:grid;gap:10px}.support-comparison-series{display:grid;grid-template-columns:100px 1fr 46px;gap:10px;align-items:center}.support-comparison-series .readable-track>div{height:100%}.support-comparison-series strong{text-align:right}';
     style.textContent +=
       ' .support-metric-grid,.support-extra-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}.support-metric,.support-person-card{border:1px solid #ccd5dd;padding:10px;break-inside:avoid}.support-metric-heading{font-weight:bold}.support-metric-values,.support-person-values{display:flex;gap:20px}.support-metric-values strong{display:block;font-size:20px}.support-role-compact{display:none}.support-role-label,.support-delta{display:block;font-size:10px}.support-person-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.support-person-trigger{font-weight:bold;margin-bottom:8px}.support-person-values dl{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.support-person-values dd{margin:0;font-weight:bold}.support-person-detail{border:1px solid #ccd5dd;padding:12px;margin-top:12px}.support-person-role-grid{display:grid;grid-template-columns:1fr;gap:16px}.support-person-detail .scope{font-size:10px}';
+    style.textContent += reportPrintStyles;
     doc.head.append(style);
     doc.title = title;
     doc.body.append(heading, metadata, clone);

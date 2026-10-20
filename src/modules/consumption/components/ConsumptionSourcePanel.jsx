@@ -1,4 +1,5 @@
 /** Conferência das células originais e dos candidatos operacionais, sem corrigir ou atribuir vínculos. */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React from 'react';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 export function ConsumptionSourcePanel({ row, statements, onClose }) {
@@ -14,7 +15,7 @@ export function ConsumptionSourcePanel({ row, statements, onClose }) {
             {row.filename} · linha {row.sourceRow}.{' '}
             {row.problems.join('; ') || 'Sem problemas na apuração de dados.'} {row.linkState}.
           </p>
-          <div className="table-scroll">
+          <TableScroll label="Dados originais do extrato">
             <SortableTable>
               <thead>
                 <tr>
@@ -33,11 +34,11 @@ export function ConsumptionSourcePanel({ row, statements, onClose }) {
                   ))}
               </tbody>
             </SortableTable>
-          </div>
+          </TableScroll>
           {!!row.candidates.length && (
             <>
               <h3>Registros encontrados no operacional</h3>
-              <div className="table-scroll">
+              <TableScroll label="Dados originais do extrato">
                 <SortableTable>
                   <thead>
                     <tr>
@@ -68,7 +69,7 @@ export function ConsumptionSourcePanel({ row, statements, onClose }) {
                     ))}
                   </tbody>
                 </SortableTable>
-              </div>
+              </TableScroll>
             </>
           )}
         </section>

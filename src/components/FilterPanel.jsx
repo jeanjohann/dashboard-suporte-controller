@@ -33,8 +33,8 @@ export function FilterPanel({
         <div className="filter-workspace-status">
           {matched != null && (
             <strong>
-              {matched}
-              {total != null ? ` de ${total}` : ''}{' '}
+              {matched.toLocaleString('pt-BR')}
+              {total != null ? ` de ${total.toLocaleString('pt-BR')}` : ''}{' '}
               {total == null && matched === 1 ? 'registro' : 'registros'}
             </strong>
           )}
@@ -57,8 +57,13 @@ export function FilterPanel({
         </div>
         <div className="filter-workspace-actions">
           {onClear && (
-            <button type="button" disabled={!chips.length} onClick={onClear}>
-              Limpar filtros desta categoria
+            <button
+              type="button"
+              aria-label="Limpar filtros desta categoria"
+              disabled={!chips.length}
+              onClick={onClear}
+            >
+              Limpar filtros
             </button>
           )}
           {actions}

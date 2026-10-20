@@ -79,7 +79,30 @@ export function SortableTable({ children, sort: controlledSort, onSortChange, ..
                   )
                   .map((item) => item.row)
               : rows;
-          return cloneElement(part, {}, ordered);
+          return cloneElement(
+            part,
+            {},
+            ordered.map((row) =>
+              row.type === 'tr'
+                ? cloneElement(
+                    row,
+                    {},
+                    Children.map(row.props.children, (cell) =>
+                      cell?.type === 'td'
+                        ? cloneElement(cell, {
+                            'data-cell-type':
+                              cell.props['data-cell-type'] ||
+                              (typeof cell.props.children === 'number' ||
+                              typeof cell.props['data-sort'] === 'number'
+                                ? 'number'
+                                : undefined),
+                          })
+                        : cell,
+                    ),
+                  )
+                : row,
+            ),
+          );
         }
         return part;
       })}

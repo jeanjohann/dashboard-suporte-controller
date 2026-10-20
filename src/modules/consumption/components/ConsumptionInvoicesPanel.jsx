@@ -1,4 +1,5 @@
 /** Relatórios de consumo por assunto. Recebem o recorte e preservam o domínio e contexto de impressão da página. */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
@@ -59,7 +60,7 @@ export function ConsumptionInvoicesPanel({
           Faturado e Valor Total são os campos do extrato; não confirmam pagamento. Frete permanece
           separado e sem rateio por chip.
         </InfoNote>
-        <div className="table-scroll">
+        <TableScroll label="Mensalidades e serviços faturados">
           <SortableTable>
             <thead>
               <tr>
@@ -121,7 +122,7 @@ export function ConsumptionInvoicesPanel({
               })}
             </tbody>
           </SortableTable>
-        </div>
+        </TableScroll>
       </Section>
     </>
   );

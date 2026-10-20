@@ -53,6 +53,7 @@ import { useLineFollowup } from '../hooks/useLineFollowup.js';
 import { useConsumptionArchive } from '../hooks/useConsumptionArchive.js';
 import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
 import { consumptionStories } from '../config/reportStories.js';
+import { ViewState } from '../../../components/ViewState.jsx';
 /** Coordena extratos, versões, notas e referência operacional no histórico local do navegador. */
 export function LinesPage({ onPage, operational, onOperationalChange, reloadToken = 0 }) {
   const history = useConsumptionArchive(reloadToken);
@@ -302,7 +303,11 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   setDetail={setDetail}
                   setFilters={setFilters}
                 />
-                {!ready && !error && <p role="status">Abrindo histórico…</p>}
+                {!ready && !error && (
+                  <ViewState busy compact title="Abrindo histórico…">
+                    Os arquivos e as anotações serão exibidos após a leitura do armazenamento local.
+                  </ViewState>
+                )}
                 {error && (
                   <div role="alert" className="error">
                     {error}
@@ -342,27 +347,50 @@ export function LinesPage({ onPage, operational, onOperationalChange, reloadToke
                   </>
                 )}
                 {!statements.length && ready && (
-                  <section className="empty">
-                    <h2>Guarde seus extratos e acompanhe a evolução</h2>
-                    <p>
-                      Importe os consolidados da Arqia e da Kore. Confira o mapeamento e salve a
-                      apuração no histórico.
-                    </p>
-                    <PermissionButton
-                      action="import"
-                      disabled={busy}
-                      onClick={() => input.current.click()}
-                    >
-                      Selecionar extratos
-                    </PermissionButton>
-                    <PermissionButton
-                      action="import"
-                      disabled={busy}
-                      onClick={() => backupInput.current.click()}
-                    >
-                      Restaurar backup
-                    </PermissionButton>
-                  </section>
+                  <ViewState
+                    title="Guarde seus extratos e acompanhe a evolução"
+                    action={
+                      <>
+                        <PermissionButton
+                          action="import"
+                          disabled={busy}
+                          onClick={() => input.current.click()}
+                        >
+                          Selecionar extratos
+                        </PermissionButton>
+                        <PermissionButton
+                          action="import"
+                          disabled={busy}
+                          onClick={() => backupInput.current.click()}
+                        >
+                          Restaurar backup
+                        </PermissionButton>
+                      </>
+                    }
+                  >
+                    Importe os consolidados da Arqia e da Kore. Confira o mapeamento e salve a
+                    apuração no histórico.
+                  </ViewState>
+                )}
+                {ready && !!statements.length && !selected.length && category !== 'history' && (
+                  <ViewState
+                    title="Nenhum registro corresponde a este recorte"
+                    action={
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFilters({});
+                          setSearch('');
+                          setDetail(null);
+                        }}
+                      >
+                        Limpar filtros desta categoria
+                      </button>
+                    }
+                  >
+                    Confira a apuração, os filtros e a busca. Os arquivos e as anotações do
+                    histórico permanecem guardados.
+                  </ViewState>
                 )}
                 <ConsumptionOverviewPanels
                   shown={shown}

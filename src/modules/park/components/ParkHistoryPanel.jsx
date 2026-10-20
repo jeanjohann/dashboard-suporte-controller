@@ -1,4 +1,5 @@
 /** Histórico por par serial + placa já validado, junto à origem; busca e paginação afetam só a grade. */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Section, PrintContext } from '../../../components/Section.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
@@ -171,7 +172,10 @@ export function ParkHistoryPanel({ result, orders, context }) {
               <summary>
                 Conferir grupos e tamanho da base ({history[dimension].items.length})
               </summary>
-              <div className="table-scroll park-history-group-table">
+              <TableScroll
+                label="Histórico individual do parque"
+                className="park-history-group-table"
+              >
                 <SortableTable>
                   <thead>
                     <tr>
@@ -192,7 +196,7 @@ export function ParkHistoryPanel({ result, orders, context }) {
                     ))}
                   </tbody>
                 </SortableTable>
-              </div>
+              </TableScroll>
             </details>
           </article>
           <article className="panel dashboard-widget">
@@ -231,7 +235,7 @@ export function ParkHistoryPanel({ result, orders, context }) {
         <PermissionButton action="export" onClick={exportRows}>
           Exportar histórico do parque CSV
         </PermissionButton>
-        <div className="table-scroll">
+        <TableScroll label="Histórico individual do parque">
           <SortableTable
             sort={sort}
             onSortChange={(next) => {
@@ -290,7 +294,7 @@ export function ParkHistoryPanel({ result, orders, context }) {
               ))}
             </tbody>
           </SortableTable>
-        </div>
+        </TableScroll>
         {!rows.length && <p role="status">Nenhum registro vinculável corresponde à busca.</p>}
         <div className="park-history-controls" data-no-print>
           <button disabled={!currentPage} onClick={() => setPage(currentPage - 1)}>

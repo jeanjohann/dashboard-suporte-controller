@@ -8,11 +8,12 @@ export function ConsumptionImportHeader({ busy, ready, imports, settingsAvailabl
     <header>
       <div>
         <div className="eyebrow">CONTROLE DE LINHAS</div>
-        <h1>Consumo, equipamentos e acompanhamento</h1>
+        <h1>Controle de Consumo M2M</h1>
         <p>Arqia e Kore · histórico salvo neste navegador, com backup exportável.</p>
       </div>
       <div className="line-actions">
         <PermissionButton
+          className="primary-action"
           action="import"
           disabled={busy || !ready}
           onClick={() => input.current.click()}

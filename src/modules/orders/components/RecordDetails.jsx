@@ -2,6 +2,7 @@
  * Interface de Ordens de Serviço: apresenta análises, contexto e registros de origem sem modificar a planilha.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useState } from 'react';
 import { SortableTable } from '../../../components/SortableTable.jsx';
@@ -78,7 +79,7 @@ export function MonthlyBreakdown({ data }) {
   const item = result.items.find((item) => item.label === month);
   return (
     <>
-      <div className="table-scroll">
+      <TableScroll label="Linhas originais de atendimento">
         <SortableTable>
           <thead>
             <tr>
@@ -105,7 +106,7 @@ export function MonthlyBreakdown({ data }) {
             ))}
           </tbody>
         </SortableTable>
-      </div>
+      </TableScroll>
       {item && (
         <RecordDetails data={data} rows={item.rows} title={`Atendimentos de ${item.label}`} />
       )}

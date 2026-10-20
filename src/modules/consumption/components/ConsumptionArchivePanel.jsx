@@ -1,4 +1,5 @@
 /** Gestão visual de arquivos e backups. As ações são autorizadas e persistidas pelo coordenador da página. */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
@@ -72,7 +73,7 @@ export function ConsumptionArchivePanel({
           </div>
         </div>
       )}
-      <div className="table-scroll">
+      <TableScroll label="Arquivos e versões do histórico">
         <SortableTable>
           <thead>
             <tr>
@@ -101,7 +102,7 @@ export function ConsumptionArchivePanel({
             })}
           </tbody>
         </SortableTable>
-      </div>
+      </TableScroll>
     </Section>
   );
 }

@@ -1,4 +1,5 @@
 /** Histórico individual: apresenta busca, formulário, apurações e exportação sem controlar a persistência. */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
@@ -198,7 +199,7 @@ export function LineHistoryPanel({ visible, revealToken, chartNote, busy, follow
             items={timeline.map((row) => ({ label: row.period, value: row.mbDay }))}
             format={(value) => mb(value) + '/dia'}
           />
-          <div className="table-scroll">
+          <TableScroll label="Histórico da linha">
             <SortableTable>
               <thead>
                 <tr>
@@ -229,7 +230,7 @@ export function LineHistoryPanel({ visible, revealToken, chartNote, busy, follow
                 ))}
               </tbody>
             </SortableTable>
-          </div>
+          </TableScroll>
           <InfoNote>
             Apurações semanais e mensais podem se sobrepor. São observações separadas, sem somar
             snapshots ou presumir o consumo de dias individuais.

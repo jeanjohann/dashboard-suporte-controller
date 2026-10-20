@@ -47,6 +47,11 @@ export function PeriodFilter({ start, end, earliest, onChange, shortcuts = [] })
       >
         Todo o período
       </button>
+      {start && end && start > end && (
+        <p className="filter-period-warning" role="alert">
+          A data inicial deve ser anterior ou igual à final.
+        </p>
+      )}
     </div>
   );
 }

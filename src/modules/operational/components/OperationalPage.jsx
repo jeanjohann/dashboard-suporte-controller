@@ -2,6 +2,7 @@
  * Página operacional e integração dos filtros com as análises de Parque e Manutenção.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import {
   authorizeAction,
@@ -46,6 +47,8 @@ import { parkStories } from '../config/reportStories.js';
 import { useGoogleOrders } from '../../orders/hooks/useGoogleOrders.js';
 import { OrdersGooglePanel } from '../../orders/components/OrdersGooglePanel.jsx';
 import { importGoogleOperational } from '../domain/googleOperational.js';
+import { ViewState } from '../../../components/ViewState.jsx';
+import { AnalysisMetrics } from '../../../components/AnalysisMetrics.jsx';
 
 const layoutDefinitions = [
   ...new Set([...operationalMenus, ...crossAnalysisMenus].flatMap((menu) => menu.sections)),
@@ -296,7 +299,7 @@ export function OperationalPage({
                 filters: { ...filters, busca: search, categoria: category, alcance: scopeLabel },
               }}
             >
-              <div className="app operational-page">
+              <div className={`app operational-page${analysis ? ' park-page' : ''}`}>
                 <Navigation page={page} onPage={onPage} />
                 <main>
                   <SidebarContent>
@@ -447,13 +450,21 @@ export function OperationalPage({
                       setFilters={setLogisticsFilters}
                     />
                   ) : !data ? (
-                    <section className="empty">
-                      <h2>Selecione a planilha operacional</h2>
-                      <p>
-                        Aba Equipamentos, colunas originais do layout reconhecido. Dados mantidos
-                        somente nesta sessão.
-                      </p>
-                    </section>
+                    <ViewState
+                      title="Selecione a planilha operacional"
+                      action={
+                        <PermissionButton
+                          action="import"
+                          disabled={busy}
+                          onClick={() => input.current.click()}
+                        >
+                          Importar operacional
+                        </PermissionButton>
+                      }
+                    >
+                      Aba Equipamentos, colunas originais do layout reconhecido. Dados mantidos
+                      somente nesta sessão.
+                    </ViewState>
                   ) : (
                     <>
                       <div className="source">
@@ -461,12 +472,35 @@ export function OperationalPage({
                         <span>Aba Equipamentos · somente leitura</span>
                         <span>OS: {orders?.filename || 'não importada'}</span>
                       </div>
-                      <p className="notice">
-                        O operacional é mais antigo que o histórico de OS. Ausência de atendimento
-                        registrado não indica erro, falta de instalação ou ausência de manutenção
-                        anterior. Fórmulas são lidas pelo resultado armazenado no Excel, sem
-                        recálculo.
-                      </p>
+                      <details className="analysis-context-details">
+                        <summary>Origem, histórico e leitura da planilha</summary>
+                        <p className="notice">
+                          O operacional é mais antigo que o histórico de OS. Ausência de atendimento
+                          registrado não indica erro, falta de instalação ou ausência de manutenção
+                          anterior. Fórmulas são lidas pelo resultado armazenado no Excel, sem
+                          recálculo.
+                        </p>
+                      </details>
+                      {!rows.length && data.rows.length > 0 && (
+                        <ViewState
+                          title="Nenhum registro corresponde a este recorte"
+                          action={
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFilters({});
+                                setSearch('');
+                                setOffset(0);
+                              }}
+                            >
+                              Limpar filtros desta categoria
+                            </button>
+                          }
+                        >
+                          Confira os filtros e a busca desta categoria. A base operacional importada
+                          permanece disponível.
+                        </ViewState>
+                      )}
                       <div className="inline-help-heading" hidden={menuCategory !== 'overview'}>
                         <h2>{analysis ? 'Cobertura do histórico' : 'Resumo da importação'}</h2>
                         <InfoNote>
@@ -475,16 +509,20 @@ export function OperationalPage({
                             : 'Contagens do arquivo operacional completo: registros importados, pontos para revisão, linhas distintas com apontamento e linhas sem Nº não importadas. Um registro pode ter vários pontos. Estes cards não seguem filtros nem busca; a tabela de revisão tem seu próprio recorte. Não confirmam divergências automaticamente nem alteram a planilha.'}
                         </InfoNote>
                       </div>
-                      <section className="cards" hidden={menuCategory !== 'overview'}>
-                        {cards.map(([label, value]) => (
-                          <article key={label}>
-                            <span>{label}</span>
-                            <strong>
-                              {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
-                            </strong>
-                          </article>
-                        ))}
-                      </section>
+                      <div hidden={menuCategory !== 'overview'}>
+                        <AnalysisMetrics
+                          className={analysis ? 'park-coverage' : ''}
+                          label={
+                            analysis
+                              ? 'Cobertura do histórico do parque'
+                              : 'Resumo da importação operacional'
+                          }
+                          items={cards.map(([label, value]) => [
+                            label,
+                            typeof value === 'number' ? value.toLocaleString('pt-BR') : value,
+                          ])}
+                        />
+                      </div>
                       {analysis ? (
                         <ReportStories groups={parkStories}>
                           <ParkInsights
@@ -587,7 +625,7 @@ export function OperationalPage({
                                 Rastreador e Placa para habilitar o cruzamento.
                               </p>
                             )}
-                            <div className="table-scroll">
+                            <TableScroll label="Registros do operacional">
                               <SortableTable>
                                 <thead>
                                   <tr>
@@ -616,7 +654,7 @@ export function OperationalPage({
                                   ))}
                                 </tbody>
                               </SortableTable>
-                            </div>
+                            </TableScroll>
                           </Section>
                         </ReportStories>
                       ) : (
@@ -642,7 +680,7 @@ export function OperationalPage({
                               conferência, não erros confirmados. Nenhum registro é corrigido ou
                               removido automaticamente.
                             </p>
-                            <div className="table-scroll">
+                            <TableScroll label="Registros do operacional">
                               <SortableTable>
                                 <thead>
                                   <tr>
@@ -665,7 +703,7 @@ export function OperationalPage({
                                   ))}
                                 </tbody>
                               </SortableTable>
-                            </div>
+                            </TableScroll>
                           </Section>
                           <Section title="Registros operacionais">
                             <p className="scope">
@@ -673,7 +711,7 @@ export function OperationalPage({
                               planilha permanece disponível em Original; não substitui um serial
                               desconhecido.
                             </p>
-                            <div className="table-scroll">
+                            <TableScroll label="Registros do operacional">
                               <SortableTable
                                 sort={recordSort}
                                 onSortChange={(next) => {
@@ -714,7 +752,7 @@ export function OperationalPage({
                                   ))}
                                 </tbody>
                               </SortableTable>
-                            </div>
+                            </TableScroll>
                             <footer>
                               <button disabled={!offset} onClick={() => setOffset(offset - 1)}>
                                 Anterior
@@ -742,7 +780,7 @@ export function OperationalPage({
                           {detail && menuCategory === 'records' && (
                             <Section title={`Original · linha ${detail.sourceRow}`}>
                               <button onClick={() => setDetail(null)}>Fechar detalhe</button>
-                              <div className="table-scroll">
+                              <TableScroll label="Registros do operacional">
                                 <SortableTable>
                                   <thead>
                                     <tr>
@@ -763,7 +801,7 @@ export function OperationalPage({
                                     ))}
                                   </tbody>
                                 </SortableTable>
-                              </div>
+                              </TableScroll>
                             </Section>
                           )}
                         </>

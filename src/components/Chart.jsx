@@ -21,6 +21,7 @@ import {
 import { chartAvailability, rankingItems } from '../shared/charts/chartRules.js';
 import { download, chartSvg } from '../shared/export/exports.js';
 import { categoricalColors as colors, chartColors } from '../shared/charts/palette.js';
+import { ViewState } from './ViewState.jsx';
 /** Apresenta a série calculada, controla o formato compatível e exporta o gráfico com seu contexto. */
 export function Chart({
   items,
@@ -66,7 +67,12 @@ export function Chart({
   const reason = chartAvailability(items, measure),
     circular = type === 'pie' || type === 'donut';
   const total = circular ? items.reduce((sum, item) => sum + item.value, 0) : 0;
-  if (!items.length) return <p className="scope">Sem dados para esta seleção.</p>;
+  if (!items.length)
+    return (
+      <ViewState compact title="Sem dados para este gráfico">
+        Confira a fonte, o período e os filtros desta análise.
+      </ViewState>
+    );
   if (circular && reason)
     return (
       <p role="status" className="notice">

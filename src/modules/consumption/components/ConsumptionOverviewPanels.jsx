@@ -1,4 +1,5 @@
 /** Relatórios de consumo por assunto. Recebem o recorte e preservam o domínio e contexto de impressão da página. */
+import { TableScroll } from '../../../components/TableScroll.jsx';
 import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
@@ -6,6 +7,7 @@ import { Chart } from '../../../components/Chart.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { VOLUME_SCALE } from '../domain/lineConsumption.js';
+import { AnalysisMetrics } from '../../../components/AnalysisMetrics.jsx';
 import {
   formatMB as mb,
   formatVolume as volume,
@@ -37,8 +39,10 @@ export function ConsumptionOverviewPanels({
           />
         }
       >
-        <div className="summary-grid line-cards">
-          {[
+        <AnalysisMetrics
+          className="line-cards"
+          label="Indicadores principais do consumo"
+          items={[
             ['Chips no recorte', number(summary.lines), 'Identificação por operadora + ICCID'],
             [
               'Consumo total',
@@ -57,29 +61,42 @@ export function ConsumptionOverviewPanels({
               number(summary.zero),
               `${summary.samples ? number((summary.zero / summary.samples) * 100) : '—'}% dos registros válidos; sem inferir equipamento parado`,
             ],
-            [
-              'Média geral por linha',
-              volume(summary.average),
-              `Inclui zeros · média com tráfego: ${volume(summary.activeAverage)}`,
-            ],
-            [
-              'Vínculos conferidos',
-              number(eligible.filter((row) => row.link).length),
-              'ICCID e número no mesmo registro operacional',
-            ],
-          ].map(([label, value, note]) => (
-            <div className="summary-card" key={label}>
-              <span>{label}</span>
-              <strong>{value}</strong>
-              <small>{note}</small>
-            </div>
-          ))}
-        </div>
+          ]}
+        />
+        <details className="analysis-secondary">
+          <summary>
+            Médias, extremos e vínculos <span>Mais indicadores do mesmo recorte</span>
+          </summary>
+          <AnalysisMetrics
+            label="Indicadores complementares do consumo"
+            items={[
+              [
+                'Média geral por linha',
+                volume(summary.average),
+                `Inclui zeros · média com tráfego: ${volume(summary.activeAverage)}`,
+              ],
+              [
+                'Vínculos conferidos',
+                number(eligible.filter((row) => row.link).length),
+                'ICCID e número no mesmo registro operacional',
+              ],
+              [
+                'Mediana do consumo',
+                volume(summary.median),
+                'Consumo central entre os registros de dados válidos',
+              ],
+              [
+                'Maior consumo',
+                volume(summary.max),
+                'Maior volume individual na apuração selecionada',
+              ],
+            ]}
+          />
+        </details>
         <p className="scope">
-          Mediana: {volume(summary.median)} · maior consumo: {volume(summary.max)} ·{' '}
-          {summary.excluded} registros de dados fora dos totais. SMS e frete não entram no volume de
-          dados. Clientes e equipamentos vêm da referência operacional, sem comprovar alocação
-          histórica.
+          {summary.samples} registros de dados válidos · {summary.excluded} fora dos totais. SMS e
+          frete não entram no volume de dados. Clientes e equipamentos vêm da referência
+          operacional, sem comprovar alocação histórica.
         </p>
         <div className="dashboard-chart-grid">
           <article className="panel dashboard-widget">
@@ -136,7 +153,7 @@ export function ConsumptionOverviewPanels({
           apuração. Os fornecedores têm vários contratos; não há cálculo de saldo de uma franquia
           global.
         </InfoNote>
-        <div className="table-scroll">
+        <TableScroll label="Comparativo por operadora">
           <SortableTable>
             <thead>
               <tr>
@@ -177,7 +194,7 @@ export function ConsumptionOverviewPanels({
               ))}
             </tbody>
           </SortableTable>
-        </div>
+        </TableScroll>
       </Section>
     </>
   );
