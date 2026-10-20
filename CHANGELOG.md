@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.41.2 — 20/10/2026
+
+- Alinha a altura dos três quadros iniciais de apresentação na Visão geral e permite rolar seus conteúdos mais longos, com cabeçalhos acessíveis e recolhimento preservados. Evita lacunas antes dos relatórios seguintes.
+- Mantém altura livre no celular e conteúdo integral na impressão. Em telas intermediárias, custos ocupa a largura disponível para evitar uma coluna vazia.
+
 ## 0.41.1 — 20/10/2026
 
 - Move a escolha de gráficos e os atalhos da Visão geral para um bloco recolhível logo abaixo do título, antes dos indicadores. O cabeçalho informa quantos grupos estão abertos e os controles deixam de interromper a sequência dos gráficos.

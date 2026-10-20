@@ -46,6 +46,15 @@ function InlineChart({ title, ...props }) {
   );
 }
 
+/** Mantém os quadros comparáveis sem limitar o conteúdo na impressão ou no celular. */
+function ComparisonBody({ title, children }) {
+  return (
+    <div className="overview-comparison-body" role="region" aria-label={title} tabIndex={0}>
+      {children}
+    </div>
+  );
+}
+
 /** Cada resumo permanece junto ao seu gráfico, como no painel anterior à reorganização. */
 function Operations({ dashboard, metrics }) {
   const [client, setClient] = useState('');
@@ -58,60 +67,64 @@ function Operations({ dashboard, metrics }) {
   return (
     <div className="overview-operation-widgets">
       <Section title="Clientes com mais manutenção · Visão geral" help={help.operations}>
-        <PresentationChart
-          compact
-          title="Assistências técnicas realizadas"
-          items={(metrics.clients || []).slice(0, 10)}
-          onItemClick={(item) => setClient(item.label)}
-        />
-        <button
-          type="button"
-          onClick={() =>
-            setMaintenanceDetail({
-              label: 'Manutenções realizadas',
-              rows: metrics.maintenance.map((row) => row.sourceRow),
-            })
-          }
-        >
-          Conferir atendimentos
-        </button>
-        <MaintenanceSummary
-          data={dashboard.selected}
-          selectedClient={client}
-          onSelect={setClient}
-          onDetail={setMaintenanceDetail}
-        />
-        {maintenanceDetail && (
-          <RecordDetails
-            data={dashboard.selected}
-            rows={maintenanceDetail.rows}
-            title={maintenanceDetail.label}
+        <ComparisonBody title="Clientes com mais manutenção · conteúdo do relatório">
+          <PresentationChart
             compact
-            onClose={() => setMaintenanceDetail(null)}
+            title="Assistências técnicas realizadas"
+            items={(metrics.clients || []).slice(0, 10)}
+            onItemClick={(item) => setClient(item.label)}
           />
-        )}
+          <button
+            type="button"
+            onClick={() =>
+              setMaintenanceDetail({
+                label: 'Manutenções realizadas',
+                rows: metrics.maintenance.map((row) => row.sourceRow),
+              })
+            }
+          >
+            Conferir atendimentos
+          </button>
+          <MaintenanceSummary
+            data={dashboard.selected}
+            selectedClient={client}
+            onSelect={setClient}
+            onDetail={setMaintenanceDetail}
+          />
+          {maintenanceDetail && (
+            <RecordDetails
+              data={dashboard.selected}
+              rows={maintenanceDetail.rows}
+              title={maintenanceDetail.label}
+              compact
+              onClose={() => setMaintenanceDetail(null)}
+            />
+          )}
+        </ComparisonBody>
       </Section>
       <Section title="Perfil dos serviços realizados · Visão geral" help={help.operations}>
-        <PresentationChart
-          compact
-          title="Participação por tipo de serviço"
-          items={dashboard.types}
-          type="donut"
-        />
-        <ServiceProfileSummary
-          data={dashboard.selected}
-          previous={dashboard.previous}
-          onDetail={setProfileDetail}
-        />
-        {profileDetail && (
-          <RecordDetails
-            data={dashboard.selected}
-            rows={profileDetail.rows}
-            title={profileDetail.label}
+        <ComparisonBody title="Perfil dos serviços realizados · conteúdo do relatório">
+          <PresentationChart
             compact
-            onClose={() => setProfileDetail(null)}
+            title="Participação por tipo de serviço"
+            items={dashboard.types}
+            type="donut"
           />
-        )}
+          <ServiceProfileSummary
+            data={dashboard.selected}
+            previous={dashboard.previous}
+            onDetail={setProfileDetail}
+          />
+          {profileDetail && (
+            <RecordDetails
+              data={dashboard.selected}
+              rows={profileDetail.rows}
+              title={profileDetail.label}
+              compact
+              onClose={() => setProfileDetail(null)}
+            />
+          )}
+        </ComparisonBody>
       </Section>
     </div>
   );
@@ -132,7 +145,7 @@ function Costs({ data }) {
   const [detail, setDetail] = useState(null);
   useEffect(() => setDetail(null), [data]);
   return (
-    <>
+    <ComparisonBody title="Composição dos custos · conteúdo do relatório">
       <p className="scope">
         Composição: {paired?.count || 0} realizados com Técnico e Km válidos simultaneamente. Km é
         despesa em reais; componentes não substituem o Custo Total lançado.
@@ -189,7 +202,7 @@ function Costs({ data }) {
           <RecordDetails data={data} rows={detail.rows} title={detail.label} />
         </div>
       )}
-    </>
+    </ComparisonBody>
   );
 }
 

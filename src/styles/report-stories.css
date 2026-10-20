@@ -199,6 +199,49 @@
 .overview-presentation-grid .section-body {
   padding: 14px;
 }
+.overview-comparison-body {
+  min-width: 0;
+}
+@media screen and (min-width: 801px) {
+  .overview-inline-panel--operations .workspace-section:not([hidden]),
+  .overview-inline-panel--clients .workspace-section:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+  }
+  .overview-inline-panel--operations .workspace-section:has(> .section-body:not([hidden])),
+  .overview-inline-panel--clients .workspace-section:has(> .section-body:not([hidden])) {
+    height: clamp(500px, 75vh, 720px);
+  }
+  .overview-inline-panel--operations .section-body:not([hidden]),
+  .overview-inline-panel--clients .section-body:not([hidden]) {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+  .overview-inline-panel--operations .section-content,
+  .overview-inline-panel--clients .section-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+  .overview-comparison-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    scrollbar-gutter: stable;
+    padding-right: 6px;
+  }
+  .overview-comparison-body:focus-visible {
+    outline: 2px solid var(--ui-accent);
+    outline-offset: -2px;
+  }
+  .overview-comparison-body .readable-bars {
+    max-height: none;
+    overflow: visible;
+  }
+}
 .overview-presentation-grid .readable-bar-row {
   grid-template-columns: minmax(0, 42%) minmax(0, 1fr) auto;
   gap: 10px;
@@ -276,6 +319,9 @@
   .overview-presentation-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .overview-inline-panel--clients {
+    grid-column: 1 / -1;
+  }
 }
 @media (max-width: 800px) {
   .overview-presentation-grid,
@@ -307,5 +353,10 @@
 @media print {
   .overview-presentation-controls {
     display: none !important;
+  }
+  .overview-comparison-body {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 }

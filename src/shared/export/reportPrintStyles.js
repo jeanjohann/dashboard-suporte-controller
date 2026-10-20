@@ -9,4 +9,5 @@ table{table-layout:auto}thead{display:table-header-group}tr{break-inside:avoid}t
 .analysis-secondary,.analysis-context-details{margin:14px 0}summary{font-weight:bold;margin:8px 0}.analysis-context,.scope{color:#526477}.view-state{padding:10px;border:1px solid #ccd5dd}.view-state svg{display:none}.view-state p{margin:5px 0}
 .analysis-secondary>summary>span{margin-left:10px;font-weight:normal;font-size:9px;color:#526477}
 .dashboard-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.dashboard-widget{min-width:0;break-inside:avoid;margin:14px 0}.table-scroll-hint,.table-pagination,.chart-tools>summary,.chart-heading label{display:none!important}
+.overview-comparison-body{height:auto!important;max-height:none!important;overflow:visible!important}
 `;
