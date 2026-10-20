@@ -3,6 +3,7 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { consumptionRecordsCsv } from '../domain/consumptionRecordsReport.js';
+import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import {
   consumptionCategories as categories,
   consumptionLayoutDefinitions,
@@ -100,6 +101,11 @@ export function LinesPage({
     [linked, baselines, archive.settings.factor],
   );
   const followup = useLineFollowup({ allRows, archive, commit, setError });
+  const dashboardSource = useMemo(
+    () => (ready && statements.length ? { rows: allRows, statements, error } : null),
+    [ready, statements, allRows, error],
+  );
+  usePublishDashboardSource('consumption', dashboardSource);
   const { tracked, setTracked, setLineSearch } = followup;
   function selectTracked(key) {
     setTracked(key);

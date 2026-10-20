@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Meu Dashboard — 0.44.0
+
+`modules/my-dashboard/` reúne catálogo e adaptadores de avaliação em `domain/`, registro de fontes e edição em `hooks/`, repositório local transacional em `data/` e página/construtor em `components/`. `DashboardSourcesProvider` envolve o Workspace e remonta a sessão quando identidade ou permissões mudam. Workspace publica OS/Operacional/Logística; sessões dos módulos publicam Zoho, Consumo e Monitoramento com referências estáveis. Nenhuma leitura externa é disparada pelo painel. O avaliador confere permissões antes de ler a fonte e reutiliza os domínios dos módulos. A página é carregada sob demanda. IndexedDB separado guarda somente configuração validada por identidade, com revisão concorrente. Não utiliza nem ativa o futuro banco de negócio. [Uso, critérios e limites](MEU-DASHBOARD.md).
+
 ## Preparação de persistência — 0.39.0
 
 `shared/persistence/` define documentos versionados, revisão obrigatória, paginação, exclusão lógica e adaptador de memória de referência. `server/persistence/` prepara um adaptador SQL e migração isolada para futuro banco de negócio, sem binding ou rotas ativas. O consumo conserva seu IndexedDB e backup; importação conjunta e página usam o mesmo repositório. Fontes na sessão não são gravadas automaticamente. [Contratos, limites e sequência de ativação](PREPARACAO-BANCO-DE-DADOS.md).
@@ -60,6 +64,7 @@ src/
   app/                     Workspace, navegação, tema e painel lateral
   components/              Gráficos, tabelas, filtros, ajuda e impressão compartilhados
   modules/
+    my-dashboard/          Catálogo entre módulos, blocos, fontes em memória e layouts locais
     orders/                Ordens de Serviço
       components/          Página, cards e relatórios
       hooks/               Estado da base, importação e controles da sessão

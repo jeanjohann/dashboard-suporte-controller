@@ -1,5 +1,6 @@
 /** Coordena acompanhamento e análise sem misturar demonstração e integração real. */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
@@ -35,6 +36,11 @@ const initialFilters = () => ({
 /** Bases/limite pertencem à análise; busca, situação, status e recorte pertencem à fila/exportação. */
 export function MonitoringPage({ onPage }) {
   const { snapshot, source, busy, error, demonstration, refresh } = useMonitoringSource();
+  const dashboardSource = useMemo(
+    () => (snapshot ? { snapshot, error } : null),
+    [source, snapshot?.referenceAt, error],
+  );
+  usePublishDashboardSource('monitoring', dashboardSource);
   const [category, setCategory] = useState('queue');
   const { filters, setFilters, resetSelections, counts } = useScopedSelection(
     category,

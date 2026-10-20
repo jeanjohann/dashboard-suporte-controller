@@ -1,8 +1,10 @@
 # Dashboard de suporte
 
-**Versão:** 0.41.0 — [Lembretes de conferência](docs/MONITORAMENTO-DE-FROTA.md) por veículo no Monitoramento Ativo, com data/hora, vencidos ao abrir a página e histórico salvo neste navegador. [Refinamento visual](docs/REFINAMENTO-VISUAL.md) e [preparação para banco de dados](docs/PREPARACAO-BANCO-DE-DADOS.md) preservados, sem armazenamento remoto ativado.
+**Versão:** 0.44.0 — [Meu Dashboard](docs/MEU-DASHBOARD.md): painéis personalizados com indicadores dos módulos, formatos, filtros e organização dos blocos. Configurações salvas por usuário neste navegador; fontes na sessão. Fechamentos/tempos do Zoho e as integrações existentes preservados, sem armazenamento remoto novo.
 
 ## Documentação do projeto
+
+- [Meu Dashboard — catálogo, uso e salvamento por usuário](docs/MEU-DASHBOARD.md)
 
 - [Banco de dados — preparação, limites e roteiro de migração](docs/PREPARACAO-BANCO-DE-DADOS.md)
 

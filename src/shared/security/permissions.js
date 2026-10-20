@@ -25,6 +25,7 @@ export function allowsPage(user, page) {
   if (!user?.active) return false;
   if (user.role === 'admin') return true;
   if (page === 'users') return false;
+  if (page === 'my-dashboard') return moduleKeys.some((key) => user.pages?.includes(key));
   if (page === 'imports') return user.canImport && user.pages?.length > 0;
   return moduleKeys.includes(page) && user.pages?.includes(page);
 }

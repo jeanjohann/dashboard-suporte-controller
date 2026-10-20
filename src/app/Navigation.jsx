@@ -13,6 +13,7 @@ import {
   canOpenAssistantPreview,
 } from '../modules/assistant/domain/previewAccess.js';
 const pages = [
+  ['my-dashboard', 'Meu Dashboard'],
   ['orders', 'Ordens de Serviço'],
   ['operational', 'Operacional'],
   ['lines', 'Controle de Consumo M2M'],

@@ -8,6 +8,10 @@ import { authorizeAction, accessUser } from '../shared/security/accessClient.js'
 import React, { lazy, useEffect, useState } from 'react';
 import { DeferredPage } from './DeferredPage.jsx';
 import {
+  DashboardSourcesProvider,
+  usePublishDashboardSource,
+} from '../modules/my-dashboard/hooks/DashboardSources.jsx';
+import {
   assistantPreviewHash,
   canOpenAssistantPreview,
   requestsAssistantPreview,
@@ -50,8 +54,20 @@ const MonitoringPage = lazy(() =>
     default: module.MonitoringPage,
   })),
 );
+const MyDashboardPage = lazy(() =>
+  import('../modules/my-dashboard/components/MyDashboardPage.jsx').then((module) => ({
+    default: module.MyDashboardPage,
+  })),
+);
 /** Mantém as bases da sessão e coordena páginas autorizadas e importações conjuntas. */
 export function Workspace() {
+  return (
+    <DashboardSourcesProvider>
+      <WorkspaceContent />
+    </DashboardSourcesProvider>
+  );
+}
+function WorkspaceContent() {
   const { user } = useAccess();
   const allowed = (key) =>
     key === 'assistant-lab' ? canOpenAssistantPreview(user) : allowsPage(user, key);
@@ -62,6 +78,9 @@ export function Workspace() {
     [operational, setOperational] = useState(null),
     [logistics, setLogistics] = useState(null),
     [consumptionRevision, setConsumptionRevision] = useState(0);
+  usePublishDashboardSource('orders', orders);
+  usePublishDashboardSource('operational', operational);
+  usePublishDashboardSource('logistics', logistics);
   // Entrada explícita de laboratório; nunca é adicionada ao menu ou às permissões de usuários comuns.
   useEffect(() => {
     const syncPreview = () => {
@@ -121,6 +140,14 @@ export function Workspace() {
     );
   return (
     <>
+      <DeferredPage
+        active={current === 'my-dashboard'}
+        allowed={allowed('my-dashboard')}
+        page="my-dashboard"
+        onPage={navigate}
+      >
+        <MyDashboardPage onPage={navigate} />
+      </DeferredPage>
       <DeferredPage
         active={current === 'assistant-lab'}
         allowed={canOpenAssistantPreview(user)}

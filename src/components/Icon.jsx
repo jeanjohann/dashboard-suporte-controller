@@ -4,6 +4,14 @@
  */
 import React from 'react';
 const paths = {
+  'my-dashboard': (
+    <>
+      <rect x="3" y="3" width="7" height="8" rx="1" />
+      <rect x="14" y="3" width="7" height="5" rx="1" />
+      <rect x="3" y="15" width="7" height="6" rx="1" />
+      <rect x="14" y="12" width="7" height="9" rx="1" />
+    </>
+  ),
   laboratory: (
     <>
       <path d="M9 3h6M10 3v6l-6 10a1.4 1.4 0 0 0 1.2 2h13.6a1.4 1.4 0 0 0 1.2-2L14 9V3M7.5 15h9" />

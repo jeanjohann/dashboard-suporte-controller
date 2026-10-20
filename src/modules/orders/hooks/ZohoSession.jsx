@@ -1,6 +1,7 @@
 /** Leitura Zoho somente em memória, compartilhada entre a seção e a Visão geral. */
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useAccess } from '../../../shared/security/Access.jsx';
+import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
 
 const ZohoContext = createContext(null);
 export const defaultZohoColumns = [
@@ -17,6 +18,11 @@ function Session({ children }) {
   const [reviewedReplies, setReviewedReplies] = useState(false);
   const [mapping, setMapping] = useState({});
   const [columns, setColumns] = useState(defaultZohoColumns);
+  const dashboardSource = useMemo(
+    () => (data ? { data, reviewedReplies } : null),
+    [data, reviewedReplies],
+  );
+  usePublishDashboardSource('zoho', dashboardSource);
   const value = useMemo(
     () => ({
       open,

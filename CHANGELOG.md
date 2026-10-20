@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.44.0 — 20/10/2026
+
+- Entrega **Meu Dashboard**: página em branco com catálogo pesquisável de 55 indicadores de OS, Zoho, Consumo M2M, Operacional, Parque, Logística e Monitoramento, conforme permissões existentes.
+- Permite cartões, gráficos de barras e tabelas, títulos, filtros próprios, tamanhos e reordenação. Cada bloco mostra fonte, período, recorte e atualização; reutiliza os cálculos dos módulos sem misturar bases ou transformar ausência em zero.
+- Salva até 12 painéis por usuário neste navegador, com até 40 blocos cada, criação, edição, renomeação, descarte e exclusão. IndexedDB transacional com revisão protege gravações concorrentes e mantém cópia/edição em caso de falha.
+- Fontes continuam na sessão e são carregadas nos módulos de origem. Não há consultas automáticas, sincronização entre dispositivos ou fórmulas livres nesta etapa. [Funcionamento e limites](docs/MEU-DASHBOARD.md).
+
 ## 0.43.0 — 20/10/2026
 
 - Destaca chamados fechados por Eduardo e Jean na seção Zoho e na Visão geral. Usa executor e data das transições para status da categoria Closed, conforme configuração do departamento. Reaberturas não apagam o evento anterior; repetições do mesmo chamado são deduplicadas por agente e na equipe.

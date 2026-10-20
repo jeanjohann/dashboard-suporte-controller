@@ -25,6 +25,7 @@ import './styles/report-stories.css';
 import './styles/next-analysis.css';
 import './styles/support-workspace.css';
 import './styles/analysis-workspace.css';
+import './styles/my-dashboard.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>
