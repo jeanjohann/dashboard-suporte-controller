@@ -92,13 +92,55 @@
   padding: 4px 0;
   font-weight: 500;
 }
+.overview-presentation-controls {
+  margin: 0 0 16px;
+  padding: 0 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+}
+.overview-presentation-controls > summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 12px;
+}
+.overview-presentation-controls > summary::-webkit-details-marker {
+  display: none;
+}
+.overview-presentation-controls > summary::before {
+  content: '▸';
+  color: var(--ui-muted);
+}
+.overview-presentation-controls[open] > summary::before {
+  content: '▾';
+}
+.overview-presentation-controls > summary:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.overview-presentation-controls > summary span {
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.overview-presentation-controls[open] > summary {
+  border-bottom: 1px solid var(--ui-border);
+}
+.overview-presentation-controls > .scope {
+  margin-bottom: 14px;
+}
 .overview-presentation-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 12px;
   font-size: 12px;
 }
 .overview-presentation-toolbar > div {
@@ -260,5 +302,10 @@
   }
   .analysis-destinations {
     grid-template-columns: 1fr;
+  }
+}
+@media print {
+  .overview-presentation-controls {
+    display: none !important;
   }
 }

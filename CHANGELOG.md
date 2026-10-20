@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.41.1 — 20/10/2026
+
+- Move a escolha de gráficos e os atalhos da Visão geral para um bloco recolhível logo abaixo do título, antes dos indicadores. O cabeçalho informa quantos grupos estão abertos e os controles deixam de interromper a sequência dos gráficos.
+- Preserva apresentação individual/conjunta, navegação, filtros e estado dos gráficos. Oculta os controles de apresentação na impressão.
+
 ## 0.41.0 — 19/10/2026
 
 - Adiciona um lembrete ativo por base/ID de veículo no Monitoramento Ativo, com data e hora de São Paulo e observação. Permite reagendar, cancelar, conferir manualmente com resultado opcional e iniciar novo ciclo sem apagar eventos antigos.

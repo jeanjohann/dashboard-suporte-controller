@@ -133,6 +133,84 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
             : 'Histórico selecionado'}
         </span>
       </div>
+      <details className="overview-presentation-controls">
+        <summary>
+          <strong>Apresentação e atalhos</strong>
+          <span>
+            {topics.some(([key]) => presentations[key])
+              ? `${topics.filter(([key]) => presentations[key]).length} de ${topics.length} grupos de gráficos abertos`
+              : 'Escolher gráficos e abrir análises'}
+          </span>
+        </summary>
+        <div className="overview-presentation-toolbar" aria-label="Gráficos para apresentação">
+          <strong>Apresentar nesta tela</strong>
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                setPreviewToReveal(null);
+                setPresentations(Object.fromEntries(topics.map(([key]) => [key, true])));
+                setPresentationRevision((previous) => previous + 1);
+              }}
+            >
+              Mostrar todos os gráficos
+            </button>
+            <button
+              type="button"
+              disabled={!topics.some(([key]) => presentations[key])}
+              onClick={() => {
+                setPreviewToReveal(null);
+                setPresentations((previous) =>
+                  Object.fromEntries(Object.keys(previous).map((key) => [key, false])),
+                );
+              }}
+            >
+              Recolher gráficos da apresentação
+            </button>
+          </div>
+        </div>
+        <nav className="analysis-destinations" aria-label="Aprofundar a análise de OS">
+          {topics.map(([key, label, description]) => (
+            <article key={key} className={presentations[key] ? 'is-presenting' : ''}>
+              <strong>{label}</strong>
+              <span>{description}</span>
+              <div className="overview-destination-actions">
+                <button
+                  type="button"
+                  aria-expanded={!!presentations[key]}
+                  aria-controls={presentationId + '-' + key}
+                  aria-label={
+                    (presentations[key] ? 'Recolher' : 'Mostrar') +
+                    ' gráficos de ' +
+                    label +
+                    ' aqui'
+                  }
+                  onClick={() => {
+                    setPreviewToReveal(presentations[key] ? null : key);
+                    setPresentations((previous) => ({ ...previous, [key]: !previous[key] }));
+                  }}
+                >
+                  {presentations[key] ? 'Recolher gráficos' : 'Mostrar gráficos aqui'}
+                </button>
+                <button
+                  type="button"
+                  className="overview-destination-link"
+                  aria-label={'Abrir análise completa de ' + label}
+                  onClick={() =>
+                    key === 'park' ? onPage('operational-analysis') : onCategory(key)
+                  }
+                >
+                  {key === 'park' ? 'Abrir módulo →' : 'Abrir análise →'}
+                </button>
+              </div>
+            </article>
+          ))}
+        </nav>
+        <p className="scope">
+          Gráficos nesta tela usam os filtros da Visão geral; o parque usa o arquivo operacional
+          completo. Abrir análise leva ao destino com seus filtros próprios.
+        </p>
+      </details>
       <OverviewKpis current={d.current} past={d.past} />
       <p className="scope">
         {d.range
@@ -255,69 +333,6 @@ export function DashboardOverview({ original, filters, operational, onPage, onCa
         </article>
       </div>
       <SupportZohoOverview onOpen={() => onCategory('support')} />
-      <div className="overview-presentation-toolbar" aria-label="Gráficos para apresentação">
-        <strong>Apresentar nesta tela</strong>
-        <div>
-          <button
-            type="button"
-            onClick={() => {
-              setPreviewToReveal(null);
-              setPresentations(Object.fromEntries(topics.map(([key]) => [key, true])));
-              setPresentationRevision((previous) => previous + 1);
-            }}
-          >
-            Mostrar todos os gráficos
-          </button>
-          <button
-            type="button"
-            disabled={!topics.some(([key]) => presentations[key])}
-            onClick={() => {
-              setPreviewToReveal(null);
-              setPresentations((previous) =>
-                Object.fromEntries(Object.keys(previous).map((key) => [key, false])),
-              );
-            }}
-          >
-            Recolher gráficos da apresentação
-          </button>
-        </div>
-      </div>
-      <nav className="analysis-destinations" aria-label="Aprofundar a análise de OS">
-        {topics.map(([key, label, description]) => (
-          <article key={key} className={presentations[key] ? 'is-presenting' : ''}>
-            <strong>{label}</strong>
-            <span>{description}</span>
-            <div className="overview-destination-actions">
-              <button
-                type="button"
-                aria-expanded={!!presentations[key]}
-                aria-controls={presentationId + '-' + key}
-                aria-label={
-                  (presentations[key] ? 'Recolher' : 'Mostrar') + ' gráficos de ' + label + ' aqui'
-                }
-                onClick={() => {
-                  setPreviewToReveal(presentations[key] ? null : key);
-                  setPresentations((previous) => ({ ...previous, [key]: !previous[key] }));
-                }}
-              >
-                {presentations[key] ? 'Recolher gráficos' : 'Mostrar gráficos aqui'}
-              </button>
-              <button
-                type="button"
-                className="overview-destination-link"
-                aria-label={'Abrir análise completa de ' + label}
-                onClick={() => (key === 'park' ? onPage('operational-analysis') : onCategory(key))}
-              >
-                {key === 'park' ? 'Abrir módulo →' : 'Abrir análise →'}
-              </button>
-            </div>
-          </article>
-        ))}
-      </nav>
-      <p className="scope">
-        Gráficos nesta tela usam os filtros da Visão geral; o parque usa o arquivo operacional
-        completo. Abrir análise leva ao destino com seus filtros próprios.
-      </p>
       <div className="overview-presentation-grid">
         {topics.map(([key, label]) => (
           <div
