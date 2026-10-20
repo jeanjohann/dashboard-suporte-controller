@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.41.0 — 19/10/2026
+
+- Adiciona um lembrete ativo por base/ID de veículo no Monitoramento Ativo, com data e hora de São Paulo e observação. Permite reagendar, cancelar, conferir manualmente com resultado opcional e iniciar novo ciclo sem apagar eventos antigos.
+- Salva lembretes e seu histórico no IndexedDB deste navegador, separados por usuário e demonstração/dados reais. Resumo no topo mostra pendentes e agendados ao abrir, mesmo antes de consultar a frota e independentemente dos filtros; a fila recebe indicador discreto.
+- Compara vencimentos com o relógio real ao abrir, retornar à página e a cada 30 segundos. Não solicita notificações nem executa com a página fechada. Conferência não confirma recuperação e não muda situação técnica, acompanhamento ou indicadores.
+- Inclui CSV de todo o histórico local de lembretes e aba Lembretes nas exportações do recorte. Transações e revisões protegem edições entre abas; erro de leitura/gravação é explícito e não substitui dados por uma agenda vazia.
+- Mantém anotações de tratamento na sessão e a integração de telemetria em preparação. Sem D1 de negócio, sincronização entre computadores ou envio de lembretes ao servidor.
+
 ## 0.40.0 — 19/10/2026
 
 - Aplica apresentação mais enxuta em Consumo e Parque, destacando indicadores principais e mantendo médias, extremos, trocas, taxas, bases e critérios em blocos expansíveis.

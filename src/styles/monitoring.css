@@ -1,5 +1,132 @@
 /* Organização do módulo em preparação; cores herdadas do tema do sistema. */
 /* Densidade apenas do Monitoramento Ativo: não reduz o texto nos demais módulos. */
+.monitoring-page .monitoring-reminders {
+  padding: 14px;
+  margin: 12px 0 16px;
+  min-width: 0;
+}
+.monitoring-reminder-heading,
+.monitoring-reminder-list > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.monitoring-reminder-heading {
+  flex-wrap: wrap;
+}
+.monitoring-reminder-heading h2 {
+  font-size: 14px;
+  margin: 0 0 6px;
+}
+.monitoring-reminder-heading p {
+  margin: 0;
+}
+.monitoring-reminders summary {
+  cursor: pointer;
+  padding: 9px 0;
+}
+.monitoring-reminder-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 310px;
+  overflow: auto;
+}
+.monitoring-reminder-list > li {
+  padding: 10px;
+  margin-bottom: 6px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+}
+.monitoring-reminder-list > li > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.monitoring-reminder-list small,
+.monitoring-reminder-list span {
+  display: block;
+  margin-top: 5px;
+}
+.monitoring-reminder-list small {
+  color: var(--ui-muted);
+}
+.monitoring-reminder-list p {
+  white-space: pre-wrap;
+  margin: 5px 0 0;
+}
+.monitoring-reminder-list button {
+  flex-shrink: 0;
+}
+.monitoring-reminder-list > li[data-overdue='true'] {
+  border-color: var(--ui-accent-border);
+  background: var(--ui-accent-soft);
+}
+.monitoring-reminder-tag {
+  display: block;
+  margin-top: 6px;
+  color: var(--ui-muted);
+}
+.monitoring-reminder-tag[data-overdue='true'] {
+  color: var(--ui-accent-ink);
+  font-weight: 600;
+}
+.monitoring-reminder-editor,
+.monitoring-reminder-detail {
+  border-top: 1px solid var(--ui-border);
+  padding-top: 12px;
+  margin: 12px 0;
+}
+.monitoring-reminder-editor h4 {
+  margin: 0 0 8px;
+}
+.monitoring-reminder-detail > .monitoring-reminder-editor {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
+.monitoring-reminder-editor .monitoring-fields {
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.3fr);
+}
+.monitoring-reminder-editor .monitoring-fields label:last-child {
+  grid-column: auto;
+}
+.monitoring-outcome {
+  display: grid;
+  gap: 7px;
+}
+.monitoring-page .monitoring-reminder-editor textarea {
+  width: 100%;
+  min-height: 60px;
+  font: inherit;
+  color: var(--ui-ink);
+  background: var(--ui-background);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  padding: 8px;
+}
+.monitoring-reminder-editor input {
+  width: 100%;
+  min-width: 0;
+}
+@media (max-width: 550px) {
+  .monitoring-reminder-list > li {
+    align-items: start;
+    flex-direction: column;
+  }
+  .monitoring-reminder-editor .monitoring-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media print {
+  .monitoring-reminder-list {
+    max-height: none;
+    overflow: visible;
+  }
+  .monitoring-reminder-list button {
+    display: none;
+  }
+}
 .monitoring-page > main {
   font-size: 12px;
 }

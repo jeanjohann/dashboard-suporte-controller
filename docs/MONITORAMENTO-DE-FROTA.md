@@ -1,5 +1,19 @@
 # Monitoramento Ativo — em preparação
 
+## Lembretes de conferência — 0.41.0
+
+No histórico de cada veículo, **Agendar lembrete** recebe data/hora e observação opcional. Há um lembrete ativo por **base + ID do veículo**; placa e rastreador são identificação visual, sem unir placas iguais de bases diferentes. Reagendar, cancelar ou marcar como conferido preserva data da ação, previsão e observação em histórico próprio. Conferir permite registrar resultado opcional e não confirma que a comunicação voltou, não encerra o tratamento e não muda os indicadores técnicos. Um novo ciclo conserva o histórico anterior.
+
+O painel **Lembretes de conferência**, no topo de todas as categorias do Monitoramento Ativo, mostra vencidos e próximos, sem sofrer filtros da fila. Ao abrir a página, lê os registros locais **mesmo sem consultar a API ou carregar a frota**; veículos ausentes do retrato atual mantêm o lembrete acessível no painel para gestão manual. Vencidos ficam destacados e a lista abre automaticamente quando há pendências; os próximos e os encerrados podem ser consultados em blocos expansíveis. A fila indica lembretes ativos junto do acompanhamento.
+
+Datas são explicitamente de **São Paulo** no formulário e na apresentação, mesmo com o computador em outro fuso; internamente são ISO em UTC. O agendamento/reagendamento exige data futura. Vencimento é inclusivo, comparado ao relógio real do computador ao abrir, retomar a página e a cada 30 segundos, inclusive na demonstração com telemetria congelada. O sistema não pede permissão de notificação, não emite avisos com a página fechada e não depende de um coletor para vencer os lembretes.
+
+Somente **lembretes e seu histórico** ficam no IndexedDB `addlog-monitoring-reminders`, versão 1. A chave separa a identidade do usuário autenticado (ou o modo local sem gestão) e demonstração/dados reais. Não há sincronização entre usuários, navegadores ou computadores; limpar os dados deste site remove os lembretes. O isolamento local organiza os registros, não substitui autorização do servidor nem oferece criptografia. A permissão de acesso à página permanece a existente. Transações e revisão por veículo recusam edição sobre uma revisão antiga; abas são atualizadas via BroadcastChannel quando disponível e ao retornar o foco. Erros de leitura/formato não viram lista vazia nem autorizam sobrescrita; salvamento só é confirmado ao concluir a transação.
+
+**Exportar histórico CSV** no painel inclui todos os eventos locais do modo atual, inclusive conferidos/cancelados e veículos fora da fila/frota atual. CSV/XLSX do relatório incluem somente lembretes dos veículos do recorte; o XLSX tem aba **Lembretes**, com IDs textuais e datas ISO. Exportação respeita a permissão existente. O CSV permite consulta externa, mas não é backup restaurável: não há importação de lembretes nesta etapa.
+
+Notas de **tratamento** continuam somente na sessão. A persistência de lembretes não ativa API de fornecedor, coleta automática, banco remoto ou armazenamento de telemetria. As seções de versões anteriores abaixo são históricas; referências a ausência de gravação/agendamento não incluem os lembretes locais adicionados nesta versão.
+
 ## Organização atual — 0.21.0
 
 A página inicia em **Acompanhamento**: filtros no topo, busca por placa/rastreador/cliente/perfil/responsável, seleção de situação técnica, status administrativo e recorte, seguidos da fila e do histórico selecionado. **Visão analítica** contém somente indicadores e gráficos; **Relatórios** contém as exportações. As descrições de fila junto da análise em versões abaixo são históricas e foram substituídas por esta organização.
@@ -24,7 +38,7 @@ Clicar no status de Acompanhamento abre um painel compacto abaixo da fila, com f
 
 As datas do tratamento são da ação do usuário, diferentes da referência congelada da telemetria fictícia. O histórico usa base + veículo do contrato interno, não placa isolada. A API precisará oferecer ou permitir confirmar uma chave estável de veículo; não criar identidade por placa ou nome parecido automaticamente.
 
-CSV/XLSX incluem tratamento registrado dos veículos do recorte, independentemente da página da fila. O XLSX inclui aba Histórico; impressão da fila inclui a página apresentada e o histórico selecionado, excluindo formulário de rascunho. Tudo fica **somente na sessão de demonstração**, desaparecendo ao recarregar ou sair dela. Não há gravação do monitoramento no navegador, D1 ou servidor, nem API real ativada.
+CSV/XLSX incluem tratamento registrado dos veículos do recorte, independentemente da página da fila. O XLSX inclui aba Histórico; impressão da fila inclui a página apresentada e o histórico selecionado, excluindo formulário de rascunho. O tratamento fica **somente na sessão**, desaparecendo ao recarregar ou sair dela. Lembretes possuem armazenamento local próprio desde 0.41.0; não há D1 de negócio ou API real ativada.
 
 ## O que está disponível
 
@@ -32,7 +46,7 @@ A fila exibe dez veículos por página, com Anterior, Próxima e Último. O bot�
 
 As nove colunas permitem ordenar pelo título: primeiro clique crescente, segundo decrescente e terceiro restaura a ordem inicial de maior duração conhecida. A ordenação usa todo o recorte antes da paginação e retorna à primeira página, fechando os detalhes. Datas usam o instante completo, duração e tensão numérica usam os valores originais; identificadores permanecem texto e valores ausentes ficam ao final nas duas direções. O status de acompanhamento usa somente atualizações salvas. Ordenar a tabela não altera filtros, indicadores ou dados de origem; CSV/XLSX mantêm a ordem original do recorte exportado.
 
-A página inicia sem dados e permite ativar uma demonstração explícita, inteiramente fictícia, com referência congelada em 11/10/2026 às 10:00 no fuso de São Paulo. Nenhuma consulta à API, token, agendamento, notificação ou gravação de monitoramento no servidor foi implementada nesta etapa.
+A página inicia sem dados e permite ativar uma demonstração explícita, inteiramente fictícia, com referência congelada em 11/10/2026 às 10:00 no fuso de São Paulo. A consulta manual preparada depende de configurar o coletor. Não há notificação externa ou gravação de monitoramento no servidor; o agendamento manual de lembretes locais está disponível desde 0.41.0.
 
 Há filtros por múltiplas bases, limite de atenção e situação técnica; cards, distribuição temporal, comparação por base, fila paginada, detalhes e rascunhos de acompanhamento. A série de coletas é ilustrativa, limitada à demonstração, usa todas as bases e o limite fixo de 48 horas. Ela não afirma horários reais de falhas ou recuperação.
 
@@ -69,6 +83,10 @@ Histórico individual de ocorrências, recuperações, consumo por equipamento, 
 - `src/modules/monitoring/domain/monitoring.js`: contrato normalizado, qualidade das coletas, classificação e indicadores.
 - `src/modules/monitoring/domain/monitoringReport.js`: tabelas de relatório, CSV e XLSX.
 - `src/modules/monitoring/domain/monitoring.test.js`: limites, duplicidade, coleta, datas e exportação.
+- `src/modules/monitoring/domain/monitoringReminders.js`: agenda, transições, validação e histórico exportável de lembretes.
+- `src/modules/monitoring/data/reminderRepository.js`: transações locais, escopo e revisão por veículo.
+- `src/modules/monitoring/hooks/useMonitoringReminders.js`: leitura, relógio real, foco e atualização entre abas.
+- `src/modules/monitoring/components/MonitoringReminders.jsx` e `MonitoringReminderEditor.jsx`: resumo global e formulário de lembretes.
 - `src/modules/monitoring/data/demo.js`: fonte fictícia isolada; não reutilizar como fallback de uma API com erro.
 - `src/styles/monitoring.css`: organização da página com o tema compartilhado.
 

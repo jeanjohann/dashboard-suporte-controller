@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.40.0 — [Refinamento visual](docs/REFINAMENTO-VISUAL.md) em Consumo e Parque, tabelas, filtros, mensagens e impressão, com temas e responsividade. [Preparação para banco de dados](docs/PREPARACAO-BANCO-DE-DADOS.md) disponível desde 0.39.0, sem armazenamento remoto ativado. [Clientes consolidados e filiais](docs/AGRUPAMENTO-DE-CLIENTES.md) e [critérios de manutenção](docs/CRITERIOS-DE-MANUTENCAO-E-IDENTIFICACAO.md) preservados.
+**Versão:** 0.41.0 — [Lembretes de conferência](docs/MONITORAMENTO-DE-FROTA.md) por veículo no Monitoramento Ativo, com data/hora, vencidos ao abrir a página e histórico salvo neste navegador. [Refinamento visual](docs/REFINAMENTO-VISUAL.md) e [preparação para banco de dados](docs/PREPARACAO-BANCO-DE-DADOS.md) preservados, sem armazenamento remoto ativado.
 
 ## Documentação do projeto
 

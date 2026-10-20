@@ -8,6 +8,8 @@ import { Section, PrintContext } from '../../../components/Section.jsx';
 import { download } from '../../../shared/export/exports.js';
 import { MonitoringQueue } from './MonitoringQueue.jsx';
 import { MonitoringAnalytics } from './MonitoringAnalytics.jsx';
+import { MonitoringReminders } from './MonitoringReminders.jsx';
+import { useMonitoringReminders } from '../hooks/useMonitoringReminders.js';
 import { useMonitoringSource } from '../hooks/useMonitoringSource.js';
 import {
   monitorSnapshot,
@@ -44,6 +46,7 @@ export function MonitoringPage({ onPage }) {
   const result = snapshot ? monitorSnapshot(snapshot, filters) : null;
   const queue = result ? filterMonitoringQueue(result, filters, notes) : null;
   const demo = snapshot?.demonstration === true;
+  const reminders = useMonitoringReminders(demo);
   // Identidades da demonstração nunca compartilham anotações com veículos reais.
   useEffect(() => {
     setNotes({});
@@ -64,7 +67,7 @@ export function MonitoringPage({ onPage }) {
           entry.clientId,
       }))
     : [];
-  const tables = queue ? monitoringReport(queue, filters, notes) : null;
+  const tables = queue ? monitoringReport(queue, filters, notes, reminders.records) : null;
   const scopeLabel = `Monitoramento Ativo → ${{ queue: 'Acompanhamento', overview: 'Visão analítica', reports: 'Relatórios' }[category]}`;
   const chips = filterChips(filters, {
     labels: {
@@ -189,6 +192,7 @@ export function MonitoringPage({ onPage }) {
                   : ''}
               </p>
             )}
+            <MonitoringReminders key={demo ? 'demo' : 'real'} reminders={reminders} demo={demo} />
             {!snapshot ? (
               <>
                 {modeNotice}
@@ -321,6 +325,7 @@ export function MonitoringPage({ onPage }) {
                   visible={category === 'queue'}
                   result={queue}
                   notes={notes}
+                  reminders={reminders}
                   onRecord={(key, value) => setNotes((previous) => ({ ...previous, [key]: value }))}
                   selected={selected}
                   onSelect={setSelected}
@@ -337,7 +342,7 @@ export function MonitoringPage({ onPage }) {
                 <div hidden={category !== 'reports'}>
                   <Section
                     title="Relatório de acompanhamento"
-                    help="Exporta todos os veículos do recorte da fila, independentemente da paginação, incluindo busca, situação, status e recorte selecionados. Inclui referência, critérios, dados recebidos, indicadores analíticos das bases e histórico de tratamento salvo. Rascunhos não são exportados. Resumo por base e indicadores abrangem todas as situações das bases selecionadas. Atualizações de tratamento permanecem somente nesta sessão; a integração não ativa armazenamento compartilhado."
+                    help="Exporta todos os veículos do recorte da fila, independentemente da paginação, incluindo busca, situação, status e recorte selecionados. Inclui referência, critérios, dados recebidos, indicadores analíticos das bases, histórico de tratamento e lembretes salvos dos veículos do recorte. Rascunhos não são exportados. Resumo por base e indicadores abrangem todas as situações das bases selecionadas. Tratamento permanece somente nesta sessão; lembretes ficam neste navegador, sem armazenamento compartilhado. O CSV do painel Lembretes inclui todo seu histórico local do modo atual, independentemente da fila."
                   >
                     <p>
                       {queue.rows.length} veículos · Referência{' '}
@@ -354,7 +359,8 @@ export function MonitoringPage({ onPage }) {
                     </div>
                     <p className="scope">
                       Histórico de episódios, recuperações, consumo e notificações dependem da
-                      integração e persistência das coletas.
+                      integração e persistência das coletas. Lembretes manuais são locais e constam
+                      na aba Lembretes do XLSX.
                     </p>
                   </Section>
                 </div>

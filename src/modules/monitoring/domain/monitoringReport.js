@@ -3,10 +3,12 @@ import XLSX from 'xlsx';
 import { csv } from '../../../shared/export/exports.js';
 import { monitoringStates, monitoringIndicator } from './monitoring.js';
 import { monitoringAnalytics } from './monitoringAnalytics.js';
+import { reminderExportRows } from './monitoringReminders.js';
 
 /** Monta o recorte completo e o resumo das bases; a situação filtra somente as linhas detalhadas. */
-export function monitoringReport(result, filters, notes = {}) {
+export function monitoringReport(result, filters, notes = {}, reminders = []) {
   const analysis = monitoringAnalytics(result, notes);
+  const vehicleKeys = new Set(result.rows.map((row) => row.key));
   const mode = result.demonstration ? 'DEMONSTRAÇÃO — DADOS FICTÍCIOS' : 'Dados de monitoramento';
   return {
     context: [
@@ -18,7 +20,10 @@ export function monitoringReport(result, filters, notes = {}) {
         'Base dos cards',
         'Todas as situações das bases selecionadas; veículos respeitam situação, status, recorte e busca da fila.',
       ],
-      ['Persistência', 'Acompanhamento nesta etapa: apenas memória da sessão.'],
+      [
+        'Persistência',
+        'Tratamento: memória da sessão. Lembretes e seu histórico: somente neste navegador/usuário, sem sincronização.',
+      ],
       [
         'Telemetria',
         'Alimentação em volts; perfil preservado como configuração. Nenhum alerta de tensão/perfil.',
@@ -102,6 +107,10 @@ export function monitoringReport(result, filters, notes = {}) {
       ],
       ...analysis.stages.map((item) => [item.label, item.value, 'Veículos acima do limite']),
     ],
+    reminders: reminderExportRows(
+      reminders.filter((record) => vehicleKeys.has(record.key)),
+      result.demonstration,
+    ),
     history: [
       [
         'Modo',
@@ -146,6 +155,9 @@ export function monitoringCsv(tables) {
     [],
     ['Histórico do acompanhamento'],
     ...tables.history,
+    [],
+    ['Lembretes de conferência do recorte'],
+    ...tables.reminders,
   ]);
 }
 
@@ -158,6 +170,7 @@ export function monitoringWorkbook(tables) {
     ['Resumo por base', tables.summary],
     ['Indicadores', tables.indicators],
     ['Histórico', tables.history],
+    ['Lembretes', tables.reminders],
   ]) {
     const sheet = XLSX.utils.aoa_to_sheet(rows);
     if (name === 'Resumo por base')

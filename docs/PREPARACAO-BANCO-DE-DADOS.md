@@ -1,6 +1,6 @@
 # Preparação para banco de dados — 0.39.0
 
-Esta etapa prepara contratos de acesso, um adaptador SQL e a sequência de migração. **Não ativa armazenamento remoto dos dados do negócio**, novas rotas, sincronização ou coleta automática. OS, Operacional, Zoho e Monitoramento continuam na sessão; consumo conserva seu IndexedDB e o backup versão 1. O banco `USERS_DB` continua exclusivo de usuários/permissões.
+Esta etapa prepara contratos de acesso, um adaptador SQL e a sequência de migração. **Não ativa armazenamento remoto dos dados do negócio**, novas rotas, sincronização ou coleta automática. OS, Operacional, Zoho e telemetria/tratamento do Monitoramento continuam na sessão; consumo conserva seu IndexedDB e o backup versão 1. Desde 0.41.0, somente os lembretes manuais do Monitoramento possuem IndexedDB próprio, com escopo por usuário/modo e revisão por veículo; sua migração futura deverá preservar agenda e eventos. O banco `USERS_DB` continua exclusivo de usuários/permissões.
 
 ## Separação de responsabilidades
 

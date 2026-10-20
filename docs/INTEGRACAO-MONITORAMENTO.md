@@ -63,7 +63,7 @@ Tratamento manual continua **somente em memória da sessão**. O botão Salvar a
 - `src/modules/monitoring/hooks/useMonitoringSource.js`: fonte, cancelamento de solicitações, falhas e referência local.
 - `src/modules/monitoring/domain/monitoringAnalytics.js`: cards de tratamento e recortes da fila.
 
-Para conectar: obter resposta real de teste e documentação atualizada; confirmar autenticação e escopo por base, campos/chave, fuso, significado temporal, paginação, limites e falhas parciais; implementar o adaptador/collector no servidor; testar sem publicar tokens ou amostras reais no Git; configurar o binding; conferir permissões e bases autorizadas; só depois ativar a consulta real. Episódios, recuperações, consumo, notificações e histórico permanente continuam dependentes da próxima etapa.
+Para conectar: obter resposta real de teste e documentação atualizada; confirmar autenticação e escopo por base, campos/chave, fuso, significado temporal, paginação, limites e falhas parciais; implementar o adaptador/collector no servidor; testar sem publicar tokens ou amostras reais no Git; configurar o binding; conferir permissões e bases autorizadas; só depois ativar a consulta real. Episódios, recuperações, consumo, notificações externas e histórico compartilhado continuam dependentes da próxima etapa. Lembretes manuais e seu histórico possuem persistência exclusivamente local desde 0.41.0, conforme [guia de monitoramento](MONITORAMENTO-DE-FROTA.md), sem depender desta integração.
 
 ## Conferência da entrega
 
