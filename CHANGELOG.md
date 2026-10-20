@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.43.0 — 20/10/2026
+
+- Destaca chamados fechados por Eduardo e Jean na seção Zoho e na Visão geral. Usa executor e data das transições para status da categoria Closed, conforme configuração do departamento. Reaberturas não apagam o evento anterior; repetições do mesmo chamado são deduplicadas por agente e na equipe.
+- Separa responsável atual, executor do fechamento e maior tempo válido apontado até cada fechamento. Compara todos os participantes encontrados, inclui apontamentos anteriores ao período e preserva empates. Dados de tempo incompletos exigem revisão; nenhum peso numérico foi inventado.
+- Acrescenta conferência dos fechamentos por chamado, datas, status e participação de cada agente. Permite escolher colunas no resumo por agente e na conferência de fechamentos, com mostrar todas e restaurar padrão; escolhas na sessão.
+- Reduz lotes para cinco chamados e mantém coleta completa antes de substituir dados, com validação da categoria de status e limite de histórico. Sem executar mudanças de status no Zoho, persistência ou novas permissões.
+
 ## 0.42.0 — 20/10/2026
 
 - Mostra respostas e chamados confirmados no Zoho mesmo quando a coleta contém pendências. Informa interações/chamados pendentes, motivos por contagem e acesso à conferência; datas não identificadas continuam sem confirmação. Preserva os totais finais, os tempos apontados e a deduplicação da equipe.

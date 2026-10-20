@@ -1,5 +1,18 @@
 # Zoho Desk na Equipe de suporte — escopo aprovado
 
+## Fechamentos, participação e colunas — 0.43.0
+
+O usuário definiu como medida principal **quem realizou o fechamento**, mantendo também responsabilidade e contribuição por tempo para chamados compartilhados. Não foi definida pontuação ou fórmula de pesos. Cards, gráfico e tabela do resumo Zoho, tanto na Equipe de suporte quanto na Visão geral, destacam fechados pelo agente; as outras medidas são independentes.
+
+- Fonte: `GET /tickets/{id}/History?fieldName=status`, com executor `actor` e data `eventTime`. A categoria real do status é consultada por departamento em `organizationFields?module=tickets&apiNames=status&departmentId=...`, com os escopos de leitura existentes. Esse endpoint de metadados é documentado como legado; a API nova de campos não devolve categorias de picklist em sua listagem. Nunca inferir fechamento por uma tradução ou por um nome como “Resolvido”.
+- Só transições de outra categoria para Closed e criações já em Closed contam. Mudanças entre dois status Closed não contam outro fechamento. Data em Brasília, dentro do período e até a referência da coleta; executor Agent identificado. Automação/sistema fica explícito e não é creditado ao responsável atual. Histórico inválido/ambíguo ou incompleto recusa a coleta, preservando a anterior.
+- Contagem: chamado distinto por executor dentro do período. Se foi reaberto e fechado novamente, os eventos permanecem na conferência; o mesmo chamado conta uma vez por pessoa e uma vez na equipe. Só Eduardo e Jean entram nos totais da equipe. Responsabilidade usa **assignee atual**, na coleta, e não presume proprietário histórico.
+- Participação: soma dos apontamentos atualmente válidos com data de execução até cada fechamento, inclusive anteriores ao início do período. Usa todos os agentes encontrados, não apenas os dois da equipe, e preserva empates. Lançamentos posteriores ao fechamento não entram nessa comparação. Não é reconstrução das versões históricas dos apontamentos nem medição de jornada. Ausência de apontamento não comprova ausência de trabalho. Apontamentos incompletos deixam a comparação de maior tempo em conferência; não modificam os fechamentos confirmados.
+- Cobertura: mesma pesquisa de chamados acessíveis modificados desde o início do período, sem arquivados, até a referência da coleta; atraso de indexação continua possível. Versão 2 do contrato, cinco tickets por lote, menos de 500 por coleta, até 200 eventos de status e 400 threads/apontamentos por ticket, orçamento de 42 chamadas por lote. Limites não truncam silenciosamente os indicadores.
+- Colunas: identidade obrigatória; demais indicadores selecionáveis, mostrar todas e restaurar padrão. Resumo por agente compartilha a escolha entre as duas telas, só em memória e isolada por identidade/permissão. Conferência de eventos tem seleção própria. Filtros, cálculo e coleta não mudam ao ocultar uma coluna.
+
+Referências oficiais: [histórico e eventos de tickets](https://help.zoho.com/portal/en/kb/desk/developer-space/rest-apis/articles/events-supported-in-get-ticket-history-api) e [referência da API](https://desk.zoho.com/DeskAPIDocument).
+
 ## Apresentação consolidada — 0.38.0
 
 A **Visão geral** mostra somente o resumo da última coleta: chamados respondidos, tempo apontado, chamados com tempo e média por chamado, seguidos de comparação por agente e tabela compacta. O atalho **Detalhar na equipe** abre a página **Equipe de suporte** e o painel do Zoho. O período e o horário da coleta permanecem identificados e não são alterados pelos filtros de OS.

@@ -11,6 +11,17 @@ import {
 } from '../src/shared/data/zohoActivity.js';
 import { loadZohoActivity } from '../src/modules/orders/data/zohoActivityClient.js';
 const [eduardo, jean] = zohoTeam;
+const fields = {
+  data: [
+    {
+      apiName: 'status',
+      allowedValues: [
+        { value: 'Aberto', statusType: 'Open' },
+        { value: 'Resolvido', statusType: 'Closed' },
+      ],
+    },
+  ],
+};
 const period = zohoPeriod('2026-10-19', '2026-10-19');
 const reply = (extra = {}) => ({
   id: '100',
@@ -133,8 +144,14 @@ test('coleta inclui chamado antigo modificado no recorte, página todas as fonte
       const url = new URL('https://test' + path);
       assert.equal(url.searchParams.get('modifiedTimeRange'), `${period.from},${params.anchor}`);
       assert.equal(url.searchParams.has('createdTimeRange'), false);
-      return { data: [{ id: '5', ticketNumber: '10', createdTime: '2020-01-01T00:00:00Z' }] };
+      return {
+        data: [
+          { id: '5', departmentId: '9', ticketNumber: '10', createdTime: '2020-01-01T00:00:00Z' },
+        ],
+      };
     }
+    if (path.startsWith('/organizationFields')) return fields;
+    if (path.includes('/History')) return { data: [] };
     if (path.includes('/threads'))
       return { data: [reply({ content: 'private-body', to: 'private-contact' })] };
     if (path.includes('/timeEntry'))
@@ -152,7 +169,7 @@ test('coleta inclui chamado antigo modificado no recorte, página todas as fonte
   assert.equal(data.replies.length, 1);
   assert.equal(data.metrics[0].firstResponse, '01:20 hrs');
   assert.doesNotMatch(JSON.stringify(data), /private-/);
-  assert.equal(calls.length, 4);
+  assert.equal(calls.length, 6);
 });
 
 test('limites, duplicidades, parâmetros externos e coleta incompleta são recusados', async () => {
@@ -168,7 +185,13 @@ test('limites, duplicidades, parâmetros externos e coleta incompleta são recus
   await assert.rejects(() =>
     collectZohoActivityBatch(
       async (path) =>
-        path.startsWith('/tickets/search') ? { data: [{ id: '5' }] } : { data: [reply(), reply()] },
+        path.startsWith('/tickets/search')
+          ? { data: [{ id: '5', departmentId: '9' }] }
+          : path.startsWith('/organizationFields')
+            ? fields
+            : path.includes('/History')
+              ? { data: [] }
+              : { data: [reply(), reply()] },
       params,
     ),
   );
@@ -177,16 +200,22 @@ test('limites, duplicidades, parâmetros externos e coleta incompleta são recus
       collectZohoActivityBatch(
         async (path) =>
           path.startsWith('/tickets/search')
-            ? { data: [{ id: '5' }] }
-            : {
-                data: Array.from({ length: 100 }, (_, n) =>
-                  reply({
-                    id: String(
-                      1000 + Number(new URL('https://test' + path).searchParams.get('from')) + n,
+            ? { data: [{ id: '5', departmentId: '9' }] }
+            : path.startsWith('/organizationFields')
+              ? fields
+              : path.includes('/History')
+                ? { data: [] }
+                : {
+                    data: Array.from({ length: 100 }, (_, n) =>
+                      reply({
+                        id: String(
+                          1000 +
+                            Number(new URL('https://test' + path).searchParams.get('from')) +
+                            n,
+                        ),
+                      }),
                     ),
-                  }),
-                ),
-              },
+                  },
         params,
       ),
     /400/,
@@ -195,13 +224,14 @@ test('limites, duplicidades, parâmetros externos e coleta incompleta são recus
 
 test('cliente só aplica coleta completa e preserva a referência ao paginar; falha ou cancelamento não retorna parcial', async () => {
   const base = {
-    version: 1,
+    version: 2,
     period,
     anchor: '2026-10-20T03:00:00.000Z',
     replies: [],
     entries: [],
     review: [],
     metrics: [],
+    closures: [],
     coverage: 'teste',
   };
   const calls = [];
@@ -211,7 +241,7 @@ test('cliente só aplica coleta completa e preserva a referência ao paginar; fa
     return {
       ...base,
       from: Number(p.get('from')),
-      next: calls.length === 1 ? 10 : null,
+      next: calls.length === 1 ? 5 : null,
       ticketIds: [String(calls.length)],
     };
   };
@@ -223,7 +253,7 @@ test('cliente só aplica coleta completa e preserva a referência ao paginar; fa
     () =>
       loadZohoActivity({ start: period.start, end: period.end }, async () => {
         if (++attempts === 2) throw Error('falha');
-        return { ...base, from: 0, next: 10, ticketIds: ['1'] };
+        return { ...base, from: 0, next: 5, ticketIds: ['1'] };
       }),
     /falha/,
   );

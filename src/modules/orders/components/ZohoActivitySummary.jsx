@@ -13,6 +13,8 @@ import {
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { chartColors } from '../../../shared/charts/palette.js';
+import { useZohoSession, defaultZohoColumns } from '../hooks/ZohoSession.jsx';
+import { ZohoColumnPicker } from './ZohoColumnPicker.jsx';
 export function zohoDuration(seconds, compact = false) {
   if (seconds == null) return '—';
   const n = Math.round(seconds),
@@ -23,6 +25,9 @@ export function zohoDuration(seconds, compact = false) {
   return `${h}h ${String(m).padStart(2, '0')}min ${String(s).padStart(2, '0')}s`;
 }
 const metrics = {
+  closedTickets: 'Chamados fechados pelo agente',
+  closedAssigned: 'Fechados sob responsabilidade atual',
+  leadingTimeTickets: 'Maior tempo em chamados fechados',
   seconds: 'Tempo apontado',
   confirmedTicketsReplied: 'Chamados com resposta confirmada',
   confirmedReplies: 'Respostas confirmadas',
@@ -30,7 +35,8 @@ const metrics = {
   meanSeconds: 'Média por chamado com tempo',
 };
 export function ZohoActivitySummary({ summary, compact = false, onReview }) {
-  const [metric, setMetric] = useState('seconds');
+  const [metric, setMetric] = useState('closedTickets');
+  const { columns: selectedColumns, setColumns } = useZohoSession();
   const id = useId();
   const time = metric === 'seconds' || metric === 'meanSeconds';
   const items = summary.agents.map((agent, index) => ({
@@ -41,6 +47,12 @@ export function ZohoActivitySummary({ summary, compact = false, onReview }) {
   }));
   const totals = summary.totals;
   const cards = [
+    [
+      'Chamados fechados',
+      totals.closedTickets,
+      'service',
+      'Chamados distintos que Eduardo ou Jean fecharam no período, pelo executor e pela data do histórico de mudança de status. Fechamentos repetidos do mesmo chamado contam uma vez na equipe. É o indicador principal de fechamento; não gera pontuação ponderada.',
+    ],
     [
       'Chamados respondidos',
       totals.confirmedTicketsReplied,
@@ -54,25 +66,27 @@ export function ZohoActivitySummary({ summary, compact = false, onReview }) {
       'Tempo registrado pelos agentes no período. Não equivale a jornada ou tempo de presença.',
     ],
     [
-      'Chamados com tempo',
-      totals.ticketsWithTime,
-      'service',
-      'Chamados distintos com apontamento válido. O total da equipe não soma chamados repetidos entre pessoas.',
-    ],
-    [
       'Média por chamado',
       zohoDuration(totals.meanSeconds, true),
       'attention',
       'Tempo apontado dividido pelos chamados com tempo registrado. Sem chamados elegíveis, a média fica indisponível.',
     ],
   ];
+  const optionalColumns = [
+    ['closedTickets', 'Fechados pelo agente'],
+    ['closedAssigned', 'Responsável atual · fechados'],
+    ['leadingTimeTickets', 'Maior tempo · fechados'],
+    ['confirmedTicketsReplied', 'Respondidos confirmados'],
+    ['confirmedReplies', 'Respostas confirmadas'],
+    ['seconds', 'Tempo apontado'],
+    ['ticketsWithTime', 'Com tempo'],
+    ['meanSeconds', 'Média/chamado'],
+    ['entries', 'Apontamentos válidos'],
+    ['pendingReplyCount', 'Interações pendentes'],
+  ];
   const columns = [
     ['name', 'Agente'],
-    ['confirmedTicketsReplied', 'Respondidos confirmados'],
-    ...(!compact ? [['confirmedReplies', 'Respostas confirmadas']] : []),
-    ['seconds', 'Tempo apontado'],
-    ...(!compact ? [['ticketsWithTime', 'Com tempo']] : []),
-    ['meanSeconds', 'Média/chamado'],
+    ...optionalColumns.filter(([key]) => selectedColumns.includes(key)),
   ];
   return (
     <div className={`zoho-summary${compact ? ' zoho-summary-compact' : ''}`}>
@@ -99,9 +113,26 @@ export function ZohoActivitySummary({ summary, compact = false, onReview }) {
                 {totals.pendingReplyCount ? 'Confirmados · total parcial' : 'Confirmados na coleta'}
               </small>
             )}
+            {label === 'Chamados fechados' && (
+              <small>
+                Pelo executor do histórico ·{' '}
+                {totals.closedTickets == null ? 'consulte novamente' : 'confirmados na coleta'}
+              </small>
+            )}
           </article>
         ))}
       </div>
+      <p className="scope zoho-closure-criteria">
+        Fechados pelo agente é a medida principal. Responsabilidade mostra o responsável atual do
+        chamado; maior tempo compara os apontamentos válidos de todos os agentes até cada
+        fechamento, incluindo empates. Essas medidas não são somadas.
+      </p>
+      {summary.closures.some((row) => row.effortReviewCount > 0) && (
+        <p className="zoho-confirmation-status">
+          Há apontamentos incompletos em chamados fechados. A comparação de maior tempo fica “A
+          conferir” até revisar as origens; os fechamentos confirmados permanecem visíveis.
+        </p>
+      )}
       {totals.pendingReplyCount > 0 && (
         <div className="zoho-confirmation-status" role="status">
           <div>
@@ -212,6 +243,12 @@ export function ZohoActivitySummary({ summary, compact = false, onReview }) {
         </div>
         <div className="zoho-agent-table">
           <h4 id={id}>Resumo por agente</h4>
+          <ZohoColumnPicker
+            columns={optionalColumns}
+            selected={selectedColumns}
+            onChange={setColumns}
+            defaults={defaultZohoColumns}
+          />
           {!compact && (
             <p className="zoho-table-hint">Deslize a tabela para ver todos os indicadores →</p>
           )}

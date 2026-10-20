@@ -71,7 +71,8 @@ export function normalizeZohoEntry(entry, ticketId, period) {
   if (!base.agentId) return { ...base, reason: 'Agente do apontamento não informado' };
   if (!zohoDay(entry.executedTime))
     return { ...base, reason: 'Data de execução ausente ou inválida' };
-  if (!inPeriod(entry.executedTime, period)) return { ...base, reason: 'Fora do período' };
+  if (period && !inPeriod(entry.executedTime, period))
+    return { ...base, reason: 'Fora do período' };
   const seconds = zohoSeconds(entry);
   if (seconds == null) return { ...base, reason: 'Duração ausente ou inválida' };
   return {
@@ -131,6 +132,7 @@ export function summarizeZohoActivity(data, { reviewedReplies = false } = {}) {
   const candidates = unique(data.replies).filter((reply) => ids.has(reply.agentId));
   const pendingReplies = candidates.filter((reply) => reply.review.length);
   const replies = candidates.filter((reply) => !reply.review.length || reviewedReplies);
+  const closures = unique(data.closures || []);
   const total = (agentIds) => {
     const e = entries.filter((row) => agentIds.has(row.agentId));
     const r = replies.filter((row) => agentIds.has(row.agentId));
@@ -161,6 +163,22 @@ export function summarizeZohoActivity(data, { reviewedReplies = false } = {}) {
     const seconds = e.reduce((sum, row) => sum + row.seconds, 0);
     const ticketsWithTime = new Set(e.map((row) => row.ticketId)).size;
     return {
+      closedTickets: Array.isArray(data.closures)
+        ? new Set(closures.filter((row) => agentIds.has(row.agentId)).map((row) => row.ticketId))
+            .size
+        : null,
+      closedAssigned: Array.isArray(data.closures)
+        ? new Set(closures.filter((row) => agentIds.has(row.ownerId)).map((row) => row.ticketId))
+            .size
+        : null,
+      leadingTimeTickets:
+        Array.isArray(data.closures) && !closures.some((row) => row.effortReviewCount > 0)
+          ? new Set(
+              closures
+                .filter((row) => row.leaderIds?.some((id) => agentIds.has(id)))
+                .map((row) => row.ticketId),
+            ).size
+          : null,
       seconds,
       ticketsWithTime,
       entries: e.length,
@@ -175,6 +193,7 @@ export function summarizeZohoActivity(data, { reviewedReplies = false } = {}) {
     };
   };
   return {
+    closures,
     totals: total(ids),
     agents: zohoTeam.map((agent) => ({ ...agent, ...total(new Set([agent.id])) })),
     entries,

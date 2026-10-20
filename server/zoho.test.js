@@ -233,7 +233,7 @@ test('rota de atividade valida período antes da rede, renova OAuth e exige a or
       if (parsed.pathname.includes('/organizations/'))
         return Response.json({ id: wrongOrg ? '999' : 57912045 });
       assert.equal(parsed.pathname, '/api/v1/tickets/search');
-      assert.equal(parsed.searchParams.get('limit'), '10');
+      assert.equal(parsed.searchParams.get('limit'), '5');
       assert.equal(
         parsed.searchParams.get('modifiedTimeRange'),
         '2026-10-19T03:00:00.000Z,2026-10-19T21:00:00.000Z',

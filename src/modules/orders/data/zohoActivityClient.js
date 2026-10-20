@@ -13,24 +13,25 @@ export async function loadZohoActivity(
     entries: [],
     review: [],
     metrics: [],
+    closures: [],
     ticketIds: [],
   };
   const seen = new Set();
   let from = 0,
     anchor;
-  for (let page = 0; page < 50; page++) {
+  for (let page = 0; page < 100; page++) {
     signal?.throwIfAborted();
     const params = new URLSearchParams({ start, end, from: String(from) });
     if (anchor) params.set('anchor', anchor);
     const batch = await apiImpl(`/api/zoho/activity?${params}`, { signal });
     signal?.throwIfAborted();
     if (
-      batch.version !== 1 ||
+      batch.version !== 2 ||
       batch.from !== from ||
       batch.period?.start !== start ||
       batch.period?.end !== end ||
       (anchor && batch.anchor !== anchor) ||
-      !['replies', 'entries', 'review', 'metrics', 'ticketIds'].every((key) =>
+      !['replies', 'entries', 'review', 'metrics', 'closures', 'ticketIds'].every((key) =>
         Array.isArray(batch[key]),
       )
     )
@@ -45,12 +46,12 @@ export async function loadZohoActivity(
         );
       seen.add(id);
     }
-    for (const key of ['replies', 'entries', 'review', 'metrics', 'ticketIds'])
+    for (const key of ['replies', 'entries', 'review', 'metrics', 'closures', 'ticketIds'])
       result[key].push(...batch[key]);
     onProgress(result.ticketIds.length);
     if (batch.next == null)
       return { ...result, anchor, readAt: new Date().toISOString(), coverage: batch.coverage };
-    if (batch.next !== from + 10)
+    if (batch.next !== from + 5)
       throw Error('A paginação do Zoho não avançou corretamente. A leitura anterior foi mantida.');
     from = batch.next;
   }

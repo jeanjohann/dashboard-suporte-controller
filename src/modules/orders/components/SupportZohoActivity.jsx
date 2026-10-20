@@ -6,6 +6,7 @@ import { loadZohoActivity } from '../data/zohoActivityClient.js';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { useZohoSession } from '../hooks/ZohoSession.jsx';
 import { ZohoActivitySummary, zohoDuration as duration } from './ZohoActivitySummary.jsx';
+import { ZohoClosures } from './ZohoClosures.jsx';
 
 const date = (text) =>
   text ? new Date(text).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : '—';
@@ -145,8 +146,8 @@ export function SupportZohoActivity({ active, ordersData }) {
         <div className="zoho-empty-state">
           <strong>Como a equipe está atendendo?</strong>
           <p>
-            Escolha um período e consulte os chamados respondidos, o tempo apontado e a comparação
-            entre os agentes.
+            Escolha um período e consulte os chamados fechados, respondidos, o tempo apontado e a
+            comparação entre os agentes.
           </p>
         </div>
       )}
@@ -167,6 +168,11 @@ export function SupportZohoActivity({ active, ordersData }) {
             </span>
           </p>
           <ZohoActivitySummary summary={summary} onReview={() => setReviewOpen(true)} />
+          {Array.isArray(data.closures) ? (
+            <ZohoClosures closures={summary.closures} />
+          ) : (
+            <p className="scope">Consulte novamente para carregar o histórico de fechamentos.</p>
+          )}
           {!!(summary.totals.pendingReplyCount || reviewedReplies) && (
             <details
               className="zoho-review-notice"

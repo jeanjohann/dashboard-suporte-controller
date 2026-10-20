@@ -1,5 +1,7 @@
 # Fila de implementação e ajustes
 
+Preparado em 0.43.0: fechamentos pelo executor do histórico como indicador principal, responsável atual e maior tempo por chamado compartilhado; seleção de colunas nas tabelas do Zoho. Sem fórmula de pontuação ponderada. Categorias reais de status, reaberturas, empates e limites têm validação própria. [Critérios](INTEGRACAO-ZOHO-DESK.md).
+
 **Atualização em 20/10/2026 — 0.42.0:** entregues os três itens priorizados: conferência parcial transparente do Zoho, visões favoritas locais por usuário/categoria e destaques auditáveis em OS/Consumo. [Funcionamento e limites](VISOES-E-DESTAQUES.md). Matriz modelo × motivo, backup/restauração de lembretes e ampliação da avaliação do assistente ficam para depois, conforme o proprietário. Sessões do Zoho aguardam CSV Session do escritório; nenhuma nova integração ou infraestrutura foi ativada nesta rodada.
 
 As notas históricas abaixo mantêm o contexto original. Para o estado das entregas mais recentes, consultar o histórico de versões; a integração de tickets/tempos Zoho e Google Sheets já possui leitura real, sem equivaler a sessões ou armazenamento compartilhado.
