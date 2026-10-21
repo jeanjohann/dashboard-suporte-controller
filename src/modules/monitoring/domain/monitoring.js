@@ -27,6 +27,7 @@ export function sortMonitoringRows(rows, sort, notes = {}) {
     lastRecordAt: (row) => monitoringInstant(row.lastRecordAt),
     supplyVoltageV: (row) => row.supplyVoltageV,
     profile: (row) => row.profile,
+    positions24h: (row) => row.positions24h,
     hours: (row) => row.hours,
     state: (row) => monitoringStates[row.state],
     stage: (row) => notes[row.key]?.status || monitoringStages[0],
@@ -72,6 +73,15 @@ export function monitoringVoltage(value) {
   if (typeof value === 'number' && Number.isFinite(value))
     return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 }).format(value) + ' V';
   return typeof value === 'string' ? value + ' V' : 'Valor para revisão';
+}
+
+/** Códigos documentados do legado; um estado não reconhecido continua explícito, sem inferir defeitos. */
+export function monitoringBatteryState(value) {
+  return (
+    { 0: 'Carregando', 1: 'Completa', 2: 'Falha', 3: 'Descarregando', 5: 'Ociosa', 6: 'Baixa' }[
+      value
+    ] || (value == null ? 'Não informado' : `Estado ${value}`)
+  );
 }
 
 /** Acrescenta um registro explícito de tratamento; digitar um rascunho não muda o status publicado. */

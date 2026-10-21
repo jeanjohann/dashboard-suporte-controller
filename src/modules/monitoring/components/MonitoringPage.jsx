@@ -35,7 +35,7 @@ const initialFilters = () => ({
 
 /** Bases/limite pertencem à análise; busca, situação, status e recorte pertencem à fila/exportação. */
 export function MonitoringPage({ onPage }) {
-  const { snapshot, source, busy, error, demonstration, refresh } = useMonitoringSource();
+  const { snapshot, source, busy, cooldown, error, demonstration, refresh } = useMonitoringSource();
   const dashboardSource = useMemo(
     () => (snapshot ? { snapshot, error } : null),
     [source, snapshot?.referenceAt, error],
@@ -136,8 +136,16 @@ export function MonitoringPage({ onPage }) {
       {demo
         ? 'DEMONSTRAÇÃO — Dados fictícios, referência congelada e critérios provisórios. Nenhuma API real está conectada nesta demonstração. Anotações somente nesta sessão.'
         : snapshot
-          ? 'Retrato recebido da integração. Classificação recalculada a cada minuto; nova consulta é manual. Anotações somente nesta sessão, sem sincronização entre usuários.'
-          : 'Integração em preparação. A consulta autenticada está pronta para receber o coletor; a demonstração usa somente dados fictícios.'}
+          ? 'Retrato recebido da integração. Classificação recalculada a cada minuto; consulta manual com intervalo mínimo de um minuto. Anotações somente nesta sessão, sem sincronização entre usuários.'
+          : 'Consulte a API para carregar a frota. A demonstração usa somente dados fictícios.'}
+      {snapshot?.source === 'addlog-legacy' && (
+        <p className="scope">
+          Fonte: sistema legado Addlog · Todas as bases retornadas · Posições nas últimas 24 horas
+          são registros de comunicação, sem equivalência em MB. Coleta: horário de recebimento no
+          servidor. Geração informada pela API: {snapshot.sourceGeneratedAt} (fuso não informado
+          neste campo).
+        </p>
+      )}
     </div>
   );
   return (
@@ -178,12 +186,14 @@ export function MonitoringPage({ onPage }) {
                 <p>Comunicação, prioridades e acompanhamento do suporte.</p>
               </div>
               <div className="monitoring-actions">
-                <button disabled={busy} onClick={refresh}>
+                <button disabled={busy || cooldown > 0} onClick={refresh}>
                   {busy
                     ? 'Consultando integração…'
-                    : snapshot && !demo
-                      ? 'Atualizar dados'
-                      : 'Consultar integração'}
+                    : cooldown > 0
+                      ? `Aguarde ${cooldown} s`
+                      : snapshot && !demo
+                        ? 'Atualizar dados'
+                        : 'Consultar integração'}
                 </button>
                 <button onClick={demonstration}>
                   {demo ? 'Sair da demonstração' : 'Explorar demonstração'}
@@ -203,11 +213,11 @@ export function MonitoringPage({ onPage }) {
               <>
                 {modeNotice}
                 <section className="panel monitoring-preparation">
-                  <h2>Preparado para receber a API</h2>
+                  <h2>Conexão com o sistema de rastreamento</h2>
                   <p>
-                    A conexão será feita pelo servidor após confirmar autenticação, campos, fuso e
-                    paginação. Nenhum token é solicitado ou armazenado nesta tela. Histórico
-                    compartilhado e coleta automática dependem da próxima etapa.
+                    Use Consultar integração para carregar o diagnóstico do sistema legado Addlog. O
+                    acesso é configurado pelo administrador no servidor. Histórico compartilhado e
+                    coleta automática dependem da próxima etapa.
                   </p>
                 </section>
               </>

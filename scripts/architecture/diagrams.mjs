@@ -11,6 +11,8 @@ export const diagrams = [
       'src/main.jsx',
       'src/app/Workspace.jsx',
       'server/worker.js',
+      'server/monitoring.js',
+      'server/addlogDiagnostic.js',
       'wrangler.jsonc',
       'scripts/local-assistant.mjs',
     ],
@@ -22,7 +24,13 @@ export const diagrams = [
       node('sources', 'Google Sheets + Zoho\nConsultas privadas de leitura', 840, 140, 'cloud'),
       node('session', 'Workspace + módulos\nBases e filtros da sessão', 40, 370),
       node('users', 'D1 · USERS_DB\nUsuários e permissões', 440, 370, 'store'),
-      node('collector', 'Coletor de veículos\nBinding ainda não configurado', 840, 370, 'future'),
+      node(
+        'collector',
+        'Diagnóstico legado Addlog\nToken no servidor · leitura manual',
+        840,
+        370,
+        'cloud',
+      ),
       node('browserdb', 'Armazenamento local\nPreferências, consumo, lembretes', 40, 600, 'store'),
       node('bridge', 'Ponte local · 5681\nAcervo + ferramentas restritas', 440, 600, 'local'),
       node('agent', 'n8n local + Gemini\nModelo explica resultados', 840, 600, 'local'),
@@ -33,7 +41,7 @@ export const diagrams = [
       edge('web', 'session', 'Estado React'),
       edge('session', 'browserdb', 'Persistência seletiva'),
       edge('worker', 'users', 'Acesso'),
-      edge('worker', 'collector', 'Rota preparada', [
+      edge('worker', 'collector', 'Diagnóstico HTTPS', [
         [720, 205],
         [770, 205],
         [770, 420],

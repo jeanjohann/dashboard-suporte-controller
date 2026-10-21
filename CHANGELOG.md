@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.50.0 — 21/10/2026
+
+- Conecta o Monitoramento Ativo ao diagnóstico do sistema legado Addlog pelo servidor, com endereço e token em segredos do Cloudflare. Mantém autenticação e permissão de monitoramento; a leitura abrange todas as bases retornadas pelo legado.
+- Converte a última comunicação UTC, preserva identificadores e mostra posições nas últimas 24 horas. Modelo, identificador, alimentação externa e bateria ficam no detalhe e na exportação; posições não são consumo M2M.
+- Consulta manual com intervalo de um minuto, limite no servidor, timeout e leitura limitada. Falhas por base, duplicidades, HTML e respostas incompatíveis mantêm a frota anterior com coleta indisponível. Não ativa histórico compartilhado ou coleta agendada.
+
 ## 0.49.1 — 21/10/2026
 
 - Retira o roteiro pessoal e suas notas da versão compartilhada do mapa, inclusive HTML, guia para download e apresentação. Mantém os diagramas técnicos e o restante da documentação.

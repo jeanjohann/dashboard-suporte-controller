@@ -46,6 +46,21 @@ export function normalizeMonitoringSnapshot(input) {
       !optionalText(row.plate, 100) ||
       !optionalText(row.clientName) ||
       !optionalText(row.profile) ||
+      !optionalText(row.identifier, 200) ||
+      !optionalText(row.deviceModel, 200) ||
+      !(
+        row.positions24h == null ||
+        (Number.isSafeInteger(row.positions24h) && row.positions24h >= 0)
+      ) ||
+      !(row.externalPowerFailure == null || typeof row.externalPowerFailure === 'boolean') ||
+      !(row.batteryState == null || Number.isSafeInteger(row.batteryState)) ||
+      !(
+        row.batteryPercent == null ||
+        (typeof row.batteryPercent === 'number' &&
+          Number.isFinite(row.batteryPercent) &&
+          row.batteryPercent >= 0 &&
+          row.batteryPercent <= 100)
+      ) ||
       !optionalText(row.lastRecordAt, 100) ||
       !(
         row.supplyVoltageV == null ||
@@ -63,13 +78,33 @@ export function normalizeMonitoringSnapshot(input) {
       lastRecordAt: row.lastRecordAt ?? null,
       supplyVoltageV: row.supplyVoltageV ?? null,
       profile: row.profile ?? null,
+      identifier: row.identifier ?? null,
+      deviceModel: row.deviceModel ?? null,
+      positions24h: row.positions24h ?? null,
+      externalPowerFailure: row.externalPowerFailure ?? null,
+      batteryState: row.batteryState ?? null,
+      batteryPercent: row.batteryPercent ?? null,
     };
   });
+  if (
+    input.source != null &&
+    (input.source !== 'addlog-legacy' ||
+      !optionalText(input.sourceGeneratedAt, 100) ||
+      input.positionsWindowHours !== 24)
+  )
+    throw Error('Origem do monitoramento inválida.');
   return {
     schemaVersion: 1,
     complete: true,
     demonstration: false,
     referenceAt: input.referenceAt,
+    ...(input.source === 'addlog-legacy'
+      ? {
+          source: input.source,
+          sourceGeneratedAt: input.sourceGeneratedAt ?? null,
+          positionsWindowHours: 24,
+        }
+      : {}),
     collections,
     vehicles,
   };

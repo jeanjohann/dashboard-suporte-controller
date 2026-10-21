@@ -1,9 +1,9 @@
 {
-  "version": "0.49.1",
-  "base": "7861112 · cópia da entrega",
+  "version": "0.50.0",
+  "base": "c50e543 · cópia da entrega",
   "date": "2026-10-21",
-  "total": 418,
-  "tests": 83,
+  "total": 421,
+  "tests": 84,
   "folders": [
     {
       "path": "(raiz)",
@@ -43,7 +43,7 @@
     {
       "path": "scripts",
       "description": "Ferramentas de build/verificação e serviços do laboratório local.",
-      "count": 20
+      "count": 21
     },
     {
       "path": "scripts/architecture",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 17
+      "count": 19
     },
     {
       "path": "server/persistence",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 85356,
-      "sha256": "60bc99c094c70cd224478b526f26380248e4b5a117fada0d3da64b69884ebffa",
+      "bytes": 86128,
+      "sha256": "c4fa6feb8de9c935d8503fd4b948056a0f233b3f41a8ef3dc0711f251e166ceb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -702,13 +702,13 @@
       "folder": "docs",
       "module": "Documentação",
       "layer": "Documentação",
-      "description": "Documento: Preparação da integração do Monitoramento Ativo. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "description": "Documento: Integração do Monitoramento Ativo — diagnóstico legado Addlog. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
       "exports": [],
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 7790,
-      "sha256": "2df68f20f7a91cad7ddc16e4b2a17a8f9d7f5173b4853edcce7313705f735b34",
+      "bytes": 6563,
+      "sha256": "93467312e1bbf74e16e67e8eb44803d72074afe8e7287aa19091a823cdf1eee5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -800,13 +800,13 @@
       "folder": "docs",
       "module": "Documentação",
       "layer": "Documentação",
-      "description": "Documento: Monitoramento Ativo — em preparação. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "description": "Documento: Monitoramento Ativo. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
       "exports": [],
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 16116,
-      "sha256": "b790066c91cd3ea3f82c15be03f72a1f74404b73515f534d5f24d49abc1a8f38",
+      "bytes": 17228,
+      "sha256": "a65dcfaca10a3fb871a29350a176759971bfd69450ce155cf2da17d1e6891318",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -917,8 +917,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 24661,
-      "sha256": "d1180bcb8a66771fe4fcee34959578d77b7f93077b5e900606942801ab0520fc",
+      "bytes": 24777,
+      "sha256": "d0f544ec9ae0dd6c7764dcacb68a1392e015a17895a00b1e712639c21ddb7c9f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1128,7 +1128,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 106621,
-      "sha256": "f31d5d5550b7952012841f1adbdecbf70aa9ae9cbb4f7d7ab0ede1fb0770c4fc",
+      "sha256": "e17f41f50e951ba0963e530c87af0fda8720aff6d6215366130c6a5cd76e8fcb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1142,7 +1142,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1231,
-      "sha256": "2c152bbea826ba0c9c73a6031054cc70065b4237458658ec0416bae9a44227d4",
+      "sha256": "587ac96370651b50e68f9ab0bba00f9166fa277e01dac4e4950f50ca058089ae",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1305,8 +1305,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 41133,
-      "sha256": "2e7af9b0870f3331aa221eb5e0722ee3449c1ca3e90f6e128555494f3ef531ae",
+      "bytes": 41337,
+      "sha256": "6ffbcea4b3dbdeba119d5dcb295e56cd06813d03088cc1aaeb1b1592e43d7fd3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1324,8 +1324,8 @@
       "importedBy": [
         "scripts/architecture/build-map.mjs"
       ],
-      "bytes": 13123,
-      "sha256": "c676ff5290c454ff2de95501e661be6c416e554a35d0f8aac9fafe37960651a4",
+      "bytes": 12948,
+      "sha256": "d8003687a9b0005d07ee4764cea50607aa1f7c48cdb35481903e9ec78202d0c6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1667,6 +1667,20 @@
       "status": "Laboratório local"
     },
     {
+      "path": "scripts/setup-monitoring.ps1",
+      "folder": "scripts",
+      "module": "Ferramentas e laboratório",
+      "layer": "Script / serviço local",
+      "description": "Configura endereço e token do diagnóstico legado como segredos no Cloudflare por entrada local oculta, sem gravar credenciais em arquivo.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 3023,
+      "sha256": "4c36899124a86a242d9a87b97d5734b3385e32c8d3ec3c7078f5735e3a91a1fe",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "scripts/setup-zoho.ps1",
       "folder": "scripts",
       "module": "Ferramentas e laboratório",
@@ -1707,6 +1721,52 @@
       "bytes": 1457,
       "sha256": "156ffd24aed222fed99be5e46933bb4eb3b6a6385bac8fdd9de0dea0384e5efc",
       "status": "Laboratório local"
+    },
+    {
+      "path": "server/addlogDiagnostic.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Adapta o diagnóstico documentado do legado Addlog, sem expor credenciais ou tratar posições como tráfego M2M.",
+      "exports": [
+        "diagnosticInstant",
+        "diagnosticUrl",
+        "normalizeAddlogDiagnostic"
+      ],
+      "imports": [
+        "src/modules/monitoring/data/snapshotContract.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "server/addlogDiagnostic.test.js",
+        "server/monitoring.js"
+      ],
+      "bytes": 5041,
+      "sha256": "f5ff07a46628706e7f7a7f6c28c113e40b26b1f95fa6269a593afbfcb18e1361",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "server/addlogDiagnostic.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica addlog Diagnostic no contexto de API Cloudflare. Exemplos: diagnóstico preserva zeros, IDs, UTC e metadados em ambas as validações e na exportação; ausência de posição não vira defeito ou consumo zero; perfis vazios continuam ausentes; datas impossíveis ou futuras ficam neutras para revisão, incluindo hora e minuto inválidos.",
+      "exports": [],
+      "imports": [
+        "server/addlogDiagnostic.js",
+        "server/monitoring.js",
+        "src/modules/monitoring/data/snapshotContract.js",
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/monitoring/domain/monitoringReport.js"
+      ],
+      "external": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "importedBy": [],
+      "bytes": 7287,
+      "sha256": "42a42c4d1c05760719c7b73aff2309385130737aa98c290ec500666781491cf8",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "server/architectureMap.js",
@@ -1804,15 +1864,17 @@
         "monitoringResponse"
       ],
       "imports": [
+        "server/addlogDiagnostic.js",
         "src/modules/monitoring/data/snapshotContract.js"
       ],
       "external": [],
       "importedBy": [
+        "server/addlogDiagnostic.test.js",
         "server/worker.js"
       ],
-      "bytes": 1499,
-      "sha256": "9d6e53a920f97b7d850f53001d870bf4db90d53f4b295492e5c3caa022042029",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 3581,
+      "sha256": "bfc4744749d1fbdcea0eb16c75559326fa912a15f0643e8723dd4f2314d83555",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "server/persistence/d1DocumentAdapter.js",
@@ -4257,7 +4319,7 @@
       ],
       "bytes": 9575,
       "sha256": "6d7785d49e6c3704c91fe29dbfdd8483ba20cb195fda1cc80ed050cfa2fd13d0",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/components/MonitoringPage.jsx",
@@ -4294,9 +4356,9 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 18215,
-      "sha256": "b1014b5110d87db94fa149b82734a89dba3172b43106e5f7579d8eed8e105c3c",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 18735,
+      "sha256": "783b0fe9ecb4457179d5ec6ee12d0e216c5fa84e788395dc0d45897c0831e03d",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/components/MonitoringQueue.jsx",
@@ -4320,9 +4382,9 @@
       "importedBy": [
         "src/modules/monitoring/components/MonitoringPage.jsx"
       ],
-      "bytes": 13363,
-      "sha256": "d02d5aa4df3b44a9586cbedfe101ec884f94129acf5ca0ebb6ab139911e39558",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 14151,
+      "sha256": "f66330998c384c56b7f3b7be45c86c453ca75a431d4f0c373cb09e73c095236a",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/components/MonitoringReminderEditor.jsx",
@@ -4346,7 +4408,7 @@
       ],
       "bytes": 4941,
       "sha256": "dd09205a90da3f806e46daa4afc11ad54412a3c3c1c0514b915ae7fd3d55da47",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/components/MonitoringReminders.jsx",
@@ -4373,7 +4435,7 @@
       ],
       "bytes": 5189,
       "sha256": "6a32f5931ef4fba95a6875a1359948f14c38f464e52be8a253f969a7f31ef4e0",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/data/demo.js",
@@ -4394,7 +4456,7 @@
       ],
       "bytes": 1252,
       "sha256": "05b43fda036e62df49f69b5189346ca2fa4ff9af8aa3628bef3aeb8602ec4af1",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/data/monitoringClient.js",
@@ -4413,9 +4475,9 @@
         "src/modules/monitoring/data/snapshotContract.test.js",
         "src/modules/monitoring/hooks/useMonitoringSource.js"
       ],
-      "bytes": 1052,
-      "sha256": "e2dda3ccddba2d83b2313185fcb09c98e24172d115526cc55cd2fb22ef5665ca",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 2052,
+      "sha256": "358316cfb527e355d63dc8fa6bdf84049d9938bcb0c1e0854148aed4986d5ecb",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/data/reminderRepository.js",
@@ -4438,7 +4500,7 @@
       ],
       "bytes": 3323,
       "sha256": "7e1aa76833336c27010bf5c7fb4dcf42dca2d69f2b7e12fa733fd1c97cff2725",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/data/snapshotContract.js",
@@ -4456,13 +4518,15 @@
       ],
       "external": [],
       "importedBy": [
+        "server/addlogDiagnostic.js",
+        "server/addlogDiagnostic.test.js",
         "server/monitoring.js",
         "src/modules/monitoring/data/monitoringClient.js",
         "src/modules/monitoring/data/snapshotContract.test.js"
       ],
-      "bytes": 3761,
-      "sha256": "3f91d66fedff4e39ec837260bbc04d12dc12d378a643214a0f5a33cde2bf4a09",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 5006,
+      "sha256": "738c8cd55019748cb5ea0d5a16dd4cef9c199e992d7da7c37a2b1721238b492f",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/data/snapshotContract.test.js",
@@ -4485,7 +4549,7 @@
       "importedBy": [],
       "bytes": 4149,
       "sha256": "901b58e0765e4dface803b68b072b31400427b13960c02684b58089f326e91df",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/domain/monitoring.js",
@@ -4495,6 +4559,7 @@
       "description": "Normaliza e classifica o retrato, tempos offline, tensão, ordenação e tratamento administrativo sem inferir recuperação.",
       "exports": [
         "monitorSnapshot",
+        "monitoringBatteryState",
         "monitoringBucket",
         "monitoringDate",
         "monitoringDuration",
@@ -4510,6 +4575,7 @@
       "imports": [],
       "external": [],
       "importedBy": [
+        "server/addlogDiagnostic.test.js",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
@@ -4526,9 +4592,9 @@
         "src/modules/monitoring/domain/monitoringReport.js",
         "src/modules/my-dashboard/domain/evaluate.js"
       ],
-      "bytes": 9452,
-      "sha256": "a2e12c2ccab60bcdc0b81fd25b6be223ff244f15a874f9c37e4427ac86b2beab",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 9623,
+      "sha256": "034f8380ffb4c9d40bfbd00b5a3774154e9db0183e1f01a2037b2fad0c653615",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/domain/monitoring.test.js",
@@ -4550,7 +4616,7 @@
       "importedBy": [],
       "bytes": 8867,
       "sha256": "00489c66d0e987cca5a1a6132d92758e4b3cb3e0cababcc8709e2f3f3ba8a08f",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/domain/monitoringAnalytics.js",
@@ -4575,7 +4641,7 @@
       ],
       "bytes": 3413,
       "sha256": "f31e18da1470854297a4a78a93d5e8a072eb55b7c3639a50df9a5202afd486bf",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/domain/monitoringAnalytics.test.js",
@@ -4597,7 +4663,7 @@
       "importedBy": [],
       "bytes": 3341,
       "sha256": "f587add5e34d16a524d38d89574838f99dcd4d8dd0d2502783538e452f07162f",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/domain/monitoringReminders.js",
@@ -4629,7 +4695,7 @@
       ],
       "bytes": 6222,
       "sha256": "134652e3fb02455f79bb8cf72b7d1e5b696aac4e462fdbc94cf73b0b483cc70c",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/domain/monitoringReminders.test.js",
@@ -4653,7 +4719,7 @@
       "importedBy": [],
       "bytes": 6722,
       "sha256": "aef8e558f0cec075b743b0223a2bf40c2c6f773243e3c1dc3e4ee45095d99fdb",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/domain/monitoringReport.js",
@@ -4676,14 +4742,15 @@
         "xlsx"
       ],
       "importedBy": [
+        "server/addlogDiagnostic.test.js",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/domain/monitoring.test.js",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
         "src/modules/monitoring/domain/monitoringReminders.test.js"
       ],
-      "bytes": 6327,
-      "sha256": "9c2443f2d20c74df7bfa17f4256f3edf704bcdbd9a4f45141fc494f748cc7cff",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 6645,
+      "sha256": "fb7a3e435be452c853d84e73909d6441bf01e5b2403b79656e75d6a49f5537e2",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/hooks/useMonitoringReminders.js",
@@ -4706,7 +4773,7 @@
       ],
       "bytes": 3436,
       "sha256": "89792b45afde5ead71b283b5b3a5c7675c19f88e4941a4696756c40aebe49807",
-      "status": "Interface pronta / coletor pendente"
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/monitoring/hooks/useMonitoringSource.js",
@@ -4727,9 +4794,9 @@
       "importedBy": [
         "src/modules/monitoring/components/MonitoringPage.jsx"
       ],
-      "bytes": 2585,
-      "sha256": "96c4c40ea4f247c3bab72f48c394ca2662703ab0e70c9c0f47afcac78f5be5f1",
-      "status": "Interface pronta / coletor pendente"
+      "bytes": 3084,
+      "sha256": "884e6c29557909c87f664690f0cef4f90d88ca799e045ffef75a2aea005f9769",
+      "status": "Diagnóstico legado / consulta manual"
     },
     {
       "path": "src/modules/my-dashboard/components/DashboardCatalog.jsx",
@@ -10164,8 +10231,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1081,
-      "sha256": "e6ae4bfd46f9d195fe55daaf1cc2f5e7426b7c3dbd5edb40b8afb656bfb6093f",
+      "bytes": 1211,
+      "sha256": "86b9bb6b2ac63549de818c6858e9528af59783314e19dd00e0089518d0da8ec6",
       "status": "Código ou documentação do ponto de referência"
     }
   ],

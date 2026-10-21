@@ -8,9 +8,18 @@ export function useMonitoringSource() {
     [busy, setBusy] = useState(false),
     [error, setError] = useState('');
   const [now, setNow] = useState(() => new Date().toISOString());
+  const [nextReadAt, setNextReadAt] = useState(0);
+  const [cooldown, setCooldown] = useState(0);
   const request = useRef(null),
     generation = useRef(0);
   const real = source && !source.demonstration;
+  useEffect(() => {
+    if (!nextReadAt) return;
+    const update = () => setCooldown(Math.max(0, Math.ceil((nextReadAt - Date.now()) / 1000)));
+    update();
+    const timer = setInterval(update, 1000);
+    return () => clearInterval(timer);
+  }, [nextReadAt]);
   useEffect(() => {
     if (!real) return;
     // Atualiza a idade dos dados localmente; isto não consulta a API nem executa o coletor.
@@ -28,10 +37,14 @@ export function useMonitoringSource() {
     generation.current++;
     request.current?.abort();
     setBusy(false);
+    request.current = null;
     setError('');
     setSource(source?.demonstration ? null : monitoringDemo());
   }
   async function refresh() {
+    if (request.current || Date.now() < nextReadAt) return;
+    setNextReadAt(Date.now() + 60000);
+    setCooldown(60);
     const run = ++generation.current;
     request.current?.abort();
     const controller = new AbortController();
@@ -62,9 +75,12 @@ export function useMonitoringSource() {
       );
     } finally {
       clearTimeout(timer);
-      if (generation.current === run) setBusy(false);
+      if (generation.current === run) {
+        request.current = null;
+        setBusy(false);
+      }
     }
   }
   const snapshot = real ? { ...source, referenceAt: now } : source;
-  return { snapshot, source, busy, error, demonstration, refresh };
+  return { snapshot, source, busy, cooldown, error, demonstration, refresh };
 }

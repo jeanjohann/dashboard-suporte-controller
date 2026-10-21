@@ -57,6 +57,8 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'scripts/setup-monitoring.ps1':
+    'Configura endereço e token do diagnóstico legado como segredos no Cloudflare por entrada local oculta, sem gravar credenciais em arquivo.',
   'scripts/architecture/diagrams.mjs':
     'Define os grafos editoriais dos diagramas e suas evidências no código.',
   'wrangler.architecture.jsonc':
@@ -512,8 +514,8 @@ const entries = paths.map((p) => {
         : p.startsWith('src/modules/assistant/') ||
             /^scripts\/(?:assistant|local-|gemini|start-)/.test(p)
           ? 'Laboratório local'
-          : /^(?:server\/monitoring|src\/modules\/monitoring)/.test(p)
-            ? 'Interface pronta / coletor pendente'
+          : /^(?:server\/(?:monitoring|addlogDiagnostic)|src\/modules\/monitoring)/.test(p)
+            ? 'Diagnóstico legado / consulta manual'
             : 'Código ou documentação do ponto de referência',
   };
 });

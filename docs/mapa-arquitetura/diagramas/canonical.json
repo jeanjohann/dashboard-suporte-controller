@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "title": "Mapa técnico Addlog 0.49.1",
+  "title": "Mapa técnico Addlog 0.50.0",
   "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
   "diagrams": [
     {
@@ -39,8 +39,8 @@
           },
           {
             "id": "collector",
-            "label": "Coletor de veículos · Binding ainda não configurado",
-            "class": "future"
+            "label": "Diagnóstico legado Addlog · Token no servidor · leitura manual",
+            "class": "cloud"
           },
           {
             "id": "browserdb",
@@ -92,8 +92,8 @@
           {
             "from": "worker",
             "to": "collector",
-            "label": "Rota preparada",
-            "arrow": "-.->"
+            "label": "Diagnóstico HTTPS",
+            "arrow": "-->"
           },
           {
             "from": "session",

@@ -1,4 +1,12 @@
-# Monitoramento Ativo — em preparação
+# Monitoramento Ativo
+
+## Conexão real — 0.50.0
+
+O botão **Consultar integração** carrega o diagnóstico do sistema legado Addlog pelo servidor, com credenciais em segredos do Cloudflare. A primeira leitura real foi conferida em 21/10/2026, incluindo fila ordenável, detalhes do equipamento e indicadores analíticos. O escopo são todas as bases retornadas pelo legado; os demais sistemas de rastreamento não foram conectados.
+
+O painel converte a última comunicação UTC e apresenta posições nas últimas 24 horas, alimentação e perfis. Dados ausentes continuam ausentes; perfis aplicados sem nome ficam identificados dessa forma. Posições não representam consumo de dados M2M. A coleta marca o recebimento no servidor, mantendo a geração da API como texto enquanto seu fuso não for confirmado.
+
+Atualização manual com intervalo mínimo de um minuto, sem coleta agendada. Falhas por base ou resposta incompatível mantêm a frota anterior com coleta indisponível. Tratamentos continuam na sessão e lembretes no navegador. [Configuração, mapeamento e limites](INTEGRACAO-MONITORAMENTO.md). As seções abaixo registram as entregas anteriores; menções históricas a API ainda não conectada foram superadas por esta versão.
 
 ## Lembretes de conferência — 0.41.0
 

@@ -1,6 +1,6 @@
 # Mapa do sistema — guia de estudo
 
-**Addlog · Dashboard de Suporte | versão 0.49.1 | referência: 7861112 · cópia da entrega | levantamento: 2026-10-21**
+**Addlog · Dashboard de Suporte | versão 0.50.0 | referência: c50e543 · cópia da entrega | levantamento: 2026-10-21**
 
 Este mapa descreve o código do repositório nesse ponto de referência. Configurações privadas e o estado de serviços em execução não foram auditados: uma integração ter implementação não comprova que suas credenciais estejam válidas hoje. O [mapa interativo](index.html) contém o catálogo pesquisável; o [catálogo em Markdown](CATALOGO-DE-ARQUIVOS.md) permite consultar cada arquivo. Os diagramas têm versões SVG para apresentação e fontes Mermaid editáveis em [DIAGRAMAS.md](DIAGRAMAS.md).
 
@@ -150,7 +150,7 @@ O acompanhamento usa operadora + ICCID. Anotações e arquivos permanecem no nav
 
 `MonitoringPage` separa a fila da análise. `useMonitoringSource` distingue demonstração e leitura real. O cliente só consulta a API da própria origem. O contrato exige um retrato íntegro e datas com fuso; a classificação ocorre no domínio.
 
-A rota real está preparada, mas o binding do coletor não está configurado no código de implantação. Sem ele, há indisponibilidade explícita, sem substituir a falha por dados fictícios. O estado de acompanhamento é administrativo: encerrar um tratamento não significa que o veículo voltou a comunicar. Os tratamentos ficam na sessão; os lembretes têm persistência local e revisões. A checagem de lembretes na página não é um serviço de notificações em segundo plano.
+A rota real consulta o diagnóstico legado Addlog pelo servidor quando seus segredos estão configurados. O adaptador preserva IDs, converte a última comunicação UTC e apresenta posições em 24 horas, alimentação e perfis. A consulta é manual, com intervalo de um minuto; falha por base recusa o retrato inteiro e mantém a frota anterior com coleta indisponível. O horário de coleta é o recebimento no servidor; o fuso de geração da fonte ainda deve ser confirmado. O binding privado anterior continua compatível e tem precedência quando presente. Sem configuração, há indisponibilidade explícita. O estado de acompanhamento é administrativo: encerrar um tratamento não significa que o veículo voltou a comunicar. Tratamentos ficam na sessão; lembretes possuem persistência local. Não há coleta agendada ou notificação em segundo plano.
 
 ### Importação e Usuários
 
@@ -185,15 +185,15 @@ O perfil fictício habilita consultas parametrizadas às amostras de OS e Operac
 
 O Worker verifica a assinatura, emissor, audiência e validade do JWT do Cloudflare Access, procura o usuário no D1 e verifica se está ativo. Um e-mail em cabeçalho isolado não basta. A interface oculta ações sem permissão, mas o servidor também verifica as operações recebidas. Escritas sensíveis validam origem, formato e revisão quando aplicável.
 
-| Rota                                               | Uso                                | Autorização no desenho atual                                           |
-| -------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------- |
-| `GET /api/me`                                      | Sessão e permissões                | Identidade válida e usuário aceito                                     |
-| `GET/PUT /api/admin/users`                         | Cadastro de usuários               | Administrador; validações adicionais na escrita                        |
-| `GET /api/orders/google/status` e `/snapshot`      | Conexão e leitura OS               | Administrador                                                          |
-| `GET /api/operational/google/status` e `/snapshot` | Conexão e leitura Operacional      | Administrador                                                          |
-| `GET /api/zoho/status`, `/snapshot`, `/activity`   | Piloto Zoho                        | Administrador proprietário                                             |
-| `GET /api/monitoring/snapshot`                     | Retrato do coletor                 | Administrador ou permissão de Monitoramento; depende do binding futuro |
-| `POST /api/assistant/local-session`                | Autorização efêmera do laboratório | Administrador proprietário e origem validada                           |
+| Rota                                               | Uso                                  | Autorização no desenho atual                                                                 |
+| -------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `GET /api/me`                                      | Sessão e permissões                  | Identidade válida e usuário aceito                                                           |
+| `GET/PUT /api/admin/users`                         | Cadastro de usuários                 | Administrador; validações adicionais na escrita                                              |
+| `GET /api/orders/google/status` e `/snapshot`      | Conexão e leitura OS                 | Administrador                                                                                |
+| `GET /api/operational/google/status` e `/snapshot` | Conexão e leitura Operacional        | Administrador                                                                                |
+| `GET /api/zoho/status`, `/snapshot`, `/activity`   | Piloto Zoho                          | Administrador proprietário                                                                   |
+| `GET /api/monitoring/snapshot`                     | Diagnóstico legado / coletor privado | Administrador ou permissão de Monitoramento; segredos no servidor; todas as bases retornadas |
+| `POST /api/assistant/local-session`                | Autorização efêmera do laboratório   | Administrador proprietário e origem validada                                                 |
 
 Google usa uma fonte fixa no servidor; o cliente não fornece uma URL arbitrária para consultar. Zoho mantém OAuth e tokens no Worker. A coleta de atividade só é entregue ao front após concluir suas páginas; falhas ou cancelamento não apresentam um lote truncado como completo. A ponte local do assistente valida novamente a autorização e não expõe execução livre de SQL, código, rede ou arquivos ao agente.
 
@@ -207,7 +207,7 @@ O código não substitui a configuração externa da política Access, dos segre
 | Google Sheets OS/Operacional         | Leitura privada, contratos e reaproveitamento dos importadores | Consulta autorizada da fonte configurada; sem histórico automático no D1                                 |
 | Zoho Desk                            | Leitura privada de agentes/tickets e atividade por período     | Tickets respondidos confirmados, apontamentos e pendências de conferência têm bases próprias             |
 | Permanência/presença de agentes Zoho | Documentação e preparação analítica                            | Arquivo/histórico de disponibilidade ainda depende de validação; não inferir jornada pelo tempo apontado |
-| Monitoramento de veículos            | Contrato, rota e interface                                     | Coletor privado/binding ainda não ativado                                                                |
+| Monitoramento de veículos            | Diagnóstico legado Addlog, rota autenticada e interface        | Consulta manual; cobertura real em homologação; demais sistemas e histórico compartilhado pendentes      |
 | KORE/ARQIA                           | Fila/documentação e preparação de coexistência de fontes       | Não há adaptadores de produção dessas operadoras no código atual                                         |
 | n8n + Gemini                         | Laboratório local, AI Agent e ferramenta restrita              | Depende do computador e das credenciais; não é um backend central de IA hospedado                        |
 | MCP                                  | Proposta documentada                                           | Não há endpoint MCP genérico entregue                                                                    |

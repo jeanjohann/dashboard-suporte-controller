@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.49.1 · referência 7861112 · cópia da entrega · 2026-10-21 · **418 arquivos / 83 arquivos de teste / 67 pastas**.
+Addlog 0.50.0 · referência c50e543 · cópia da entrega · 2026-10-21 · **421 arquivos / 84 arquivos de teste / 67 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -17,9 +17,9 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
 - **public/brand** — Marca e símbolo usados pela interface. (6 arquivos, incluindo subpastas).
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
-- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (20 arquivos, incluindo subpastas).
+- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (21 arquivos, incluindo subpastas).
 - **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (6 arquivos, incluindo subpastas).
-- **server** — API Cloudflare e adaptadores privados de integrações. (17 arquivos, incluindo subpastas).
+- **server** — API Cloudflare e adaptadores privados de integrações. (19 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio preparado e testes; não ligado ao Worker. (3 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Esquema SQL futuro de documentos de negócio. (1 arquivos, incluindo subpastas).
 - **src** — Aplicação executada no navegador. (311 arquivos, incluindo subpastas).
@@ -333,7 +333,7 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 ### docs/INTEGRACAO-MONITORAMENTO.md
 
-**Documentação · Documentação** — Documento: Preparação da integração do Monitoramento Ativo. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+**Documentação · Documentação** — Documento: Integração do Monitoramento Ativo — diagnóstico legado Addlog. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/INTEGRACAO-MONITORAMENTO.md) · Código ou documentação do ponto de referência
 
@@ -403,7 +403,7 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 ### docs/MONITORAMENTO-DE-FROTA.md
 
-**Documentação · Documentação** — Documento: Monitoramento Ativo — em preparação. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+**Documentação · Documentação** — Documento: Monitoramento Ativo. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/MONITORAMENTO-DE-FROTA.md) · Código ou documentação do ponto de referência
 
@@ -957,6 +957,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 Dependências externas: `jose`, `node:assert/strict`, `node:test`.
 
+### scripts/setup-monitoring.ps1
+
+**Ferramentas e laboratório · Script / serviço local** — Configura endereço e token do diagnóstico legado como segredos no Cloudflare por entrada local oculta, sem gravar credenciais em arquivo.
+
+[Abrir fonte](../../scripts/setup-monitoring.ps1) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
 ### scripts/setup-zoho.ps1
 
 **Ferramentas e laboratório · Script / serviço local** — Assistente operacional local para configurar a integração Zoho; não é parte do bundle do navegador.
@@ -986,6 +996,30 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 Importa arquivos locais: nenhum identificado.
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### server/addlogDiagnostic.js
+
+**API Cloudflare · Backend** — Adapta o diagnóstico documentado do legado Addlog, sem expor credenciais ou tratar posições como tráfego M2M.
+
+[Abrir fonte](../../server/addlogDiagnostic.js) · Diagnóstico legado / consulta manual
+
+Exporta: `diagnosticInstant`, `diagnosticUrl`, `normalizeAddlogDiagnostic`.
+
+Importa arquivos locais: [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js).
+
+Importado por: [server/addlogDiagnostic.test.js](../../server/addlogDiagnostic.test.js), [server/monitoring.js](../../server/monitoring.js).
+
+### server/addlogDiagnostic.test.js
+
+**API Cloudflare · Teste** — Verifica addlog Diagnostic no contexto de API Cloudflare. Exemplos: diagnóstico preserva zeros, IDs, UTC e metadados em ambas as validações e na exportação; ausência de posição não vira defeito ou consumo zero; perfis vazios continuam ausentes; datas impossíveis ou futuras ficam neutras para revisão, incluindo hora e minuto inválidos.
+
+[Abrir fonte](../../server/addlogDiagnostic.test.js) · Diagnóstico legado / consulta manual
+
+Importa arquivos locais: [server/addlogDiagnostic.js](../../server/addlogDiagnostic.js), [server/monitoring.js](../../server/monitoring.js), [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
 
 ### server/architectureMap.js
 
@@ -1043,13 +1077,13 @@ Dependências externas: `jose`, `node:assert/strict`, `node:test`.
 
 **API Cloudflare · Backend** — Normaliza e classifica o retrato, tempos offline, tensão, ordenação e tratamento administrativo sem inferir recuperação.
 
-[Abrir fonte](../../server/monitoring.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../server/monitoring.js) · Diagnóstico legado / consulta manual
 
 Exporta: `monitoringResponse`.
 
-Importa arquivos locais: [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js).
+Importa arquivos locais: [server/addlogDiagnostic.js](../../server/addlogDiagnostic.js), [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js).
 
-Importado por: [server/worker.js](../../server/worker.js).
+Importado por: [server/addlogDiagnostic.test.js](../../server/addlogDiagnostic.test.js), [server/worker.js](../../server/worker.js).
 
 ### server/persistence/d1DocumentAdapter.js
 
@@ -2237,7 +2271,7 @@ Dependências externas: `node:assert/strict`, `node:test`, `xlsx`.
 
 **Monitoramento Ativo · Interface React** — Visão analítica separada da fila; cada card abre seu recorte sem alterar as bases selecionadas.
 
-[Abrir fonte](../../src/modules/monitoring/components/MonitoringAnalytics.jsx) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/components/MonitoringAnalytics.jsx) · Diagnóstico legado / consulta manual
 
 Exporta: `MonitoringAnalytics`.
 
@@ -2251,7 +2285,7 @@ Dependências externas: `react`.
 
 **Monitoramento Ativo · Interface React** — Coordena acompanhamento e análise sem misturar demonstração e integração real.
 
-[Abrir fonte](../../src/modules/monitoring/components/MonitoringPage.jsx) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/components/MonitoringPage.jsx) · Diagnóstico legado / consulta manual
 
 Exporta: `MonitoringPage`.
 
@@ -2265,7 +2299,7 @@ Dependências externas: `react`.
 
 **Monitoramento Ativo · Interface React** — Tabela prioritária e histórico manual de tratamento, sem confundir situação administrativa com comunicação.
 
-[Abrir fonte](../../src/modules/monitoring/components/MonitoringQueue.jsx) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/components/MonitoringQueue.jsx) · Diagnóstico legado / consulta manual
 
 Exporta: `MonitoringQueue`.
 
@@ -2279,7 +2313,7 @@ Dependências externas: `react`.
 
 **Monitoramento Ativo · Interface React** — Agendamento manual, separado do formulário de tratamento e dos sinais de comunicação.
 
-[Abrir fonte](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx) · Diagnóstico legado / consulta manual
 
 Exporta: `MonitoringReminderEditor`.
 
@@ -2293,7 +2327,7 @@ Dependências externas: `react`.
 
 **Monitoramento Ativo · Interface React** — Resumo global do modo atual: filtros da fila não escondem lembretes vencidos.
 
-[Abrir fonte](../../src/modules/monitoring/components/MonitoringReminders.jsx) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/components/MonitoringReminders.jsx) · Diagnóstico legado / consulta manual
 
 Exporta: `MonitoringReminders`.
 
@@ -2307,7 +2341,7 @@ Dependências externas: `react`.
 
 **Monitoramento Ativo · Dados / transporte** — Dados fictícios e referência congelada para avaliar a interface, sem conexão com a API.
 
-[Abrir fonte](../../src/modules/monitoring/data/demo.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/data/demo.js) · Diagnóstico legado / consulta manual
 
 Exporta: `monitoringDemo`.
 
@@ -2319,7 +2353,7 @@ Importado por: [src/modules/monitoring/domain/monitoring.test.js](../../src/modu
 
 **Monitoramento Ativo · Dados / transporte** — O navegador consulta somente a própria origem; credenciais do fornecedor não entram neste contrato.
 
-[Abrir fonte](../../src/modules/monitoring/data/monitoringClient.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/data/monitoringClient.js) · Diagnóstico legado / consulta manual
 
 Exporta: `fetchMonitoringSnapshot`.
 
@@ -2331,7 +2365,7 @@ Importado por: [src/modules/monitoring/data/snapshotContract.test.js](../../src/
 
 **Monitoramento Ativo · Dados / transporte** — Persistência exclusivamente local. Transação serializa abas; revisão impede edição sobre dados antigos.
 
-[Abrir fonte](../../src/modules/monitoring/data/reminderRepository.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/data/reminderRepository.js) · Diagnóstico legado / consulta manual
 
 Exporta: `createReminderRepository`, `reminderScope`.
 
@@ -2343,19 +2377,19 @@ Importado por: [src/modules/monitoring/domain/monitoringReminders.test.js](../..
 
 **Monitoramento Ativo · Dados / transporte** — Valida o contrato v1 do retrato de Monitoramento e recusa respostas incompletas ou grandes demais.
 
-[Abrir fonte](../../src/modules/monitoring/data/snapshotContract.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/data/snapshotContract.js) · Diagnóstico legado / consulta manual
 
 Exporta: `normalizeMonitoringSnapshot`, `readSnapshotJson`, `snapshotLimitBytes`.
 
 Importa arquivos locais: [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js).
 
-Importado por: [server/monitoring.js](../../server/monitoring.js), [src/modules/monitoring/data/monitoringClient.js](../../src/modules/monitoring/data/monitoringClient.js), [src/modules/monitoring/data/snapshotContract.test.js](../../src/modules/monitoring/data/snapshotContract.test.js).
+Importado por: [server/addlogDiagnostic.js](../../server/addlogDiagnostic.js), [server/addlogDiagnostic.test.js](../../server/addlogDiagnostic.test.js), [server/monitoring.js](../../server/monitoring.js), [src/modules/monitoring/data/monitoringClient.js](../../src/modules/monitoring/data/monitoringClient.js), [src/modules/monitoring/data/snapshotContract.test.js](../../src/modules/monitoring/data/snapshotContract.test.js).
 
 ### src/modules/monitoring/data/snapshotContract.test.js
 
 **Monitoramento Ativo · Teste** — Verifica snapshot Contract no contexto de Monitoramento Ativo. Exemplos: contrato v1 preserva identificadores/zero e remove campos extras de todas as camadas; parcialidade, versão, demonstração e metadados ambíguos são recusados; datas problemáticas de telemetria e duplicidades de veículo chegam à revisão, sem alertas artificiais.
 
-[Abrir fonte](../../src/modules/monitoring/data/snapshotContract.test.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/data/snapshotContract.test.js) · Diagnóstico legado / consulta manual
 
 Exporta: `sample`.
 
@@ -2369,19 +2403,19 @@ Dependências externas: `node:assert/strict`, `node:test`.
 
 **Monitoramento Ativo · Domínio** — Normaliza e classifica o retrato, tempos offline, tensão, ordenação e tratamento administrativo sem inferir recuperação.
 
-[Abrir fonte](../../src/modules/monitoring/domain/monitoring.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/domain/monitoring.js) · Diagnóstico legado / consulta manual
 
-Exporta: `monitorSnapshot`, `monitoringBucket`, `monitoringDate`, `monitoringDuration`, `monitoringIndicator`, `monitoringInstant`, `monitoringStages`, `monitoringStates`, `monitoringVoltage`, `recordMonitoringUpdate`, `sortMonitoringRows`, `vehicleKey`.
+Exporta: `monitorSnapshot`, `monitoringBatteryState`, `monitoringBucket`, `monitoringDate`, `monitoringDuration`, `monitoringIndicator`, `monitoringInstant`, `monitoringStages`, `monitoringStates`, `monitoringVoltage`, `recordMonitoringUpdate`, `sortMonitoringRows`, `vehicleKey`.
 
 Importa arquivos locais: nenhum identificado.
 
-Importado por: [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringReminderEditor.jsx](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js), [src/modules/monitoring/data/snapshotContract.test.js](../../src/modules/monitoring/data/snapshotContract.test.js), [src/modules/monitoring/domain/monitoring.test.js](../../src/modules/monitoring/domain/monitoring.test.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringAnalytics.test.js](../../src/modules/monitoring/domain/monitoringAnalytics.test.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js).
+Importado por: [server/addlogDiagnostic.test.js](../../server/addlogDiagnostic.test.js), [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringReminderEditor.jsx](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js), [src/modules/monitoring/data/snapshotContract.test.js](../../src/modules/monitoring/data/snapshotContract.test.js), [src/modules/monitoring/domain/monitoring.test.js](../../src/modules/monitoring/domain/monitoring.test.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringAnalytics.test.js](../../src/modules/monitoring/domain/monitoringAnalytics.test.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js).
 
 ### src/modules/monitoring/domain/monitoring.test.js
 
 **Monitoramento Ativo · Teste** — Verifica monitoring no contexto de Monitoramento Ativo. Exemplos: fila ordena todo o recorte antes de paginar, mantém ausências no fim e IDs longos como texto; limites em horas são inclusivos e faixas exclusivas; ausência não vira zero; mesma placa em bases diferentes não colide; duplicidade exclui todo grupo antes do filtro.
 
-[Abrir fonte](../../src/modules/monitoring/domain/monitoring.test.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/domain/monitoring.test.js) · Diagnóstico legado / consulta manual
 
 Importa arquivos locais: [src/modules/monitoring/data/demo.js](../../src/modules/monitoring/data/demo.js), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js).
 
@@ -2393,7 +2427,7 @@ Dependências externas: `node:assert/strict`, `node:test`, `xlsx`.
 
 **Monitoramento Ativo · Domínio** — Calcula indicadores do retrato atual e filtra a fila sem mudar o denominador analítico das bases escolhidas.
 
-[Abrir fonte](../../src/modules/monitoring/domain/monitoringAnalytics.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/domain/monitoringAnalytics.js) · Diagnóstico legado / consulta manual
 
 Exporta: `filterMonitoringQueue`, `monitoringAnalytics`, `monitoringFocusLabels`.
 
@@ -2405,7 +2439,7 @@ Importado por: [src/modules/monitoring/components/MonitoringAnalytics.jsx](../..
 
 **Monitoramento Ativo · Teste** — Verifica monitoring Analytics no contexto de Monitoramento Ativo. Exemplos: tratamento usa só alertas utilizáveis e encerrado não representa recuperação; cards e denominadores não mudam com busca/status; tokens da busca cruzam campos e ignoram acento; coleta ruim não gera prioridades; base vazia não produz percentual ou duração zero.
 
-[Abrir fonte](../../src/modules/monitoring/domain/monitoringAnalytics.test.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/domain/monitoringAnalytics.test.js) · Diagnóstico legado / consulta manual
 
 Importa arquivos locais: [src/modules/monitoring/data/demo.js](../../src/modules/monitoring/data/demo.js), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js).
 
@@ -2417,7 +2451,7 @@ Dependências externas: `node:assert/strict`, `node:test`.
 
 **Monitoramento Ativo · Domínio** — Valida lembretes, revisões, vencimentos e histórico por base/veículo no fuso de São Paulo.
 
-[Abrir fonte](../../src/modules/monitoring/domain/monitoringReminders.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/domain/monitoringReminders.js) · Diagnóstico legado / consulta manual
 
 Exporta: `changeReminder`, `reminderActions`, `reminderDueAt`, `reminderExportRows`, `reminderLabels`, `reminderLocalDate`, `reminderOverdue`, `validateReminderDocument`.
 
@@ -2429,7 +2463,7 @@ Importado por: [src/modules/monitoring/components/MonitoringQueue.jsx](../../src
 
 **Monitoramento Ativo · Teste** — Verifica monitoring Reminders no contexto de Monitoramento Ativo. Exemplos: agenda usa São Paulo explicitamente e rejeita datas normalizadas, ausentes e horários inválidos; só aceita agenda futura; vencimento é inclusivo e independe da telemetria; um ativo por veículo: reagendamento, conferência, cancelamento e novo ciclo conservam o histórico.
 
-[Abrir fonte](../../src/modules/monitoring/domain/monitoringReminders.test.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/domain/monitoringReminders.test.js) · Diagnóstico legado / consulta manual
 
 Importa arquivos locais: [src/modules/monitoring/data/demo.js](../../src/modules/monitoring/data/demo.js), [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js).
 
@@ -2441,13 +2475,13 @@ Dependências externas: `node:assert/strict`, `node:test`, `xlsx`.
 
 **Monitoramento Ativo · Domínio** — Monta CSV/Excel do retrato analisado com contexto e identificação explícita da demonstração.
 
-[Abrir fonte](../../src/modules/monitoring/domain/monitoringReport.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/domain/monitoringReport.js) · Diagnóstico legado / consulta manual
 
 Exporta: `monitoringCsv`, `monitoringReport`, `monitoringWorkbook`.
 
 Importa arquivos locais: [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/shared/export/exports.js](../../src/shared/export/exports.js).
 
-Importado por: [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/monitoring/domain/monitoring.test.js](../../src/modules/monitoring/domain/monitoring.test.js), [src/modules/monitoring/domain/monitoringAnalytics.test.js](../../src/modules/monitoring/domain/monitoringAnalytics.test.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js).
+Importado por: [server/addlogDiagnostic.test.js](../../server/addlogDiagnostic.test.js), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/monitoring/domain/monitoring.test.js](../../src/modules/monitoring/domain/monitoring.test.js), [src/modules/monitoring/domain/monitoringAnalytics.test.js](../../src/modules/monitoring/domain/monitoringAnalytics.test.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js).
 
 Dependências externas: `xlsx`.
 
@@ -2455,7 +2489,7 @@ Dependências externas: `xlsx`.
 
 **Monitoramento Ativo · Estado / coordenação** — Lê ao abrir/retornar à página. O relógio dos lembretes não usa a referência congelada da demonstração.
 
-[Abrir fonte](../../src/modules/monitoring/hooks/useMonitoringReminders.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/hooks/useMonitoringReminders.js) · Diagnóstico legado / consulta manual
 
 Exporta: `useMonitoringReminders`.
 
@@ -2469,7 +2503,7 @@ Dependências externas: `react`.
 
 **Monitoramento Ativo · Estado / coordenação** — Separa fonte e tela. Demonstração nunca é fallback de erro; atualização real é explícita nesta etapa.
 
-[Abrir fonte](../../src/modules/monitoring/hooks/useMonitoringSource.js) · Interface pronta / coletor pendente
+[Abrir fonte](../../src/modules/monitoring/hooks/useMonitoringSource.js) · Diagnóstico legado / consulta manual
 
 Exporta: `useMonitoringSource`.
 

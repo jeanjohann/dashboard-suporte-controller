@@ -10,6 +10,7 @@ import {
   monitoringStates,
   monitoringIndicator,
   monitoringVoltage,
+  monitoringBatteryState,
   monitoringStages,
   recordMonitoringUpdate,
   sortMonitoringRows,
@@ -30,6 +31,7 @@ const columns = [
   ['lastRecordAt', 'Última atualização'],
   ['supplyVoltageV', 'Alimentação'],
   ['profile', 'Perfil'],
+  ['positions24h', 'Posições · 24 h'],
   ['hours', 'Sem atualização'],
   ['state', 'Situação técnica'],
   ['stage', 'Acompanhamento'],
@@ -159,6 +161,11 @@ export function MonitoringQueue({
                       : String(row.profile)}
                   </td>
                   <td>
+                    {row.positions24h == null
+                      ? 'Não informado'
+                      : row.positions24h.toLocaleString('pt-BR')}
+                  </td>
+                  <td>
                     {monitoringDuration(row.hours)}
                     <small className="monitoring-cell-note">{signal.label}</small>
                   </td>
@@ -260,6 +267,20 @@ export function MonitoringQueue({
               ? 'Não informado'
               : String(detail.profile)}
           </p>
+          <p className="scope">
+            Identificador: {detail.identifier ?? 'Não informado'} · Modelo:{' '}
+            {detail.deviceModel || 'Não informado'} · Posições em 24 h:{' '}
+            {detail.positions24h ?? 'Não informado'} · Falha de alimentação externa:{' '}
+            {detail.externalPowerFailure == null
+              ? 'Não informado'
+              : detail.externalPowerFailure
+                ? 'Sim'
+                : 'Não'}{' '}
+            · Bateria interna: {monitoringBatteryState(detail.batteryState)} · Carga:{' '}
+            {detail.batteryPercent == null ? 'Não informado' : `${detail.batteryPercent}%`}. A
+            tensão pode representar a bateria interna quando há falha externa nos MXT-130/160;
+            posições não representam consumo de dados dos chips.
+          </p>
           <div className="monitoring-treatment-grid">
             <div className="monitoring-treatment-form" data-no-print>
               <h4>Registrar tratamento</h4>
@@ -318,7 +339,7 @@ export function MonitoringQueue({
           </div>
           <p className="scope">
             Histórico manual desta sessão. Encerrar acompanhamento não confirma recuperação da
-            comunicação. A API e a persistência ainda serão conectadas.
+            comunicação. A persistência compartilhada ainda não está ativada.
           </p>
         </section>
       )}
