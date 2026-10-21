@@ -1041,26 +1041,18 @@
           `<div class="diagram-footer"><a href="diagramas/${d.id}.svg" download>Baixar SVG</a><a href="diagramas/${d.id}.mmd" download>Fonte Mermaid</a><span class="note">SVG composto a partir do mesmo grafo canônico; não depende de um renderizador online.</span></div><div class="evidence"><strong>Relações verificadas nestes arquivos</strong>${d.evidence.map((p) => fileButton(p)).join('')}</div>`;
       }
       $('diagram-choice').addEventListener('change', (e) => showDiagram(e.target.value));
-      const notes = [
-        'Comece pelos três ambientes. A análise comum é feita no navegador; integrações privadas passam pelo Worker. O laboratório de IA continua no computador local.',
-        'A rastreabilidade é o fio condutor: preservar a origem, selecionar registros, calcular regras e só então apresentar os resultados. Google e Excel compartilham o caminho analítico.',
-        'OS fornece o histórico; Operacional fornece a fotografia cadastral. Parque cruza os dois. Consumo usa sua própria base e uma referência operacional. Monitoramento tem fonte independente.',
-        'A autorização existe também no servidor. Credenciais não vão para o bundle React, e uma identidade de e-mail sem assinatura válida não libera operações.',
-        'Explique a distinção entre sessão, armazenamento do navegador e banco compartilhado. O D1 ativo é o cadastro de acesso; a persistência central de negócio ainda é uma preparação.',
-        'O agente consulta uma ferramenta permitida e o sistema calcula. O modelo interpreta e pode errar a explicação. O perfil fictício oferece consultas ampliadas às amostras; não há acesso livre aos arquivos.',
-        'Feche com a evolução: testes e build ajudam a manter a entrega, mas a ativação de coletor, operadoras, presença Zoho e banco de negócio exige integrações/configurações próprias.',
-      ];
+      const notes = data.presentationNotes || [];
       $('present').innerHTML =
-        '<div class="deck-intro"><p class="eyebrow" style="color:#ffb56b">Roteiro para apresentação</p><h2>Da planilha à decisão, com origem verificável</h2><p>Use as sete vistas abaixo para apresentar o sistema em cerca de dez minutos. A impressão desta aba organiza uma vista por página; os SVGs podem ser inseridos em outros materiais.</p></div>' +
+        '<div class="deck-intro"><p class="eyebrow" style="color:#ffb56b">Apresentação técnica</p><h2>Da planilha à decisão, com origem verificável</h2><p>As vistas abaixo apresentam a estrutura e os fluxos do sistema. A impressão desta aba organiza uma vista por página; os SVGs podem ser inseridos em outros materiais.</p></div>' +
         data.diagrams
           .map(
             (d, i) =>
-              `<article class="panel slide"><p class="eyebrow">${String(i + 1).padStart(2, '0')} / 07 · Addlog ${data.version}</p>${d.svg.replaceAll(d.id + '-', 'present-' + d.id + '-')}<p>${notes[i]}</p></article>`,
+              `<article class="panel slide"><p class="eyebrow">${String(i + 1).padStart(2, '0')} / 07 · Addlog ${data.version}</p>${d.svg.replaceAll(d.id + '-', 'present-' + d.id + '-')}${notes[i] ? '<p>' + escape(notes[i]) + '</p>' : ''}</article>`,
           )
           .join('');
       $('print').addEventListener('click', () => window.print());
       $('download').addEventListener('click', () => {
-        const { guide, diagrams, ...inventory } = data;
+        const { guide, diagrams, presentationNotes, ...inventory } = data;
         const blob = new Blob([JSON.stringify(inventory, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
         const url = URL.createObjectURL(blob);

@@ -25,3 +25,6 @@ Thumbs.db
 # Artefatos locais do Worker e banco de teste
 .wrangler/
 .worker-build/
+
+# Roteiro e notas de apresentação exclusivos do proprietário, apenas neste computador.
+/docs/mapa-arquitetura-local/

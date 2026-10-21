@@ -4,6 +4,8 @@ Entregue em **0.49.0 — 21/10/2026**. O mapa pode ser consultado sem cadastrar 
 
 ## Uso
 
+Desde 0.49.1, o roteiro pessoal e as notas de fala ficam exclusivamente na cópia local em `docs/mapa-arquitetura-local/`, ignorada pelo Git. O mapa compartilhável e seus downloads não incluem esse conteúdo. A pasta local contém `index.html` (edição completa), `roteiro-apresentacao.md` e `notas-apresentacao.json`; preservar esses arquivos neste computador para recompor a edição completa nas próximas gerações.
+
 1. Enviar o endereço e a senha às pessoas autorizadas pelo proprietário.
 2. Informar a senha para acessar guia, diagramas, catálogo e apresentação.
 3. Usar **Sair** ao terminar em um computador compartilhado. O acesso expira após oito horas.

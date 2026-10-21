@@ -6,6 +6,11 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { parseAst } from 'rollup/parseAst';
 import { diagrams, diagramColors } from './diagrams.mjs';
+import {
+  publicStudyGuide,
+  privateStudyGuide,
+  renderArchitectureMap,
+} from './presentationPrivacy.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const out = path.join(root, 'docs/mapa-arquitetura');
@@ -723,7 +728,7 @@ catalog.push(
   '',
 );
 fs.writeFileSync(path.join(out, 'CATALOGO-DE-ARQUIVOS.md'), catalog.join('\n'));
-const guide = read('docs/mapa-arquitetura/GUIA-DE-ESTUDO.md').replace(
+const guide = publicStudyGuide(read('docs/mapa-arquitetura/GUIA-DE-ESTUDO.md')).replace(
   /^\*\*Addlog[^\n]+/m,
   `**Addlog · Dashboard de Suporte | versão ${version} | referência: ${base} | levantamento: ${date}**`,
 );
@@ -735,18 +740,31 @@ const diagramGuide = read('docs/mapa-arquitetura/DIAGRAMAS.md')
     `Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão ${version} (${base}, ${date}). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.`,
   );
 fs.writeFileSync(path.join(out, 'DIAGRAMAS.md'), diagramGuide);
-const embedded = JSON.stringify({
+const mapData = {
   ...data,
   guide,
   diagrams: diagrams.map((d) => ({ ...d, svg: svg(d) })),
-}).replaceAll('<', '\\u003c');
+};
 const template = read('scripts/architecture/map-template.html');
-const placeholder = /\/\*ARCHITECTURE_DATA\*\/\s*null/;
-if (!placeholder.test(template)) throw new Error('Placeholder do template ausente.');
-fs.writeFileSync(
-  path.join(out, 'index.html'),
-  template.replace(placeholder, () => embedded),
-);
+fs.writeFileSync(path.join(out, 'index.html'), renderArchitectureMap(template, mapData));
+// Este diretório é ignorado pelo Git e nunca é copiado para o site compartilhado.
+const privateOut = path.join(root, 'docs/mapa-arquitetura-local');
+const privateSection = path.join(privateOut, 'roteiro-apresentacao.md');
+if (fs.existsSync(privateSection)) {
+  const localGuide = privateStudyGuide(guide, fs.readFileSync(privateSection, 'utf8'));
+  const notesFile = path.join(privateOut, 'notas-apresentacao.json');
+  const notes = fs.existsSync(notesFile) ? JSON.parse(fs.readFileSync(notesFile, 'utf8')) : [];
+  if (!Array.isArray(notes) || notes.some((note) => typeof note !== 'string'))
+    throw Error('Notas locais incompatíveis.');
+  fs.writeFileSync(
+    path.join(privateOut, 'index.html'),
+    renderArchitectureMap(template, { ...mapData, guide: localGuide, presentationNotes: notes }),
+  );
+  fs.writeFileSync(path.join(privateOut, 'GUIA-DE-ESTUDO.md'), localGuide);
+  for (const name of ['CATALOGO-DE-ARQUIVOS.md', 'DIAGRAMAS.md', 'inventario.json'])
+    fs.copyFileSync(path.join(out, name), path.join(privateOut, name));
+  fs.cpSync(path.join(out, 'diagramas'), path.join(privateOut, 'diagramas'), { recursive: true });
+}
 console.log(
   JSON.stringify(
     {

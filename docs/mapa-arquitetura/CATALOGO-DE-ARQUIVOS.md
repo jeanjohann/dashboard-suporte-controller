@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.49.0 · referência 448654a · cópia da entrega · 2026-10-21 · **416 arquivos / 82 arquivos de teste / 67 pastas**.
+Addlog 0.49.1 · referência 7861112 · cópia da entrega · 2026-10-21 · **418 arquivos / 83 arquivos de teste / 67 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -17,8 +17,8 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
 - **public/brand** — Marca e símbolo usados pela interface. (6 arquivos, incluindo subpastas).
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
-- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (18 arquivos, incluindo subpastas).
-- **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (4 arquivos, incluindo subpastas).
+- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (20 arquivos, incluindo subpastas).
+- **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (6 arquivos, incluindo subpastas).
 - **server** — API Cloudflare e adaptadores privados de integrações. (17 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio preparado e testes; não ligado ao Worker. (3 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Esquema SQL futuro de documentos de negócio. (1 arquivos, incluindo subpastas).
@@ -757,7 +757,7 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 [Abrir fonte](../../scripts/architecture/build-map.mjs) · Código ou documentação do ponto de referência
 
-Importa arquivos locais: [scripts/architecture/diagrams.mjs](../../scripts/architecture/diagrams.mjs).
+Importa arquivos locais: [scripts/architecture/diagrams.mjs](../../scripts/architecture/diagrams.mjs), [scripts/architecture/presentationPrivacy.mjs](../../scripts/architecture/presentationPrivacy.mjs).
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
@@ -791,11 +791,35 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 [Abrir fonte](../../scripts/architecture/package-site.mjs) · Código ou documentação do ponto de referência
 
-Importa arquivos locais: nenhum identificado.
+Importa arquivos locais: [scripts/architecture/presentationPrivacy.mjs](../../scripts/architecture/presentationPrivacy.mjs).
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
 Dependências externas: `node:fs`, `node:path`, `node:url`.
+
+### scripts/architecture/presentationPrivacy.mjs
+
+**Ferramentas e laboratório · Script / serviço local** — Mantém o roteiro do proprietário fora dos documentos compartilháveis e dos downloads.
+
+[Abrir fonte](../../scripts/architecture/presentationPrivacy.mjs) · Código ou documentação do ponto de referência
+
+Exporta: `assertPublicArchitectureMap`, `privateStudyGuide`, `publicStudyGuide`, `renderArchitectureMap`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [scripts/architecture/build-map.mjs](../../scripts/architecture/build-map.mjs), [scripts/architecture/package-site.mjs](../../scripts/architecture/package-site.mjs), [scripts/architecture/presentationPrivacy.test.mjs](../../scripts/architecture/presentationPrivacy.test.mjs).
+
+### scripts/architecture/presentationPrivacy.test.mjs
+
+**Ferramentas e laboratório · Teste** — Verifica presentation Privacy no contexto de Ferramentas e laboratório. Exemplos: remove integralmente roteiro e subseções, preservando o restante do guia; reconstrói roteiro somente na cópia local, sem duplicar ou alterar a versão pública; HTML compartilhável e inventário não carregam notas privadas; cópia local recebe conteúdo separado.
+
+[Abrir fonte](../../scripts/architecture/presentationPrivacy.test.mjs) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [scripts/architecture/presentationPrivacy.mjs](../../scripts/architecture/presentationPrivacy.mjs).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
 
 ### scripts/assistant-agent-workflow.mjs
 

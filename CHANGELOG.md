@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.49.1 — 21/10/2026
+
+- Retira o roteiro pessoal e suas notas da versão compartilhada do mapa, inclusive HTML, guia para download e apresentação. Mantém os diagramas técnicos e o restante da documentação.
+- Preserva a edição completa em pasta local ignorada pelo Git. A geração recompõe essa edição somente quando os arquivos privados estão presentes; o empacotamento recusa conteúdo privado na saída compartilhável.
+
 ## 0.49.0 — 21/10/2026
 
 - Publica o mapa em endereço independente com senha compartilhada, sem cadastro no sistema. Todos os documentos/diagramas exigem sessão assinada de oito horas; cookie seguro, limitação de tentativas, saída, proteção de cache e invalidação ao trocar a senha.

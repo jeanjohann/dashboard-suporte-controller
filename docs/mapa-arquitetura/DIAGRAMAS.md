@@ -1,6 +1,6 @@
-# Mapa técnico Addlog 0.49.0
+# Mapa técnico Addlog 0.49.1
 
-Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.49.0 (448654a · cópia da entrega, 2026-10-21). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
+Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.49.1 (7861112 · cópia da entrega, 2026-10-21). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
 
 ## Arquitetura geral
 

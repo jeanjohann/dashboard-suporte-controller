@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { publicStudyGuide, assertPublicArchitectureMap } from './presentationPrivacy.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const source = path.join(root, 'docs/mapa-arquitetura'),
   output = path.join(root, '.worker-build/architecture-site');
@@ -13,6 +14,10 @@ const allowed = new Set([
   'inventario.json',
 ]);
 fs.mkdirSync(output, { recursive: true });
+const publicGuide = fs.readFileSync(path.join(source, 'GUIA-DE-ESTUDO.md'), 'utf8');
+if (publicStudyGuide(publicGuide) !== publicGuide)
+  throw Error('O guia compartilhável ainda contém o roteiro local. Publicação interrompida.');
+assertPublicArchitectureMap(fs.readFileSync(path.join(source, 'index.html'), 'utf8'));
 for (const name of allowed) fs.copyFileSync(path.join(source, name), path.join(output, name));
 fs.writeFileSync(
   path.join(output, 'index.html'),

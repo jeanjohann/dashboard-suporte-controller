@@ -1,6 +1,6 @@
 # Mapa do sistema — guia de estudo
 
-**Addlog · Dashboard de Suporte | versão 0.49.0 | referência: 448654a · cópia da entrega | levantamento: 2026-10-21**
+**Addlog · Dashboard de Suporte | versão 0.49.1 | referência: 7861112 · cópia da entrega | levantamento: 2026-10-21**
 
 Este mapa descreve o código do repositório nesse ponto de referência. Configurações privadas e o estado de serviços em execução não foram auditados: uma integração ter implementação não comprova que suas credenciais estejam válidas hoje. O [mapa interativo](index.html) contém o catálogo pesquisável; o [catálogo em Markdown](CATALOGO-DE-ARQUIVOS.md) permite consultar cada arquivo. Os diagramas têm versões SVG para apresentação e fontes Mermaid editáveis em [DIAGRAMAS.md](DIAGRAMAS.md).
 
@@ -249,28 +249,6 @@ Os testes ficam junto dos módulos: cobrem regras de cálculo, normalização, p
 | Zoho                                        | `server/zohoActivity.js`, `shared/data/zohoActivity.js`, `ZohoSession.jsx` | Autoria, período, paginação e parcelas a conferir          |
 | Permissão ou integração privada             | `server/worker.js`, `shared/security/`                                     | Configuração externa Access e segredos                     |
 | Pergunta/ferramenta do agente               | `scripts/assistant-agent-workflow.mjs`, `assistant-demo-queries.mjs`       | Ponte local, perfil do acervo e limites da interface       |
-
-## 12. Roteiro de apresentação de 10 minutos
-
-1. **1 minuto — problema e resultado.** Explique as fontes de dados e a rastreabilidade até a linha da planilha.
-2. **2 minutos — arquitetura.** Mostre o diagrama geral: navegador, Worker e laboratório local. Distinga código, dados e integrações.
-3. **2 minutos — caminho de uma informação.** Use o diagrama de leitura e o exemplo de atendimentos. Mostre um card e sua origem.
-4. **2 minutos — módulos.** Explique os vínculos OS → Parque e Operacional → Consumo; apresente suporte/Zoho sem somar métricas incompatíveis.
-5. **1 minuto — armazenamento e segurança.** Mostre a diferença entre sessão, armazenamento local e D1; explique que as credenciais ficam fora do navegador.
-6. **1 minuto — assistente.** Mostre a ferramenta restrita, os cálculos locais e o perfil fictício; explique a dependência dos serviços locais.
-7. **1 minuto — evolução.** Aponte coletor de Monitoramento, presença Zoho, operadoras e banco compartilhado como próximos passos com limites claros.
-
-### Perguntas que podem aparecer
-
-**“Todos usam a mesma base salva?”** Não automaticamente. O D1 compartilha o acesso; bases de sessão e históricos locais têm escopos diferentes. Google pode oferecer a mesma origem autorizada, mas isso não cria um histórico central de todas as operações.
-
-**“A IA calcula os números?”** Os cálculos são feitos pelas funções do sistema e retornados pela ferramenta. O modelo interpreta o resultado e pode errar a explicação; os cards e referências ajudam a conferir.
-
-**“A vida útil é definitiva?”** Não. O sistema mede ciclos e tempo observado conforme os eventos disponíveis. Ciclos abertos, trocas confirmadas e durações comprováveis precisam ser separados.
-
-**“O Monitoramento já consulta a frota real?”** A interface e o contrato estão preparados; o binding do coletor não está ligado na configuração do repositório. A demonstração é identificada.
-
-**“Um arquivo sem importadores está morto?”** Não é possível afirmar só por esse mapa. Pode ser um script invocado diretamente, uma entrada de configuração, teste, documentação ou referência histórica. O catálogo mostra a ausência de referência estática sem concluir que o arquivo pode ser removido.
 
 ## 13. Como manter este mapa
 

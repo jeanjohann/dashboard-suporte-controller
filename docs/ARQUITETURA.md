@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Edição local do mapa — 0.49.1
+
+`scripts/architecture/presentationPrivacy.mjs` separa o roteiro pessoal do guia compartilhável e valida a ausência de notas privadas no HTML publicado. O gerador recompõe uma edição completa em `docs/mapa-arquitetura-local/` somente a partir dos arquivos locais ignorados pelo Git. O pacote do Worker documental usa exclusivamente `docs/mapa-arquitetura/` e recusa uma edição privada. O restante dos diagramas e suas fontes permanece compartilhável.
+
 ## Mapa compartilhado — 0.49.0
 
 `server/architectureMap.js` é um Worker documental independente, configurado em `wrangler.architecture.jsonc`. Autentica senha compartilhada e sessão HMAC de oito horas antes de servir qualquer asset; não depende do cadastro D1 nem concede acesso ao dashboard. `scripts/architecture/build-map.mjs` passa a usar a versão e os arquivos atuais; `package-site.mjs` copia somente documentos e diagramas para saída separada. O atalho administrativo usa `shared/config/architectureMap.js`. A publicação do mapa é separada da aplicação e não reutiliza seus Secrets. [Funcionamento e limites](MAPA-COMPARTILHADO.md).

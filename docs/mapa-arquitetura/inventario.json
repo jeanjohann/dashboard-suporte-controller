@@ -1,9 +1,9 @@
 {
-  "version": "0.49.0",
-  "base": "448654a · cópia da entrega",
+  "version": "0.49.1",
+  "base": "7861112 · cópia da entrega",
   "date": "2026-10-21",
-  "total": 416,
-  "tests": 82,
+  "total": 418,
+  "tests": 83,
   "folders": [
     {
       "path": "(raiz)",
@@ -43,12 +43,12 @@
     {
       "path": "scripts",
       "description": "Ferramentas de build/verificação e serviços do laboratório local.",
-      "count": 18
+      "count": 20
     },
     {
       "path": "scripts/architecture",
       "description": "Geração do inventário, diagramas e empacotamento do mapa protegido.",
-      "count": 4
+      "count": 6
     },
     {
       "path": "server",
@@ -371,8 +371,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 386,
-      "sha256": "2febd86ed3f7e8ed941536b5b0d1d31dfd21db6451fd397bb7f8960342af08c0",
+      "bytes": 510,
+      "sha256": "053da087b317ca653920894d591a144670861df90112704c289208968b84bb74",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 84916,
-      "sha256": "58e9b6815832672c71382d966e78c66b1fd0517098cc550842b8eab301b0bd5a",
+      "bytes": 85356,
+      "sha256": "60bc99c094c70cd224478b526f26380248e4b5a117fada0d3da64b69884ebffa",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -442,7 +442,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 8084,
-      "sha256": "63effe1fba1729d02bba7e72e16c30ae2a8a14e8fd63f5a1efdc05722981c4a3",
+      "sha256": "d86c8a8f87653ee98dcf6ed5446d6dfc296e6273e51d0ccbccff01330df0438e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -497,8 +497,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 34389,
-      "sha256": "86d3807e3a45daedd54902c6979916e9e00befbee3a70d3db7023bf47dd0059b",
+      "bytes": 34886,
+      "sha256": "40a4529c9101f3396d501e96e22c9890e5719c4d6846c54417b43fccadd0b951",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -763,8 +763,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 3124,
-      "sha256": "ee9ec95d8fbb065d756d2714e53472de3b9a6c45d90d18509c0da11a17e6b870",
+      "bytes": 3549,
+      "sha256": "ebf9d719aa957f1f74638621e7fbd68fc12e8e5cabe6fa5f419eebd889a332e2",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1128,7 +1128,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 106621,
-      "sha256": "f554f70d1a51c6b9d72c43c572bd6f18bd7cda182be3f221bb1176ff63c4ad7e",
+      "sha256": "f31d5d5550b7952012841f1adbdecbf70aa9ae9cbb4f7d7ab0ede1fb0770c4fc",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1142,7 +1142,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1231,
-      "sha256": "be3f6b10fbae0bd59043fffad78169901c911c4434f5e6f480bcb7ebec298c8e",
+      "sha256": "2c152bbea826ba0c9c73a6031054cc70065b4237458658ec0416bae9a44227d4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1293,7 +1293,8 @@
       "description": "Gera um mapa documental reproduzível; não modifica fontes, planilhas ou configurações de execução.",
       "exports": [],
       "imports": [
-        "scripts/architecture/diagrams.mjs"
+        "scripts/architecture/diagrams.mjs",
+        "scripts/architecture/presentationPrivacy.mjs"
       ],
       "external": [
         "node:child_process",
@@ -1304,8 +1305,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 40059,
-      "sha256": "228fe3fc427df45f592c255120543b32023ac67ef1ae47ef1cc916a847687c1d",
+      "bytes": 41133,
+      "sha256": "2e7af9b0870f3331aa221eb5e0722ee3449c1ca3e90f6e128555494f3ef531ae",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1337,8 +1338,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 33530,
-      "sha256": "d0d760ba23b031da249f1a9bc74c35f66f5403883d243622a5a8e9fe828f9780",
+      "bytes": 32222,
+      "sha256": "e99785085f6a04bf55e55687b82493c0f21d5f8c698ff9598d5422aef0295884",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1348,15 +1349,59 @@
       "layer": "Script / serviço local",
       "description": "Empacota somente os documentos do mapa, separados do aplicativo e de suas credenciais.",
       "exports": [],
-      "imports": [],
+      "imports": [
+        "scripts/architecture/presentationPrivacy.mjs"
+      ],
       "external": [
         "node:fs",
         "node:path",
         "node:url"
       ],
       "importedBy": [],
-      "bytes": 1417,
-      "sha256": "6c935434cce5bb2a095ad5e4bce0cfb3bfa8ac69e5a177bb0c0e257b375470cd",
+      "bytes": 1830,
+      "sha256": "c1cfead6b3397ed656e2feff8f6b7a97f4fd46cc3e35c3b7238fabc2ad27ed80",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "scripts/architecture/presentationPrivacy.mjs",
+      "folder": "scripts/architecture",
+      "module": "Ferramentas e laboratório",
+      "layer": "Script / serviço local",
+      "description": "Mantém o roteiro do proprietário fora dos documentos compartilháveis e dos downloads.",
+      "exports": [
+        "assertPublicArchitectureMap",
+        "privateStudyGuide",
+        "publicStudyGuide",
+        "renderArchitectureMap"
+      ],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "scripts/architecture/build-map.mjs",
+        "scripts/architecture/package-site.mjs",
+        "scripts/architecture/presentationPrivacy.test.mjs"
+      ],
+      "bytes": 1474,
+      "sha256": "5f1e69976f80cb17fb414ad5fc936788de3399c8c491f6c7b8700709c7651820",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "scripts/architecture/presentationPrivacy.test.mjs",
+      "folder": "scripts/architecture",
+      "module": "Ferramentas e laboratório",
+      "layer": "Teste",
+      "description": "Verifica presentation Privacy no contexto de Ferramentas e laboratório. Exemplos: remove integralmente roteiro e subseções, preservando o restante do guia; reconstrói roteiro somente na cópia local, sem duplicar ou alterar a versão pública; HTML compartilhável e inventário não carregam notas privadas; cópia local recebe conteúdo separado.",
+      "exports": [],
+      "imports": [
+        "scripts/architecture/presentationPrivacy.mjs"
+      ],
+      "external": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "importedBy": [],
+      "bytes": 2803,
+      "sha256": "b73fa88b30146ffad2211e814c60df417d5170cf18c581185455fd4c99ad56a2",
       "status": "Código ou documentação do ponto de referência"
     },
     {

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.49.0 — [Mapa de arquitetura compartilhado](docs/MAPA-COMPARTILHADO.md) em endereço independente com senha, sem cadastro de usuários; atalho para administradores no sistema. Análises personalizadas, matriz de manutenção e diagnósticos da versão anterior preservados.
+**Versão:** 0.49.1 — [Mapa de arquitetura compartilhado](docs/MAPA-COMPARTILHADO.md) em endereço independente com senha, sem cadastro de usuários; atalho para administradores no sistema. Análises personalizadas, matriz de manutenção e diagnósticos da versão anterior preservados.
 
 ## Documentação do projeto
 
