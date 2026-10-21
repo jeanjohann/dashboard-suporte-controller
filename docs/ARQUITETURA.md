@@ -1,5 +1,9 @@
 # Arquitetura e organização do código
 
+## Mapa compartilhado — 0.49.0
+
+`server/architectureMap.js` é um Worker documental independente, configurado em `wrangler.architecture.jsonc`. Autentica senha compartilhada e sessão HMAC de oito horas antes de servir qualquer asset; não depende do cadastro D1 nem concede acesso ao dashboard. `scripts/architecture/build-map.mjs` passa a usar a versão e os arquivos atuais; `package-site.mjs` copia somente documentos e diagramas para saída separada. O atalho administrativo usa `shared/config/architectureMap.js`. A publicação do mapa é separada da aplicação e não reutiliza seus Secrets. [Funcionamento e limites](MAPA-COMPARTILHADO.md).
+
 ## Composição e visualização do Meu Dashboard — 0.46.0
 
 `domain/presentation.js` limita os formatos por natureza do indicador, associa séries por rótulo exato, preserva nulos, agrega a cauda da rosca e resolve herança opcional do recorte. `domain/templates.js` fornece composições apenas com métricas permitidas. `WidgetVisualization` observa o espaço real com ResizeObserver e adapta gráfico/rótulos; a ampliação reutiliza o mesmo resultado com tabela completa. Cartões complementares e comparação são configurações validadas de um nível, avaliadas separadamente pelas regras/permissões existentes. `DashboardTools` reúne modelos, status das fontes e recorte opcional. Seções/recorte/partes são preservados na cópia e backup, sem novas consultas, dados persistidos ou infraestrutura.

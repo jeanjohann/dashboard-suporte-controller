@@ -802,7 +802,29 @@
           .replace(/[\u0300-\u036f]/g, '')
           .toLowerCase();
       const fileIndex = new Map(data.files.map((f) => [f.path, f]));
-      const sourceLink = (p) => '../../' + p.split('/').map(encodeURIComponent).join('/');
+      const hosted = document.documentElement.dataset.hosted === 'true';
+      const repository = 'https://github.com/jeanjohann/dashboard-suporte-controller/blob/main/';
+      const sourceLink = (p) =>
+        (hosted ? repository : '../../') + p.split('/').map(encodeURIComponent).join('/');
+      function documentHref(href) {
+        if (!hosted || /^(?:#|https?:)/.test(href)) return href;
+        const target = new URL(href, 'https://map.invalid/docs/mapa-arquitetura/').pathname.slice(
+          1,
+        );
+        return target.startsWith('docs/mapa-arquitetura/')
+          ? '/' + target.slice('docs/mapa-arquitetura/'.length)
+          : repository + target.split('/').map(encodeURIComponent).join('/');
+      }
+      if (hosted) {
+        document
+          .querySelector('.header-tools')
+          .insertAdjacentHTML(
+            'beforeend',
+            '<form method="post" action="/logout"><button type="submit">Sair</button></form>',
+          );
+        document.querySelector('footer span:nth-child(2)').textContent =
+          'Acesso por senha · somente documentação · sem dados do sistema';
+      }
       let selected = 'src/app/Workspace.jsx';
       let tab = 'guide';
       function inline(v) {
@@ -810,7 +832,9 @@
           .replace(/`([^`]+)`/g, '<code>$1</code>')
           .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
           .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) =>
-            /^https?:|^[\w./#-]+$/.test(href) ? `<a href="${href}">${label}</a>` : label,
+            /^https?:|^[\w./#-]+$/.test(href)
+              ? `<a href="${documentHref(href)}">${label}</a>`
+              : label,
           );
       }
       function markdown(text) {
@@ -899,7 +923,7 @@
       ]
         .map(([n, s]) => `<div class="stat"><strong>${n}</strong><span>${s}</span></div>`)
         .join('');
-      $('baseline').textContent = `Versão ${data.version} · base ${data.base} · 21/10/2026`;
+      $('baseline').textContent = `Versão ${data.version} · base ${data.base} · ${data.date}`;
       $('guide-content').innerHTML = markdown(data.guide);
       $('toc').innerHTML = [...$('guide-content').querySelectorAll('h2')]
         .map((h) => `<a href="#${h.id}">${h.textContent}</a>`)
@@ -1031,7 +1055,7 @@
         data.diagrams
           .map(
             (d, i) =>
-              `<article class="panel slide"><p class="eyebrow">${String(i + 1).padStart(2, '0')} / 07 · Addlog 0.48.0</p>${d.svg.replaceAll(d.id + '-', 'present-' + d.id + '-')}<p>${notes[i]}</p></article>`,
+              `<article class="panel slide"><p class="eyebrow">${String(i + 1).padStart(2, '0')} / 07 · Addlog ${data.version}</p>${d.svg.replaceAll(d.id + '-', 'present-' + d.id + '-')}<p>${notes[i]}</p></article>`,
           )
           .join('');
       $('print').addEventListener('click', () => window.print());
@@ -1041,7 +1065,7 @@
         const a = document.createElement('a');
         const url = URL.createObjectURL(blob);
         a.href = url;
-        a.download = 'addlog-inventario-0.48.0.json';
+        a.download = `addlog-inventario-${data.version}.json`;
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       });

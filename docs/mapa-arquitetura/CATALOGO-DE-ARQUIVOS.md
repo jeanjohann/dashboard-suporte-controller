@@ -1,8 +1,8 @@
 # Catálogo completo de arquivos
 
-Addlog 0.48.0 · referência 9919caf + melhorias locais · 21/10/2026 · **407 arquivos / 81 arquivos de teste / 65 pastas**.
+Addlog 0.49.0 · referência 448654a · cópia da entrega · 2026-10-21 · **416 arquivos / 82 arquivos de teste / 67 pastas**.
 
-Arquivos da base 9919caf lidos da cópia local, incluindo novos arquivos em src. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
+Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
 Os imports indicam relações de módulos, não todas as chamadas de funções. Scripts, entradas, assets e configurações podem não ter importador. As exportações listadas são símbolos explícitos identificados na fonte.
 
@@ -10,18 +10,19 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 
 ## Pastas
 
-- **(raiz)** — Arquivos da configuração raiz. (12 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (45 arquivos, incluindo subpastas).
+- **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
+- **docs** — Guias, critérios e histórico das implementações. (46 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (1 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
 - **public/brand** — Marca e símbolo usados pela interface. (6 arquivos, incluindo subpastas).
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
-- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (14 arquivos, incluindo subpastas).
-- **server** — API Cloudflare e adaptadores privados de integrações. (15 arquivos, incluindo subpastas).
+- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (18 arquivos, incluindo subpastas).
+- **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (4 arquivos, incluindo subpastas).
+- **server** — API Cloudflare e adaptadores privados de integrações. (17 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio preparado e testes; não ligado ao Worker. (3 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Esquema SQL futuro de documentos de negócio. (1 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (310 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (311 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
 - **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (224 arquivos, incluindo subpastas).
@@ -67,8 +68,9 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/park/domain** — Validação e cálculo das regras de negócio de Parque e Manutenção. (4 arquivos, incluindo subpastas).
 - **src/modules/users** — Módulo Usuários: interface, regras e integração de seus dados. (1 arquivos, incluindo subpastas).
 - **src/modules/users/components** — Página e painéis visuais de Usuários. (1 arquivos, incluindo subpastas).
-- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (40 arquivos, incluindo subpastas).
+- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (41 arquivos, incluindo subpastas).
 - **src/shared/charts** — Regras de representação e paleta de gráficos. (3 arquivos, incluindo subpastas).
+- **src/shared/config** — Endereços de serviços documentais sem credenciais. (1 arquivos, incluindo subpastas).
 - **src/shared/data** — Filtros, datas, ordenação e contratos normalizados. (13 arquivos, incluindo subpastas).
 - **src/shared/export** — Exportações e contexto de impressão. (5 arquivos, incluindo subpastas).
 - **src/shared/filters** — Seleção independente por categoria e visões salvas locais. (7 arquivos, incluindo subpastas).
@@ -364,6 +366,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Logística de equipamentos — 0.18.0. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/LOGISTICA-DE-EQUIPAMENTOS.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/MAPA-COMPARTILHADO.md
+
+**Documentação · Documentação** — Documento: Compartilhamento do mapa de arquitetura. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+
+[Abrir fonte](../../docs/MAPA-COMPARTILHADO.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -739,6 +751,52 @@ Importa arquivos locais: nenhum identificado.
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
+### scripts/architecture/build-map.mjs
+
+**Ferramentas e laboratório · Script / serviço local** — Gera um mapa documental reproduzível; não modifica fontes, planilhas ou configurações de execução.
+
+[Abrir fonte](../../scripts/architecture/build-map.mjs) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [scripts/architecture/diagrams.mjs](../../scripts/architecture/diagrams.mjs).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:child_process`, `node:crypto`, `node:fs`, `node:path`, `node:url`, `rollup/parseAst`.
+
+### scripts/architecture/diagrams.mjs
+
+**Ferramentas e laboratório · Script / serviço local** — Define os grafos editoriais dos diagramas e suas evidências no código.
+
+[Abrir fonte](../../scripts/architecture/diagrams.mjs) · Código ou documentação do ponto de referência
+
+Exporta: `diagramColors`, `diagrams`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [scripts/architecture/build-map.mjs](../../scripts/architecture/build-map.mjs).
+
+### scripts/architecture/map-template.html
+
+**Ferramentas e laboratório · Script / serviço local** — Template autocontido do mapa interativo, com navegação, catálogo, diagramas e apresentação.
+
+[Abrir fonte](../../scripts/architecture/map-template.html) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### scripts/architecture/package-site.mjs
+
+**Ferramentas e laboratório · Script / serviço local** — Empacota somente os documentos do mapa, separados do aplicativo e de suas credenciais.
+
+[Abrir fonte](../../scripts/architecture/package-site.mjs) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:fs`, `node:path`, `node:url`.
+
 ### scripts/assistant-agent-workflow.mjs
 
 **Ferramentas e laboratório · Script / serviço local** — Agente com ferramentas restritas. Pergunta chega por contexto efêmero autenticado no loopback.
@@ -904,6 +962,32 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 Importa arquivos locais: nenhum identificado.
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### server/architectureMap.js
+
+**API Cloudflare · Backend** — Site documental independente: senha compartilhada, sessão curta e nenhum binding de dados do sistema.
+
+[Abrir fonte](../../server/architectureMap.js) · Código ou documentação do ponto de referência
+
+Exporta: `createArchitectureHandler`, `default`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [server/architectureMap.test.js](../../server/architectureMap.test.js).
+
+Dependências externas: `jose`.
+
+### server/architectureMap.test.js
+
+**API Cloudflare · Teste** — Verifica architecture Map no contexto de API Cloudflare. Exemplos: nenhum documento ou diagrama é servido antes da senha, inclusive acesso direto; senha correta cria cookie curto, seguro e limitado a este site; armazenamento não recebe credenciais; assinatura, audiência, cookies duplicados e rotação da senha invalidam a sessão.
+
+[Abrir fonte](../../server/architectureMap.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [server/architectureMap.js](../../server/architectureMap.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:fs`, `node:test`.
 
 ### server/googleOrders.js
 
@@ -1109,7 +1193,7 @@ Dependências externas: `react`.
 
 Exporta: `Navigation`.
 
-Importa arquivos locais: [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/app/Theme.jsx](../../src/app/Theme.jsx), [src/components/Icon.jsx](../../src/components/Icon.jsx), [src/modules/assistant/domain/previewAccess.js](../../src/modules/assistant/domain/previewAccess.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
+Importa arquivos locais: [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/app/Theme.jsx](../../src/app/Theme.jsx), [src/components/Icon.jsx](../../src/components/Icon.jsx), [src/modules/assistant/domain/previewAccess.js](../../src/modules/assistant/domain/previewAccess.js), [src/shared/config/architectureMap.js](../../src/shared/config/architectureMap.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
 Importado por: [src/app/DeferredPage.jsx](../../src/app/DeferredPage.jsx), [src/modules/assistant/components/AssistantPage.jsx](../../src/modules/assistant/components/AssistantPage.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/OrdersPage.jsx](../../src/modules/orders/components/OrdersPage.jsx), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx).
 
@@ -4355,6 +4439,18 @@ Importa arquivos locais: nenhum identificado.
 
 Importado por: [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/orders/components/AdvancedInsights.jsx](../../src/modules/orders/components/AdvancedInsights.jsx), [src/modules/orders/components/DashboardOverview.jsx](../../src/modules/orders/components/DashboardOverview.jsx), [src/modules/orders/components/GeographyComparison.jsx](../../src/modules/orders/components/GeographyComparison.jsx), [src/modules/orders/components/ZohoActivitySummary.jsx](../../src/modules/orders/components/ZohoActivitySummary.jsx), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/export/exports.test.js](../../src/shared/export/exports.test.js), [src/shared/export/reportPrintStyles.js](../../src/shared/export/reportPrintStyles.js).
 
+### src/shared/config/architectureMap.js
+
+**Compartilhado · Catálogo** — Endereço documental independente; o visitante informa a senha compartilhada, sem conta no sistema.
+
+[Abrir fonte](../../src/shared/config/architectureMap.js) · Código ou documentação do ponto de referência
+
+Exporta: `architectureMapUrl`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/app/Navigation.jsx](../../src/app/Navigation.jsx).
+
 ### src/shared/data/filters.js
 
 **Compartilhado · Dados / transporte** — Centraliza leitura de campos, datas de atendimento, extensão temporal e filtros combinados sobre a OS.
@@ -5036,6 +5132,16 @@ Importa arquivos locais: nenhum identificado.
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
 Dependências externas: `vite`.
+
+### wrangler.architecture.jsonc
+
+**Configuração e entrega · Configuração** — Publica o mapa em Worker independente, com senha, limitação de tentativas e todos os arquivos protegidos.
+
+[Abrir fonte](../../wrangler.architecture.jsonc) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
 ### wrangler.jsonc
 

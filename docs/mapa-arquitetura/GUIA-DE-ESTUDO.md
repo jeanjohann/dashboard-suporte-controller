@@ -1,10 +1,16 @@
 # Mapa do sistema — guia de estudo
 
-**Addlog · Dashboard de Suporte | versão local 0.48.0 | referência de base: 9919caf + melhorias locais | levantamento: 21/10/2026**
+**Addlog · Dashboard de Suporte | versão 0.49.0 | referência: 448654a · cópia da entrega | levantamento: 2026-10-21**
 
 Este mapa descreve o código do repositório nesse ponto de referência. Configurações privadas e o estado de serviços em execução não foram auditados: uma integração ter implementação não comprova que suas credenciais estejam válidas hoje. O [mapa interativo](index.html) contém o catálogo pesquisável; o [catálogo em Markdown](CATALOGO-DE-ARQUIVOS.md) permite consultar cada arquivo. Os diagramas têm versões SVG para apresentação e fontes Mermaid editáveis em [DIAGRAMAS.md](DIAGRAMAS.md).
 
-Abra `index.html` com um duplo clique: o mapa funciona sem servidor e sem internet. Comece pelo Guia de estudo, passe aos Diagramas e use o Catálogo para investigar um arquivo específico. A aba Apresentar reúne as vistas com notas de fala e impressão. Os botões de abrir o código-fonte dependem de manter o mapa dentro da pasta do projeto; todo o conteúdo explicativo e a busca estão incorporados ao HTML. Para transportar os SVGs e fontes editáveis, conserve a pasta inteira.
+Abra `index.html` com um duplo clique para consultar offline. Para compartilhar sem cadastrar usuários, use [o endereço do mapa](https://mapa-arquitetura-addlog.jean-johann.workers.dev/) e a senha fornecida pelo proprietário. O menu dos administradores do sistema contém o atalho **Mapa de arquitetura**. Comece pelo Guia de estudo, passe aos Diagramas e use o Catálogo para investigar um arquivo específico. A aba Apresentar reúne as vistas com notas de fala e impressão. Na versão online, os links de código apontam para o GitHub e respeitam o acesso daquele repositório; o site documental não hospeda as fontes. Para transportar os SVGs e fontes editáveis offline, conserve a pasta inteira.
+
+## Acesso compartilhado — 0.49.0
+
+O mapa é servido por um Worker independente (`server/architectureMap.js`, `wrangler.architecture.jsonc`), sem D1, APIs do dashboard, credenciais Google/Zoho ou bases da sessão. A senha fica em Secret do servidor. Todos os documentos e diagramas passam pela autenticação antes da entrega, inclusive URLs diretas; não basta conhecer o caminho de um arquivo. A sessão assinada dura oito horas, usa cookie seguro/HttpOnly e não usa localStorage. Há limitação de tentativas, saída pelo botão **Sair**, bloqueio de cache e orientação de não indexação. A rotação da senha invalida os cookies anteriores. Senha compartilhada não identifica visitantes individualmente; os arquivos baixados continuam com quem os recebeu.
+
+`npm run architecture:build` regenera o inventário com versão e arquivos atuais e empacota apenas a documentação. `npm run architecture:deploy` publica somente esse Worker, preservando seus Secrets. A aplicação principal continua com o mesmo controle Cloudflare Access e usuários.
 
 ## Atualização de 21/10/2026
 

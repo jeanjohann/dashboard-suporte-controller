@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.48.0 — Análises personalizadas no Meu Dashboard, matriz de manutenção por modelo × motivo e diagnósticos detalhados nas revisões de OS e Operacional. [Como usar](docs/REVISAO-E-ANALISES-LIVRES.md).
+**Versão:** 0.49.0 — [Mapa de arquitetura compartilhado](docs/MAPA-COMPARTILHADO.md) em endereço independente com senha, sem cadastro de usuários; atalho para administradores no sistema. Análises personalizadas, matriz de manutenção e diagnósticos da versão anterior preservados.
 
 ## Documentação do projeto
 

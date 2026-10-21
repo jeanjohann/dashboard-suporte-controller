@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.49.0 — 21/10/2026
+
+- Publica o mapa em endereço independente com senha compartilhada, sem cadastro no sistema. Todos os documentos/diagramas exigem sessão assinada de oito horas; cookie seguro, limitação de tentativas, saída, proteção de cache e invalidação ao trocar a senha.
+- Adiciona atalho ao mapa no menu de administradores. O site documental não recebe bindings de dados, usuários ou integrações do dashboard; somente os documentos aprovados são empacotados.
+- Automatiza a regeneração do mapa com versão e arquivos atuais antes da publicação documental. A cópia local continua disponível offline; links online de código apontam ao GitHub, sem copiar fontes ao site.
+- [Uso, publicação e rotação](docs/MAPA-COMPARTILHADO.md).
+
 ## 0.48.0 — 21/10/2026
 
 - Meu Dashboard ganha análises personalizadas de OS e Operacional: campos de agrupamento, contagem de registros/distintos e soma/média financeira com denominadores válidos e linhas de origem. Configurações acompanham salvamento, cópia e backup; séries personalizadas ficam lado a lado, sem comparação automática de eixos distintos.

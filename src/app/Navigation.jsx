@@ -4,6 +4,7 @@
  */
 import { useAccess } from '../shared/security/Access.jsx';
 import { allowsPage } from '../shared/security/permissions.js';
+import { architectureMapUrl } from '../shared/config/architectureMap.js';
 import { Icon } from '../components/Icon.jsx';
 import React, { useEffect, useState } from 'react';
 import { ThemeToggle } from './Theme.jsx';
@@ -26,7 +27,12 @@ export function Navigation({ page, onPage }) {
   const { user, managed } = useAccess();
   const visiblePages = [
     ...pages.slice(0, -1),
-    ...(managed && user?.role === 'admin' ? [['users', 'Usuários e permissões']] : []),
+    ...(managed && user?.role === 'admin'
+      ? [
+          ['users', 'Usuários e permissões'],
+          ['architecture-map', 'Mapa de arquitetura'],
+        ]
+      : []),
     pages.at(-1),
   ].filter(([key]) => allowsPage(user, key));
   const [collapsed, setCollapsed] = useState(() => {
@@ -59,6 +65,10 @@ export function Navigation({ page, onPage }) {
     window.dispatchEvent(new Event('sidebar-change'));
   };
   function select(key) {
+    if (key === 'architecture-map') {
+      window.open(architectureMapUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
     if (key === page) {
       if (collapsed) {
         changeCollapsed(false);

@@ -9,31 +9,25 @@ import { diagrams, diagramColors } from './diagrams.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const out = path.join(root, 'docs/mapa-arquitetura');
-const base = '9919caf + melhorias locais';
-const commit = '9919caf';
-const date = '2026-10-21';
 const git = (...args) =>
   execFileSync('git', ['-c', `safe.directory=${root.replaceAll('\\', '/')}`, ...args], {
     cwd: root,
     encoding: 'utf8',
     maxBuffer: 12e6,
   });
+const commit = git('rev-parse', '--short', 'HEAD').trim();
+const base = `${commit} · cópia da entrega`;
+const date = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'America/Sao_Paulo',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+}).format(new Date());
+const version = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
 const paths = [
-  ...new Set([
-    ...git('ls-tree', '-r', '--name-only', commit).trim().split('\n'),
-    ...git(
-      'ls-files',
-      '--others',
-      '--exclude-standard',
-      '--',
-      'src/',
-      'docs/REVISAO-E-ANALISES-LIVRES.md',
-    )
-      .trim()
-      .split('\n'),
-  ]),
+  ...new Set(git('ls-files', '--cached', '--others', '--exclude-standard').trim().split('\n')),
 ]
-  .filter((p) => p && fs.existsSync(path.join(root, p)))
+  .filter((p) => p && !p.startsWith('docs/mapa-arquitetura/') && fs.existsSync(path.join(root, p)))
   .sort();
 const read = (p) => fs.readFileSync(path.join(root, p), 'utf8');
 const esc = (v) =>
@@ -58,6 +52,12 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'scripts/architecture/diagrams.mjs':
+    'Define os grafos editoriais dos diagramas e suas evidências no código.',
+  'wrangler.architecture.jsonc':
+    'Publica o mapa em Worker independente, com senha, limitação de tentativas e todos os arquivos protegidos.',
+  'scripts/architecture/map-template.html':
+    'Template autocontido do mapa interativo, com navegação, catálogo, diagramas e apresentação.',
   'src/modules/orders/components/ZohoColumnPicker.jsx':
     'Permite escolher e restaurar colunas visíveis das tabelas de atividade Zoho.',
   'src/modules/orders/components/ZohoClosures.jsx':
@@ -337,6 +337,8 @@ const folderRoles = {
   'src/shared/filters': 'Seleção independente por categoria e visões salvas locais.',
   'src/shared/layout': 'Personalização de página e agrupamento dos relatórios.',
   'src/shared/security': 'Sessão, autorização e cliente da API protegida.',
+  'src/shared/config': 'Endereços de serviços documentais sem credenciais.',
+  'scripts/architecture': 'Geração do inventário, diagramas e empacotamento do mapa protegido.',
   'src/shared/persistence':
     'Contratos de documentos versionados e adaptadores de referência; preparação de evolução.',
   'src/styles': 'CSS global e refinamentos; a ordem é definida em main.jsx.',
@@ -603,7 +605,7 @@ function svg(d) {
 fs.mkdirSync(path.join(out, 'diagramas'), { recursive: true });
 const canonical = {
   version: 2,
-  title: 'Mapa técnico Addlog 0.48.0',
+  title: `Mapa técnico Addlog ${version}`,
   description:
     'Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.',
   diagrams: diagrams.map((d) => ({
@@ -659,7 +661,7 @@ const additions = [
   'scripts/architecture/map-template.html',
 ];
 const data = {
-  version: '0.48.0',
+  version,
   base,
   date,
   total: entries.length,
@@ -668,13 +670,13 @@ const data = {
   files: entries,
   additions,
   scope:
-    'Arquivos da base 9919caf lidos da cópia local, incluindo novos arquivos em src. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.',
+    'Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.',
 };
 fs.writeFileSync(path.join(out, 'inventario.json'), JSON.stringify(data, null, 2) + '\n');
 const catalog = [
   '# Catálogo completo de arquivos',
   '',
-  `Addlog 0.48.0 · referência ${base} · 21/10/2026 · **${data.total} arquivos / ${data.tests} arquivos de teste / ${folders.length - 1} pastas**.`,
+  `Addlog ${version} · referência ${base} · ${date} · **${data.total} arquivos / ${data.tests} arquivos de teste / ${folders.length - 1} pastas**.`,
   '',
   data.scope,
   '',
@@ -721,7 +723,18 @@ catalog.push(
   '',
 );
 fs.writeFileSync(path.join(out, 'CATALOGO-DE-ARQUIVOS.md'), catalog.join('\n'));
-const guide = read('docs/mapa-arquitetura/GUIA-DE-ESTUDO.md');
+const guide = read('docs/mapa-arquitetura/GUIA-DE-ESTUDO.md').replace(
+  /^\*\*Addlog[^\n]+/m,
+  `**Addlog · Dashboard de Suporte | versão ${version} | referência: ${base} | levantamento: ${date}**`,
+);
+fs.writeFileSync(path.join(out, 'GUIA-DE-ESTUDO.md'), guide);
+const diagramGuide = read('docs/mapa-arquitetura/DIAGRAMAS.md')
+  .replace(/^# .+/, `# Mapa técnico Addlog ${version}`)
+  .replace(
+    /^Fluxos gerais preservados[^\n]+/m,
+    `Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão ${version} (${base}, ${date}). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.`,
+  );
+fs.writeFileSync(path.join(out, 'DIAGRAMAS.md'), diagramGuide);
 const embedded = JSON.stringify({
   ...data,
   guide,

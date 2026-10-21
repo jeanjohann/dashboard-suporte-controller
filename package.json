@@ -1,9 +1,11 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.48.0",
+  "version": "0.49.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "architecture:build": "node scripts/architecture/build-map.mjs && node scripts/architecture/package-site.mjs",
+    "architecture:deploy": "npm run architecture:build && wrangler deploy --config wrangler.architecture.jsonc --keep-vars",
     "dev": "vite --host 127.0.0.1",
     "build": "vite build && node scripts/bundle-report.mjs",
     "test": "node --test",

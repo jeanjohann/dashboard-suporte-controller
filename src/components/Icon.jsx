@@ -4,6 +4,15 @@
  */
 import React from 'react';
 const paths = {
+  'architecture-map': (
+    <>
+      <rect x="8" y="2" width="8" height="6" rx="1" />
+      <path d="M12 8v5M4 17v-4h16v4" />
+      <rect x="1" y="17" width="6" height="5" rx="1" />
+      <rect x="9" y="17" width="6" height="5" rx="1" />
+      <rect x="17" y="17" width="6" height="5" rx="1" />
+    </>
+  ),
   'my-dashboard': (
     <>
       <rect x="3" y="3" width="7" height="8" rx="1" />

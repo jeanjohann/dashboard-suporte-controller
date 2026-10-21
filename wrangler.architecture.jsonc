@@ -1,0 +1,20 @@
+{
+  "name": "mapa-arquitetura-addlog",
+  "main": "server/architectureMap.js",
+  "compatibility_date": "2026-10-11",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./.worker-build/architecture-site",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "not_found_handling": "none",
+  },
+  "ratelimits": [
+    {
+      "name": "MAP_LOGIN_LIMITER",
+      "namespace_id": "5791204501",
+      "simple": { "limit": 5, "period": 60 },
+    },
+  ],
+}
