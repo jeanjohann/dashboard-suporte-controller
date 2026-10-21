@@ -22,6 +22,8 @@ const series = (module, key, label, unit = 'count') => ({
   kinds: ['chart', 'table'],
 });
 export const dashboardCatalog = [
+  { ...series('orders', 'custom', 'Análise personalizada de OS'), custom: true },
+  { ...series('operational', 'custom', 'Análise personalizada do Operacional'), custom: true },
   ...[
     ['completed', 'Visitas e atendimentos'],
     ['productive', 'Intervenções executadas'],

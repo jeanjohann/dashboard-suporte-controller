@@ -52,6 +52,7 @@ export const orderStories = {
         'Tempo observado em campo',
         'Tempo até retirada no histórico',
         'Trocas de equipamentos',
+        'Modelo × motivo da manutenção',
       ]),
     },
   ],

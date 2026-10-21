@@ -1,3 +1,4 @@
+import './styles/review-diagnostics.css';
 /** Entrada do navegador: aplica tema e autenticação antes de montar o espaço de trabalho. */
 import React from 'react';
 import { createRoot } from 'react-dom/client';

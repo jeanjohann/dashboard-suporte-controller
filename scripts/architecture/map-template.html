@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Addlog · Mapa da arquitetura</title>
+    <style>
+      :root {
+        font-family: Inter, 'Segoe UI', Arial, sans-serif;
+        color: #202733;
+        background: #f5f6f8;
+        font-size: 14px;
+        --muted: #647084;
+        --line: #dce1e8;
+        --orange: #ef831a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+      }
+      button,
+      a,
+      select,
+      input {
+        outline-offset: 4px;
+      }
+      button,
+      select {
+        cursor: pointer;
+      }
+      a {
+        color: #9c4d00;
+        text-underline-offset: 3px;
+      }
+      button {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: #263241;
+        border-radius: 8px;
+        padding: 9px 13px;
+      }
+      button:hover {
+        border-color: #d17a2a;
+        background: #fff6ed;
+      }
+      button[aria-selected='true'],
+      .active {
+        background: #fff0df;
+        color: #994600;
+        border-color: #eaa65c;
+      }
+      .shell {
+        max-width: 1550px;
+        margin: auto;
+        padding: 28px 36px 60px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: #a85a12;
+        font-weight: 700;
+        margin: 0 0 9px;
+      }
+      h1 {
+        font-size: clamp(27px, 3vw, 39px);
+        letter-spacing: -0.04em;
+        margin: 0 0 10px;
+        line-height: 1.15;
+      }
+      header p {
+        color: var(--muted);
+        margin: 0;
+        line-height: 1.6;
+      }
+      .header-tools {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .primary {
+        background: #26313c;
+        border-color: #26313c;
+        color: #fff;
+      }
+      .primary:hover {
+        color: #26313c;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin: 25px 0 18px;
+      }
+      .stat {
+        padding: 17px 20px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+      }
+      .stat strong {
+        font-size: 27px;
+        letter-spacing: -0.04em;
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .stat:nth-child(1) {
+        border-top: 3px solid #f29437;
+      }
+      .stat:nth-child(2) {
+        border-top: 3px solid #4a94bb;
+      }
+      .stat:nth-child(3) {
+        border-top: 3px solid #5b9d80;
+      }
+      .stat:nth-child(4) {
+        border-top: 3px solid #9276bd;
+      }
+      .tabs {
+        display: flex;
+        gap: 7px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 13px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .tabs button {
+        border-color: transparent;
+        background: transparent;
+        font-weight: 600;
+      }
+      .tabs button[aria-selected='true'] {
+        background: #fff0df;
+        color: #994600;
+        border-color: #f2c796;
+      }
+      .panel {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+      }
+      .note {
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      .scope {
+        padding: 11px 15px;
+        background: #eef2f6;
+        border-radius: 8px;
+        margin: 0 0 16px;
+        font-size: 12px;
+        color: #526174;
+        line-height: 1.6;
+      }
+      .guide-grid {
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .toc {
+        position: sticky;
+        top: 20px;
+        padding: 17px;
+      }
+      .toc strong {
+        display: block;
+        margin-bottom: 10px;
+      }
+      .toc a {
+        display: block;
+        color: #536175;
+        text-decoration: none;
+        padding: 7px 0;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .toc a:hover {
+        color: #9c4d00;
+      }
+      .prose {
+        padding: 26px 32px;
+        line-height: 1.8;
+        overflow-wrap: anywhere;
+      }
+      .prose h1 {
+        font-size: 28px;
+        margin-bottom: 16px;
+      }
+      .prose h2 {
+        font-size: 23px;
+        letter-spacing: -0.025em;
+        border-top: 1px solid var(--line);
+        padding-top: 26px;
+        margin: 30px 0 14px;
+        scroll-margin-top: 25px;
+      }
+      .prose h3 {
+        font-size: 17px;
+        margin-top: 24px;
+      }
+      .prose p {
+        margin: 12px 0;
+      }
+      .prose ol,
+      .prose ul {
+        padding-left: 23px;
+      }
+      .prose li {
+        margin: 7px 0;
+      }
+      code {
+        font:
+          12px 'Cascadia Code',
+          Consolas,
+          monospace;
+        background: #f0f3f6;
+        border-radius: 4px;
+        padding: 2px 5px;
+        overflow-wrap: anywhere;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        margin: 16px 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      th {
+        text-align: left;
+        color: #536175;
+        background: #f5f7f9;
+      }
+      th,
+      td {
+        padding: 11px 13px;
+        border: 1px solid var(--line);
+        vertical-align: top;
+      }
+      .filterbar {
+        display: grid;
+        grid-template-columns: minmax(240px, 1fr) 210px 195px auto;
+        gap: 10px;
+        padding: 14px;
+        align-items: center;
+      }
+      input[type='search'],
+      select {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 11px 12px;
+        width: 100%;
+        color: #344154;
+        min-width: 0;
+      }
+      label.check {
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+        display: flex;
+        gap: 6px;
+      }
+      .countline {
+        margin: 12px 2px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+      .catalog {
+        display: grid;
+        grid-template-columns: minmax(320px, 40%) minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+      .filelist {
+        max-height: 72vh;
+        overflow-y: auto;
+        padding: 7px;
+      }
+      .file {
+        text-align: left;
+        width: 100%;
+        border-color: transparent;
+        border-radius: 7px;
+        padding: 12px 11px;
+        margin-bottom: 3px;
+        background: transparent;
+        display: block;
+      }
+      .file span {
+        display: block;
+        overflow-wrap: anywhere;
+        line-height: 1.5;
+      }
+      .file .path {
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .file .meta {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 5px;
+      }
+      .file.active {
+        background: #fff4e7;
+        border-color: #f3cea4;
+      }
+      .detail {
+        padding: 24px 27px;
+        min-height: 470px;
+        overflow-wrap: anywhere;
+      }
+      .detail h2 {
+        font-size: 21px;
+        line-height: 1.45;
+        margin: 15px 0;
+        letter-spacing: -0.02em;
+      }
+      .detail p {
+        line-height: 1.8;
+      }
+      .badge {
+        display: inline-block;
+        border-radius: 5px;
+        padding: 5px 8px;
+        background: #eef3f8;
+        font-size: 11px;
+        color: #53677b;
+        margin-right: 5px;
+      }
+      .detail h3 {
+        font-size: 13px;
+        margin: 24px 0 10px;
+      }
+      .linklist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .linklist li {
+        border-bottom: 1px solid #eef1f4;
+      }
+      .linklist button {
+        border: none;
+        background: transparent;
+        text-align: left;
+        width: 100%;
+        color: #375c80;
+        padding: 8px 0;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+      .symbol {
+        display: inline-block;
+        margin: 3px 4px 3px 0;
+      }
+      .folder-grid {
+        display: grid;
+        grid-template-columns: 350px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+      .folder-list {
+        padding: 10px;
+        max-height: 76vh;
+        overflow-y: auto;
+      }
+      .folder-list button {
+        display: block;
+        width: 100%;
+        border-color: transparent;
+        text-align: left;
+        padding: 9px 8px;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+      .folder-list small {
+        color: var(--muted);
+        float: right;
+      }
+      .folder-details {
+        padding: 24px;
+      }
+      .folder-details h2 {
+        margin-top: 0;
+      }
+      .diagram-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .diagram-controls select {
+        max-width: 440px;
+      }
+      .diagram-card {
+        padding: 15px;
+      }
+      .diagram-card svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .diagram-footer {
+        padding: 10px 15px 5px;
+        display: flex;
+        gap: 17px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .evidence {
+        margin: 14px 15px 8px;
+        padding: 13px 15px;
+        border-radius: 7px;
+        background: #f5f7fa;
+        font-size: 12px;
+        line-height: 1.8;
+      }
+      .evidence strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+      .evidence button {
+        padding: 5px 8px;
+        margin: 3px;
+        font-size: 11px;
+      }
+      .deck-intro {
+        padding: 27px 30px;
+        background: #26313d;
+        color: #fff;
+        margin-bottom: 20px;
+        border-radius: 13px;
+      }
+      .deck-intro h2 {
+        font-size: 26px;
+        letter-spacing: -0.025em;
+        margin: 6px 0 12px;
+      }
+      .deck-intro p {
+        color: #d1d8e2;
+        max-width: 900px;
+        line-height: 1.8;
+      }
+      .slide {
+        margin: 0 0 24px;
+        padding: 20px;
+        break-inside: avoid;
+      }
+      .slide h2 {
+        font-size: 22px;
+        margin: 10px 15px;
+      }
+      .slide p {
+        margin: 12px 15px;
+        color: #536175;
+        line-height: 1.8;
+      }
+      .slide svg {
+        width: 100%;
+        height: auto;
+      }
+      footer {
+        margin-top: 28px;
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 11px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .empty {
+        padding: 28px;
+        color: var(--muted);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (max-width: 1000px) {
+        .shell {
+          padding: 22px;
+        }
+        .guide-grid {
+          grid-template-columns: 1fr;
+        }
+        .toc {
+          position: static;
+        }
+        .toc nav {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0 15px;
+        }
+        .filterbar {
+          grid-template-columns: 1fr 1fr;
+        }
+        .catalog {
+          grid-template-columns: minmax(250px, 36%) minmax(0, 1fr);
+        }
+        .folder-grid {
+          grid-template-columns: 280px 1fr;
+        }
+      }
+      @media (max-width: 680px) {
+        .shell {
+          padding: 18px 12px;
+        }
+        header {
+          align-items: start;
+          flex-direction: column;
+        }
+        .stats {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stat {
+          padding: 12px;
+          gap: 8px;
+        }
+        .stat strong {
+          font-size: 23px;
+        }
+        .filterbar,
+        .catalog,
+        .folder-grid {
+          grid-template-columns: 1fr;
+        }
+        .filelist,
+        .folder-list {
+          max-height: 320px;
+        }
+        .prose {
+          padding: 16px;
+        }
+        .detail {
+          padding: 19px;
+        }
+        .diagram-controls {
+          flex-wrap: wrap;
+        }
+        .diagram-card {
+          padding: 0;
+          overflow-x: auto;
+        }
+        .diagram-card svg {
+          min-width: 850px;
+        }
+        .slide {
+          padding: 7px;
+        }
+        .slide svg {
+          min-width: 650px;
+        }
+        .slide {
+          overflow-x: auto;
+        }
+      }
+      @media print {
+        @page {
+          margin: 12mm;
+        }
+        body {
+          background: #fff;
+        }
+        .shell {
+          max-width: none;
+          padding: 0;
+        }
+        header,
+        .stats,
+        .tabs,
+        .toc,
+        .header-tools,
+        footer,
+        .filterbar,
+        .countline,
+        .filelist,
+        .folder-list,
+        .diagram-controls,
+        .diagram-footer,
+        .evidence,
+        .no-print {
+          display: none !important;
+        }
+        .panel {
+          border: none;
+        }
+        .guide-grid,
+        .catalog,
+        .folder-grid {
+          display: block;
+        }
+        .prose,
+        .detail {
+          padding: 0;
+        }
+        .prose {
+          font-size: 10pt;
+          line-height: 1.55;
+        }
+        .prose h2 {
+          break-after: avoid;
+        }
+        table {
+          font-size: 8pt;
+        }
+        tr {
+          break-inside: avoid;
+        }
+        a {
+          color: inherit;
+        }
+        .slide {
+          break-after: page;
+          padding: 0;
+        }
+        .slide svg {
+          min-width: 0;
+          max-height: 80vh;
+        }
+        .deck-intro {
+          background: #fff;
+          color: #222;
+        }
+        .deck-intro p {
+          color: #444;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div>
+          <p class="eyebrow">Addlog · Engenharia e dados</p>
+          <h1>Mapa da arquitetura</h1>
+          <p>
+            Do arquivo de origem à análise. Um guia para estudar, localizar o código e apresentar o
+            sistema.
+          </p>
+        </div>
+        <div class="header-tools">
+          <button id="print" class="primary">Imprimir / Salvar PDF</button
+          ><button id="download">Baixar inventário JSON</button>
+        </div>
+      </header>
+      <div class="stats" id="stats"></div>
+      <nav class="tabs" role="tablist" aria-label="Áreas do mapa">
+        <button
+          role="tab"
+          id="tab-guide"
+          aria-controls="guide"
+          aria-selected="true"
+          data-tab="guide"
+        >
+          Guia de estudo
+        </button>
+        <button
+          role="tab"
+          id="tab-diagrams"
+          aria-controls="diagrams"
+          aria-selected="false"
+          data-tab="diagrams"
+        >
+          Diagramas
+        </button>
+        <button
+          role="tab"
+          id="tab-folders"
+          aria-controls="folders"
+          aria-selected="false"
+          data-tab="folders"
+        >
+          Pastas
+        </button>
+        <button
+          role="tab"
+          id="tab-files"
+          aria-controls="files"
+          aria-selected="false"
+          data-tab="files"
+        >
+          Catálogo de arquivos
+        </button>
+        <button
+          role="tab"
+          id="tab-present"
+          aria-controls="present"
+          aria-selected="false"
+          data-tab="present"
+        >
+          Apresentar
+        </button>
+      </nav>
+      <section id="guide" role="tabpanel" aria-labelledby="tab-guide">
+        <div class="guide-grid">
+          <aside class="panel toc">
+            <strong>Roteiro de leitura</strong>
+            <nav id="toc"></nav>
+          </aside>
+          <article id="guide-content" class="panel prose"></article>
+        </div>
+      </section>
+      <section id="diagrams" role="tabpanel" aria-labelledby="tab-diagrams" hidden>
+        <div class="diagram-controls">
+          <select id="diagram-choice" aria-label="Diagrama"></select
+          ><span class="note">Sete vistas complementares · SVG vetorial e Mermaid editável</span>
+        </div>
+        <div id="diagram-view" class="panel diagram-card"></div>
+      </section>
+      <section id="folders" role="tabpanel" aria-labelledby="tab-folders" hidden>
+        <p class="scope">
+          Cada pasta versionada tem uma função. Clique para ver os arquivos do ramo; o catálogo
+          permite investigar as dependências de cada um.
+        </p>
+        <div class="folder-grid">
+          <div class="panel folder-list" id="folder-list"></div>
+          <div class="panel folder-details" id="folder-details"></div>
+        </div>
+      </section>
+      <section id="files" role="tabpanel" aria-labelledby="tab-files" hidden>
+        <p class="scope">
+          Imports locais descrevem dependências de código. Comunicação por props, contexto, HTTP e
+          armazenamento aparece no guia e nos diagramas. Sem importador estático não significa
+          arquivo sem uso.
+        </p>
+        <div class="panel filterbar">
+          <input
+            id="query"
+            type="search"
+            placeholder="Buscar caminho, função ou responsabilidade…"
+            aria-label="Buscar arquivos"
+          /><select id="module" aria-label="Módulo">
+            <option value="">Todos os módulos</option></select
+          ><select id="layer" aria-label="Tipo de arquivo">
+            <option value="">Todos os tipos</option></select
+          ><label class="check"><input id="hide-tests" type="checkbox" />Ocultar testes</label>
+        </div>
+        <div class="countline">
+          <span id="file-count" class="note" aria-live="polite"></span
+          ><button id="clear">Limpar busca</button>
+        </div>
+        <div class="catalog">
+          <div id="file-list" class="panel filelist"></div>
+          <article id="file-detail" class="panel detail" aria-live="polite"></article>
+        </div>
+      </section>
+      <section id="present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
+      <footer>
+        <span id="baseline"></span
+        ><span>Offline · sem consultas externas · sem credenciais ou conteúdo das planilhas</span
+        ><a href="GUIA-DE-ESTUDO.md">Guia em Markdown</a
+        ><a href="CATALOGO-DE-ARQUIVOS.md">Catálogo completo</a
+        ><a href="DIAGRAMAS.md">Fontes dos diagramas</a>
+      </footer>
+    </div>
+    <script>
+      'use strict';
+      const data = /*ARCHITECTURE_DATA*/ null;
+      const $ = (id) => document.getElementById(id);
+      const escape = (v) =>
+        String(v)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;');
+      const slug = (v) =>
+        v
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+      const normalized = (v) =>
+        v
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase();
+      const fileIndex = new Map(data.files.map((f) => [f.path, f]));
+      const sourceLink = (p) => '../../' + p.split('/').map(encodeURIComponent).join('/');
+      let selected = 'src/app/Workspace.jsx';
+      let tab = 'guide';
+      function inline(v) {
+        return escape(v)
+          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) =>
+            /^https?:|^[\w./#-]+$/.test(href) ? `<a href="${href}">${label}</a>` : label,
+          );
+      }
+      function markdown(text) {
+        const lines = text.split(/\r?\n/),
+          result = [];
+        let list = '',
+          table = false;
+        function close() {
+          if (list) result.push(`</${list}>`);
+          list = '';
+          if (table) result.push('</tbody></table></div>');
+          table = false;
+        }
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          if (!line.trim()) {
+            close();
+            continue;
+          }
+          const h = line.match(/^(#{1,4})\s+(.+)/);
+          if (h) {
+            close();
+            result.push(`<h${h[1].length} id="${slug(h[2])}">${inline(h[2])}</h${h[1].length}>`);
+            continue;
+          }
+          if (line.startsWith('|')) {
+            if (/^\|[\s:|-]+\|$/.test(line)) continue;
+            const cells = line
+              .replace(/^\||\|$/g, '')
+              .split('|')
+              .map((s) => s.trim());
+            if (!table) {
+              if (list) {
+                result.push(`</${list}>`);
+                list = '';
+              }
+              result.push(
+                '<div class="table-wrap"><table><thead><tr>' +
+                  cells.map((s) => `<th>${inline(s)}</th>`).join('') +
+                  '</tr></thead><tbody>',
+              );
+              table = true;
+            } else
+              result.push('<tr>' + cells.map((s) => `<td>${inline(s)}</td>`).join('') + '</tr>');
+            continue;
+          }
+          const item = line.match(/^(\d+\.|-)\s+(.*)/);
+          if (item) {
+            const type = item[1] === '-' ? 'ul' : 'ol';
+            if (list !== type) {
+              close();
+              result.push(`<${type}>`);
+              list = type;
+            }
+            result.push(`<li>${inline(item[2])}</li>`);
+            continue;
+          }
+          close();
+          result.push(`<p>${inline(line)}</p>`);
+        }
+        close();
+        return result.join('');
+      }
+      function changeTab(id) {
+        tab = id;
+        document.querySelectorAll('[role="tabpanel"]').forEach((p) => (p.hidden = p.id !== id));
+        document
+          .querySelectorAll('[data-tab]')
+          .forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
+      }
+      document
+        .querySelectorAll('[data-tab]')
+        .forEach((b) => b.addEventListener('click', () => changeTab(b.dataset.tab)));
+      $('stats').innerHTML = [
+        [data.total, 'arquivos mapeados'],
+        [
+          new Set(
+            data.files
+              .map((file) => file.path.match(/^src\/modules\/([^/]+)/)?.[1])
+              .filter(Boolean),
+          ).size,
+          'módulos funcionais',
+        ],
+        [data.tests, 'arquivos de teste'],
+        [data.diagrams.length, 'diagramas técnicos'],
+      ]
+        .map(([n, s]) => `<div class="stat"><strong>${n}</strong><span>${s}</span></div>`)
+        .join('');
+      $('baseline').textContent = `Versão ${data.version} · base ${data.base} · 21/10/2026`;
+      $('guide-content').innerHTML = markdown(data.guide);
+      $('toc').innerHTML = [...$('guide-content').querySelectorAll('h2')]
+        .map((h) => `<a href="#${h.id}">${h.textContent}</a>`)
+        .join('');
+      for (const [id, values] of [
+        ['module', data.files.map((f) => f.module)],
+        ['layer', data.files.map((f) => f.layer)],
+      ]) {
+        for (const value of [...new Set(values)].sort((a, b) => a.localeCompare(b, 'pt-BR'))) {
+          const o = document.createElement('option');
+          o.value = value;
+          o.textContent = value;
+          $(id).append(o);
+        }
+      }
+      function fileButton(p, className = '') {
+        return `<button class="${className}" data-file="${escape(p)}">${escape(p)}</button>`;
+      }
+      function fileLinks(paths) {
+        return paths.length
+          ? '<ul class="linklist">' +
+              paths.map((p) => `<li>${fileButton(p)}</li>`).join('') +
+              '</ul>'
+          : '<p class="note">Nenhuma referência estática identificada. Entradas, scripts, configurações e assets podem ser usados sem importação.</p>';
+      }
+      function showDetail(p) {
+        selected = p;
+        const f = fileIndex.get(p);
+        if (!f) return;
+        $('file-detail').innerHTML =
+          `<span class="badge">${escape(f.module)}</span><span class="badge">${escape(f.layer)}</span><h2>${escape(f.path)}</h2><p>${escape(f.description)}</p><p class="note">${escape(f.status)}</p><a href="${sourceLink(f.path)}" target="_blank" rel="noopener">Abrir arquivo de origem ↗</a><h3>Funções / símbolos exportados</h3>${f.exports.length ? f.exports.map((x) => `<code class="symbol">${escape(x)}</code>`).join('') : '<p class="note">Sem símbolos explícitos identificados; consulte o arquivo para efeitos de entrada, estilos ou configuração.</p>'}<h3>Importa ${f.imports.length} arquivo(s) local(is)</h3>${fileLinks(f.imports)}<h3>Importado por ${f.importedBy.length} arquivo(s)</h3>${fileLinks(f.importedBy)}<h3>Dependências externas</h3><p>${f.external.length ? f.external.map((x) => `<code class="symbol">${escape(x)}</code>`).join('') : '<span class="note">Nenhuma importação externa identificada.</span>'}</p>`;
+        document
+          .querySelectorAll('.file[data-file]')
+          .forEach((b) => b.classList.toggle('active', b.dataset.file === p));
+      }
+      function renderFiles() {
+        const query = normalized($('query').value.trim());
+        const files = data.files.filter(
+          (f) =>
+            (!$('module').value || f.module === $('module').value) &&
+            (!$('layer').value || f.layer === $('layer').value) &&
+            (!$('hide-tests').checked || f.layer !== 'Teste') &&
+            (!query ||
+              normalized(
+                [f.path, f.module, f.layer, f.description, ...f.exports].join(' '),
+              ).includes(query)),
+        );
+        $('file-count').textContent =
+          `${files.length} de ${data.total} arquivos · selecione um arquivo para investigar suas relações`;
+        $('file-list').innerHTML = files.length
+          ? files
+              .map(
+                (f) =>
+                  `<button class="file${f.path === selected ? ' active' : ''}" data-file="${escape(f.path)}"><span class="path">${escape(f.path)}</span><span class="meta">${escape(f.module)} · ${escape(f.layer)}</span></button>`,
+              )
+              .join('')
+          : '<p class="empty">Nenhum arquivo corresponde à busca.</p>';
+      }
+      for (const id of ['query', 'module', 'layer', 'hide-tests'])
+        $(id).addEventListener(id === 'query' ? 'input' : 'change', renderFiles);
+      $('clear').addEventListener('click', () => {
+        $('query').value = '';
+        $('module').value = '';
+        $('layer').value = '';
+        $('hide-tests').checked = false;
+        renderFiles();
+      });
+      function openFile(p) {
+        changeTab('files');
+        showDetail(p);
+        if (!$('file-list').querySelector(`[data-file="${CSS.escape(p)}"]`)) {
+          $('query').value = '';
+          $('module').value = '';
+          $('layer').value = '';
+          $('hide-tests').checked = false;
+        }
+        renderFiles();
+        $('file-list')
+          .querySelector(`[data-file="${CSS.escape(p)}"]`)
+          ?.scrollIntoView({ block: 'nearest' });
+      }
+      document.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-file]');
+        if (b) openFile(b.dataset.file);
+      });
+      $('folder-list').innerHTML = data.folders
+        .map(
+          (f) =>
+            `<button data-folder="${escape(f.path)}" style="padding-left:${10 + Math.max(0, f.path.split('/').length - 1) * 12}px">${escape(f.path === '(raiz)' ? '(raiz do projeto)' : f.path.split('/').at(-1) + '/')} <small>${f.count}</small></button>`,
+        )
+        .join('');
+      function showFolder(p) {
+        const f = data.folders.find((x) => x.path === p);
+        document
+          .querySelectorAll('[data-folder]')
+          .forEach((b) => b.classList.toggle('active', b.dataset.folder === p));
+        const files = data.files.filter((e) =>
+          p === '(raiz)' ? e.folder === p : e.path.startsWith(p + '/'),
+        );
+        $('folder-details').innerHTML =
+          `<p class="eyebrow">Estrutura do projeto</p><h2>${escape(p)}</h2><p>${escape(f.description)}</p><p class="note">${files.length} arquivo(s)${p === '(raiz)' ? ' diretos' : ', incluindo subpastas'}. Clique para ver a responsabilidade e as dependências.</p>` +
+          fileLinks(files.map((e) => e.path));
+      }
+      $('folder-list').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-folder]');
+        if (b) showFolder(b.dataset.folder);
+      });
+      $('diagram-choice').innerHTML = data.diagrams
+        .map((d) => `<option value="${d.id}">${d.title}</option>`)
+        .join('');
+      function showDiagram(id) {
+        const d = data.diagrams.find((v) => v.id === id);
+        $('diagram-view').innerHTML =
+          d.svg +
+          `<div class="diagram-footer"><a href="diagramas/${d.id}.svg" download>Baixar SVG</a><a href="diagramas/${d.id}.mmd" download>Fonte Mermaid</a><span class="note">SVG composto a partir do mesmo grafo canônico; não depende de um renderizador online.</span></div><div class="evidence"><strong>Relações verificadas nestes arquivos</strong>${d.evidence.map((p) => fileButton(p)).join('')}</div>`;
+      }
+      $('diagram-choice').addEventListener('change', (e) => showDiagram(e.target.value));
+      const notes = [
+        'Comece pelos três ambientes. A análise comum é feita no navegador; integrações privadas passam pelo Worker. O laboratório de IA continua no computador local.',
+        'A rastreabilidade é o fio condutor: preservar a origem, selecionar registros, calcular regras e só então apresentar os resultados. Google e Excel compartilham o caminho analítico.',
+        'OS fornece o histórico; Operacional fornece a fotografia cadastral. Parque cruza os dois. Consumo usa sua própria base e uma referência operacional. Monitoramento tem fonte independente.',
+        'A autorização existe também no servidor. Credenciais não vão para o bundle React, e uma identidade de e-mail sem assinatura válida não libera operações.',
+        'Explique a distinção entre sessão, armazenamento do navegador e banco compartilhado. O D1 ativo é o cadastro de acesso; a persistência central de negócio ainda é uma preparação.',
+        'O agente consulta uma ferramenta permitida e o sistema calcula. O modelo interpreta e pode errar a explicação. O perfil fictício oferece consultas ampliadas às amostras; não há acesso livre aos arquivos.',
+        'Feche com a evolução: testes e build ajudam a manter a entrega, mas a ativação de coletor, operadoras, presença Zoho e banco de negócio exige integrações/configurações próprias.',
+      ];
+      $('present').innerHTML =
+        '<div class="deck-intro"><p class="eyebrow" style="color:#ffb56b">Roteiro para apresentação</p><h2>Da planilha à decisão, com origem verificável</h2><p>Use as sete vistas abaixo para apresentar o sistema em cerca de dez minutos. A impressão desta aba organiza uma vista por página; os SVGs podem ser inseridos em outros materiais.</p></div>' +
+        data.diagrams
+          .map(
+            (d, i) =>
+              `<article class="panel slide"><p class="eyebrow">${String(i + 1).padStart(2, '0')} / 07 · Addlog 0.48.0</p>${d.svg.replaceAll(d.id + '-', 'present-' + d.id + '-')}<p>${notes[i]}</p></article>`,
+          )
+          .join('');
+      $('print').addEventListener('click', () => window.print());
+      $('download').addEventListener('click', () => {
+        const { guide, diagrams, ...inventory } = data;
+        const blob = new Blob([JSON.stringify(inventory, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = 'addlog-inventario-0.48.0.json';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+      renderFiles();
+      showDetail(selected);
+      showFolder('src');
+      showDiagram(data.diagrams[0].id);
+    </script>
+  </body>
+</html>

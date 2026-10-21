@@ -1,3 +1,4 @@
+import { defaultQuery } from './customQuery.js';
 import { dashboardMetric } from './catalog.js';
 
 export const kindLabels = {
@@ -17,8 +18,20 @@ const partitions = new Set([
   'consumption.operators',
   'monitoring.bases',
 ]);
-export function metricKinds(metric) {
+export function metricKinds(metric, query) {
   if (!metric) return [];
+  if (metric.custom) {
+    const q = query || defaultQuery(metric.module);
+    return q.group === 'none'
+      ? ['card', 'table']
+      : [
+          'chart',
+          'columns',
+          ...(q.group === 'month' ? ['line'] : []),
+          ...(q.measure === 'rows' ? ['donut'] : []),
+          'table',
+        ];
+  }
   if (!metric.kinds.includes('chart')) return metric.kinds;
   return [
     'chart',
@@ -43,6 +56,8 @@ export function canCompare(left, right) {
   return Boolean(
     a &&
     b &&
+    !a.custom &&
+    !b.custom &&
     a.kinds.includes('chart') &&
     b.kinds.includes('chart') &&
     a.unit === b.unit &&

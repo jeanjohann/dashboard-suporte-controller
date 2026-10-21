@@ -1,0 +1,140 @@
+{
+  "version": 2,
+  "title": "Mapa técnico Addlog 0.48.0",
+  "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
+  "diagrams": [
+    {
+      "id": "map_02-leitura",
+      "title": "Da fonte ao indicador",
+      "kind": "flowchart",
+      "description": "A entrada muda; o importador e as regras analíticas continuam compartilhados.",
+      "accessibility": "Ausência não vira zero automaticamente. Filtros de análise e busca da grade têm alcances próprios.",
+      "data": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "excel",
+            "label": "Excel / CSV local · Arquivo escolhido pelo usuário",
+            "class": "app"
+          },
+          {
+            "id": "google",
+            "label": "Google via Worker · Retrato da aba autorizada",
+            "class": "cloud"
+          },
+          {
+            "id": "adapter",
+            "label": "Adaptador de fonte · Valida contrato e células",
+            "class": "app"
+          },
+          {
+            "id": "importer",
+            "label": "Importador do módulo · Cabeçalhos · tipos · origem",
+            "class": "domain"
+          },
+          {
+            "id": "normalized",
+            "label": "Base normalizada · Linhas · células · revisões",
+            "class": "domain"
+          },
+          {
+            "id": "filter",
+            "label": "Filtro da categoria · Período · campos · seleção",
+            "class": "app"
+          },
+          {
+            "id": "domain",
+            "label": "Funções de domínio · Totais · grupos · ciclos · custos",
+            "class": "domain"
+          },
+          {
+            "id": "view",
+            "label": "Cards / gráficos / tabelas · Apresentam o resultado",
+            "class": "app"
+          },
+          {
+            "id": "audit",
+            "label": "Conferência e exportação · Linhas de origem e contexto",
+            "class": "app"
+          }
+        ],
+        "edges": [
+          {
+            "from": "google",
+            "to": "adapter",
+            "label": "Snapshot",
+            "arrow": "-->"
+          },
+          {
+            "from": "adapter",
+            "to": "importer",
+            "label": "Mesma leitura",
+            "arrow": "-->"
+          },
+          {
+            "from": "excel",
+            "to": "importer",
+            "label": "Leitura manual",
+            "arrow": "-->"
+          },
+          {
+            "from": "importer",
+            "to": "normalized",
+            "label": "Preserva origem",
+            "arrow": "-->"
+          },
+          {
+            "from": "normalized",
+            "to": "filter",
+            "label": "Recorte",
+            "arrow": "-->"
+          },
+          {
+            "from": "filter",
+            "to": "domain",
+            "label": "Registros elegíveis",
+            "arrow": "-->"
+          },
+          {
+            "from": "domain",
+            "to": "view",
+            "label": "Resultados",
+            "arrow": "-->"
+          },
+          {
+            "from": "view",
+            "to": "audit",
+            "label": "Detalhar / exportar",
+            "arrow": "-->"
+          }
+        ]
+      },
+      "styles": [
+        {
+          "name": "app",
+          "definition": "fill:#eef4ff,stroke:#5484c8,color:#172334"
+        },
+        {
+          "name": "domain",
+          "definition": "fill:#fff1dc,stroke:#df8a25,color:#172334"
+        },
+        {
+          "name": "cloud",
+          "definition": "fill:#e9f7ee,stroke:#42996a,color:#172334"
+        },
+        {
+          "name": "store",
+          "definition": "fill:#e4f6f4,stroke:#2b9086,color:#172334"
+        },
+        {
+          "name": "local",
+          "definition": "fill:#f2ebff,stroke:#9670cc,color:#172334"
+        },
+        {
+          "name": "future",
+          "definition": "fill:#f3f4f6,stroke:#929ba9,color:#172334"
+        }
+      ]
+    }
+  ]
+}

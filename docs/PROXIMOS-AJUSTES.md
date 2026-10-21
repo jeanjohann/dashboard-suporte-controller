@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+## Rodada 0.48.0 — preparada em 21/10/2026
+
+Análises personalizadas de OS/Operacional no Meu Dashboard, matriz modelo × motivo e revisões com diagnóstico comum. [Critérios e limites](REVISAO-E-ANALISES-LIVRES.md). Comparações de séries personalizadas, persistência compartilhada no banco e aprofundamento do agente n8n continuam para etapas posteriores. A configuração do banco não substitui políticas de backup e migração dos históricos locais.
+
 Primeira rodada de evolução do **Meu Dashboard entregue em 0.45.0**: arraste/redimensionamento, modo Organizar com desfazer, duplicação, backup de configurações e apresentação/tela cheia/impressão. Segunda rodada preparada em **0.46.0**: conteúdo adaptável, colunas/linhas/rosca conforme o indicador, ampliação e tabela completa, composição de até quatro indicadores no mesmo card, comparação de duas séries compatíveis, seções/modelos, central de fontes e recorte opcional do painel. Publicação/homologação descritas na entrega. [Uso e limites](MEU-DASHBOARD.md).
 
 ## A20 — Identidade e temas: implementado em 0.47.0

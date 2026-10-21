@@ -1,0 +1,107 @@
+{
+  "version": 2,
+  "title": "Mapa técnico Addlog 0.48.0",
+  "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
+  "diagrams": [
+    {
+      "id": "map_07-entrega",
+      "title": "Do código à publicação",
+      "kind": "flowchart",
+      "description": "Fonte versionada, validações, compilação e implantação são etapas distintas.",
+      "accessibility": "Os scripts do assistente continuam locais. Um build aprovado não valida as credenciais de todos os serviços externos.",
+      "data": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "source",
+            "label": "Código no Git · src/ · server/ · scripts/",
+            "class": "app"
+          },
+          {
+            "id": "check",
+            "label": "Validações locais · Imports · formato · testes",
+            "class": "domain"
+          },
+          {
+            "id": "build",
+            "label": "Vite build · Chunks + manifesto + relatório",
+            "class": "domain"
+          },
+          {
+            "id": "browser",
+            "label": "Navegador · Assets e páginas sob demanda",
+            "class": "app"
+          },
+          {
+            "id": "cloud",
+            "label": "Cloudflare · ASSETS + Worker + D1",
+            "class": "cloud"
+          },
+          {
+            "id": "deploy",
+            "label": "Distribuição / Wrangler · dist/ + server/worker.js",
+            "class": "cloud"
+          }
+        ],
+        "edges": [
+          {
+            "from": "source",
+            "to": "check",
+            "label": "Revisar",
+            "arrow": "-->"
+          },
+          {
+            "from": "check",
+            "to": "build",
+            "label": "Compilar",
+            "arrow": "-->"
+          },
+          {
+            "from": "build",
+            "to": "deploy",
+            "label": "Artefatos",
+            "arrow": "-->"
+          },
+          {
+            "from": "deploy",
+            "to": "cloud",
+            "label": "Implantar",
+            "arrow": "-->"
+          },
+          {
+            "from": "cloud",
+            "to": "browser",
+            "label": "Servir aplicação",
+            "arrow": "-->"
+          }
+        ]
+      },
+      "styles": [
+        {
+          "name": "app",
+          "definition": "fill:#eef4ff,stroke:#5484c8,color:#172334"
+        },
+        {
+          "name": "domain",
+          "definition": "fill:#fff1dc,stroke:#df8a25,color:#172334"
+        },
+        {
+          "name": "cloud",
+          "definition": "fill:#e9f7ee,stroke:#42996a,color:#172334"
+        },
+        {
+          "name": "store",
+          "definition": "fill:#e4f6f4,stroke:#2b9086,color:#172334"
+        },
+        {
+          "name": "local",
+          "definition": "fill:#f2ebff,stroke:#9670cc,color:#172334"
+        },
+        {
+          "name": "future",
+          "definition": "fill:#f3f4f6,stroke:#929ba9,color:#172334"
+        }
+      ]
+    }
+  ]
+}

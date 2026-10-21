@@ -1,5 +1,6 @@
 /** Relatórios de OS: carregados quando há base, mantendo a ordem, estados e contexto da página. */
 import React from 'react';
+import { MaintenanceMatrix } from './MaintenanceMatrix.jsx';
 import { OrdersLifecyclePanel } from './OrdersLifecyclePanel.jsx';
 import { OrdersSwapsPanel } from './OrdersSwapsPanel.jsx';
 import { OrdersRecordsPanel } from './OrdersRecordsPanel.jsx';
@@ -151,11 +152,18 @@ export function OrdersReports({
         setReferenceDate={setReferenceDate}
         visible={visible.lifecycle}
       />
+      <MaintenanceMatrix
+        original={data}
+        data={selected}
+        filename={filename}
+        visible={visible.maintenanceMatrix}
+      />
       <OrdersSwapsPanel data={data} devices={devices} visible={visible.swaps} />
       <OrdersFinancePanel financial={financial} data={selected} visible={visible.finance} />
       <OrdersOperationsPanel summary={summary} visible={visible.operations} />
       <OrdersCallsPanel summary={summary} visible={visible.calls} />
       <OrdersRecordsPanel
+        filename={filename}
         data={data}
         selected={selected}
         review={review}

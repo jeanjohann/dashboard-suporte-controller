@@ -2,6 +2,7 @@
  * Página operacional e integração dos filtros com as análises de Parque e Manutenção.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
+import { ReviewPanel } from '../../../components/ReviewPanel.jsx';
 import { TableScroll } from '../../../components/TableScroll.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import {
@@ -226,19 +227,6 @@ export function OperationalPage({
         ['Linhas com revisão', new Set(data?.issues.map((i) => i.row)).size],
         ['Linhas sem Nº, não importadas', data?.skipped || 0],
       ];
-  function exportReview() {
-    download(
-      csv([
-        ['Arquivo', source.filename],
-        ['Regra', 'Ausência nas OS não é divergência'],
-        [],
-        ['Categoria', 'Linha Excel', 'Célula', 'Coluna', 'Conteúdo original', 'Motivo'],
-        ...issues.map((i) => [i.category, i.row, i.address, i.column, i.value, i.reason]),
-      ]),
-      'text/csv;charset=utf-8',
-      'revisao-operacional.csv',
-    );
-  }
   function exportLinks() {
     download(
       csv([
@@ -673,50 +661,13 @@ export function OperationalPage({
                       ) : (
                         <>
                           <Section title="Revisão manual">
-                            <label>
-                              Categoria{' '}
-                              <select
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                              >
-                                <option value="">Todas</option>
-                                {['Formato', 'Conferência', 'Possível divergência'].map((c) => (
-                                  <option key={c}>{c}</option>
-                                ))}
-                              </select>
-                            </label>
-                            <PermissionButton action="export" onClick={exportReview}>
-                              Exportar revisão CSV
-                            </PermissionButton>
-                            <p className="scope">
-                              {issues.length} pontos na seleção. Repetições são candidatos à
-                              conferência, não erros confirmados. Nenhum registro é corrigido ou
-                              removido automaticamente.
-                            </p>
-                            <TableScroll label="Registros do operacional">
-                              <SortableTable>
-                                <thead>
-                                  <tr>
-                                    <th>Categoria</th>
-                                    <th>Célula</th>
-                                    <th>Coluna</th>
-                                    <th>Original</th>
-                                    <th>Motivo</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {issues.map((i, index) => (
-                                    <tr key={index}>
-                                      <td>{i.category}</td>
-                                      <td>{i.address}</td>
-                                      <td>{i.column}</td>
-                                      <td>{i.value}</td>
-                                      <td>{i.reason}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </SortableTable>
-                            </TableScroll>
+                            <ReviewPanel
+                              issues={data.issues.filter((issue) => selected.has(issue.row))}
+                              data={{ ...data, sheetName: 'Equipamentos' }}
+                              filename={source.filename}
+                              category={category}
+                              onCategoryChange={setCategory}
+                            />
                           </Section>
                           <Section title="Registros operacionais">
                             <p className="scope">

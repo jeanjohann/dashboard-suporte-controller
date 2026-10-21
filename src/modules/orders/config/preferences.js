@@ -4,6 +4,7 @@
  */
 export const sectionLabels = {
   supportPerformance: 'Equipe de suporte',
+  maintenanceMatrix: 'Modelo × motivo da manutenção',
   fieldLife: 'Vida em campo até primeira troca',
   maintenanceReasons: 'Motivos das manutenções',
   absorbedAnalysis: 'Serviços absorvidos pela Addlog',

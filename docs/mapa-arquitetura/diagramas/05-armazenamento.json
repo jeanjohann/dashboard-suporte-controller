@@ -1,0 +1,95 @@
+{
+  "version": 2,
+  "title": "Mapa técnico Addlog 0.48.0",
+  "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
+  "diagrams": [
+    {
+      "id": "map_05-armazenamento",
+      "title": "Mapa de armazenamento",
+      "kind": "flowchart",
+      "description": "Persistência local, sessão e banco compartilhado têm finalidades diferentes.",
+      "accessibility": "Não há sincronização automática dos históricos locais entre computadores. O banco de negócio ainda não está ligado.",
+      "data": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "session",
+            "label": "Memória React · Bases, recortes, coletas e tratamentos",
+            "class": "app"
+          },
+          {
+            "id": "preferences",
+            "label": "localStorage · Tema, favoritos e apresentação",
+            "class": "store"
+          },
+          {
+            "id": "indexed",
+            "label": "IndexedDB local · Consumo, notas e lembretes",
+            "class": "store"
+          },
+          {
+            "id": "worker",
+            "label": "Cloudflare Worker · Identidade e integrações",
+            "class": "cloud"
+          },
+          {
+            "id": "d1",
+            "label": "D1 ativo · USERS_DB · Usuários e permissões",
+            "class": "store"
+          },
+          {
+            "id": "futuredb",
+            "label": "Banco de negócio futuro · Contrato e adaptador preparados",
+            "class": "future"
+          }
+        ],
+        "edges": [
+          {
+            "from": "session",
+            "to": "preferences",
+            "label": "Salvar configuração",
+            "arrow": "-->"
+          },
+          {
+            "from": "session",
+            "to": "indexed",
+            "label": "Repositórios locais",
+            "arrow": "-->"
+          },
+          {
+            "from": "worker",
+            "to": "d1",
+            "label": "Cadastro de acesso",
+            "arrow": "-->"
+          }
+        ]
+      },
+      "styles": [
+        {
+          "name": "app",
+          "definition": "fill:#eef4ff,stroke:#5484c8,color:#172334"
+        },
+        {
+          "name": "domain",
+          "definition": "fill:#fff1dc,stroke:#df8a25,color:#172334"
+        },
+        {
+          "name": "cloud",
+          "definition": "fill:#e9f7ee,stroke:#42996a,color:#172334"
+        },
+        {
+          "name": "store",
+          "definition": "fill:#e4f6f4,stroke:#2b9086,color:#172334"
+        },
+        {
+          "name": "local",
+          "definition": "fill:#f2ebff,stroke:#9670cc,color:#172334"
+        },
+        {
+          "name": "future",
+          "definition": "fill:#f3f4f6,stroke:#929ba9,color:#172334"
+        }
+      ]
+    }
+  ]
+}

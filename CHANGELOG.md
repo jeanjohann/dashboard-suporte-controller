@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.48.0 — 21/10/2026
+
+- Meu Dashboard ganha análises personalizadas de OS e Operacional: campos de agrupamento, contagem de registros/distintos e soma/média financeira com denominadores válidos e linhas de origem. Configurações acompanham salvamento, cópia e backup; séries personalizadas ficam lado a lado, sem comparação automática de eixos distintos.
+- Equipamentos ganha matriz modelo × motivo: eventos de assistência de rastreador, trocas atribuídas ao serial retirado, cobertura das exclusões e conferência dos registros.
+- Revisões de OS e Operacional usam diagnóstico comum com busca, categorias, paginação, origem, impacto, orientação e exportação CSV. As planilhas originais permanecem intactas.
+- Mapa local de apresentação atualizado com os novos arquivos e conexões; banco e assistente permanecem fora desta rodada.
+
 ## 0.47.0 — 20/10/2026
 
 - Renova o tema claro com superfícies suaves, verde petróleo, azul e violeta; no escuro, usa grafite e séries mais luminosas. Menus, filtros, botões, cards, tabelas e Meu Dashboard compartilham os tokens do tema.

@@ -1,0 +1,113 @@
+{
+  "version": 2,
+  "title": "Mapa técnico Addlog 0.48.0",
+  "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
+  "diagrams": [
+    {
+      "id": "map_04-seguranca",
+      "title": "Fronteiras de acesso",
+      "kind": "flowchart",
+      "description": "A interface ajuda a controlar ações; a API verifica identidade e autorização novamente.",
+      "accessibility": "Segredos dos fornecedores ficam no Worker ou no n8n. Configurar a política Access é uma etapa externa ao código.",
+      "data": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "person",
+            "label": "Usuário / navegador · Login Cloudflare Access",
+            "class": "app"
+          },
+          {
+            "id": "jwt",
+            "label": "Worker · valida JWT · Assinatura · emissor · audiência",
+            "class": "cloud"
+          },
+          {
+            "id": "db",
+            "label": "Usuário no D1 · Ativo · função · permissões",
+            "class": "store"
+          },
+          {
+            "id": "ui",
+            "label": "Interface autorizada · Páginas e ações concedidas",
+            "class": "app"
+          },
+          {
+            "id": "route",
+            "label": "Autorização da rota · Escopo · origem · revisão",
+            "class": "cloud"
+          },
+          {
+            "id": "result",
+            "label": "Operação permitida · Dados mínimos ou erro explícito",
+            "class": "cloud"
+          }
+        ],
+        "edges": [
+          {
+            "from": "person",
+            "to": "jwt",
+            "label": "Asserção Access",
+            "arrow": "-->"
+          },
+          {
+            "from": "jwt",
+            "to": "db",
+            "label": "Consulta de acesso",
+            "arrow": "-->"
+          },
+          {
+            "from": "db",
+            "to": "route",
+            "label": "Direitos válidos",
+            "arrow": "-->"
+          },
+          {
+            "from": "ui",
+            "to": "route",
+            "label": "Chamada /api",
+            "arrow": "-->"
+          },
+          {
+            "from": "route",
+            "to": "result",
+            "label": "Autorizar / recusar",
+            "arrow": "-->"
+          },
+          {
+            "from": "person",
+            "to": "ui",
+            "label": "Sessão /api/me",
+            "arrow": "-->"
+          }
+        ]
+      },
+      "styles": [
+        {
+          "name": "app",
+          "definition": "fill:#eef4ff,stroke:#5484c8,color:#172334"
+        },
+        {
+          "name": "domain",
+          "definition": "fill:#fff1dc,stroke:#df8a25,color:#172334"
+        },
+        {
+          "name": "cloud",
+          "definition": "fill:#e9f7ee,stroke:#42996a,color:#172334"
+        },
+        {
+          "name": "store",
+          "definition": "fill:#e4f6f4,stroke:#2b9086,color:#172334"
+        },
+        {
+          "name": "local",
+          "definition": "fill:#f2ebff,stroke:#9670cc,color:#172334"
+        },
+        {
+          "name": "future",
+          "definition": "fill:#f3f4f6,stroke:#929ba9,color:#172334"
+        }
+      ]
+    }
+  ]
+}

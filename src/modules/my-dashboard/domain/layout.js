@@ -1,3 +1,4 @@
+import { validQuery } from './customQuery.js';
 import { validISODate } from '../../../shared/data/isoDate.js';
 import { dashboardMetric } from './catalog.js';
 import { metricKinds, canCompare } from './presentation.js';
@@ -73,6 +74,7 @@ function checkWidget(widget, nested = false) {
     !keys(widget, [
       'id',
       'metric',
+      'query',
       'title',
       'kind',
       'size',
@@ -86,7 +88,7 @@ function checkWidget(widget, nested = false) {
     !metric ||
     typeof widget.title !== 'string' ||
     widget.title.length > 100 ||
-    !metricKinds(metric).includes(widget.kind) ||
+    !metricKinds(metric, widget.query).includes(widget.kind) ||
     !['small', 'medium', 'wide'].includes(widget.size) ||
     (widget.height !== undefined &&
       (!Number.isInteger(widget.height) || widget.height < 320 || widget.height > 960)) ||
@@ -107,6 +109,8 @@ function checkWidget(widget, nested = false) {
     ])
   )
     throw Error('Um bloco contém uma configuração inválida.');
+  if (metric.custom ? !validQuery(metric.module, widget.query) : widget.query !== undefined)
+    throw Error('Configuração da análise personalizada inválida.');
   checkFilters(widget.filters);
   if (widget.companions !== undefined) {
     if (widget.kind !== 'card' || !Array.isArray(widget.companions) || widget.companions.length > 3)

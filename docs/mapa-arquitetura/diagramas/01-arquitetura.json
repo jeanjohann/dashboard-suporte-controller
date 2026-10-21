@@ -1,0 +1,140 @@
+{
+  "version": 2,
+  "title": "Mapa técnico Addlog 0.48.0",
+  "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
+  "diagrams": [
+    {
+      "id": "map_01-arquitetura",
+      "title": "Arquitetura geral",
+      "kind": "flowchart",
+      "description": "Três ambientes: navegador, Cloudflare e laboratório no computador.",
+      "accessibility": "Planilhas manuais são processadas no navegador. D1 ativo não armazena todas as bases de negócio.",
+      "data": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "web",
+            "label": "Navegador · React · interface e análises",
+            "class": "app"
+          },
+          {
+            "id": "worker",
+            "label": "Cloudflare Worker · API autenticada · /api/*",
+            "class": "cloud"
+          },
+          {
+            "id": "sources",
+            "label": "Google Sheets + Zoho · Consultas privadas de leitura",
+            "class": "cloud"
+          },
+          {
+            "id": "session",
+            "label": "Workspace + módulos · Bases e filtros da sessão",
+            "class": "app"
+          },
+          {
+            "id": "users",
+            "label": "D1 · USERS_DB · Usuários e permissões",
+            "class": "store"
+          },
+          {
+            "id": "collector",
+            "label": "Coletor de veículos · Binding ainda não configurado",
+            "class": "future"
+          },
+          {
+            "id": "browserdb",
+            "label": "Armazenamento local · Preferências, consumo, lembretes",
+            "class": "store"
+          },
+          {
+            "id": "bridge",
+            "label": "Ponte local · 5681 · Acervo + ferramentas restritas",
+            "class": "local"
+          },
+          {
+            "id": "agent",
+            "label": "n8n local + Gemini · Modelo explica resultados",
+            "class": "local"
+          }
+        ],
+        "edges": [
+          {
+            "from": "web",
+            "to": "worker",
+            "label": "HTTP /api",
+            "arrow": "-->"
+          },
+          {
+            "from": "worker",
+            "to": "sources",
+            "label": "OAuth / leitura",
+            "arrow": "-->"
+          },
+          {
+            "from": "web",
+            "to": "session",
+            "label": "Estado React",
+            "arrow": "-->"
+          },
+          {
+            "from": "session",
+            "to": "browserdb",
+            "label": "Persistência seletiva",
+            "arrow": "-->"
+          },
+          {
+            "from": "worker",
+            "to": "users",
+            "label": "Acesso",
+            "arrow": "-->"
+          },
+          {
+            "from": "worker",
+            "to": "collector",
+            "label": "Rota preparada",
+            "arrow": "-.->"
+          },
+          {
+            "from": "session",
+            "to": "bridge",
+            "label": "Assistente: HTTP local",
+            "arrow": "-->"
+          },
+          {
+            "from": "bridge",
+            "to": "agent",
+            "label": "CLI + ferramentas",
+            "arrow": "-->"
+          }
+        ]
+      },
+      "styles": [
+        {
+          "name": "app",
+          "definition": "fill:#eef4ff,stroke:#5484c8,color:#172334"
+        },
+        {
+          "name": "domain",
+          "definition": "fill:#fff1dc,stroke:#df8a25,color:#172334"
+        },
+        {
+          "name": "cloud",
+          "definition": "fill:#e9f7ee,stroke:#42996a,color:#172334"
+        },
+        {
+          "name": "store",
+          "definition": "fill:#e4f6f4,stroke:#2b9086,color:#172334"
+        },
+        {
+          "name": "local",
+          "definition": "fill:#f2ebff,stroke:#9670cc,color:#172334"
+        },
+        {
+          "name": "future",
+          "definition": "fill:#f3f4f6,stroke:#929ba9,color:#172334"
+        }
+      ]
+    }
+  ]
+}

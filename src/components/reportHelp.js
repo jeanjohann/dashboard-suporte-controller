@@ -5,6 +5,8 @@ const osScope =
 export const reportHelp = {
   'Composição do custo':
     'Agrupa as visitas Concluída/Pago pela dimensão escolhida, incluindo improdutivas. Barras de composição usam a mesma base de linhas com Técnico e Km válidos; Km é valor em reais. Médias dividem as somas pela quantidade de valores válidos da base indicada, incluindo zero. A participação do deslocamento usa linhas com Km e Custo Total válidos e não produz percentual com denominador zero. As bases podem diferir e são informadas no completo. Não substitui Custo Total lançado nem mede receita ou lucro.',
+  'Modelo × motivo da manutenção':
+    'Cruza os modelos derivados do serial com o motivo registrado nas assistências técnicas efetivas. Uma troca conta uma vez e pertence ao serial retirado quando a direção está confirmada. As duas linhas precisam permanecer no recorte. Trocas sem direção, seleções parciais e classificações ambíguas têm contagem separada. Modelos desconhecidos não são descartados. Acessórios não entram nesta matriz. Clique em uma célula para conferir as linhas originais. Quantidade de eventos não é taxa de falha nem estimativa de vida útil.',
   'Evolução dos custos':
     'Agrupa visitas Concluída/Pago por mês da Data de atendimento, seguindo os filtros da página e incluindo improdutivas. Volume conta linhas; custo soma Custo Total válido; custo médio divide a soma pela quantidade de custos válidos do mês. Componentes e participação do deslocamento usam as bases válidas indicadas no relatório, sem preencher ausências com zero. Datas inválidas/ausentes não entram na evolução. Serve para observar volume e gasto registrados, sem comprovar faturamento ou cobertura completa de cada mês.',
   'Validação dos vínculos com o parque':

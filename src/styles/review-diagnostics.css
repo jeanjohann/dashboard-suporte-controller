@@ -1,0 +1,59 @@
+.review-diagnostics {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.review-diagnostics > .cards,
+.maintenance-matrix-cards {
+  margin: 0;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.review-diagnostics > .cards article,
+.maintenance-matrix-cards article {
+  min-height: 85px;
+  padding: 14px;
+}
+.review-diagnostics > .cards strong,
+.maintenance-matrix-cards strong {
+  font-size: 24px;
+}
+.review-diagnostics .toolbar {
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.review-diagnostics .toolbar label {
+  display: grid;
+  gap: 6px;
+}
+.review-diagnostics [aria-label='Diagnóstico de revisão'] table {
+  min-width: 740px;
+  table-layout: fixed;
+}
+.review-diagnostics [aria-label='Diagnóstico de revisão'] th:nth-child(4) {
+  width: 40%;
+}
+.review-diagnostics [aria-label='Diagnóstico de revisão'] td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.review-diagnostics [aria-label='Detalhes do diagnóstico'] {
+  border-inline-start: 3px solid var(--chart-primary, #278c79);
+  padding: 16px;
+  margin: 0;
+}
+.review-diagnostics footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+@media print {
+  .review-diagnostics .toolbar,
+  .review-diagnostics footer,
+  .review-diagnostics td:last-child button {
+    display: none;
+  }
+}

@@ -4,10 +4,10 @@ import React from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { sectionLabels } from '../config/preferences.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
-import { SortableTable } from '../../../components/SortableTable.jsx';
+import { ReviewPanel } from '../../../components/ReviewPanel.jsx';
 
 /** Apresenta o recorte e as ações recebidas; a base original permanece no controlador. */
-export function OrdersRecordsPanel({ data, selected, review, visible, records }) {
+export function OrdersRecordsPanel({ data, selected, review, visible, records, filename }) {
   const {
     search,
     setSearch,
@@ -179,34 +179,7 @@ export function OrdersRecordsPanel({ data, selected, review, visible, records })
             </footer>
           </>
         ) : (
-          <TableScroll label="Registros e revisão das OS">
-            <SortableTable>
-              <thead>
-                <tr>
-                  <th>Célula</th>
-                  <th>Coluna</th>
-                  <th>Conteúdo original</th>
-                  <th>Motivo para revisão</th>
-                </tr>
-              </thead>
-              <tbody>
-                {review.map((issue, index) => (
-                  <tr key={issue.address + index}>
-                    <td title={issue.address}>{issue.address}</td>
-                    <td title={issue.column}>{issue.column}</td>
-                    <td title={String(issue.value ?? '')}>{issue.value}</td>
-                    <td title={issue.reason}>{issue.reason}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </SortableTable>
-            {!review.length && (
-              <p className="review-empty">
-                Nenhum ponto de revisão foi detectado neste recorte. Isso não confirma a correção
-                completa do cadastro ou das regras de negócio.
-              </p>
-            )}
-          </TableScroll>
+          <ReviewPanel issues={review} data={data} filename={filename} />
         )}
       </section>
       <InfoNote>

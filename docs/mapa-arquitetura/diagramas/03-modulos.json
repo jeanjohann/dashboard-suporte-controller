@@ -1,0 +1,134 @@
+{
+  "version": 2,
+  "title": "Mapa técnico Addlog 0.48.0",
+  "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
+  "diagrams": [
+    {
+      "id": "map_03-modulos",
+      "title": "Como os módulos compartilham dados",
+      "kind": "flowchart",
+      "description": "Compartilhamento explícito pelo Workspace e pelos coordenadores de página.",
+      "accessibility": "O Monitoramento tem fonte independente. A referência Operacional só chega a OS quando há permissão de Parque.",
+      "data": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "imports",
+            "label": "Importação conjunta · Prévia e lote autorizado",
+            "class": "app"
+          },
+          {
+            "id": "workspace",
+            "label": "Workspace · Bases OS / Operacional / Logística",
+            "class": "app"
+          },
+          {
+            "id": "monitor",
+            "label": "Monitoramento Ativo · Fonte e lembretes próprios",
+            "class": "app"
+          },
+          {
+            "id": "orders",
+            "label": "Ordens de Serviço · Operação · custos · suporte · ciclos",
+            "class": "app"
+          },
+          {
+            "id": "operational",
+            "label": "OperationalPage · Cadastro e coordenador do Parque",
+            "class": "app"
+          },
+          {
+            "id": "consumption",
+            "label": "Consumo M2M · Extratos + referência operacional",
+            "class": "app"
+          },
+          {
+            "id": "zoho",
+            "label": "ZohoSession · Uma coleta para resumo e equipe",
+            "class": "cloud"
+          },
+          {
+            "id": "park",
+            "label": "Parque e Manutenção · Operacional × histórico de OS",
+            "class": "domain"
+          },
+          {
+            "id": "logistics",
+            "label": "Logística no Parque · Envios e Devoluções",
+            "class": "app"
+          }
+        ],
+        "edges": [
+          {
+            "from": "imports",
+            "to": "workspace",
+            "label": "Aplica lote",
+            "arrow": "-->"
+          },
+          {
+            "from": "workspace",
+            "to": "orders",
+            "label": "OS",
+            "arrow": "-->"
+          },
+          {
+            "from": "workspace",
+            "to": "operational",
+            "label": "OS + Operacional",
+            "arrow": "-->"
+          },
+          {
+            "from": "workspace",
+            "to": "consumption",
+            "label": "Referência + revisão",
+            "arrow": "-->"
+          },
+          {
+            "from": "zoho",
+            "to": "orders",
+            "label": "Contexto compartilhado",
+            "arrow": "-->"
+          },
+          {
+            "from": "operational",
+            "to": "park",
+            "label": "Vínculos e análises",
+            "arrow": "-->"
+          },
+          {
+            "from": "operational",
+            "to": "logistics",
+            "label": "Base logística",
+            "arrow": "-->"
+          }
+        ]
+      },
+      "styles": [
+        {
+          "name": "app",
+          "definition": "fill:#eef4ff,stroke:#5484c8,color:#172334"
+        },
+        {
+          "name": "domain",
+          "definition": "fill:#fff1dc,stroke:#df8a25,color:#172334"
+        },
+        {
+          "name": "cloud",
+          "definition": "fill:#e9f7ee,stroke:#42996a,color:#172334"
+        },
+        {
+          "name": "store",
+          "definition": "fill:#e4f6f4,stroke:#2b9086,color:#172334"
+        },
+        {
+          "name": "local",
+          "definition": "fill:#f2ebff,stroke:#9670cc,color:#172334"
+        },
+        {
+          "name": "future",
+          "definition": "fill:#f3f4f6,stroke:#929ba9,color:#172334"
+        }
+      ]
+    }
+  ]
+}

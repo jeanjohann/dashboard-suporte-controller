@@ -28,6 +28,35 @@ export function WidgetContext({ result, title }) {
           {!result.collectionLabel ? ' (Brasília)' : ''}
         </p>
         <p>{result.note}</p>
+        {result.queryAudit && (
+          <details>
+            <summary>Conferir cálculo e linhas de origem</summary>
+            <div className="md-table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Grupo</th>
+                    <th>Valor</th>
+                    <th>Válidos / excluídos da medida</th>
+                    <th>Linhas Excel</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.queryAudit.map((item) => (
+                    <tr key={item.label}>
+                      <th>{item.label}</th>
+                      <td>{formatMetric(item.value, result.unit)}</td>
+                      <td>
+                        {item.valid} / {item.excluded}
+                      </td>
+                      <td>{item.rows.join(', ') || 'Nenhuma'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        )}
       </details>
     </div>
   );

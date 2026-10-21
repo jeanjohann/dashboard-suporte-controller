@@ -28,7 +28,14 @@ export const dashboardCategories = [
   {
     key: 'equipment',
     label: 'Equipamentos',
-    sections: ['fieldLife', 'swaps', 'history', 'lifecycle', 'durationAnalysis'],
+    sections: [
+      'fieldLife',
+      'swaps',
+      'maintenanceMatrix',
+      'history',
+      'lifecycle',
+      'durationAnalysis',
+    ],
   },
   {
     key: 'reports',

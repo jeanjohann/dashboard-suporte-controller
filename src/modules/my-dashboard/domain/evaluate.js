@@ -1,4 +1,5 @@
 /** Adaptadores do catálogo. Reutilizam regras dos módulos e nunca juntam totais de fontes diferentes. */
+import { evaluateCustomQuery } from './customQuery.js';
 import { dashboardMetric, dashboardModules, canUseDashboardModule } from './catalog.js';
 import { validISODate } from '../../../shared/data/isoDate.js';
 import { field, attendanceExtent } from '../../../shared/data/filters.js';
@@ -140,6 +141,12 @@ export function evaluateDashboardWidget(widget, sources, user) {
     series: null,
   };
   try {
+    if (key === 'custom')
+      return {
+        ...result,
+        ...evaluateCustomQuery(module, source.data, widget.query, filters),
+        demonstration: Boolean(source.demonstration || source.data.demonstration),
+      };
     if (module === 'orders') {
       const data = {
         ...source.data,

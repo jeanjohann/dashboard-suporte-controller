@@ -1,3 +1,4 @@
+import { defaultQuery, queryGroups, queryMeasures, queryLabels } from '../domain/customQuery.js';
 import React, { useId, useState } from 'react';
 import { localId } from '../../../shared/data/localId.js';
 import { dashboardMetric, dashboardModules, permittedCatalog } from '../domain/catalog.js';
@@ -48,6 +49,7 @@ export function WidgetEditor({
           kind: metric.kinds[0],
           size: metric.kinds.includes('chart') ? 'medium' : 'small',
           filters: {},
+          ...(metric.custom ? { query: defaultQuery(metric.module) } : {}),
         },
     ),
     [error, setError] = useState(''),
@@ -108,6 +110,58 @@ export function WidgetEditor({
             onChange={(e) => setDraft({ ...draft, title: e.target.value })}
           />
         </label>
+        {metric.custom && (
+          <fieldset>
+            <legend>Construir análise</legend>
+            <div className="md-form-grid">
+              {[
+                ['group', 'Agrupar por', queryGroups[module]],
+                ['measure', 'Medida', queryMeasures[module]],
+                [
+                  'scope',
+                  'Registros considerados',
+                  module === 'orders' ? ['performed', 'productive', 'all'] : ['all'],
+                ],
+              ].map(([key, label, values]) => (
+                <label key={key}>
+                  {label}
+                  <select
+                    aria-label={label}
+                    value={draft.query[key]}
+                    onChange={(event) => {
+                      const query = { ...draft.query, [key]: event.target.value };
+                      const kinds = metricKinds(metric, query);
+                      const { comparison, companions, ...rest } = draft;
+                      setDraft({
+                        ...rest,
+                        query,
+                        kind: kinds.includes(draft.kind) ? draft.kind : kinds[0],
+                      });
+                    }}
+                  >
+                    {values.map((value) => (
+                      <option key={value} value={value}>
+                        {queryLabels[value] ||
+                          {
+                            performed: 'Concluída / Pago',
+                            productive: 'Concluída / Pago sem improdutivas',
+                            all: 'Todos os registros',
+                          }[value] ||
+                          value}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+            <p className="md-muted">
+              Identificadores são contados como distintos. Custos e mensalidades usam somente
+              valores válidos, incluindo zeros. O agrupamento conserva os campos originais, sem
+              consolidar nomes automaticamente. Comparações de séries personalizadas ficam para uma
+              próxima etapa; você já pode colocar suas análises lado a lado.
+            </p>
+          </fieldset>
+        )}
         {!nested && (
           <div className="md-form-grid">
             <label>
@@ -127,7 +181,7 @@ export function WidgetEditor({
                   });
                 }}
               >
-                {metricKinds(metric).map((key) => (
+                {metricKinds(metric, draft.query).map((key) => (
                   <option key={key} value={key}>
                     {kindLabels[key]}
                   </option>
@@ -377,7 +431,8 @@ export function WidgetEditor({
         )}
         {!nested &&
           ['chart', 'columns', 'line', 'table'].includes(draft.kind) &&
-          metric.kinds.includes('chart') && (
+          metric.kinds.includes('chart') &&
+          !metric.custom && (
             <fieldset>
               <legend>Comparar duas séries</legend>
               <p className="md-muted">

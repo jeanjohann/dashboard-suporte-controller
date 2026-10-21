@@ -1,10 +1,12 @@
 # Dashboard de suporte
 
-**Versão:** 0.47.0 — [Nova identidade visual](docs/REFINAMENTO-VISUAL.md): logo branca, tema claro em verde petróleo com superfícies suaves e tema escuro em grafite com cores mais destacadas. Gráficos, cards, controles e exportações acompanham a paleta. [Meu Dashboard](docs/MEU-DASHBOARD.md) conserva composição e organização.
+**Versão:** 0.48.0 — Análises personalizadas no Meu Dashboard, matriz de manutenção por modelo × motivo e diagnósticos detalhados nas revisões de OS e Operacional. [Como usar](docs/REVISAO-E-ANALISES-LIVRES.md).
 
 ## Documentação do projeto
 
 - [Meu Dashboard — catálogo, uso e salvamento por usuário](docs/MEU-DASHBOARD.md)
+
+- [Mapa completo do sistema: guia interativo, pastas, arquivos e diagramas](docs/mapa-arquitetura/index.html) — referência local 0.48.0; abra o HTML localmente para pesquisar e apresentar. [Guia em Markdown](docs/mapa-arquitetura/GUIA-DE-ESTUDO.md).
 
 - [Banco de dados — preparação, limites e roteiro de migração](docs/PREPARACAO-BANCO-DE-DADOS.md)
 

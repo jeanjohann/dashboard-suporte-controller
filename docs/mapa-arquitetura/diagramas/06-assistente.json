@@ -1,0 +1,147 @@
+{
+  "version": 2,
+  "title": "Mapa técnico Addlog 0.48.0",
+  "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
+  "diagrams": [
+    {
+      "id": "map_06-assistente",
+      "title": "Caminho de uma pergunta ao assistente",
+      "kind": "flowchart",
+      "description": "A IA escolhe uma ferramenta permitida; o sistema calcula e conserva a evidência.",
+      "accessibility": "Sem memória de conversa. Perfil fictício permite consultas ampliadas; perfil real segue restrito. Não é MCP genérico.",
+      "data": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "page",
+            "label": "Assistente no sistema · Pergunta + autorização efêmera",
+            "class": "app"
+          },
+          {
+            "id": "bridge",
+            "label": "Ponte local · 5681 · Valida identidade, origem e limites",
+            "class": "local"
+          },
+          {
+            "id": "n8n",
+            "label": "n8n · execução por CLI · Workflow labAssistantAgent01",
+            "class": "local"
+          },
+          {
+            "id": "source",
+            "label": "Acervo autorizado · readArchive · pasta import/",
+            "class": "store"
+          },
+          {
+            "id": "model",
+            "label": "AI Agent + Gemini · Pergunta e catálogo permitido",
+            "class": "local"
+          },
+          {
+            "id": "uiresult",
+            "label": "Resultado na página · Cards calculados + explicação",
+            "class": "app"
+          },
+          {
+            "id": "calc",
+            "label": "Consulta determinística · Funções de domínio · limites",
+            "class": "domain"
+          },
+          {
+            "id": "tool",
+            "label": "Ferramenta consultar_acervo · HTTP autenticado para a ponte",
+            "class": "local"
+          }
+        ],
+        "edges": [
+          {
+            "from": "page",
+            "to": "bridge",
+            "label": "POST local",
+            "arrow": "-->"
+          },
+          {
+            "from": "bridge",
+            "to": "n8n",
+            "label": "Executar workflow",
+            "arrow": "-->"
+          },
+          {
+            "from": "bridge",
+            "to": "source",
+            "label": "Leitura direta",
+            "arrow": "-->"
+          },
+          {
+            "from": "n8n",
+            "to": "model",
+            "label": "Contexto",
+            "arrow": "-->"
+          },
+          {
+            "from": "model",
+            "to": "tool",
+            "label": "Escolha de consulta",
+            "arrow": "-->"
+          },
+          {
+            "from": "tool",
+            "to": "calc",
+            "label": "Parâmetros validados",
+            "arrow": "-->"
+          },
+          {
+            "from": "source",
+            "to": "calc",
+            "label": "Dados permitidos",
+            "arrow": "-->"
+          },
+          {
+            "from": "calc",
+            "to": "model",
+            "label": "Resultado da ferramenta",
+            "arrow": "-->"
+          },
+          {
+            "from": "calc",
+            "to": "uiresult",
+            "label": "Totais + origens",
+            "arrow": "-->"
+          },
+          {
+            "from": "model",
+            "to": "uiresult",
+            "label": "Explicação via ponte",
+            "arrow": "-->"
+          }
+        ]
+      },
+      "styles": [
+        {
+          "name": "app",
+          "definition": "fill:#eef4ff,stroke:#5484c8,color:#172334"
+        },
+        {
+          "name": "domain",
+          "definition": "fill:#fff1dc,stroke:#df8a25,color:#172334"
+        },
+        {
+          "name": "cloud",
+          "definition": "fill:#e9f7ee,stroke:#42996a,color:#172334"
+        },
+        {
+          "name": "store",
+          "definition": "fill:#e4f6f4,stroke:#2b9086,color:#172334"
+        },
+        {
+          "name": "local",
+          "definition": "fill:#f2ebff,stroke:#9670cc,color:#172334"
+        },
+        {
+          "name": "future",
+          "definition": "fill:#f3f4f6,stroke:#929ba9,color:#172334"
+        }
+      ]
+    }
+  ]
+}
