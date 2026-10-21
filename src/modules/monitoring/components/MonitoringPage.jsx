@@ -1,5 +1,5 @@
 /** Coordena acompanhamento e análise sem misturar demonstração e integração real. */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
@@ -51,8 +51,14 @@ export function MonitoringPage({ onPage }) {
   const [notes, setNotes] = useState({}),
     [selected, setSelected] = useState(null),
     [page, setPage] = useState(0);
-  const result = snapshot ? monitorSnapshot(snapshot, filters) : null;
-  const queue = result ? filterMonitoringQueue(result, filters, notes) : null;
+  const result = useMemo(
+    () => (snapshot ? monitorSnapshot(snapshot, filters) : null),
+    [snapshot, filters.clients, filters.models, filters.threshold, filters.state],
+  );
+  const queue = useMemo(
+    () => (result ? filterMonitoringQueue(result, filters, notes) : null),
+    [result, filters, notes],
+  );
   const demo = snapshot?.demonstration === true;
   const reminders = useMonitoringReminders(demo);
   // Identidades da demonstração nunca compartilham anotações com veículos reais.
@@ -75,7 +81,10 @@ export function MonitoringPage({ onPage }) {
           entry.clientId,
       }))
     : [];
-  const tables = queue ? monitoringReport(queue, filters, notes, reminders.records) : null;
+  const [analyticsOpened, setAnalyticsOpened] = useState(false);
+  useEffect(() => {
+    if (category === 'overview') setAnalyticsOpened(true);
+  }, [category]);
   const models = snapshot
     ? [...new Set(snapshot.vehicles.map(monitoringModel))]
         .sort()
@@ -116,27 +125,32 @@ export function MonitoringPage({ onPage }) {
     setSelected(null);
     setPage(0);
   };
-  function openQueue(focus, clientId, model) {
-    setFilters(
-      (previous) => ({
-        ...previous,
-        threshold: filters.threshold,
-        focus,
-        clients: clientId ? [clientId] : filters.clients,
-        models: model == null ? filters.models : [model],
-        state: 'all',
-        stage: 'all',
-        search: '',
-      }),
-      'queue',
-    );
-    setSelected(null);
-    setPage(0);
-    setCategory('queue');
-  }
+  const openQueue = useCallback(
+    (focus, clientId, model) => {
+      setFilters(
+        (previous) => ({
+          ...previous,
+          threshold: filters.threshold,
+          focus,
+          clients: clientId ? [clientId] : filters.clients,
+          models: model == null ? filters.models : [model],
+          state: 'all',
+          stage: 'all',
+          search: '',
+        }),
+        'queue',
+      );
+      setSelected(null);
+      setPage(0);
+      setCategory('queue');
+    },
+    [setFilters, filters.threshold, filters.clients, filters.models],
+  );
   const exportFile = (format) =>
     download(
-      format === 'csv' ? monitoringCsv(tables) : monitoringWorkbook(tables),
+      format === 'csv'
+        ? monitoringCsv(monitoringReport(queue, filters, notes, reminders.records))
+        : monitoringWorkbook(monitoringReport(queue, filters, notes, reminders.records)),
       format === 'csv'
         ? 'text/csv;charset=utf-8'
         : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -392,13 +406,15 @@ export function MonitoringPage({ onPage }) {
                   page={page}
                   setPage={setPage}
                 />
-                <MonitoringAnalytics
-                  visible={category === 'overview'}
-                  result={result}
-                  notes={notes}
-                  threshold={filters.threshold}
-                  onQueue={openQueue}
-                />
+                {analyticsOpened && (
+                  <MonitoringAnalytics
+                    visible={category === 'overview'}
+                    result={result}
+                    notes={notes}
+                    threshold={filters.threshold}
+                    onQueue={openQueue}
+                  />
+                )}
                 <div hidden={category !== 'reports'}>
                   <Section
                     title="Relatório de acompanhamento"

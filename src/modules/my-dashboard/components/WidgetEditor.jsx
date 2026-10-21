@@ -37,6 +37,7 @@ export function WidgetEditor({
   onApply,
   nested = false,
   sections = [],
+  comparisonWith,
 }) {
   const metric = dashboardMetric(widget?.metric || metricId),
     prefix = useId();
@@ -81,6 +82,8 @@ export function WidgetEditor({
     event.preventDefault();
     event.stopPropagation();
     try {
+      if (comparisonWith && !canCompare(comparisonWith, draft))
+        throw Error('Mantenha a mesma fonte, agrupamento e medida da série principal.');
       validateDashboardDocument({
         version: 1,
         revision: 0,
@@ -134,6 +137,9 @@ export function WidgetEditor({
                       const { comparison, companions, ...rest } = draft;
                       setDraft({
                         ...rest,
+                        ...(comparison && canCompare({ ...draft, query }, comparison)
+                          ? { comparison }
+                          : {}),
                         query,
                         kind: kinds.includes(draft.kind) ? draft.kind : kinds[0],
                       });
@@ -157,8 +163,8 @@ export function WidgetEditor({
             <p className="md-muted">
               Identificadores são contados como distintos. Custos e mensalidades usam somente
               valores válidos, incluindo zeros. O agrupamento conserva os campos originais, sem
-              consolidar nomes automaticamente. Comparações de séries personalizadas ficam para uma
-              próxima etapa; você já pode colocar suas análises lado a lado.
+              consolidar nomes automaticamente. Compare séries da mesma fonte, agrupamento e medida,
+              com períodos, clientes e escopos próprios. Ausências não viram zero.
             </p>
           </fieldset>
         )}
@@ -431,8 +437,7 @@ export function WidgetEditor({
         )}
         {!nested &&
           ['chart', 'columns', 'line', 'table'].includes(draft.kind) &&
-          metric.kinds.includes('chart') &&
-          !metric.custom && (
+          metric.kinds.includes('chart') && (
             <fieldset>
               <legend>Comparar duas séries</legend>
               <p className="md-muted">
@@ -464,13 +469,35 @@ export function WidgetEditor({
                   <select
                     aria-label="Comparar com"
                     value=""
-                    onChange={(e) =>
-                      e.target.value && setExtra({ metricId: e.target.value, kind: 'comparison' })
-                    }
+                    onChange={(e) => {
+                      if (!e.target.value) return;
+                      setExtra({
+                        metricId: e.target.value,
+                        kind: 'comparison',
+                        ...(metric.custom
+                          ? {
+                              widget: {
+                                id: localId(),
+                                metric: e.target.value,
+                                title: 'Comparação · ' + draft.title.slice(0, 85),
+                                kind: 'chart',
+                                size: draft.size,
+                                filters: { ...draft.filters },
+                                query: { ...draft.query },
+                              },
+                            }
+                          : {}),
+                      });
+                    }}
                   >
                     <option value="">Sem comparação</option>
                     {permittedCatalog(user)
-                      .filter((item) => canCompare(draft.metric, item.id))
+                      .filter((item) =>
+                        canCompare(
+                          draft,
+                          item.custom ? { metric: item.id, query: draft.query } : item.id,
+                        ),
+                      )
                       .map((item) => (
                         <option key={item.id} value={item.id}>
                           {dashboardModules[item.module].label} · {item.label}
@@ -499,6 +526,7 @@ export function WidgetEditor({
         <WidgetEditor
           {...extra}
           nested
+          comparisonWith={extra.kind === 'comparison' ? draft : undefined}
           sources={sources}
           user={user}
           onClose={() => setExtra(null)}

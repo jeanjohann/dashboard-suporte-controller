@@ -3,14 +3,20 @@ import React from 'react';
 import { Chart } from '../../../components/Chart.jsx';
 import { Section } from '../../../components/Section.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
-import { SortableTable } from '../../../components/SortableTable.jsx';
+import { MonitoringSummaryTable } from './MonitoringSummaryTable.jsx';
 import { monitoringDuration, monitoringStages } from '../domain/monitoring.js';
 import { monitoringAnalytics } from '../domain/monitoringAnalytics.js';
 import { MonitoringTelemetry } from './MonitoringTelemetry.jsx';
 
 const pct = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
-export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible }) {
+export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
+  result,
+  notes,
+  threshold,
+  onQueue,
+  visible,
+}) {
   const analysis = monitoringAnalytics(result, notes);
   const chartTitle = (value) => (result.demonstration ? 'DEMONSTRAÇÃO · ' : '') + value;
   const exportNote = `${result.demonstration ? 'DADOS FICTÍCIOS · ' : ''}Referência ${result.referenceAt}; limite ${threshold} h; todas as situações das bases e modelos selecionados. Coletas utilizáveis; não confirma defeito.`;
@@ -175,36 +181,50 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
             value: group.alerts,
           }))}
         />
-        <div className="table-scroll">
-          <SortableTable>
-            <thead>
-              <tr>
-                <th>Base</th>
-                <th>Veículos</th>
-                <th>Acima do limite</th>
-                <th>% da frota</th>
-                <th>Detalhamento</th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.groups.map((group) => (
-                <tr key={group.clientId}>
-                  <td>{group.label || group.clientId}</td>
-                  <td>{group.total}</td>
-                  <td>{group.alerts}</td>
-                  <td data-sort={group.percentage}>
-                    {group.percentage.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%
-                  </td>
-                  <td>
-                    <button onClick={() => onQueue('alerts', group.clientId)}>
-                      Conferir veículos
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </SortableTable>
-        </div>
+        <MonitoringSummaryTable
+          label="bases com alertas"
+          rows={result.groups.map((group) => ({ ...group, id: group.clientId }))}
+          columns={[
+            {
+              id: 'label',
+              label: 'Base',
+              required: true,
+              value: (row) => row.label || row.clientId,
+            },
+            {
+              id: 'fleet',
+              label: 'Veículos',
+              numeric: true,
+              essential: true,
+              value: (row) => row.total,
+            },
+            {
+              id: 'alerts',
+              label: 'Acima do limite',
+              numeric: true,
+              essential: true,
+              value: (row) => row.alerts,
+            },
+            {
+              id: 'percentage',
+              label: '% da frota',
+              numeric: true,
+              essential: true,
+              value: (row) => row.percentage,
+              render: (row) =>
+                row.percentage.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%',
+            },
+            {
+              id: 'action',
+              label: 'Conferência',
+              required: true,
+              value: (row) => row.label || row.clientId,
+              render: (row) => (
+                <button onClick={() => onQueue('alerts', row.clientId)}>Conferir veículos</button>
+              ),
+            },
+          ]}
+        />
       </Section>
       <MonitoringTelemetry result={result} onQueue={onQueue} />
       <p className="scope">
@@ -213,4 +233,4 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
       </p>
     </div>
   );
-}
+});

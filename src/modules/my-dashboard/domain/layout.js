@@ -126,7 +126,7 @@ function checkWidget(widget, nested = false) {
     checkWidget(widget.comparison, true);
     if (
       !['chart', 'columns', 'line', 'table'].includes(widget.kind) ||
-      !canCompare(widget.metric, widget.comparison.metric) ||
+      !canCompare(widget, widget.comparison) ||
       widget.id === widget.comparison.id
     )
       throw Error('Compare séries da mesma unidade e agrupamento.');

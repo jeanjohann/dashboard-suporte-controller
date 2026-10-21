@@ -1,12 +1,12 @@
 # Dashboard de suporte
 
-**Versão:** 0.49.1 — [Mapa de arquitetura compartilhado](docs/MAPA-COMPARTILHADO.md) em endereço independente com senha, sem cadastro de usuários; atalho para administradores no sistema. Análises personalizadas, matriz de manutenção e diagnósticos da versão anterior preservados.
+**Versão:** 0.52.0 — tabelas essenciais/completas no Monitoramento, comparações de análises personalizadas no Meu Dashboard e piloto local de permanência por sessões do Zoho. [Escopo e limites da rodada](docs/LAYOUT-E-CONSULTAS-052.md). Agendamento e histórico remoto aguardam a definição do armazenamento.
 
 ## Documentação do projeto
 
 - [Meu Dashboard — catálogo, uso e salvamento por usuário](docs/MEU-DASHBOARD.md)
 
-- [Mapa completo do sistema: guia interativo, pastas, arquivos e diagramas](docs/mapa-arquitetura/index.html) — referência local 0.48.0; abra o HTML localmente para pesquisar e apresentar. [Guia em Markdown](docs/mapa-arquitetura/GUIA-DE-ESTUDO.md).
+- [Mapa completo do sistema: guia interativo, pastas, arquivos e diagramas](docs/mapa-arquitetura/index.html) — referência local regenerada a cada entrega; abra o HTML localmente para pesquisar e apresentar. [Guia em Markdown](docs/mapa-arquitetura/GUIA-DE-ESTUDO.md).
 
 - [Banco de dados — preparação, limites e roteiro de migração](docs/PREPARACAO-BANCO-DE-DADOS.md)
 

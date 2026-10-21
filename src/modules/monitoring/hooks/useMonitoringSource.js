@@ -1,5 +1,5 @@
 /** Separa fonte e tela. Demonstração nunca é fallback de erro; atualização real é explícita nesta etapa. */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { monitoringDemo } from '../data/demo.js';
 import { fetchMonitoringSnapshot } from '../data/monitoringClient.js';
 
@@ -81,6 +81,9 @@ export function useMonitoringSource() {
       }
     }
   }
-  const snapshot = real ? { ...source, referenceAt: now } : source;
+  const snapshot = useMemo(
+    () => (real ? { ...source, referenceAt: now } : source),
+    [source, now, real],
+  );
   return { snapshot, source, busy, cooldown, error, demonstration, refresh };
 }

@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { format } from 'prettier';
 import {
   publicStudyGuide,
   privateStudyGuide,
@@ -12,6 +14,17 @@ const guide =
   '# Guia\n\n## 11. Leitura\n\nTexto público.\n\n' +
   section +
   '## 13. Como manter\n\nManutenção pública.\n';
+
+test('formatação do HTML gerado preserva JSON verificável e bloqueio do roteiro privado', async () => {
+  const template = readFileSync(new URL('./map-template.html', import.meta.url), 'utf8');
+  const publicHtml = await format(
+    renderArchitectureMap(template, { guide: publicStudyGuide(guide), diagrams: [] }),
+    { parser: 'html' },
+  );
+  assert.doesNotThrow(() => assertPublicArchitectureMap(publicHtml));
+  const privateHtml = await format(renderArchitectureMap(template, { guide }), { parser: 'html' });
+  assert.throws(() => assertPublicArchitectureMap(privateHtml));
+});
 test('remove integralmente roteiro e subseções, preservando o restante do guia', () => {
   const clean = publicStudyGuide(guide);
   assert.ok(!clean.includes('CONTEUDO_EXCLUSIVO_TESTE'));

@@ -1,5 +1,5 @@
 /** Tabela prioritária e histórico manual de tratamento, sem confundir situação administrativa com comunicação. */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { Icon } from '../../../components/Icon.jsx';
 import { MonitoringReminderEditor } from './MonitoringReminderEditor.jsx';
@@ -54,7 +54,10 @@ export function MonitoringQueue({
   const [draft, setDraft] = useState({ status: monitoringStages[0], owner: '', text: '' });
   const [message, setMessage] = useState('');
   const [sort, setSort] = useState(null);
-  const orderedRows = sortMonitoringRows(result.rows, sort, notes);
+  const orderedRows = useMemo(
+    () => sortMonitoringRows(result.rows, sort, notes),
+    [result.rows, sort, notes],
+  );
   const pages = Math.max(1, Math.ceil(result.rows.length / 10));
   useEffect(() => {
     if (page >= pages) setPage(pages - 1);

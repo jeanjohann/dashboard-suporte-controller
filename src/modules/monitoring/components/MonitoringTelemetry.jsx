@@ -1,8 +1,8 @@
 /** Apresenta alimentação, posições e modelos do retrato, com cobertura e caminhos até os veículos de origem. */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { Chart } from '../../../components/Chart.jsx';
-import { SortableTable } from '../../../components/SortableTable.jsx';
+import { MonitoringSummaryTable } from './MonitoringSummaryTable.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { monitoringTelemetry } from '../domain/monitoringTelemetry.js';
 
@@ -12,7 +12,7 @@ const number = (value, digits = 0) =>
     : value.toLocaleString('pt-BR', { maximumFractionDigits: digits });
 
 export function MonitoringTelemetry({ result, onQueue }) {
-  const data = monitoringTelemetry(result);
+  const data = useMemo(() => monitoringTelemetry(result), [result]);
   const note = `${result.demonstration ? 'DADOS FICTÍCIOS · ' : ''}Referência ${result.referenceAt}; bases e modelos selecionados. Último estado recebido, sem diagnóstico de defeito. Posições são registros em 24 h, não MB.`;
   const cards = [
     [
@@ -143,44 +143,70 @@ export function MonitoringTelemetry({ result, onQueue }) {
             .map((row) => ({ label: row.label, value: row.positionsTotal }))}
           exportNote={note}
         />
-        <div className="table-scroll">
-          <SortableTable>
-            <thead>
-              <tr>
-                {[
-                  'Base',
-                  'Veículos',
-                  'Com leitura',
-                  'Posições · 24 h',
-                  'Média com leitura',
-                  'Com posições',
-                  'Zero posições',
-                  'Conferência',
-                ].map((label) => (
-                  <th key={label}>{label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.bases.map((row) => (
-                <tr key={row.id}>
-                  <td>{row.label}</td>
-                  <td>{row.fleet}</td>
-                  <td>
-                    {row.positionsReadings} de {row.fleet}
-                  </td>
-                  <td data-sort={row.positionsTotal}>{number(row.positionsTotal)}</td>
-                  <td data-sort={row.positionsAverage}>{number(row.positionsAverage, 1)}</td>
-                  <td>{number(row.positionsActive)}</td>
-                  <td>{number(row.positionsZero)}</td>
-                  <td>
-                    <button onClick={() => onQueue('all', row.id)}>Conferir base</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </SortableTable>
-        </div>
+        <MonitoringSummaryTable
+          label="bases"
+          rows={data.bases}
+          columns={[
+            { id: 'label', label: 'Base', required: true, value: (row) => row.label },
+            {
+              id: 'fleet',
+              label: 'Veículos',
+              essential: true,
+              numeric: true,
+              value: (row) => row.fleet,
+              render: (row) => <>{number(row.fleet, 0)}</>,
+            },
+            {
+              id: 'positionsReadings',
+              label: 'Com leitura',
+              essential: true,
+              numeric: true,
+              value: (row) => row.positionsReadings,
+              render: (row) => <>{number(row.positionsReadings, 0)}</>,
+            },
+            {
+              id: 'positionsTotal',
+              label: 'Posições · 24 h',
+              essential: true,
+              numeric: true,
+              value: (row) => row.positionsTotal,
+              render: (row) => <>{number(row.positionsTotal, 0)}</>,
+            },
+            {
+              id: 'positionsAverage',
+              label: 'Média com leitura',
+              essential: true,
+              numeric: true,
+              value: (row) => row.positionsAverage,
+              render: (row) => <>{number(row.positionsAverage, 1)}</>,
+            },
+            {
+              id: 'positionsActive',
+              label: 'Com posições',
+              numeric: true,
+              value: (row) => row.positionsActive,
+              render: (row) => <>{number(row.positionsActive, 0)}</>,
+            },
+            {
+              id: 'positionsZero',
+              label: 'Zero posições',
+              numeric: true,
+              value: (row) => row.positionsZero,
+              render: (row) => <>{number(row.positionsZero, 0)}</>,
+            },
+            {
+              id: 'action',
+              label: 'Conferência',
+              required: true,
+              value: (row) => row.label,
+              render: (row) => (
+                <button type="button" onClick={() => onQueue('all', row.id)}>
+                  Conferir base
+                </button>
+              ),
+            },
+          ]}
+        />
       </Section>
       <Section
         title="Equipamentos por modelo"
@@ -195,57 +221,98 @@ export function MonitoringTelemetry({ result, onQueue }) {
           items={data.models.map((row) => ({ label: row.label, value: row.fleet }))}
           exportNote={note}
         />
-        <div className="table-scroll">
-          <SortableTable>
-            <thead>
-              <tr>
-                {[
-                  'Modelo',
-                  'Veículos',
-                  'Acima do limite',
-                  '% do modelo',
-                  'Falha externa',
-                  'Bateria baixa',
-                  'Falha da bateria',
-                  'Posições · 24 h',
-                  'Conferência',
-                ].map((label) => (
-                  <th key={label}>{label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.models.map((row) => (
-                <tr key={row.id}>
-                  <td>{row.label}</td>
-                  <td>{row.fleet}</td>
-                  <td>{row.delayed}</td>
-                  <td data-sort={row.delayed / row.fleet}>
-                    {number((row.delayed / row.fleet) * 100, 1)}%
-                  </td>
-                  <td>
-                    {number(row.externalFailure)}
-                    <small className="monitoring-cell-note">{row.powerReadings} com sinal</small>
-                  </td>
-                  <td>
-                    {number(row.batteryLow)}
-                    <small className="monitoring-cell-note">{row.batteryReadings} com estado</small>
-                  </td>
-                  <td>{number(row.batteryFailure)}</td>
-                  <td>
-                    {number(row.positionsTotal)}
-                    <small className="monitoring-cell-note">
-                      {row.positionsReadings} com leitura
-                    </small>
-                  </td>
-                  <td>
-                    <button onClick={() => onQueue('all', null, row.id)}>Conferir modelo</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </SortableTable>
-        </div>
+        <MonitoringSummaryTable
+          label="modelos"
+          rows={data.models}
+          columns={[
+            { id: 'label', label: 'Modelo', required: true, value: (row) => row.label },
+            {
+              id: 'fleet',
+              label: 'Veículos',
+              essential: true,
+              numeric: true,
+              value: (row) => row.fleet,
+              render: (row) => <>{number(row.fleet, 0)}</>,
+            },
+            {
+              id: 'delayed',
+              label: 'Acima do limite',
+              essential: true,
+              numeric: true,
+              value: (row) => row.delayed,
+              render: (row) => <>{number(row.delayed, 0)}</>,
+            },
+            {
+              id: 'percentage',
+              label: '% do modelo',
+              essential: true,
+              numeric: true,
+              value: (row) => (row.fleet ? (row.delayed / row.fleet) * 100 : null),
+              render: (row) => (
+                <>
+                  {number(row.fleet ? (row.delayed / row.fleet) * 100 : null, 1) +
+                    (row.fleet ? '%' : '')}
+                </>
+              ),
+            },
+            {
+              id: 'externalFailure',
+              label: 'Falha externa',
+              numeric: true,
+              value: (row) => row.externalFailure,
+              render: (row) => (
+                <>
+                  {number(row.externalFailure, 0)}
+                  <small className="monitoring-cell-note">{row.powerReadings} com sinal</small>
+                </>
+              ),
+            },
+            {
+              id: 'batteryLow',
+              label: 'Bateria baixa',
+              numeric: true,
+              value: (row) => row.batteryLow,
+              render: (row) => (
+                <>
+                  {number(row.batteryLow, 0)}
+                  <small className="monitoring-cell-note">{row.batteryReadings} com estado</small>
+                </>
+              ),
+            },
+            {
+              id: 'batteryFailure',
+              label: 'Falha da bateria',
+              numeric: true,
+              value: (row) => row.batteryFailure,
+              render: (row) => <>{number(row.batteryFailure, 0)}</>,
+            },
+            {
+              id: 'positionsTotal',
+              label: 'Posições · 24 h',
+              numeric: true,
+              value: (row) => row.positionsTotal,
+              render: (row) => (
+                <>
+                  {number(row.positionsTotal, 0)}
+                  <small className="monitoring-cell-note">
+                    {row.positionsReadings} com leitura
+                  </small>
+                </>
+              ),
+            },
+            {
+              id: 'action',
+              label: 'Conferência',
+              required: true,
+              value: (row) => row.label,
+              render: (row) => (
+                <button type="button" onClick={() => onQueue('all', null, row.id)}>
+                  Conferir modelo
+                </button>
+              ),
+            },
+          ]}
+        />
       </Section>
     </>
   );

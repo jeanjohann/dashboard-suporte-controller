@@ -1,6 +1,6 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.51.0",
+  "version": "0.52.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,6 +9,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build && node scripts/bundle-report.mjs",
     "test": "node --test",
+    "benchmark:monitoring": "node scripts/benchmark-monitoring.mjs",
     "check:imports": "node scripts/check-imports.mjs",
     "format": "prettier --write src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
     "format:check": "prettier --check src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",

@@ -32,7 +32,13 @@ const version = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf
 const paths = [
   ...new Set(git('ls-files', '--cached', '--others', '--exclude-standard').trim().split('\n')),
 ]
-  .filter((p) => p && !p.startsWith('docs/mapa-arquitetura/') && fs.existsSync(path.join(root, p)))
+  .filter(
+    (p) =>
+      p &&
+      !p.startsWith('docs/mapa-arquitetura/') &&
+      !p.startsWith('outputs/') &&
+      fs.existsSync(path.join(root, p)),
+  )
   .sort();
 const read = (p) => fs.readFileSync(path.join(root, p), 'utf8');
 const esc = (v) =>
@@ -57,6 +63,20 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'src/modules/monitoring/components/MonitoringSummaryTable.jsx':
+    'Tabela por base/modelo com colunas essenciais ou completas, seleção, ordenação semântica de todo o conjunto e paginação de 15 linhas.',
+  'src/modules/monitoring/domain/monitoringHistory.js':
+    'Compara fotografias reais para eventos observados de atraso e retorno da comunicação, sem presumir duração exata; calcula janelas UTC futuras de coleta.',
+  'server/monitoringCollection.js':
+    'Coletor ainda inativo: exige lease e publicação transacional do futuro repositório durável; não está conectado ao Worker ou a cron.',
+  'src/modules/orders/domain/zohoPresence.js':
+    'Valida e recorta intervalos de sessões por agente, une sobreposições e aponta duplicatas, abertos e datas inválidas sem estimar duração.',
+  'src/modules/orders/components/ZohoPresencePanel.jsx':
+    'Piloto local de CSV Session: mapeamento explícito, fuso, período, cards, conferência e exportação; mantém dados somente na memória da sessão.',
+  'scripts/benchmark-monitoring.mjs':
+    'Mede classificação, telemetria, filtro, ordenação e relatório com 1.800 veículos fictícios, sem consultar a API real; gera resultados locais ignorados pelo Git.',
+  'src/styles/monitoring-refinement.css':
+    'Refina hierarquia e alinhamento das tabelas e cards do Monitoramento e formulário local de sessões, com responsividade e contexto de impressão.',
   'scripts/setup-monitoring.ps1':
     'Configura endereço e token do diagnóstico legado como segredos no Cloudflare por entrada local oculta, sem gravar credenciais em arquivo.',
   'scripts/architecture/diagrams.mjs':

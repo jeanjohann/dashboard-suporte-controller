@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.52.0 — 21/10/2026
+
+- Monitoramento com tabelas essenciais/completas, escolha de colunas, cabeçalhos e números alinhados, cobertura separada do valor principal e paginação das bases. Ordenação considera todas as linhas; impressão identifica o recorte paginado e exportações mantêm o conjunto completo.
+- Evita repetir classificação e ordenação durante a espera entre consultas; carrega a visão analítica quando aberta e prepara relatórios somente ao exportar. Ensaio reproduzível com 1.800 veículos fictícios, sem chamadas à API real.
+- Meu Dashboard compara análises personalizadas da mesma fonte, agrupamento e medida, com filtros e escopos próprios. Categorias ausentes permanecem indisponíveis; comparação mensal conserva a ordem cronológica e o backup mantém as duas consultas.
+- Piloto de CSV Session do Zoho: colunas e fuso explícitos, período independente, união de sobreposições por agente e revisão/exportação dos registros inválidos ou abertos. Dados somente na memória da sessão; validação com o arquivo real ainda pendente.
+- Preparação inativa do coletor com identidade por execução, contrato de publicação atômica e eventos de atraso/retorno observados. Nenhum banco, rota, cron ou histórico remoto foi ativado. [Critérios e limites](docs/LAYOUT-E-CONSULTAS-052.md).
+
 ## 0.51.0 — 21/10/2026
 
 - Amplia o Monitoramento Ativo com alimentação/bateria, posições por base e inventário por modelo. Coberturas e médias distinguem zeros, ausências e coleta indisponível; os sinais representam o último estado recebido.

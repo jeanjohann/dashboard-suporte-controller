@@ -111,7 +111,11 @@ export function WidgetVisualization({
   const [ref, size] = useSize();
   const titles = comparison ? [widget.title, widget.comparison.title] : undefined;
   const rows = comparison
-    ? compareSeries(result.series || [], comparison.series || [], widget.metric === 'orders.months')
+    ? compareSeries(
+        result.series || [],
+        comparison.series || [],
+        result.chronological || widget.metric === 'orders.months',
+      )
     : result.series || [{ label: widget.title, value: result.value }];
   if (widget.kind === 'card')
     return <div className="md-widget-value">{formatMetric(result.value, result.unit)}</div>;

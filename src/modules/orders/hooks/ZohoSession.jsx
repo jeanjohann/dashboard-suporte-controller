@@ -14,6 +14,7 @@ export const defaultZohoColumns = [
 ];
 function Session({ children }) {
   const [open, setOpen] = useState(false);
+  const [presence, setPresence] = useState(null);
   const [data, setData] = useState(null);
   const [reviewedReplies, setReviewedReplies] = useState(false);
   const [mapping, setMapping] = useState({});
@@ -25,6 +26,8 @@ function Session({ children }) {
   usePublishDashboardSource('zoho', dashboardSource);
   const value = useMemo(
     () => ({
+      presence,
+      setPresence,
       open,
       setOpen,
       data,
@@ -36,7 +39,7 @@ function Session({ children }) {
       columns,
       setColumns,
     }),
-    [open, data, reviewedReplies, mapping, columns],
+    [open, data, reviewedReplies, mapping, columns, presence],
   );
   return <ZohoContext.Provider value={value}>{children}</ZohoContext.Provider>;
 }

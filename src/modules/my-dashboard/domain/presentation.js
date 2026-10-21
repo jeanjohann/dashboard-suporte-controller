@@ -1,4 +1,4 @@
-import { defaultQuery } from './customQuery.js';
+import { defaultQuery, validQuery, queryUnit } from './customQuery.js';
 import { dashboardMetric } from './catalog.js';
 
 export const kindLabels = {
@@ -51,8 +51,22 @@ function axis(metric) {
   return metric?.id;
 }
 export function canCompare(left, right) {
-  const a = dashboardMetric(left),
-    b = dashboardMetric(right);
+  const first = typeof left === 'string' ? { metric: left } : left;
+  const second = typeof right === 'string' ? { metric: right } : right;
+  const a = dashboardMetric(first?.metric),
+    b = dashboardMetric(second?.metric);
+  if (a?.custom || b?.custom)
+    return Boolean(
+      a?.custom &&
+      b?.custom &&
+      a.module === b.module &&
+      validQuery(a.module, first.query) &&
+      validQuery(b.module, second.query) &&
+      first.query.group !== 'none' &&
+      first.query.group === second.query.group &&
+      first.query.measure === second.query.measure &&
+      queryUnit(first.query) === queryUnit(second.query),
+    );
   return Boolean(
     a &&
     b &&

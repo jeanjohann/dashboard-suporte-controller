@@ -6,6 +6,7 @@ import { loadZohoActivity } from '../data/zohoActivityClient.js';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { useZohoSession } from '../hooks/ZohoSession.jsx';
 import { ZohoActivitySummary, zohoDuration as duration } from './ZohoActivitySummary.jsx';
+import { ZohoPresencePanel } from './ZohoPresencePanel.jsx';
 import { ZohoClosures } from './ZohoClosures.jsx';
 
 const date = (text) =>
@@ -156,6 +157,7 @@ export function SupportZohoActivity({ active, ordersData }) {
           {error}
         </p>
       )}
+      <ZohoPresencePanel />
       {data && summary && (
         <>
           <p role="status" className="zoho-read-status">
