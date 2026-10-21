@@ -129,7 +129,10 @@ export function monitoringBucket(hours) {
 }
 
 /** Analisa um retrato completo antes de filtrar; chaves duplicadas são excluídas como grupo. */
-export function monitorSnapshot(snapshot, { clients = [], threshold = 48, state = 'all' } = {}) {
+export function monitorSnapshot(
+  snapshot,
+  { clients = [], models = [], threshold = 48, state = 'all' } = {},
+) {
   if (![48, 72, 96].includes(Number(threshold))) throw Error('Limite inválido.');
   if (!['all', ...Object.keys(monitoringStates)].includes(state)) throw Error('Situação inválida.');
   const reference = monitoringInstant(snapshot.referenceAt);
@@ -174,7 +177,11 @@ export function monitorSnapshot(snapshot, { clients = [], threshold = 48, state 
       bucket: hours == null ? null : monitoringBucket(hours),
     });
   }
-  const scoped = all.filter((row) => !clients.length || clients.includes(row.clientId));
+  const scoped = all.filter(
+    (row) =>
+      (!clients.length || clients.includes(row.clientId)) &&
+      (!models.length || models.includes(row.deviceModel?.trim() || '')),
+  );
   const usable = scoped.filter((row) => ['recent', 'delayed'].includes(row.state));
   const delayed = usable.filter((row) => row.hours >= Number(threshold));
   const rows = scoped

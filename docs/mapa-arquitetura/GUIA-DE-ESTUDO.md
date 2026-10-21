@@ -1,6 +1,6 @@
 # Mapa do sistema — guia de estudo
 
-**Addlog · Dashboard de Suporte | versão 0.50.0 | referência: c50e543 · cópia da entrega | levantamento: 2026-10-21**
+**Addlog · Dashboard de Suporte | versão 0.51.0 | referência: 6f34a55 · cópia da entrega | levantamento: 2026-10-21**
 
 Este mapa descreve o código do repositório nesse ponto de referência. Configurações privadas e o estado de serviços em execução não foram auditados: uma integração ter implementação não comprova que suas credenciais estejam válidas hoje. O [mapa interativo](index.html) contém o catálogo pesquisável; o [catálogo em Markdown](CATALOGO-DE-ARQUIVOS.md) permite consultar cada arquivo. Os diagramas têm versões SVG para apresentação e fontes Mermaid editáveis em [DIAGRAMAS.md](DIAGRAMAS.md).
 
@@ -101,7 +101,7 @@ O catálogo lista os arquivos da base e os novos arquivos de aplicação desta r
 ## 4. Inicialização e navegação
 
 1. O navegador abre `index.html`, que carrega `src/main.jsx`.
-2. `ThemeProvider` aplica o tema. `AccessProvider` obtém a sessão e as permissões na API em ambiente gerenciado.
+2. `ThemeProvider` aplica o tema salvo: Claro, Escuro ou Grafite e Lima. O seletor no rodapé preserva a preferência local e as cores próprias de impressão. `AccessProvider` obtém a sessão e as permissões na API em ambiente gerenciado.
 3. `Workspace` mantém as bases de OS, Operacional e Logística da sessão e recebe atualizações de importação.
 4. `Navigation` apresenta os destinos autorizados. `DeferredPage` carrega o código da página na primeira visita e mantém sua instância enquanto autorizada, com exceções explícitas como Usuários.
 5. Cada página conecta controles, hooks, regras de domínio e componentes. Alterações locais de filtros recalculam o recorte correspondente.
@@ -147,6 +147,8 @@ O parque mostra a cobertura que o arquivo e os vínculos permitem observar. Ele 
 O acompanhamento usa operadora + ICCID. Anotações e arquivos permanecem no navegador, com backup explícito. Uma fotografia operacional atual não comprova a titularidade de uma linha em períodos passados. Os destaques de aumento comparam MB/dia do mesmo chip/operadora com uma apuração anterior elegível e não sobreposta; não somam períodos sobrepostos como se fossem um único intervalo.
 
 ### Monitoramento Ativo
+
+Os blocos de telemetria analisam alimentação/bateria, posições por base e equipamentos por modelo. `monitoringTelemetry.js` centraliza cobertura, ausência versus zero e exclusão de coletas indisponíveis; `MonitoringTelemetry.jsx` apresenta gráficos e tabelas com acesso às filas. Modelos participam do recorte analítico, e os relatórios exportam os mesmos agregados. Sinais pertencem ao último registro recebido e posições à janela de 24 h da última consulta; não são diagnóstico elétrico, consumo M2M ou histórico.
 
 `MonitoringPage` separa a fila da análise. `useMonitoringSource` distingue demonstração e leitura real. O cliente só consulta a API da própria origem. O contrato exige um retrato íntegro e datas com fuso; a classificação ocorre no domínio.
 

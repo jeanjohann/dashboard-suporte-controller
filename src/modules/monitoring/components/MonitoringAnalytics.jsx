@@ -1,4 +1,4 @@
-/** Visão analítica separada da fila; cada card abre seu recorte sem alterar as bases selecionadas. */
+/** Visão analítica separada da fila; cada card abre seu recorte sem alterar as bases e modelos selecionados. */
 import React from 'react';
 import { Chart } from '../../../components/Chart.jsx';
 import { Section } from '../../../components/Section.jsx';
@@ -6,19 +6,20 @@ import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { monitoringDuration, monitoringStages } from '../domain/monitoring.js';
 import { monitoringAnalytics } from '../domain/monitoringAnalytics.js';
+import { MonitoringTelemetry } from './MonitoringTelemetry.jsx';
 
 const pct = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
 export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible }) {
   const analysis = monitoringAnalytics(result, notes);
   const chartTitle = (value) => (result.demonstration ? 'DEMONSTRAÇÃO · ' : '') + value;
-  const exportNote = `${result.demonstration ? 'DADOS FICTÍCIOS · ' : ''}Referência ${result.referenceAt}; limite ${threshold} h; todas as situações das bases selecionadas. Coletas utilizáveis; não confirma defeito.`;
+  const exportNote = `${result.demonstration ? 'DADOS FICTÍCIOS · ' : ''}Referência ${result.referenceAt}; limite ${threshold} h; todas as situações das bases e modelos selecionados. Coletas utilizáveis; não confirma defeito.`;
   const stages = Object.fromEntries(analysis.stages.map((entry) => [entry.label, entry.value]));
   const cards = [
     [
       'Veículos monitorados',
       result.totals.fleet,
-      'Todas as situações das bases selecionadas',
+      'Todas as situações das bases e modelos selecionados',
       'all',
     ],
     [
@@ -93,7 +94,7 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
             note={`${result.demonstration ? 'DEMONSTRAÇÃO · dados fictícios. ' : ''}Mesmo retrato e bases da visão completa. Limite ${threshold} h; acompanhamento administrativo não comprova recuperação.`}
           />
         }
-        help="Todos os cards usam a frota identificada das bases selecionadas, independentemente dos filtros da fila. Alertas significam tempo desde o último registro acima do limite, com coleta válida e recente, sem confirmar defeito. Status administrativos usam apenas atualizações salvas nesta sessão. Em acompanhamento inclui Em análise, Aguardando contato e Manutenção agendada; seu percentual divide esse número pelo total de veículos acima do limite. Encerrados não contam como recuperados. Clique em um card para abrir a fila correspondente; busca, situação e status anteriores da fila serão limpos, mantendo as bases e o limite."
+        help="Todos os cards usam a frota identificada das bases e modelos selecionados, independentemente dos filtros da fila. Alertas significam tempo desde o último registro acima do limite, com coleta válida e recente, sem confirmar defeito. Status administrativos usam apenas atualizações salvas nesta sessão. Em acompanhamento inclui Em análise, Aguardando contato e Manutenção agendada; seu percentual divide esse número pelo total de veículos acima do limite. Encerrados não contam como recuperados. Clique em um card para abrir a fila correspondente; busca, situação e status anteriores da fila serão limpos, mantendo as bases e o limite."
       >
         <div className="cards monitoring-cards">
           {cards.map(([label, value, note, focus]) => (
@@ -205,6 +206,7 @@ export function MonitoringAnalytics({ result, notes, threshold, onQueue, visible
           </SortableTable>
         </div>
       </Section>
+      <MonitoringTelemetry result={result} onQueue={onQueue} />
       <p className="scope">
         Indicadores do retrato atual. Evolução real, recuperações e reincidências estarão
         disponíveis após integrar e armazenar as coletas.

@@ -1,9 +1,9 @@
 {
-  "version": "0.50.0",
-  "base": "c50e543 · cópia da entrega",
+  "version": "0.51.0",
+  "base": "6f34a55 · cópia da entrega",
   "date": "2026-10-21",
-  "total": 421,
-  "tests": 84,
+  "total": 426,
+  "tests": 85,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 46
+      "count": 48
     },
     {
       "path": "docs/diagrams",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 311
+      "count": 314
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 224
+      "count": 227
     },
     {
       "path": "src/modules/assistant",
@@ -173,12 +173,12 @@
     {
       "path": "src/modules/monitoring",
       "description": "Módulo Monitoramento Ativo: interface, regras e integração de seus dados.",
-      "count": 19
+      "count": 22
     },
     {
       "path": "src/modules/monitoring/components",
       "description": "Página e painéis visuais de Monitoramento Ativo.",
-      "count": 5
+      "count": 6
     },
     {
       "path": "src/modules/monitoring/data",
@@ -188,7 +188,7 @@
     {
       "path": "src/modules/monitoring/domain",
       "description": "Validação e cálculo das regras de negócio de Monitoramento Ativo.",
-      "count": 7
+      "count": 9
     },
     {
       "path": "src/modules/monitoring/hooks",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 86128,
-      "sha256": "c4fa6feb8de9c935d8503fd4b948056a0f233b3f41a8ef3dc0711f251e166ceb",
+      "bytes": 86805,
+      "sha256": "6b25e7294f805e2035198fd13dc13d48b54671a3f9a92d4bb88e2f7e7a207377",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -805,8 +805,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 17228,
-      "sha256": "a65dcfaca10a3fb871a29350a176759971bfd69450ce155cf2da17d1e6891318",
+      "bytes": 17873,
+      "sha256": "b855c94dca4aa7b588cf96385a31aa1cc51c21652236d996a04134dc3bfd0914",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -978,6 +978,34 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "docs/TELEMETRIA-MONITORAMENTO.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Alimentação, posições e equipamentos — Monitoramento Ativo. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 3138,
+      "sha256": "0b3d89bfe87dba2204300df8521cea85629f0a9391dc55816d614ffe040b4151",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/TEMAS-DO-SISTEMA.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Temas do sistema. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 1127,
+      "sha256": "849c8bddfe798df1ac28131df5513981921c75f63ae244accb03c48e626039fa",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "docs/USUARIOS-E-PERMISSOES.md",
       "folder": "docs",
       "module": "Documentação",
@@ -1128,7 +1156,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 106621,
-      "sha256": "e17f41f50e951ba0963e530c87af0fda8720aff6d6215366130c6a5cd76e8fcb",
+      "sha256": "bc072bca255f074add9ceb3507422f6c9d721491cbbb5bf0a45fb1ff535dd6c1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1142,7 +1170,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1231,
-      "sha256": "587ac96370651b50e68f9ab0bba00f9166fa277e01dac4e4950f50ca058089ae",
+      "sha256": "f3f6eac5ff4cf7d6bdd5f43ab5565b5a8097edd653fb960620cf357adea817ca",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2228,7 +2256,7 @@
       "folder": "src/app",
       "module": "Shell da aplicação",
       "layer": "Interface React",
-      "description": "Aplica o tema salvo neste navegador e fornece a alternância para todo o aplicativo.",
+      "description": "Temas globais, com preferência local preservada e escolha explícita entre as três paletas.",
       "exports": [
         "ThemeProvider",
         "ThemeToggle",
@@ -2242,8 +2270,8 @@
         "src/app/Navigation.jsx",
         "src/main.jsx"
       ],
-      "bytes": 2063,
-      "sha256": "344a4b67b73f2a222b9f0995096d0583ac37f7b0ddc427a085c75b0b1cbe8e60",
+      "bytes": 3519,
+      "sha256": "275162c4a53bc47e39f9cb1da60e873869111f166c9d87ecbd9b20d3e4af8313",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2377,6 +2405,7 @@
         "src/modules/consumption/components/ConsumptionOverviewPanels.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringTelemetry.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/AdvancedInsights.jsx",
         "src/modules/orders/components/Explorers.jsx",
@@ -2656,6 +2685,7 @@
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringTelemetry.jsx",
         "src/modules/orders/components/AdvancedInsights.jsx",
         "src/modules/orders/components/FieldLifePanel.jsx",
         "src/modules/orders/components/OrdersLifecyclePanel.jsx",
@@ -2736,6 +2766,7 @@
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
+        "src/modules/monitoring/components/MonitoringTelemetry.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/AdvancedInsights.jsx",
         "src/modules/orders/components/DescriptiveReport.jsx",
@@ -2786,6 +2817,7 @@
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringTelemetry.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/AdvancedInsights.jsx",
         "src/modules/orders/components/CustomerIdentityNote.jsx",
@@ -4299,7 +4331,7 @@
       "folder": "src/modules/monitoring/components",
       "module": "Monitoramento Ativo",
       "layer": "Interface React",
-      "description": "Visão analítica separada da fila; cada card abre seu recorte sem alterar as bases selecionadas.",
+      "description": "Visão analítica separada da fila; cada card abre seu recorte sem alterar as bases e modelos selecionados.",
       "exports": [
         "MonitoringAnalytics"
       ],
@@ -4308,6 +4340,7 @@
         "src/components/ReportSummary.jsx",
         "src/components/Section.jsx",
         "src/components/SortableTable.jsx",
+        "src/modules/monitoring/components/MonitoringTelemetry.jsx",
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringAnalytics.js"
       ],
@@ -4317,8 +4350,8 @@
       "importedBy": [
         "src/modules/monitoring/components/MonitoringPage.jsx"
       ],
-      "bytes": 9575,
-      "sha256": "6d7785d49e6c3704c91fe29dbfdd8483ba20cb195fda1cc80ed050cfa2fd13d0",
+      "bytes": 9530,
+      "sha256": "23ba46f6f2e23926d2198f6a5028ecec6c7d4692eb675de94a547bb71621b2e6",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4342,6 +4375,7 @@
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringAnalytics.js",
         "src/modules/monitoring/domain/monitoringReport.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.js",
         "src/modules/monitoring/hooks/useMonitoringReminders.js",
         "src/modules/monitoring/hooks/useMonitoringSource.js",
         "src/modules/my-dashboard/hooks/DashboardSources.jsx",
@@ -4356,8 +4390,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 18735,
-      "sha256": "783b0fe9ecb4457179d5ec6ee12d0e216c5fa84e788395dc0d45897c0831e03d",
+      "bytes": 20037,
+      "sha256": "e5633ca6576ba6d6027313be3eab3841a9ace9c8177990d98042d9f5d2412362",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4382,8 +4416,8 @@
       "importedBy": [
         "src/modules/monitoring/components/MonitoringPage.jsx"
       ],
-      "bytes": 14151,
-      "sha256": "f66330998c384c56b7f3b7be45c86c453ca75a431d4f0c373cb09e73c095236a",
+      "bytes": 14348,
+      "sha256": "835f0f40437b41c98acfa34b2bf9cdd475dcdc9d0f054588396e1a9fc00a2529",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4438,6 +4472,32 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "src/modules/monitoring/components/MonitoringTelemetry.jsx",
+      "folder": "src/modules/monitoring/components",
+      "module": "Monitoramento Ativo",
+      "layer": "Interface React",
+      "description": "Apresenta alimentação, posições e modelos do retrato, com cobertura e caminhos até os veículos de origem.",
+      "exports": [
+        "MonitoringTelemetry"
+      ],
+      "imports": [
+        "src/components/Chart.jsx",
+        "src/components/ReportSummary.jsx",
+        "src/components/Section.jsx",
+        "src/components/SortableTable.jsx",
+        "src/modules/monitoring/domain/monitoringTelemetry.js"
+      ],
+      "external": [
+        "react"
+      ],
+      "importedBy": [
+        "src/modules/monitoring/components/MonitoringAnalytics.jsx"
+      ],
+      "bytes": 10482,
+      "sha256": "adfb1e1e377520acc858a703667ec052c2261cc83fa8e571a62e6c6dd2ae8c15",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "src/modules/monitoring/data/demo.js",
       "folder": "src/modules/monitoring/data",
       "module": "Monitoramento Ativo",
@@ -4452,10 +4512,11 @@
         "src/modules/monitoring/domain/monitoring.test.js",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
         "src/modules/monitoring/domain/monitoringReminders.test.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js",
         "src/modules/monitoring/hooks/useMonitoringSource.js"
       ],
-      "bytes": 1252,
-      "sha256": "05b43fda036e62df49f69b5189346ca2fa4ff9af8aa3628bef3aeb8602ec4af1",
+      "bytes": 1620,
+      "sha256": "df06428b03693bf4ef19d2f697d21b90087767d3fe00354bbd23c2966e10f7f1",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4590,10 +4651,12 @@
         "src/modules/monitoring/domain/monitoringReminders.js",
         "src/modules/monitoring/domain/monitoringReminders.test.js",
         "src/modules/monitoring/domain/monitoringReport.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js",
         "src/modules/my-dashboard/domain/evaluate.js"
       ],
-      "bytes": 9623,
-      "sha256": "034f8380ffb4c9d40bfbd00b5a3774154e9db0183e1f01a2037b2fad0c653615",
+      "bytes": 9736,
+      "sha256": "e00c26d92d2d05732d5648e2d91868fabe1cb8cd337e7bd10df2e63494a6b0be",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4630,17 +4693,19 @@
         "monitoringFocusLabels"
       ],
       "imports": [
-        "src/modules/monitoring/domain/monitoring.js"
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.js"
       ],
       "external": [],
       "importedBy": [
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
-        "src/modules/monitoring/domain/monitoringReport.js"
+        "src/modules/monitoring/domain/monitoringReport.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js"
       ],
-      "bytes": 3413,
-      "sha256": "f31e18da1470854297a4a78a93d5e8a072eb55b7c3639a50df9a5202afd486bf",
+      "bytes": 3873,
+      "sha256": "560a0953c8e38dc908e9a1d62189814ca7e3d9f8d2a87bce240b2dd5d889b303",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4661,8 +4726,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 3341,
-      "sha256": "f587add5e34d16a524d38d89574838f99dcd4d8dd0d2502783538e452f07162f",
+      "bytes": 3281,
+      "sha256": "24ad2770784a886cb1acde7d0902b96ff59de25d9a4ac8da0336459b8325f61b",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4736,6 +4801,7 @@
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringAnalytics.js",
         "src/modules/monitoring/domain/monitoringReminders.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.js",
         "src/shared/export/exports.js"
       ],
       "external": [
@@ -4746,10 +4812,62 @@
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/domain/monitoring.test.js",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
-        "src/modules/monitoring/domain/monitoringReminders.test.js"
+        "src/modules/monitoring/domain/monitoringReminders.test.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js"
       ],
-      "bytes": 6645,
-      "sha256": "fb7a3e435be452c853d84e73909d6441bf01e5b2403b79656e75d6a49f5537e2",
+      "bytes": 10034,
+      "sha256": "71c3fa833e7b145114def7da107937dab14d6f587e162583b23fd9945c6cec40",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/domain/monitoringTelemetry.js",
+      "folder": "src/modules/monitoring/domain",
+      "module": "Monitoramento Ativo",
+      "layer": "Domínio",
+      "description": "Analisa o último estado recebido, com cobertura explícita; ausência e coleta antiga nunca viram zero.",
+      "exports": [
+        "matchesTelemetryFocus",
+        "modelLabel",
+        "monitoringModel",
+        "monitoringTelemetry"
+      ],
+      "imports": [
+        "src/modules/monitoring/domain/monitoring.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "src/modules/monitoring/components/MonitoringPage.jsx",
+        "src/modules/monitoring/components/MonitoringTelemetry.jsx",
+        "src/modules/monitoring/domain/monitoringAnalytics.js",
+        "src/modules/monitoring/domain/monitoringReport.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js"
+      ],
+      "bytes": 3939,
+      "sha256": "a204b0b38f9182a3d97071544ae500d2f08a009536f3f93c122749009663128e",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/domain/monitoringTelemetry.test.js",
+      "folder": "src/modules/monitoring/domain",
+      "module": "Monitoramento Ativo",
+      "layer": "Teste",
+      "description": "Verifica monitoring Telemetry no contexto de Monitoramento Ativo. Exemplos: telemetria separa ausência de zero e usa a cobertura correta nas médias e grupos; coleta indisponível preserva inventário, exclui sinais técnicos e mantém totais ausentes; recortes técnicos abrem exatamente os veículos contados, sem alterar o total analítico.",
+      "exports": [],
+      "imports": [
+        "src/modules/monitoring/data/demo.js",
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/monitoring/domain/monitoringAnalytics.js",
+        "src/modules/monitoring/domain/monitoringReport.js",
+        "src/modules/monitoring/domain/monitoringTelemetry.js"
+      ],
+      "external": [
+        "node:assert/strict",
+        "node:test",
+        "xlsx"
+      ],
+      "importedBy": [],
+      "bytes": 4582,
+      "sha256": "1c6a874669066ca33c9e9327d629100cf91ddf9202b44617d2dc27eb02bddd12",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -10105,8 +10223,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 13891,
-      "sha256": "3b9242dec7380a6b82a76c0dedf06b5cf872e58b4295bdfbdd8dd8dad531365d",
+      "bytes": 16145,
+      "sha256": "e458c87d717da00fa28dd1cc78a9c6f5d22f7a3c0d82276dac6d5ebc86c713b8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10185,8 +10303,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 20539,
-      "sha256": "dd3081b43924b93e5b3bc6f83c63f7299e5d9dd5f0bdd48ab43ffd9f847665e5",
+      "bytes": 20866,
+      "sha256": "0a71feff2cb05edc2597df5edf104cd132cad9b117886c2502b4ee964e740e9c",
       "status": "Código ou documentação do ponto de referência"
     },
     {

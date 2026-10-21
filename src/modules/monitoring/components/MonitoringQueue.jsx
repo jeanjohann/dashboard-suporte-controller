@@ -148,7 +148,12 @@ export function MonitoringQueue({
                       <span>{row.plate || 'Não informado'}</span>
                     </span>
                   </td>
-                  <td>{row.trackerId || 'Não informado'}</td>
+                  <td>
+                    {row.trackerId || 'Não informado'}
+                    <small className="monitoring-cell-note">
+                      {row.deviceModel || 'Modelo não informado'}
+                    </small>
+                  </td>
                   <td>
                     {row.clientName || row.clientId}
                     <small className="monitoring-cell-note">{row.clientId}</small>

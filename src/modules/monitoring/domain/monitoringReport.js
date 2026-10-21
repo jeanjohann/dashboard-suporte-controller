@@ -4,10 +4,12 @@ import { csv } from '../../../shared/export/exports.js';
 import { monitoringStates, monitoringIndicator } from './monitoring.js';
 import { monitoringAnalytics } from './monitoringAnalytics.js';
 import { reminderExportRows } from './monitoringReminders.js';
+import { monitoringTelemetry } from './monitoringTelemetry.js';
 
 /** Monta o recorte completo e o resumo das bases; a situação filtra somente as linhas detalhadas. */
 export function monitoringReport(result, filters, notes = {}, reminders = []) {
   const analysis = monitoringAnalytics(result, notes);
+  const telemetry = monitoringTelemetry(result);
   const vehicleKeys = new Set(result.rows.map((row) => row.key));
   const mode = result.demonstration ? 'DEMONSTRAÇÃO — DADOS FICTÍCIOS' : 'Dados de monitoramento';
   return {
@@ -18,7 +20,7 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ['Critério', 'Limites provisórios 48/72/96 h; coleta utilizável há menos de 2 h.'],
       [
         'Base dos cards',
-        'Todas as situações das bases selecionadas; veículos respeitam situação, status, recorte e busca da fila.',
+        'Todas as situações das bases e modelos selecionados; veículos respeitam situação, status, recorte e busca da fila.',
       ],
       [
         'Persistência',
@@ -93,7 +95,11 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
     ],
     indicators: [
       ['Indicador', 'Valor', 'Base / unidade'],
-      ['Veículos monitorados', result.totals.fleet, 'Todas as situações das bases selecionadas'],
+      [
+        'Veículos monitorados',
+        result.totals.fleet,
+        'Todas as situações das bases e modelos selecionados',
+      ],
       ['Acima do limite', analysis.alerts, 'Coleta utilizável; limite selecionado'],
       ['96 h ou mais', result.totals.critical, 'Coleta utilizável'],
       ['Bases afetadas', analysis.affectedBases, 'Bases com ao menos um veículo acima do limite'],
@@ -118,6 +124,114 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
         'Fração 0–1 sobre os veículos acima do limite; não é recuperação',
       ],
       ...analysis.stages.map((item) => [item.label, item.value, 'Veículos acima do limite']),
+      [
+        'Falha de alimentação externa',
+        telemetry.externalFailure,
+        `${telemetry.powerReadings} veículos com sinal utilizável; último estado recebido`,
+      ],
+      [
+        'Bateria interna baixa',
+        telemetry.batteryLow,
+        `${telemetry.batteryReadings} veículos com estado reconhecido`,
+      ],
+      [
+        'Falha da bateria interna',
+        telemetry.batteryFailure,
+        'Código 2 informado no último registro',
+      ],
+      [
+        'Bateria descarregando',
+        telemetry.batteryDischarging,
+        'Código 3 informado no último registro',
+      ],
+      [
+        'Posições informadas em 24 h',
+        telemetry.positionsTotal,
+        `${telemetry.positionsReadings} de ${telemetry.fleet} veículos com leitura; não MB`,
+      ],
+      [
+        'Média de posições por veículo com leitura',
+        telemetry.positionsAverage,
+        'Inclui zeros; exclui ausência e coleta indisponível',
+      ],
+    ],
+    power: [
+      [
+        'Modo',
+        'Base',
+        'Veículos',
+        'Com sinal utilizável',
+        'Falha externa',
+        'Com estado de bateria reconhecido',
+        'Bateria baixa',
+        'Falha de bateria',
+        'Descarregando',
+      ],
+      ...telemetry.bases.map((row) => [
+        mode,
+        row.label,
+        row.fleet,
+        row.powerReadings,
+        row.externalFailure,
+        row.batteryReadings,
+        row.batteryLow,
+        row.batteryFailure,
+        row.batteryDischarging,
+      ]),
+    ],
+    positions: [
+      [
+        'Modo',
+        'Base',
+        'Veículos',
+        'Com leitura utilizável',
+        'Sem leitura utilizável',
+        'Posições em 24 h (não MB)',
+        'Média por veículo com leitura',
+        'Com posições',
+        'Com zero posições',
+      ],
+      ...telemetry.bases.map((row) => [
+        mode,
+        row.label,
+        row.fleet,
+        row.positionsReadings,
+        row.positionsUnknown,
+        row.positionsTotal,
+        row.positionsAverage,
+        row.positionsActive,
+        row.positionsZero,
+      ]),
+    ],
+    models: [
+      [
+        'Modo',
+        'Modelo',
+        'Veículos',
+        'Acima do limite',
+        'Fração acima do limite',
+        'Com sinal de alimentação',
+        'Falha externa',
+        'Com estado de bateria',
+        'Bateria baixa',
+        'Falha da bateria',
+        'Com leitura de posições',
+        'Posições em 24 h (não MB)',
+      ],
+      ...telemetry.models.map((row) => [
+        mode,
+        row.label,
+        row.fleet,
+        row.delayed,
+        row.delayed / row.fleet,
+        row.powerReadings,
+        row.externalFailure,
+        row.batteryReadings,
+        row.batteryLow,
+        row.batteryFailure,
+        row.positionsReadings,
+        row.positionsTotal,
+      ]),
     ],
     reminders: reminderExportRows(
       reminders.filter((record) => vehicleKeys.has(record.key)),
@@ -162,8 +276,17 @@ export function monitoringCsv(tables) {
     ['Resumo por base'],
     ...tables.summary,
     [],
-    ['Indicadores das bases selecionadas'],
+    ['Indicadores das bases e modelos selecionados'],
     ...tables.indicators,
+    [],
+    ['Alimentação por base — último estado recebido'],
+    ...tables.power,
+    [],
+    ['Posições por base — janela móvel de 24 h, não MB'],
+    ...tables.positions,
+    [],
+    ['Equipamentos por modelo'],
+    ...tables.models,
     [],
     ['Histórico do acompanhamento'],
     ...tables.history,
@@ -181,6 +304,9 @@ export function monitoringWorkbook(tables) {
     ['Veículos', tables.vehicles],
     ['Resumo por base', tables.summary],
     ['Indicadores', tables.indicators],
+    ['Alimentação por base', tables.power],
+    ['Posições por base', tables.positions],
+    ['Modelos', tables.models],
     ['Histórico', tables.history],
     ['Lembretes', tables.reminders],
   ]) {

@@ -5,6 +5,7 @@ export function monitoringDemo() {
   const hours = [150, 100, 86, 73, 60, 48, 12, 4, 1, 0.5, null, 20];
   return {
     demonstration: true,
+    positionsWindowHours: 24,
     referenceAt,
     collections: clients.map((name, i) => ({ clientId: `demo-${i}`, at: referenceAt, ok: true })),
     vehicles: hours.map((hours, i) => ({
@@ -13,6 +14,12 @@ export function monitoringDemo() {
       vehicleId: `vehicle-${i}`,
       plate: `ABC-${1001 + i}`,
       trackerId: `162${710001 + i}`,
+      deviceModel: i === 10 ? null : ['MXT-130', 'MXT-160', 'Modelo DEMO'][i % 3],
+      identifier: `DEMO-${i}`,
+      positions24h: i === 10 ? null : i % 4 === 0 ? 0 : (i + 1) * 80,
+      externalPowerFailure: i === 10 ? null : i % 4 === 0,
+      batteryState: i === 10 ? null : [1, 6, 2, 3, 0, 5][i % 6],
+      batteryPercent: i === 10 ? null : i % 2 ? 15 : 100,
       supplyVoltageV: i === 10 ? null : i === 11 ? 0 : i % 2 ? 24.4 : 12.6,
       profile: i === 10 ? null : `Perfil DEMO ${i % 2 ? '02' : '01'}`,
       lastRecordAt:

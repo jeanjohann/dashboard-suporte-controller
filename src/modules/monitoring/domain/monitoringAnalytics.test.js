@@ -66,5 +66,5 @@ test('relatório exporta a busca da fila, mantendo base e indicadores analítico
   assert.equal(tables.vehicles.length, 2);
   assert.equal(tables.indicators.find((row) => row[0] === 'Acima do limite')[1], 6);
   assert.match(monitoringCsv(tables), /Resumo por base/);
-  assert.match(monitoringCsv(tables), /Indicadores das bases selecionadas/);
+  assert.match(monitoringCsv(tables), /Indicadores das bases e modelos selecionados/);
 });

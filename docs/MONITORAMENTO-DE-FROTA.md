@@ -1,5 +1,11 @@
 # Monitoramento Ativo
 
+## Telemetria e equipamentos — 0.51.0
+
+A Visão analítica inclui alimentação/bateria, posições em 24 horas por base e distribuição por modelo. Bases e modelos delimitam os indicadores; busca e recortes pertencem à fila. Cada indicador técnico permite abrir seus veículos, e os modelos possuem conferência própria. CSV/XLSX incluem cobertura e os agregados correspondentes. [Critérios e denominadores](TELEMETRIA-MONITORAMENTO.md).
+
+O tema adicional **Grafite e Lima** está no controle de aparência, no rodapé do menu, junto de Claro e Escuro. A preferência permanece neste navegador. [Temas do sistema](TEMAS-DO-SISTEMA.md).
+
 ## Conexão real — 0.50.0
 
 O botão **Consultar integração** carrega o diagnóstico do sistema legado Addlog pelo servidor, com credenciais em segredos do Cloudflare. A primeira leitura real foi conferida em 21/10/2026, incluindo fila ordenável, detalhes do equipamento e indicadores analíticos. O escopo são todas as bases retornadas pelo legado; os demais sistemas de rastreamento não foram conectados.

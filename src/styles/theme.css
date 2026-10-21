@@ -99,6 +99,52 @@
   --chart-negative: #f28aa6;
 }
 
+/* Paleta adicional inspirada em grafite, lima, branco e azul petróleo. */
+:root[data-theme='lime'] {
+  color-scheme: light;
+  --brand-surface: #282828;
+  --ui-background: #f0f1ed;
+  --ui-surface: #ffffff;
+  --ui-soft: #e8edeb;
+  --ui-ink: #282828;
+  --ui-muted: #52656a;
+  --ui-border: #d0dbd7;
+  --ui-line: #e2e8e3;
+  --ui-shadow: #283a3212;
+  --ui-button-bg: #282828;
+  --ui-button-text: #ffffff;
+  --ui-button-hover: #40595e;
+  --ui-accent: #a8c513;
+  --ui-on-accent: #222a0a;
+  --ui-accent-hover: #bed837;
+  --ui-accent-ink: #4c6000;
+  --ui-accent-soft: #eef3d5;
+  --ui-accent-border: #b6c96c;
+  --ui-coral: #aa5c38;
+  --ui-link: #346b74;
+  --ui-success-bg: #eaf2dd;
+  --ui-success-ink: #465e19;
+  --ui-success-border: #bdce99;
+  --ui-warning-bg: #fbf0d8;
+  --ui-warning-ink: #7b5416;
+  --ui-error-bg: #f9e9e7;
+  --ui-error-ink: #9c3b42;
+  --ui-info-bg: #e5eff0;
+  --ui-info-ink: #376773;
+  --ui-violet-bg: #eeebf5;
+  --ui-violet-ink: #6a5786;
+  --chart-primary: #788e05;
+  --chart-blue: #3e708e;
+  --chart-teal: #54888e;
+  --chart-purple: #88719e;
+  --chart-coral: #ba7653;
+  --chart-slate: #65797c;
+  --chart-amber: #aa8126;
+  --chart-rose: #a65f80;
+  --chart-other: #84918c;
+  --chart-negative: #ac4e61;
+}
+
 /* Navegação e chave de tema. */
 .app > aside.app-navigation {
   display: grid;
@@ -880,7 +926,8 @@ footer button:hover:not(:disabled) {
 /* Papel usa cores próprias, mesmo quando a tela está no tema escuro. */
 @media print {
   :root,
-  :root[data-theme='dark'] {
+  :root[data-theme='dark'],
+  :root[data-theme='lime'] {
     color-scheme: light;
     --ui-background: #fff;
     --ui-surface: #fff;

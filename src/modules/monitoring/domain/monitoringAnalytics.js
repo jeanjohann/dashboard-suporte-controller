@@ -1,5 +1,6 @@
 /** Indicadores do retrato atual: não inferem episódios, recuperação ou falha confirmada. */
 import { monitoringStages } from './monitoring.js';
+import { matchesTelemetryFocus } from './monitoringTelemetry.js';
 
 export const monitoringFocusLabels = {
   all: 'Todos os veículos',
@@ -12,6 +13,13 @@ export const monitoringFocusLabels = {
   contact: 'Alertas · aguardando contato',
   scheduled: 'Alertas · manutenção agendada',
   closed: 'Alertas · acompanhamento encerrado',
+  'external-power': 'Falha de alimentação externa',
+  'battery-low': 'Bateria interna baixa',
+  'battery-failure': 'Falha da bateria interna',
+  'battery-discharging': 'Bateria descarregando',
+  'power-unknown': 'Sem informação de alimentação',
+  'positions-active': 'Com posições nas últimas 24 h',
+  'positions-zero': 'Zero posições nas últimas 24 h',
 };
 const status = (row, notes) =>
   monitoringStages.includes(notes[row.key]?.status) ? notes[row.key].status : monitoringStages[0];
@@ -58,6 +66,7 @@ export function filterMonitoringQueue(result, filters, notes = {}) {
   return {
     ...result,
     rows: result.rows.filter((row) => {
+      if (!matchesTelemetryFocus(row, focus)) return false;
       if (stage !== 'all' && status(row, notes) !== stage) return false;
       if (focus === 'alerts' && row.state !== 'delayed') return false;
       if (focus === 'critical' && (!['recent', 'delayed'].includes(row.state) || row.hours < 96))
@@ -76,6 +85,8 @@ export function filterMonitoringQueue(result, filters, notes = {}) {
           row.clientName,
           row.clientId,
           row.profile,
+          row.deviceModel,
+          row.identifier,
           notes[row.key]?.owner,
         ].join(' '),
       );

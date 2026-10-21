@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.51.0 — 21/10/2026
+
+- Amplia o Monitoramento Ativo com alimentação/bateria, posições por base e inventário por modelo. Coberturas e médias distinguem zeros, ausências e coleta indisponível; os sinais representam o último estado recebido.
+- Filtro de modelos, busca por modelo/identificador e acesso dos indicadores às respectivas filas. CSV/XLSX incluem agregados por base/modelo, com contexto e denominadores.
+- Adiciona o tema Grafite e Lima, inspirado na paleta do proprietário, com branco, azul petróleo e cores complementares. Um seletor mantém Claro e Escuro disponíveis e preserva a preferência neste navegador; impressão mantém cores próprias.
+
 ## 0.50.0 — 21/10/2026
 
 - Conecta o Monitoramento Ativo ao diagnóstico do sistema legado Addlog pelo servidor, com endereço e token em segredos do Cloudflare. Mantém autenticação e permissão de monitoramento; a leitura abrange todas as bases retornadas pelo legado.

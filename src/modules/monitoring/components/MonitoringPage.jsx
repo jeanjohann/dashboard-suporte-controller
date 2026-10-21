@@ -23,9 +23,11 @@ import { monitoringReport, monitoringCsv, monitoringWorkbook } from '../domain/m
 import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
 import { filterChips, filterDisplay } from '../../../shared/filters/scopedSelection.js';
 import { FilterPanel, FilterCount } from '../../../components/FilterPanel.jsx';
+import { modelLabel, monitoringModel } from '../domain/monitoringTelemetry.js';
 
 const initialFilters = () => ({
   clients: [],
+  models: [],
   threshold: 48,
   state: 'all',
   focus: 'all',
@@ -74,10 +76,16 @@ export function MonitoringPage({ onPage }) {
       }))
     : [];
   const tables = queue ? monitoringReport(queue, filters, notes, reminders.records) : null;
+  const models = snapshot
+    ? [...new Set(snapshot.vehicles.map(monitoringModel))]
+        .sort()
+        .map((id) => ({ id, label: modelLabel(id) }))
+    : [];
   const scopeLabel = `Monitoramento Ativo → ${{ queue: 'Acompanhamento', overview: 'Visão analítica', reports: 'Relatórios' }[category]}`;
   const chips = filterChips(filters, {
     labels: {
       clients: 'Bases',
+      models: 'Modelos',
       threshold: 'Limite',
       state: 'Situação técnica',
       focus: 'Recorte da fila',
@@ -88,13 +96,15 @@ export function MonitoringPage({ onPage }) {
     format: (value, key) =>
       key === 'clients'
         ? value.map((id) => bases.find((base) => base.id === id)?.label || id).join(', ')
-        : key === 'threshold'
-          ? `${value} horas`
-          : key === 'state'
-            ? monitoringStates[value] || value
-            : key === 'focus'
-              ? monitoringFocusLabels[value] || value
-              : filterDisplay(value),
+        : key === 'models'
+          ? value.map(modelLabel).join(', ')
+          : key === 'threshold'
+            ? `${value} horas`
+            : key === 'state'
+              ? monitoringStates[value] || value
+              : key === 'focus'
+                ? monitoringFocusLabels[value] || value
+                : filterDisplay(value),
     remove: (key) => {
       setFilters((previous) => ({ ...previous, [key]: initialFilters()[key] }));
       setSelected(null);
@@ -106,13 +116,14 @@ export function MonitoringPage({ onPage }) {
     setSelected(null);
     setPage(0);
   };
-  function openQueue(focus, clientId) {
+  function openQueue(focus, clientId, model) {
     setFilters(
       (previous) => ({
         ...previous,
         threshold: filters.threshold,
         focus,
         clients: clientId ? [clientId] : filters.clients,
+        models: model == null ? filters.models : [model],
         state: 'all',
         stage: 'all',
         search: '',
@@ -228,10 +239,13 @@ export function MonitoringPage({ onPage }) {
                     scopeKey: `monitoring:${demo ? 'demo' : 'real'}:${category}`,
                     state: { filters },
                     validate: (view) =>
+                      (view.filters?.models || []).some(
+                        (id) => !models.some((model) => model.id === id),
+                      ) ||
                       (view.filters?.clients || []).some(
                         (id) => !bases.some((base) => base.id === id),
                       )
-                        ? 'Uma base desta visão não está disponível nesta fonte. Atualize a visão antes de aplicar.'
+                        ? 'Uma base ou modelo desta visão não está disponível nesta fonte. Atualize a visão antes de aplicar.'
                         : '',
                     onApply: (view) => {
                       setFilters({ ...initialFilters(), ...view.filters });
@@ -248,7 +262,7 @@ export function MonitoringPage({ onPage }) {
                     setSelected(null);
                     setPage(0);
                   }}
-                  help="Cada categoria mantém filtros próprios. Tempo desde o último registro até a referência exibida. Faixas de 48/72/96 h e validade da coleta inferior a 2 h são provisórias. Falha de coleta, datas inválidas/futuras ou posição ausente não confirmam interrupção. Bases e limite afetam a análise desta categoria; busca, situação, acompanhamento e recorte afetam sua fila/exportação, sem alterar o denominador dos cards. Clicar em um card abre Acompanhamento e aplica explicitamente as bases, o limite e o recorte desse card na fila, sem modificar os filtros da visão analítica."
+                  help="Cada categoria mantém filtros próprios. Tempo desde o último registro até a referência exibida. Faixas de 48/72/96 h e validade da coleta inferior a 2 h são provisórias. Falha de coleta, datas inválidas/futuras ou posição ausente não confirmam interrupção. Bases, modelos e limite afetam a análise desta categoria; busca, situação, acompanhamento e recorte afetam sua fila/exportação, sem alterar o denominador dos cards. Clicar em um card abre Acompanhamento e aplica explicitamente as bases, os modelos, o limite e o recorte desse card na fila, sem modificar os filtros da visão analítica."
                   source={`Referência: ${monitoringDate(snapshot.referenceAt)} · São Paulo · Limite: ${filters.threshold} horas · ${demo ? 'Dados fictícios' : 'Retrato recebido: ' + monitoringDate(source.referenceAt)}`}
                 >
                   <div className="monitoring-filter-fields">
@@ -262,6 +276,21 @@ export function MonitoringPage({ onPage }) {
                         update(
                           'clients',
                           bases.filter((base) => value.includes(base.label)).map((base) => base.id),
+                        )
+                      }
+                    />
+                    <MultiFilter
+                      label="Modelos de equipamento"
+                      options={models.map((model) => model.label)}
+                      values={models
+                        .filter((model) => filters.models.includes(model.id))
+                        .map((model) => model.label)}
+                      onChange={(value) =>
+                        update(
+                          'models',
+                          models
+                            .filter((model) => value.includes(model.label))
+                            .map((model) => model.id),
                         )
                       }
                     />
@@ -287,7 +316,7 @@ export function MonitoringPage({ onPage }) {
                         <input
                           aria-label="Buscar veículo"
                           type="search"
-                          placeholder="Placa, rastreador, cliente, perfil ou responsável…"
+                          placeholder="Placa, rastreador, modelo, cliente, perfil ou responsável…"
                           value={filters.search}
                           onChange={(event) => update('search', event.target.value)}
                         />
