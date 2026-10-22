@@ -84,7 +84,7 @@ export function analyzeZohoPresence(rows, mapping, { offset, start = '', end = '
       continue;
     }
     seen.add(key);
-    if (until <= lower || from >= upper) {
+    if (until === from ? from < lower || from >= upper : until <= lower || from >= upper) {
       outside++;
       continue;
     }

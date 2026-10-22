@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.59.0 — [bases completas salvas e coleta agendada do Monitoramento](docs/BASES-SALVAS-E-COLETA.md), no banco de negócio separado dos acessos e restrito ao proprietário no piloto. Planilhas usam uma versão ativa e mantêm cinco versões; Monitoramento conserva 30 dias e a última coleta válida. Consulte o estado de publicação no guia.
+**Versão:** 0.60.0 — [permanência por sessões Zoho e refinamento visual](docs/PERMANENCIA-ZOHO-E-REFINAMENTO.md), com leitura CSV, comparação por agente e evolução diária. [Bases completas e coleta agendada no D1](docs/BASES-SALVAS-E-COLETA.md) seguem restritas ao proprietário no piloto. Consulte os guias para publicação e pendências de validação real.
 
 ## Documentação do projeto
 

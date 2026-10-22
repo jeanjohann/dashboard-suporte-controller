@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+## Permanência e refinamento 0.60.0 — 22/10/2026
+
+O proprietário confirmou tempo conectado dos agentes como prioridade; CSV Session real ainda precisa ser exportado. Leitura local ampliada com filtro/ranking por agente, evolução diária, sessões e revisão exportáveis. Botão Adicionar indicador redimensionado e contraste corrigido também no Salvar painel. [Entrega e validação pendente](PERMANENCIA-ZOHO-E-REFINAMENTO.md). Não houve criação de fonte automática de sessões nem persistência da presença no banco.
+
 ## Evolução 0.59.0 — 22/10/2026
 
 Bases completas de OS/Operacional/Logística e coleta do Monitoramento publicadas no banco do piloto. Cinco versões por planilha; fotografias de 30 dias; cron 9h, 12h, 15h e 18h de São Paulo. Backup e migração SQL conferidos, com lembrete real preservado. GitHub main `0072c8c`, Worker ativo `91c2c185-6d5f-47d7-b67c-3d341a3c52a7`, 434 testes aprovados e compilação concluída. Primeiro uso autenticado das bases e primeira execução real ainda precisam ser conferidos. O proprietário já validou a agenda 0.58.0 entre navegadores. [Escopo, testes e limitações](BASES-SALVAS-E-COLETA.md).

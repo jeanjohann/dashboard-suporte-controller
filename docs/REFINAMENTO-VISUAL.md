@@ -1,5 +1,9 @@
 # Refinamento visual
 
+## Permanência e Meu Dashboard — 0.60.0
+
+Altura e ícone de Adicionar indicador alinhados aos outros controles. Ações principais usam o par de cores de botão/texto da paleta, corrigindo mistura de tokens que causava contraste insuficiente no tema mineral. Configurações do painel mais compactas; presença Zoho com resumo, gráficos, tabelas e detalhes proporcionais. [Escopo e verificação](PERMANENCIA-ZOHO-E-REFINAMENTO.md).
+
 ## Identidade e paletas — 0.47.0
 
 Rodada A20 solicitada e autorizada em 20/10/2026. Tema claro com fundo mineral suave, superfícies brancas, verde petróleo nos destaques e tons complementares azuis/violetas. Tema escuro com superfícies grafite e cores mais luminosas nas séries e nos cards. Números e texto principal mantêm cor neutra; as cores distinguem categorias e estados, sem representar pontuação ou produtividade.

@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.60.0 — 22/10/2026
+
+- Amplia a leitura de permanência por CSV Session do Zoho: filtro e comparação por agente, evolução diária com união de sobreposições, detalhes e exportação do recorte. Corrige sessão válida de duração zero no início do período. CSV real e fonte automática continuam pendentes.
+- Refina cards, tabelas e configuração da permanência, com cabeçalhos fixos e layout responsivo. Acrescenta exemplo fictício identificado para testar a importação.
+- Uniformiza o botão Adicionar indicador do Meu Dashboard e corrige contraste das ações principais nas paletas. [Uso, critérios e validação](docs/PERMANENCIA-ZOHO-E-REFINAMENTO.md).
+
 ## 0.59.0 — 22/10/2026
 
 - Salva bases completas de OS, Operacional e Logística no D1 do piloto do proprietário. Carrega a versão ativa ao abrir; publicação transacional, hash e revisão evitam cargas parciais ou sobrescrita silenciosa. Mantém cinco versões sem somá-las nos relatórios.

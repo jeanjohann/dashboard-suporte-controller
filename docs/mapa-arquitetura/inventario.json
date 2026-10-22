@@ -1,9 +1,9 @@
 {
-  "version": "0.59.0",
-  "base": "0072c8c · cópia da entrega",
+  "version": "0.60.0",
+  "base": "ee3f3b5 · cópia da entrega",
   "date": "2026-10-22",
-  "total": 475,
-  "tests": 96,
+  "total": 479,
+  "tests": 97,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 53
+      "count": 54
     },
     {
       "path": "docs/diagrams",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 341
+      "count": 344
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 247
+      "count": 250
     },
     {
       "path": "src/modules/assistant",
@@ -243,12 +243,12 @@
     {
       "path": "src/modules/orders",
       "description": "Módulo Ordens de Serviço: interface, regras e integração de seus dados.",
-      "count": 115
+      "count": 118
     },
     {
       "path": "src/modules/orders/components",
       "description": "Página e painéis visuais de Ordens de Serviço.",
-      "count": 44
+      "count": 45
     },
     {
       "path": "src/modules/orders/config",
@@ -263,7 +263,7 @@
     {
       "path": "src/modules/orders/domain",
       "description": "Validação e cálculo das regras de negócio de Ordens de Serviço.",
-      "count": 58
+      "count": 60
     },
     {
       "path": "src/modules/orders/hooks",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 94355,
-      "sha256": "d37075f19bc9d37be8cbe8f4517215279f0df80f4d03b04c28233ab2909403fa",
+      "bytes": 95037,
+      "sha256": "a88522694488e9dc641c8a9dc07c297f3089c0a64b14c39997befc700efe544f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -441,8 +441,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 8171,
-      "sha256": "38a1823900c201205bafede738c4d595f94d4c4d551453b719ffc31100d016a0",
+      "bytes": 8184,
+      "sha256": "530c5c5a34255f0ebe0d6ee7a73130a0bac072e1c8fc23feb0d0b3693c73fd0f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -922,6 +922,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "docs/PERMANENCIA-ZOHO-E-REFINAMENTO.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Leitura CSV de permanência, recortes por agente/dia, exportação, refinamento do dashboard e validação real pendente.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 4885,
+      "sha256": "90ff2173efe33827680b5ad0435daa6911317ab7c42d70b13f01b38ebb40bb72",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "docs/PERSONALIZACAO-DE-PAGINAS.md",
       "folder": "docs",
       "module": "Documentação",
@@ -987,8 +1001,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 37517,
-      "sha256": "031d7af1be49d1be010ccecc83d2c43f95a3a6da761ef3c5c480c26868a00abc",
+      "bytes": 38050,
+      "sha256": "4029bb7c91700d59e87deca8d7c1eb289b1662834ac266ae4f2edfbd50709599",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1001,8 +1015,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 6715,
-      "sha256": "02e0be1c948bc74c24e768605e0716e659b33813d38d38cd23b5d34b3bad82ea",
+      "bytes": 7153,
+      "sha256": "140d95d25f69e446aca60aaf1a5ef270efebe475ce24cefad04429fc011d8ebe",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1226,7 +1240,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "5791e8e000e175dac54d44987bf8d270987e80c0f22cf42bfaa8f6ec47e5e689",
+      "sha256": "4ef9943a3c1ec75ae9acaf2b8e43513cd36a1fbad1f7ffd0018e6d4ae3ee9731",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1240,7 +1254,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "38df25124ae48dd5968bbcc2ebe13eb0d62f2a5e751400f782ce24aa57b066a0",
+      "sha256": "cc8bc604ef7a6577a1cba0f07a477650aa93899f168bfde906412b2fffc47c1f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1403,8 +1417,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 47213,
-      "sha256": "4ba06ba48d0668e86ecffbfb2106eefe76d3ca3056a397a31b941720043ba31b",
+      "bytes": 47777,
+      "sha256": "7ac55962c11d4f6cd92a219ca9521812be442834bc4aaf156042dca66202fb2b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2561,6 +2575,7 @@
         "src/modules/orders/components/SupportPeople.jsx",
         "src/modules/orders/components/SupportPerformance.jsx",
         "src/modules/orders/components/Technicians.jsx",
+        "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx"
       ],
@@ -2916,6 +2931,7 @@
         "src/modules/orders/components/Technicians.jsx",
         "src/modules/orders/components/ZohoActivitySummary.jsx",
         "src/modules/orders/components/ZohoClosures.jsx",
+        "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx"
       ],
@@ -2946,7 +2962,7 @@
         "src/modules/orders/components/MaintenanceMatrix.jsx",
         "src/modules/orders/components/OrdersRecordsPanel.jsx",
         "src/modules/orders/components/RecordDetails.jsx",
-        "src/modules/orders/components/ZohoPresencePanel.jsx",
+        "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx"
       ],
@@ -6660,7 +6676,7 @@
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/orders/components/SupportZohoOverview.jsx",
         "src/modules/orders/components/ZohoClosures.jsx",
-        "src/modules/orders/components/ZohoPresencePanel.jsx"
+        "src/modules/orders/components/ZohoPresenceResults.jsx"
       ],
       "bytes": 12182,
       "sha256": "fbea66824d48635dccc35aff5f463af67566ee9df6e9d47da16d54691506342d",
@@ -6710,9 +6726,8 @@
       "description": "Piloto local de CSV Session: mapeamento explícito, fuso, período, cards, conferência e exportação; mantém dados somente na memória da sessão.",
       "exports": ["ZohoPresencePanel"],
       "imports": [
-        "src/components/TableScroll.jsx",
         "src/modules/consumption/domain/consumption.js",
-        "src/modules/orders/components/ZohoActivitySummary.jsx",
+        "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/orders/domain/zohoPresence.js",
         "src/modules/orders/hooks/ZohoSession.jsx",
         "src/shared/export/exports.js",
@@ -6721,8 +6736,30 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/orders/components/SupportZohoActivity.jsx"],
-      "bytes": 10384,
-      "sha256": "7873f11acddf90df5eb7e996292692d298fc9e96134860e741d67c1d40c0b51a",
+      "bytes": 7779,
+      "sha256": "2d8478526277f1e5b8a6db73c679c5dba3834b26674022289a257b95c6a446fb",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/orders/components/ZohoPresenceResults.jsx",
+      "folder": "src/modules/orders/components",
+      "module": "Ordens de Serviço",
+      "layer": "Interface React",
+      "description": "Apresenta presença por agente e evolução diária, sessões e conferência, com filtro e exportação do recorte completo.",
+      "exports": ["ZohoPresenceResults"],
+      "imports": [
+        "src/components/Chart.jsx",
+        "src/components/SortableTable.jsx",
+        "src/components/TableScroll.jsx",
+        "src/modules/orders/components/ZohoActivitySummary.jsx",
+        "src/modules/orders/domain/zohoPresenceView.js",
+        "src/shared/export/exports.js",
+        "src/shared/security/Access.jsx"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/orders/components/ZohoPresencePanel.jsx"],
+      "bytes": 9738,
+      "sha256": "28896a9cab6a05ec883d76cfcde2170ce94132fa906a15abc49243b058daa6bc",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8058,10 +8095,11 @@
       "external": [],
       "importedBy": [
         "src/modules/orders/components/ZohoPresencePanel.jsx",
-        "src/modules/orders/domain/zohoPresence.test.js"
+        "src/modules/orders/domain/zohoPresence.test.js",
+        "src/modules/orders/domain/zohoPresenceView.test.js"
       ],
-      "bytes": 4953,
-      "sha256": "46e0a9a59589227bc62d3fbc1e51b139cba6594520bd18b4065a95623a31da57",
+      "bytes": 5002,
+      "sha256": "cc190f3c081d5577e2ec68807ffe04166b470cdfb0fe424827bf0b6af9e5e892",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8076,6 +8114,40 @@
       "importedBy": [],
       "bytes": 2241,
       "sha256": "9b1c3fd862c5faf51f1896b97d19faa7ed632a6adb6f50d4fbf194c6072f7e2d",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/orders/domain/zohoPresenceView.js",
+      "folder": "src/modules/orders/domain",
+      "module": "Ordens de Serviço",
+      "layer": "Domínio",
+      "description": "Une intervalos já validados por agente e os separa pela meia-noite do fuso informado para a evolução diária, sem preencher dias ausentes.",
+      "exports": ["presenceDateTime", "zohoPresenceView"],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "src/modules/orders/components/ZohoPresenceResults.jsx",
+        "src/modules/orders/domain/zohoPresenceView.test.js"
+      ],
+      "bytes": 2743,
+      "sha256": "60d300266d291fea151705be21c6464a3866831ddf189b6665f296183506c0fa",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/orders/domain/zohoPresenceView.test.js",
+      "folder": "src/modules/orders/domain",
+      "module": "Ordens de Serviço",
+      "layer": "Teste",
+      "description": "Verifica zoho Presence View no contexto de Ordens de Serviço. Exemplos: evolução diária recorta meia-noite no fuso do arquivo e une sobreposições antes de somar; filtro por agente mantém apenas suas sessões e apontamentos, sem converter ausências em zero; fim à meia-noite não cria dia vazio e períodos extensos não geram milhões de pontos.",
+      "exports": [],
+      "imports": [
+        "src/modules/orders/domain/zohoPresence.js",
+        "src/modules/orders/domain/zohoPresenceView.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 2734,
+      "sha256": "7a8c421df96fdf40700aa36ba6c35bcbbe83e9f8bddbcc03bf1d3115ad80e45c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8721,6 +8793,7 @@
         "src/modules/orders/components/SupportPerformance.jsx",
         "src/modules/orders/components/Technicians.jsx",
         "src/modules/orders/components/ZohoPresencePanel.jsx",
+        "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/orders/domain/descriptive.js",
         "src/modules/orders/domain/fieldLifeSummary.test.js",
         "src/modules/orders/domain/insightExport.test.js",
@@ -9205,6 +9278,7 @@
         "src/modules/orders/components/SupportZohoPanel.jsx",
         "src/modules/orders/components/Technicians.jsx",
         "src/modules/orders/components/ZohoPresencePanel.jsx",
+        "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/orders/hooks/ZohoSession.jsx",
         "src/modules/orders/hooks/useGoogleOrders.js",
         "src/modules/park/components/ParkHistoryPanel.jsx",
@@ -9445,8 +9519,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 23563,
-      "sha256": "fa54531e541cd058ac4efa9743773be8fa7283902878385626e250a00c48bec5",
+      "bytes": 23823,
+      "sha256": "56b020541fad3e32a815587827a2f1a3efe54bdcd7858b4a0a7a2a022dafa2fb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9585,8 +9659,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 13301,
-      "sha256": "33fba391ec2f5c84a57a0803b55f7966b0ca5aa24fcbc66a473515faf7c084d7",
+      "bytes": 15916,
+      "sha256": "bbdcb481b7a1136f3dd88ac95cd61b4ca92a7aae75a5f84d5c63962606f1242c",
       "status": "Código ou documentação do ponto de referência"
     },
     {

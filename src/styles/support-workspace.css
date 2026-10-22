@@ -1,4 +1,131 @@
 /* Página da equipe: hierarquia e densidade próprias, sem alterar a Visão geral. */
+.zoho-presence-setup > summary,
+.zoho-presence-results > details > summary {
+  padding: 10px 0;
+  cursor: pointer;
+  font-size: 12px;
+}
+.zoho-presence-setup > p {
+  max-width: 90ch;
+  line-height: 1.6;
+}
+.zoho-presence-fields {
+  align-items: end;
+  font-size: 12px;
+}
+.zoho-presence-fields :is(input, select) {
+  min-width: 0;
+  width: 100%;
+  min-height: 34px;
+  margin: 0;
+}
+.zoho-presence-results {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin-top: 14px;
+}
+.zoho-presence-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.zoho-presence-toolbar > label {
+  display: grid;
+  gap: 5px;
+  flex: 0 1 300px;
+  min-width: 0;
+  font-size: 12px;
+}
+.zoho-presence-toolbar select {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+}
+.zoho-presence-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 12px;
+}
+.zoho-presence-metrics > article {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px;
+  background: var(--ui-soft);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+.zoho-presence-metrics :is(span, small) {
+  color: var(--ui-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.zoho-presence-metrics strong {
+  font-size: clamp(20px, 2vw, 26px);
+  color: var(--ui-ink);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.zoho-presence-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.zoho-presence-charts > section {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+.zoho-presence-charts h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+.zoho-presence-results .table-scroll {
+  max-height: 360px;
+  overflow: auto;
+}
+.zoho-presence-results :is(th, td) {
+  padding: 10px 12px;
+  vertical-align: top;
+}
+.zoho-presence-results thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--ui-soft);
+}
+.zoho-presence-results [data-cell-type='number'] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.zoho-presence-results th[data-cell-type='number'] .sort-heading {
+  justify-content: flex-end;
+  text-align: right;
+}
+@media (max-width: 1050px) {
+  .zoho-presence-charts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media print {
+  .zoho-presence-charts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .zoho-presence-results .table-scroll {
+    max-height: none;
+    overflow: visible;
+  }
+  .zoho-presence-results thead th {
+    position: static;
+  }
+}
 .support-workspace,
 .zoho-connection {
   min-width: 0;

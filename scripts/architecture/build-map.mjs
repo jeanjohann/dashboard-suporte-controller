@@ -63,6 +63,12 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'docs/PERMANENCIA-ZOHO-E-REFINAMENTO.md':
+    'Leitura CSV de permanência, recortes por agente/dia, exportação, refinamento do dashboard e validação real pendente.',
+  'src/modules/orders/components/ZohoPresenceResults.jsx':
+    'Apresenta presença por agente e evolução diária, sessões e conferência, com filtro e exportação do recorte completo.',
+  'src/modules/orders/domain/zohoPresenceView.js':
+    'Une intervalos já validados por agente e os separa pela meia-noite do fuso informado para a evolução diária, sem preencher dias ausentes.',
   'docs/BASES-SALVAS-E-COLETA.md':
     'Bases completas no D1 do proprietário, versões ativas, retenção, coleta agendada, verificação e estado da publicação.',
   'server/businessSources.js':

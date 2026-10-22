@@ -58,9 +58,9 @@
 }
 .my-dashboard-page .md-primary,
 .md-dialog .md-primary {
-  background: var(--md-accent);
-  border-color: var(--md-accent);
-  color: var(--ui-on-accent);
+  background: var(--ui-button-bg);
+  border-color: var(--ui-button-bg);
+  color: var(--ui-button-text);
 }
 .my-dashboard-page main button:hover:not(:disabled),
 .md-dialog button:hover:not(:disabled) {
@@ -76,22 +76,34 @@
   outline-offset: 3px;
 }
 .my-dashboard-page .md-add-button {
-  padding: 12px 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 8px 12px;
+  line-height: 16px;
   white-space: nowrap;
 }
+.my-dashboard-page .md-page-actions > button {
+  min-height: 34px;
+  padding: 8px 12px;
+  line-height: 16px;
+}
 .md-add-button > span {
-  font-size: 18px;
-  padding-right: 6px;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
 }
 .md-board-controls {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 12px 16px;
   background: var(--md-surface);
   border: 1px solid var(--md-border);
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
 }
 .md-board-name {
   flex: 1 1 230px;
