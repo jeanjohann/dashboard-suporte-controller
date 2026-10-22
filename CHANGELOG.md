@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.58.0 — 22/10/2026
+
+- Cria banco D1 de negócio separado do banco de usuários, com migração SQL explícita e exportação manual com hash SHA-256. Não ativa coleta automática ou armazenamento das demais bases.
+- Conecta a agenda de lembretes ao Worker autenticado no piloto do administrador principal: documentos por veículo, revisão atômica, horário do servidor e preservação dos históricos.
+- Migra os lembretes reais de cada navegador mediante conferência e ação explícita. Reconhece reenvio, recusa históricos divergentes e conserva a cópia local. Falhas remotas não acionam fallback local. [Escopo e ativação](docs/BANCO-CLOUDFLARE.md).
+
 ## 0.57.0 — 22/10/2026
 
 - Exibe consumo KORE em MB decimais (1 MB = 1.000.000 bytes), preservando os bytes originais e incluindo ambas as unidades no CSV.

@@ -1,5 +1,7 @@
 # Monitoramento: acompanhamento e cadastros — 0.53.0
 
+**Atualização 0.58.0:** agenda e histórico de lembretes passam a ter integração D1 no piloto do administrador principal, com migração explícita e cópia local preservada. Tratamento e telemetria seguem na sessão. [Ativação e limites](BANCO-CLOUDFLARE.md). A descrição abaixo registra a entrega 0.53.0.
+
 ## Área de trabalho
 
 Filtros e lembretes aparecem antes da fila, com apresentação compacta. Quando fechados, filtros e visões favoritas compartilham uma linha; abrir os filtros mantém cada título acima de seu campo. O resumo dos recortes continua visível. Lembretes pendentes são destacados no resumo, mesmo com a lista recolhida; falha de leitura tem aviso explícito e opção de tentar novamente ao abrir. Não há mudança na persistência local dos lembretes ou das anotações.

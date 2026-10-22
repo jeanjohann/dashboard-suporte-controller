@@ -83,11 +83,56 @@ export function MonitoringReminders({ reminders, demo }) {
           </PermissionButton>
         )}
         <p className="scope">
-          Salvos neste navegador para este usuário, sem sincronização. Horários de São Paulo; os
-          filtros da fila não ocultam lembretes.{' '}
+          {reminders.mode === 'remote'
+            ? 'Agenda salva no banco do sistema, disponível nos computadores autorizados. '
+            : 'Salvos neste navegador para este usuário, sem sincronização. '}
+          Horários de São Paulo; os filtros da fila não ocultam lembretes.{' '}
           {demo ? 'Lembretes fictícios separados dos reais. ' : ''}Abra o histórico de um veículo
-          para agendar. Limpar os dados do navegador remove estes registros.
+          para agendar.{' '}
+          {reminders.mode !== 'remote' && 'Limpar os dados do navegador remove estes registros.'}
         </p>
+        {reminders.migration && (
+          <div className="notice" role="status">
+            <p>
+              Há {reminders.migration.length} lembretes neste navegador para migrar, incluindo os
+              encerrados e seu histórico. A cópia local será mantida. Históricos diferentes no banco
+              não serão substituídos.
+            </p>
+            <details>
+              <summary>Conferir registros locais</summary>
+              <ul>
+                {reminders.migration.map((row) => (
+                  <li key={row.key}>
+                    {row.plate || row.vehicleId} · {clientDisplay(row.clientName)} ·{' '}
+                    {row.history.length} eventos · {reminderLabels[row.status]}
+                    {reminders.migrationResults?.some(
+                      (result) => result.key === row.key && result.status === 'conflict',
+                    ) && ' · Histórico diferente no banco'}
+                  </li>
+                ))}
+              </ul>
+            </details>
+            <PermissionButton
+              action="import"
+              disabled={reminders.saving}
+              onClick={reminders.migrate}
+            >
+              {reminders.saving ? 'Migrando…' : 'Migrar lembretes para o banco'}
+            </PermissionButton>
+            <PermissionButton
+              action="export"
+              onClick={() =>
+                download(
+                  csv(reminderExportRows(reminders.migration)),
+                  'text/csv;charset=utf-8',
+                  'lembretes-locais-antes-da-migracao.csv',
+                )
+              }
+            >
+              Exportar cópia local CSV
+            </PermissionButton>
+          </div>
+        )}
         {reminders.error && (
           <div role="alert">
             <p>{reminders.error}</p>

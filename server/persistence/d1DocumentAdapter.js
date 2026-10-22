@@ -1,4 +1,4 @@
-/** Adaptador SQL preparado, sem binding, rota ou inicialização automática no Worker. */
+/** Adaptador SQL do banco de negócio. Não inicializa tabelas e nunca usa USERS_DB. */
 const fields =
   'workspace_id, resource, record_id, revision, payload_version, payload_json, deleted, updated_at, updated_by';
 const decode = (row) =>

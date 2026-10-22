@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.57.0 · referência 6561b4c · cópia da entrega · 2026-10-22 · **455 arquivos / 92 arquivos de teste / 67 pastas**.
+Addlog 0.58.0 · referência 301bd21 · cópia da entrega · 2026-10-22 · **461 arquivos / 94 arquivos de teste / 67 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -11,21 +11,21 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 ## Pastas
 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (51 arquivos, incluindo subpastas).
+- **docs** — Guias, critérios e histórico das implementações. (52 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (1 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
 - **public/brand** — Marca e símbolo usados pela interface. (6 arquivos, incluindo subpastas).
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
-- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (23 arquivos, incluindo subpastas).
+- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (24 arquivos, incluindo subpastas).
 - **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (6 arquivos, incluindo subpastas).
-- **server** — API Cloudflare e adaptadores privados de integrações. (24 arquivos, incluindo subpastas).
-- **server/persistence** — Adaptador D1 de negócio preparado e testes; não ligado ao Worker. (3 arquivos, incluindo subpastas).
-- **server/persistence/migrations** — Esquema SQL futuro de documentos de negócio. (1 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (333 arquivos, incluindo subpastas).
+- **server** — API Cloudflare e adaptadores privados de integrações. (26 arquivos, incluindo subpastas).
+- **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (3 arquivos, incluindo subpastas).
+- **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (1 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (335 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
-- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (243 arquivos, incluindo subpastas).
+- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (245 arquivos, incluindo subpastas).
 - **src/modules/assistant** — Módulo Assistente: interface, regras e integração de seus dados. (6 arquivos, incluindo subpastas).
 - **src/modules/assistant/components** — Página e painéis visuais de Assistente. (2 arquivos, incluindo subpastas).
 - **src/modules/assistant/data** — Leitura, contratos e transporte de dados de Assistente. (2 arquivos, incluindo subpastas).
@@ -43,9 +43,9 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/logistics** — Módulo Logística: interface, regras e integração de seus dados. (3 arquivos, incluindo subpastas).
 - **src/modules/logistics/components** — Página e painéis visuais de Logística. (1 arquivos, incluindo subpastas).
 - **src/modules/logistics/domain** — Validação e cálculo das regras de negócio de Logística. (2 arquivos, incluindo subpastas).
-- **src/modules/monitoring** — Módulo Monitoramento Ativo: interface, regras e integração de seus dados. (28 arquivos, incluindo subpastas).
+- **src/modules/monitoring** — Módulo Monitoramento Ativo: interface, regras e integração de seus dados. (30 arquivos, incluindo subpastas).
 - **src/modules/monitoring/components** — Página e painéis visuais de Monitoramento Ativo. (8 arquivos, incluindo subpastas).
-- **src/modules/monitoring/data** — Leitura, contratos e transporte de dados de Monitoramento Ativo. (5 arquivos, incluindo subpastas).
+- **src/modules/monitoring/data** — Leitura, contratos e transporte de dados de Monitoramento Ativo. (7 arquivos, incluindo subpastas).
 - **src/modules/monitoring/domain** — Validação e cálculo das regras de negócio de Monitoramento Ativo. (13 arquivos, incluindo subpastas).
 - **src/modules/monitoring/hooks** — Estado, efeitos e coordenação da sessão de Monitoramento Ativo. (2 arquivos, incluindo subpastas).
 - **src/modules/my-dashboard** — Módulo Meu Dashboard: interface, regras e integração de seus dados. (25 arquivos, incluindo subpastas).
@@ -196,6 +196,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Automação com n8n e proposta de MCP. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/AUTOMACAO-N8N-E-MCP.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/BANCO-CLOUDFLARE.md
+
+**Documentação · Documentação** — Ativação D1 de negócio, piloto do proprietário, migração dos lembretes, limites, backup/restauração e sequência das demais fontes.
+
+[Abrir fonte](../../docs/BANCO-CLOUDFLARE.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -919,6 +929,16 @@ Importa arquivos locais: [scripts/gemini-demo-workflow.mjs](../../scripts/gemini
 
 Importado por: [scripts/local-assistant.test.mjs](../../scripts/local-assistant.test.mjs).
 
+### scripts/backup-business-db.ps1
+
+**Ferramentas e laboratório · Script / serviço local** — Exporta o banco de negócio em SQL para pasta ignorada pelo Git e gera hash SHA-256; não restaura nem altera produção.
+
+[Abrir fonte](../../scripts/backup-business-db.ps1) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
 ### scripts/benchmark-monitoring.mjs
 
 **Ferramentas e laboratório · Script / serviço local** — Mede classificação, telemetria, filtro, ordenação e relatório com 1.800 veículos fictícios, sem consultar a API real; gera resultados locais ignorados pelo Git.
@@ -1119,6 +1139,30 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 Dependências externas: `node:assert/strict`, `node:fs`, `node:test`.
 
+### server/businessReminders.js
+
+**API Cloudflare · Backend** — API autenticada da agenda no banco de negócio: piloto do proprietário, revisão por veículo, histórico e migração local idempotente sem sobrescrita.
+
+[Abrir fonte](../../server/businessReminders.js) · Código ou documentação do ponto de referência
+
+Exporta: `businessRemindersResponse`, `reminderDocumentId`.
+
+Importa arquivos locais: [server/persistence/d1DocumentAdapter.js](../../server/persistence/d1DocumentAdapter.js), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/shared/persistence/documentRepository.js](../../src/shared/persistence/documentRepository.js).
+
+Importado por: [server/businessReminders.test.js](../../server/businessReminders.test.js), [server/worker.js](../../server/worker.js).
+
+### server/businessReminders.test.js
+
+**API Cloudflare · Teste** — Verifica business Reminders no contexto de API Cloudflare. Exemplos: agenda D1 recusa acesso indevido e origem externa; status não abre dados; agenda D1 preserva histórico entre sessões, controla concorrência e usa relógio/ator do servidor; migração D1 é repetível, mantém encerrados, recusa divergências e valida lote antes de gravar.
+
+[Abrir fonte](../../server/businessReminders.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [server/businessReminders.js](../../server/businessReminders.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:fs`, `node:sqlite`, `node:test`.
+
 ### server/googleOrders.js
 
 **API Cloudflare · Backend** — Leitura privada do Google Sheets. As credenciais ficam no Worker; nenhum conteúdo é gravado no D1.
@@ -1219,7 +1263,7 @@ Dependências externas: `node:assert/strict`, `node:test`.
 
 ### server/persistence/d1DocumentAdapter.js
 
-**API Cloudflare · Backend** — Adaptador SQL preparado, sem binding, rota ou inicialização automática no Worker.
+**API Cloudflare · Backend** — Adaptador SQL do banco de negócio. Não inicializa tabelas e nunca usa USERS_DB.
 
 [Abrir fonte](../../server/persistence/d1DocumentAdapter.js) · Preparação / contrato
 
@@ -1227,7 +1271,7 @@ Exporta: `createD1DocumentAdapter`.
 
 Importa arquivos locais: nenhum identificado.
 
-Importado por: [server/persistence/documentRepository.test.js](../../server/persistence/documentRepository.test.js).
+Importado por: [server/businessReminders.js](../../server/businessReminders.js), [server/persistence/documentRepository.test.js](../../server/persistence/documentRepository.test.js).
 
 ### server/persistence/documentRepository.test.js
 
@@ -1271,7 +1315,7 @@ Importado por: [server/worker.js](../../server/worker.js).
 
 Exporta: `authenticatedEmail`, `createHandler`, `default`, `recordUser`.
 
-Importa arquivos locais: [server/googleOrders.js](../../server/googleOrders.js), [server/kore.js](../../server/kore.js), [server/monitoring.js](../../server/monitoring.js), [server/schema.js](../../server/schema.js), [server/zoho.js](../../server/zoho.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
+Importa arquivos locais: [server/businessReminders.js](../../server/businessReminders.js), [server/googleOrders.js](../../server/googleOrders.js), [server/kore.js](../../server/kore.js), [server/monitoring.js](../../server/monitoring.js), [server/schema.js](../../server/schema.js), [server/zoho.js](../../server/zoho.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
 Importado por: [server/worker.test.js](../../server/worker.test.js).
 
@@ -1279,7 +1323,7 @@ Dependências externas: `jose`.
 
 ### server/worker.test.js
 
-**API Cloudflare · Teste** — Verifica worker no contexto de API Cloudflare. Exemplos: sessão do Assistente local exige proprietário ativo, POST e mesma origem; Google Sheets exige sessão ativa e administrador mesmo para consultar configuração; piloto Zoho exige proprietário ativo autenticado; nem outros administradores recebem dados.
+**API Cloudflare · Teste** — Verifica worker no contexto de API Cloudflare. Exemplos: agenda de negócio é autenticada e o piloto só libera o administrador principal; sessão do Assistente local exige proprietário ativo, POST e mesma origem; Google Sheets exige sessão ativa e administrador mesmo para consultar configuração.
 
 [Abrir fonte](../../server/worker.test.js) · Código ou documentação do ponto de referência
 
@@ -2621,7 +2665,31 @@ Exporta: `createReminderRepository`, `reminderScope`.
 
 Importa arquivos locais: [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js).
 
-Importado por: [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/hooks/useMonitoringReminders.js](../../src/modules/monitoring/hooks/useMonitoringReminders.js).
+Importado por: [src/modules/monitoring/data/remoteReminderRepository.js](../../src/modules/monitoring/data/remoteReminderRepository.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/hooks/useMonitoringReminders.js](../../src/modules/monitoring/hooks/useMonitoringReminders.js).
+
+### src/modules/monitoring/data/remoteReminderRepository.js
+
+**Monitoramento Ativo · Dados / transporte** — Seleciona a agenda remota conforme autorização, lê todas as páginas e migra a cópia local por escolha explícita, sem fallback em falhas.
+
+[Abrir fonte](../../src/modules/monitoring/data/remoteReminderRepository.js) · Diagnóstico legado / consulta manual
+
+Exporta: `createConfiguredReminderRepository`.
+
+Importa arquivos locais: [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
+
+Importado por: [src/modules/monitoring/data/remoteReminderRepository.test.js](../../src/modules/monitoring/data/remoteReminderRepository.test.js), [src/modules/monitoring/hooks/useMonitoringReminders.js](../../src/modules/monitoring/hooks/useMonitoringReminders.js).
+
+### src/modules/monitoring/data/remoteReminderRepository.test.js
+
+**Monitoramento Ativo · Teste** — Verifica remote Reminder Repository no contexto de Monitoramento Ativo. Exemplos: agenda remota falha sem fallback; somente status explícito permite modo local; migração exige escolha explícita, preserva cópia local e reconhece repetição; históricos divergentes não concluem migração nem liberam edição.
+
+[Abrir fonte](../../src/modules/monitoring/data/remoteReminderRepository.test.js) · Diagnóstico legado / consulta manual
+
+Importa arquivos locais: [src/modules/monitoring/data/remoteReminderRepository.js](../../src/modules/monitoring/data/remoteReminderRepository.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
 
 ### src/modules/monitoring/data/snapshotContract.js
 
@@ -2659,7 +2727,7 @@ Exporta: `monitorSnapshot`, `monitoringBatteryState`, `monitoringBucket`, `monit
 
 Importa arquivos locais: [src/modules/monitoring/domain/monitoringPeriods.js](../../src/modules/monitoring/domain/monitoringPeriods.js).
 
-Importado por: [scripts/benchmark-monitoring.mjs](../../scripts/benchmark-monitoring.mjs), [server/addlogDiagnostic.test.js](../../server/addlogDiagnostic.test.js), [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx), [src/modules/monitoring/components/MonitoringReminderEditor.jsx](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js), [src/modules/monitoring/data/snapshotContract.test.js](../../src/modules/monitoring/data/snapshotContract.test.js), [src/modules/monitoring/domain/monitoring.test.js](../../src/modules/monitoring/domain/monitoring.test.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringAnalytics.test.js](../../src/modules/monitoring/domain/monitoringAnalytics.test.js), [src/modules/monitoring/domain/monitoringHistory.js](../../src/modules/monitoring/domain/monitoringHistory.js), [src/modules/monitoring/domain/monitoringRegistry.js](../../src/modules/monitoring/domain/monitoringRegistry.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js), [src/modules/monitoring/domain/monitoringTelemetry.js](../../src/modules/monitoring/domain/monitoringTelemetry.js), [src/modules/monitoring/domain/monitoringTelemetry.test.js](../../src/modules/monitoring/domain/monitoringTelemetry.test.js), [src/modules/monitoring/domain/monitoringWorkspace.test.js](../../src/modules/monitoring/domain/monitoringWorkspace.test.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js).
+Importado por: [scripts/benchmark-monitoring.mjs](../../scripts/benchmark-monitoring.mjs), [server/addlogDiagnostic.test.js](../../server/addlogDiagnostic.test.js), [server/businessReminders.js](../../server/businessReminders.js), [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx), [src/modules/monitoring/components/MonitoringReminderEditor.jsx](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/data/snapshotContract.js](../../src/modules/monitoring/data/snapshotContract.js), [src/modules/monitoring/data/snapshotContract.test.js](../../src/modules/monitoring/data/snapshotContract.test.js), [src/modules/monitoring/domain/monitoring.test.js](../../src/modules/monitoring/domain/monitoring.test.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringAnalytics.test.js](../../src/modules/monitoring/domain/monitoringAnalytics.test.js), [src/modules/monitoring/domain/monitoringHistory.js](../../src/modules/monitoring/domain/monitoringHistory.js), [src/modules/monitoring/domain/monitoringRegistry.js](../../src/modules/monitoring/domain/monitoringRegistry.js), [src/modules/monitoring/domain/monitoringReminders.js](../../src/modules/monitoring/domain/monitoringReminders.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js), [src/modules/monitoring/domain/monitoringTelemetry.js](../../src/modules/monitoring/domain/monitoringTelemetry.js), [src/modules/monitoring/domain/monitoringTelemetry.test.js](../../src/modules/monitoring/domain/monitoringTelemetry.test.js), [src/modules/monitoring/domain/monitoringWorkspace.test.js](../../src/modules/monitoring/domain/monitoringWorkspace.test.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js).
 
 ### src/modules/monitoring/domain/monitoring.test.js
 
@@ -2743,7 +2811,7 @@ Exporta: `changeReminder`, `reminderActions`, `reminderDueAt`, `reminderExportRo
 
 Importa arquivos locais: [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js).
 
-Importado por: [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringReminderEditor.jsx](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js).
+Importado por: [server/businessReminders.js](../../server/businessReminders.js), [server/businessReminders.test.js](../../server/businessReminders.test.js), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringReminderEditor.jsx](../../src/modules/monitoring/components/MonitoringReminderEditor.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/data/remoteReminderRepository.js](../../src/modules/monitoring/data/remoteReminderRepository.js), [src/modules/monitoring/data/remoteReminderRepository.test.js](../../src/modules/monitoring/data/remoteReminderRepository.test.js), [src/modules/monitoring/domain/monitoringReminders.test.js](../../src/modules/monitoring/domain/monitoringReminders.test.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js).
 
 ### src/modules/monitoring/domain/monitoringReminders.test.js
 
@@ -2815,7 +2883,7 @@ Dependências externas: `node:assert/strict`, `node:test`, `xlsx`.
 
 Exporta: `useMonitoringReminders`.
 
-Importa arquivos locais: [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
+Importa arquivos locais: [src/modules/monitoring/data/reminderRepository.js](../../src/modules/monitoring/data/reminderRepository.js), [src/modules/monitoring/data/remoteReminderRepository.js](../../src/modules/monitoring/data/remoteReminderRepository.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
 
 Importado por: [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx).
 
@@ -5275,7 +5343,7 @@ Exporta: `PersistenceError`, `cloneDocument`, `createDocumentRepository`, `docum
 
 Importa arquivos locais: nenhum identificado.
 
-Importado por: [server/persistence/documentRepository.test.js](../../server/persistence/documentRepository.test.js), [src/modules/consumption/data/historyRepository.test.js](../../src/modules/consumption/data/historyRepository.test.js), [src/shared/persistence/documentValueAdapter.js](../../src/shared/persistence/documentValueAdapter.js), [src/shared/persistence/memoryDocumentAdapter.js](../../src/shared/persistence/memoryDocumentAdapter.js).
+Importado por: [server/businessReminders.js](../../server/businessReminders.js), [server/persistence/documentRepository.test.js](../../server/persistence/documentRepository.test.js), [src/modules/consumption/data/historyRepository.test.js](../../src/modules/consumption/data/historyRepository.test.js), [src/shared/persistence/documentValueAdapter.js](../../src/shared/persistence/documentValueAdapter.js), [src/shared/persistence/memoryDocumentAdapter.js](../../src/shared/persistence/memoryDocumentAdapter.js).
 
 ### src/shared/persistence/documentValueAdapter.js
 
@@ -5325,7 +5393,7 @@ Exporta: `accessManaged`, `accessUser`, `api`, `authorizeAction`, `setAccessSess
 
 Importa arquivos locais: [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
-Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/consumption/hooks/useLineFollowup.js](../../src/modules/consumption/hooks/useLineFollowup.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/SupportZohoPanel.jsx](../../src/modules/orders/components/SupportZohoPanel.jsx), [src/modules/orders/components/ZohoPresencePanel.jsx](../../src/modules/orders/components/ZohoPresencePanel.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/hooks/useGoogleOrders.js](../../src/modules/orders/hooks/useGoogleOrders.js), [src/modules/orders/hooks/useOrdersSession.js](../../src/modules/orders/hooks/useOrdersSession.js), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
+Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/consumption/hooks/useLineFollowup.js](../../src/modules/consumption/hooks/useLineFollowup.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/monitoring/data/remoteReminderRepository.js](../../src/modules/monitoring/data/remoteReminderRepository.js), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/SupportZohoPanel.jsx](../../src/modules/orders/components/SupportZohoPanel.jsx), [src/modules/orders/components/ZohoPresencePanel.jsx](../../src/modules/orders/components/ZohoPresencePanel.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/hooks/useGoogleOrders.js](../../src/modules/orders/hooks/useGoogleOrders.js), [src/modules/orders/hooks/useOrdersSession.js](../../src/modules/orders/hooks/useOrdersSession.js), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
 
 ### src/shared/security/permissions.js
 

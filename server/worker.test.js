@@ -54,6 +54,50 @@ const input = {
   version: 0,
 };
 
+test('agenda de negócio é autenticada e o piloto só libera o administrador principal', async () => {
+  const db = database();
+  try {
+    const e = env(db),
+      admin = createHandler(async () => owner);
+    await admin(request('PUT', input), e);
+    const path = '/api/business/status';
+    assert.equal(
+      (
+        await createHandler(async () => {
+          throw Error('invalid');
+        })(request('GET', null, path), e)
+      ).status,
+      401,
+    );
+    const other = await createHandler(async () => input.email)(request('GET', null, path), e);
+    assert.equal(other.status, 200);
+    assert.equal((await other.json()).permitted, false);
+    assert.equal(
+      (
+        await createHandler(async () => input.email)(
+          request('GET', null, '/api/monitoring/reminders'),
+          e,
+        )
+      ).status,
+      403,
+    );
+    assert.equal((await admin(request('GET', null, path), e)).status, 503);
+    const configured = await admin(request('GET', null, path), {
+      ...e,
+      BUSINESS_DB: { prepare() {} },
+    });
+    assert.equal(configured.status, 200);
+    assert.equal((await configured.json()).permitted, true);
+    await db.prepare('UPDATE app_users SET active = 0 WHERE email = ?').bind(input.email).run();
+    assert.equal(
+      (await createHandler(async () => input.email)(request('GET', null, path), e)).status,
+      403,
+    );
+  } finally {
+    db.close();
+  }
+});
+
 test('sessão do Assistente local exige proprietário ativo, POST e mesma origem', async () => {
   const db = database();
   try {

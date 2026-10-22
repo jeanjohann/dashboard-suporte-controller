@@ -9,7 +9,13 @@ import { reminderExportRows } from './monitoringReminders.js';
 import { monitoringTelemetry } from './monitoringTelemetry.js';
 
 /** Monta o recorte completo e o resumo das bases; a situação filtra somente as linhas detalhadas. */
-export function monitoringReport(result, filters, notes = {}, reminders = []) {
+export function monitoringReport(
+  result,
+  filters,
+  notes = {},
+  reminders = [],
+  reminderStorage = 'local',
+) {
   const analysis = monitoringAnalytics(result, notes);
   const telemetry = monitoringTelemetry(result);
   const vehicleKeys = new Set(result.rows.map((row) => row.key));
@@ -27,7 +33,9 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ],
       [
         'Persistência',
-        'Tratamento: memória da sessão. Lembretes e seu histórico: somente neste navegador/usuário, sem sincronização.',
+        reminderStorage === 'remote'
+          ? 'Tratamento: memória da sessão. Lembretes e seu histórico: banco do sistema, conforme acesso do piloto.'
+          : 'Tratamento: memória da sessão. Lembretes e seu histórico: somente neste navegador/usuário, sem sincronização.',
       ],
       [
         'Telemetria',

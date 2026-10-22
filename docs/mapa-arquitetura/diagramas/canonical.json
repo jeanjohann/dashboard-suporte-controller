@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "title": "Mapa técnico Addlog 0.57.0",
+  "title": "Mapa técnico Addlog 0.58.0",
   "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
   "diagrams": [
     {
@@ -507,7 +507,7 @@
       "title": "Mapa de armazenamento",
       "kind": "flowchart",
       "description": "Persistência local, sessão e banco compartilhado têm finalidades diferentes.",
-      "accessibility": "Não há sincronização automática dos históricos locais entre computadores. O banco de negócio ainda não está ligado.",
+      "accessibility": "Agenda do proprietário conectável ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.",
       "data": {
         "direction": "LR",
         "nodes": [
@@ -538,8 +538,8 @@
           },
           {
             "id": "futuredb",
-            "label": "Banco de negócio futuro · Contrato e adaptador preparados",
-            "class": "future"
+            "label": "D1 · BUSINESS_DB · Agenda do piloto · proprietário",
+            "class": "store"
           }
         ],
         "edges": [
@@ -559,6 +559,12 @@
             "from": "worker",
             "to": "d1",
             "label": "Cadastro de acesso",
+            "arrow": "-->"
+          },
+          {
+            "from": "worker",
+            "to": "futuredb",
+            "label": "Agenda autenticada",
             "arrow": "-->"
           }
         ]

@@ -63,6 +63,14 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'docs/BANCO-CLOUDFLARE.md':
+    'Ativação D1 de negócio, piloto do proprietário, migração dos lembretes, limites, backup/restauração e sequência das demais fontes.',
+  'server/businessReminders.js':
+    'API autenticada da agenda no banco de negócio: piloto do proprietário, revisão por veículo, histórico e migração local idempotente sem sobrescrita.',
+  'src/modules/monitoring/data/remoteReminderRepository.js':
+    'Seleciona a agenda remota conforme autorização, lê todas as páginas e migra a cópia local por escolha explícita, sem fallback em falhas.',
+  'scripts/backup-business-db.ps1':
+    'Exporta o banco de negócio em SQL para pasta ignorada pelo Git e gera hash SHA-256; não restaura nem altera produção.',
   'scripts/setup-kore.ps1':
     'Configura credenciais KORE como segredos do Worker por entrada oculta e stdin, sem gravar valores privados em arquivos.',
   'server/kore.js':
@@ -386,8 +394,10 @@ const folderRoles = {
     'Contratos de documentos versionados e adaptadores de referência; preparação de evolução.',
   'src/styles': 'CSS global e refinamentos; a ordem é definida em main.jsx.',
   server: 'API Cloudflare e adaptadores privados de integrações.',
-  'server/persistence': 'Adaptador D1 de negócio preparado e testes; não ligado ao Worker.',
-  'server/persistence/migrations': 'Esquema SQL futuro de documentos de negócio.',
+  'server/persistence':
+    'Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato.',
+  'server/persistence/migrations':
+    'Migrações exclusivas do banco de negócio, separadas das migrações de usuários.',
   migrations: 'Migrações do banco ativo de usuários.',
   scripts: 'Ferramentas de build/verificação e serviços do laboratório local.',
   docs: 'Guias, critérios e histórico das implementações.',

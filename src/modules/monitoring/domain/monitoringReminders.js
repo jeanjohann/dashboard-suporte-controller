@@ -154,7 +154,7 @@ export function reminderExportRows(records, demo = false) {
     ],
     ...records.flatMap((row) =>
       row.history.map((entry) => [
-        demo ? 'DEMONSTRAÇÃO — DADOS FICTÍCIOS' : 'Lembrete manual local',
+        demo ? 'DEMONSTRAÇÃO — DADOS FICTÍCIOS' : 'Lembrete manual',
         row.clientId,
         row.clientName,
         row.vehicleId,

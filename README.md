@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.54.1 — revisão visual da conferência API × Operacional, cabeçalhos alinhados e seletor compacto de [temas](docs/TEMAS-DO-SISTEMA.md). Inclui a fila do Monitoramento priorizada, períodos de 30/60/90 dias, exportação junto da grade e conferência API × Operacional da [0.53.0](docs/MONITORAMENTO-TRABALHO-E-CADASTROS.md). Agendamento e histórico remoto aguardam a definição do armazenamento.
+**Versão:** 0.58.0 — [banco de negócio D1 e agenda do piloto](docs/BANCO-CLOUDFLARE.md), separados do banco de acessos. Inclui consumo KORE em MB com vínculo operacional da 0.57.0. Demais fontes e coleta automática serão conectadas em etapas.
 
 ## Documentação do projeto
 

@@ -1,12 +1,16 @@
 /** Lê ao abrir/retornar à página. O relógio dos lembretes não usa a referência congelada da demonstração. */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAccess } from '../../../shared/security/Access.jsx';
-import { createReminderRepository, reminderScope } from '../data/reminderRepository.js';
+import { reminderScope } from '../data/reminderRepository.js';
+import { createConfiguredReminderRepository } from '../data/remoteReminderRepository.js';
 
 export function useMonitoringReminders(demo) {
   const { user, managed } = useAccess();
   const scope = reminderScope(user, managed, demo);
-  const repository = useMemo(() => createReminderRepository(scope), [scope]);
+  const repository = useMemo(
+    () => createConfiguredReminderRepository({ scope, managed, demo }),
+    [scope, managed, demo],
+  );
   const current = useRef(repository);
   current.current = repository;
   const [state, setState] = useState({ repository: null, records: [], loading: true, error: '' });
@@ -78,6 +82,19 @@ export function useMonitoringReminders(demo) {
       setSaving(false);
     }
   }
+  async function migrate() {
+    if (saving || state.loading) return;
+    setSaving(true);
+    try {
+      await repository.migrate();
+      await reload();
+    } catch (error) {
+      if (current.current === repository)
+        setState((previous) => ({ ...previous, error: error.message }));
+    } finally {
+      setSaving(false);
+    }
+  }
   return {
     records: available ? state.records : [],
     now,
@@ -86,5 +103,9 @@ export function useMonitoringReminders(demo) {
     saving,
     change,
     reload,
+    migrate,
+    mode: repository.mode,
+    migration: repository.migration,
+    migrationResults: repository.migrationResults,
   };
 }

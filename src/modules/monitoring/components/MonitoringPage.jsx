@@ -161,7 +161,7 @@ export function MonitoringPage({ onPage, operational }) {
     setExportBusy(true);
     setExportError('');
     try {
-      const tables = monitoringReport(queue, filters, notes, reminders.records);
+      const tables = monitoringReport(queue, filters, notes, reminders.records, reminders.mode);
       const content =
         format === 'xlsx'
           ? monitoringWorkbook(tables)
@@ -476,7 +476,7 @@ export function MonitoringPage({ onPage, operational }) {
                 <div hidden={category !== 'reports'}>
                   <Section
                     title="Relatório de acompanhamento"
-                    help="Exporta todos os veículos do recorte da fila, independentemente da paginação, incluindo busca, situação, status e recorte selecionados. Inclui referência, critérios, dados recebidos, indicadores analíticos das bases, histórico de tratamento e lembretes salvos dos veículos do recorte. Rascunhos não são exportados. Resumo por base e indicadores abrangem todas as situações das bases selecionadas. Tratamento permanece somente nesta sessão; lembretes ficam neste navegador, sem armazenamento compartilhado. O CSV do painel Lembretes inclui todo seu histórico local do modo atual, independentemente da fila."
+                    help={`Exporta todos os veículos do recorte da fila, independentemente da paginação, incluindo busca, situação, status e recorte selecionados. Inclui referência, critérios, dados recebidos, indicadores analíticos das bases, histórico de tratamento e lembretes salvos dos veículos do recorte. Rascunhos não são exportados. Resumo por base e indicadores abrangem todas as situações das bases selecionadas. Tratamento permanece somente nesta sessão; ${reminders.mode === 'remote' ? 'lembretes usam o banco do sistema conforme acesso do piloto' : 'lembretes ficam neste navegador, sem armazenamento compartilhado'}. O CSV do painel Lembretes inclui todo seu histórico confirmado, independentemente da fila.`}
                   >
                     <p>
                       {queue.rows.length} veículos · Referência{' '}

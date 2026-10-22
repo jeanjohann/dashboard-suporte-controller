@@ -155,4 +155,10 @@ test('CSV e XLSX incluem lembretes somente do recorte; CSV global conserva encer
   assert.equal(reminderExportRows([outside])[1][3], '000000017');
   const empty = monitoringReport({ ...result, rows: [] }, {}, {}, [done]);
   assert.equal(empty.reminders.length, 1);
+  const remote = monitoringReport({ ...result, demonstration: false }, {}, {}, [done], 'remote');
+  assert.match(remote.context.find((row) => row[0] === 'Persistência')[1], /banco do sistema/);
+  assert.doesNotMatch(
+    remote.context.find((row) => row[0] === 'Persistência')[1],
+    /somente neste navegador/,
+  );
 });

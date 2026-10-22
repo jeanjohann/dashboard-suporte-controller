@@ -1,5 +1,5 @@
--- Preparação para um banco de NEGÓCIO separado. Não integra migrations/ de USERS_DB.
--- Aplicação manual somente após definir acesso, retenção, limites e homologação.
+-- Banco de NEGÓCIO separado. Não integra migrations/ de USERS_DB.
+-- Aplicação por migração explícita; o Worker não cria tabelas em requisições.
 CREATE TABLE business_documents (
   workspace_id TEXT NOT NULL,
   resource TEXT NOT NULL,

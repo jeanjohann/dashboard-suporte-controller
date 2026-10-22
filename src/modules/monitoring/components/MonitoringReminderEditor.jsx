@@ -19,7 +19,11 @@ export function MonitoringReminderEditor({ vehicle, record, reminders }) {
     setOutcome('');
   }, [vehicle.key, record?.revision]);
   const active = record?.status === 'scheduled';
-  const disabled = reminders.loading || Boolean(reminders.error) || reminders.saving;
+  const disabled =
+    reminders.loading ||
+    Boolean(reminders.error) ||
+    reminders.saving ||
+    Boolean(reminders.migration);
   async function save(action) {
     setMessage('');
     try {
@@ -29,7 +33,9 @@ export function MonitoringReminderEditor({ vehicle, record, reminders }) {
           ? 'Conferência registrada. A situação técnica do veículo permanece independente.'
           : action === 'cancel'
             ? 'Lembrete cancelado. Histórico preservado.'
-            : 'Lembrete salvo neste navegador.',
+            : reminders.mode === 'remote'
+              ? 'Lembrete salvo no banco do sistema.'
+              : 'Lembrete salvo neste navegador.',
       );
     } catch (error) {
       setMessage(error.message);

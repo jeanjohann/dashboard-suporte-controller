@@ -202,13 +202,7 @@ export const diagrams = [
       node('indexed', 'IndexedDB local\nConsumo, notas e lembretes', 840, 140, 'store'),
       node('worker', 'Cloudflare Worker\nIdentidade e integrações', 40, 370, 'cloud'),
       node('d1', 'D1 ativo · USERS_DB\nUsuários e permissões', 440, 370, 'store'),
-      node(
-        'futuredb',
-        'Banco de negócio futuro\nContrato e adaptador preparados',
-        840,
-        370,
-        'future',
-      ),
+      node('futuredb', 'D1 · BUSINESS_DB\nAgenda do piloto · proprietário', 840, 370, 'store'),
     ],
     edges: [
       edge('session', 'preferences', 'Salvar configuração'),
@@ -219,8 +213,14 @@ export const diagrams = [
         [980, 240],
       ]),
       edge('worker', 'd1', 'Cadastro de acesso'),
+      edge('worker', 'futuredb', 'Agenda autenticada', [
+        [180, 470],
+        [180, 545],
+        [980, 545],
+        [980, 470],
+      ]),
     ],
-    note: 'Não há sincronização automática dos históricos locais entre computadores. O banco de negócio ainda não está ligado.',
+    note: 'Agenda do proprietário conectável ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.',
   },
   {
     id: '06-assistente',

@@ -8,6 +8,7 @@ import { monitoringResponse } from './monitoring.js';
 import { googleOrdersResponse } from './googleOrders.js';
 import { zohoResponse } from './zoho.js';
 import { koreResponse } from './kore.js';
+import { businessRemindersResponse } from './businessReminders.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
   normalizeEmail,
@@ -98,6 +99,15 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
+      if (
+        [
+          '/api/business/status',
+          '/api/monitoring/reminders',
+          '/api/monitoring/reminders/import',
+        ].includes(url.pathname)
+      ) {
+        return businessRemindersResponse(request, env, user, owner);
+      }
       if (['/api/zoho/status', '/api/zoho/snapshot', '/api/zoho/activity'].includes(url.pathname)) {
         if (user.role !== 'admin' || email !== owner)
           return reply(

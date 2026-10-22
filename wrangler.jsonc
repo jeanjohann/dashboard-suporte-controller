@@ -17,8 +17,15 @@
     "GOOGLE_ORDERS_SHEET": "OS 2025_26",
     "GOOGLE_OPERATIONAL_SPREADSHEET_ID": "1cHu3p6KaXTc0MIet_U--TWxsDtdJWhpuTBSYJPVLRew",
     "ZOHO_ORG_ID": "57912045",
+    "BUSINESS_REMINDERS_ACCESS": "owner",
   },
   "d1_databases": [
+    {
+      "binding": "BUSINESS_DB",
+      "database_name": "dashboard-suporte-negocio",
+      "database_id": "b3609719-196a-40a7-95b9-5e3a769c9610",
+      "migrations_dir": "server/persistence/migrations",
+    },
     {
       "binding": "USERS_DB",
       "database_name": "dashboard-suporte-acessos",
@@ -27,11 +34,21 @@
     },
   ],
   "ratelimits": [
-    { "name": "KORE_API_LIMITER", "namespace_id": "1003", "simple": { "limit": 1, "period": 60 } },
+    {
+      "name": "KORE_API_LIMITER",
+      "namespace_id": "1003",
+      "simple": {
+        "limit": 1,
+        "period": 60,
+      },
+    },
     {
       "name": "MONITORING_DIAGNOSTIC_LIMITER",
       "namespace_id": "1002",
-      "simple": { "limit": 1, "period": 60 },
+      "simple": {
+        "limit": 1,
+        "period": 60,
+      },
     },
   ],
 }
