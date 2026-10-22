@@ -220,7 +220,7 @@ export const diagrams = [
         [980, 470],
       ]),
     ],
-    note: 'Agenda do proprietário conectável ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.',
+    note: 'Agenda do proprietário integrada ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.',
   },
   {
     id: '06-assistente',

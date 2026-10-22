@@ -507,7 +507,7 @@
       "title": "Mapa de armazenamento",
       "kind": "flowchart",
       "description": "Persistência local, sessão e banco compartilhado têm finalidades diferentes.",
-      "accessibility": "Agenda do proprietário conectável ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.",
+      "accessibility": "Agenda do proprietário integrada ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.",
       "data": {
         "direction": "LR",
         "nodes": [
