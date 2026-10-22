@@ -4,7 +4,7 @@ import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { KorePilotPanel } from './KorePilotPanel.jsx';
 
-export function CarrierPage({ carrier, active, onPage }) {
+export function CarrierPage({ carrier, active, onPage, operational }) {
   const name = carrier === 'kore' ? 'KORE' : 'Arqia';
   return (
     <SidePanelProvider>
@@ -19,7 +19,7 @@ export function CarrierPage({ carrier, active, onPage }) {
             </div>
           </header>
           {carrier === 'kore' ? (
-            <KorePilotPanel visible={active} />
+            <KorePilotPanel visible={active} operational={operational} />
           ) : (
             <section className="panel" style={{ padding: 24 }}>
               <h2>Integração Arqia</h2>

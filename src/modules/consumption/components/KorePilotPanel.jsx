@@ -1,5 +1,5 @@
 /** Consulta manual KORE restrita a administradores; uma página isolada, sem gravar ou combinar dados com CSV. */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
@@ -7,13 +7,13 @@ import { PermissionButton, useAccess } from '../../../shared/security/Access.jsx
 import { download, csv } from '../../../shared/export/exports.js';
 import { korePageSummary } from '../data/koreContract.js';
 import { appendKoreBatch } from '../data/koreCollection.js';
+import { linkConsumption } from '../domain/lineConsumption.js';
+import { koreMegabytes, formatKoreMegabytes } from '../domain/koreDisplay.js';
 
 const show = (value) => (value == null || value === '' ? 'Não informado' : value);
-const bytes = (value) =>
-  value == null ? 'Não informado' : value.toLocaleString('pt-BR') + ' bytes';
 const yes = (value) => (value == null ? 'Não informado' : value ? 'Sim' : 'Não');
 
-export function KorePilotPanel({ visible }) {
+export function KorePilotPanel({ visible, operational }) {
   const { user } = useAccess();
   const allowed = user?.role === 'admin';
   const [status, setStatus] = useState(null),
@@ -136,6 +136,10 @@ export function KorePilotPanel({ visible }) {
     }
   }
   const summary = page ? korePageSummary(page) : null;
+  const linkedRows = useMemo(
+    () => linkConsumption(page?.rows ?? [], operational),
+    [page, operational],
+  );
   function exportPage() {
     const header = [
       'Fonte',
@@ -153,6 +157,11 @@ export function KorePilotPanel({ visible }) {
       'Conexão informada',
       'Último acesso (BRT; UTC-03:00)',
       'Consumo informado (bytes)',
+      'Consumo informado (MB; 1 MB = 1000000 bytes)',
+      'Cliente no Operacional',
+      'Serial no Operacional',
+      'Modelo por serial',
+      'Conferência do vínculo',
       'Dados aprovisionados',
       'Dados bloqueados',
       'Bloqueio funcional',
@@ -161,7 +170,7 @@ export function KorePilotPanel({ visible }) {
       'APN',
       'Tecnologia',
     ];
-    const rows = page.rows.map((row) => [
+    const rows = linkedRows.map((row) => [
       'KORE/Saitro',
       page.readAt,
       page.page,
@@ -177,6 +186,11 @@ export function KorePilotPanel({ visible }) {
       row.connection ?? '',
       row.lastAccess ?? '',
       row.bytes ?? '',
+      koreMegabytes(row.bytes) ?? '',
+      row.client,
+      row.serial,
+      row.model,
+      row.linkState,
       yes(row.dataProvisioned),
       yes(row.dataBlocked),
       yes(row.functionalBlock),
@@ -221,9 +235,17 @@ export function KorePilotPanel({ visible }) {
       ) : (
         <>
           <p className="notice">
-            Consumo em bytes e horários em BRT (UTC-03:00). Sessões abertas podem levar de 5 minutos
-            a 1 hora para atualizar, conforme a operadora. O período do acumulado ainda precisa de
-            confirmação; estes valores permanecem separados dos indicadores dos CSVs.
+            Consumo em MB (1 MB = 1.000.000 bytes) e horários em BRT (UTC-03:00). Sessões abertas
+            podem levar de 5 minutos a 1 hora para atualizar, conforme a operadora. O período do
+            acumulado ainda precisa de confirmação; estes valores permanecem separados dos
+            indicadores dos CSVs.
+          </p>
+          <p className="scope">
+            {operational?.data?.rows || operational?.rows
+              ? `Referência: ${operational.filename || 'Operacional carregado na sessão'}.`
+              : 'Carregue o Operacional para conferir clientes e equipamentos.'}{' '}
+            O vínculo exige ICCID e número correspondendo ao mesmo cadastro único. Cadastro atual
+            não comprova titularidade histórica.
           </p>
           <div className="integration-preview-controls" data-no-print>
             <button
@@ -327,9 +349,13 @@ export function KorePilotPanel({ visible }) {
                     page.complete
                       ? 'Total informado nas linhas coletadas'
                       : 'Subtotal da coleta parcial',
-                    bytes(summary.bytes),
+                    formatKoreMegabytes(summary.bytes),
                   ],
                   ['Linhas com bytes informados', `${summary.known} de ${summary.rows}`],
+                  [
+                    'Vínculos confirmados no Operacional',
+                    `${linkedRows.filter((row) => row.link).length} de ${summary.rows}`,
+                  ],
                 ]}
                 note="Acumulado de período não confirmado; não equivale a consumo diário ou mensal. Ausência não é zero."
               />
@@ -340,10 +366,14 @@ export function KorePilotPanel({ visible }) {
                       {[
                         'ICCID',
                         'MSISDN',
+                        'Cliente · Operacional',
+                        'Serial',
+                        'Modelo por serial',
+                        'Conferência do vínculo',
                         'Operadora',
                         'Situação',
                         'Conexão informada',
-                        'Consumo informado · bytes',
+                        'Consumo informado · MB',
                         'Último acesso · BRT',
                         'Dados bloqueados',
                         'Suspensa',
@@ -354,14 +384,18 @@ export function KorePilotPanel({ visible }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {page.rows.slice((viewPage - 1) * 20, viewPage * 20).map((row) => (
+                    {linkedRows.slice((viewPage - 1) * 20, viewPage * 20).map((row) => (
                       <tr key={row.id}>
                         <td>{show(row.iccid)}</td>
                         <td>{show(row.number)}</td>
+                        <td>{row.client}</td>
+                        <td>{row.serial}</td>
+                        <td>{row.model}</td>
+                        <td>{row.linkState}</td>
                         <td>{show(row.operator)}</td>
                         <td>{show(row.status)}</td>
                         <td>{show(row.connection)}</td>
-                        <td data-sort={row.bytes}>{bytes(row.bytes)}</td>
+                        <td data-sort={row.bytes}>{formatKoreMegabytes(row.bytes)}</td>
                         <td>{show(row.lastAccess)}</td>
                         <td>{yes(row.dataBlocked)}</td>
                         <td>{yes(row.suspended)}</td>

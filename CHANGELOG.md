@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.57.0 — 22/10/2026
+
+- Exibe consumo KORE em MB decimais (1 MB = 1.000.000 bytes), preservando os bytes originais e incluindo ambas as unidades no CSV.
+- Vincula a coleta ao Operacional carregado na sessão com as regras existentes: cliente, serial e modelo por serial somente quando ICCID e número conferem no mesmo cadastro único. Ausências, ambiguidades e divergências permanecem visíveis para revisão.
+- Exportação inclui estado do vínculo e referências do cadastro, sem modificar a fonte ou os indicadores CSV. Consulta completa segue paginada: não há opção documentada de retorno integral em uma chamada.
+
 ## 0.56.0 — 22/10/2026
 
 - Coleta KORE acumula lotes de até oito páginas por token, com continuação a cada dez minutos enquanto a página estiver aberta. Progresso, pausa, retomada e reinício preservam a distinção entre coleta parcial e completa.

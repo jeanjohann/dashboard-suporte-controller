@@ -1,9 +1,9 @@
 {
-  "version": "0.56.0",
-  "base": "12ceef5 · cópia da entrega",
+  "version": "0.57.0",
+  "base": "6561b4c · cópia da entrega",
   "date": "2026-10-22",
-  "total": 453,
-  "tests": 91,
+  "total": 455,
+  "tests": 92,
   "folders": [
     {
       "path": "(raiz)",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 331
+      "count": 333
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 241
+      "count": 243
     },
     {
       "path": "src/modules/assistant",
@@ -108,7 +108,7 @@
     {
       "path": "src/modules/consumption",
       "description": "Módulo Consumo M2M: interface, regras e integração de seus dados.",
-      "count": 46
+      "count": 48
     },
     {
       "path": "src/modules/consumption/components",
@@ -128,7 +128,7 @@
     {
       "path": "src/modules/consumption/domain",
       "description": "Validação e cálculo das regras de negócio de Consumo M2M.",
-      "count": 19
+      "count": 21
     },
     {
       "path": "src/modules/consumption/hooks",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 92267,
-      "sha256": "394887e61c47bf0e31dadfa411f9cab2937a7367443eda074f92c4e0187169ee",
+      "bytes": 92898,
+      "sha256": "e9001b3533011a078eccb2bfac5fc8e5912874add5bf0db55f660bfef57b853c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -707,8 +707,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 6826,
-      "sha256": "2cc7c10d22f3ca3a2ffe82277d235e3b5d85208bfc75f14f0ab6d8f817233e14",
+      "bytes": 8202,
+      "sha256": "20b86d91f6de7eb66d8926374ff5e217de5ea2c124ee20fab77d0c059c76941c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1198,7 +1198,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 106621,
-      "sha256": "b8abda5e26097a0f556951eedd2a9c8ae1e5a544ea7ff044d1f60b2cef9005c7",
+      "sha256": "d008902e8fd08907d1d7dbc72b11d4defea0612c3f7b96bd36fe2d0a5903dcb0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1212,7 +1212,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "1a2fe7c0ae405826e175f0ddd625328360f97403db29d931d7c924bb6ae871ef",
+      "sha256": "df512313aa5c05c0fce712eb317f4411cbd06863e61015d36292769408db567b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2496,8 +2496,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 9480,
-      "sha256": "9ede96076f3b6c8d9c104017b4c520d0d5913cd20993949ee6fccbd3d7ec0cd2",
+      "bytes": 9564,
+      "sha256": "6dd5eecb331016c5121f47293f3bc0a968ac6c08615bc2cc1754ee480e183f3f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3307,8 +3307,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 1478,
-      "sha256": "0076183c66ec943f2acd7a2354b67d250cce64f09201616af0b09de3ab50f916",
+      "bytes": 1517,
+      "sha256": "bb7aaa9c8887114fe513380226d34694703080050ba23b794acab9922a54d5cd",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3584,6 +3584,8 @@
         "src/components/SortableTable.jsx",
         "src/modules/consumption/data/koreCollection.js",
         "src/modules/consumption/data/koreContract.js",
+        "src/modules/consumption/domain/koreDisplay.js",
+        "src/modules/consumption/domain/lineConsumption.js",
         "src/shared/export/exports.js",
         "src/shared/security/Access.jsx"
       ],
@@ -3593,8 +3595,8 @@
       "importedBy": [
         "src/modules/consumption/components/CarrierPage.jsx"
       ],
-      "bytes": 15203,
-      "sha256": "6a48ccdcfddbf63c25b340a22b071729fd230b1fbda228b8798bc6f40b9e822e",
+      "bytes": 16727,
+      "sha256": "3a555c1813cc95d96ca6c7410490d1489f9e5f92ef3fd0f46e17a0c8c5efb792",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4216,6 +4218,46 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/modules/consumption/domain/koreDisplay.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Domínio",
+      "description": "MB decimal; bytes originais permanecem inteiros no contrato e na exportação.",
+      "exports": [
+        "formatKoreMegabytes",
+        "koreMegabytes"
+      ],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "src/modules/consumption/components/KorePilotPanel.jsx",
+        "src/modules/consumption/domain/koreDisplay.test.js"
+      ],
+      "bytes": 427,
+      "sha256": "b2c47d19cf1bfa64aff72200ee2254faaabdff4afc182d1c0e62fdc2da0952e6",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/domain/koreDisplay.test.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Teste",
+      "description": "Verifica kore Display no contexto de Consumo M2M. Exemplos: MB decimal preserva zero, bytes pequenos e ausência sem conversão binária; linhas da API usam cadastro único conferido e não atribuem cliente por coincidência parcial.",
+      "exports": [],
+      "imports": [
+        "src/modules/consumption/domain/koreDisplay.js",
+        "src/modules/consumption/domain/lineConsumption.js"
+      ],
+      "external": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "importedBy": [],
+      "bytes": 1691,
+      "sha256": "22b199ef8352b0ceea17d88fe0c359f2e3324ff2ab98a60d1e8ddbf520fe35b8",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/modules/consumption/domain/lineConsumption.js",
       "folder": "src/modules/consumption/domain",
       "module": "Consumo M2M",
@@ -4255,6 +4297,7 @@
         "src/modules/consumption/components/ConsumptionImportPreview.jsx",
         "src/modules/consumption/components/ConsumptionOverviewPanels.jsx",
         "src/modules/consumption/components/ConsumptionSourcesPanel.jsx",
+        "src/modules/consumption/components/KorePilotPanel.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/consumption/components/LineRecordsTable.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
@@ -4270,6 +4313,7 @@
         "src/modules/consumption/domain/consumptionSelection.js",
         "src/modules/consumption/domain/consumptionSelection.test.js",
         "src/modules/consumption/domain/csvParsing.test.js",
+        "src/modules/consumption/domain/koreDisplay.test.js",
         "src/modules/consumption/domain/lineConsumption.test.js",
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/consumption/hooks/useLineFollowup.js",

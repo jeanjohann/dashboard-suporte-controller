@@ -230,7 +230,12 @@ function WorkspaceContent() {
           page={carrier}
           onPage={navigate}
         >
-          <CarrierPage carrier={carrier} active={current === carrier} onPage={navigate} />
+          <CarrierPage
+            carrier={carrier}
+            active={current === carrier}
+            onPage={navigate}
+            operational={operational}
+          />
         </DeferredPage>
       ))}
       <DeferredPage

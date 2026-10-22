@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.56.0 · referência 12ceef5 · cópia da entrega · 2026-10-22 · **453 arquivos / 91 arquivos de teste / 67 pastas**.
+Addlog 0.57.0 · referência 6561b4c · cópia da entrega · 2026-10-22 · **455 arquivos / 92 arquivos de teste / 67 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -22,19 +22,19 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **server** — API Cloudflare e adaptadores privados de integrações. (24 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio preparado e testes; não ligado ao Worker. (3 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Esquema SQL futuro de documentos de negócio. (1 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (331 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (333 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
-- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (241 arquivos, incluindo subpastas).
+- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (243 arquivos, incluindo subpastas).
 - **src/modules/assistant** — Módulo Assistente: interface, regras e integração de seus dados. (6 arquivos, incluindo subpastas).
 - **src/modules/assistant/components** — Página e painéis visuais de Assistente. (2 arquivos, incluindo subpastas).
 - **src/modules/assistant/data** — Leitura, contratos e transporte de dados de Assistente. (2 arquivos, incluindo subpastas).
 - **src/modules/assistant/domain** — Validação e cálculo das regras de negócio de Assistente. (2 arquivos, incluindo subpastas).
-- **src/modules/consumption** — Módulo Consumo M2M: interface, regras e integração de seus dados. (46 arquivos, incluindo subpastas).
+- **src/modules/consumption** — Módulo Consumo M2M: interface, regras e integração de seus dados. (48 arquivos, incluindo subpastas).
 - **src/modules/consumption/components** — Página e painéis visuais de Consumo M2M. (15 arquivos, incluindo subpastas).
 - **src/modules/consumption/config** — Categorias e catálogos de apresentação de Consumo M2M. (2 arquivos, incluindo subpastas).
 - **src/modules/consumption/data** — Leitura, contratos e transporte de dados de Consumo M2M. (6 arquivos, incluindo subpastas).
-- **src/modules/consumption/domain** — Validação e cálculo das regras de negócio de Consumo M2M. (19 arquivos, incluindo subpastas).
+- **src/modules/consumption/domain** — Validação e cálculo das regras de negócio de Consumo M2M. (21 arquivos, incluindo subpastas).
 - **src/modules/consumption/hooks** — Estado, efeitos e coordenação da sessão de Consumo M2M. (3 arquivos, incluindo subpastas).
 - **src/modules/consumption/utils** — Formatação e utilitários de Consumo M2M. (1 arquivos, incluindo subpastas).
 - **src/modules/imports** — Módulo Importação: interface, regras e integração de seus dados. (3 arquivos, incluindo subpastas).
@@ -1941,7 +1941,7 @@ Dependências externas: `react`.
 
 Exporta: `KorePilotPanel`.
 
-Importa arquivos locais: [src/components/ReportSummary.jsx](../../src/components/ReportSummary.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/modules/consumption/data/koreCollection.js](../../src/modules/consumption/data/koreCollection.js), [src/modules/consumption/data/koreContract.js](../../src/modules/consumption/data/koreContract.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
+Importa arquivos locais: [src/components/ReportSummary.jsx](../../src/components/ReportSummary.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/modules/consumption/data/koreCollection.js](../../src/modules/consumption/data/koreCollection.js), [src/modules/consumption/data/koreContract.js](../../src/modules/consumption/data/koreContract.js), [src/modules/consumption/domain/koreDisplay.js](../../src/modules/consumption/domain/koreDisplay.js), [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
 
 Importado por: [src/modules/consumption/components/CarrierPage.jsx](../../src/modules/consumption/components/CarrierPage.jsx).
 
@@ -2265,6 +2265,30 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 Dependências externas: `node:assert/strict`, `node:test`.
 
+### src/modules/consumption/domain/koreDisplay.js
+
+**Consumo M2M · Domínio** — MB decimal; bytes originais permanecem inteiros no contrato e na exportação.
+
+[Abrir fonte](../../src/modules/consumption/domain/koreDisplay.js) · Código ou documentação do ponto de referência
+
+Exporta: `formatKoreMegabytes`, `koreMegabytes`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/modules/consumption/components/KorePilotPanel.jsx](../../src/modules/consumption/components/KorePilotPanel.jsx), [src/modules/consumption/domain/koreDisplay.test.js](../../src/modules/consumption/domain/koreDisplay.test.js).
+
+### src/modules/consumption/domain/koreDisplay.test.js
+
+**Consumo M2M · Teste** — Verifica kore Display no contexto de Consumo M2M. Exemplos: MB decimal preserva zero, bytes pequenos e ausência sem conversão binária; linhas da API usam cadastro único conferido e não atribuem cliente por coincidência parcial.
+
+[Abrir fonte](../../src/modules/consumption/domain/koreDisplay.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [src/modules/consumption/domain/koreDisplay.js](../../src/modules/consumption/domain/koreDisplay.js), [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
 ### src/modules/consumption/domain/lineConsumption.js
 
 **Consumo M2M · Domínio** — Normaliza extratos em unidades inteiras, preserva ICCID, gerencia versões/apurações e vincula referência e histórico por chip.
@@ -2275,7 +2299,7 @@ Exporta: `VOLUME_SCALE`, `attachBaselines`, `baselineByPeriod`, `chipKey`, `cons
 
 Importa arquivos locais: [src/modules/consumption/domain/consumption.js](../../src/modules/consumption/domain/consumption.js), [src/modules/operational/domain/operational.js](../../src/modules/operational/domain/operational.js), [src/modules/orders/domain/trackerModels.js](../../src/modules/orders/domain/trackerModels.js).
 
-Importado por: [src/modules/consumption/components/ConsumptionArchivePanel.jsx](../../src/modules/consumption/components/ConsumptionArchivePanel.jsx), [src/modules/consumption/components/ConsumptionEquipmentPanels.jsx](../../src/modules/consumption/components/ConsumptionEquipmentPanels.jsx), [src/modules/consumption/components/ConsumptionFiltersPanel.jsx](../../src/modules/consumption/components/ConsumptionFiltersPanel.jsx), [src/modules/consumption/components/ConsumptionImportPreview.jsx](../../src/modules/consumption/components/ConsumptionImportPreview.jsx), [src/modules/consumption/components/ConsumptionOverviewPanels.jsx](../../src/modules/consumption/components/ConsumptionOverviewPanels.jsx), [src/modules/consumption/components/ConsumptionSourcesPanel.jsx](../../src/modules/consumption/components/ConsumptionSourcesPanel.jsx), [src/modules/consumption/components/LineHistoryPanel.jsx](../../src/modules/consumption/components/LineHistoryPanel.jsx), [src/modules/consumption/components/LineRecordsTable.jsx](../../src/modules/consumption/components/LineRecordsTable.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/consumption/data/consumptionHistory.js](../../src/modules/consumption/data/consumptionHistory.js), [src/modules/consumption/domain/consumptionAttention.js](../../src/modules/consumption/domain/consumptionAttention.js), [src/modules/consumption/domain/consumptionAttention.test.js](../../src/modules/consumption/domain/consumptionAttention.test.js), [src/modules/consumption/domain/consumptionFilters.js](../../src/modules/consumption/domain/consumptionFilters.js), [src/modules/consumption/domain/consumptionFilters.test.js](../../src/modules/consumption/domain/consumptionFilters.test.js), [src/modules/consumption/domain/consumptionFollowup.js](../../src/modules/consumption/domain/consumptionFollowup.js), [src/modules/consumption/domain/consumptionFollowup.test.js](../../src/modules/consumption/domain/consumptionFollowup.test.js), [src/modules/consumption/domain/consumptionRecordsReport.js](../../src/modules/consumption/domain/consumptionRecordsReport.js), [src/modules/consumption/domain/consumptionRecordsReport.test.js](../../src/modules/consumption/domain/consumptionRecordsReport.test.js), [src/modules/consumption/domain/consumptionSelection.js](../../src/modules/consumption/domain/consumptionSelection.js), [src/modules/consumption/domain/consumptionSelection.test.js](../../src/modules/consumption/domain/consumptionSelection.test.js), [src/modules/consumption/domain/csvParsing.test.js](../../src/modules/consumption/domain/csvParsing.test.js), [src/modules/consumption/domain/lineConsumption.test.js](../../src/modules/consumption/domain/lineConsumption.test.js), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/consumption/hooks/useLineFollowup.js](../../src/modules/consumption/hooks/useLineFollowup.js), [src/modules/consumption/utils/consumptionFormatting.js](../../src/modules/consumption/utils/consumptionFormatting.js), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/operational/domain/operational.test.js](../../src/modules/operational/domain/operational.test.js).
+Importado por: [src/modules/consumption/components/ConsumptionArchivePanel.jsx](../../src/modules/consumption/components/ConsumptionArchivePanel.jsx), [src/modules/consumption/components/ConsumptionEquipmentPanels.jsx](../../src/modules/consumption/components/ConsumptionEquipmentPanels.jsx), [src/modules/consumption/components/ConsumptionFiltersPanel.jsx](../../src/modules/consumption/components/ConsumptionFiltersPanel.jsx), [src/modules/consumption/components/ConsumptionImportPreview.jsx](../../src/modules/consumption/components/ConsumptionImportPreview.jsx), [src/modules/consumption/components/ConsumptionOverviewPanels.jsx](../../src/modules/consumption/components/ConsumptionOverviewPanels.jsx), [src/modules/consumption/components/ConsumptionSourcesPanel.jsx](../../src/modules/consumption/components/ConsumptionSourcesPanel.jsx), [src/modules/consumption/components/KorePilotPanel.jsx](../../src/modules/consumption/components/KorePilotPanel.jsx), [src/modules/consumption/components/LineHistoryPanel.jsx](../../src/modules/consumption/components/LineHistoryPanel.jsx), [src/modules/consumption/components/LineRecordsTable.jsx](../../src/modules/consumption/components/LineRecordsTable.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/consumption/data/consumptionHistory.js](../../src/modules/consumption/data/consumptionHistory.js), [src/modules/consumption/domain/consumptionAttention.js](../../src/modules/consumption/domain/consumptionAttention.js), [src/modules/consumption/domain/consumptionAttention.test.js](../../src/modules/consumption/domain/consumptionAttention.test.js), [src/modules/consumption/domain/consumptionFilters.js](../../src/modules/consumption/domain/consumptionFilters.js), [src/modules/consumption/domain/consumptionFilters.test.js](../../src/modules/consumption/domain/consumptionFilters.test.js), [src/modules/consumption/domain/consumptionFollowup.js](../../src/modules/consumption/domain/consumptionFollowup.js), [src/modules/consumption/domain/consumptionFollowup.test.js](../../src/modules/consumption/domain/consumptionFollowup.test.js), [src/modules/consumption/domain/consumptionRecordsReport.js](../../src/modules/consumption/domain/consumptionRecordsReport.js), [src/modules/consumption/domain/consumptionRecordsReport.test.js](../../src/modules/consumption/domain/consumptionRecordsReport.test.js), [src/modules/consumption/domain/consumptionSelection.js](../../src/modules/consumption/domain/consumptionSelection.js), [src/modules/consumption/domain/consumptionSelection.test.js](../../src/modules/consumption/domain/consumptionSelection.test.js), [src/modules/consumption/domain/csvParsing.test.js](../../src/modules/consumption/domain/csvParsing.test.js), [src/modules/consumption/domain/koreDisplay.test.js](../../src/modules/consumption/domain/koreDisplay.test.js), [src/modules/consumption/domain/lineConsumption.test.js](../../src/modules/consumption/domain/lineConsumption.test.js), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/consumption/hooks/useLineFollowup.js](../../src/modules/consumption/hooks/useLineFollowup.js), [src/modules/consumption/utils/consumptionFormatting.js](../../src/modules/consumption/utils/consumptionFormatting.js), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/operational/domain/operational.test.js](../../src/modules/operational/domain/operational.test.js).
 
 ### src/modules/consumption/domain/lineConsumption.test.js
 

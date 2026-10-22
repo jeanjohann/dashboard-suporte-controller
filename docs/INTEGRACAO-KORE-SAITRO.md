@@ -1,5 +1,13 @@
 # KORE/Saitro — piloto de consulta manual
 
+## Atualização 0.57.0 — MB e referência operacional
+
+Tabela e resumo exibem MB decimais: **1 MB = 1.000.000 bytes**. O contrato continua preservando bytes inteiros; o CSV inclui bytes e MB para conferência. Valores ausentes não viram zero, e a apresentação mantém precisão até um byte. Essa unidade não altera conversões já utilizadas pelos extratos CSV, cuja equivalência permanece sujeita à homologação do período e da apuração.
+
+O painel recebe o Operacional da sessão e reaproveita `linkConsumption`: ICCID e número devem apontar para o mesmo registro único, com identificadores válidos. Cliente, serial e modelo por serial aparecem somente nesse vínculo conferido. Correspondências parciais, ambíguas e divergentes ficam sinalizadas sem atribuir cliente. Mudar o Operacional recalcula a conferência sem repetir chamadas à KORE. Não se modifica o cadastro, nem se infere titularidade histórica a partir da referência atual.
+
+A documentação recebida expõe paginação por `pagina`, sem parâmetro documentado para retornar todas as linhas ou aumentar o tamanho da página. A implementação mantém lotes; o fato de a resposta real trazer vinte linhas, enquanto o texto cita dez, não autoriza supor consulta sem limite. Para acelerar, confirmar com a KORE exportação integral, tamanho máximo de página e limite efetivo por token.
+
 ## Atualização 0.56.0 — coleta de todas as páginas
 
 A ação em **Consumo → KORE** inicia a coleta em lotes. `GET /api/consumption/kore/batch?pagina=N` usa um token para até oito páginas consecutivas e encerra somente esse token ao final. São no máximo dez chamadas por lote incluindo concessão e encerramento; usa-se o limite conservador diante das divergências documentais. A rota antiga `/page` permanece compatível.
