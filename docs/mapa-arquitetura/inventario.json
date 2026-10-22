@@ -1,6 +1,6 @@
 {
   "version": "0.55.1",
-  "base": "a5c781c · cópia da entrega",
+  "base": "1b5ad0f · cópia da entrega",
   "date": "2026-10-22",
   "total": 451,
   "tests": 90,
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 91304,
-      "sha256": "8ef2a520cec5446a48786f5288aa2ae78ed5303b546bcb401e256c9182f9c743",
+      "bytes": 91624,
+      "sha256": "f9f9a9b28554f1b69fa51466575c9c841f9819ae1fae6c0a5aaba12ef0f32955",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -707,8 +707,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 4750,
-      "sha256": "dd338185190472935595697b2c8ae82046afa258a9cf6905f2fecbb0a3b2a932",
+      "bytes": 4979,
+      "sha256": "55d8d9a87b8dac100445fdef40da65e1a74930ff483346757786b4891910e011",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1980,8 +1980,8 @@
         "server/kore.test.js",
         "server/worker.js"
       ],
-      "bytes": 8560,
-      "sha256": "22c0d6d75fd52d428588ed8e18ebeb1f693ef1208824b8b3b83a66e94a6a3663",
+      "bytes": 8585,
+      "sha256": "c5231e94a64df24a1c3008781f9254099d2322d89a5bc7e37db40f8f7e650d66",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2000,8 +2000,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 8076,
-      "sha256": "7d78f429b3d3a87fe0edf05dcdd41c01ea560b1ff4101b3b5395603dad27b4fc",
+      "bytes": 8148,
+      "sha256": "3cf0116e724bcf4e7f5fbd368a3c3c43dbc6ee0b3a316103a1e546eb616c2309",
       "status": "Código ou documentação do ponto de referência"
     },
     {

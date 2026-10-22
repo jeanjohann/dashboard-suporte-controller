@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.55.1 — 22/10/2026
+
+- Reconhece a confirmação real de encerramento KORE `status: true`, além do formato documentado `"OK"`. Preserva páginas válidas com aviso separado se esse encerramento falhar.
+- Ajusta a espera da interface para 10 minutos entre leituras, conforme exigência real do serviço de tokens.
+
 ## 0.55.0 — 22/10/2026
 
 - Adiciona páginas KORE e Arqia ao menu principal, herdando a permissão de Consumo M2M. O piloto KORE/Saitro permite consulta manual por administradores: linhas paginadas, consumo em bytes, situação, conexão, bloqueios e último acesso BRT. Exporta somente a página exibida. Arqia aguarda documentação e acesso.

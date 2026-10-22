@@ -39,3 +39,5 @@ Segredos `KORE_API_USERNAME` e `KORE_API_PASSWORD`, configuráveis por `scripts/
 Referência: [documentação privada KORE/Saitro](https://kore.saitro.com/api/docs/), consultada com acesso autorizado, e esclarecimentos do atendimento encaminhados pelo proprietário em 22/10/2026.
 
 Desde 0.55.1, uma leitura validada permanece disponível mesmo quando falha o encerramento posterior do token. O campo cleanupConfirmed informa essa confirmação e a interface mostra a pendência separadamente.
+
+Teste real de 22/10/2026 confirmou HTTP 200 no encerramento, com status booleano true (diferente do OK documentado). A versão 0.55.1 reconhece ambos os formatos explícitos; falso, ausência e erro continuam sem confirmação.

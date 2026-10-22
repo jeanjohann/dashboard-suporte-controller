@@ -159,11 +159,12 @@ test('transporte usa token em header, não encaminha identidade e encerra soment
       return Response.json(sample());
     }
     assert.equal(url.pathname, `/api/token/disable/${token}/`);
-    return Response.json({ status: 'OK' });
+    return Response.json({ status: true });
   };
   const response = await koreResponse(request(), e, fetcher);
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  assert.equal((await response.clone().json()).cleanupConfirmed, true);
   assert.deepEqual(calls, ['/api/token/', '/api/simcards/', `/api/token/disable/${token}/`]);
   assert.doesNotMatch(
     await response.text(),

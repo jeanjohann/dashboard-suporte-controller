@@ -216,7 +216,7 @@ export async function koreResponse(request, env, fetcher = fetch) {
           }),
           65536,
         );
-        if (reply.status !== 'OK') throw Error('cleanup');
+        if (reply.status !== 'OK' && reply.status !== true) throw Error('cleanup');
         if (output) output.cleanupConfirmed = true;
       } catch {
         console.warn('KORE_DIAGNOSTIC cleanup failed');
