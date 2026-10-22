@@ -1,3 +1,4 @@
+import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 /** Apresenta alimentação, posições e modelos do retrato, com cobertura e caminhos até os veículos de origem. */
 import React, { useMemo } from 'react';
 import { Section } from '../../../components/Section.jsx';
@@ -140,14 +141,24 @@ export function MonitoringTelemetry({ result, onQueue }) {
           title="Posições informadas por base · 24 h"
           items={data.bases
             .filter((row) => row.positionsTotal != null)
-            .map((row) => ({ label: row.label, value: row.positionsTotal }))}
+            .map((row) => ({
+              label: row.label,
+              displayLabel: clientDisplay(row.label),
+              value: row.positionsTotal,
+            }))}
           exportNote={note}
         />
         <MonitoringSummaryTable
           label="bases"
           rows={data.bases}
           columns={[
-            { id: 'label', label: 'Base', required: true, value: (row) => row.label },
+            {
+              id: 'label',
+              label: 'Base',
+              required: true,
+              value: (row) => row.label,
+              render: (row) => clientDisplay(row.label),
+            },
             {
               id: 'fleet',
               label: 'Veículos',

@@ -1,3 +1,4 @@
+import { monitoringThresholds, monitoringBands } from './monitoringPeriods.js';
 /**
  * Contrato interno do monitoramento, independente dos nomes ainda pendentes da API.
  * Datas exigem fuso explícito. Falha ou atraso de coleta nunca confirma falha do veículo.
@@ -61,7 +62,10 @@ export function monitoringIndicator(row) {
     !Number.isFinite(row.hours)
   )
     return { tone: 'unknown', label: monitoringStates[row.state] || 'Sem classificação' };
-  if (row.hours >= 96) return { tone: 'critical', label: '4 dias ou mais' };
+  if (row.hours >= 2160) return { tone: 'extreme', label: '90 dias ou mais' };
+  if (row.hours >= 1440) return { tone: 'long', label: '60 a menos de 90 dias' };
+  if (row.hours >= 720) return { tone: 'extended', label: '30 a menos de 60 dias' };
+  if (row.hours >= 96) return { tone: 'critical', label: '4 a menos de 30 dias' };
   if (row.hours >= 72) return { tone: 'high', label: '3 a menos de 4 dias' };
   if (row.hours >= 48) return { tone: 'attention', label: '2 a menos de 3 dias' };
   return { tone: 'recent', label: 'Menos de 2 dias' };
@@ -119,13 +123,9 @@ export const vehicleKey = (vehicle) => JSON.stringify([vehicle.clientId, vehicle
 
 /** Faixas exclusivas, sem arredondar a duração antes de comparar os limites. */
 export function monitoringBucket(hours) {
-  return hours >= 96
-    ? '96 h ou mais'
-    : hours >= 72
-      ? '72 a <96 h'
-      : hours >= 48
-        ? '48 a <72 h'
-        : 'Menos de 48 h';
+  return (
+    monitoringBands.find((band) => hours >= band.from && hours < band.to)?.label || 'Menos de 48 h'
+  );
 }
 
 /** Analisa um retrato completo antes de filtrar; chaves duplicadas são excluídas como grupo. */
@@ -133,7 +133,7 @@ export function monitorSnapshot(
   snapshot,
   { clients = [], models = [], threshold = 48, state = 'all' } = {},
 ) {
-  if (![48, 72, 96].includes(Number(threshold))) throw Error('Limite inválido.');
+  if (!monitoringThresholds.includes(Number(threshold))) throw Error('Limite inválido.');
   if (!['all', ...Object.keys(monitoringStates)].includes(state)) throw Error('Situação inválida.');
   const reference = monitoringInstant(snapshot.referenceAt);
   if (reference == null) throw Error('Referência temporal inválida.');
@@ -214,7 +214,7 @@ export function monitorSnapshot(
       invalid: scoped.filter((row) => row.state === 'invalid').length,
       percentage: scoped.length ? (delayed.length / scoped.length) * 100 : null,
     },
-    buckets: ['48 a <72 h', '72 a <96 h', '96 h ou mais'].map((label) => ({
+    buckets: monitoringBands.map(({ label }) => ({
       label,
       value: usable.filter((row) => row.bucket === label).length,
     })),

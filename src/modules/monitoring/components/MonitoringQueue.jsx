@@ -1,3 +1,4 @@
+import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 /** Tabela prioritária e histórico manual de tratamento, sem confundir situação administrativa com comunicação. */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
@@ -20,7 +21,10 @@ const legend = [
   ['recent', 'Menos de 2 dias'],
   ['attention', '2 a <3 dias'],
   ['high', '3 a <4 dias'],
-  ['critical', '4 dias ou mais'],
+  ['critical', '4 a <30 dias'],
+  ['extended', '30 a <60 dias'],
+  ['long', '60 a <90 dias'],
+  ['extreme', '90 dias ou mais'],
   ['unknown', 'Sem classificação'],
 ];
 
@@ -47,6 +51,7 @@ export function MonitoringQueue({
   page,
   setPage,
   visible,
+  actions,
 }) {
   const detail = result.rows.find((row) => row.key === selected);
   const saved = detail ? notes[detail.key] : null;
@@ -54,6 +59,8 @@ export function MonitoringQueue({
   const [draft, setDraft] = useState({ status: monitoringStages[0], owner: '', text: '' });
   const [message, setMessage] = useState('');
   const [sort, setSort] = useState(null);
+  const [technical, setTechnical] = useState(false);
+  const optionalColumns = ['supplyVoltageV', 'profile', 'positions24h'];
   const orderedRows = useMemo(
     () => sortMonitoringRows(result.rows, sort, notes),
     [result.rows, sort, notes],
@@ -104,8 +111,25 @@ export function MonitoringQueue({
     <Section
       title="Fila de acompanhamento"
       visible={visible}
-      help="Uma linha por veículo/base, em ordem inicial de maior duração conhecida. A demonstração é explicitamente fictícia. Placa, ID rastreador, cliente/base, última atualização, alimentação em volts e perfil são apresentados sem inferir defeito elétrico ou configuração. Os sinais usam faixas fixas de 2/3/4 dias, independentemente do limite de atenção selecionado. Coleta desatualizada, data inválida/futura e ausência de registro recebem sinal neutro. Abaixo de 2 dias não confirma que está online neste instante. O status de acompanhamento é administrativo; clique nele para consultar o histórico e registre atualizações explicitamente. Busca, situação, status e recorte filtram a fila inteira antes da ordenação e paginação. Tratamento permanece somente nesta sessão; lembretes e seu histórico ficam salvos neste navegador, separados por usuário e modo real/demonstração. A impressão inclui a página exibida e o histórico selecionado; CSV/XLSX incluem todo o recorte."
+      help="Uma linha por veículo/base, em ordem inicial de maior duração conhecida. Placa, ID rastreador, cliente/base, última atualização, alimentação em volts e perfil são apresentados sem inferir defeito elétrico ou configuração. Os sinais usam faixas fixas de 2/3/4/30/60/90 dias, independentemente do limite de atenção selecionado. Coleta desatualizada, data inválida/futura e ausência de registro recebem sinal neutro. Abaixo de 2 dias não confirma que está online neste instante. O status de acompanhamento é administrativo; clique nele para consultar o histórico e registre atualizações explicitamente. Busca, situação, status e recorte filtram a fila inteira antes da ordenação e paginação. Tratamento permanece somente nesta sessão; lembretes e seu histórico ficam salvos neste navegador, separados por usuário e modo real/demonstração. A impressão inclui a página exibida e o histórico selecionado; CSV/XLSX incluem todo o recorte."
     >
+      {actions && (
+        <div className="monitoring-queue-actions" data-no-print>
+          {actions}
+        </div>
+      )}
+      <label className="monitoring-queue-columns">
+        <input
+          type="checkbox"
+          checked={technical}
+          onChange={(e) => {
+            setTechnical(e.target.checked);
+            setSort(null);
+            setPage(0);
+          }}
+        />
+        Exibir alimentação, perfil e posições na grade
+      </label>
       <div className="monitoring-legend" aria-label="Legenda do tempo sem atualização">
         {legend.map(([tone, label]) => (
           <span key={tone}>
@@ -118,22 +142,24 @@ export function MonitoringQueue({
         <table>
           <thead>
             <tr>
-              {columns.map(([key, label]) => (
-                <th
-                  key={key}
-                  aria-sort={
-                    sort?.key === key
-                      ? sort.direction === 'asc'
-                        ? 'ascending'
-                        : 'descending'
-                      : 'none'
-                  }
-                >
-                  <button type="button" className="sort-heading" onClick={() => orderBy(key)}>
-                    {label} {sort?.key === key ? (sort.direction === 'asc' ? '↑' : '↓') : '↕'}
-                  </button>
-                </th>
-              ))}
+              {columns
+                .filter(([key]) => technical || !optionalColumns.includes(key))
+                .map(([key, label]) => (
+                  <th
+                    key={key}
+                    aria-sort={
+                      sort?.key === key
+                        ? sort.direction === 'asc'
+                          ? 'ascending'
+                          : 'descending'
+                        : 'none'
+                    }
+                  >
+                    <button type="button" className="sort-heading" onClick={() => orderBy(key)}>
+                      {label} {sort?.key === key ? (sort.direction === 'asc' ? '↑' : '↓') : '↕'}
+                    </button>
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
@@ -158,21 +184,25 @@ export function MonitoringQueue({
                     </small>
                   </td>
                   <td>
-                    {row.clientName || row.clientId}
+                    {clientDisplay(row.clientName || row.clientId)}
                     <small className="monitoring-cell-note">{row.clientId}</small>
                   </td>
                   <td>{monitoringDate(row.lastRecordAt)}</td>
-                  <td>{monitoringVoltage(row.supplyVoltageV)}</td>
-                  <td>
-                    {row.profile == null || row.profile === ''
-                      ? 'Não informado'
-                      : String(row.profile)}
-                  </td>
-                  <td>
-                    {row.positions24h == null
-                      ? 'Não informado'
-                      : row.positions24h.toLocaleString('pt-BR')}
-                  </td>
+                  {technical && <td>{monitoringVoltage(row.supplyVoltageV)}</td>}
+                  {technical && (
+                    <td>
+                      {row.profile == null || row.profile === ''
+                        ? 'Não informado'
+                        : String(row.profile)}
+                    </td>
+                  )}
+                  {technical && (
+                    <td>
+                      {row.positions24h == null
+                        ? 'Não informado'
+                        : row.positions24h.toLocaleString('pt-BR')}
+                    </td>
+                  )}
                   <td>
                     {monitoringDuration(row.hours)}
                     <small className="monitoring-cell-note">{signal.label}</small>
@@ -257,7 +287,7 @@ export function MonitoringQueue({
         >
           <div className="monitoring-actions">
             <h3>
-              {detail.plate} · {detail.clientName}
+              {detail.plate} · {clientDisplay(detail.clientName)}
             </h3>
             <button onClick={() => onSelect(null)}>Fechar histórico</button>
           </div>

@@ -1,3 +1,7 @@
+import {
+  monitoringThresholds,
+  monitoringPeriodLabel,
+} from '../../monitoring/domain/monitoringPeriods.js';
 import { defaultQuery, queryGroups, queryMeasures, queryLabels } from '../domain/customQuery.js';
 import React, { useId, useState } from 'react';
 import { localId } from '../../../shared/data/localId.js';
@@ -350,9 +354,9 @@ export function WidgetEditor({
                     value={filters.threshold || 48}
                     onChange={(e) => filter('threshold', Number(e.target.value))}
                   >
-                    {[48, 72, 96].map((hours) => (
+                    {monitoringThresholds.map((hours) => (
                       <option key={hours} value={hours}>
-                        {hours} horas
+                        {monitoringPeriodLabel(hours)}
                       </option>
                     ))}
                   </select>

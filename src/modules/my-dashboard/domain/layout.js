@@ -1,3 +1,4 @@
+import { monitoringThresholds } from '../../monitoring/domain/monitoringPeriods.js';
 import { validQuery } from './customQuery.js';
 import { validISODate } from '../../../shared/data/isoDate.js';
 import { dashboardMetric } from './catalog.js';
@@ -57,7 +58,7 @@ function checkFilters(filters) {
     if (key === 'grouping' && !['branch', 'consolidated', 'explicit'].includes(item))
       throw Error('Agrupamento de clientes inválido.');
     if (key === 'threshold') {
-      if (![48, 72, 96].includes(item)) throw Error('Limite de comunicação inválido.');
+      if (!monitoringThresholds.includes(item)) throw Error('Limite de comunicação inválido.');
     } else if (typeof item !== 'string' || item.length > 160) throw Error('Filtro inválido.');
   }
   const { start, end } = filters;

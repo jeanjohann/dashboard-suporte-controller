@@ -1,3 +1,5 @@
+import { monitoringBands, monitoringPeriodLabel } from './monitoringPeriods.js';
+import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 /** Relatórios locais do retrato analisado; demonstração é identificada no contexto e em cada linha. */
 import XLSX from 'xlsx';
 import { csv } from '../../../shared/export/exports.js';
@@ -17,7 +19,8 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ['Modo', mode],
       ['Referência', result.referenceAt],
       ['Filtros', JSON.stringify(filters)],
-      ['Critério', 'Limites provisórios 48/72/96 h; coleta utilizável há menos de 2 h.'],
+      ['Limite de atenção', monitoringPeriodLabel(filters.threshold || 48)],
+      ['Critério', 'Faixas de 48/72/96 h e 30/60/90 dias; coleta utilizável há menos de 2 h.'],
       [
         'Base dos cards',
         'Todas as situações das bases e modelos selecionados; veículos respeitam situação, status, recorte e busca da fila.',
@@ -58,10 +61,14 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
         'Falha de alimentação externa',
         'Estado da bateria interna (código)',
         'Carga da bateria interna (%)',
+        'Base ID',
+        'Referência do relatório ISO',
+        'Limite de atenção (horas)',
+        'Filtros da categoria',
       ],
       ...result.rows.map((row) => [
         mode,
-        row.clientName,
+        clientDisplay(row.clientName),
         row.plate,
         row.vehicleId,
         row.trackerId,
@@ -81,13 +88,17 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
         row.externalPowerFailure == null ? '' : row.externalPowerFailure ? 'Sim' : 'Não',
         row.batteryState ?? '',
         row.batteryPercent ?? '',
+        row.clientId,
+        result.referenceAt,
+        filters.threshold || 48,
+        JSON.stringify(filters),
       ]),
     ],
     summary: [
       ['Modo', 'Base', 'Veículos', 'Acima do limite', 'Percentual da frota'],
       ...result.groups.map((group) => [
         mode,
-        group.label,
+        clientDisplay(group.label),
         group.total,
         group.alerts,
         group.percentage / 100,
@@ -102,6 +113,11 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ],
       ['Acima do limite', analysis.alerts, 'Coleta utilizável; limite selecionado'],
       ['96 h ou mais', result.totals.critical, 'Coleta utilizável'],
+      ...monitoringBands.map((band) => [
+        band.label,
+        result.buckets.find((row) => row.label === band.label)?.value ?? 0,
+        'Faixa exclusiva; coleta utilizável',
+      ]),
       ['Bases afetadas', analysis.affectedBases, 'Bases com ao menos um veículo acima do limite'],
       [
         'Maior tempo acima do limite',
@@ -169,7 +185,7 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ],
       ...telemetry.bases.map((row) => [
         mode,
-        row.label,
+        clientDisplay(row.label),
         row.fleet,
         row.powerReadings,
         row.externalFailure,
@@ -193,7 +209,7 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ],
       ...telemetry.bases.map((row) => [
         mode,
-        row.label,
+        clientDisplay(row.label),
         row.fleet,
         row.positionsReadings,
         row.positionsUnknown,
@@ -220,7 +236,7 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ],
       ...telemetry.models.map((row) => [
         mode,
-        row.label,
+        clientDisplay(row.label),
         row.fleet,
         row.delayed,
         row.delayed / row.fleet,
@@ -252,7 +268,7 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
       ...result.rows.flatMap((row) =>
         (notes[row.key]?.history || []).map((entry) => [
           mode,
-          row.clientName,
+          clientDisplay(row.clientName),
           row.plate,
           row.vehicleId,
           row.trackerId,
@@ -267,7 +283,8 @@ export function monitoringReport(result, filters, notes = {}, reminders = []) {
 }
 
 /** Exporta contexto e veículos com proteção de texto contra fórmulas de planilha. */
-export function monitoringCsv(tables) {
+export function monitoringCsv(tables, { vehiclesOnly = false } = {}) {
+  if (vehiclesOnly) return csv(tables.vehicles);
   return csv([
     ...tables.context,
     [],
@@ -318,6 +335,26 @@ export function monitoringWorkbook(tables) {
       const row = rows.findIndex((entry) => entry[0] === 'Cobertura de acompanhamento') + 1;
       if (sheet[`B${row}`]) sheet[`B${row}`].z = '0.0%';
     }
+    const columns = Math.max(...rows.map((row) => row.length), 1);
+    sheet['!cols'] = Array.from({ length: columns }, (_, index) => ({
+      wch: Math.min(
+        52,
+        Math.max(14, ...rows.slice(0, 200).map((row) => String(row[index] ?? '').length)),
+      ),
+    }));
+    if (name !== 'Contexto' && rows.length > 1)
+      sheet['!autofilter'] = {
+        ref: XLSX.utils.encode_range({
+          s: { r: 0, c: 0 },
+          e: { r: rows.length - 1, c: columns - 1 },
+        }),
+      };
+    if (name === 'Modelos')
+      for (let row = 2; row <= rows.length; row++)
+        if (sheet['E' + row]) sheet['E' + row].z = '0.0%';
+    if (name === 'Veículos')
+      for (let row = 2; row <= rows.length; row++)
+        if (sheet['U' + row]) sheet['U' + row].z = '0.0"%"';
     XLSX.utils.book_append_sheet(book, sheet, name);
   }
   return XLSX.write(book, { type: 'array', bookType: 'xlsx' });

@@ -2,6 +2,8 @@
 
 ## Fila atual — 22/10/2026, após a versão 0.52.0
 
+**Rodada 0.53.0 preparada e testada localmente:** fila do Monitoramento priorizada, filtros e lembretes compactos, alinhamento, indicadores e períodos de 30/60/90 dias, exportação junto da grade e conferência API × Operacional. [Critérios e limites](MONITORAMENTO-TRABALHO-E-CADASTROS.md). Consumo/linha não estão documentados no contrato integrado; posições não foram convertidas para MB. Publicação desta rodada ainda pendente.
+
 Este bloco é a referência atual de prioridades. As seções seguintes preservam registros históricos e podem citar pendências já concluídas. A inclusão de sugestões não representa implementação ou publicação.
 
 **Rodada 0.52.0 publicada em 21/10/2026:** A21–A24 nas tabelas por base/modelo do Monitoramento, A26 com amostra fictícia de 1.800 veículos, comparação de séries personalizadas compatíveis e piloto local de CSV Session do Zoho. Coletor e eventos de atraso/retorno têm contrato e testes, mas permanecem desconectados da execução. [Entrega, critérios e dependências](LAYOUT-E-CONSULTAS-052.md). Publicação no GitHub e Cloudflare conferida em 22/10/2026; não foi ativado armazenamento ou agendamento. A25 e auditoria visual adicional nas demais páginas permanecem evoluções futuras.

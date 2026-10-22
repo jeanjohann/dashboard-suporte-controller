@@ -1,3 +1,4 @@
+import { monitoringThresholds } from '../src/modules/monitoring/domain/monitoringPeriods.js';
 /** Preparação inativa: exige repositório durável com lease e commit atômico antes de ligar um agendador. */
 import { normalizeMonitoringSnapshot } from '../src/modules/monitoring/data/snapshotContract.js';
 import { monitoringObservationEvents } from '../src/modules/monitoring/domain/monitoringHistory.js';
@@ -6,7 +7,7 @@ export async function runMonitoringCollection({ runId, repository, collect, thre
   if (typeof runId !== 'string' || !/^[a-zA-Z0-9:_-]{1,100}$/.test(runId))
     throw Error('Identidade da execução inválida.');
   if (
-    ![48, 72, 96].includes(threshold) ||
+    !monitoringThresholds.includes(threshold) ||
     !['claim', 'latest', 'commit', 'release'].every(
       (method) => typeof repository?.[method] === 'function',
     ) ||

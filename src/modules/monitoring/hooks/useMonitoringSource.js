@@ -1,6 +1,5 @@
 /** Separa fonte e tela. Demonstração nunca é fallback de erro; atualização real é explícita nesta etapa. */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { monitoringDemo } from '../data/demo.js';
 import { fetchMonitoringSnapshot } from '../data/monitoringClient.js';
 
 export function useMonitoringSource() {
@@ -33,14 +32,6 @@ export function useMonitoringSource() {
     },
     [],
   );
-  function demonstration() {
-    generation.current++;
-    request.current?.abort();
-    setBusy(false);
-    request.current = null;
-    setError('');
-    setSource(source?.demonstration ? null : monitoringDemo());
-  }
   async function refresh() {
     if (request.current || Date.now() < nextReadAt) return;
     setNextReadAt(Date.now() + 60000);
@@ -85,5 +76,5 @@ export function useMonitoringSource() {
     () => (real ? { ...source, referenceAt: now } : source),
     [source, now, real],
   );
-  return { snapshot, source, busy, cooldown, error, demonstration, refresh };
+  return { snapshot, source, busy, cooldown, error, refresh };
 }

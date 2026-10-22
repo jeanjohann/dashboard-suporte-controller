@@ -171,7 +171,7 @@ function WorkspaceContent() {
         page="monitoring"
         onPage={navigate}
       >
-        <MonitoringPage onPage={navigate} />
+        <MonitoringPage onPage={navigate} operational={operational} />
       </DeferredPage>
       <DeferredPage
         active={current === 'imports'}

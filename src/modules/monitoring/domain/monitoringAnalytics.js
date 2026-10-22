@@ -6,6 +6,9 @@ export const monitoringFocusLabels = {
   all: 'Todos os veículos',
   alerts: 'Acima do limite',
   critical: '96 h ou mais',
+  days30: '30 dias ou mais',
+  days60: '60 dias ou mais',
+  days90: '90 dias ou mais',
   missing: 'Sem posição registrada',
   unknown: 'Sem classificação utilizável',
   unstarted: 'Alertas · não iniciado',
@@ -70,6 +73,12 @@ export function filterMonitoringQueue(result, filters, notes = {}) {
       if (stage !== 'all' && status(row, notes) !== stage) return false;
       if (focus === 'alerts' && row.state !== 'delayed') return false;
       if (focus === 'critical' && (!['recent', 'delayed'].includes(row.state) || row.hours < 96))
+        return false;
+      if (
+        { days30: 720, days60: 1440, days90: 2160 }[focus] &&
+        (!['recent', 'delayed'].includes(row.state) ||
+          row.hours < { days30: 720, days60: 1440, days90: 2160 }[focus])
+      )
         return false;
       if (focus === 'missing' && row.state !== 'missing') return false;
       if (focus === 'unknown' && ['recent', 'delayed'].includes(row.state)) return false;

@@ -29,7 +29,7 @@ A consulta é manual, com intervalo de pelo menos 60 segundos na tela. O binding
 
 Timeout de 15 s no servidor e 20 s no navegador; leitura limitada a 5 MiB e 50 mil veículos, sem truncamento. Falhas HTTP, HTML de login, schema incompatível, identificadores duplicados e qualquer entrada em `errors` recusam o retrato inteiro. Uma resposta parcial nunca remove silenciosamente as bases que falharam. A última frota real da sessão é mantida com coleta indisponível e sinais neutros; uma primeira falha não inventa veículos. Mensagens internas e credenciais do fornecedor não são devolvidas.
 
-Datas de coleta válidas, não futuras e com menos de duas horas continuam sendo o critério provisório de classificação utilizável. Recalcular a idade localmente não executa outra consulta. A demonstração exige seleção explícita e não compartilha anotações com a fonte real.
+Datas de coleta válidas, não futuras e com menos de duas horas continuam sendo o critério provisório de classificação utilizável. Recalcular a idade localmente não executa outra consulta. Desde 0.53.0, a demonstração fica restrita aos testes de desenvolvimento, sem opção na interface. Limites de 30/60/90 dias e a conferência com o Operacional estão descritos em [Monitoramento: acompanhamento e cadastros](MONITORAMENTO-TRABALHO-E-CADASTROS.md).
 
 Tratamentos permanecem na memória da sessão. Lembretes e seu histórico são locais por usuário/navegador. Histórico de episódios/recuperações, permissões por base, armazenamento compartilhado, notificações e retenção continuam pendentes. O D1 guarda apenas usuários e permissões.
 

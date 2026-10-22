@@ -7,6 +7,14 @@
 
 # Histórico de versões
 
+## 0.53.0 — 22/10/2026
+
+- Prioriza a grade de Monitoramento com filtros/lembretes compactos, acompanhamento acessível na rolagem e telemetria opcional. Retira a demonstração da interface; indicadores maiores e mais vibrantes, com texto e estado neutro preservados.
+- Corrige o alinhamento dos filtros abertos e separa gráficos dos controles de tabela. Apresenta clientes/bases em caixa alta sem alterar fontes, IDs ou agrupamentos.
+- Adiciona limites e recortes de 30/60/90 dias, faixas analíticas exclusivas e compatibilidade com o Meu Dashboard.
+- Adiciona conferência API × Operacional por serial exato, com vínculos ambíguos, valores lado a lado, referências da planilha, busca e CSV. Nenhuma correção automática; nomes de bases e razões sociais não têm equivalência presumida.
+- Exporta diretamente da fila: CSV retangular do recorte completo e XLSX com filtros, contexto e percentuais formatados. Preserva CSV completo por seções em Relatórios. Consumo e dados da linha não constam no contrato integrado documentado e não foram inferidos de posições. [Critérios e limites](docs/MONITORAMENTO-TRABALHO-E-CADASTROS.md).
+
 ## 0.52.0 — 21/10/2026
 
 - Monitoramento com tabelas essenciais/completas, escolha de colunas, cabeçalhos e números alinhados, cobertura separada do valor principal e paginação das bases. Ordenação considera todas as linhas; impressão identifica o recorte paginado e exportações mantêm o conjunto completo.

@@ -1,3 +1,4 @@
+import { clientDisplay } from '../shared/data/clientDisplay.js';
 /**
  * Componente compartilhado de apresentação. As regras de negócio são fornecidas pelos módulos.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -24,7 +25,7 @@ import { categoricalColors as colors, chartColors } from '../shared/charts/palet
 import { ViewState } from './ViewState.jsx';
 /** Apresenta a série calculada, controla o formato compatível e exporta o gráfico com seu contexto. */
 export function Chart({
-  items,
+  items: inputItems,
   type = 'bars',
   measure,
   title,
@@ -34,18 +35,30 @@ export function Chart({
   compact = false,
   onItemClick,
 }) {
+  const clientNames = /cliente|base|razão social/i.test(title || '');
+  const items = clientNames
+    ? inputItems.map((item) => ({
+        ...item,
+        displayLabel: item.displayLabel || clientDisplay(item.label),
+      }))
+    : inputItems;
   const container = useRef();
   const [limit, setLimit] = useState('10');
   const shown = ranking && type === 'bars' ? rankingItems(items, limit) : items;
   function exportChart() {
     if (type === 'bars') {
       download(
-        chartSvg(shown, {
-          title,
-          subtitle: `${shown.length} de ${items.length} categorias exibidas`,
-          format,
-          note: exportNote,
-        }),
+        chartSvg(
+          clientNames
+            ? shown.map((item) => ({ ...item, label: clientDisplay(item.label) }))
+            : shown,
+          {
+            title,
+            subtitle: `${shown.length} de ${items.length} categorias exibidas`,
+            format,
+            note: exportNote,
+          },
+        ),
         'image/svg+xml',
         'grafico-barras.svg',
       );

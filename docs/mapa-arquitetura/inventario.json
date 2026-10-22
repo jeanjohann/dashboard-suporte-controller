@@ -1,9 +1,9 @@
 {
-  "version": "0.52.0",
-  "base": "aafffa1 · cópia da entrega",
+  "version": "0.53.0",
+  "base": "7b85358 · cópia da entrega",
   "date": "2026-10-22",
-  "total": 437,
-  "tests": 88,
+  "total": 443,
+  "tests": 89,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 49
+      "count": 50
     },
     {
       "path": "docs/diagrams",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 321
+      "count": 326
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 233
+      "count": 237
     },
     {
       "path": "src/modules/assistant",
@@ -173,12 +173,12 @@
     {
       "path": "src/modules/monitoring",
       "description": "Módulo Monitoramento Ativo: interface, regras e integração de seus dados.",
-      "count": 24
+      "count": 28
     },
     {
       "path": "src/modules/monitoring/components",
       "description": "Página e painéis visuais de Monitoramento Ativo.",
-      "count": 7
+      "count": 8
     },
     {
       "path": "src/modules/monitoring/data",
@@ -188,7 +188,7 @@
     {
       "path": "src/modules/monitoring/domain",
       "description": "Validação e cálculo das regras de negócio de Monitoramento Ativo.",
-      "count": 10
+      "count": 13
     },
     {
       "path": "src/modules/monitoring/hooks",
@@ -298,7 +298,7 @@
     {
       "path": "src/shared",
       "description": "Contratos e infraestrutura compartilhados entre módulos.",
-      "count": 41
+      "count": 42
     },
     {
       "path": "src/shared/charts",
@@ -313,7 +313,7 @@
     {
       "path": "src/shared/data",
       "description": "Filtros, datas, ordenação e contratos normalizados.",
-      "count": 13
+      "count": 14
     },
     {
       "path": "src/shared/export",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 88144,
-      "sha256": "f71c186a836d0c77cd930e2044ef209f5625eb42e07178eee4ed633d91f092c6",
+      "bytes": 89296,
+      "sha256": "3c34ce7d4e937f467952dd3d5dfa2e297e86e6f5fcf503f3aa4c27ce71e206fb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -441,8 +441,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 8131,
-      "sha256": "218512d390531d0470fe05650aaf248c7f7a3730e9a21c64f0b94117aaaf3fad",
+      "bytes": 8138,
+      "sha256": "ff647ef9311061413326c5305c9ba58279f79d315ab25b1276e931a593653059",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -707,8 +707,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 6563,
-      "sha256": "93467312e1bbf74e16e67e8eb44803d72074afe8e7287aa19091a823cdf1eee5",
+      "bytes": 6736,
+      "sha256": "0be760125c1a922f799e5efff59e409998177413aa52952bf71bb382c0776d62",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -824,6 +824,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "docs/MONITORAMENTO-TRABALHO-E-CADASTROS.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Monitoramento: acompanhamento e cadastros — 0.53.0. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 7738,
+      "sha256": "5042a3904d3eb7e35c66e4e22a19b0cab9d860c034bca51fef352ad5672728cf",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "docs/OPERACIONAL.md",
       "folder": "docs",
       "module": "Documentação",
@@ -931,8 +945,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 33325,
-      "sha256": "4e4880c2d1e68805c3b90f289f6599c4890f49aee47833efdd5fc9e73b844806",
+      "bytes": 33769,
+      "sha256": "fbfb689711fe69090d941b474e6264f015ce5aac2853e310b5557f25173960a3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1170,7 +1184,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "2ce387466a74a763eb5672c8ba8a9716674e85cb4c3b9adc11df04798f3d3a2f",
+      "sha256": "22b2ffec228582325ced9580b682259376ddd9e93e2d1f322a6e60376e75d8c2",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1184,7 +1198,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "f4c621833780793dfffd436aa8babe1082a3dccddc2a2d7ef26cd36122d529b2",
+      "sha256": "f5ca2e53e09bc78d4a8dc79eb9dd33dd9131fdaaa1e283a2fa9faf1032248177",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1347,8 +1361,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 42834,
-      "sha256": "0953f258a01c1f6579a3a3052777cea27be03c89fce0f68001529b5c80f8c76c",
+      "bytes": 43562,
+      "sha256": "f44eed937878d4a1e2745fd6df750a7da6b9981d275c92ab4406db7c1d2a4e13",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1822,12 +1836,13 @@
       "exports": ["runMonitoringCollection"],
       "imports": [
         "src/modules/monitoring/data/snapshotContract.js",
-        "src/modules/monitoring/domain/monitoringHistory.js"
+        "src/modules/monitoring/domain/monitoringHistory.js",
+        "src/modules/monitoring/domain/monitoringPeriods.js"
       ],
       "external": [],
       "importedBy": ["server/monitoringCollection.test.js"],
-      "bytes": 1896,
-      "sha256": "66b060d03117f59197eea6b229e80dbff4ee71a96e11ee32db7e8f19c8b158a9",
+      "bytes": 1998,
+      "sha256": "2de721725d57d1a222473023425adc49283f4c3518126f991c9d02fe0b1c328e",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -2151,8 +2166,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 8944,
-      "sha256": "efedf45b64bcaf2155284eae3fbbe0d76c1f8eb062140101839be7a7aeed1fab",
+      "bytes": 8970,
+      "sha256": "6d6b4c4eba3d5d4470efa391d0ff5316eec678a12cd4b51abea9bdb66822fbe1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2219,6 +2234,7 @@
         "src/components/ViewState.jsx",
         "src/shared/charts/chartRules.js",
         "src/shared/charts/palette.js",
+        "src/shared/data/clientDisplay.js",
         "src/shared/export/exports.js",
         "src/shared/security/Access.jsx"
       ],
@@ -2244,8 +2260,8 @@
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx"
       ],
-      "bytes": 9157,
-      "sha256": "95ec455c3006d4fd530e96a388341becbea002c2ffa40f30e33c8ffbd73c81ad",
+      "bytes": 9632,
+      "sha256": "5cfa3c0a309f7f2b2b40c6c24f14c7795252ed63e4063d868c62e852ea333fa8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2363,7 +2379,7 @@
       "layer": "Interface React",
       "description": "Permite selecionar mais de um valor no mesmo campo; a combinação entre campos é feita pelo filtro de dados.",
       "exports": ["MultiFilter"],
-      "imports": [],
+      "imports": ["src/shared/data/clientDisplay.js"],
       "external": ["react", "react-dom"],
       "importedBy": [
         "src/modules/consumption/components/ConsumptionFiltersPanel.jsx",
@@ -2371,8 +2387,8 @@
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersFiltersPanel.jsx"
       ],
-      "bytes": 5030,
-      "sha256": "ddaba7c74490630b770573ae5ddaeb352c9856e12c8497665c7a94d266887bea",
+      "bytes": 5256,
+      "sha256": "0c262c36cf8f021a9933ec47c32ba4b6513d928e93774ca0fa7dc499914c67d2",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2528,6 +2544,7 @@
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringTelemetry.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/AdvancedInsights.jsx",
@@ -2595,8 +2612,8 @@
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx"
       ],
-      "bytes": 4375,
-      "sha256": "f12aace9e6aea2faea3c8e3eae35b9a6487d6f98f11bffabd867294f9db1eac1",
+      "bytes": 4774,
+      "sha256": "79dbbf3ea59a14b0dbc8a84f7ce0c72c78f5c7de9d80777256174dac7b0ee79a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2616,6 +2633,7 @@
         "src/modules/consumption/components/ConsumptionSourcePanel.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/consumption/components/LineRecordsTable.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringSummaryTable.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/MaintenanceMatrix.jsx",
@@ -3826,12 +3844,14 @@
         "src/modules/monitoring/components/MonitoringSummaryTable.jsx",
         "src/modules/monitoring/components/MonitoringTelemetry.jsx",
         "src/modules/monitoring/domain/monitoring.js",
-        "src/modules/monitoring/domain/monitoringAnalytics.js"
+        "src/modules/monitoring/domain/monitoringAnalytics.js",
+        "src/modules/monitoring/domain/monitoringPeriods.js",
+        "src/shared/data/clientDisplay.js"
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 9950,
-      "sha256": "ca3f59902018c301bcb66a10ae6a488c912b869848a862d62fc23944ec440b93",
+      "bytes": 10624,
+      "sha256": "846f0b9be512761d60d64fb5e243bfc2ccd7c750134b9234189584d75791ce10",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -3849,23 +3869,27 @@
         "src/components/Section.jsx",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringAnalytics.js",
+        "src/modules/monitoring/domain/monitoringPeriods.js",
         "src/modules/monitoring/domain/monitoringReport.js",
         "src/modules/monitoring/domain/monitoringTelemetry.js",
         "src/modules/monitoring/hooks/useMonitoringReminders.js",
         "src/modules/monitoring/hooks/useMonitoringSource.js",
         "src/modules/my-dashboard/hooks/DashboardSources.jsx",
+        "src/shared/data/clientDisplay.js",
         "src/shared/export/exports.js",
         "src/shared/filters/scopedSelection.js",
         "src/shared/filters/useScopedSelection.js",
-        "src/shared/security/Access.jsx"
+        "src/shared/security/Access.jsx",
+        "src/shared/security/permissions.js"
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 20606,
-      "sha256": "355546ec9a9c3f4ac7b053cd4b6d9b29de007beabe137cf727e46fdb6d7d1328",
+      "bytes": 22867,
+      "sha256": "8458d760cd40cd5bb8834d9712c8f1a9fee589548ad8e2f72478a8a0b1840322",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -3880,12 +3904,36 @@
         "src/components/Section.jsx",
         "src/modules/monitoring/components/MonitoringReminderEditor.jsx",
         "src/modules/monitoring/domain/monitoring.js",
-        "src/modules/monitoring/domain/monitoringReminders.js"
+        "src/modules/monitoring/domain/monitoringReminders.js",
+        "src/shared/data/clientDisplay.js"
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 14413,
-      "sha256": "4b67eb9399eb2bc7a408ef72b74e7ad40b9553d127a0bcde3138159e20fb96d7",
+      "bytes": 15453,
+      "sha256": "ab8e0d9603c334b130c82fd91e57fdb0c3149c4c861735a52d85010d3413fcb5",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/components/MonitoringRegistry.jsx",
+      "folder": "src/modules/monitoring/components",
+      "module": "Monitoramento Ativo",
+      "layer": "Interface React",
+      "description": "Conferência autorizada API × Operacional, com grupos, filtros, referências de origem e CSV; não modifica os cadastros.",
+      "exports": ["MonitoringRegistry"],
+      "imports": [
+        "src/components/Section.jsx",
+        "src/components/TableScroll.jsx",
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/monitoring/domain/monitoringRegistry.js",
+        "src/shared/data/clientDisplay.js",
+        "src/shared/export/exports.js",
+        "src/shared/security/Access.jsx",
+        "src/shared/security/permissions.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
+      "bytes": 8038,
+      "sha256": "1da3d170674c3b97a6cecb980dbea46e42913e4f58a452949da59466705d8ac3",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -3919,14 +3967,15 @@
         "src/modules/monitoring/components/MonitoringReminderEditor.jsx",
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringReminders.js",
+        "src/shared/data/clientDisplay.js",
         "src/shared/export/exports.js",
         "src/shared/security/Access.jsx",
         "src/shared/security/permissions.js"
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 5059,
-      "sha256": "19692a014b970ab2764bb13370c4cbf319e2fcf7c15422edbcad894ec8194c73",
+      "bytes": 5343,
+      "sha256": "6523393f8bb4a0ba2ca5e2d081f85eb66d428b98aaeff999660984c113d8c6b5",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -3962,12 +4011,13 @@
         "src/components/ReportSummary.jsx",
         "src/components/Section.jsx",
         "src/modules/monitoring/components/MonitoringSummaryTable.jsx",
-        "src/modules/monitoring/domain/monitoringTelemetry.js"
+        "src/modules/monitoring/domain/monitoringTelemetry.js",
+        "src/shared/data/clientDisplay.js"
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringAnalytics.jsx"],
-      "bytes": 12581,
-      "sha256": "dbad857ce20b51f8ff1d01e34cb95b80e2a2fb1620bfe259ed64491e3e9cdcc5",
+      "bytes": 12873,
+      "sha256": "bd44ba35906966dd2a3ab9bebc3c3cf86c3a54de7408eceeb828d3266fed8d70",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -3983,8 +4033,7 @@
         "src/modules/monitoring/domain/monitoring.test.js",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
         "src/modules/monitoring/domain/monitoringReminders.test.js",
-        "src/modules/monitoring/domain/monitoringTelemetry.test.js",
-        "src/modules/monitoring/hooks/useMonitoringSource.js"
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js"
       ],
       "bytes": 1620,
       "sha256": "df06428b03693bf4ef19d2f697d21b90087767d3fe00354bbd23c2966e10f7f1",
@@ -4087,7 +4136,7 @@
         "sortMonitoringRows",
         "vehicleKey"
       ],
-      "imports": [],
+      "imports": ["src/modules/monitoring/domain/monitoringPeriods.js"],
       "external": [],
       "importedBy": [
         "scripts/benchmark-monitoring.mjs",
@@ -4095,6 +4144,7 @@
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminderEditor.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
         "src/modules/monitoring/data/reminderRepository.js",
@@ -4104,15 +4154,17 @@
         "src/modules/monitoring/domain/monitoringAnalytics.js",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
         "src/modules/monitoring/domain/monitoringHistory.js",
+        "src/modules/monitoring/domain/monitoringRegistry.js",
         "src/modules/monitoring/domain/monitoringReminders.js",
         "src/modules/monitoring/domain/monitoringReminders.test.js",
         "src/modules/monitoring/domain/monitoringReport.js",
         "src/modules/monitoring/domain/monitoringTelemetry.js",
         "src/modules/monitoring/domain/monitoringTelemetry.test.js",
+        "src/modules/monitoring/domain/monitoringWorkspace.test.js",
         "src/modules/my-dashboard/domain/evaluate.js"
       ],
-      "bytes": 9736,
-      "sha256": "e00c26d92d2d05732d5648e2d91868fabe1cb8cd337e7bd10df2e63494a6b0be",
+      "bytes": 10016,
+      "sha256": "bc01fa12256958994a85d6ad1162c2cf5f37dff1c61b1c84000d875fc55834ec",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4129,8 +4181,8 @@
       ],
       "external": ["node:assert/strict", "node:test", "xlsx"],
       "importedBy": [],
-      "bytes": 8676,
-      "sha256": "bf3bf86b9c67440c96bef2b7bcd3e8cc16c8334050b41a5d850ccf72712d56fa",
+      "bytes": 8685,
+      "sha256": "c90f78ed244eb4b3db781f3e530f6e72b56bc2d3e47d3a704c5d0bef33f5df13",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4151,10 +4203,11 @@
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
         "src/modules/monitoring/domain/monitoringReport.js",
-        "src/modules/monitoring/domain/monitoringTelemetry.test.js"
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js",
+        "src/modules/monitoring/domain/monitoringWorkspace.test.js"
       ],
-      "bytes": 3873,
-      "sha256": "560a0953c8e38dc908e9a1d62189814ca7e3d9f8d2a87bce240b2dd5d889b303",
+      "bytes": 4192,
+      "sha256": "493018f700d9e1c34a1616b92915942836c27f06a102c9085823552267828747",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4188,6 +4241,49 @@
       "importedBy": ["server/monitoringCollection.js", "server/monitoringCollection.test.js"],
       "bytes": 2549,
       "sha256": "5aedbafdb6e1c555d6aae21561ab6f0d6ade6987e508eafc46e4eb33cdc81b76",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/domain/monitoringPeriods.js",
+      "folder": "src/modules/monitoring/domain",
+      "module": "Monitoramento Ativo",
+      "layer": "Domínio",
+      "description": "Define limites de 48/72/96 horas e 30/60/90 dias e as faixas exclusivas de duração usadas na análise.",
+      "exports": ["monitoringBands", "monitoringPeriodLabel", "monitoringThresholds"],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "server/monitoringCollection.js",
+        "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringPage.jsx",
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/monitoring/domain/monitoringReport.js",
+        "src/modules/my-dashboard/components/WidgetEditor.jsx",
+        "src/modules/my-dashboard/domain/layout.js"
+      ],
+      "bytes": 605,
+      "sha256": "13e030a0d9ee8f5384f9f978b20f69318589da328e3fd99dd20f0a5cdcfa3d1b",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/domain/monitoringRegistry.js",
+      "folder": "src/modules/monitoring/domain",
+      "module": "Monitoramento Ativo",
+      "layer": "Domínio",
+      "description": "Cruza seriais numéricos exatos e únicos, preserva duplicidades e imprecisão e compara placa, cliente/base e modelo sem inferir equivalências.",
+      "exports": ["reconcileMonitoringRegistry", "registryExportRows", "registryStates"],
+      "imports": [
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/operational/domain/operational.js",
+        "src/shared/data/clientDisplay.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
+        "src/modules/monitoring/domain/monitoringWorkspace.test.js"
+      ],
+      "bytes": 5919,
+      "sha256": "dae6742931591f9901d22097feb4f51190cb9da0c5c405d4eed3d922b8e1e02a",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4250,8 +4346,10 @@
       "imports": [
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringAnalytics.js",
+        "src/modules/monitoring/domain/monitoringPeriods.js",
         "src/modules/monitoring/domain/monitoringReminders.js",
         "src/modules/monitoring/domain/monitoringTelemetry.js",
+        "src/shared/data/clientDisplay.js",
         "src/shared/export/exports.js"
       ],
       "external": ["xlsx"],
@@ -4262,10 +4360,11 @@
         "src/modules/monitoring/domain/monitoring.test.js",
         "src/modules/monitoring/domain/monitoringAnalytics.test.js",
         "src/modules/monitoring/domain/monitoringReminders.test.js",
-        "src/modules/monitoring/domain/monitoringTelemetry.test.js"
+        "src/modules/monitoring/domain/monitoringTelemetry.test.js",
+        "src/modules/monitoring/domain/monitoringWorkspace.test.js"
       ],
-      "bytes": 10034,
-      "sha256": "71c3fa833e7b145114def7da107937dab14d6f587e162583b23fd9945c6cec40",
+      "bytes": 11661,
+      "sha256": "f2d936d728e2f2408bbd776fda4feb65c37f826e560fa8cbd3ebfd7fda079e3d",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4310,6 +4409,25 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "src/modules/monitoring/domain/monitoringWorkspace.test.js",
+      "folder": "src/modules/monitoring/domain",
+      "module": "Monitoramento Ativo",
+      "layer": "Teste",
+      "description": "Verifica monitoring Workspace no contexto de Monitoramento Ativo. Exemplos: 30/60/90 dias são inclusivos, faixas exclusivas e ausência permanece neutra; CSV da grade é retangular; XLSX inclui todo o recorte, zeros, IDs como texto e filtros; conferência usa somente serial único e preserva origens, ausências e duplicatas.",
+      "exports": [],
+      "imports": [
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/monitoring/domain/monitoringAnalytics.js",
+        "src/modules/monitoring/domain/monitoringRegistry.js",
+        "src/modules/monitoring/domain/monitoringReport.js"
+      ],
+      "external": ["node:assert/strict", "node:test", "xlsx"],
+      "importedBy": [],
+      "bytes": 5931,
+      "sha256": "d63672304526cdc0506b9d0067f76a009ad5ba070bba74ffc276c21b00fb1d11",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "src/modules/monitoring/hooks/useMonitoringReminders.js",
       "folder": "src/modules/monitoring/hooks",
       "module": "Monitoramento Ativo",
@@ -4333,14 +4451,11 @@
       "layer": "Estado / coordenação",
       "description": "Separa fonte e tela. Demonstração nunca é fallback de erro; atualização real é explícita nesta etapa.",
       "exports": ["useMonitoringSource"],
-      "imports": [
-        "src/modules/monitoring/data/demo.js",
-        "src/modules/monitoring/data/monitoringClient.js"
-      ],
+      "imports": ["src/modules/monitoring/data/monitoringClient.js"],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 3144,
-      "sha256": "8a14b8cf8eed483f0fe84967d51a2d68fbda7e3856cd5f52138d08609f651c0e",
+      "bytes": 2860,
+      "sha256": "ffba7440117953cf76a1d51ae101900091c6bc838b84c5e81f29a4b51fb5caaf",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4462,6 +4577,7 @@
       "description": "Edita métrica, consulta aprovada, apresentação, composição e recorte; valida antes de aplicar.",
       "exports": ["WidgetEditor"],
       "imports": [
+        "src/modules/monitoring/domain/monitoringPeriods.js",
         "src/modules/my-dashboard/components/DashboardDialog.jsx",
         "src/modules/my-dashboard/domain/catalog.js",
         "src/modules/my-dashboard/domain/customQuery.js",
@@ -4472,8 +4588,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/my-dashboard/components/MyDashboardPage.jsx"],
-      "bytes": 20382,
-      "sha256": "3e4da7aa43be415516ce35d3e5cd3b99a5e42143b2b69dcdd1643d24361a35bf",
+      "bytes": 20520,
+      "sha256": "f85132bf92935edf06e31b09e61df16c3be60ef6dc8ae83c667d24c820d0f587",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4742,6 +4858,7 @@
       "description": "Valida documentos e blocos, limites, filtros, consultas e compatibilidade das composições.",
       "exports": ["emptyDashboardDocument", "moveWidget", "validateDashboardDocument"],
       "imports": [
+        "src/modules/monitoring/domain/monitoringPeriods.js",
         "src/modules/my-dashboard/domain/catalog.js",
         "src/modules/my-dashboard/domain/customQuery.js",
         "src/modules/my-dashboard/domain/presentation.js",
@@ -4759,8 +4876,8 @@
         "src/modules/my-dashboard/domain/presentation.test.js",
         "src/modules/my-dashboard/hooks/useDashboards.js"
       ],
-      "bytes": 5358,
-      "sha256": "d7c0147494693e432437cfc97f0f9c256079240e754a3c3815cbfec5b7ed6959",
+      "bytes": 5451,
+      "sha256": "b04b43160205a3d7172222065f00ef38787d7150f7e14c9b32b43e41e51b86e6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5055,6 +5172,7 @@
         "src/modules/consumption/domain/lineConsumption.js",
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/imports/domain/bulkImport.js",
+        "src/modules/monitoring/domain/monitoringRegistry.js",
         "src/modules/my-dashboard/domain/customQuery.js",
         "src/modules/my-dashboard/domain/customQuery.test.js",
         "src/modules/my-dashboard/domain/evaluate.js",
@@ -7747,6 +7865,31 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/shared/data/clientDisplay.js",
+      "folder": "src/shared/data",
+      "module": "Compartilhado",
+      "layer": "Dados / transporte",
+      "description": "Formata nomes de clientes em caixa alta somente na apresentação, sem alterar fonte, identidade ou agrupamento.",
+      "exports": ["clientDisplay"],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "src/components/Chart.jsx",
+        "src/components/MultiFilter.jsx",
+        "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringPage.jsx",
+        "src/modules/monitoring/components/MonitoringQueue.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
+        "src/modules/monitoring/components/MonitoringReminders.jsx",
+        "src/modules/monitoring/components/MonitoringTelemetry.jsx",
+        "src/modules/monitoring/domain/monitoringRegistry.js",
+        "src/modules/monitoring/domain/monitoringReport.js"
+      ],
+      "bytes": 190,
+      "sha256": "5d93639efaab539c719ad6d056613d948d3ccb79b42b7b791b1d790036435020",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/shared/data/filters.js",
       "folder": "src/shared/data",
       "module": "Compartilhado",
@@ -8046,6 +8189,7 @@
         "src/modules/consumption/hooks/useLineFollowup.js",
         "src/modules/logistics/components/LogisticsPanel.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
         "src/modules/monitoring/domain/monitoringReport.js",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
@@ -8437,6 +8581,7 @@
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
         "src/modules/monitoring/hooks/useMonitoringReminders.js",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
@@ -8527,6 +8672,8 @@
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
+        "src/modules/monitoring/components/MonitoringPage.jsx",
+        "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
         "src/modules/my-dashboard/domain/catalog.js",
@@ -8665,8 +8812,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 3627,
-      "sha256": "a4c00c58fcd6275553c75cf34a906c39d617f592021e2a68381f2982c1aed3e6",
+      "bytes": 10955,
+      "sha256": "dfd93884a38f2b293e889ba979068d65a46a881e7a2192ceada19613b5df8d1d",
       "status": "Código ou documentação do ponto de referência"
     },
     {

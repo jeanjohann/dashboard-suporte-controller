@@ -63,6 +63,14 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'src/modules/monitoring/components/MonitoringRegistry.jsx':
+    'Conferência autorizada API × Operacional, com grupos, filtros, referências de origem e CSV; não modifica os cadastros.',
+  'src/modules/monitoring/domain/monitoringRegistry.js':
+    'Cruza seriais numéricos exatos e únicos, preserva duplicidades e imprecisão e compara placa, cliente/base e modelo sem inferir equivalências.',
+  'src/modules/monitoring/domain/monitoringPeriods.js':
+    'Define limites de 48/72/96 horas e 30/60/90 dias e as faixas exclusivas de duração usadas na análise.',
+  'src/shared/data/clientDisplay.js':
+    'Formata nomes de clientes em caixa alta somente na apresentação, sem alterar fonte, identidade ou agrupamento.',
   'src/modules/monitoring/components/MonitoringSummaryTable.jsx':
     'Tabela por base/modelo com colunas essenciais ou completas, seleção, ordenação semântica de todo o conjunto e paginação de 15 linhas.',
   'src/modules/monitoring/domain/monitoringHistory.js':

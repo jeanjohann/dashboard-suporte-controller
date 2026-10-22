@@ -1,3 +1,4 @@
+import { clientDisplay } from '../shared/data/clientDisplay.js';
 /**
  * Componente compartilhado de apresentação. As regras de negócio são fornecidas pelos módulos.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -7,6 +8,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 /** Permite selecionar mais de um valor no mesmo campo; a combinação entre campos é feita pelo filtro de dados. */
 export function MultiFilter({ label, options, values, disabled, onChange }) {
+  const clientNames = /cliente|base|razão social/i.test(label);
   const [search, setSearch] = useState('');
   const root = useRef(null);
   const menu = useRef(null);
@@ -101,7 +103,9 @@ export function MultiFilter({ label, options, values, disabled, onChange }) {
                         )
                       }
                     />
-                    <span>{value || 'Sem dados'}</span>
+                    <span>
+                      {clientNames ? clientDisplay(value || 'Sem dados') : value || 'Sem dados'}
+                    </span>
                   </label>
                 ))}
                 {!visible.length && <p>Nenhuma opção encontrada.</p>}

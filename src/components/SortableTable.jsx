@@ -20,6 +20,10 @@ export function SortableTable({ children, sort: controlledSort, onSortChange, ..
   const controlled = typeof onSortChange === 'function';
   const sort = controlled ? controlledSort : localSort;
   const setSort = controlled ? onSortChange : setLocalSort;
+  const headings = Children.toArray(children).find((part) => part?.type === 'thead');
+  const labels = Children.toArray(headings?.props.children).flatMap((row) =>
+    Children.toArray(row?.props.children).map((cell) => plainText(cell)),
+  );
   return (
     <table {...props}>
       {Children.map(children, (part) => {
@@ -87,9 +91,11 @@ export function SortableTable({ children, sort: controlledSort, onSortChange, ..
                 ? cloneElement(
                     row,
                     {},
-                    Children.map(row.props.children, (cell) =>
+                    Children.map(row.props.children, (cell, index) =>
                       cell?.type === 'td'
                         ? cloneElement(cell, {
+                            'data-client-name':
+                              /cliente|razão social|^base$/i.test(labels[index] || '') || undefined,
                             'data-cell-type':
                               cell.props['data-cell-type'] ||
                               (typeof cell.props.children === 'number' ||

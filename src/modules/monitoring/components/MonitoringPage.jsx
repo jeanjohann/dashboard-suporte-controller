@@ -1,9 +1,13 @@
+import { clientDisplay } from '../../../shared/data/clientDisplay.js';
+import { MonitoringRegistry } from './MonitoringRegistry.jsx';
+import { monitoringThresholds, monitoringPeriodLabel } from '../domain/monitoringPeriods.js';
 /** Coordena acompanhamento e análise sem misturar demonstração e integração real. */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
-import { PermissionButton } from '../../../shared/security/Access.jsx';
+import { PermissionButton, useAccess } from '../../../shared/security/Access.jsx';
+import { allowsPage } from '../../../shared/security/permissions.js';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
 import { Section, PrintContext } from '../../../components/Section.jsx';
 import { download } from '../../../shared/export/exports.js';
@@ -36,8 +40,10 @@ const initialFilters = () => ({
 });
 
 /** Bases/limite pertencem à análise; busca, situação, status e recorte pertencem à fila/exportação. */
-export function MonitoringPage({ onPage }) {
-  const { snapshot, source, busy, cooldown, error, demonstration, refresh } = useMonitoringSource();
+export function MonitoringPage({ onPage, operational }) {
+  const { user } = useAccess();
+  const canReview = allowsPage(user, 'operational') || allowsPage(user, 'operational-analysis');
+  const { snapshot, source, busy, cooldown, error, refresh } = useMonitoringSource();
   const dashboardSource = useMemo(
     () => (snapshot ? { snapshot, error } : null),
     [source, snapshot?.referenceAt, error],
@@ -76,7 +82,9 @@ export function MonitoringPage({ onPage }) {
     ? snapshot.collections.map((entry) => ({
         id: entry.clientId,
         label:
-          (snapshot.vehicles.find((row) => row.clientId === entry.clientId)?.clientName || 'Base') +
+          clientDisplay(
+            snapshot.vehicles.find((row) => row.clientId === entry.clientId)?.clientName || 'Base',
+          ) +
           ' · ' +
           entry.clientId,
       }))
@@ -90,7 +98,7 @@ export function MonitoringPage({ onPage }) {
         .sort()
         .map((id) => ({ id, label: modelLabel(id) }))
     : [];
-  const scopeLabel = `Monitoramento Ativo → ${{ queue: 'Acompanhamento', overview: 'Visão analítica', reports: 'Relatórios' }[category]}`;
+  const scopeLabel = `Monitoramento Ativo → ${{ queue: 'Acompanhamento', overview: 'Visão analítica', reports: 'Relatórios', registry: 'Conferência de cadastros' }[category]}`;
   const chips = filterChips(filters, {
     labels: {
       clients: 'Bases',
@@ -108,7 +116,7 @@ export function MonitoringPage({ onPage }) {
         : key === 'models'
           ? value.map(modelLabel).join(', ')
           : key === 'threshold'
-            ? `${value} horas`
+            ? monitoringPeriodLabel(value)
             : key === 'state'
               ? monitoringStates[value] || value
               : key === 'focus'
@@ -146,32 +154,65 @@ export function MonitoringPage({ onPage }) {
     },
     [setFilters, filters.threshold, filters.clients, filters.models],
   );
-  const exportFile = (format) =>
-    download(
-      format === 'csv'
-        ? monitoringCsv(monitoringReport(queue, filters, notes, reminders.records))
-        : monitoringWorkbook(monitoringReport(queue, filters, notes, reminders.records)),
-      format === 'csv'
-        ? 'text/csv;charset=utf-8'
-        : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      (demo ? 'DEMO-' : '') + 'monitoramento.' + format,
-    );
-  const modeNotice = (
-    <div className="notice">
-      {demo
-        ? 'DEMONSTRAÇÃO — Dados fictícios, referência congelada e critérios provisórios. Nenhuma API real está conectada nesta demonstração. Anotações somente nesta sessão.'
-        : snapshot
-          ? 'Retrato recebido da integração. Classificação recalculada a cada minuto; consulta manual com intervalo mínimo de um minuto. Anotações somente nesta sessão, sem sincronização entre usuários.'
-          : 'Consulte a API para carregar a frota. A demonstração usa somente dados fictícios.'}
-      {snapshot?.source === 'addlog-legacy' && (
-        <p className="scope">
-          Fonte: sistema legado Addlog · Todas as bases retornadas · Posições nas últimas 24 horas
-          são registros de comunicação, sem equivalência em MB. Coleta: horário de recebimento no
-          servidor. Geração informada pela API: {snapshot.sourceGeneratedAt} (fuso não informado
-          neste campo).
+  const [exportBusy, setExportBusy] = useState(false),
+    [exportError, setExportError] = useState('');
+  async function exportFile(format) {
+    if (exportBusy || !queue) return;
+    setExportBusy(true);
+    setExportError('');
+    try {
+      const tables = monitoringReport(queue, filters, notes, reminders.records);
+      const content =
+        format === 'xlsx'
+          ? monitoringWorkbook(tables)
+          : monitoringCsv(tables, { vehiclesOnly: format === 'csv' });
+      await download(
+        content,
+        format === 'xlsx'
+          ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          : 'text/csv;charset=utf-8',
+        'monitoramento-' +
+          (format === 'sections'
+            ? 'completo'
+            : { queue: 'acompanhamento', reports: 'relatorios', overview: 'analitico' }[category] ||
+              'cadastros') +
+          '.' +
+          (format === 'xlsx' ? 'xlsx' : 'csv'),
+      );
+    } catch {
+      setExportError('Não foi possível exportar. Tente novamente ou use o outro formato.');
+    } finally {
+      setExportBusy(false);
+    }
+  }
+  const exportActions = (
+    <>
+      <PermissionButton action="export" disabled={exportBusy} onClick={() => exportFile('xlsx')}>
+        Exportar XLSX
+      </PermissionButton>
+      <PermissionButton action="export" disabled={exportBusy} onClick={() => exportFile('csv')}>
+        CSV da grade
+      </PermissionButton>
+      <span className="scope">
+        {queue?.rows.length || 0} veículos · recorte completo da categoria atual
+      </span>
+    </>
+  );
+  const modeNotice = snapshot && (
+    <details className="monitoring-source-note">
+      <summary>Fonte, atualização e limites desta leitura</summary>
+      <p>
+        Consulta manual; classificação recalculada a cada minuto, sem nova chamada à API. Anotações
+        somente nesta sessão, sem sincronização entre usuários.
+      </p>
+      {snapshot.source === 'addlog-legacy' && (
+        <p>
+          Fonte: sistema legado Addlog · Posições são registros de comunicação, sem equivalência em
+          MB. Geração informada: {snapshot.sourceGeneratedAt} (fuso não confirmado). A documentação
+          do diagnóstico integrado não disponibiliza telefone, ICCID, operadora ou consumo de dados.
         </p>
       )}
-    </div>
+    </details>
   );
   return (
     <SidePanelProvider>
@@ -183,17 +224,20 @@ export function MonitoringPage({ onPage }) {
               ['queue', 'Acompanhamento'],
               ['overview', 'Visão analítica'],
               ['reports', 'Relatórios'],
-            ].map(([key, label]) => (
-              <button
-                key={key}
-                className={category === key ? 'active' : ''}
-                aria-pressed={category === key}
-                onClick={() => setCategory(key)}
-              >
-                {label}
-                <FilterCount count={counts[key]} />
-              </button>
-            ))}
+              ['registry', 'Conferência de cadastros'],
+            ]
+              .filter(([key]) => key !== 'registry' || canReview)
+              .map(([key, label]) => (
+                <button
+                  key={key}
+                  className={category === key ? 'active' : ''}
+                  aria-pressed={category === key}
+                  onClick={() => setCategory(key)}
+                >
+                  {label}
+                  <FilterCount count={counts[key]} />
+                </button>
+              ))}
           </div>
         </SidebarContent>
         <PrintContext.Provider
@@ -220,9 +264,6 @@ export function MonitoringPage({ onPage }) {
                         ? 'Atualizar dados'
                         : 'Consultar integração'}
                 </button>
-                <button onClick={demonstration}>
-                  {demo ? 'Sair da demonstração' : 'Explorar demonstração'}
-                </button>
               </div>
             </header>
             {error && (
@@ -233,10 +274,10 @@ export function MonitoringPage({ onPage }) {
                   : ''}
               </p>
             )}
-            <MonitoringReminders key={demo ? 'demo' : 'real'} reminders={reminders} demo={demo} />
+
             {!snapshot ? (
               <>
-                {modeNotice}
+                <MonitoringReminders reminders={reminders} demo={false} />
                 <section className="panel monitoring-preparation">
                   <h2>Conexão com o sistema de rastreamento</h2>
                   <p>
@@ -248,144 +289,153 @@ export function MonitoringPage({ onPage }) {
               </>
             ) : (
               <>
-                <FilterPanel
-                  savedView={{
-                    scopeKey: `monitoring:${demo ? 'demo' : 'real'}:${category}`,
-                    state: { filters },
-                    validate: (view) =>
-                      (view.filters?.models || []).some(
-                        (id) => !models.some((model) => model.id === id),
-                      ) ||
-                      (view.filters?.clients || []).some(
-                        (id) => !bases.some((base) => base.id === id),
-                      )
-                        ? 'Uma base ou modelo desta visão não está disponível nesta fonte. Atualize a visão antes de aplicar.'
-                        : '',
-                    onApply: (view) => {
-                      setFilters({ ...initialFilters(), ...view.filters });
-                      setPage(0);
+                {category !== 'registry' && (
+                  <FilterPanel
+                    savedView={{
+                      scopeKey: `monitoring:${demo ? 'demo' : 'real'}:${category}`,
+                      state: { filters },
+                      validate: (view) =>
+                        (view.filters?.models || []).some(
+                          (id) => !models.some((model) => model.id === id),
+                        ) ||
+                        (view.filters?.clients || []).some(
+                          (id) => !bases.some((base) => base.id === id),
+                        )
+                          ? 'Uma base ou modelo desta visão não está disponível nesta fonte. Atualize a visão antes de aplicar.'
+                          : '',
+                      onApply: (view) => {
+                        setFilters({ ...initialFilters(), ...view.filters });
+                        setPage(0);
+                        setSelected(null);
+                      },
+                    }}
+                    scope={scopeLabel}
+                    chips={chips}
+                    matched={category === 'overview' ? result.totals.fleet : queue.rows.length}
+                    total={snapshot.vehicles.length}
+                    onClear={() => {
+                      setFilters(initialFilters());
                       setSelected(null);
-                    },
-                  }}
-                  scope={scopeLabel}
-                  chips={chips}
-                  matched={category === 'overview' ? result.totals.fleet : queue.rows.length}
-                  total={snapshot.vehicles.length}
-                  onClear={() => {
-                    setFilters(initialFilters());
-                    setSelected(null);
-                    setPage(0);
-                  }}
-                  help="Cada categoria mantém filtros próprios. Tempo desde o último registro até a referência exibida. Faixas de 48/72/96 h e validade da coleta inferior a 2 h são provisórias. Falha de coleta, datas inválidas/futuras ou posição ausente não confirmam interrupção. Bases, modelos e limite afetam a análise desta categoria; busca, situação, acompanhamento e recorte afetam sua fila/exportação, sem alterar o denominador dos cards. Clicar em um card abre Acompanhamento e aplica explicitamente as bases, os modelos, o limite e o recorte desse card na fila, sem modificar os filtros da visão analítica."
-                  source={`Referência: ${monitoringDate(snapshot.referenceAt)} · São Paulo · Limite: ${filters.threshold} horas · ${demo ? 'Dados fictícios' : 'Retrato recebido: ' + monitoringDate(source.referenceAt)}`}
-                >
-                  <div className="monitoring-filter-fields">
-                    <MultiFilter
-                      label="Bases de clientes"
-                      options={bases.map((base) => base.label)}
-                      values={bases
-                        .filter((base) => filters.clients.includes(base.id))
-                        .map((base) => base.label)}
-                      onChange={(value) =>
-                        update(
-                          'clients',
-                          bases.filter((base) => value.includes(base.label)).map((base) => base.id),
-                        )
-                      }
-                    />
-                    <MultiFilter
-                      label="Modelos de equipamento"
-                      options={models.map((model) => model.label)}
-                      values={models
-                        .filter((model) => filters.models.includes(model.id))
-                        .map((model) => model.label)}
-                      onChange={(value) =>
-                        update(
-                          'models',
-                          models
-                            .filter((model) => value.includes(model.label))
-                            .map((model) => model.id),
-                        )
-                      }
-                    />
-                    <label>
-                      Limite de atenção
-                      <select
-                        aria-label="Limite de atenção"
-                        value={filters.threshold}
-                        onChange={(event) => update('threshold', Number(event.target.value))}
-                      >
-                        {[48, 72, 96].map((hours) => (
-                          <option key={hours} value={hours}>
-                            {hours} horas
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
-                  {category !== 'overview' && (
-                    <div className="monitoring-queue-filters" data-no-print>
+                      setPage(0);
+                    }}
+                    help="Cada categoria mantém filtros próprios. Tempo desde o último registro até a referência exibida. Faixas de 48/72/96 horas e 30/60/90 dias e validade da coleta inferior a 2 h são provisórias. Falha de coleta, datas inválidas/futuras ou posição ausente não confirmam interrupção. Bases, modelos e limite afetam a análise desta categoria; busca, situação, acompanhamento e recorte afetam sua fila/exportação, sem alterar o denominador dos cards. Clicar em um card abre Acompanhamento e aplica explicitamente as bases, os modelos, o limite e o recorte desse card na fila, sem modificar os filtros da visão analítica."
+                    source={`Referência: ${monitoringDate(snapshot.referenceAt)} · São Paulo · Limite: ${monitoringPeriodLabel(filters.threshold)} · ${demo ? 'Dados fictícios' : 'Retrato recebido: ' + monitoringDate(source.referenceAt)}`}
+                  >
+                    <div className="monitoring-filter-fields">
+                      <MultiFilter
+                        label="Bases de clientes"
+                        options={bases.map((base) => base.label)}
+                        values={bases
+                          .filter((base) => filters.clients.includes(base.id))
+                          .map((base) => base.label)}
+                        onChange={(value) =>
+                          update(
+                            'clients',
+                            bases
+                              .filter((base) => value.includes(base.label))
+                              .map((base) => base.id),
+                          )
+                        }
+                      />
+                      <MultiFilter
+                        label="Modelos de equipamento"
+                        options={models.map((model) => model.label)}
+                        values={models
+                          .filter((model) => filters.models.includes(model.id))
+                          .map((model) => model.label)}
+                        onChange={(value) =>
+                          update(
+                            'models',
+                            models
+                              .filter((model) => value.includes(model.label))
+                              .map((model) => model.id),
+                          )
+                        }
+                      />
                       <label>
-                        Buscar veículo
-                        <input
-                          aria-label="Buscar veículo"
-                          type="search"
-                          placeholder="Placa, rastreador, modelo, cliente, perfil ou responsável…"
-                          value={filters.search}
-                          onChange={(event) => update('search', event.target.value)}
-                        />
-                      </label>
-                      <label>
-                        Situação técnica
+                        Limite de atenção
                         <select
-                          aria-label="Situação técnica"
-                          value={filters.state}
-                          onChange={(event) => update('state', event.target.value)}
+                          aria-label="Limite de atenção"
+                          value={filters.threshold}
+                          onChange={(event) => update('threshold', Number(event.target.value))}
                         >
-                          <option value="all">Todas</option>
-                          {Object.entries(monitoringStates).map(([key, label]) => (
-                            <option key={key} value={key}>
-                              {label}
+                          {monitoringThresholds.map((hours) => (
+                            <option key={hours} value={hours}>
+                              {monitoringPeriodLabel(hours)}
                             </option>
                           ))}
                         </select>
                       </label>
-                      <label>
-                        Status de acompanhamento
-                        <select
-                          aria-label="Filtrar acompanhamento"
-                          value={filters.stage}
-                          onChange={(event) => update('stage', event.target.value)}
-                        >
-                          <option value="all">Todos</option>
-                          {monitoringStages.map((stage) => (
-                            <option key={stage}>{stage}</option>
-                          ))}
-                        </select>
-                      </label>
-                      <label>
-                        Recorte da fila
-                        <select
-                          aria-label="Recorte da fila"
-                          value={filters.focus}
-                          onChange={(event) => update('focus', event.target.value)}
-                        >
-                          {Object.entries(monitoringFocusLabels).map(([key, label]) => (
-                            <option key={key} value={key}>
-                              {label}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                      <p className="scope" role="status">
-                        {queue.rows.length} de {result.totals.fleet} veículos no recorte da fila.
-                        Exportação usa este mesmo recorte; cards usam todas as situações das bases
-                        selecionadas.
-                      </p>
                     </div>
-                  )}
-                </FilterPanel>
-                {modeNotice}
+                    {category !== 'overview' && (
+                      <div className="monitoring-queue-filters" data-no-print>
+                        <label>
+                          Buscar veículo
+                          <input
+                            aria-label="Buscar veículo"
+                            type="search"
+                            placeholder="Placa, rastreador, modelo, cliente, perfil ou responsável…"
+                            value={filters.search}
+                            onChange={(event) => update('search', event.target.value)}
+                          />
+                        </label>
+                        <label>
+                          Situação técnica
+                          <select
+                            aria-label="Situação técnica"
+                            value={filters.state}
+                            onChange={(event) => update('state', event.target.value)}
+                          >
+                            <option value="all">Todas</option>
+                            {Object.entries(monitoringStates).map(([key, label]) => (
+                              <option key={key} value={key}>
+                                {label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          Status de acompanhamento
+                          <select
+                            aria-label="Filtrar acompanhamento"
+                            value={filters.stage}
+                            onChange={(event) => update('stage', event.target.value)}
+                          >
+                            <option value="all">Todos</option>
+                            {monitoringStages.map((stage) => (
+                              <option key={stage}>{stage}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          Recorte da fila
+                          <select
+                            aria-label="Recorte da fila"
+                            value={filters.focus}
+                            onChange={(event) => update('focus', event.target.value)}
+                          >
+                            {Object.entries(monitoringFocusLabels).map(([key, label]) => (
+                              <option key={key} value={key}>
+                                {label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <p className="scope" role="status">
+                          {queue.rows.length} de {result.totals.fleet} veículos no recorte da fila.
+                          Exportação usa este mesmo recorte; cards usam todas as situações das bases
+                          selecionadas.
+                        </p>
+                      </div>
+                    )}
+                  </FilterPanel>
+                )}
+                <MonitoringReminders reminders={reminders} demo={false} />
+                {exportError && (
+                  <p role="alert" className="notice">
+                    {exportError}
+                  </p>
+                )}
                 {(result.totals.stale > 0 ||
                   result.totals.invalid > 0 ||
                   result.issues.length > 0) && (
@@ -397,6 +447,7 @@ export function MonitoringPage({ onPage }) {
                 )}
                 <MonitoringQueue
                   visible={category === 'queue'}
+                  actions={exportActions}
                   result={queue}
                   notes={notes}
                   reminders={reminders}
@@ -406,6 +457,13 @@ export function MonitoringPage({ onPage }) {
                   page={page}
                   setPage={setPage}
                 />
+                {category === 'registry' && (
+                  <MonitoringRegistry
+                    snapshot={snapshot}
+                    operational={operational}
+                    onPage={onPage}
+                  />
+                )}
                 {analyticsOpened && (
                   <MonitoringAnalytics
                     visible={category === 'overview'}
@@ -426,11 +484,13 @@ export function MonitoringPage({ onPage }) {
                       {demo ? 'DADOS FICTÍCIOS' : 'Dados da integração'}
                     </p>
                     <div className="monitoring-actions">
-                      <PermissionButton action="export" onClick={() => exportFile('xlsx')}>
-                        Exportar XLSX{demo ? ' de demonstração' : ''}
-                      </PermissionButton>
-                      <PermissionButton action="export" onClick={() => exportFile('csv')}>
-                        Exportar CSV{demo ? ' de demonstração' : ''}
+                      {exportActions}
+                      <PermissionButton
+                        action="export"
+                        disabled={exportBusy}
+                        onClick={() => exportFile('sections')}
+                      >
+                        CSV completo por seções
                       </PermissionButton>
                     </div>
                     <p className="scope">
@@ -440,6 +500,7 @@ export function MonitoringPage({ onPage }) {
                     </p>
                   </Section>
                 </div>
+                {modeNotice}
               </>
             )}
           </main>

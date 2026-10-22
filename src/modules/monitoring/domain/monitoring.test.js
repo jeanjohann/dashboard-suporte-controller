@@ -65,7 +65,7 @@ test('limites em horas são inclusivos e faixas exclusivas; ausência não vira 
   assert.equal(result.totals.percentage, 50);
   assert.deepEqual(
     result.buckets.map((item) => item.value),
-    [2, 2, 2],
+    [2, 2, 2, 0, 0, 0],
   );
   assert.equal(monitorSnapshot(snapshot, { threshold: 72 }).totals.delayed, 4);
   assert.equal(monitorSnapshot(snapshot, { threshold: 96 }).totals.delayed, 2);

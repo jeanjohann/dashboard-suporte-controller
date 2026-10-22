@@ -1,4 +1,307 @@
 /* Tabelas semânticas e seções proporcionais ao conteúdo. */
+[data-client-name='true'] {
+  text-transform: uppercase;
+}
+.monitoring-page > main {
+  min-width: 0;
+}
+.monitoring-page > main > header {
+  margin-bottom: 10px;
+  align-items: center;
+}
+.monitoring-page > main > header h1 {
+  font-size: 22px;
+  margin: 2px 0;
+}
+.monitoring-page > main > header p,
+.monitoring-page .eyebrow {
+  display: none;
+}
+.monitoring-page > main > header .monitoring-actions {
+  margin: 0;
+}
+.monitoring-page .filter-workspace {
+  padding: 10px 12px;
+  margin: 0 0 10px;
+}
+.monitoring-page .filter-workspace-heading {
+  margin-bottom: 3px;
+}
+.monitoring-page .filter-workspace-summary {
+  padding-top: 6px;
+  margin-top: 3px;
+}
+.monitoring-page .filter-workspace-source {
+  padding-top: 6px;
+  margin-top: 6px;
+  font-size: 10px;
+}
+.monitoring-page .filter-workspace .saved-views {
+  margin: 4px 0;
+}
+.monitoring-page .filter-workspace:not(:has(.filter-workspace-editor[open], .saved-views[open])) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.monitoring-page .filter-workspace > .filter-workspace-heading,
+.monitoring-page .filter-workspace > .filter-workspace-summary,
+.monitoring-page .filter-workspace > .filter-workspace-source {
+  grid-column: 1/-1;
+}
+.monitoring-page
+  .filter-workspace:not(:has(.filter-workspace-editor[open], .saved-views[open]))
+  > .saved-views {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+}
+.monitoring-page
+  .filter-workspace:not(:has(.filter-workspace-editor[open], .saved-views[open]))
+  > .filter-workspace-editor {
+  grid-column: 1;
+  grid-row: 2;
+}
+.monitoring-page .filter-workspace > .saved-views {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.monitoring-page .filter-workspace > .saved-views > summary {
+  padding: 6px 0;
+}
+.monitoring-page .filter-workspace > .saved-views > summary small {
+  display: none;
+}
+.monitoring-page
+  .filter-workspace:not(:has(.filter-workspace-editor[open], .saved-views[open]))
+  > .filter-workspace-editor {
+  margin: 0;
+}
+.monitoring-page .monitoring-filter-fields {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(150px, 0.55fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.monitoring-page .monitoring-queue-filters {
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.monitoring-page .monitoring-filter-fields > label,
+.monitoring-page .monitoring-queue-filters > label {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-width: 0;
+}
+.monitoring-page .monitoring-filter-fields .multi-filter {
+  min-width: 0;
+}
+.monitoring-page .monitoring-filter-fields .multi-filter > span {
+  display: block;
+  margin-bottom: 5px;
+}
+.monitoring-page .monitoring-filter-fields select,
+.monitoring-page .monitoring-queue-filters select,
+.monitoring-page .monitoring-queue-filters input {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+.monitoring-page .monitoring-queue-filters > .scope {
+  margin: 0;
+  font-size: 10px;
+}
+.monitoring-page .monitoring-reminders {
+  padding: 0 12px;
+  margin: 0 0 10px;
+}
+.monitoring-page .monitoring-reminders-content > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.monitoring-reminders-content > summary::before {
+  content: '▸';
+}
+.monitoring-reminders-content[open] > summary::before {
+  content: '▾';
+}
+.monitoring-reminders-content > summary strong {
+  margin-right: auto;
+}
+.monitoring-reminders-content > summary [data-overdue='true'] {
+  color: var(--ui-error-ink);
+  font-weight: 650;
+}
+.monitoring-page .monitoring-queue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.monitoring-page .monitoring-queue-actions .scope {
+  margin: 0 0 0 auto;
+}
+.monitoring-queue-columns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  font-size: 11px;
+}
+.monitoring-queue-columns input {
+  min-height: 0 !important;
+}
+.monitoring-page .monitoring-queue-table th:last-child,
+.monitoring-page .monitoring-queue-table td:last-child {
+  position: sticky;
+  right: 0;
+  background: var(--ui-surface);
+  box-shadow: -1px 0 var(--ui-border);
+  z-index: 1;
+}
+.monitoring-page .monitoring-queue-table th:last-child {
+  z-index: 3;
+  background: var(--ui-soft);
+}
+.monitoring-page .monitoring-age-dot {
+  width: 12px;
+  height: 12px;
+  flex-basis: 12px;
+  border: 1px solid color-mix(in srgb, var(--ui-ink) 25%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 12%, transparent);
+}
+.monitoring-page .monitoring-tone-recent {
+  background: #15c584;
+  color: #15c584;
+}
+.monitoring-page .monitoring-tone-attention {
+  background: #f0b516;
+  color: #f0b516;
+}
+.monitoring-page .monitoring-tone-high {
+  background: #fb792b;
+  color: #fb792b;
+}
+.monitoring-page .monitoring-tone-critical {
+  background: #f04458;
+  color: #f04458;
+}
+.monitoring-page .monitoring-tone-extended {
+  background: #df2c8b;
+  color: #df2c8b;
+}
+.monitoring-page .monitoring-tone-long {
+  background: #ac55ed;
+  color: #ac55ed;
+}
+.monitoring-page .monitoring-tone-extreme {
+  background: #7959ef;
+  color: #7959ef;
+}
+.monitoring-page .monitoring-tone-unknown {
+  background: #8995a7;
+  color: #8995a7;
+}
+.monitoring-page .bar-chart {
+  display: flow-root;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+}
+.monitoring-page .readable-bars {
+  margin-bottom: 8px;
+}
+.monitoring-page .monitoring-summary-table {
+  clear: both;
+  margin-top: 16px;
+}
+.monitoring-page .monitoring-queue-table {
+  max-height: min(68vh, 760px);
+  overflow: auto;
+}
+.monitoring-page .monitoring-queue-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--ui-soft);
+}
+.monitoring-page .monitoring-source-note {
+  padding: 10px 0;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.monitoring-registry-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+@media (min-width: 800px) {
+  .monitoring-registry-counts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.monitoring-registry-counts button {
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+.monitoring-registry-counts button strong {
+  font-size: 20px;
+}
+.monitoring-registry-counts button[aria-pressed='true'] {
+  outline: 2px solid var(--ui-accent);
+}
+.monitoring-registry-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin: 12px 0;
+}
+.monitoring-registry-controls label {
+  display: grid;
+  gap: 5px;
+  min-width: 180px;
+}
+@media (max-width: 1050px) {
+  .monitoring-page .monitoring-filter-fields {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .monitoring-page .monitoring-queue-filters {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .monitoring-page .monitoring-filter-fields,
+  .monitoring-page .monitoring-queue-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .monitoring-page .monitoring-queue-actions .scope {
+    width: 100%;
+    margin: 0;
+  }
+}
+@media print {
+  .monitoring-queue-actions,
+  .monitoring-source-note,
+  .monitoring-registry-controls {
+    display: none !important;
+  }
+  .monitoring-page .monitoring-queue-table {
+    max-height: none;
+    overflow: visible;
+  }
+  .monitoring-page .monitoring-queue-table thead th {
+    position: static;
+  }
+}
 .zoho-presence-fields {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));

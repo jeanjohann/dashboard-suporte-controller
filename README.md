@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.52.0 — tabelas essenciais/completas no Monitoramento, comparações de análises personalizadas no Meu Dashboard e piloto local de permanência por sessões do Zoho. [Escopo e limites da rodada](docs/LAYOUT-E-CONSULTAS-052.md). Agendamento e histórico remoto aguardam a definição do armazenamento.
+**Versão:** 0.53.0 — fila do Monitoramento priorizada, filtros/lembretes compactos, períodos de 30/60/90 dias, exportação junto da grade e conferência de cadastros API × Operacional. [Uso e limites](docs/MONITORAMENTO-TRABALHO-E-CADASTROS.md). Agendamento e histórico remoto aguardam a definição do armazenamento.
 
 ## Documentação do projeto
 

@@ -1,3 +1,5 @@
+import { clientDisplay } from '../../../shared/data/clientDisplay.js';
+import { monitoringPeriodLabel } from '../domain/monitoringPeriods.js';
 /** Visão analítica separada da fila; cada card abre seu recorte sem alterar as bases e modelos selecionados. */
 import React from 'react';
 import { Chart } from '../../../components/Chart.jsx';
@@ -29,12 +31,24 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
       'all',
     ],
     [
-      `${threshold} h ou mais`,
+      `${monitoringPeriodLabel(threshold)} ou mais`,
       analysis.alerts,
       `${pct(result.totals.percentage == null ? null : result.totals.percentage / 100)} da frota identificada`,
       'alerts',
     ],
     ['96 h ou mais', result.totals.critical, 'Datas válidas e coletas utilizáveis', 'critical'],
+    ...[
+      [30, 'days30'],
+      [60, 'days60'],
+      [90, 'days90'],
+    ].map(([days, focus]) => [
+      `${days} dias ou mais`,
+      result.scoped.filter(
+        (row) => ['recent', 'delayed'].includes(row.state) && row.hours >= days * 24,
+      ).length,
+      'Duração acumulada; coleta utilizável',
+      focus,
+    ]),
     [
       'Sem posição registrada',
       result.totals.missing,
@@ -131,7 +145,7 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
               note={`${result.demonstration ? 'DEMONSTRAÇÃO. ' : ''}Faixas exclusivas, fixas a partir de 48 h, com coleta utilizável. Não representa histórico de interrupções.`}
             />
           }
-          help="Faixas exclusivas com datas válidas e coleta utilizável: 48 a menos de 72 h, 72 a menos de 96 h e 96 h ou mais. Abaixo de 48 h fica fora das barras. O limite selecionado não altera estas faixas fixas; não se trata de histórico de interrupções."
+          help="Faixas exclusivas com datas válidas e coleta utilizável: 48–72 h, 72–96 h, 96 h–30 dias, 30–60 dias, 60–90 dias e 90 dias ou mais. Abaixo de 48 h fica fora das barras. O limite selecionado não altera estas faixas fixas; não se trata de histórico de interrupções."
         >
           <Chart
             compact
@@ -178,6 +192,7 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
           exportNote={exportNote}
           items={result.groups.map((group) => ({
             label: group.label || group.clientId,
+            displayLabel: clientDisplay(group.label || group.clientId),
             value: group.alerts,
           }))}
         />
@@ -190,6 +205,7 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
               label: 'Base',
               required: true,
               value: (row) => row.label || row.clientId,
+              render: (row) => clientDisplay(row.label || row.clientId),
             },
             {
               id: 'fleet',
