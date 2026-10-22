@@ -1,6 +1,6 @@
 # Mapa do sistema — guia de estudo
 
-**Addlog · Dashboard de Suporte | versão 0.55.1 | referência: 1b5ad0f · cópia da entrega | levantamento: 2026-10-22**
+**Addlog · Dashboard de Suporte | versão 0.56.0 | referência: 12ceef5 · cópia da entrega | levantamento: 2026-10-22**
 
 Este mapa descreve o código do repositório nesse ponto de referência. Configurações privadas e o estado de serviços em execução não foram auditados: uma integração ter implementação não comprova que suas credenciais estejam válidas hoje. O [mapa interativo](index.html) contém o catálogo pesquisável; o [catálogo em Markdown](CATALOGO-DE-ARQUIVOS.md) permite consultar cada arquivo. Os diagramas têm versões SVG para apresentação e fontes Mermaid editáveis em [DIAGRAMAS.md](DIAGRAMAS.md).
 
@@ -204,6 +204,8 @@ Google usa uma fonte fixa no servidor; o cliente não fornece uma URL arbitrári
 O código não substitui a configuração externa da política Access, dos segredos, do D1 e dos fornecedores. Não há chaves ou identificadores privados reproduzidos neste material.
 
 ## 9. Integrações: o que existe e o que está preparado
+
+Desde 0.56.0, KORE acumula lotes de até oito páginas por token no navegador, com continuação a cada dez minutos enquanto a página está ativa. A rota `/api/consumption/kore/batch` exige administrador. `koreCollection.js` valida sequência, unicidade e total; o fim conferido distingue coleta completa e parcial. Tabela e exportação usam as linhas acumuladas na memória da sessão. Não há coleta em segundo plano no servidor nem persistência de frota. [Escopo e limites](../INTEGRACAO-KORE-SAITRO.md).
 
 | Integração                           | Implementação no repositório                                      | Limite para a apresentação                                                                               |
 | ------------------------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |

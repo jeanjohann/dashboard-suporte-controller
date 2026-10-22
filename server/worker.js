@@ -140,7 +140,13 @@ export function createHandler(authenticate = authenticatedEmail) {
           url.pathname.startsWith('/api/operational/') ? 'operational' : 'orders',
         );
       }
-      if (['/api/consumption/kore/status', '/api/consumption/kore/page'].includes(url.pathname)) {
+      if (
+        [
+          '/api/consumption/kore/status',
+          '/api/consumption/kore/page',
+          '/api/consumption/kore/batch',
+        ].includes(url.pathname)
+      ) {
         if (user.role !== 'admin')
           return reply(
             { error: 'O piloto KORE está disponível somente para administradores.' },

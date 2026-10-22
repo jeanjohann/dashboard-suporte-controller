@@ -282,6 +282,19 @@ test('piloto KORE exige administrador ativo, inclusive quando usuário possui ac
       path = '/api/consumption/kore/status';
     await admin(request('PUT', { ...input, pages: ['lines'] }), e);
     assert.equal(
+      (
+        await createHandler(async () => input.email)(
+          request('GET', null, '/api/consumption/kore/batch?pagina=1'),
+          e,
+        )
+      ).status,
+      403,
+    );
+    assert.equal(
+      (await admin(request('GET', null, '/api/consumption/kore/batch?pagina=1'), e)).status,
+      503,
+    );
+    assert.equal(
       (await createHandler(async () => input.email)(request('GET', null, path), e)).status,
       403,
     );

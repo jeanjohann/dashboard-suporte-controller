@@ -1,9 +1,9 @@
 {
-  "version": "0.55.1",
-  "base": "1b5ad0f · cópia da entrega",
+  "version": "0.56.0",
+  "base": "12ceef5 · cópia da entrega",
   "date": "2026-10-22",
-  "total": 451,
-  "tests": 90,
+  "total": 453,
+  "tests": 91,
   "folders": [
     {
       "path": "(raiz)",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 23
+      "count": 24
     },
     {
       "path": "server/persistence",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 330
+      "count": 331
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 240
+      "count": 241
     },
     {
       "path": "src/modules/assistant",
@@ -108,7 +108,7 @@
     {
       "path": "src/modules/consumption",
       "description": "Módulo Consumo M2M: interface, regras e integração de seus dados.",
-      "count": 45
+      "count": 46
     },
     {
       "path": "src/modules/consumption/components",
@@ -123,7 +123,7 @@
     {
       "path": "src/modules/consumption/data",
       "description": "Leitura, contratos e transporte de dados de Consumo M2M.",
-      "count": 5
+      "count": 6
     },
     {
       "path": "src/modules/consumption/domain",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 91624,
-      "sha256": "f9f9a9b28554f1b69fa51466575c9c841f9819ae1fae6c0a5aaba12ef0f32955",
+      "bytes": 92267,
+      "sha256": "394887e61c47bf0e31dadfa411f9cab2937a7367443eda074f92c4e0187169ee",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -707,8 +707,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 4979,
-      "sha256": "55d8d9a87b8dac100445fdef40da65e1a74930ff483346757786b4891910e011",
+      "bytes": 6826,
+      "sha256": "2cc7c10d22f3ca3a2ffe82277d235e3b5d85208bfc75f14f0ab6d8f817233e14",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1198,7 +1198,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 106621,
-      "sha256": "54fa90c6e302605f03d101cb0a792c59c43daabb7310b74d31eadb43d2f6bda6",
+      "sha256": "b8abda5e26097a0f556951eedd2a9c8ae1e5a544ea7ff044d1f60b2cef9005c7",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1212,7 +1212,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "528528ab2d26e5f610f94fc9410c15b7c76ab2549b980ba87d3e56fc355848f2",
+      "sha256": "1a2fe7c0ae405826e175f0ddd625328360f97403db29d931d7c924bb6ae871ef",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1375,8 +1375,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 44265,
-      "sha256": "14ca4ce90ebb05c2d8fcf0a802c3fca763d6281c096650b2c1fbf5cc511e8203",
+      "bytes": 44269,
+      "sha256": "27c3edce5d877cb8bcb649f6f16a6e51b47644fe49eb59d41cbb8231c2f6021f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1967,7 +1967,7 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Backend",
-      "description": "Consulta manual de uma página KORE, com token no servidor, validação do contrato e encerramento somente do token utilizado.",
+      "description": "Consulta KORE em lotes de até oito páginas por token, com validação e encerramento somente do token utilizado.",
       "exports": [
         "koreResponse",
         "mapKorePage"
@@ -1978,10 +1978,11 @@
       "external": [],
       "importedBy": [
         "server/kore.test.js",
+        "server/koreCollection.test.js",
         "server/worker.js"
       ],
-      "bytes": 8585,
-      "sha256": "c5231e94a64df24a1c3008781f9254099d2322d89a5bc7e37db40f8f7e650d66",
+      "bytes": 8992,
+      "sha256": "efdd334a6e3f391711ef5cef93b18d5b67b20ccd95bab72865054f4b7da22e2f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2002,6 +2003,26 @@
       "importedBy": [],
       "bytes": 8148,
       "sha256": "3cf0116e724bcf4e7f5fbd368a3c3c43dbc6ee0b3a316103a1e546eb616c2309",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/koreCollection.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica kore Collection no contexto de API Cloudflare. Exemplos: lotes usam até oito páginas por token e acumulam todas as linhas sem novo acesso para paginar a tabela; falha intermediária não publica lote truncado e encerra apenas o token usado; duplicatas, lacunas, total alterado e fim inconsistente não corrompem a coleta anterior.",
+      "exports": [],
+      "imports": [
+        "server/kore.js",
+        "src/modules/consumption/data/koreCollection.js"
+      ],
+      "external": [
+        "node:assert/strict",
+        "node:test"
+      ],
+      "importedBy": [],
+      "bytes": 3125,
+      "sha256": "b6cfa4a9c44ea1543cb7be71283c3e3dc4c405f5d3a9a283e80d53f259955180",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2168,8 +2189,8 @@
       "importedBy": [
         "server/worker.test.js"
       ],
-      "bytes": 9680,
-      "sha256": "de1c83c506f028398bdcfd8ab775dea86229c2a6b58749a887d27d105e09b08b",
+      "bytes": 9768,
+      "sha256": "ac1fb3fdabf8523bef5f5c4f91842678d330d819f24ea87276af868526ad05fe",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2189,8 +2210,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 12305,
-      "sha256": "c76f50d266979c848e562c09fdd1a81ea1fb23e871df56d5900dafeed2c552b7",
+      "bytes": 12643,
+      "sha256": "48657e3e5ba6d7ae6f192477a1de0c5934a29625580e7033e50053c3c8a5f916",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3553,7 +3574,7 @@
       "folder": "src/modules/consumption/components",
       "module": "Consumo M2M",
       "layer": "Interface React",
-      "description": "Piloto KORE para administradores: página de linhas, bytes, horários BRT e exportação isolada dos indicadores CSV.",
+      "description": "Coleta KORE para administradores: lotes a cada dez minutos, cobertura, pausa e exportação em memória, isolada dos indicadores CSV.",
       "exports": [
         "KorePilotPanel"
       ],
@@ -3561,6 +3582,7 @@
         "src/components/ReportSummary.jsx",
         "src/components/Section.jsx",
         "src/components/SortableTable.jsx",
+        "src/modules/consumption/data/koreCollection.js",
         "src/modules/consumption/data/koreContract.js",
         "src/shared/export/exports.js",
         "src/shared/security/Access.jsx"
@@ -3571,8 +3593,8 @@
       "importedBy": [
         "src/modules/consumption/components/CarrierPage.jsx"
       ],
-      "bytes": 12810,
-      "sha256": "2eda4a24a6d5d7e7fb6221d578dae552ba76acee2546c3f33e4d1e1501e58d95",
+      "bytes": 15203,
+      "sha256": "6a48ccdcfddbf63c25b340a22b071729fd230b1fbda228b8798bc6f40b9e822e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3827,6 +3849,27 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/modules/consumption/data/koreCollection.js",
+      "folder": "src/modules/consumption/data",
+      "module": "Consumo M2M",
+      "layer": "Dados / transporte",
+      "description": "Acumula lotes contíguos em memória, rejeitando duplicidades e mudança de cobertura.",
+      "exports": [
+        "appendKoreBatch"
+      ],
+      "imports": [
+        "src/modules/consumption/data/koreContract.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "server/koreCollection.test.js",
+        "src/modules/consumption/components/KorePilotPanel.jsx"
+      ],
+      "bytes": 1811,
+      "sha256": "e5a6e321ab21019ecef20822b8c961a5eabf5ec854de0a8ab59855652956b705",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/modules/consumption/data/koreContract.js",
       "folder": "src/modules/consumption/data",
       "module": "Consumo M2M",
@@ -3841,7 +3884,8 @@
       "importedBy": [
         "server/kore.js",
         "server/kore.test.js",
-        "src/modules/consumption/components/KorePilotPanel.jsx"
+        "src/modules/consumption/components/KorePilotPanel.jsx",
+        "src/modules/consumption/data/koreCollection.js"
       ],
       "bytes": 3450,
       "sha256": "af930b56e5b82f0f0f19b96cc1c200ce2560c358243c08865514a545abbf0c47",

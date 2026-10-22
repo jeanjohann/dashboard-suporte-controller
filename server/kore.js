@@ -1,4 +1,4 @@
-/** Piloto KORE/Saitro: uma página por consulta, autenticação e encerramento apenas do token desta leitura. */
+/** KORE/Saitro: lotes de até oito páginas por token, com encerramento somente do token desta leitura. */
 import { normalizeKorePage } from '../src/modules/consumption/data/koreContract.js';
 
 const origin = 'https://kore.saitro.com';
@@ -126,7 +126,7 @@ export async function koreResponse(request, env, fetcher = fetch) {
   )
     return json({ error: 'Página de consulta inválida.' }, 400);
   const controller = new AbortController(),
-    timer = setTimeout(() => controller.abort(), 18000);
+    timer = setTimeout(() => controller.abort(), 45000);
   let token = null,
     stage = 'authentication',
     output = null;
@@ -165,19 +165,28 @@ export async function koreResponse(request, env, fetcher = fetch) {
     )
       throw Error('grant');
     stage = 'reading';
-    const pageUrl = new URL('/api/simcards/', origin);
-    pageUrl.searchParams.set('pagina', pageText);
-    const body = await readJson(
-      await fetcher(pageUrl, {
-        method: 'GET',
-        redirect: 'manual',
-        cache: 'no-store',
-        signal: controller.signal,
-        headers: { Accept: 'application/json', Authorization: grant.Authorization },
-      }),
-    );
-    stage = 'contract';
-    output = mapKorePage(body, Number(pageText));
+    const pages = [];
+    const limit = url.pathname.endsWith('/batch') ? 8 : 1;
+    for (let index = 0; index < limit; index++) {
+      stage = 'reading';
+      const number = Number(pageText) + index;
+      const pageUrl = new URL('/api/simcards/', origin);
+      pageUrl.searchParams.set('pagina', String(number));
+      const body = await readJson(
+        await fetcher(pageUrl, {
+          method: 'GET',
+          redirect: 'manual',
+          cache: 'no-store',
+          signal: controller.signal,
+          headers: { Accept: 'application/json', Authorization: grant.Authorization },
+        }),
+      );
+      stage = 'contract';
+      pages.push(mapKorePage(body, number));
+      if (pages[0].totalReported !== pages.at(-1).totalReported) throw Error('contract');
+      if (!pages.at(-1).hasNext) break;
+    }
+    output = limit === 1 ? pages[0] : { pages };
     output.cleanupConfirmed = false;
   } catch (failure) {
     // Apenas códigos internos e status HTTP; nunca registrar URL, corpo ou autenticação.

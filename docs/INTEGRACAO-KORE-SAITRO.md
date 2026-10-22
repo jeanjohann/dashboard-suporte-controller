@@ -1,5 +1,17 @@
 # KORE/Saitro — piloto de consulta manual
 
+## Atualização 0.56.0 — coleta de todas as páginas
+
+A ação em **Consumo → KORE** inicia a coleta em lotes. `GET /api/consumption/kore/batch?pagina=N` usa um token para até oito páginas consecutivas e encerra somente esse token ao final. São no máximo dez chamadas por lote incluindo concessão e encerramento; usa-se o limite conservador diante das divergências documentais. A rota antiga `/page` permanece compatível.
+
+O navegador acumula lotes em memória e permite continuar automaticamente após dez minutos, enquanto a página KORE estiver ativa. É possível pausar, continuar ou reiniciar. Recarregar perde os dados e o progresso. Não há tarefa no servidor, cron ou armazenamento central. Os lotes representam uma janela de coleta, sem garantia de fotografia simultânea da conta.
+
+Cada lote é validado antes de ser publicado. Páginas fora de sequência, total alterado, IDs/ICCIDs repetidos ou fim de paginação incompatível recusam o lote sem alterar a coleta anterior. Um erro pausa a continuação. Somente o fim confirmado com contagem correspondente ao total da operadora habilita o rótulo **Coleta completa**. Exportação informa cobertura parcial/completa, início/fim da coleta e páginas coletadas.
+
+A tabela exibe vinte linhas por vez a partir da memória; esses botões não consultam a KORE e funcionam durante a espera. O subtotal considera todas as linhas já coletadas, com ausência de bytes separada de zero. A operação com 1.083 linhas em páginas de vinte requer aproximadamente sete lotes, ou uma hora entre o primeiro e o último, sem contar atrasos e falhas.
+
+O período do acumulado ainda depende de confirmação. Relatórios históricos por data possuem endpoints documentados, mas não foram implementados nesta entrega. Abaixo permanece o registro do piloto inicial e da homologação.
+
 Entrega 0.55.0, em 22/10/2026. Acesso em **Consumo → KORE**. Consulta uma página por vez e exporta somente a página exibida. O total informado pela operadora não significa que todas as linhas foram coletadas. A amostra de conexão retornou 20 linhas e total de 1.083; esses números podem variar.
 
 As páginas KORE e Arqia herdam a permissão de Consumo M2M. A consulta KORE permanece restrita a administradores ativos. Arqia exibe a pendência de documentação e acesso, com atalho para o controle de CSVs, sem métricas fictícias.

@@ -5,7 +5,8 @@ import { SortableTable } from '../../../components/SortableTable.jsx';
 import { ReportSummary } from '../../../components/ReportSummary.jsx';
 import { PermissionButton, useAccess } from '../../../shared/security/Access.jsx';
 import { download, csv } from '../../../shared/export/exports.js';
-import { normalizeKorePage, korePageSummary } from '../data/koreContract.js';
+import { korePageSummary } from '../data/koreContract.js';
+import { appendKoreBatch } from '../data/koreCollection.js';
 
 const show = (value) => (value == null || value === '' ? 'Não informado' : value);
 const bytes = (value) =>
@@ -20,6 +21,8 @@ export function KorePilotPanel({ visible }) {
     [busy, setBusy] = useState(false),
     [error, setError] = useState('');
   const [remaining, setRemaining] = useState(0);
+  const [automatic, setAutomatic] = useState(false),
+    [viewPage, setViewPage] = useState(1);
   const request = useRef(null),
     retryAt = useRef(0);
   useEffect(() => {
@@ -53,6 +56,18 @@ export function KorePilotPanel({ visible }) {
     );
     return () => clearInterval(timer);
   }, [remaining > 0]);
+  useEffect(() => {
+    if (
+      visible &&
+      automatic &&
+      !busy &&
+      !error &&
+      !remaining &&
+      page?.hasNext &&
+      page.cleanupConfirmed
+    )
+      read(page.page + 1);
+  }, [visible, automatic, busy, error, remaining, page]);
   async function read(number = 1) {
     if (request.current || Date.now() < retryAt.current) return;
     const controller = new AbortController();
@@ -61,9 +76,9 @@ export function KorePilotPanel({ visible }) {
     setRemaining(600);
     setBusy(true);
     setError('');
-    const timer = setTimeout(() => controller.abort(), 30000);
+    const timer = setTimeout(() => controller.abort(), 55000);
     try {
-      const response = await fetch(`/api/consumption/kore/page?pagina=${number}`, {
+      const response = await fetch(`/api/consumption/kore/batch?pagina=${number}`, {
         credentials: 'same-origin',
         cache: 'no-store',
         redirect: 'error',
@@ -104,10 +119,12 @@ export function KorePilotPanel({ visible }) {
       }
       if (!response.headers.get('Content-Type')?.includes('application/json'))
         throw Error('A KORE não retornou uma página válida.');
-      const next = normalizeKorePage(await response.json());
-      if (next.page !== number) throw Error('A página recebida não corresponde à solicitada.');
+      const next = appendKoreBatch(number === 1 ? null : page, await response.json());
       setPage(next);
+      if (number === 1) setViewPage(1);
+      if (next.complete || !next.cleanupConfirmed) setAutomatic(false);
     } catch (failure) {
+      setAutomatic(false);
       if (!controller.signal.aborted) setError(failure.message);
       else setError('A consulta ultrapassou o tempo de espera.');
     } finally {
@@ -123,7 +140,9 @@ export function KorePilotPanel({ visible }) {
     const header = [
       'Fonte',
       'Consulta UTC',
-      'Página',
+      'Páginas coletadas',
+      'Início da coleta UTC',
+      'Cobertura',
       'Total informado na conta',
       'Período do consumo',
       'ICCID',
@@ -146,6 +165,8 @@ export function KorePilotPanel({ visible }) {
       'KORE/Saitro',
       page.readAt,
       page.page,
+      page.firstReadAt,
+      page.complete ? 'Completa' : 'Parcial',
       page.totalReported,
       'Não confirmado',
       row.iccid ?? '',
@@ -164,25 +185,31 @@ export function KorePilotPanel({ visible }) {
       row.apn ?? '',
       row.technology ?? '',
     ]);
-    download(csv([header, ...rows]), 'text/csv;charset=utf-8', `kore-pagina-${page.page}.csv`);
+    download(
+      csv([header, ...rows]),
+      'text/csv;charset=utf-8',
+      `kore-coleta-${page.complete ? 'completa' : 'parcial'}.csv`,
+    );
   }
   return (
     <Section
       title="KORE · consulta de linhas"
       visible={visible}
-      help="Piloto manual, somente para administradores. Uma página por leitura; a quantidade total da conta não é a quantidade coletada. Autenticação e encerramento do token usado nesta consulta ocorrem somente no servidor. Consumo em bytes é o acumulado informado pela KORE, ainda sem período/ciclo confirmado. Último acesso é mostrado em BRT (UTC-03:00), conforme confirmação da operadora. A consulta lê o banco da KORE no momento do pedido; sessões abertas dependem das atualizações das operadoras, de 5 minutos a 1 hora. A consulta não modifica os indicadores CSV. Sem atualização automática."
+      help="Coleta iniciada manualmente, para administradores. Cada lote consulta até oito páginas com um token e tenta encerrá-lo ao final. Lotes seguintes aguardam dez minutos e continuam enquanto esta página estiver aberta, sem erro e com continuação habilitada. Dados ficam apenas na memória desta sessão; recarregar perde o progresso. A coleta abrange vários instantes, não é uma fotografia simultânea. Consumo em bytes, horários BRT, período do acumulado ainda não confirmado. Não altera indicadores CSV."
       summary={
         <ReportSummary
           metrics={[
             [
               'Situação',
               page
-                ? 'Leitura confirmada'
+                ? page.complete
+                  ? 'Coleta completa'
+                  : 'Coleta parcial'
                 : status?.configured
                   ? 'Configurada'
                   : 'Aguardando configuração',
             ],
-            ['Linhas desta página', page?.rows.length ?? '—'],
+            ['Linhas coletadas', page?.rows.length ?? '—'],
             ['Linhas informadas na conta', page?.totalReported ?? '—'],
           ]}
           note="Fonte separada dos extratos CSV; período do acumulado ainda não confirmado."
@@ -201,36 +228,68 @@ export function KorePilotPanel({ visible }) {
           <div className="integration-preview-controls" data-no-print>
             <button
               disabled={!status?.configured || busy || remaining > 0}
-              onClick={() => read(page?.page ?? 1)}
+              onClick={() => {
+                setAutomatic(true);
+                read(page?.hasNext ? page.page + 1 : 1);
+              }}
             >
               {busy
                 ? 'Consultando KORE…'
                 : remaining > 0
                   ? `Aguarde ${remaining} s`
                   : page
-                    ? 'Atualizar página KORE'
-                    : 'Consultar linhas KORE'}
+                    ? page.hasNext
+                      ? 'Continuar coleta KORE'
+                      : 'Atualizar todas as linhas'
+                    : 'Coletar todas as linhas KORE'}
             </button>
             {page && (
               <>
-                <button
-                  disabled={busy || remaining > 0 || page.page <= 1}
-                  onClick={() => read(page.page - 1)}
-                >
+                <button disabled={viewPage <= 1} onClick={() => setViewPage(viewPage - 1)}>
                   Página anterior
                 </button>
                 <button
-                  disabled={busy || remaining > 0 || !page.hasNext}
-                  onClick={() => read(page.page + 1)}
+                  disabled={viewPage * 20 >= page.rows.length}
+                  onClick={() => setViewPage(viewPage + 1)}
                 >
                   Próxima página
                 </button>
                 <PermissionButton action="export" onClick={exportPage}>
-                  Exportar página CSV
+                  Exportar linhas coletadas CSV
                 </PermissionButton>
+                {page.hasNext && (
+                  <button
+                    disabled={busy || remaining > 0}
+                    onClick={() => {
+                      setAutomatic(true);
+                      read(1);
+                    }}
+                  >
+                    Reiniciar coleta
+                  </button>
+                )}
               </>
             )}
           </div>
+          <p className="scope">
+            Cada lote consulta até oito páginas. A próxima coleta aguarda dez minutos. Dados e
+            progresso ficam apenas nesta sessão; recarregar a página reinicia a coleta.
+          </p>
+          {page?.hasNext && (
+            <p className="scope" role="status">
+              {page.rows.length} de {page.totalReported} linhas coletadas · {page.page} páginas.
+              {automatic
+                ? ' Continuação automática habilitada; mantenha esta página aberta.'
+                : ' Continuação pausada.'}
+              <button
+                type="button"
+                onClick={() => setAutomatic(!automatic)}
+                disabled={busy || !!error || !page.cleanupConfirmed}
+              >
+                {automatic ? 'Pausar continuação' : 'Habilitar continuação'}
+              </button>
+            </p>
+          )}
           {status && !status.configured && (
             <p className="scope">Acesso KORE ainda não configurado no servidor.</p>
           )}
@@ -251,18 +310,28 @@ export function KorePilotPanel({ visible }) {
               <p className="scope">
                 Leitura bem-sucedida:{' '}
                 {new Date(page.readAt).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}{' '}
-                (Brasília). Página {page.page}: {page.rows.length} linhas de {page.totalReported}{' '}
-                informadas na conta.{' '}
+                (Brasília). {page.rows.length} linhas de {page.totalReported} informadas na conta ·{' '}
+                {page.page} páginas coletadas.{' '}
                 {page.hasNext
                   ? 'Há outras páginas ainda não coletadas.'
-                  : 'Fim da paginação informado nesta consulta; páginas anteriores não são acumuladas neste painel.'}
+                  : 'Coleta completa: todas as páginas e a quantidade de linhas foram conferidas.'}{' '}
+                Início:{' '}
+                {new Date(page.firstReadAt).toLocaleString('pt-BR', {
+                  timeZone: 'America/Sao_Paulo',
+                })}{' '}
+                (Brasília).
               </p>
               <ReportSummary
                 metrics={[
-                  ['Subtotal desta página', bytes(summary.bytes)],
+                  [
+                    page.complete
+                      ? 'Total informado nas linhas coletadas'
+                      : 'Subtotal da coleta parcial',
+                    bytes(summary.bytes),
+                  ],
                   ['Linhas com bytes informados', `${summary.known} de ${summary.rows}`],
                 ]}
-                note="Acumulado de período não confirmado; não é consumo diário, mensal ou total da conta. Ausência não é zero."
+                note="Acumulado de período não confirmado; não equivale a consumo diário ou mensal. Ausência não é zero."
               />
               <div className="table-scroll">
                 <SortableTable>
@@ -285,7 +354,7 @@ export function KorePilotPanel({ visible }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {page.rows.map((row) => (
+                    {page.rows.slice((viewPage - 1) * 20, viewPage * 20).map((row) => (
                       <tr key={row.id}>
                         <td>{show(row.iccid)}</td>
                         <td>{show(row.number)}</td>

@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.56.0 — 22/10/2026
+
+- Coleta KORE acumula lotes de até oito páginas por token, com continuação a cada dez minutos enquanto a página estiver aberta. Progresso, pausa, retomada e reinício preservam a distinção entre coleta parcial e completa.
+- Confere páginas consecutivas, IDs/ICCIDs duplicados e estabilidade do total informado. Falhas não publicam lotes truncados nem substituem a coleta anterior. Exportação inclui cobertura e intervalo de leitura.
+- Navegação da tabela em blocos de 20 linhas utiliza os dados já coletados, sem novas chamadas à operadora. Dados e progresso permanecem apenas na memória da sessão.
+
 ## 0.55.1 — 22/10/2026
 
 - Reconhece a confirmação real de encerramento KORE `status: true`, além do formato documentado `"OK"`. Preserva páginas válidas com aviso separado se esse encerramento falhar.
