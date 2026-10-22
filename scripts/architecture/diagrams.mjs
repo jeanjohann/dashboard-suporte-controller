@@ -220,7 +220,7 @@ export const diagrams = [
         [980, 470],
       ]),
     ],
-    note: 'Piloto do proprietário: agenda, cinco versões de OS/Operacional/Logística e coletas por 30 dias. Cron 9h/12h/15h/18h de São Paulo depende da publicação 0.59.0. Consumo e preferências conservam armazenamento anterior.',
+    note: 'Piloto do proprietário: agenda, cinco versões de OS/Operacional/Logística e coletas por 30 dias. Worker 0.59.0 publicado com cron 9h/12h/15h/18h de São Paulo. Consumo e preferências conservam armazenamento anterior.',
   },
   {
     id: '06-assistente',

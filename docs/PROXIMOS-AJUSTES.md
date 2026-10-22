@@ -2,7 +2,7 @@
 
 ## Evolução 0.59.0 — 22/10/2026
 
-Bases completas de OS/Operacional/Logística e coleta do Monitoramento preparadas para o banco do piloto. Cinco versões por planilha; fotografias de 30 dias; horários aprovados 9h, 12h, 15h e 18h de São Paulo. Backup e migração SQL conferidos, com lembrete real preservado. Publicação e primeiro uso autenticado ainda precisam ser confirmados. O proprietário já validou a agenda 0.58.0 entre navegadores. [Escopo, testes e limitações](BASES-SALVAS-E-COLETA.md).
+Bases completas de OS/Operacional/Logística e coleta do Monitoramento publicadas no banco do piloto. Cinco versões por planilha; fotografias de 30 dias; cron 9h, 12h, 15h e 18h de São Paulo. Backup e migração SQL conferidos, com lembrete real preservado. GitHub main `0072c8c`, Worker ativo `91c2c185-6d5f-47d7-b67c-3d341a3c52a7`, 434 testes aprovados e compilação concluída. Primeiro uso autenticado das bases e primeira execução real ainda precisam ser conferidos. O proprietário já validou a agenda 0.58.0 entre navegadores. [Escopo, testes e limitações](BASES-SALVAS-E-COLETA.md).
 
 Próximas etapas: homologar primeiro envio e coleta reais, acompanhar espaço e limites do Worker, definir acesso de outros usuários e depois avaliar persistência de consumo/Zoho/KORE e painéis. Histórico de comunicação não equivale a consumo da linha; sessões Zoho continuam aguardando fonte validada. Não há notificação automática nesta entrega.
 

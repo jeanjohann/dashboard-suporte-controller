@@ -1,6 +1,6 @@
 # Mapa técnico Addlog 0.59.0
 
-Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.59.0 (6972fef · cópia da entrega, 2026-10-22). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
+Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.59.0 (0072c8c · cópia da entrega, 2026-10-22). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
 
 ## Arquitetura geral
 

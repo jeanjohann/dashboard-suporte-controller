@@ -44,7 +44,7 @@ A versão 0.59.0 conecta OS, Operacional, Logística e fotografias do Monitorame
 
 ## Estado de ativação
 
-O proprietário confirmou persistência após recarga e acesso pelo Edge em 22/10/2026. A migração `0002_snapshots_and_collection.sql` foi aplicada após backup e restauração local conferidos, preservando o único documento de lembrete existente. Uma segunda exportação/restauração confirmou a integridade do esquema ampliado. Código 0.59.0 preparado; publicação e primeiro uso das novas fontes são registrados no guia específico.
+O proprietário confirmou persistência após recarga e acesso pelo Edge em 22/10/2026. A migração `0002_snapshots_and_collection.sql` foi aplicada após backup e restauração local conferidos, preservando o único documento de lembrete existente. Uma segunda exportação/restauração confirmou a integridade do esquema ampliado. A versão 0.59.0 foi publicada no GitHub e no Cloudflare com cron ativo; primeiro uso autenticado das novas fontes ainda precisa ser conferido. [Registro da publicação](BASES-SALVAS-E-COLETA.md).
 
 Banco criado em 22/10/2026, região ENAM, identificador `b3609719-196a-40a7-95b9-5e3a769c9610`. Migração `0001_business_documents.sql` aplicada no serviço remoto. Primeira exportação SQL conferida por SHA-256 e restaurada em SQLite local: integridade OK, índice de listagem presente e zero documentos. Esse ensaio valida a estrutura inicial; não substitui a conferência dos dados reais após a migração de cada navegador.
 
