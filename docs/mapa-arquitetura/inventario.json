@@ -1,6 +1,6 @@
 {
   "version": "0.55.0",
-  "base": "ab1915c · cópia da entrega",
+  "base": "80db355 · cópia da entrega",
   "date": "2026-10-22",
   "total": 451,
   "tests": 90,
@@ -2380,8 +2380,8 @@
         "src/modules/orders/components/OrdersPage.jsx",
         "src/modules/users/components/UsersPage.jsx"
       ],
-      "bytes": 6303,
-      "sha256": "bdaaba1baf2062de0689d2ffb7789e8dc7d20b4298a24e2b6209bcc1f2264f82",
+      "bytes": 7242,
+      "sha256": "586096d6846bef4fbba46d806458b63693d56f0fa28edb30d2eb78a9fcd5f90b",
       "status": "Código ou documentação do ponto de referência"
     },
     {

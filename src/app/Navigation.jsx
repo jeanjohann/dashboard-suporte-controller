@@ -69,7 +69,7 @@ export function Navigation({ page, onPage }) {
       window.open(architectureMapUrl, '_blank', 'noopener,noreferrer');
       return;
     }
-    if (key === page) {
+    if (key === page || (key === 'lines' && ['kore', 'arqia'].includes(page))) {
       if (collapsed) {
         changeCollapsed(false);
         setMenuOpen(true);
@@ -107,42 +107,61 @@ export function Navigation({ page, onPage }) {
                   : ''
               }
               aria-current={page === key ? 'page' : undefined}
-              aria-expanded={key !== 'imports' && page === key ? !collapsed && menuOpen : undefined}
-              aria-controls={key !== 'imports' && page === key ? `submenu-${key}` : undefined}
+              aria-expanded={
+                key !== 'imports' &&
+                (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page)))
+                  ? !collapsed && menuOpen
+                  : undefined
+              }
+              aria-controls={
+                key !== 'imports' &&
+                (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page)))
+                  ? `submenu-${key}`
+                  : undefined
+              }
               onClick={() => select(key)}
             >
               <span className="navigation-icon" aria-hidden="true">
                 <Icon name={['kore', 'arqia'].includes(key) ? 'lines' : key} />
               </span>
               <span className="navigation-label">{label}</span>
-              {key !== 'imports' && page === key && (
-                <span className="navigation-chevron" aria-hidden="true">
-                  {<Icon name={menuOpen ? 'up' : 'down'} size={14} />}
-                </span>
-              )}
+              {key !== 'imports' &&
+                (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page))) && (
+                  <span className="navigation-chevron" aria-hidden="true">
+                    {<Icon name={menuOpen ? 'up' : 'down'} size={14} />}
+                  </span>
+                )}
             </button>
-            {key === 'lines' && (
+            {key === 'lines' && ['lines', 'kore', 'arqia'].includes(page) && (
               <div
-                className="category-navigation"
-                hidden={collapsed}
+                id="submenu-lines"
+                hidden={collapsed || !menuOpen}
                 aria-label="Operadoras de consumo"
               >
-                {['kore', 'arqia']
-                  .filter((carrier) => allowsPage(user, carrier))
-                  .map((carrier) => (
-                    <button
-                      key={carrier}
-                      type="button"
-                      className={page === carrier ? 'active' : ''}
-                      aria-current={page === carrier ? 'page' : undefined}
-                      onClick={() => select(carrier)}
-                    >
-                      {carrier === 'kore' ? 'KORE' : 'Arqia'}
+                <div className="sidebar-tools">
+                  <nav className="category-navigation" aria-label="Acompanhamento de operadoras">
+                    <button type="button" onClick={() => onPage('lines')}>
+                      Visão do consumo
                     </button>
-                  ))}
+                    {['kore', 'arqia']
+                      .filter((carrier) => allowsPage(user, carrier))
+                      .map((carrier) => (
+                        <button
+                          key={carrier}
+                          type="button"
+                          className={page === carrier ? 'active' : ''}
+                          aria-current={page === carrier ? 'page' : undefined}
+                          onClick={() => select(carrier)}
+                        >
+                          {carrier === 'kore' ? 'KORE' : 'Arqia'}
+                        </button>
+                      ))}
+                  </nav>
+                </div>
+                {page === 'lines' && <SidePanelTarget />}
               </div>
             )}
-            {page === key && (
+            {page === key && key !== 'lines' && (
               <div id={`submenu-${key}`} hidden={collapsed || !menuOpen}>
                 <SidePanelTarget />
               </div>
