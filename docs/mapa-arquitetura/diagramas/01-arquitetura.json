@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "title": "Mapa técnico Addlog 0.54.1",
+  "title": "Mapa técnico Addlog 0.55.0",
   "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
   "diagrams": [
     {
@@ -24,7 +24,7 @@
           },
           {
             "id": "sources",
-            "label": "Google Sheets + Zoho · Consultas privadas de leitura",
+            "label": "Google · Zoho · KORE · Consultas privadas de leitura",
             "class": "cloud"
           },
           {

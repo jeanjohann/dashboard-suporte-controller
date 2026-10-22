@@ -18,6 +18,8 @@ const pages = [
   ['orders', 'Ordens de Serviço'],
   ['operational', 'Operacional'],
   ['lines', 'Controle de Consumo M2M'],
+  ['kore', 'KORE'],
+  ['arqia', 'Arqia'],
   ['operational-analysis', 'Parque e Manutenção'],
   ['monitoring', 'Monitoramento Ativo'],
   ['imports', 'Importação'],
@@ -108,7 +110,7 @@ export function Navigation({ page, onPage }) {
               onClick={() => select(key)}
             >
               <span className="navigation-icon" aria-hidden="true">
-                <Icon name={key} />
+                <Icon name={['kore', 'arqia'].includes(key) ? 'lines' : key} />
               </span>
               <span className="navigation-label">{label}</span>
               {key !== 'imports' && page === key && (

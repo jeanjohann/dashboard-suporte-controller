@@ -274,6 +274,28 @@ test('configuração incompleta recusa APIs e rotas desconhecidas não viram HTM
   }
 });
 
+test('piloto KORE exige administrador ativo, inclusive quando usuário possui acesso ao consumo', async () => {
+  const db = database();
+  try {
+    const e = env(db),
+      admin = createHandler(async () => owner),
+      path = '/api/consumption/kore/status';
+    await admin(request('PUT', { ...input, pages: ['lines'] }), e);
+    assert.equal(
+      (await createHandler(async () => input.email)(request('GET', null, path), e)).status,
+      403,
+    );
+    assert.equal((await admin(request('GET', null, path), e)).status, 200);
+    assert.equal(
+      (await admin(request('GET', null, '/api/consumption/kore/page?pagina=1'), e)).status,
+      503,
+    );
+    assert.equal((await admin(request('POST', null, path), e)).status, 405);
+  } finally {
+    db.close();
+  }
+});
+
 test('monitoramento exige página autorizada, serviço privado e GET; não encaminha identidade nem erros do fornecedor', async () => {
   const db = database();
   try {

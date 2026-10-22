@@ -27,6 +27,7 @@
     },
   ],
   "ratelimits": [
+    { "name": "KORE_API_LIMITER", "namespace_id": "1003", "simple": { "limit": 1, "period": 60 } },
     {
       "name": "MONITORING_DIAGNOSTIC_LIMITER",
       "namespace_id": "1002",

@@ -45,15 +45,15 @@ export function ConsumptionSourcesPanel({ archive, visible }) {
     <Section
       title={title}
       visible={visible}
-      help="APIs KORE Brasil/Saitro e Arqia ainda não conectadas. A origem atual é CSV local. A prévia usa apenas dados fictícios isolados; não consulta operadoras, não importa registros e não altera notas ou backups. Revisões substituem a observação da mesma conexão/conta/período; fontes diferentes exigem escolha explícita. Datas, unidades e conta devem ser normalizadas por adaptadores validados antes da coleta real."
+      help="KORE/Saitro possui piloto separado de consulta manual. Arqia ainda aguarda documentação e acesso. A origem dos indicadores atuais continua sendo CSV local. A prévia usa apenas dados fictícios isolados; não consulta operadoras, não importa registros e não altera notas ou backups. Revisões substituem a observação da mesma conexão/conta/período; fontes diferentes exigem escolha explícita. Datas, unidades e conta devem ser normalizadas por adaptadores validados antes da coleta real."
       summary={
         <ReportSummary
           metrics={[
             ['Arquivos locais', archive.files.length],
             ['Versões em uso', archive.files.filter((file) => file.active !== false).length],
-            ['APIs conectadas', 'Nenhuma'],
+            ['Fonte dos indicadores', 'CSV local'],
           ]}
-          note="CSV continua sendo a fonte atual. As duas integrações aguardam documentação, acesso e homologação."
+          note="CSV continua alimentando os indicadores. KORE possui consulta manual separada, em bytes e BRT; equivalência de período e apuração aguarda homologação."
         />
       }
     >
@@ -74,7 +74,7 @@ export function ConsumptionSourcesPanel({ archive, visible }) {
             <tr>
               <td>KORE Brasil / Saitro</td>
               <td>Linhas e consumo</td>
-              <td>Aguardando documentação e acesso da conta</td>
+              <td>Piloto na página KORE; bytes e BRT confirmados, período pendente</td>
             </tr>
             <tr>
               <td>Arqia</td>

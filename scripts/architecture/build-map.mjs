@@ -63,6 +63,12 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'scripts/setup-kore.ps1':
+    'Configura credenciais KORE como segredos do Worker por entrada oculta e stdin, sem gravar valores privados em arquivos.',
+  'server/kore.js':
+    'Consulta manual de uma página KORE, com token no servidor, validação do contrato e encerramento somente do token utilizado.',
+  'src/modules/consumption/components/KorePilotPanel.jsx':
+    'Piloto KORE para administradores: página de linhas, bytes, horários BRT e exportação isolada dos indicadores CSV.',
   'src/styles/theme-presets.css':
     'Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.',
   'src/modules/monitoring/components/MonitoringRegistry.jsx':

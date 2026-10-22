@@ -331,26 +331,28 @@ export function LinesPage({
                   imports={imports}
                   settingsAvailable={ready && (!!statements.length || category === 'history')}
                 />
-                <ConsumptionFiltersPanel
-                  scope={`Consumo → ${categories.find(([key]) => key === category)[1]}`}
-                  selectedCount={selected.length}
-                  actions={<ReportControls onExpand={setExpansion} />}
-                  operators={operators}
-                  periods={periods}
-                  statements={statements}
-                  fields={fields}
-                  allRows={allRows}
-                  filters={filters}
-                  filter={filter}
-                  archive={archive}
-                  busy={busy}
-                  ready={ready}
-                  commit={commit}
-                  search={search}
-                  setSearch={setSearch}
-                  setDetail={setDetail}
-                  setFilters={setFilters}
-                />
+                {category !== 'kore' && (
+                  <ConsumptionFiltersPanel
+                    scope={`Consumo → ${categories.find(([key]) => key === category)[1]}`}
+                    selectedCount={selected.length}
+                    actions={<ReportControls onExpand={setExpansion} />}
+                    operators={operators}
+                    periods={periods}
+                    statements={statements}
+                    fields={fields}
+                    allRows={allRows}
+                    filters={filters}
+                    filter={filter}
+                    archive={archive}
+                    busy={busy}
+                    ready={ready}
+                    commit={commit}
+                    search={search}
+                    setSearch={setSearch}
+                    setDetail={setDetail}
+                    setFilters={setFilters}
+                  />
+                )}
                 {!ready && !error && (
                   <ViewState busy compact title="Abrindo histórico…">
                     Os arquivos e as anotações serão exibidos após a leitura do armazenamento local.
@@ -373,7 +375,7 @@ export function LinesPage({
                   savePending={savePending}
                   setPending={setPending}
                 />
-                {!!statements.length && (
+                {!!statements.length && category !== 'kore' && (
                   <>
                     <div className="source">
                       <span>
@@ -394,7 +396,7 @@ export function LinesPage({
                     </p>
                   </>
                 )}
-                {!statements.length && ready && (
+                {!statements.length && ready && category !== 'kore' && (
                   <ViewState
                     title="Guarde seus extratos e acompanhe a evolução"
                     action={
@@ -420,26 +422,30 @@ export function LinesPage({
                     apuração no histórico.
                   </ViewState>
                 )}
-                {ready && !!statements.length && !selected.length && category !== 'history' && (
-                  <ViewState
-                    title="Nenhum registro corresponde a este recorte"
-                    action={
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFilters({});
-                          setSearch('');
-                          setDetail(null);
-                        }}
-                      >
-                        Limpar filtros desta categoria
-                      </button>
-                    }
-                  >
-                    Confira a apuração, os filtros e a busca. Os arquivos e as anotações do
-                    histórico permanecem guardados.
-                  </ViewState>
-                )}
+                {ready &&
+                  !!statements.length &&
+                  !selected.length &&
+                  category !== 'history' &&
+                  category !== 'kore' && (
+                    <ViewState
+                      title="Nenhum registro corresponde a este recorte"
+                      action={
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFilters({});
+                            setSearch('');
+                            setDetail(null);
+                          }}
+                        >
+                          Limpar filtros desta categoria
+                        </button>
+                      }
+                    >
+                      Confira a apuração, os filtros e a busca. Os arquivos e as anotações do
+                      histórico permanecem guardados.
+                    </ViewState>
+                  )}
                 {category === 'overview' && ready && !!statements.length && (
                   <AttentionPanel
                     scope="Consumo · apurações e filtros atuais"

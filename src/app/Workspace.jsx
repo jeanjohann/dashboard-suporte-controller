@@ -34,6 +34,11 @@ const LinesPage = lazy(() =>
     default: module.LinesPage,
   })),
 );
+const CarrierPage = lazy(() =>
+  import('../modules/consumption/components/CarrierPage.jsx').then((module) => ({
+    default: module.CarrierPage,
+  })),
+);
 const OperationalPage = lazy(() =>
   import('../modules/operational/components/OperationalPage.jsx').then((module) => ({
     default: module.OperationalPage,
@@ -217,6 +222,17 @@ function WorkspaceContent() {
           reloadToken={consumptionRevision}
         />
       </DeferredPage>
+      {['kore', 'arqia'].map((carrier) => (
+        <DeferredPage
+          key={carrier}
+          active={current === carrier}
+          allowed={allowed(carrier)}
+          page={carrier}
+          onPage={navigate}
+        >
+          <CarrierPage carrier={carrier} active={current === carrier} onPage={navigate} />
+        </DeferredPage>
+      ))}
       <DeferredPage
         active={['operational', 'operational-analysis'].includes(current)}
         allowed={allowed('operational') || allowed('operational-analysis')}

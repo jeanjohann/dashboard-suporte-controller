@@ -7,6 +7,7 @@ import { usersSchema } from './schema.js';
 import { monitoringResponse } from './monitoring.js';
 import { googleOrdersResponse } from './googleOrders.js';
 import { zohoResponse } from './zoho.js';
+import { koreResponse } from './kore.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
   normalizeEmail,
@@ -138,6 +139,14 @@ export function createHandler(authenticate = authenticatedEmail) {
           undefined,
           url.pathname.startsWith('/api/operational/') ? 'operational' : 'orders',
         );
+      }
+      if (['/api/consumption/kore/status', '/api/consumption/kore/page'].includes(url.pathname)) {
+        if (user.role !== 'admin')
+          return reply(
+            { error: 'O piloto KORE está disponível somente para administradores.' },
+            403,
+          );
+        return koreResponse(request, env);
       }
       if (url.pathname === '/api/monitoring/snapshot') {
         if (user.role !== 'admin' && !user.pages.includes('monitoring'))

@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.55.0 — 22/10/2026
+
+- Adiciona páginas KORE e Arqia ao menu principal, herdando a permissão de Consumo M2M. O piloto KORE/Saitro permite consulta manual por administradores: linhas paginadas, consumo em bytes, situação, conexão, bloqueios e último acesso BRT. Exporta somente a página exibida. Arqia aguarda documentação e acesso.
+- Credenciais ficam em segredos do Cloudflare. Autenticação por token no servidor, leitura de uma página e encerramento somente do token usado; sem limpeza global de tokens ou comandos de alteração dos chips. Intervalo de um minuto, limites de leitura e preservação da página anterior em falha.
+- Mantém o piloto separado dos indicadores, arquivos, notas e backups CSV. A operadora confirmou bytes, BRT (UTC-03:00) e atualização de sessões abertas entre 5 minutos e 1 hora. Período do acumulado e regras divergentes de limite/paginação precisam de confirmação antes da integração dos totais.
+
 ## 0.54.1 — 22/10/2026
 
 - Simplifica a seleção de temas para nomes em fonte de 12 px, mantendo a indicação da opção ativa e a preferência salva.

@@ -1,6 +1,6 @@
 # Mapa do sistema — guia de estudo
 
-**Addlog · Dashboard de Suporte | versão 0.54.1 | referência: da68bc6 · cópia da entrega | levantamento: 2026-10-22**
+**Addlog · Dashboard de Suporte | versão 0.55.0 | referência: f785dc8 · cópia da entrega | levantamento: 2026-10-22**
 
 Este mapa descreve o código do repositório nesse ponto de referência. Configurações privadas e o estado de serviços em execução não foram auditados: uma integração ter implementação não comprova que suas credenciais estejam válidas hoje. O [mapa interativo](index.html) contém o catálogo pesquisável; o [catálogo em Markdown](CATALOGO-DE-ARQUIVOS.md) permite consultar cada arquivo. Os diagramas têm versões SVG para apresentação e fontes Mermaid editáveis em [DIAGRAMAS.md](DIAGRAMAS.md).
 
@@ -25,7 +25,7 @@ A arquitetura geral permanece a mesma. O inventário foi regenerado a partir da 
 
 O sistema transforma bases de atendimento, equipamentos e consumo em análises com rastreabilidade até os registros de origem. A aplicação principal roda no navegador, em React. Ela lê planilhas, valida e normaliza campos, aplica filtros por categoria e calcula indicadores em funções de domínio. Os gráficos, cards e tabelas apresentam esses resultados sem alterar as planilhas originais.
 
-O Cloudflare entrega a aplicação e hospeda uma API protegida. Essa API autentica o usuário, verifica suas permissões e faz as consultas privadas ao Google Sheets e ao Zoho Desk. O banco D1 em uso guarda o cadastro de usuários e suas permissões; ele não é um banco central de todas as planilhas e históricos de negócio.
+O Cloudflare entrega a aplicação e hospeda uma API protegida. Essa API autentica o usuário, verifica suas permissões e faz as consultas privadas ao Google Sheets, ao Zoho Desk e ao piloto KORE/Saitro. O banco D1 em uso guarda o cadastro de usuários e suas permissões; ele não é um banco central de todas as planilhas e históricos de negócio.
 
 Há também um laboratório separado, no computador local. Uma ponte autenticada conecta o sistema ao n8n e ao Gemini. O agente usa ferramentas restritas que calculam resultados sobre fontes autorizadas. Ele explica resultados; os cálculos continuam no sistema. Esse laboratório depende dos serviços locais e não é necessário para abrir os relatórios comuns.
 
@@ -197,23 +197,26 @@ O Worker verifica a assinatura, emissor, audiência e validade do JWT do Cloudfl
 | `GET /api/monitoring/snapshot`                     | Diagnóstico legado / coletor privado | Administrador ou permissão de Monitoramento; segredos no servidor; todas as bases retornadas |
 | `POST /api/assistant/local-session`                | Autorização efêmera do laboratório   | Administrador proprietário e origem validada                                                 |
 
+O piloto KORE usa `GET /api/consumption/kore/status` e `/page?pagina=N`, restritos a administradores. Credenciais e token ficam no servidor, com encerramento do token utilizado. A consulta exibe somente uma página; sessões abertas podem atrasar de 5 minutos a 1 hora. [Detalhes e pendências](../INTEGRACAO-KORE-SAITRO.md).
+
 Google usa uma fonte fixa no servidor; o cliente não fornece uma URL arbitrária para consultar. Zoho mantém OAuth e tokens no Worker. A coleta de atividade só é entregue ao front após concluir suas páginas; falhas ou cancelamento não apresentam um lote truncado como completo. A ponte local do assistente valida novamente a autorização e não expõe execução livre de SQL, código, rede ou arquivos ao agente.
 
 O código não substitui a configuração externa da política Access, dos segredos, do D1 e dos fornecedores. Não há chaves ou identificadores privados reproduzidos neste material.
 
 ## 9. Integrações: o que existe e o que está preparado
 
-| Integração                           | Implementação no repositório                                   | Limite para a apresentação                                                                               |
-| ------------------------------------ | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Planilhas Excel/CSV                  | Importadores e análises em uso                                 | Validade depende dos campos e do histórico disponível                                                    |
-| Google Sheets OS/Operacional         | Leitura privada, contratos e reaproveitamento dos importadores | Consulta autorizada da fonte configurada; sem histórico automático no D1                                 |
-| Zoho Desk                            | Leitura privada de agentes/tickets e atividade por período     | Tickets respondidos confirmados, apontamentos e pendências de conferência têm bases próprias             |
-| Permanência/presença de agentes Zoho | Documentação e preparação analítica                            | Arquivo/histórico de disponibilidade ainda depende de validação; não inferir jornada pelo tempo apontado |
-| Monitoramento de veículos            | Diagnóstico legado Addlog, rota autenticada e interface        | Consulta manual; cobertura real em homologação; demais sistemas e histórico compartilhado pendentes      |
-| KORE/ARQIA                           | Fila/documentação e preparação de coexistência de fontes       | Não há adaptadores de produção dessas operadoras no código atual                                         |
-| n8n + Gemini                         | Laboratório local, AI Agent e ferramenta restrita              | Depende do computador e das credenciais; não é um backend central de IA hospedado                        |
-| MCP                                  | Proposta documentada                                           | Não há endpoint MCP genérico entregue                                                                    |
-| Banco central de negócio             | Contratos e adaptador D1 preparados                            | `USERS_DB` continua dedicado ao acesso; persistência de negócio ainda não ativada                        |
+| Integração                           | Implementação no repositório                                      | Limite para a apresentação                                                                               |
+| ------------------------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Planilhas Excel/CSV                  | Importadores e análises em uso                                    | Validade depende dos campos e do histórico disponível                                                    |
+| Google Sheets OS/Operacional         | Leitura privada, contratos e reaproveitamento dos importadores    | Consulta autorizada da fonte configurada; sem histórico automático no D1                                 |
+| Zoho Desk                            | Leitura privada de agentes/tickets e atividade por período        | Tickets respondidos confirmados, apontamentos e pendências de conferência têm bases próprias             |
+| Permanência/presença de agentes Zoho | Documentação e preparação analítica                               | Arquivo/histórico de disponibilidade ainda depende de validação; não inferir jornada pelo tempo apontado |
+| Monitoramento de veículos            | Diagnóstico legado Addlog, rota autenticada e interface           | Consulta manual; cobertura real em homologação; demais sistemas e histórico compartilhado pendentes      |
+| KORE/Saitro                          | Adaptador privado e consulta manual paginada para administradores | Bytes/BRT confirmados; período e conexão no servidor em homologação; separado dos CSVs                   |
+| Arqia                                | Preparação de coexistência de fontes                              | Documentação e acesso pendentes                                                                          |
+| n8n + Gemini                         | Laboratório local, AI Agent e ferramenta restrita                 | Depende do computador e das credenciais; não é um backend central de IA hospedado                        |
+| MCP                                  | Proposta documentada                                              | Não há endpoint MCP genérico entregue                                                                    |
+| Banco central de negócio             | Contratos e adaptador D1 preparados                               | `USERS_DB` continua dedicado ao acesso; persistência de negócio ainda não ativada                        |
 
 No Zoho, tempo apontado é duração registrada numa atividade, com autoria/data próprias. Primeira resposta e resolução descrevem o ciclo do ticket; nenhum desses números, sozinho, mede o tempo de permanência do agente. Confirmados e parcelas a conferir devem continuar identificados.
 

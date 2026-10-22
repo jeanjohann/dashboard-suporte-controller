@@ -21,7 +21,7 @@ export const diagrams = [
     nodes: [
       node('web', 'Navegador\nReact · interface e análises', 40, 140),
       node('worker', 'Cloudflare Worker\nAPI autenticada · /api/*', 440, 140, 'cloud'),
-      node('sources', 'Google Sheets + Zoho\nConsultas privadas de leitura', 840, 140, 'cloud'),
+      node('sources', 'Google · Zoho · KORE\nConsultas privadas de leitura', 840, 140, 'cloud'),
       node('session', 'Workspace + módulos\nBases e filtros da sessão', 40, 370),
       node('users', 'D1 · USERS_DB\nUsuários e permissões', 440, 370, 'store'),
       node(

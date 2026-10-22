@@ -1,19 +1,19 @@
 # Integrações de consumo — KORE e Arqia
 
-**Incluídas na fila de implementação pelo proprietário em 17/10/2026.** Objetivo: alimentar o Controle de Consumo por consultas às operadoras e reduzir a importação manual, preservando identificação das linhas, acompanhamento e conferência da origem. Nenhuma API de operadora foi implementada, configurada ou ativada nesta etapa.
+**Incluídas na fila de implementação pelo proprietário em 17/10/2026.** Objetivo: alimentar o Controle de Consumo por consultas às operadoras e reduzir a importação manual, preservando identificação das linhas, acompanhamento e conferência da origem. Atualização 0.55.0: piloto KORE/Saitro implementado e credenciais configuradas; leitura no servidor ainda em homologação. Arqia aguarda documentação e acesso.
 
-O proprietário buscará documentação e liberação de acesso na segunda-feira, **19/10/2026**. Essa data é a previsão de obtenção das informações, não um compromisso de entrada em produção. As duas integrações podem ser homologadas separadamente, conforme o acesso disponível.
+Em 22/10/2026 foram recebidos documentação privada e acesso KORE/Saitro. Bytes, BRT e atraso de sessões abertas entre 5 minutos e 1 hora estão confirmados. O período do acumulado permanece pendente. [Escopo do piloto KORE](INTEGRACAO-KORE-SAITRO.md).
 
 **Preparação entregue em 0.28.0:** o [laboratório CSV/API](PREPARACAO-FONTES-DE-CONSUMO.md) demonstra revisões, repetição, escolha de fonte e falha parcial com dados fictícios. A política interna testada não foi aplicada ao histórico real nem implementa endpoints, adaptadores das operadoras ou coleta. Os próximos passos abaixo continuam necessários para ativação.
 
 ## Operadoras e situação confirmada
 
-| Fila  | Operadora / portal informado                                    | Evidência e pendência                                                                                                                                                                                                                                                                             |
-| ----- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A15-K | KORE Brasil / Saitro — `https://kore.saitro.com/sistema/login/` | A página oficial da KORE identifica esse endereço como portal brasileiro, separado dos portais Super SIM e ConnectivityPro. A documentação pública de API Clients administra aplicações/credenciais. Falta confirmar a API que atende as linhas dessa conta e obter sua documentação e liberação. |
-| A15-A | Arqia — `https://plataformadegestao.arqia.com.br/login.faces`   | A página oficial da Plataforma de Gestão aponta para o mesmo portal e anuncia integração por API. Não foram confirmados endpoints, autenticação, campos retornados, limites, custos ou habilitação para a conta da Addlog.                                                                        |
+| Fila  | Operadora / portal informado                                    | Evidência e pendência                                                                                                                                                                                                                                                                                        |
+| ----- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A15-K | KORE Brasil / Saitro — `https://kore.saitro.com/sistema/login/` | A página oficial da KORE identifica esse endereço como portal brasileiro, separado dos portais Super SIM e ConnectivityPro. A documentação pública de API Clients administra aplicações/credenciais. API Saitro confirmada e piloto manual implementado; validar conexão no servidor e período do acumulado. |
+| A15-A | Arqia — `https://plataformadegestao.arqia.com.br/login.faces`   | A página oficial da Plataforma de Gestão aponta para o mesmo portal e anuncia integração por API. Não foram confirmados endpoints, autenticação, campos retornados, limites, custos ou habilitação para a conta da Addlog.                                                                                   |
 
-O endereço efetivo do portal KORE prevalece sobre a seleção inicial “Super SIM / KORE Console” feita durante a investigação. A API Super SIM possui recursos de consumo, mas a compatibilidade com a conta Saitro continua pendente. Não reutilizar sua autenticação, unidades, retenção ou limites por suposição.
+O endereço efetivo do portal KORE prevalece sobre a seleção inicial “Super SIM / KORE Console” feita durante a investigação. A API Super SIM possui recursos de consumo, mas esta conta utiliza a API própria Saitro. Não reutilizar sua autenticação, unidades, retenção ou limites por suposição.
 
 ## Dados desejados no piloto
 
