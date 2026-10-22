@@ -17,9 +17,7 @@ const pages = [
   ['my-dashboard', 'Meu Dashboard'],
   ['orders', 'Ordens de Serviço'],
   ['operational', 'Operacional'],
-  ['lines', 'Controle de Consumo M2M'],
-  ['kore', 'KORE'],
-  ['arqia', 'Arqia'],
+  ['lines', 'Consumo'],
   ['operational-analysis', 'Parque e Manutenção'],
   ['monitoring', 'Monitoramento Ativo'],
   ['imports', 'Importação'],
@@ -103,7 +101,11 @@ export function Navigation({ page, onPage }) {
               type="button"
               title={label}
               aria-label={label}
-              className={page === key ? 'active' : ''}
+              className={
+                page === key || (key === 'lines' && ['kore', 'arqia'].includes(page))
+                  ? 'active'
+                  : ''
+              }
               aria-current={page === key ? 'page' : undefined}
               aria-expanded={key !== 'imports' && page === key ? !collapsed && menuOpen : undefined}
               aria-controls={key !== 'imports' && page === key ? `submenu-${key}` : undefined}
@@ -119,6 +121,27 @@ export function Navigation({ page, onPage }) {
                 </span>
               )}
             </button>
+            {key === 'lines' && (
+              <div
+                className="category-navigation"
+                hidden={collapsed}
+                aria-label="Operadoras de consumo"
+              >
+                {['kore', 'arqia']
+                  .filter((carrier) => allowsPage(user, carrier))
+                  .map((carrier) => (
+                    <button
+                      key={carrier}
+                      type="button"
+                      className={page === carrier ? 'active' : ''}
+                      aria-current={page === carrier ? 'page' : undefined}
+                      onClick={() => select(carrier)}
+                    >
+                      {carrier === 'kore' ? 'KORE' : 'Arqia'}
+                    </button>
+                  ))}
+              </div>
+            )}
             {page === key && (
               <div id={`submenu-${key}`} hidden={collapsed || !menuOpen}>
                 <SidePanelTarget />
