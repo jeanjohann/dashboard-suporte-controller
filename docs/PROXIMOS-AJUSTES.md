@@ -2,7 +2,7 @@
 
 ## Permanência e refinamento 0.60.0 — 22/10/2026
 
-O proprietário confirmou tempo conectado dos agentes como prioridade; CSV Session real ainda precisa ser exportado. Leitura local ampliada com filtro/ranking por agente, evolução diária, sessões e revisão exportáveis. Botão Adicionar indicador redimensionado e contraste corrigido também no Salvar painel. [Entrega e validação pendente](PERMANENCIA-ZOHO-E-REFINAMENTO.md). Não houve criação de fonte automática de sessões nem persistência da presença no banco.
+O proprietário confirmou tempo conectado dos agentes como prioridade; CSV Session real ainda precisa ser exportado. Versão publicada no GitHub (`d1aeab2`) e no Cloudflare, com 438 testes aprovados. Leitura local ampliada com filtro/ranking por agente, evolução diária, sessões e revisão exportáveis. Botão Adicionar indicador redimensionado e contraste corrigido também no Salvar painel. [Entrega e validação pendente](PERMANENCIA-ZOHO-E-REFINAMENTO.md). Não houve criação de fonte automática de sessões nem persistência da presença no banco.
 
 ## Evolução 0.59.0 — 22/10/2026
 

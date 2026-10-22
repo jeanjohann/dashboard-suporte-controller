@@ -38,4 +38,6 @@ Testes de domínio cobrem união de intervalos, duplicatas, saídas ausentes, fu
 
 O controle do navegador está desativado nas configurações do Work nesta sessão. Compilação e verificações de código não substituem inspeção visual interativa. O CSV real, seu fuso e os totais no Zoho ainda precisam ser conferidos; não houve leitura real de presença ou automação de sessões.
 
-Estado de publicação: versão preparada, aguardando conclusão das verificações e entrega.
+Publicada em 22/10/2026: GitHub main `d1aeab2`, upload Cloudflare `cad94b04-d6c5-4559-a0a2-d4ad9cbebd62` e versão ativa `9eefde56-bf2f-4c7c-a515-fb8c21163ac9` com 100% do tráfego e mesmo etag do código. Conferidos os bindings de bancos separados, piloto owner, handlers fetch/scheduled e cron existente. A rota de fontes sem sessão continua redirecionando ao Access.
+
+Importações, formatação, 438 testes e compilação aprovados; um teste previsto ignorado. A publicação não representa homologação do CSV real nem inspeção visual interativa, que permanecem pendentes conforme descrito acima. O mapa documental foi atualizado no repositório, sem publicar o site independente do mapa.
