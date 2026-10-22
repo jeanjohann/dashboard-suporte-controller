@@ -66,7 +66,7 @@ export function LogisticsPanel({ source, onImport, filters, setFilters, onExpand
       if (accessManaged() && !allowsSource(accessUser(), 'logistics'))
         throw Error('Importação da logística não autorizada.');
       const result = importLogistics(await file.arrayBuffer());
-      onImport({ filename: file.name, data: result });
+      await onImport({ filename: file.name, data: result });
     } catch (e) {
       setError(
         (e.message || 'Não foi possível ler o arquivo.') +

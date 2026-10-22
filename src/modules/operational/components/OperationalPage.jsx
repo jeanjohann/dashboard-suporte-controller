@@ -165,7 +165,7 @@ export function OperationalPage({
       if (accessManaged() && !allowsSource(accessUser(), 'operational'))
         throw Error('Importação operacional não autorizada.');
       const data = importOperational(await file.arrayBuffer());
-      setSource({ data, filename: file.name });
+      await setSource({ data, filename: file.name });
       setOffset(0);
       setDetail(null);
       setSearch('');

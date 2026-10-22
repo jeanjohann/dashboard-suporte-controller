@@ -1,5 +1,6 @@
 import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 import { MonitoringRegistry } from './MonitoringRegistry.jsx';
+import { MonitoringCollectionHistory } from './MonitoringCollectionHistory.jsx';
 import { monitoringThresholds, monitoringPeriodLabel } from '../domain/monitoringPeriods.js';
 /** Coordena acompanhamento e análise sem misturar demonstração e integração real. */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -43,7 +44,18 @@ const initialFilters = () => ({
 export function MonitoringPage({ onPage, operational }) {
   const { user } = useAccess();
   const canReview = allowsPage(user, 'operational') || allowsPage(user, 'operational-analysis');
-  const { snapshot, source, busy, cooldown, error, refresh } = useMonitoringSource();
+  const {
+    snapshot,
+    source,
+    busy,
+    cooldown,
+    error,
+    refresh,
+    savedMode,
+    savedAt,
+    lastAttempt,
+    reloadSaved,
+  } = useMonitoringSource();
   const dashboardSource = useMemo(
     () => (snapshot ? { snapshot, error } : null),
     [source, snapshot?.referenceAt, error],
@@ -202,8 +214,11 @@ export function MonitoringPage({ onPage, operational }) {
     <details className="monitoring-source-note">
       <summary>Fonte, atualização e limites desta leitura</summary>
       <p>
-        Consulta manual; classificação recalculada a cada minuto, sem nova chamada à API. Anotações
-        somente nesta sessão, sem sincronização entre usuários.
+        {savedMode
+          ? 'Base salva, com coleta agendada e atualização manual opcional'
+          : 'Consulta manual'}
+        ; classificação recalculada a cada minuto, sem nova chamada à API. Anotações somente nesta
+        sessão, sem sincronização entre usuários.
       </p>
       {snapshot.source === 'addlog-legacy' && (
         <p>
@@ -266,6 +281,25 @@ export function MonitoringPage({ onPage, operational }) {
                 </button>
               </div>
             </header>
+            {savedMode && (
+              <div className="monitoring-saved-status">
+                <span>
+                  {savedAt
+                    ? `Última base salva: ${monitoringDate(savedAt)}`
+                    : 'Ainda não há uma coleta salva. Faça a primeira atualização ou aguarde o próximo horário.'}{' '}
+                  · Coletas às 9h, 12h, 15h e 18h (São Paulo). Histórico de 30 dias.
+                </span>
+                <button onClick={reloadSaved} disabled={busy}>
+                  Carregar base salva
+                </button>
+                {lastAttempt?.status === 'failed' && (
+                  <p role="status">
+                    A última tentativa de coleta falhou. A base anterior foi preservada; confira sua
+                    data.
+                  </p>
+                )}
+              </div>
+            )}
             {error && (
               <p role="alert" className="notice">
                 {error}{' '}
@@ -282,8 +316,10 @@ export function MonitoringPage({ onPage, operational }) {
                   <h2>Conexão com o sistema de rastreamento</h2>
                   <p>
                     Use Consultar integração para carregar o diagnóstico do sistema legado Addlog. O
-                    acesso é configurado pelo administrador no servidor. Histórico compartilhado e
-                    coleta automática dependem da próxima etapa.
+                    acesso é configurado pelo administrador no servidor.{' '}
+                    {savedMode
+                      ? 'No piloto, a última coleta válida fica salva e as próximas são agendadas às 9h, 12h, 15h e 18h (São Paulo).'
+                      : 'A coleta salva está disponível apenas para o administrador principal durante o piloto.'}
                   </p>
                 </section>
               </>
@@ -494,12 +530,15 @@ export function MonitoringPage({ onPage, operational }) {
                       </PermissionButton>
                     </div>
                     <p className="scope">
-                      Histórico de episódios, recuperações, consumo e notificações dependem da
-                      integração e persistência das coletas. Lembretes manuais são locais e constam
-                      na aba Lembretes do XLSX.
+                      {savedMode
+                        ? 'Fotografias e eventos observados são guardados por 30 dias no piloto; o relatório exporta a fotografia atual.'
+                        : 'Histórico de episódios e recuperações depende da persistência das coletas.'}{' '}
+                      Consumo da linha e notificações são etapas separadas. Lembretes confirmados
+                      constam na aba Lembretes do XLSX.
                     </p>
                   </Section>
                 </div>
+                {savedMode && category === 'reports' && <MonitoringCollectionHistory />}
                 {modeNotice}
               </>
             )}

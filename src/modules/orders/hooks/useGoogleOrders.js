@@ -71,7 +71,7 @@ export function useGoogleOrders({
         !current.manualBusy &&
         current.source === start.source
       )
-        current.onImport(next);
+        await current.onImport(next);
     } catch (e) {
       if (request.current === controller && latest.current.allowed && latest.current.active)
         setError(

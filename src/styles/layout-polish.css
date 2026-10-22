@@ -145,6 +145,82 @@
   margin: 60px auto;
   padding: 24px;
 }
+.saved-sources-status,
+.monitoring-saved-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.saved-sources-status {
+  position: relative;
+  z-index: 1;
+  margin: 10px 20px 0;
+}
+.monitoring-saved-status > span {
+  flex: 1 1 360px;
+}
+.monitoring-saved-status > p {
+  flex-basis: 100%;
+  margin: 0;
+}
+.saved-sources-panel {
+  padding: 16px;
+}
+.saved-sources-panel > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.saved-sources-panel dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 12px;
+  margin: 12px 0 0;
+}
+.saved-sources-panel dl > div {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+.saved-sources-panel dt {
+  font-weight: 600;
+}
+.saved-sources-panel dd {
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+.saved-sources-panel small {
+  color: var(--ui-muted);
+}
+.monitoring-collection-history {
+  padding: 14px;
+}
+.monitoring-collection-history summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.monitoring-collection-history .table-scroll {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+@media print {
+  .saved-sources-status,
+  .monitoring-saved-status {
+    display: none;
+  }
+}
 .users-page .user-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

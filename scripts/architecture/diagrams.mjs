@@ -197,12 +197,12 @@ export const diagrams = [
     width: 1240,
     height: 620,
     nodes: [
-      node('session', 'Memória React\nBases, recortes, coletas e tratamentos', 40, 140),
+      node('session', 'Memória React\nVersões ativas, recortes e tratamentos', 40, 140),
       node('preferences', 'localStorage\nTema, favoritos e apresentação', 440, 140, 'store'),
       node('indexed', 'IndexedDB local\nConsumo, notas e lembretes', 840, 140, 'store'),
       node('worker', 'Cloudflare Worker\nIdentidade e integrações', 40, 370, 'cloud'),
       node('d1', 'D1 ativo · USERS_DB\nUsuários e permissões', 440, 370, 'store'),
-      node('futuredb', 'D1 · BUSINESS_DB\nAgenda do piloto · proprietário', 840, 370, 'store'),
+      node('futuredb', 'D1 · BUSINESS_DB\nAgenda, bases e coletas · piloto', 840, 370, 'store'),
     ],
     edges: [
       edge('session', 'preferences', 'Salvar configuração'),
@@ -213,14 +213,14 @@ export const diagrams = [
         [980, 240],
       ]),
       edge('worker', 'd1', 'Cadastro de acesso'),
-      edge('worker', 'futuredb', 'Agenda autenticada', [
+      edge('worker', 'futuredb', 'Persistência autenticada', [
         [180, 470],
         [180, 545],
         [980, 545],
         [980, 470],
       ]),
     ],
-    note: 'Agenda do proprietário integrada ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.',
+    note: 'Piloto do proprietário: agenda, cinco versões de OS/Operacional/Logística e coletas por 30 dias. Cron 9h/12h/15h/18h de São Paulo depende da publicação 0.59.0. Consumo e preferências conservam armazenamento anterior.',
   },
   {
     id: '06-assistente',

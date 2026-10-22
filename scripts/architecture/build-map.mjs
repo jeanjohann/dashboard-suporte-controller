@@ -63,6 +63,30 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'docs/BASES-SALVAS-E-COLETA.md':
+    'Bases completas no D1 do proprietário, versões ativas, retenção, coleta agendada, verificação e estado da publicação.',
+  'server/businessSources.js':
+    'Rotas autenticadas de envio em partes, catálogo, leitura e publicação transacional das bases OS, Operacional e Logística no piloto.',
+  'server/monitoringStorage.js':
+    'Coletor conectado ao D1 com lease, cron 9h/12h/15h/18h de São Paulo, fotografia válida, eventos, histórico paginado e retenção de 30 dias.',
+  'server/persistence/snapshotStore.js':
+    'Armazena partes imutáveis e verifica hashes; publica ponteiros e revisões em transação, preservando cinco versões das planilhas.',
+  'server/persistence/snapshotTestDatabase.mjs':
+    'Banco SQLite em memória que reproduz a interface D1 e lotes transacionais para testes sem rede ou dados de produção.',
+  'server/persistence/migrations/0002_snapshots_and_collection.sql':
+    'Estrutura de manifestos, partes, bases ativas, publicações, leases e histórico de coletas no banco de negócio separado.',
+  'src/shared/persistence/snapshotPayload.js':
+    'Valida JSON portátil das bases e fotografias, limites, divisão de partes e hashes de integridade sem alterar identificadores.',
+  'src/shared/persistence/sourceSnapshotClient.js':
+    'Carrega versões completas, confere integridade e só aplica uma importação depois da confirmação transacional do servidor.',
+  'src/shared/persistence/useSavedSources.js':
+    'Coordena restauração inicial e gravação central das três planilhas no piloto, sem fallback local em falhas.',
+  'src/shared/persistence/SavedSourcesPanel.jsx':
+    'Mostra versões ativas das bases e permite recarregá-las do banco, com indicação de salvamento e erros.',
+  'src/modules/monitoring/data/savedMonitoringClient.js':
+    'Distingue leitura da coleta salva e atualização pelo fornecedor, validando a fotografia antes de exibi-la.',
+  'src/modules/monitoring/components/MonitoringCollectionHistory.jsx':
+    'Consulta sob demanda o histórico paginado das execuções e suas contagens, sem chamar o fornecedor.',
   'docs/BANCO-CLOUDFLARE.md':
     'Ativação D1 de negócio, piloto do proprietário, migração dos lembretes, limites, backup/restauração e sequência das demais fontes.',
   'server/businessReminders.js':
@@ -92,7 +116,7 @@ const descriptions = {
   'src/modules/monitoring/domain/monitoringHistory.js':
     'Compara fotografias reais para eventos observados de atraso e retorno da comunicação, sem presumir duração exata; calcula janelas UTC futuras de coleta.',
   'server/monitoringCollection.js':
-    'Coletor ainda inativo: exige lease e publicação transacional do futuro repositório durável; não está conectado ao Worker ou a cron.',
+    'Coordena coleta completa, lease e publicação atômica de fotografias/eventos; conectado ao repositório D1 por monitoringStorage.',
   'src/modules/orders/domain/zohoPresence.js':
     'Valida e recorta intervalos de sessões por agente, une sobreposições e aponta duplicatas, abertos e datas inválidas sem estimar duração.',
   'src/modules/orders/components/ZohoPresencePanel.jsx':
@@ -177,7 +201,7 @@ const descriptions = {
   'migrations/0001_users.sql':
     'Migração SQL do cadastro de usuários e suas permissões; corresponde ao D1 ativo de acesso.',
   'server/persistence/migrations/0001_business_documents.sql':
-    'Esquema futuro de documentos de negócio, separado do banco de usuários; não ativado automaticamente.',
+    'Esquema dos documentos de negócio usado pela agenda do piloto, separado do banco de usuários.',
   'public/_headers': 'Cabeçalhos HTTP dos arquivos estáticos, incluindo políticas de segurança.',
   'public/robots.txt': 'Instruções a mecanismos de busca para a aplicação.',
   'scripts/setup-zoho.ps1':
@@ -391,7 +415,7 @@ const folderRoles = {
   'src/shared/config': 'Endereços de serviços documentais sem credenciais.',
   'scripts/architecture': 'Geração do inventário, diagramas e empacotamento do mapa protegido.',
   'src/shared/persistence':
-    'Contratos de documentos versionados e adaptadores de referência; preparação de evolução.',
+    'Contratos de documentos, integridade e clientes das bases completas no piloto D1.',
   'src/styles': 'CSS global e refinamentos; a ordem é definida em main.jsx.',
   server: 'API Cloudflare e adaptadores privados de integrações.',
   'server/persistence':

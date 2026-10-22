@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "title": "Mapa técnico Addlog 0.58.0",
+  "title": "Mapa técnico Addlog 0.59.0",
   "description": "Fluxos gerais preservados; inventário atualizado a partir da cópia local em homologação.",
   "diagrams": [
     {
@@ -507,13 +507,13 @@
       "title": "Mapa de armazenamento",
       "kind": "flowchart",
       "description": "Persistência local, sessão e banco compartilhado têm finalidades diferentes.",
-      "accessibility": "Agenda do proprietário integrada ao BUSINESS_DB na 0.58.0, com migração local explícita. Demais bases continuam nos armazenamentos anteriores; nenhum cron é ativado.",
+      "accessibility": "Piloto do proprietário: agenda, cinco versões de OS/Operacional/Logística e coletas por 30 dias. Cron 9h/12h/15h/18h de São Paulo depende da publicação 0.59.0. Consumo e preferências conservam armazenamento anterior.",
       "data": {
         "direction": "LR",
         "nodes": [
           {
             "id": "session",
-            "label": "Memória React · Bases, recortes, coletas e tratamentos",
+            "label": "Memória React · Versões ativas, recortes e tratamentos",
             "class": "app"
           },
           {
@@ -538,7 +538,7 @@
           },
           {
             "id": "futuredb",
-            "label": "D1 · BUSINESS_DB · Agenda do piloto · proprietário",
+            "label": "D1 · BUSINESS_DB · Agenda, bases e coletas · piloto",
             "class": "store"
           }
         ],
@@ -564,7 +564,7 @@
           {
             "from": "worker",
             "to": "futuredb",
-            "label": "Agenda autenticada",
+            "label": "Persistência autenticada",
             "arrow": "-->"
           }
         ]

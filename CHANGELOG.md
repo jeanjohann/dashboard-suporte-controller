@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.59.0 — 22/10/2026
+
+- Salva bases completas de OS, Operacional e Logística no D1 do piloto do proprietário. Carrega a versão ativa ao abrir; publicação transacional, hash e revisão evitam cargas parciais ou sobrescrita silenciosa. Mantém cinco versões sem somá-las nos relatórios.
+- Conecta Monitoramento ao banco: leitura salva ao abrir, atualização manual e agendamento às 9h, 12h, 15h e 18h de São Paulo. Retém fotografias e eventos observados por 30 dias, preservando a última válida e os lembretes existentes.
+- Acrescenta estado de salvamento na importação e histórico paginado das coletas nos relatórios. Extratos de consumo e demais fontes continuam nos armazenamentos anteriores. [Funcionamento, limites e ativação](docs/BASES-SALVAS-E-COLETA.md).
+
 ## 0.58.0 — 22/10/2026
 
 - Cria banco D1 de negócio separado do banco de usuários, com migração SQL explícita e exportação manual com hash SHA-256. Não ativa coleta automática ou armazenamento das demais bases.

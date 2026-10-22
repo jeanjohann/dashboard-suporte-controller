@@ -98,6 +98,38 @@ test('agenda de negócio é autenticada e o piloto só libera o administrador pr
   }
 });
 
+test('bases e coletas salvas exigem identidade ativa e restringem o piloto ao proprietário', async () => {
+  const db = database();
+  try {
+    const e = env(db),
+      admin = createHandler(async () => owner);
+    await admin(request('PUT', input), e);
+    const forbidden = createHandler(async () => {
+      throw Error('invalid');
+    });
+    for (const path of [
+      '/api/sources/catalog',
+      '/api/monitoring/saved',
+      '/api/monitoring/history',
+    ]) {
+      assert.equal((await forbidden(request('GET', null, path), e)).status, 401);
+      assert.equal(
+        (await createHandler(async () => input.email)(request('GET', null, path), e)).status,
+        403,
+      );
+      assert.equal((await admin(request('GET', null, path), e)).status, 503);
+    }
+    await db.prepare('UPDATE app_users SET active=0 WHERE email=?').bind(input.email).run();
+    assert.equal(
+      (await createHandler(async () => input.email)(request('GET', null, '/api/sources/status'), e))
+        .status,
+      403,
+    );
+  } finally {
+    db.close();
+  }
+});
+
 test('sessão do Assistente local exige proprietário ativo, POST e mesma origem', async () => {
   const db = database();
   try {

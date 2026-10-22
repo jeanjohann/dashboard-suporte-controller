@@ -67,6 +67,7 @@ export function LinesPage({
   onOperationalChange,
   reloadToken = 0,
   repository,
+  centralSources = false,
 }) {
   const history = useConsumptionArchive(reloadToken, repository);
   const layout = usePageLayout('consumption');
@@ -86,7 +87,11 @@ export function LinesPage({
   const sourceAnchor = useRef();
   const [historyReveal, setHistoryReveal] = useState(0);
   const statements = useMemo(() => historyStatements(archive.files), [archive.files]);
-  const reference = operational?.data ? operational : archive.operational;
+  const reference = centralSources
+    ? operational
+    : operational?.data
+      ? operational
+      : archive.operational;
   const linked = useMemo(
     () =>
       linkConsumption(
@@ -150,6 +155,7 @@ export function LinesPage({
     setHistoryReveal((previous) => previous + 1);
   }
   const imports = useConsumptionImports({
+    centralSources,
     history,
     operational,
     onOperationalChange,

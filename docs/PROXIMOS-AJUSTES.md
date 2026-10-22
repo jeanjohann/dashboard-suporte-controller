@@ -1,5 +1,11 @@
 # Fila de implementação e ajustes
 
+## Evolução 0.59.0 — 22/10/2026
+
+Bases completas de OS/Operacional/Logística e coleta do Monitoramento preparadas para o banco do piloto. Cinco versões por planilha; fotografias de 30 dias; horários aprovados 9h, 12h, 15h e 18h de São Paulo. Backup e migração SQL conferidos, com lembrete real preservado. Publicação e primeiro uso autenticado ainda precisam ser confirmados. O proprietário já validou a agenda 0.58.0 entre navegadores. [Escopo, testes e limitações](BASES-SALVAS-E-COLETA.md).
+
+Próximas etapas: homologar primeiro envio e coleta reais, acompanhar espaço e limites do Worker, definir acesso de outros usuários e depois avaliar persistência de consumo/Zoho/KORE e painéis. Histórico de comunicação não equivale a consumo da linha; sessões Zoho continuam aguardando fonte validada. Não há notificação automática nesta entrega.
+
 ## Fila atual — 22/10/2026, após a versão 0.58.0
 
 **Rodada 0.58.0 publicada em 22/10/2026:** proprietário escolheu D1 e autorizou piloto exclusivo do administrador principal. Banco `dashboard-suporte-negocio` criado, separado dos acessos, e primeira migração aplicada. Agenda remota ativada no piloto do proprietário, com migração local explícita e backup manual. Código `9034a2a`, bindings separados e acesso owner confirmados. Homologação da interface e migração dos dados reais pelo proprietário ainda pendentes. [Estado, acesso e limites](BANCO-CLOUDFLARE.md). A escolha de hospedagem foi resolvida; adaptação das demais fontes e coleta agendada continuam como próximas entregas.

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.58.0 — [banco de negócio D1 e agenda do piloto](docs/BANCO-CLOUDFLARE.md), separados do banco de acessos. Inclui consumo KORE em MB com vínculo operacional da 0.57.0. Demais fontes e coleta automática serão conectadas em etapas.
+**Versão:** 0.59.0 — [bases completas salvas e coleta agendada do Monitoramento](docs/BASES-SALVAS-E-COLETA.md), no banco de negócio separado dos acessos e restrito ao proprietário no piloto. Planilhas usam uma versão ativa e mantêm cinco versões; Monitoramento conserva 30 dias e a última coleta válida. Consulte o estado de publicação no guia.
 
 ## Documentação do projeto
 

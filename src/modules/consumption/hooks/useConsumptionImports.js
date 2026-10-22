@@ -28,6 +28,7 @@ export function useConsumptionImports({
   onClearDetail,
   onClearTracked,
   onReviewBackup,
+  centralSources = false,
 }) {
   const { archive, setBusy, setError, setMessage, commit } = history;
   const [pending, setPending] = useState([]),
@@ -98,11 +99,19 @@ export function useConsumptionImports({
         data: importOperational(await file.arrayBuffer()),
         savedAt: new Date().toISOString(),
       };
+      if (centralSources) {
+        await onOperationalChange(source);
+        setMessage(
+          'Base operacional completa salva no banco. A referência dos backups locais não foi substituída.',
+        );
+        onClearDetail();
+        return;
+      }
       await commit(
         { ...archive, operational: source },
         'Referência operacional salva para os vínculos.',
       );
-      onOperationalChange?.(source);
+      await onOperationalChange?.(source);
       onClearDetail();
     } catch (e) {
       setError(e.message);
@@ -136,8 +145,13 @@ export function useConsumptionImports({
     try {
       if (accessManaged() && backup?.operational && !allowsSource(accessUser(), 'operational'))
         throw Error('Este backup contém uma base operacional que você não pode importar.');
-      await commit(backup, 'Backup restaurado neste navegador.');
-      if (backup.operational) onOperationalChange?.(backup.operational);
+      await commit(
+        backup,
+        centralSources
+          ? 'Consumo restaurado neste navegador. A base operacional do banco foi mantida.'
+          : 'Backup restaurado neste navegador.',
+      );
+      if (backup.operational && !centralSources) await onOperationalChange?.(backup.operational);
       setBackup(null);
       onResetFilters();
       onClearDetail();

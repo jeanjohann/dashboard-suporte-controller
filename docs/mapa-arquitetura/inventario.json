@@ -1,9 +1,9 @@
 {
-  "version": "0.58.0",
-  "base": "9034a2a · cópia da entrega",
+  "version": "0.59.0",
+  "base": "6972fef · cópia da entrega",
   "date": "2026-10-22",
-  "total": 461,
-  "tests": 94,
+  "total": 475,
+  "tests": 96,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 52
+      "count": 53
     },
     {
       "path": "docs/diagrams",
@@ -53,22 +53,22 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 26
+      "count": 33
     },
     {
       "path": "server/persistence",
       "description": "Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato.",
-      "count": 3
+      "count": 7
     },
     {
       "path": "server/persistence/migrations",
       "description": "Migrações exclusivas do banco de negócio, separadas das migrações de usuários.",
-      "count": 1
+      "count": 2
     },
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 335
+      "count": 341
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 245
+      "count": 247
     },
     {
       "path": "src/modules/assistant",
@@ -173,17 +173,17 @@
     {
       "path": "src/modules/monitoring",
       "description": "Módulo Monitoramento Ativo: interface, regras e integração de seus dados.",
-      "count": 30
+      "count": 32
     },
     {
       "path": "src/modules/monitoring/components",
       "description": "Página e painéis visuais de Monitoramento Ativo.",
-      "count": 8
+      "count": 9
     },
     {
       "path": "src/modules/monitoring/data",
       "description": "Leitura, contratos e transporte de dados de Monitoramento Ativo.",
-      "count": 7
+      "count": 8
     },
     {
       "path": "src/modules/monitoring/domain",
@@ -298,7 +298,7 @@
     {
       "path": "src/shared",
       "description": "Contratos e infraestrutura compartilhados entre módulos.",
-      "count": 42
+      "count": 46
     },
     {
       "path": "src/shared/charts",
@@ -332,8 +332,8 @@
     },
     {
       "path": "src/shared/persistence",
-      "description": "Contratos de documentos versionados e adaptadores de referência; preparação de evolução.",
-      "count": 3
+      "description": "Contratos de documentos, integridade e clientes das bases completas no piloto D1.",
+      "count": 7
     },
     {
       "path": "src/shared/security",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 93568,
-      "sha256": "d5eeb8175b011563e912cbd9b91f8a609360b7547f6977f17912ce64ad4f2fd2",
+      "bytes": 94355,
+      "sha256": "d37075f19bc9d37be8cbe8f4517215279f0df80f4d03b04c28233ab2909403fa",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -441,8 +441,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 8063,
-      "sha256": "687cd99b896461d8cf6d17672fde0d4cbbb436524eb1000963d0e91ea1016a0a",
+      "bytes": 8171,
+      "sha256": "38a1823900c201205bafede738c4d595f94d4c4d551453b719ffc31100d016a0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -525,8 +525,22 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 6883,
-      "sha256": "9dd6357e8c15878fe450196182206dac9db95dd44e779ce07c7f56b2d744de7a",
+      "bytes": 7339,
+      "sha256": "6236a7d50a98fdf245507e45ab8717c0d668722fce5c8206ba5172b7f81ee704",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/BASES-SALVAS-E-COLETA.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Bases completas no D1 do proprietário, versões ativas, retenção, coleta agendada, verificação e estado da publicação.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 5843,
+      "sha256": "d4d270d886304ea14ecb39dac53091b1c7e1ea6cd5305f354c6361c6a34472e5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -931,8 +945,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 14222,
-      "sha256": "322ee78af0667f7388754b9cf1a4840aee852c1fcdbff0cc6eb0f6a448bdd60f",
+      "bytes": 14496,
+      "sha256": "61b6e11bf52c40f8cf14e334b981bbd8a51381d22eaf0d42934628238bcdec97",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -973,8 +987,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 36518,
-      "sha256": "e63618829b25fb5da6237648bcf939f2d08cd6f794f25a96edc79dfe05e3c219",
+      "bytes": 37391,
+      "sha256": "17449cf7ccf3078bf795249023c323995e59b8d81bd032c36b98acd125d36fad",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1211,8 +1225,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 106621,
-      "sha256": "0a12a1c4479330f915bc0dfbb140ccce1e0d0d2d20178acbc1fa7870033092e3",
+      "bytes": 103424,
+      "sha256": "5791e8e000e175dac54d44987bf8d270987e80c0f22cf42bfaa8f6ec47e5e689",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1226,7 +1240,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "6a0bca3bddb317b6c0951d7c4821a0d03e0e5c367d3c9c9ca30757847ec50b55",
+      "sha256": "38df25124ae48dd5968bbcc2ebe13eb0d62f2a5e751400f782ce24aa57b066a0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1389,8 +1403,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 45101,
-      "sha256": "bc2f455b7978d0f7b3c3329fa645c968b635a7cac384895c2a5d7024a422a910",
+      "bytes": 47213,
+      "sha256": "4ba06ba48d0668e86ecffbfb2106eefe76d3ca3056a397a31b941720043ba31b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1403,8 +1417,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["scripts/architecture/build-map.mjs"],
-      "bytes": 13088,
-      "sha256": "7c0bf6a16b309faa709f9f5308e9739e965fecf228722eab7c886f929263bd70",
+      "bytes": 13149,
+      "sha256": "239df20244851d349c972e9ab72f2010d73157e4dc3cdf7ea8fa916dc4670fd3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1878,6 +1892,27 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "server/businessSources.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Rotas autenticadas de envio em partes, catálogo, leitura e publicação transacional das bases OS, Operacional e Logística no piloto.",
+      "exports": ["businessReply", "businessSourcesResponse", "readBusinessBody"],
+      "imports": [
+        "server/persistence/snapshotStore.js",
+        "src/shared/persistence/snapshotPayload.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "server/monitoringStorage.js",
+        "server/persistence/snapshotStore.test.js",
+        "server/worker.js"
+      ],
+      "bytes": 6956,
+      "sha256": "27ff6ee823156a8f215d6df9ad45475a8a4037e49f1eef34be044b97e08899f7",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "server/googleOrders.js",
       "folder": "server",
       "module": "API Cloudflare",
@@ -1956,7 +1991,11 @@
       "exports": ["monitoringResponse"],
       "imports": ["server/addlogDiagnostic.js", "src/modules/monitoring/data/snapshotContract.js"],
       "external": [],
-      "importedBy": ["server/addlogDiagnostic.test.js", "server/worker.js"],
+      "importedBy": [
+        "server/addlogDiagnostic.test.js",
+        "server/monitoringStorage.js",
+        "server/worker.js"
+      ],
       "bytes": 3581,
       "sha256": "bfc4744749d1fbdcea0eb16c75559326fa912a15f0643e8723dd4f2314d83555",
       "status": "Diagnóstico legado / consulta manual"
@@ -1966,7 +2005,7 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Backend",
-      "description": "Coletor ainda inativo: exige lease e publicação transacional do futuro repositório durável; não está conectado ao Worker ou a cron.",
+      "description": "Coordena coleta completa, lease e publicação atômica de fotografias/eventos; conectado ao repositório D1 por monitoringStorage.",
       "exports": ["runMonitoringCollection"],
       "imports": [
         "src/modules/monitoring/data/snapshotContract.js",
@@ -1974,7 +2013,11 @@
         "src/modules/monitoring/domain/monitoringPeriods.js"
       ],
       "external": [],
-      "importedBy": ["server/monitoringCollection.test.js"],
+      "importedBy": [
+        "server/monitoringCollection.test.js",
+        "server/monitoringStorage.js",
+        "server/monitoringStorage.test.js"
+      ],
       "bytes": 1998,
       "sha256": "2de721725d57d1a222473023425adc49283f4c3518126f991c9d02fe0b1c328e",
       "status": "Diagnóstico legado / consulta manual"
@@ -1994,6 +2037,50 @@
       "importedBy": [],
       "bytes": 3366,
       "sha256": "2551aa4f5870e89429869e937ca3cd0218f80629c28d076e7cfcab27b5e01f8e",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "server/monitoringStorage.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Coletor conectado ao D1 com lease, cron 9h/12h/15h/18h de São Paulo, fotografia válida, eventos, histórico paginado e retenção de 30 dias.",
+      "exports": [
+        "collectAndStoreMonitoring",
+        "createMonitoringCollectionRepository",
+        "monitoringCron",
+        "pruneStoredSnapshots",
+        "scheduledMonitoring",
+        "storedMonitoringResponse"
+      ],
+      "imports": [
+        "server/businessSources.js",
+        "server/monitoring.js",
+        "server/monitoringCollection.js",
+        "server/persistence/snapshotStore.js"
+      ],
+      "external": [],
+      "importedBy": ["server/monitoringStorage.test.js", "server/worker.js"],
+      "bytes": 10550,
+      "sha256": "e6131731e15f87a9ceb130f187fbeff3e05b7722952a273207ab50352cca12bd",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "server/monitoringStorage.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica monitoring Storage no contexto de API Cloudflare. Exemplos: coletas publicam fotografia, execução e retorno observado em transação, sem duplicar execução; falha parcial preserva última coleta e lease impede concorrência; lease vencido não publica; retenção remove fotografias/eventos com mais de 30 dias, conservando a última válida.",
+      "exports": [],
+      "imports": [
+        "server/monitoringCollection.js",
+        "server/monitoringStorage.js",
+        "server/persistence/snapshotTestDatabase.mjs"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 7816,
+      "sha256": "520f62437172be0c7ddb0384ba6d2a6771490425be575d287baa3e57df17f45e",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -2037,13 +2124,85 @@
       "folder": "server/persistence/migrations",
       "module": "API Cloudflare",
       "layer": "Esquema SQL",
-      "description": "Esquema futuro de documentos de negócio, separado do banco de usuários; não ativado automaticamente.",
+      "description": "Esquema dos documentos de negócio usado pela agenda do piloto, separado do banco de usuários.",
       "exports": [],
       "imports": [],
       "external": [],
       "importedBy": [],
       "bytes": 773,
       "sha256": "1c33e2ea0283164cbccd21bb7edeb972e892f5dcb5d034b555bc5af7f55c31ba",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "server/persistence/migrations/0002_snapshots_and_collection.sql",
+      "folder": "server/persistence/migrations",
+      "module": "API Cloudflare",
+      "layer": "Esquema SQL",
+      "description": "Estrutura de manifestos, partes, bases ativas, publicações, leases e histórico de coletas no banco de negócio separado.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 2223,
+      "sha256": "e8c1bae829ae1ca4f50837ba107cb36b3bb68758c7152a63ba445747041c1bcb",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "server/persistence/snapshotStore.js",
+      "folder": "server/persistence",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Armazena partes imutáveis e verifica hashes; publica ponteiros e revisões em transação, preservando cinco versões das planilhas.",
+      "exports": ["SnapshotConflict", "createSnapshotStore"],
+      "imports": ["src/shared/persistence/snapshotPayload.js"],
+      "external": [],
+      "importedBy": [
+        "server/businessSources.js",
+        "server/monitoringStorage.js",
+        "server/persistence/snapshotStore.test.js"
+      ],
+      "bytes": 9043,
+      "sha256": "9b1844e811d58ee2e2b736c54b0727bbafc8f4ae6e5a8b4a52d784b5742cd66e",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "server/persistence/snapshotStore.test.js",
+      "folder": "server/persistence",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica snapshot Store no contexto de API Cloudflare. Exemplos: bases reais dos importadores sobrevivem a JSON/SQL, com células, zeros e ocorrências repetidas preservados; upload parcial, reenvio divergente e hash inválido não substituem a última base publicada; publicação conjunta é atômica em conflito e repetição não incrementa revisão.",
+      "exports": [],
+      "imports": [
+        "server/businessSources.js",
+        "server/persistence/snapshotStore.js",
+        "server/persistence/snapshotTestDatabase.mjs",
+        "src/modules/logistics/domain/logistics.js",
+        "src/modules/operational/domain/operational.js",
+        "src/modules/orders/data/import.js",
+        "src/shared/persistence/snapshotPayload.js",
+        "src/shared/persistence/sourceSnapshotClient.js"
+      ],
+      "external": ["node:assert/strict", "node:test", "xlsx"],
+      "importedBy": [],
+      "bytes": 10340,
+      "sha256": "255cb79395147a478b0c9e8de202afe08776efa1f29d13a53c4b5b626753c1d2",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "server/persistence/snapshotTestDatabase.mjs",
+      "folder": "server/persistence",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Banco SQLite em memória que reproduz a interface D1 e lotes transacionais para testes sem rede ou dados de produção.",
+      "exports": ["snapshotTestDatabase"],
+      "imports": [],
+      "external": ["node:fs", "node:sqlite"],
+      "importedBy": [
+        "server/monitoringStorage.test.js",
+        "server/persistence/snapshotStore.test.js"
+      ],
+      "bytes": 1685,
+      "sha256": "9180225007fd8fc1ddaece3903f5ce82d7b55617e47fe7d4bb9cdb0c719d198d",
       "status": "Preparação / contrato"
     },
     {
@@ -2069,17 +2228,19 @@
       "exports": ["authenticatedEmail", "createHandler", "default", "recordUser"],
       "imports": [
         "server/businessReminders.js",
+        "server/businessSources.js",
         "server/googleOrders.js",
         "server/kore.js",
         "server/monitoring.js",
+        "server/monitoringStorage.js",
         "server/schema.js",
         "server/zoho.js",
         "src/shared/security/permissions.js"
       ],
       "external": ["jose"],
       "importedBy": ["server/worker.test.js"],
-      "bytes": 10096,
-      "sha256": "a91ba863e83e3e9bece1d1eff533a5380f78b4ae987b357fb8be2c4d314ae75a",
+      "bytes": 10618,
+      "sha256": "49f796c57e08fafe78617799cf99e46bd1c5cd21baf0b3428ef89e520121a573",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2087,13 +2248,13 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Teste",
-      "description": "Verifica worker no contexto de API Cloudflare. Exemplos: agenda de negócio é autenticada e o piloto só libera o administrador principal; sessão do Assistente local exige proprietário ativo, POST e mesma origem; Google Sheets exige sessão ativa e administrador mesmo para consultar configuração.",
+      "description": "Verifica worker no contexto de API Cloudflare. Exemplos: agenda de negócio é autenticada e o piloto só libera o administrador principal; bases e coletas salvas exigem identidade ativa e restringem o piloto ao proprietário; sessão do Assistente local exige proprietário ativo, POST e mesma origem.",
       "exports": [],
       "imports": ["server/worker.js"],
       "external": ["jose", "node:assert/strict", "node:sqlite", "node:test"],
       "importedBy": [],
-      "bytes": 14065,
-      "sha256": "c86dda9c370db6c502504c8e2558b8ef39e2fec3339a9c02904b996b91e6483f",
+      "bytes": 15124,
+      "sha256": "ce56c90fdaaee782d0aab881bf14e1a2890f59f529b6f3b3171390d3b1c39dfa",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2302,14 +2463,15 @@
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersPage.jsx",
         "src/modules/users/components/UsersPage.jsx",
+        "src/shared/persistence/useSavedSources.js",
         "src/shared/security/Access.jsx",
         "src/shared/security/accessClient.js",
         "src/shared/security/permissions.js"
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 9564,
-      "sha256": "6dd5eecb331016c5121f47293f3bc0a968ac6c08615bc2cc1754ee480e183f3f",
+      "bytes": 11037,
+      "sha256": "8fab57624f7e24771656e7eba17656b1938559309419bff6cc0e44d5b0eb6caf",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3289,8 +3451,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 27233,
-      "sha256": "03f550e2aeef0e8f041fc868a0795be8deb3d06202b8e6349424c9eac627a096",
+      "bytes": 27330,
+      "sha256": "da0830ae326ecc13b78b215f4307045cbce3f420dcc963d4be86a96fc7494025",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3912,8 +4074,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 5995,
-      "sha256": "20db38086eafb6d75eb5e3aba35d85a821ea4cf76b6340b474068c31feda71af",
+      "bytes": 6457,
+      "sha256": "e9eef1d868342a2d808889c647adeaa0022348e32aa4453a6fbcade8122c9909",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3972,14 +4134,15 @@
         "src/app/Navigation.jsx",
         "src/app/SidePanel.jsx",
         "src/modules/imports/domain/bulkImport.js",
+        "src/shared/persistence/SavedSourcesPanel.jsx",
         "src/shared/security/Access.jsx",
         "src/shared/security/accessClient.js",
         "src/shared/security/permissions.js"
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 9123,
-      "sha256": "d19a9e9c01eb7c2d92d56cc1ae423bddc7b91dc9cf44503e3ecbbb7ddc8993dd",
+      "bytes": 9279,
+      "sha256": "e9d166327fd95ceb6f7ccc02f2923240b5fc14577959bb5ffbc392073237e518",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4050,8 +4213,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/operational/components/OperationalPage.jsx"],
-      "bytes": 16326,
-      "sha256": "a35af9bc4f68348fd97999a62be3e58a256afc2334b9d7535aed157f8ff2a003",
+      "bytes": 16332,
+      "sha256": "479c30f8265cd9a1624ebbfac1825cb7ae465faf37ec125d5429b0f17b41d75f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4065,6 +4228,7 @@
       "external": ["xlsx"],
       "importedBy": [
         "scripts/local-acervo.mjs",
+        "server/persistence/snapshotStore.test.js",
         "src/modules/imports/domain/bulkImport.js",
         "src/modules/logistics/components/LogisticsPanel.jsx",
         "src/modules/logistics/domain/logistics.test.js",
@@ -4115,6 +4279,23 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
+      "folder": "src/modules/monitoring/components",
+      "module": "Monitoramento Ativo",
+      "layer": "Interface React",
+      "description": "Consulta sob demanda o histórico paginado das execuções e suas contagens, sem chamar o fornecedor.",
+      "exports": ["MonitoringCollectionHistory"],
+      "imports": [
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
+      "bytes": 3045,
+      "sha256": "410fdfa90887659f1e8106f378ac102e8883c07d475b26ffc70259e9f30c56aa",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "src/modules/monitoring/components/MonitoringPage.jsx",
       "folder": "src/modules/monitoring/components",
       "module": "Monitoramento Ativo",
@@ -4128,6 +4309,7 @@
         "src/components/MultiFilter.jsx",
         "src/components/Section.jsx",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
@@ -4148,8 +4330,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 22975,
-      "sha256": "b70d5f7f094a5f0a5e87ed099f1600c4b7f3e0f38422403c6cd5bb22c9bccebc",
+      "bytes": 24604,
+      "sha256": "09c53c571820d9c3c83ba36dfd6eff97e978691c6bf8f6da9ef08bb08db170f7",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4376,6 +4558,23 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "src/modules/monitoring/data/savedMonitoringClient.js",
+      "folder": "src/modules/monitoring/data",
+      "module": "Monitoramento Ativo",
+      "layer": "Dados / transporte",
+      "description": "Distingue leitura da coleta salva e atualização pelo fornecedor, validando a fotografia antes de exibi-la.",
+      "exports": ["fetchSavedMonitoring"],
+      "imports": [
+        "src/modules/monitoring/data/snapshotContract.js",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": [],
+      "importedBy": ["src/modules/monitoring/hooks/useMonitoringSource.js"],
+      "bytes": 628,
+      "sha256": "9c3657c559aced63052a928361ec55f12b452892640371986f214f3684798e97",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "src/modules/monitoring/data/snapshotContract.js",
       "folder": "src/modules/monitoring/data",
       "module": "Monitoramento Ativo",
@@ -4390,7 +4589,9 @@
         "server/monitoring.js",
         "server/monitoringCollection.js",
         "src/modules/monitoring/data/monitoringClient.js",
-        "src/modules/monitoring/data/snapshotContract.test.js"
+        "src/modules/monitoring/data/savedMonitoringClient.js",
+        "src/modules/monitoring/data/snapshotContract.test.js",
+        "src/shared/persistence/snapshotPayload.js"
       ],
       "bytes": 5006,
       "sha256": "738c8cd55019748cb5ea0d5a16dd4cef9c199e992d7da7c37a2b1721238b492f",
@@ -4442,6 +4643,7 @@
         "server/addlogDiagnostic.test.js",
         "server/businessReminders.js",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
@@ -4756,11 +4958,16 @@
       "layer": "Estado / coordenação",
       "description": "Separa fonte e tela. Demonstração nunca é fallback de erro; atualização real é explícita nesta etapa.",
       "exports": ["useMonitoringSource"],
-      "imports": ["src/modules/monitoring/data/monitoringClient.js"],
+      "imports": [
+        "src/modules/monitoring/data/monitoringClient.js",
+        "src/modules/monitoring/data/savedMonitoringClient.js",
+        "src/shared/security/Access.jsx",
+        "src/shared/security/accessClient.js"
+      ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 2860,
-      "sha256": "ffba7440117953cf76a1d51ae101900091c6bc838b84c5e81f29a4b51fb5caaf",
+      "bytes": 6294,
+      "sha256": "7fcb38d623834c0e7da2e820d0b2710f69a6c938d2de0911fadf6ea2232a91e3",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -5390,8 +5597,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 37752,
-      "sha256": "0931cf8537528dd704126590e5acc155bfe30ede8a71e7ba0dcd8fc80b061e0f",
+      "bytes": 37758,
+      "sha256": "4626bf7238cb5cc54de780fad89a0b286bf173bf2a2d20c5a92d8cb7fa3bdc70",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5472,6 +5679,7 @@
       "importedBy": [
         "scripts/assistant-demo-queries.mjs",
         "scripts/local-acervo.mjs",
+        "server/persistence/snapshotStore.test.js",
         "src/modules/consumption/data/consumptionHistory.js",
         "src/modules/consumption/data/consumptionHistory.test.js",
         "src/modules/consumption/domain/lineConsumption.js",
@@ -6659,6 +6867,7 @@
       "external": ["xlsx"],
       "importedBy": [
         "scripts/local-acervo.mjs",
+        "server/persistence/snapshotStore.test.js",
         "src/modules/imports/domain/bulkImport.js",
         "src/modules/orders/data/googleOrders.js",
         "src/modules/orders/data/googleOrders.test.js",
@@ -7909,8 +8118,8 @@
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersPage.jsx"
       ],
-      "bytes": 4262,
-      "sha256": "35debca5f7b91060861dbfd76835fced14775913e51722659288362052025225",
+      "bytes": 4268,
+      "sha256": "647ed440385e1bd6278907793859171df24fb07e0292ed5f5e25cc9f79671744",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -7933,8 +8142,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/orders/components/OrdersPage.jsx"],
-      "bytes": 6091,
-      "sha256": "050564bed2eb1bd87e5f5bf08473b976a2467364150b25d456667995b59ebbfb",
+      "bytes": 6097,
+      "sha256": "7f1bec17443f7f0ac0016d54caa6fbc3f445099b452504e2039f3212f3d6f79e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8808,6 +9017,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/shared/persistence/SavedSourcesPanel.jsx",
+      "folder": "src/shared/persistence",
+      "module": "Compartilhado",
+      "layer": "Interface React",
+      "description": "Mostra versões ativas das bases e permite recarregá-las do banco, com indicação de salvamento e erros.",
+      "exports": ["SavedSourcesPanel"],
+      "imports": [],
+      "external": ["react"],
+      "importedBy": ["src/modules/imports/components/ImportPage.jsx"],
+      "bytes": 1920,
+      "sha256": "794755fbaa32a28a92c5eb936e207e343146db5e107d9b4eac06a63ea417caaa",
+      "status": "Preparação / contrato"
+    },
+    {
       "path": "src/shared/persistence/documentRepository.js",
       "folder": "src/shared/persistence",
       "module": "Compartilhado",
@@ -8821,7 +9044,8 @@
         "server/persistence/documentRepository.test.js",
         "src/modules/consumption/data/historyRepository.test.js",
         "src/shared/persistence/documentValueAdapter.js",
-        "src/shared/persistence/memoryDocumentAdapter.js"
+        "src/shared/persistence/memoryDocumentAdapter.js",
+        "src/shared/persistence/snapshotPayload.js"
       ],
       "bytes": 7255,
       "sha256": "21aa58fc96b2fa9196bf16599160f41f65f2bebcfe5a28d0c2a3ce19094925bb",
@@ -8862,6 +9086,73 @@
       "status": "Preparação / contrato"
     },
     {
+      "path": "src/shared/persistence/snapshotPayload.js",
+      "folder": "src/shared/persistence",
+      "module": "Compartilhado",
+      "layer": "Infraestrutura compartilhada",
+      "description": "Valida JSON portátil das bases e fotografias, limites, divisão de partes e hashes de integridade sem alterar identificadores.",
+      "exports": [
+        "prepareSnapshot",
+        "sha256",
+        "snapshotKinds",
+        "snapshotMaxBytes",
+        "snapshotMaxParts",
+        "snapshotPartChars",
+        "sourceKinds",
+        "splitSnapshot",
+        "validateSnapshotValue",
+        "validateStoredSource"
+      ],
+      "imports": [
+        "src/modules/monitoring/data/snapshotContract.js",
+        "src/shared/persistence/documentRepository.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "server/businessSources.js",
+        "server/persistence/snapshotStore.js",
+        "server/persistence/snapshotStore.test.js",
+        "src/shared/persistence/sourceSnapshotClient.js"
+      ],
+      "bytes": 4351,
+      "sha256": "9d1c4bba7966f454db3c08cec449075efd70a141f694f6cf63a0981e3d447cd6",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "src/shared/persistence/sourceSnapshotClient.js",
+      "folder": "src/shared/persistence",
+      "module": "Compartilhado",
+      "layer": "Infraestrutura compartilhada",
+      "description": "Carrega versões completas, confere integridade e só aplica uma importação depois da confirmação transacional do servidor.",
+      "exports": ["createSourceSnapshotClient"],
+      "imports": [
+        "src/shared/persistence/snapshotPayload.js",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "server/persistence/snapshotStore.test.js",
+        "src/shared/persistence/useSavedSources.js"
+      ],
+      "bytes": 3921,
+      "sha256": "1ac7c2ed6d608e2ff1f7cd0415e1909985b1797ca197cc49a7b42e4e78b7f97c",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "src/shared/persistence/useSavedSources.js",
+      "folder": "src/shared/persistence",
+      "module": "Compartilhado",
+      "layer": "Infraestrutura compartilhada",
+      "description": "Coordena restauração inicial e gravação central das três planilhas no piloto, sem fallback local em falhas.",
+      "exports": ["useSavedSources"],
+      "imports": ["src/shared/persistence/sourceSnapshotClient.js"],
+      "external": ["react"],
+      "importedBy": ["src/app/Workspace.jsx"],
+      "bytes": 3677,
+      "sha256": "9777ce7489f85962654626a3370d93297ef5333b83c666721f5f87ae16375152",
+      "status": "Preparação / contrato"
+    },
+    {
       "path": "src/shared/security/Access.jsx",
       "folder": "src/shared/security",
       "module": "Compartilhado",
@@ -8892,6 +9183,7 @@
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
         "src/modules/monitoring/hooks/useMonitoringReminders.js",
+        "src/modules/monitoring/hooks/useMonitoringSource.js",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
         "src/modules/my-dashboard/hooks/DashboardSources.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
@@ -8940,7 +9232,10 @@
         "src/modules/consumption/hooks/useLineFollowup.js",
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
+        "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
         "src/modules/monitoring/data/remoteReminderRepository.js",
+        "src/modules/monitoring/data/savedMonitoringClient.js",
+        "src/modules/monitoring/hooks/useMonitoringSource.js",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/SupportZohoPanel.jsx",
@@ -8950,6 +9245,7 @@
         "src/modules/orders/hooks/useOrdersSession.js",
         "src/modules/users/components/UsersPage.jsx",
         "src/shared/export/exports.js",
+        "src/shared/persistence/sourceSnapshotClient.js",
         "src/shared/security/Access.jsx"
       ],
       "bytes": 1620,
@@ -9107,8 +9403,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 4306,
-      "sha256": "92877ebb63bc6a2832b257e1d51b32e4147182e22396c889a9454fbaec630247",
+      "bytes": 5796,
+      "sha256": "c54c6a89ad68f7a2ea177abb886f28a55265ec425a0eb3e9d4504ba0b0a5f9f1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9373,8 +9669,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1637,
-      "sha256": "8cca1f1a2ec0de20076351e3e5f8d6bc5d59037e40aa7478cdedf9753a6e9642",
+      "bytes": 1689,
+      "sha256": "77cf322eb188acc34da3e5787929210da587a1b5332f0e9054da8fa86f4bf4a6",
       "status": "Código ou documentação do ponto de referência"
     }
   ],

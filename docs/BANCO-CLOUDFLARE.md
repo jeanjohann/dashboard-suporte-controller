@@ -1,4 +1,4 @@
-# Banco de negócio no Cloudflare — 0.58.0
+# Banco de negócio no Cloudflare — piloto 0.58.0 e evolução 0.59.0
 
 Em 22/10/2026, o proprietário escolheu D1 e autorizou renovar o acesso técnico. O piloto é restrito ao administrador principal. Este documento registra a primeira conexão da agenda; não significa que todas as fontes foram migradas.
 
@@ -40,9 +40,11 @@ O SQL e os documentos JSON podem ser exportados. Migrar para outro servidor requ
 
 ## Próximas fontes
 
-OS, Operacional, logística, consultas Zoho/KORE, consumo e Meu Dashboard ainda usam seus armazenamentos anteriores. O próximo passo é salvar lotes imutáveis com origem, manifesto e partes/linhas, medindo tamanho e validando completude antes de apontá-los como base atual. Depois, conectar o coletor com lease/transação, retenção e horários aprovados. Esta entrega não ativa cron, notificações com página fechada ou coleta automática.
+A versão 0.59.0 conecta OS, Operacional, Logística e fotografias do Monitoramento ao banco. Mantém cinco versões por planilha, coletas às 9h/12h/15h/18h de São Paulo e fotografias por 30 dias, conservando a última válida. Zoho/KORE, consumo e Meu Dashboard continuam nos armazenamentos anteriores. [Funcionamento e estado de ativação](BASES-SALVAS-E-COLETA.md). A migração SQL isolada não ativa cron nem notificações.
 
 ## Estado de ativação
+
+O proprietário confirmou persistência após recarga e acesso pelo Edge em 22/10/2026. A migração `0002_snapshots_and_collection.sql` foi aplicada após backup e restauração local conferidos, preservando o único documento de lembrete existente. Uma segunda exportação/restauração confirmou a integridade do esquema ampliado. Código 0.59.0 preparado; publicação e primeiro uso das novas fontes são registrados no guia específico.
 
 Banco criado em 22/10/2026, região ENAM, identificador `b3609719-196a-40a7-95b9-5e3a769c9610`. Migração `0001_business_documents.sql` aplicada no serviço remoto. Primeira exportação SQL conferida por SHA-256 e restaurada em SQLite local: integridade OK, índice de listagem presente e zero documentos. Esse ensaio valida a estrutura inicial; não substitui a conferência dos dados reais após a migração de cada navegador.
 

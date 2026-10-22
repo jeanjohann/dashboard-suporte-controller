@@ -9,6 +9,8 @@ import { googleOrdersResponse } from './googleOrders.js';
 import { zohoResponse } from './zoho.js';
 import { koreResponse } from './kore.js';
 import { businessRemindersResponse } from './businessReminders.js';
+import { businessSourcesResponse } from './businessSources.js';
+import { storedMonitoringResponse, scheduledMonitoring } from './monitoringStorage.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
   normalizeEmail,
@@ -99,6 +101,14 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
+      if (url.pathname.startsWith('/api/sources/'))
+        return businessSourcesResponse(request, env, user, owner);
+      if (
+        ['/api/monitoring/saved', '/api/monitoring/refresh', '/api/monitoring/history'].includes(
+          url.pathname,
+        )
+      )
+        return storedMonitoringResponse(request, env, user, owner);
       if (
         [
           '/api/business/status',
@@ -241,4 +251,4 @@ export function createHandler(authenticate = authenticatedEmail) {
     }
   };
 }
-export default { fetch: createHandler() };
+export default { fetch: createHandler(), scheduled: scheduledMonitoring };

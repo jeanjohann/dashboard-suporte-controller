@@ -6,6 +6,7 @@ import { useAccess } from '../shared/security/Access.jsx';
 import { allowsPage, allowsSource } from '../shared/security/permissions.js';
 import { authorizeAction, accessUser } from '../shared/security/accessClient.js';
 import React, { lazy, useEffect, useState } from 'react';
+import { useSavedSources } from '../shared/persistence/useSavedSources.js';
 import { DeferredPage } from './DeferredPage.jsx';
 import {
   DashboardSourcesProvider,
@@ -73,7 +74,7 @@ export function Workspace() {
   );
 }
 function WorkspaceContent() {
-  const { user } = useAccess();
+  const { user, managed } = useAccess();
   const allowed = (key) =>
     key === 'assistant-lab' ? canOpenAssistantPreview(user) : allowsPage(user, key);
   const [page, setPage] = useState(() =>
@@ -83,6 +84,16 @@ function WorkspaceContent() {
     [operational, setOperational] = useState(null),
     [logistics, setLogistics] = useState(null),
     [consumptionRevision, setConsumptionRevision] = useState(0);
+  const savedSources = useSavedSources({
+    user,
+    managed,
+    onApply: (batch) => {
+      if (Object.hasOwn(batch, 'orders')) setOrders(batch.orders);
+      if (Object.hasOwn(batch, 'operational')) setOperational(batch.operational);
+      if (Object.hasOwn(batch, 'logistics')) setLogistics(batch.logistics);
+    },
+  });
+  const saveSource = (kind, value) => savedSources.save({ [kind]: value });
   usePublishDashboardSource('orders', orders);
   usePublishDashboardSource('operational', operational);
   usePublishDashboardSource('logistics', logistics);
@@ -110,6 +121,15 @@ function WorkspaceContent() {
     for (const [key, value] of Object.entries(batch))
       if ((Array.isArray(value) ? value.length : value) && !allowsSource(accessUser() || user, key))
         throw Error('Você não tem permissão para importar esta base.');
+    const sources = Object.fromEntries(
+      ['orders', 'operational', 'logistics']
+        .filter((kind) => batch[kind])
+        .map((kind) => [kind, batch[kind]]),
+    );
+    if (savedSources.enabled && batch.consumption.length && Object.keys(sources).length)
+      throw Error(
+        'No piloto, importe os extratos de consumo em um lote separado das bases salvas, para evitar confirmação parcial.',
+      );
     if (batch.consumption.length) {
       // Dependências do lote são carregadas somente quando há consumo a gravar.
       const [{ consumptionHistoryRepository }, { mergeBulkHistory }] = await Promise.all([
@@ -121,9 +141,7 @@ function WorkspaceContent() {
       await consumptionHistoryRepository.write(mergeBulkHistory(archive, batch));
       setConsumptionRevision((value) => value + 1);
     }
-    if (batch.orders) setOrders(batch.orders);
-    if (batch.operational) setOperational(batch.operational);
-    if (batch.logistics) setLogistics(batch.logistics);
+    if (Object.keys(sources).length) await savedSources.save(sources);
   }
   const current = allowed(page)
     ? page
@@ -145,6 +163,15 @@ function WorkspaceContent() {
     );
   return (
     <>
+      {(savedSources.loading || savedSources.busy || savedSources.error) && (
+        <div className="saved-sources-status" role={savedSources.error ? 'alert' : 'status'}>
+          {savedSources.error ||
+            (savedSources.busy ? 'Salvando bases no banco…' : 'Carregando bases salvas…')}
+          {savedSources.error && (
+            <button onClick={savedSources.reload}>Tentar carregar novamente</button>
+          )}
+        </div>
+      )}
       <DeferredPage
         active={current === 'my-dashboard'}
         allowed={allowed('my-dashboard')}
@@ -185,6 +212,7 @@ function WorkspaceContent() {
         onPage={navigate}
       >
         <ImportPage
+          savedSources={savedSources}
           onPage={navigate}
           onApply={applyBatch}
           orders={allowed('orders') || allowed('operational-analysis') ? orders : null}
@@ -205,7 +233,7 @@ function WorkspaceContent() {
           active={current === 'orders'}
           operational={allowed('operational-analysis') ? operational : null}
           onPage={navigate}
-          onImport={setOrders}
+          onImport={(value) => saveSource('orders', value)}
           source={orders}
         />
       </DeferredPage>
@@ -216,9 +244,10 @@ function WorkspaceContent() {
         onPage={navigate}
       >
         <LinesPage
+          centralSources={savedSources.enabled}
           onPage={navigate}
           operational={operational}
-          onOperationalChange={setOperational}
+          onOperationalChange={(value) => saveSource('operational', value)}
           reloadToken={consumptionRevision}
         />
       </DeferredPage>
@@ -262,9 +291,9 @@ function WorkspaceContent() {
           onPage={navigate}
           orders={orders}
           source={operational}
-          setSource={setOperational}
+          setSource={(value) => saveSource('operational', value)}
           logistics={allowed('operational-analysis') ? logistics : null}
-          setLogistics={setLogistics}
+          setLogistics={(value) => saveSource('logistics', value)}
         />
       </DeferredPage>
     </>

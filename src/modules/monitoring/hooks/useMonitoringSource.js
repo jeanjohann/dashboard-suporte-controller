@@ -1,8 +1,17 @@
 /** Separa fonte e tela. Demonstração nunca é fallback de erro; atualização real é explícita nesta etapa. */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { fetchMonitoringSnapshot } from '../data/monitoringClient.js';
+import { useAccess } from '../../../shared/security/Access.jsx';
+import { api } from '../../../shared/security/accessClient.js';
+import { fetchSavedMonitoring } from '../data/savedMonitoringClient.js';
 
 export function useMonitoringSource() {
+  const { user, managed } = useAccess();
+  const persistent = useRef(false),
+    ready = useRef(!managed);
+  const [savedAt, setSavedAt] = useState(null),
+    [savedMode, setSavedMode] = useState(false),
+    [lastAttempt, setLastAttempt] = useState(null);
   const [source, setSource] = useState(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState('');
@@ -12,6 +21,81 @@ export function useMonitoringSource() {
   const request = useRef(null),
     generation = useRef(0);
   const real = source && !source.demonstration;
+  useEffect(() => {
+    if (!managed) return;
+    const controller = new AbortController();
+    let live = true;
+    ready.current = false;
+    generation.current++;
+    request.current?.abort();
+    request.current = null;
+    persistent.current = false;
+    setSource(null);
+    setSavedAt(null);
+    setSavedMode(false);
+    setLastAttempt(null);
+    setBusy(true);
+    async function load() {
+      try {
+        const status = await api('/api/sources/status', { signal: controller.signal });
+        if (status.version !== 1 || typeof status.permitted !== 'boolean')
+          throw Error('Configuração do monitoramento salvo incompatível.');
+        if (!live) return;
+        persistent.current = status.permitted;
+        setSavedMode(status.permitted);
+        if (status.permitted) {
+          const data = await fetchSavedMonitoring({ signal: controller.signal });
+          if (!live) return;
+          setSource(data.snapshot);
+          setSavedAt(data.savedAt);
+          setLastAttempt(data.lastAttempt);
+          setNow(new Date().toISOString());
+        }
+        ready.current = true;
+        setError('');
+      } catch (error) {
+        if (live) setError(error.message);
+      } finally {
+        if (live) setBusy(false);
+      }
+    }
+    load();
+    return () => {
+      live = false;
+      controller.abort();
+    };
+  }, [managed, user?.email]);
+  async function reloadSaved() {
+    if (!persistent.current || request.current) return;
+    const controller = new AbortController(),
+      run = generation.current;
+    request.current = controller;
+    try {
+      const data = await fetchSavedMonitoring({ signal: controller.signal });
+      if (generation.current !== run) return;
+      setSource(data.snapshot);
+      setSavedAt(data.savedAt);
+      setLastAttempt(data.lastAttempt);
+      setNow(new Date().toISOString());
+      setError('');
+    } catch (error) {
+      if (generation.current === run) setError(error.message);
+    } finally {
+      if (request.current === controller) request.current = null;
+    }
+  }
+  useEffect(() => {
+    if (!savedMode) return;
+    const tick = () => {
+      if (document.visibilityState === 'visible') reloadSaved();
+    };
+    const timer = setInterval(tick, 300000);
+    window.addEventListener('focus', tick);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('focus', tick);
+    };
+  }, [savedMode]);
   useEffect(() => {
     if (!nextReadAt) return;
     const update = () => setCooldown(Math.max(0, Math.ceil((nextReadAt - Date.now()) / 1000)));
@@ -33,6 +117,12 @@ export function useMonitoringSource() {
     [],
   );
   async function refresh() {
+    if (!ready.current) {
+      setError(
+        'Não foi possível conferir a base salva. Recarregue a página antes de atualizar a integração.',
+      );
+      return;
+    }
     if (request.current || Date.now() < nextReadAt) return;
     setNextReadAt(Date.now() + 60000);
     setCooldown(60);
@@ -44,7 +134,14 @@ export function useMonitoringSource() {
     setBusy(true);
     setError('');
     try {
-      const next = await fetchMonitoringSnapshot({ signal: controller.signal });
+      let next;
+      if (persistent.current) {
+        const data = await fetchSavedMonitoring({ refresh: true, signal: controller.signal });
+        if (generation.current !== run) return;
+        next = data.snapshot;
+        setSavedAt(data.savedAt);
+        setLastAttempt(data.lastAttempt);
+      } else next = await fetchMonitoringSnapshot({ signal: controller.signal });
       if (generation.current !== run) return;
       setNow(new Date().toISOString());
       setSource(next);
@@ -76,5 +173,16 @@ export function useMonitoringSource() {
     () => (real ? { ...source, referenceAt: now } : source),
     [source, now, real],
   );
-  return { snapshot, source, busy, cooldown, error, refresh };
+  return {
+    snapshot,
+    source,
+    busy,
+    cooldown,
+    error,
+    refresh,
+    savedMode,
+    savedAt,
+    lastAttempt,
+    reloadSaved,
+  };
 }

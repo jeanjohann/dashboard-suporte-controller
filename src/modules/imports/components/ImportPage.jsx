@@ -11,10 +11,11 @@ import {
 import { allowsSource } from '../../../shared/security/permissions.js';
 import React, { useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
+import { SavedSourcesPanel } from '../../../shared/persistence/SavedSourcesPanel.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { inspectImportFile, assembleImportBatch, importTypeLabels } from '../domain/bulkImport.js';
 /** Apresenta a prévia dos arquivos reconhecidos e aplica somente o lote selecionado e autorizado. */
-export function ImportPage({ onPage, onApply, orders, operational, logistics }) {
+export function ImportPage({ onPage, onApply, orders, operational, logistics, savedSources }) {
   const input = useRef(),
     [items, setItems] = useState([]),
     [busy, setBusy] = useState(false),
@@ -103,6 +104,7 @@ export function ImportPage({ onPage, onApply, orders, operational, logistics }) 
               onChange={inspect}
             />
           </header>
+          <SavedSourcesPanel storage={savedSources} />
           <div className="notice">
             Excel é identificado pelas abas OS 2025_26 ou OS 2025, Equipamentos ou Envios +
             Devoluções; CSV usa os formatos de consumo já suportados. Selecione uma OS, um

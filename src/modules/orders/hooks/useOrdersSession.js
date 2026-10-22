@@ -64,7 +64,7 @@ export function useOrdersSession({ source, onImport, scope = 'overview' }) {
       setPage(0);
       setSearch('');
       setView('records');
-      onImport({ data: result, filename: file.name });
+      await onImport({ data: result, filename: file.name });
       resetSelections();
       setRecordSort(null);
     } catch (e) {
