@@ -1,6 +1,6 @@
 # KORE/Saitro — piloto de consulta manual
 
-Entrega 0.55.0, em 22/10/2026. Acesso em **KORE**, no menu principal. Consulta uma página por vez e exporta somente a página exibida. O total informado pela operadora não significa que todas as linhas foram coletadas. A amostra de conexão retornou 20 linhas e total de 1.083; esses números podem variar.
+Entrega 0.55.0, em 22/10/2026. Acesso em **Consumo → KORE**. Consulta uma página por vez e exporta somente a página exibida. O total informado pela operadora não significa que todas as linhas foram coletadas. A amostra de conexão retornou 20 linhas e total de 1.083; esses números podem variar.
 
 As páginas KORE e Arqia herdam a permissão de Consumo M2M. A consulta KORE permanece restrita a administradores ativos. Arqia exibe a pendência de documentação e acesso, com atalho para o controle de CSVs, sem métricas fictícias.
 
@@ -30,10 +30,12 @@ O painel preserva a última página válida em caso de erro. Ausência de bytes 
 
 ## Limites e próximos passos
 
-O piloto exige intervalo mínimo de um minuto na interface e no limitador do Worker por localização da Cloudflare. Isso não é uma trava global distribuída para o token: evitar consultas simultâneas por outros consumidores da mesma conta. O fornecedor documenta um token ativo por usuário e apresenta referências divergentes a 10 requisições/token e 200 requisições/10 minutos. Confirmar a regra efetiva antes de ampliar a coleta. O tamanho da página vem da resposta, sem assumir o tamanho citado na introdução da documentação.
+Desde 0.55.1, a interface exige intervalo de 10 minutos entre leituras, conforme recusa real de novo token. O limitador adicional do Worker permanece de uma requisição por minuto por localização da Cloudflare. Isso não é uma trava global distribuída para o token: evitar consultas simultâneas por outros consumidores da mesma conta. O fornecedor documenta um token ativo por usuário e apresenta referências divergentes a 10 requisições/token e 200 requisições/10 minutos. Confirmar a regra efetiva antes de ampliar a coleta. O tamanho da página vem da resposta, sem assumir o tamanho citado na introdução da documentação.
 
 Há documentação de produtos e histórico diário de sessões em `/api/simcards/consumo/dados/YYYY-MM-DD/` e por linha. Esses recursos ainda não são coletados pelo piloto. Depois de confirmar período, limites e concorrência, homologar linhas conhecidas no portal/CSV, paginação completa e retenção antes de agregar indicadores.
 
 Segredos `KORE_API_USERNAME` e `KORE_API_PASSWORD`, configuráveis por `scripts/setup-kore.ps1` com entrada oculta e transmissão por stdin. Nenhum valor privado pertence ao Git ou a este documento.
 
 Referência: [documentação privada KORE/Saitro](https://kore.saitro.com/api/docs/), consultada com acesso autorizado, e esclarecimentos do atendimento encaminhados pelo proprietário em 22/10/2026.
+
+Desde 0.55.1, uma leitura validada permanece disponível mesmo quando falha o encerramento posterior do token. O campo cleanupConfirmed informa essa confirmação e a interface mostra a pendência separadamente.

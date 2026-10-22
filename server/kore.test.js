@@ -193,8 +193,13 @@ test('falhas são sanitizadas, encerramento é tentado após falha da leitura e 
       if (mode === 'cleanup-error') return new Response('private-sentinel', { status: 401 });
       return Response.json({ status: 'OK' });
     });
-    assert.equal(response.status, 502);
-    assert.doesNotMatch(await response.text(), /private-sentinel|fixture|Authorization/);
+    assert.equal(response.status, mode === 'cleanup-error' ? 200 : 502);
+    const body = await response.json();
+    if (mode === 'cleanup-error') {
+      assert.equal(body.rows.length, 2);
+      assert.equal(body.cleanupConfirmed, false);
+    }
+    assert.doesNotMatch(JSON.stringify(body), /private-sentinel|fixture|Authorization/);
     assert.ok(calls.includes(`/api/token/disable/${token}/`));
     assert.ok(!calls.includes('/api/token/clear/'));
   }

@@ -178,6 +178,7 @@ export async function koreResponse(request, env, fetcher = fetch) {
     );
     stage = 'contract';
     output = mapKorePage(body, Number(pageText));
+    output.cleanupConfirmed = false;
   } catch (failure) {
     // Apenas códigos internos e status HTTP; nunca registrar URL, corpo ou autenticação.
     const reason =
@@ -216,9 +217,9 @@ export async function koreResponse(request, env, fetcher = fetch) {
           65536,
         );
         if (reply.status !== 'OK') throw Error('cleanup');
+        if (output) output.cleanupConfirmed = true;
       } catch {
         console.warn('KORE_DIAGNOSTIC cleanup failed');
-        if (output) output = null;
       }
     }
   }

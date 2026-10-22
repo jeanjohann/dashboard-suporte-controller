@@ -17,6 +17,7 @@ export function normalizeKorePage(input) {
     !integer(input.totalReported) ||
     typeof input.hasNext !== 'boolean' ||
     input.period !== 'unconfirmed' ||
+    !(input.cleanupConfirmed == null || typeof input.cleanupConfirmed === 'boolean') ||
     typeof input.readAt !== 'string' ||
     !/^\d{4}-\d{2}-\d{2}T.*Z$/.test(input.readAt) ||
     !Number.isFinite(Date.parse(input.readAt)) ||
@@ -78,6 +79,7 @@ export function normalizeKorePage(input) {
     totalReported: input.totalReported,
     hasNext: input.hasNext,
     readAt: input.readAt,
+    cleanupConfirmed: input.cleanupConfirmed === true,
     rows,
   };
 }

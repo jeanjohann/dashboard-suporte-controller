@@ -57,8 +57,8 @@ export function KorePilotPanel({ visible }) {
     if (request.current || Date.now() < retryAt.current) return;
     const controller = new AbortController();
     request.current = controller;
-    retryAt.current = Date.now() + 60000;
-    setRemaining(60);
+    retryAt.current = Date.now() + 600000;
+    setRemaining(600);
     setBusy(true);
     setError('');
     const timer = setTimeout(() => controller.abort(), 30000);
@@ -73,7 +73,7 @@ export function KorePilotPanel({ visible }) {
         const messages = {
           401: 'Entre novamente no sistema para consultar a KORE.',
           403: 'O piloto KORE está disponível somente para administradores.',
-          429: 'Aguarde um minuto entre consultas à KORE.',
+          429: 'Aguarde antes de repetir a consulta à KORE.',
           503: 'As credenciais KORE ainda não estão configuradas.',
         };
         if (messages[response.status]) throw Error(messages[response.status]);
@@ -241,6 +241,13 @@ export function KorePilotPanel({ visible }) {
           )}
           {page && (
             <>
+              {!page.cleanupConfirmed && (
+                <p role="status" className="notice">
+                  Os dados foram recebidos e validados. A KORE não confirmou o encerramento do token
+                  no formato esperado; o administrador deve conferir essa pendência antes de uma
+                  nova consulta.
+                </p>
+              )}
               <p className="scope">
                 Leitura bem-sucedida:{' '}
                 {new Date(page.readAt).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}{' '}
