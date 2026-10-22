@@ -1,8 +1,8 @@
 # Fila de implementação e ajustes
 
-## Fila atual — 22/10/2026, após a versão 0.54.0
+## Fila atual — 22/10/2026, após a versão 0.54.1
 
-**Revisão visual 0.54.1 pronta e validada localmente:** cards neutros na conferência API × Operacional, busca mais ampla, controles responsivos, tabela com colunas proporcionais e cabeçalhos compartilhados alinhados. Seletor de temas reduzido aos nomes em 12 px. Conferidos os temas Sálvia e Areia/Noite Azul, seleção dos cards, busca e layout em 390 px com 1.800 veículos fictícios. Importações, formatação, 398 testes e compilação aprovados; um teste previsto ignorado. Sem novas regras de dados ou novas paletas nesta rodada; publicação ainda não realizada.
+**Revisão visual 0.54.1 publicada em 22/10/2026:** cards neutros na conferência API × Operacional, busca mais ampla, controles responsivos, tabela com colunas proporcionais e cabeçalhos compartilhados alinhados. Seletor de temas reduzido aos nomes em 12 px. Conferidos os temas Sálvia e Areia/Noite Azul, seleção dos cards, busca e layout em 390 px com 1.800 veículos fictícios. Importações, formatação, 398 testes e compilação aprovados; um teste previsto ignorado. Publicada com autorização específica no GitHub (main, código `50fde55`) e no Cloudflare (versão `d883a578-c522-4777-8841-1aed3b7ff209`). Seletor compacto e arquivo `/assets/index-BUeTyRHt.js` conferidos na produção, preservando a preferência Escuro. A conferência com dados foi validada na amostra local; nenhuma coleta real foi disparada na verificação de publicação.
 
 **Rodada 0.54.0 publicada em 22/10/2026:** cinco novas paletas solicitadas durante a publicação: Sálvia e Areia, Lagoa, Azul e Âmbar, Noite Azul e Lima Elétrica. Mantém os temas anteriores e os critérios dos indicadores. Publicação autorizada e concluída no GitHub (main, código `32ba6a8`) e no Cloudflare (versão `ba31a774-75e3-4b3c-9d81-82f6544cd1a5`). As oito opções do seletor foram conferidas no sistema publicado; a preferência Escuro permaneceu selecionada.
 
