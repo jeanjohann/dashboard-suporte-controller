@@ -186,18 +186,19 @@ summary:focus-visible {
 }
 .report-heading {
   position: relative;
-  align-items: flex-start;
+  align-items: center;
   padding-right: 60px;
 }
 .report-heading-actions {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 6px;
   margin-left: auto;
 }
 .report-heading-actions > .info-note {
   position: absolute;
-  top: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 16px;
   margin: 0;
 }
@@ -206,7 +207,6 @@ summary:focus-visible {
     padding-right: 50px;
   }
   .report-heading-actions > .info-note {
-    top: 10px;
     right: 10px;
   }
 }

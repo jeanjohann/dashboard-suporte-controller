@@ -83,6 +83,7 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
         {registryStates.map((label) => (
           <button
             key={label}
+            className="summary-card"
             aria-pressed={state === label}
             onClick={() => {
               setState(state === label ? 'all' : label);
@@ -145,7 +146,7 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
         cliente/base indica necessidade de conferir nomes ou códigos, sem equivalência presumida. A
         comparação não usa os filtros das outras categorias.
       </p>
-      <TableScroll label="Divergências de cadastro">
+      <TableScroll label="Divergências de cadastro" className="monitoring-registry-table">
         <table>
           <thead>
             <tr>

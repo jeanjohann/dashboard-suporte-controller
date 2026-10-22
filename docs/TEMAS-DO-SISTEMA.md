@@ -2,7 +2,7 @@
 
 ## Paletas adicionais — 0.54.0
 
-O seletor passa a oferecer oito opções, preservando Claro, Escuro e Grafite e Lima. As cinco novas opções seguem as paletas fornecidas pelo proprietário, na ordem abaixo. As amostras do seletor preservam os códigos originais; superfícies, textos, botões e séries dos gráficos usam também tons derivados para contraste. A preferência anterior não muda até o usuário escolher outra opção.
+O seletor passa a oferecer oito opções, preservando Claro, Escuro e Grafite e Lima. As cinco novas opções seguem as paletas fornecidas pelo proprietário, na ordem abaixo. Na revisão 0.54.1, o seletor mostra somente os nomes em fonte de 12 px, com a opção ativa destacada. Os códigos originais ficam registrados abaixo; superfícies, textos, botões e séries dos gráficos usam também tons derivados para contraste. A preferência anterior não muda até o usuário escolher outra opção.
 
 | Tema           | Superfícies                                            | Cores fornecidas                                      |
 | -------------- | ------------------------------------------------------ | ----------------------------------------------------- |

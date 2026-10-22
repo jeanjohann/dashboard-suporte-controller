@@ -1,6 +1,6 @@
 {
-  "version": "0.54.0",
-  "base": "8e3542b · cópia da entrega",
+  "version": "0.54.1",
+  "base": "da68bc6 · cópia da entrega",
   "date": "2026-10-22",
   "total": 444,
   "tests": 89,
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 89809,
-      "sha256": "5e9ed2b08e5f5ec78a5a065660c8c3d16ef2a15188e5ec77c83350b6b9c75c8d",
+      "bytes": 90346,
+      "sha256": "226ae2799c7f0b15180208d04fb5fe98dcf4559931ed74f9a41617836a034746",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -945,8 +945,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 34178,
-      "sha256": "de45f0994cc7f7ca7457304483e163a964659886da78e32c851846a3fa7158f8",
+      "bytes": 34847,
+      "sha256": "42bb681fdf626287c7954a6155d39573f52726160c4a187b2452895c9fd72e9d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1029,8 +1029,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 3798,
-      "sha256": "ceb1f30b05ecbb259a7a2a2eafeae8e37d98db7a143982c5fc376bf461fbb266",
+      "bytes": 3894,
+      "sha256": "54d5398bc2c3b46ffe86a691eb2aca4a5a3f0a8cdbdc6bdcc6ada0b9e374fe60",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1184,7 +1184,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "fcc5406dd91b42a1841757411acdb9e3887499c166d64ac3e1ef7b38e676784d",
+      "sha256": "29f225921bd2ed38dc02dd1f753909816558d7bf7464f9f1e8243309c9c0dbfe",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1198,7 +1198,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "49c77b419f4830246ec8203e4f5b9ab6fae5ad629d0b67fd897523c9e96d8670",
+      "sha256": "09790fe829f4278967076fd37557c6b49383742cb793f63d350bc1583ab31ff0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2135,8 +2135,8 @@
       "imports": [],
       "external": ["react"],
       "importedBy": ["src/app/Navigation.jsx", "src/main.jsx"],
-      "bytes": 4104,
-      "sha256": "d12d5a70d7dfef37c2f88bdbbedfbee6e92547fbb13b38be4c9ec311661820e3",
+      "bytes": 3300,
+      "sha256": "05164b50751222d22de671bfafd41f6af88c915f49346e8ecf4acd73f1d40a9e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3933,8 +3933,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 8038,
-      "sha256": "1da3d170674c3b97a6cecb980dbea46e42913e4f58a452949da59466705d8ac3",
+      "bytes": 8113,
+      "sha256": "fb2ae4b2ae25d25e10fad51a6699c498b30640ad9ba5a96cb00078a152639a55",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -8729,8 +8729,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 5194,
-      "sha256": "2e86ccbf1096231b9d55d76dd298fc539bd8062e551ae87123006895e846a04b",
+      "bytes": 5205,
+      "sha256": "f828983c61cd970377f4a704d098f50689223df20b90918d28395647a5537aea",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8813,8 +8813,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 10955,
-      "sha256": "dfd93884a38f2b293e889ba979068d65a46a881e7a2192ceada19613b5df8d1d",
+      "bytes": 13122,
+      "sha256": "43345d2cd50e532789bc7e6756eb57554eb0edcdd90af5e786e141eae100d046",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8939,8 +8939,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 16145,
-      "sha256": "e458c87d717da00fa28dd1cc78a9c6f5d22f7a3c0d82276dac6d5ebc86c713b8",
+      "bytes": 16013,
+      "sha256": "940020ecb197499a62bcb9936ba4e2da3330604fe8f5c3702d73872177367ff3",
       "status": "Código ou documentação do ponto de referência"
     },
     {

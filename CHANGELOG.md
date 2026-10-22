@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.54.1 — 22/10/2026
+
+- Simplifica a seleção de temas para nomes em fonte de 12 px, mantendo a indicação da opção ativa e a preferência salva.
+- Troca os blocos escuros da conferência API × Operacional por cards neutros com números em destaque e seleção discreta. Busca, filtro e exportação passam a usar uma grade responsiva.
+- Equilibra larguras e quebra de texto na tabela de conferência, preservando o cabeçalho durante a rolagem. Alinha títulos, ações e ajuda nos cabeçalhos compartilhados dos relatórios.
+
 ## 0.54.0 — 22/10/2026
 
 - Adiciona cinco temas a partir das paletas fornecidas: Sálvia e Areia, Lagoa, Azul e Âmbar, Noite Azul e Lima Elétrica. Preserva as três opções anteriores e a preferência já salva.

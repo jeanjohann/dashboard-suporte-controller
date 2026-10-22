@@ -10,30 +10,14 @@ import React, {
 } from 'react';
 
 const themes = [
-  { id: 'light', label: 'Claro', colors: ['#ffffff', '#147b72', '#3c7cc4'] },
-  { id: 'dark', label: 'Escuro', colors: ['#232930', '#58dfbd', '#7db7ff'] },
-  { id: 'lime', label: 'Grafite e Lima', colors: ['#282828', '#a8c513', '#679ca3'] },
-  {
-    id: 'sage',
-    label: 'Sálvia e Areia',
-    colors: ['#55879f', '#306c67', '#72a17f', '#cacaa5', '#e0d9c7'],
-  },
-  { id: 'lagoon', label: 'Lagoa', colors: ['#2ba0c9', '#23a69b', '#bad09d', '#e8e5c9', '#f3f3f3'] },
-  {
-    id: 'ocean',
-    label: 'Azul e Âmbar',
-    colors: ['#0868c5', '#0a979f', '#8bcb74', '#ffefb5', '#fffaf3'],
-  },
-  {
-    id: 'midnight',
-    label: 'Noite Azul',
-    colors: ['#a9d3e2', '#edf2f0', '#172130', '#78797e', '#e5e5e5'],
-  },
-  {
-    id: 'electric',
-    label: 'Lima Elétrica',
-    colors: ['#96ef4c', '#fff34d', '#131f00', '#757873', '#e2e2e2'],
-  },
+  { id: 'light', label: 'Claro' },
+  { id: 'dark', label: 'Escuro' },
+  { id: 'lime', label: 'Grafite e Lima' },
+  { id: 'sage', label: 'Sálvia e Areia' },
+  { id: 'lagoon', label: 'Lagoa' },
+  { id: 'ocean', label: 'Azul e Âmbar' },
+  { id: 'midnight', label: 'Noite Azul' },
+  { id: 'electric', label: 'Lima Elétrica' },
 ];
 const ThemeContext = createContext({ theme: 'light', selectTheme: () => {} });
 const storageKey = 'addlog-theme-v1';
@@ -112,13 +96,7 @@ export function ThemeToggle() {
               picker.current.querySelector('summary').focus();
             }}
           >
-            <span className="theme-swatches" aria-hidden="true">
-              {entry.colors.map((color) => (
-                <i key={color} style={{ background: color }} />
-              ))}
-            </span>
             <span>{entry.label}</span>
-            <span aria-hidden="true">{theme === entry.id ? '✓' : ''}</span>
           </button>
         ))}
         <small>Salvo neste navegador.</small>
