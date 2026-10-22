@@ -63,6 +63,8 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'src/styles/theme-presets.css':
+    'Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.',
   'src/modules/monitoring/components/MonitoringRegistry.jsx':
     'Conferência autorizada API × Operacional, com grupos, filtros, referências de origem e CSV; não modifica os cadastros.',
   'src/modules/monitoring/domain/monitoringRegistry.js':

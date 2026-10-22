@@ -1,8 +1,8 @@
 {
-  "version": "0.53.0",
-  "base": "7b85358 · cópia da entrega",
+  "version": "0.54.0",
+  "base": "8e3542b · cópia da entrega",
   "date": "2026-10-22",
-  "total": 443,
+  "total": 444,
   "tests": 89,
   "folders": [
     {
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 326
+      "count": 327
     },
     {
       "path": "src/app",
@@ -343,7 +343,7 @@
     {
       "path": "src/styles",
       "description": "CSS global e refinamentos; a ordem é definida em main.jsx.",
-      "count": 22
+      "count": 23
     }
   ],
   "files": [
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 89296,
-      "sha256": "3c34ce7d4e937f467952dd3d5dfa2e297e86e6f5fcf503f3aa4c27ce71e206fb",
+      "bytes": 89809,
+      "sha256": "5e9ed2b08e5f5ec78a5a065660c8c3d16ef2a15188e5ec77c83350b6b9c75c8d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -441,8 +441,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 8138,
-      "sha256": "ff647ef9311061413326c5305c9ba58279f79d315ab25b1276e931a593653059",
+      "bytes": 8196,
+      "sha256": "3f369f5548959cbe171f52e74bf0c62be595676013f3b27616d24cdc548a8e2d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -833,8 +833,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 7738,
-      "sha256": "5042a3904d3eb7e35c66e4e22a19b0cab9d860c034bca51fef352ad5672728cf",
+      "bytes": 8270,
+      "sha256": "daa3a295b49d16869604cee432f1f791faa14d1b70213be6a0148eeb2e260048",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -945,8 +945,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 33769,
-      "sha256": "fbfb689711fe69090d941b474e6264f015ce5aac2853e310b5557f25173960a3",
+      "bytes": 34178,
+      "sha256": "de45f0994cc7f7ca7457304483e163a964659886da78e32c851846a3fa7158f8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1029,8 +1029,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1127,
-      "sha256": "849c8bddfe798df1ac28131df5513981921c75f63ae244accb03c48e626039fa",
+      "bytes": 3798,
+      "sha256": "ceb1f30b05ecbb259a7a2a2eafeae8e37d98db7a143982c5fc376bf461fbb266",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1184,7 +1184,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "22b2ffec228582325ced9580b682259376ddd9e93e2d1f322a6e60376e75d8c2",
+      "sha256": "fcc5406dd91b42a1841757411acdb9e3887499c166d64ac3e1ef7b38e676784d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1198,7 +1198,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "f5ca2e53e09bc78d4a8dc79eb9dd33dd9131fdaaa1e283a2fa9faf1032248177",
+      "sha256": "49c77b419f4830246ec8203e4f5b9ab6fae5ad629d0b67fd897523c9e96d8670",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1361,8 +1361,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 43562,
-      "sha256": "f44eed937878d4a1e2745fd6df750a7da6b9981d275c92ab4406db7c1d2a4e13",
+      "bytes": 43772,
+      "sha256": "d49a983f2d8d000d0cdeef3561b04ac7a972ed327fa38e4965e84ac75d33871f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2130,13 +2130,13 @@
       "folder": "src/app",
       "module": "Shell da aplicação",
       "layer": "Interface React",
-      "description": "Temas globais, com preferência local preservada e escolha explícita entre as três paletas.",
+      "description": "Temas globais, com preferência local preservada e escolha explícita de paleta.",
       "exports": ["ThemeProvider", "ThemeToggle", "useTheme"],
       "imports": [],
       "external": ["react"],
       "importedBy": ["src/app/Navigation.jsx", "src/main.jsx"],
-      "bytes": 3519,
-      "sha256": "275162c4a53bc47e39f9cb1da60e873869111f166c9d87ecbd9b20d3e4af8313",
+      "bytes": 4104,
+      "sha256": "d12d5a70d7dfef37c2f88bdbbedfbee6e92547fbb13b38be4c9ec311661820e3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2712,12 +2712,13 @@
         "src/styles/support-people.css",
         "src/styles/support-workspace.css",
         "src/styles/support.css",
+        "src/styles/theme-presets.css",
         "src/styles/theme.css"
       ],
       "external": ["react", "react-dom/client"],
       "importedBy": [],
-      "bytes": 1482,
-      "sha256": "51421e23e36c2995d1eb75c3e18067d6a791e038272aa9a6949808b2828d48e4",
+      "bytes": 1519,
+      "sha256": "6d38542731f6fce8e6f49a2aecfd784bb311fe865fc1efa2a9b85061ab97f941",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8996,6 +8997,20 @@
       "importedBy": ["src/main.jsx"],
       "bytes": 1682,
       "sha256": "6248f0a265274cc6760339c2652e65fc636c4ecbc6a5457ca18f44256b028606",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/styles/theme-presets.css",
+      "folder": "src/styles",
+      "module": "Compartilhado",
+      "layer": "Estilo",
+      "description": "Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": ["src/main.jsx"],
+      "bytes": 6071,
+      "sha256": "a36fc9abecec461e28f9ce62ba0278ee67120d46a18dbd208e35b981cc18214c",
       "status": "Código ou documentação do ponto de referência"
     },
     {

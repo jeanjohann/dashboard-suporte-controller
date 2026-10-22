@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.53.0 · referência 7b85358 · cópia da entrega · 2026-10-22 · **443 arquivos / 89 arquivos de teste / 67 pastas**.
+Addlog 0.54.0 · referência 8e3542b · cópia da entrega · 2026-10-22 · **444 arquivos / 89 arquivos de teste / 67 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -22,7 +22,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **server** — API Cloudflare e adaptadores privados de integrações. (21 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio preparado e testes; não ligado ao Worker. (3 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Esquema SQL futuro de documentos de negócio. (1 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (326 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (327 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
 - **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (237 arquivos, incluindo subpastas).
@@ -77,7 +77,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/shared/layout** — Personalização de página e agrupamento dos relatórios. (5 arquivos, incluindo subpastas).
 - **src/shared/persistence** — Contratos de documentos versionados e adaptadores de referência; preparação de evolução. (3 arquivos, incluindo subpastas).
 - **src/shared/security** — Sessão, autorização e cliente da API protegida. (4 arquivos, incluindo subpastas).
-- **src/styles** — CSS global e refinamentos; a ordem é definida em main.jsx. (22 arquivos, incluindo subpastas).
+- **src/styles** — CSS global e refinamentos; a ordem é definida em main.jsx. (23 arquivos, incluindo subpastas).
 
 ## Arquivos
 
@@ -1349,7 +1349,7 @@ Dependências externas: `react`, `react-dom`.
 
 ### src/app/Theme.jsx
 
-**Shell da aplicação · Interface React** — Temas globais, com preferência local preservada e escolha explícita entre as três paletas.
+**Shell da aplicação · Interface React** — Temas globais, com preferência local preservada e escolha explícita de paleta.
 
 [Abrir fonte](../../src/app/Theme.jsx) · Código ou documentação do ponto de referência
 
@@ -1645,7 +1645,7 @@ Importado por: [src/components/Section.jsx](../../src/components/Section.jsx).
 
 [Abrir fonte](../../src/main.jsx) · Código ou documentação do ponto de referência
 
-Importa arquivos locais: [src/app/Theme.jsx](../../src/app/Theme.jsx), [src/app/Workspace.jsx](../../src/app/Workspace.jsx), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/styles/analysis-workspace.css](../../src/styles/analysis-workspace.css), [src/styles/controls.css](../../src/styles/controls.css), [src/styles/filter-workspace.css](../../src/styles/filter-workspace.css), [src/styles/filters.css](../../src/styles/filters.css), [src/styles/google-orders.css](../../src/styles/google-orders.css), [src/styles/identity.css](../../src/styles/identity.css), [src/styles/layout-polish.css](../../src/styles/layout-polish.css), [src/styles/monitoring-refinement.css](../../src/styles/monitoring-refinement.css), [src/styles/monitoring.css](../../src/styles/monitoring.css), [src/styles/my-dashboard.css](../../src/styles/my-dashboard.css), [src/styles/next-analysis.css](../../src/styles/next-analysis.css), [src/styles/overview-agenda.css](../../src/styles/overview-agenda.css), [src/styles/overview-kpis.css](../../src/styles/overview-kpis.css), [src/styles/page-settings.css](../../src/styles/page-settings.css), [src/styles/report-stories.css](../../src/styles/report-stories.css), [src/styles/review-diagnostics.css](../../src/styles/review-diagnostics.css), [src/styles/sidebar.css](../../src/styles/sidebar.css), [src/styles/style.css](../../src/styles/style.css), [src/styles/support-people.css](../../src/styles/support-people.css), [src/styles/support-workspace.css](../../src/styles/support-workspace.css), [src/styles/support.css](../../src/styles/support.css), [src/styles/theme.css](../../src/styles/theme.css).
+Importa arquivos locais: [src/app/Theme.jsx](../../src/app/Theme.jsx), [src/app/Workspace.jsx](../../src/app/Workspace.jsx), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/styles/analysis-workspace.css](../../src/styles/analysis-workspace.css), [src/styles/controls.css](../../src/styles/controls.css), [src/styles/filter-workspace.css](../../src/styles/filter-workspace.css), [src/styles/filters.css](../../src/styles/filters.css), [src/styles/google-orders.css](../../src/styles/google-orders.css), [src/styles/identity.css](../../src/styles/identity.css), [src/styles/layout-polish.css](../../src/styles/layout-polish.css), [src/styles/monitoring-refinement.css](../../src/styles/monitoring-refinement.css), [src/styles/monitoring.css](../../src/styles/monitoring.css), [src/styles/my-dashboard.css](../../src/styles/my-dashboard.css), [src/styles/next-analysis.css](../../src/styles/next-analysis.css), [src/styles/overview-agenda.css](../../src/styles/overview-agenda.css), [src/styles/overview-kpis.css](../../src/styles/overview-kpis.css), [src/styles/page-settings.css](../../src/styles/page-settings.css), [src/styles/report-stories.css](../../src/styles/report-stories.css), [src/styles/review-diagnostics.css](../../src/styles/review-diagnostics.css), [src/styles/sidebar.css](../../src/styles/sidebar.css), [src/styles/style.css](../../src/styles/style.css), [src/styles/support-people.css](../../src/styles/support-people.css), [src/styles/support-workspace.css](../../src/styles/support-workspace.css), [src/styles/support.css](../../src/styles/support.css), [src/styles/theme-presets.css](../../src/styles/theme-presets.css), [src/styles/theme.css](../../src/styles/theme.css).
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
@@ -5424,6 +5424,16 @@ Importado por: [src/main.jsx](../../src/main.jsx).
 **Compartilhado · Estilo** — Estilos da área de suporte e seus relatórios.
 
 [Abrir fonte](../../src/styles/support.css) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/main.jsx](../../src/main.jsx).
+
+### src/styles/theme-presets.css
+
+**Compartilhado · Estilo** — Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.
+
+[Abrir fonte](../../src/styles/theme-presets.css) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 

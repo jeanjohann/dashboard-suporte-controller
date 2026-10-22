@@ -1,8 +1,10 @@
 # Fila de implementação e ajustes
 
-## Fila atual — 22/10/2026, após a versão 0.52.0
+## Fila atual — 22/10/2026, após a versão 0.53.0
 
-**Rodada 0.53.0 preparada e testada localmente:** fila do Monitoramento priorizada, filtros e lembretes compactos, alinhamento, indicadores e períodos de 30/60/90 dias, exportação junto da grade e conferência API × Operacional. [Critérios e limites](MONITORAMENTO-TRABALHO-E-CADASTROS.md). Consumo/linha não estão documentados no contrato integrado; posições não foram convertidas para MB. Publicação desta rodada ainda pendente.
+**Rodada 0.54.0 preparada e testada:** cinco novas paletas solicitadas durante a publicação: Sálvia e Areia, Lagoa, Azul e Âmbar, Noite Azul e Lima Elétrica. Mantém os temas anteriores e os critérios dos indicadores. Publicação no GitHub (main) e no Cloudflare autorizada explicitamente em 22/10/2026; entrega em andamento.
+
+**Rodada 0.53.0 publicada em 22/10/2026:** fila do Monitoramento priorizada, filtros e lembretes compactos, alinhamento, indicadores e períodos de 30/60/90 dias, exportação junto da grade e conferência API × Operacional. [Critérios e limites](MONITORAMENTO-TRABALHO-E-CADASTROS.md). Consumo/linha não estão documentados no contrato integrado; posições não foram convertidas para MB. Código `8e3542b` no GitHub; Cloudflare confirmou a publicação.
 
 Este bloco é a referência atual de prioridades. As seções seguintes preservam registros históricos e podem citar pendências já concluídas. A inclusão de sugestões não representa implementação ou publicação.
 

@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.53.0 — fila do Monitoramento priorizada, filtros/lembretes compactos, períodos de 30/60/90 dias, exportação junto da grade e conferência de cadastros API × Operacional. [Uso e limites](docs/MONITORAMENTO-TRABALHO-E-CADASTROS.md). Agendamento e histórico remoto aguardam a definição do armazenamento.
+**Versão:** 0.54.0 — cinco novas [paletas de aparência](docs/TEMAS-DO-SISTEMA.md), preservando os temas anteriores. Inclui a fila do Monitoramento priorizada, períodos de 30/60/90 dias, exportação junto da grade e conferência API × Operacional da [0.53.0](docs/MONITORAMENTO-TRABALHO-E-CADASTROS.md). Agendamento e histórico remoto aguardam a definição do armazenamento.
 
 ## Documentação do projeto
 

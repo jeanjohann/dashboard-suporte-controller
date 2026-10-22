@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.54.0 — 22/10/2026
+
+- Adiciona cinco temas a partir das paletas fornecidas: Sálvia e Areia, Lagoa, Azul e Âmbar, Noite Azul e Lima Elétrica. Preserva as três opções anteriores e a preferência já salva.
+- Amplia o seletor com amostras das cinco cores originais e rolagem limitada à altura da tela. Tons derivados sustentam o contraste; avisos e indicadores de status mantêm seus significados. Impressão e exportações conservam cores próprias. [Paletas e critérios](docs/TEMAS-DO-SISTEMA.md).
+
 ## 0.53.0 — 22/10/2026
 
 - Prioriza a grade de Monitoramento com filtros/lembretes compactos, acompanhamento acessível na rolagem e telemetria opcional. Retira a demonstração da interface; indicadores maiores e mais vibrantes, com texto e estado neutro preservados.
