@@ -1,10 +1,10 @@
 # Fila de implementação e ajustes
 
-## Fila atual — 21/10/2026, após a versão 0.51.0
+## Fila atual — 22/10/2026, após a versão 0.52.0
 
 Este bloco é a referência atual de prioridades. As seções seguintes preservam registros históricos e podem citar pendências já concluídas. A inclusão de sugestões não representa implementação ou publicação.
 
-**Rodada 0.52.0 preparada localmente:** A21–A24 nas tabelas por base/modelo do Monitoramento, A26 com amostra fictícia de 1.800 veículos, comparação de séries personalizadas compatíveis e piloto local de CSV Session do Zoho. Coletor e eventos de atraso/retorno têm contrato e testes, mas permanecem desconectados da execução. [Entrega, critérios e dependências](LAYOUT-E-CONSULTAS-052.md). Publicação autorizada pelo proprietário; não foi ativado armazenamento ou agendamento. A25 e auditoria visual adicional nas demais páginas permanecem evoluções futuras.
+**Rodada 0.52.0 publicada em 21/10/2026:** A21–A24 nas tabelas por base/modelo do Monitoramento, A26 com amostra fictícia de 1.800 veículos, comparação de séries personalizadas compatíveis e piloto local de CSV Session do Zoho. Coletor e eventos de atraso/retorno têm contrato e testes, mas permanecem desconectados da execução. [Entrega, critérios e dependências](LAYOUT-E-CONSULTAS-052.md). Publicação no GitHub e Cloudflare conferida em 22/10/2026; não foi ativado armazenamento ou agendamento. A25 e auditoria visual adicional nas demais páginas permanecem evoluções futuras.
 
 **Já disponíveis:** API manual do diagnóstico legado Addlog no Monitoramento (funcionamento informado pelo proprietário), telemetria de alimentação/bateria, posições por base, inventário e filtro de modelos, temas e mapa compartilhado; análises personalizadas de OS/Operacional e revisão comum da 0.48.0. Demais sistemas de rastreamento não estão abrangidos automaticamente.
 

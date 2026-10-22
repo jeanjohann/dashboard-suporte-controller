@@ -1,7 +1,7 @@
 {
   "version": "0.52.0",
-  "base": "00f6158 · cópia da entrega",
-  "date": "2026-10-21",
+  "base": "aafffa1 · cópia da entrega",
+  "date": "2026-10-22",
   "total": 437,
   "tests": 88,
   "folders": [
@@ -749,8 +749,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 6202,
-      "sha256": "9f8a3b7f0646246e57401ef777ee89f228c192903af5db1954a279dd9e72c40d",
+      "bytes": 7100,
+      "sha256": "9deef21de3b18eb4cd56db46c9833d5a17c7a50d24891c282c5dc4481016d943",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -931,8 +931,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 33305,
-      "sha256": "679e417825a6e3259a5ec9c20c0a65627d5e3cfd193bf7e6f60bad5fd2f1a800",
+      "bytes": 33325,
+      "sha256": "4e4880c2d1e68805c3b90f289f6599c4890f49aee47833efdd5fc9e73b844806",
       "status": "Código ou documentação do ponto de referência"
     },
     {

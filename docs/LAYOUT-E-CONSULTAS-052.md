@@ -39,3 +39,9 @@ O cálculo de janela aceita de um a quatro horários UTC explícitos por dia, ai
 Em 21/10/2026, `npm run check` aprovou importações, formatação, 394 testes e compilação; um teste previsto permanece ignorado. Na interface: três temas, tela de 390 px, paginação de 20 bases e última página dos 1.800 veículos, seleção de colunas, ordenação de zeros/ausências, acesso do modelo à fila e montagem sob demanda da análise. Comparação fictícia confirmou filtros distintos e categoria ausente; CSV fictício confirmou 4 horas acumuladas, sobreposição, sessão aberta, exportação e leitura preservada ao trocar de seção.
 
 Esses ensaios não substituem homologação da frota real, do CSV Session real ou de um futuro banco/agendador.
+
+## Encerramento da publicação — 22/10/2026
+
+Código da entrega publicado na branch main do GitHub no commit `aafffa1`. Cloudflare confirmou a versão ativa `f8eda63b-3155-4d09-8371-9b8c2e29ee3b` com 100% do tráfego. A publicação preservou as variáveis remotas (`--keep-vars`). Conferência autenticada do Monitoramento no endereço de produção confirmou as novas visões Essencial/Completa e os estados zero/ausente com dados de demonstração, sem erros no console e sem consultar a API real.
+
+A revisão inicial no navegador havia sido interrompida por limite de uso da ferramenta; foi concluída em 22/10. Nenhuma alteração adicional no aplicativo foi necessária. O mapa foi atualizado nos arquivos locais e no GitHub; seu Worker independente não foi republicado nesta rodada. Banco, agendamento e homologação do CSV Session real permanecem pendentes conforme os limites acima.
