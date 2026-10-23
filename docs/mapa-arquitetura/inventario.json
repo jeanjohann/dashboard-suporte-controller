@@ -1,6 +1,6 @@
 {
   "version": "0.64.4",
-  "base": "a4417ed · cópia da entrega",
+  "base": "e778e0a · cópia da entrega",
   "date": "2026-10-23",
   "total": 502,
   "tests": 103,
@@ -2762,8 +2762,8 @@
         "server/zohoActivity.js",
         "server/zohoClosures.test.js"
       ],
-      "bytes": 4844,
-      "sha256": "0b458bc4656d5523d7a620546cf9a1aec35c44caf5fc0b7c7a3cc95776001e30",
+      "bytes": 5221,
+      "sha256": "5aa1350de6ad202244c4e7b9449f48954772bc4fc91a751884bd3b8e99adb4bc",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2825,8 +2825,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 6594,
-      "sha256": "be451742dedd67ce9e83cfbb98d0fc96799d2aad91ae8e8bce41010799170327",
+      "bytes": 6928,
+      "sha256": "2299f165a11e41caa03d49eb07c64045fc6328604943f2c395fbce77a3e99cbc",
       "status": "Código ou documentação do ponto de referência"
     },
     {

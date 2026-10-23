@@ -79,6 +79,16 @@ export function closureReader(fetchPage, fail, { unfiltered = false } = {}) {
       );
       if (rows.length > 50) throw fail('O histórico não respeitou a paginação de fechamentos.');
       for (const event of rows) {
+        // Histórico completo contém notificações e apontamentos com a mesma assinatura
+        // resumida. Apenas mudanças reais de Status entram na conferência de fechamento.
+        if (
+          !['TicketUpdated', 'TicketCreated'].includes(event?.eventName) ||
+          !Array.isArray(event.eventInfo) ||
+          !event.eventInfo.some(
+            (item) => item.systemProperty === true && item.propertyName === 'Status',
+          )
+        )
+          continue;
         const signature = JSON.stringify([
           event.eventTime,
           event.eventName,

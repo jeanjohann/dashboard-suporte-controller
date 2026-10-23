@@ -122,6 +122,16 @@ test('histórico completo conserva fechamento após reabertura e divergência da
         data: includeClosure
           ? [
               {
+                eventName: 'TimeEntryCreated',
+                eventTime: '2026-10-22T10:02:00Z',
+                actor: event.actor,
+              },
+              {
+                eventName: 'TimeEntryCreated',
+                eventTime: '2026-10-22T10:02:00Z',
+                actor: event.actor,
+              },
+              {
                 eventName: 'TicketUpdated',
                 eventTime: '2026-10-22T10:02:00Z',
                 actor: event.actor,
