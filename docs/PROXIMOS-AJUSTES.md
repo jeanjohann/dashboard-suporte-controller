@@ -2,7 +2,7 @@
 
 ## Indicadores Suporte 0.62.0 — 23/10/2026
 
-Página própria no menu, com filtros independentes, fontes OS/Zoho e lançamentos manuais diários por agente no D1 do piloto. Cards, evolução diária, assuntos, tipos, clientes, metas opcionais, configuração de seções e exportação. [Critérios, uso e validação](INDICADORES-SUPORTE.md).
+Publicada no GitHub (`2a1d303`) e Cloudflare, com 454 testes aprovados. Página própria no menu, com filtros independentes, fontes OS/Zoho e lançamentos manuais diários por agente no D1 do piloto. Cards, evolução diária, assuntos, tipos, clientes, metas opcionais, configuração de seções e exportação. Acesso autenticado confirmou o módulo, a OS salva, a leitura do banco e o formulário habilitado. [Critérios, uso e validação](INDICADORES-SUPORTE.md).
 
 Próxima conferência: comparar uma semana real com as fontes e validar o preenchimento manual. Chamados criados pelo próprio suporte e assuntos ficam manuais até conferir a autoria e correspondência das categorias da API. Tempo nesta página significa apontamento nos chamados; a pendência de sessões para tempo conectado continua separada.
 

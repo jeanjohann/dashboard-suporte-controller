@@ -1,6 +1,6 @@
 {
   "version": "0.62.0",
-  "base": "e20f57d · cópia da entrega",
+  "base": "2a1d303 · cópia da entrega",
   "date": "2026-10-23",
   "total": 495,
   "tests": 101,
@@ -769,8 +769,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 9688,
-      "sha256": "4d3a10ad2d3d3d2617f1366e6dcbb513a070aa4c78c0b723665cf055b2f4bf87",
+      "bytes": 10224,
+      "sha256": "4cd3c9812a4356a3431871f031019b8a70546f1074afdb7e1f718b9dbd9a37f7",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1049,8 +1049,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 39580,
-      "sha256": "314fb1fc16103a887b42b69ff0e313c245e7372cb9ba29cd6f11f88e0b9de45a",
+      "bytes": 39751,
+      "sha256": "c236e114fd1f5cac084fa958fbf1a04deb8f055efda79aa234e89f46bc35ec66",
       "status": "Código ou documentação do ponto de referência"
     },
     {

@@ -52,6 +52,8 @@ Testes com dados fictícios cobrem datas, papéis distintos de execução/agenda
 
 Verificação automatizada: 454 testes aprovados, nenhuma falha e um teste previamente ignorado. Compilação do aplicativo e simulação do Worker concluídas. Revisão visual no navegador local conferiu o menu, o layout, os atalhos de semana atual/anterior e a abertura do formulário. O modo local manteve a gravação desabilitada, sem simular confirmação do D1.
 
-Pendente de conferência no navegador autenticado: totais reais de uma semana e primeiro preenchimento manual pelo usuário.
+Publicada no GitHub (`2a1d303`) e no Cloudflare. Versão ativa `d951cf4e-0300-48b1-934e-dbdae96e094e`, com o mesmo código da versão enviada `05aea0b2-98fc-4b54-b038-8edf1eba657a`, 100% do tráfego, bancos/segredos preservados e cron existente. A sessão autenticada confirmou a abertura do módulo, a fonte OS salva, a leitura vazia dos lançamentos e o formulário habilitado para gravação. Nenhum lançamento fictício foi gravado em produção.
+
+Pendente de conferência pelo usuário: comparar totais reais de uma semana com a fonte e realizar o primeiro preenchimento manual. A consulta ao fornecedor Zoho não foi disparada durante a revisão visual.
 
 Próxima evolução possível: conferir no retorno real do Zoho a autoria da criação e a correspondência de assuntos antes de substituir os campos manuais por automáticos. A documentação oficial de histórico distingue ações de agentes, clientes e automação: [eventos do histórico](https://help.zoho.com/portal/en/kb/desk/developer-space/rest-apis/articles/events-supported-in-get-ticket-history-api). Esta entrega não presume esse vínculo nem acrescenta escopos OAuth.
