@@ -2,7 +2,7 @@
 
 ## Zoho nos indicadores 0.63.0 — 23/10/2026
 
-Publicada no GitHub (`96a3210`) e Cloudflare, versão ativa `9e195481-4708-44f2-880d-372816a6650d` com 100% do tráfego. 459 testes aprovados. Diagnóstico real confirmou abertura por Contact/Email e por Agent/source nulo, além de categorias compatíveis com a planilha. O proprietário definiu os assuntos pelos chamados fechados por agente. Consulta ampliada agrega aberturas confirmadas e categoria atual dos fechados; manuais preservados e não somados. Conferir totais com relatório do proprietário. Tempo conectado continua aguardando CSV Session.
+Publicada no GitHub (`96a3210`) e Cloudflare, versão ativa `6bb3c56e-5ab0-46a0-a19a-124b08d9eb36` com 100% do tráfego. 460 testes aprovados. Diagnóstico real confirmou abertura por Contact/Email e por Agent/source nulo, além de categorias compatíveis com a planilha. O proprietário definiu os assuntos pelos chamados fechados por agente. Consulta ampliada agrega aberturas confirmadas e categoria atual dos fechados; manuais preservados e não somados. A consulta real identificou divergência entre data de fechamento e histórico; a página mantém fechamentos e assuntos indisponíveis nesse caso, sem impedir as métricas com evidências independentes. Conferir chamados indicados com relatório do proprietário. Tempo conectado continua aguardando CSV Session.
 
 ## Indicadores Suporte 0.62.0 — 23/10/2026
 
