@@ -63,7 +63,8 @@ export async function collectZohoActivityBatch(get, { period, from, anchor, indi
     review = [],
     metrics = [],
     closures = [],
-    ticketIndicators = [];
+    ticketIndicators = [],
+    closureReview = [];
   const readClosures = closureReader(fetchPage, (message) => new ZohoActivityError(message));
   const ticketIds = new Set();
   for (const ticket of tickets) {
@@ -73,7 +74,7 @@ export async function collectZohoActivityBatch(get, { period, from, anchor, indi
         'Chamados repetidos ou inválidos durante a coleta. Tente novamente.',
       );
     ticketIds.add(ticketId);
-    const ticketClosures = await readClosures(ticket, period, anchor);
+    let ticketClosures = await readClosures(ticket, period, anchor);
     if (indicators) {
       if (++calls > 42)
         throw new ZohoActivityError('Limite de chamadas atingido. Reduza o período.');
@@ -86,6 +87,21 @@ export async function collectZohoActivityBatch(get, { period, from, anchor, indi
     }
     const closedDay = zohoDay(ticket.closedTime);
     if (
+      indicators &&
+      closedDay &&
+      closedDay >= period.start &&
+      closedDay <= period.end &&
+      Date.parse(ticket.closedTime) <= Date.parse(anchor) &&
+      !ticketClosures.some(
+        (r) => Math.abs(Date.parse(r.closedAt) - Date.parse(ticket.closedTime)) < 1000,
+      )
+    ) {
+      const fullReader = closureReader(fetchPage, (message) => new ZohoActivityError(message), {
+        unfiltered: true,
+      });
+      ticketClosures = await fullReader(ticket, period, anchor);
+    }
+    if (
       closedDay &&
       closedDay >= period.start &&
       closedDay <= period.end &&
@@ -93,10 +109,19 @@ export async function collectZohoActivityBatch(get, { period, from, anchor, indi
       !ticketClosures.some(
         (row) => Math.abs(Date.parse(row.closedAt) - Date.parse(ticket.closedTime)) < 1000,
       )
-    )
-      throw new ZohoActivityError(
-        'A data de fechamento do chamado não pôde ser conferida no histórico de status.',
-      );
+    ) {
+      if (indicators) {
+        closureReview.push({
+          ticketId,
+          number: String(ticket.ticketNumber || ticketId).slice(0, 50),
+          closedTime: ticket.closedTime,
+        });
+        ticketClosures = [];
+      } else
+        throw new ZohoActivityError(
+          'A data de fechamento do chamado não pôde ser conferida no histórico de status.',
+        );
+    }
     const allEntries = [];
     let effortReviewCount = 0;
     for (const [kind, path, normalize, target] of [
@@ -215,7 +240,7 @@ export async function collectZohoActivityBatch(get, { period, from, anchor, indi
     review,
     metrics,
     closures,
-    ...(indicators ? { ticketIndicators } : {}),
+    ...(indicators ? { ticketIndicators, closureReview } : {}),
     coverage:
       'Chamados acessíveis modificados desde o início do período até a referência da coleta; não inclui arquivos ou itens fora do acesso da conta. A indexação do Zoho pode atrasar.',
   };

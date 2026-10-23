@@ -1,6 +1,6 @@
 {
   "version": "0.63.0",
-  "base": "260f120 · cópia da entrega",
+  "base": "96a3210 · cópia da entrega",
   "date": "2026-10-23",
   "total": 499,
   "tests": 103,
@@ -769,8 +769,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 11444,
-      "sha256": "808734316bc000de96d9a2089760111768bcfdb79d9d05fcffca364d4b292614",
+      "bytes": 12649,
+      "sha256": "530b4f2f726721b262e12d12271c58bc5cb1214aaa5639ec5db9957254cf4700",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1049,8 +1049,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 39751,
-      "sha256": "c236e114fd1f5cac084fa958fbf1a04deb8f055efda79aa234e89f46bc35ec66",
+      "bytes": 40356,
+      "sha256": "3410978f98974232529035f4afeb2ee26933a16111a12017f1b760db3ef9dcaf",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2442,8 +2442,8 @@
         "server/zohoClosures.test.js",
         "server/zohoIndicators.test.js"
       ],
-      "bytes": 8448,
-      "sha256": "72fa140a4711c8703c25e5e5a1b0251fa43f1cbcb66e7fa2c1dd7bcd8c110df7",
+      "bytes": 9252,
+      "sha256": "be16066486b6b1b4fd0bd65688d83d5639bd110ece2704dbd25947664436b8fb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2474,8 +2474,8 @@
       "imports": ["src/shared/data/zohoActivity.js"],
       "external": [],
       "importedBy": ["server/zohoActivity.js", "server/zohoClosures.test.js"],
-      "bytes": 4690,
-      "sha256": "93c2f0e2930a9f6128567ffed569f8a4d0d849c77718a0b0258d87d761ad1fe2",
+      "bytes": 4742,
+      "sha256": "c5c0fe38cbf5b694bd5852293a817b791aba88b56df2b7f5b79299a13b8cd49c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2524,8 +2524,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 3794,
-      "sha256": "e9d0a8f641e2cd8a7426c12bf21ada9b7eea0eee1a45cff7ab090775426d5f68",
+      "bytes": 5551,
+      "sha256": "981ce601e0792b6a434d73cf434945c8619db0da33edabda14b43095f6d6b9c8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -7143,8 +7143,8 @@
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 3254,
-      "sha256": "5a91d81f094d9d005401a9a701bce99bee137356ef10d7deb2504ac884cac819",
+      "bytes": 3561,
+      "sha256": "411f4092a3d47ead18ef74f3811d396b03bc821e773c3a1b4e5b26d225a7374b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8615,8 +8615,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 32214,
-      "sha256": "562e4f72a08696014741ae8ee32ccba08a306c46689d8476aebf49cff13c10b8",
+      "bytes": 32768,
+      "sha256": "e959cf5dc31a39e94ebaec79a80f25c394f69ece24506c6e5b3482909729b97c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8692,8 +8692,8 @@
         "src/modules/support-indicators/domain/indicators.test.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js"
       ],
-      "bytes": 7946,
-      "sha256": "62561893463c83d73f5c6a525d371e6fdb8b541c9eb2dd1f68d5f47caac2d392",
+      "bytes": 7989,
+      "sha256": "df630e10fa3d035f07cfa9f9ab65ca4ef0b2037cbba9aef44901c0db25b12d9d",
       "status": "Código ou documentação do ponto de referência"
     },
     {

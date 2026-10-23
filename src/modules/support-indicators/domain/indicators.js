@@ -138,9 +138,10 @@ export function zohoSummary(data, period, agentId = '') {
   };
   const unique = (rows) => [...new Map(rows.map((r) => [`${r.ticketId}:${r.id}`, r])).values()];
   const entries = unique(data.entries).filter((r) => ids.has(r.agentId) && within(r.executedTime));
-  const closures = Array.isArray(data.closures)
-    ? unique(data.closures).filter((r) => ids.has(r.agentId) && within(r.closedAt))
-    : null;
+  const closures =
+    Array.isArray(data.closures) && data.closuresComplete !== false
+      ? unique(data.closures).filter((r) => ids.has(r.agentId) && within(r.closedAt))
+      : null;
   const seconds = entries.reduce((n, r) => n + r.seconds, 0),
     tickets = new Set(entries.map((r) => r.ticketId)).size;
   const daily = new Map();

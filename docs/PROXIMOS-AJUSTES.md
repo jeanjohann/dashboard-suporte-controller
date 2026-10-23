@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+## Zoho nos indicadores 0.63.0 — 23/10/2026
+
+Publicada no GitHub (`96a3210`) e Cloudflare, versão ativa `9e195481-4708-44f2-880d-372816a6650d` com 100% do tráfego. 459 testes aprovados. Diagnóstico real confirmou abertura por Contact/Email e por Agent/source nulo, além de categorias compatíveis com a planilha. O proprietário definiu os assuntos pelos chamados fechados por agente. Consulta ampliada agrega aberturas confirmadas e categoria atual dos fechados; manuais preservados e não somados. Conferir totais com relatório do proprietário. Tempo conectado continua aguardando CSV Session.
+
 ## Indicadores Suporte 0.62.0 — 23/10/2026
 
 Publicada no GitHub (`2a1d303`) e Cloudflare, com 454 testes aprovados. Página própria no menu, com filtros independentes, fontes OS/Zoho e lançamentos manuais diários por agente no D1 do piloto. Cards, evolução diária, assuntos, tipos, clientes, metas opcionais, configuração de seções e exportação. Acesso autenticado confirmou o módulo, a OS salva, a leitura do banco e o formulário habilitado. [Critérios, uso e validação](INDICADORES-SUPORTE.md).

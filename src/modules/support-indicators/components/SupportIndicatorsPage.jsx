@@ -533,6 +533,15 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                   quando houver.
                 </p>
               )}
+              {zoho && zohoData?.closureReview?.length > 0 && (
+                <p className="notice">
+                  Fechamentos e assuntos automáticos indisponíveis: o histórico do Zoho não
+                  confirmou a data de fechamento dos chamados{' '}
+                  {zohoData.closureReview.map((r) => r.number).join(', ')}. Aberturas e apontamentos
+                  têm conferência independente. Assuntos manuais, quando preenchidos, permanecem
+                  identificados como alternativa.
+                </p>
+              )}
               <div className="si-sections">
                 {settings.sections.map((key) => (
                   <section className="si-panel" key={key}>

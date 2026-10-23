@@ -43,7 +43,7 @@ export function closureFromHistory(event, ticket, period, states, anchor) {
   };
 }
 
-export function closureReader(fetchPage, fail) {
+export function closureReader(fetchPage, fail, { unfiltered = false } = {}) {
   const catalogs = new Map();
   return async (ticket, period, anchor) => {
     const departmentId = zohoId(ticket.departmentId);
@@ -75,7 +75,7 @@ export function closureReader(fetchPage, fail) {
       seen = new Set();
     for (let page = 0; page < 4; page++) {
       const rows = await fetchPage(
-        `/tickets/${zohoId(ticket.id)}/History?from=${page * 50}&limit=50&fieldName=status`,
+        `/tickets/${zohoId(ticket.id)}/History?from=${page * 50}&limit=50${unfiltered ? '' : '&fieldName=status'}`,
       );
       if (rows.length > 50) throw fail('O histórico não respeitou a paginação de fechamentos.');
       for (const event of rows) {

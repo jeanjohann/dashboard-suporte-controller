@@ -17,6 +17,8 @@ export async function loadZohoActivity(
     ticketIds: [],
     ticketIndicators: [],
     indicatorsAvailable: true,
+    closureReview: [],
+    closuresComplete: true,
   };
   const seen = new Set();
   let from = 0,
@@ -71,6 +73,11 @@ export async function loadZohoActivity(
     if (Array.isArray(batch.ticketIndicators))
       result.ticketIndicators.push(...batch.ticketIndicators);
     else result.indicatorsAvailable = false;
+    if (indicators) {
+      if (!Array.isArray(batch.closureReview)) throw Error('Conferência de fechamentos ausente.');
+      result.closureReview.push(...batch.closureReview);
+      if (batch.closureReview.length) result.closuresComplete = false;
+    }
     onProgress(result.ticketIds.length);
     if (batch.next == null)
       return { ...result, anchor, readAt: new Date().toISOString(), coverage: batch.coverage };

@@ -86,7 +86,52 @@ test('assuntos contam fechados únicos por agente e a criação não usa o respo
   ]);
   assert.equal(zohoSummary(data, period, agents[0].id).created, 0);
   assert.equal(zohoSummary(data, period, agents[1].id).created, 1);
+  assert.equal(zohoSummary({ ...data, closuresComplete: false }, period).created, 1);
+  assert.equal(zohoSummary({ ...data, closuresComplete: false }, period).closed, null);
+  assert.equal(zohoSummary({ ...data, closuresComplete: false }, period).categories, null);
   evidence[0].creation = { state: 'unknown' };
   assert.equal(zohoSummary(data, period).created, null);
   assert.equal(zohoSummary({ ...data, indicatorsAvailable: false }, period).categories, null);
+});
+test('histórico completo recupera fechamento omitido pelo filtro sem inventar autoria', async () => {
+  const t = { ...ticket, createdTime: '2020-01-01T10:00:00Z', closedTime: '2026-10-22T10:00:00Z' };
+  const get = async (path) => {
+    if (path.startsWith('/tickets/search')) return { data: [t] };
+    if (path.startsWith('/organizationFields'))
+      return {
+        data: [
+          {
+            apiName: 'status',
+            allowedValues: [
+              { value: 'Aberto', statusType: 'Open' },
+              { value: 'Fechado', statusType: 'Closed' },
+            ],
+          },
+        ],
+      };
+    if (path.includes('fieldName=status')) return { data: [] };
+    if (path.includes('/History?'))
+      return {
+        data: [
+          {
+            eventName: 'TicketUpdated',
+            eventTime: t.closedTime,
+            actor: event.actor,
+            eventInfo: [
+              {
+                systemProperty: true,
+                propertyName: 'Status',
+                propertyValue: { previousValue: 'Aberto', updatedValue: 'Fechado' },
+              },
+            ],
+          },
+        ],
+      };
+    if (path === '/tickets/1') return { ...t, category: 'Treinamento' };
+    if (path.endsWith('/metrics')) return {};
+    return { data: [] };
+  };
+  const result = await collectZohoActivityBatch(get, { period, anchor, from: 0, indicators: true });
+  assert.equal(result.closures.length, 1);
+  assert.equal(result.closures[0].agentId, event.actor.id);
 });
