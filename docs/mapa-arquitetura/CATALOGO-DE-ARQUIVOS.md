@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.64.0 · referência 1ea3091 · cópia da entrega · 2026-10-23 · **500 arquivos / 103 arquivos de teste / 71 pastas**.
+Addlog 0.64.3 · referência 8082aab · cópia da entrega · 2026-10-23 · **502 arquivos / 103 arquivos de teste / 71 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -11,7 +11,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 ## Pastas
 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (56 arquivos, incluindo subpastas).
+- **docs** — Guias, critérios e histórico das implementações. (57 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (2 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
@@ -22,7 +22,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **server** — API Cloudflare e adaptadores privados de integrações. (41 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (9 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (2 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (354 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (355 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
 - **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (257 arquivos, incluindo subpastas).
@@ -72,14 +72,14 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/support-indicators/hooks** — Estado, efeitos e coordenação da sessão de Indicadores Suporte. (1 arquivos, incluindo subpastas).
 - **src/modules/users** — Módulo Usuários: interface, regras e integração de seus dados. (1 arquivos, incluindo subpastas).
 - **src/modules/users/components** — Página e painéis visuais de Usuários. (1 arquivos, incluindo subpastas).
-- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (48 arquivos, incluindo subpastas).
+- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (49 arquivos, incluindo subpastas).
 - **src/shared/charts** — Regras de representação e paleta de gráficos. (3 arquivos, incluindo subpastas).
 - **src/shared/config** — Endereços de serviços documentais sem credenciais. (1 arquivos, incluindo subpastas).
 - **src/shared/data** — Filtros, datas, ordenação e contratos normalizados. (14 arquivos, incluindo subpastas).
 - **src/shared/export** — Exportações e contexto de impressão. (5 arquivos, incluindo subpastas).
 - **src/shared/filters** — Seleção independente por categoria e visões salvas locais. (7 arquivos, incluindo subpastas).
 - **src/shared/layout** — Personalização de página e agrupamento dos relatórios. (5 arquivos, incluindo subpastas).
-- **src/shared/persistence** — Contratos de documentos, integridade e clientes das bases completas no piloto D1. (9 arquivos, incluindo subpastas).
+- **src/shared/persistence** — Contratos de documentos, integridade e clientes das bases completas no piloto D1. (10 arquivos, incluindo subpastas).
 - **src/shared/security** — Sessão, autorização e cliente da API protegida. (4 arquivos, incluindo subpastas).
 - **src/styles** — CSS global e refinamentos; a ordem é definida em main.jsx. (24 arquivos, incluindo subpastas).
 
@@ -530,6 +530,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Personalização das páginas. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/PERSONALIZACAO-DE-PAGINAS.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/PLANO-DE-REFATORACAO-E-DESEMPENHO.md
+
+**Documentação · Documentação** — Documento: Levantamento de refatoração e desempenho. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+
+[Abrir fonte](../../docs/PLANO-DE-REFATORACAO-E-DESEMPENHO.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -1703,7 +1713,7 @@ Dependências externas: `react`.
 
 Exporta: `Workspace`.
 
-Importa arquivos locais: [src/app/DeferredPage.jsx](../../src/app/DeferredPage.jsx), [src/modules/assistant/components/AssistantPage.jsx](../../src/modules/assistant/components/AssistantPage.jsx), [src/modules/assistant/domain/previewAccess.js](../../src/modules/assistant/domain/previewAccess.js), [src/modules/consumption/components/CarrierPage.jsx](../../src/modules/consumption/components/CarrierPage.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/consumption/data/historyRepository.js](../../src/modules/consumption/data/historyRepository.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/OrdersPage.jsx](../../src/modules/orders/components/OrdersPage.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/persistence/useSavedSources.js](../../src/shared/persistence/useSavedSources.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
+Importa arquivos locais: [src/app/DeferredPage.jsx](../../src/app/DeferredPage.jsx), [src/modules/assistant/components/AssistantPage.jsx](../../src/modules/assistant/components/AssistantPage.jsx), [src/modules/assistant/domain/previewAccess.js](../../src/modules/assistant/domain/previewAccess.js), [src/modules/consumption/components/CarrierPage.jsx](../../src/modules/consumption/components/CarrierPage.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/consumption/data/historyRepository.js](../../src/modules/consumption/data/historyRepository.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/OrdersPage.jsx](../../src/modules/orders/components/OrdersPage.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/persistence/SavedSourcesStatus.jsx](../../src/shared/persistence/SavedSourcesStatus.jsx), [src/shared/persistence/useSavedSources.js](../../src/shared/persistence/useSavedSources.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
 Importado por: [src/main.jsx](../../src/main.jsx).
 
@@ -5734,6 +5744,20 @@ Exporta: `SavedSourcesPanel`.
 Importa arquivos locais: nenhum identificado.
 
 Importado por: [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx).
+
+Dependências externas: `react`.
+
+### src/shared/persistence/SavedSourcesStatus.jsx
+
+**Compartilhado · Interface React** — Progresso fora do fluxo da página; fechar a janela não interrompe a transferência.
+
+[Abrir fonte](../../src/shared/persistence/SavedSourcesStatus.jsx) · Preparação / contrato
+
+Exporta: `SavedSourcesStatus`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx).
 
 Dependências externas: `react`.
 

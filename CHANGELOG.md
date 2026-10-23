@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.64.3 — 23/10/2026
+
+- Alinha cabeçalhos e valores numéricos das tabelas de Indicadores Suporte, com ordenação compacta, larguras mínimas e rolagem horizontal.
+- Fechamentos sem conferência completa passam a mostrar Em conferência e as referências pendentes no card, em vez de apresentar ausência genérica de dados. Não altera a autoria nem substitui o histórico pelo responsável atual.
+
 ## 0.64.2 — 23/10/2026
 
 - Substitui o aviso de carregamento das bases por uma janela compacta central, fora do fluxo da página, sem deslocar o conteúdo.
