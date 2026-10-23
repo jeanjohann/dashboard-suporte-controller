@@ -144,11 +144,43 @@ export function zohoSummary(data, period, agentId = '') {
   const seconds = entries.reduce((n, r) => n + r.seconds, 0),
     tickets = new Set(entries.map((r) => r.ticketId)).size;
   const daily = new Map();
+  const evidence = new Map((data.ticketIndicators || []).map((r) => [r.ticketId, r]));
+  const usable = data.indicatorsAvailable === true;
+  const creationUnknown =
+    !usable || [...evidence.values()].some((r) => r.creation.state === 'unknown');
+  const createdFor = (selectedIds) =>
+    creationUnknown
+      ? null
+      : new Set(
+          [...evidence.values()]
+            .filter(
+              (r) =>
+                r.creation.state === 'support' &&
+                selectedIds.has(r.creation.agentId) &&
+                within(r.creation.at),
+            )
+            .map((r) => r.ticketId),
+        ).size;
+  const categories =
+    usable && closures && closures.every((r) => evidence.has(r.ticketId))
+      ? [...new Set(closures.map((r) => r.ticketId))].reduce((map, id) => {
+          const label = evidence.get(id).category || 'Categoria não informada';
+          map.set(label, (map.get(label) || 0) + 1);
+          return map;
+        }, new Map())
+      : null;
   for (const row of entries) {
     const label = zohoDay(row.executedTime);
     daily.set(label, (daily.get(label) || 0) + row.seconds);
   }
   return {
+    created: createdFor(ids),
+    creationUnknown,
+    categories: categories
+      ? [...categories]
+          .map(([label, value]) => ({ label, value }))
+          .sort((a, b) => b.value - a.value)
+      : null,
     seconds,
     meanSeconds: tickets ? seconds / tickets : null,
     tickets,
@@ -160,6 +192,7 @@ export function zohoSummary(data, period, agentId = '') {
       .filter((a) => ids.has(a.id))
       .map((a) => ({
         ...a,
+        created: createdFor(new Set([a.id])),
         seconds: entries.filter((r) => r.agentId === a.id).reduce((n, r) => n + r.seconds, 0),
         closed: closures
           ? new Set(closures.filter((r) => r.agentId === a.id).map((r) => r.ticketId)).size

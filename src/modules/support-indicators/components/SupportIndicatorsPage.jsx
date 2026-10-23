@@ -33,7 +33,7 @@ const valuesOf = (orders, zoho, manual) => ({
   executed: orders && !orders.unavailable ? orders.executed : null,
   scheduled: orders && !orders.unavailable ? orders.scheduled : null,
   unproductive: orders && !orders.unavailable ? orders.unproductive : null,
-  created: manual?.totals.created ?? null,
+  created: zoho?.created ?? manual?.totals.created ?? null,
   closed: zoho?.closed ?? null,
   seconds: zoho?.seconds ?? null,
   requests: manual?.requests ?? null,
@@ -150,6 +150,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     oldValues = valuesOf(oldOrders, oldZoho, oldManual),
     settings = store.settings,
     hasOrders = orders && !orders.unavailable;
+  const manualMetric = (key) =>
+    ['requests', 'activities'].includes(key) || (key === 'created' && zoho?.created == null);
   const shownAgents = agents.filter((a) => !agentId || a.id === agentId);
   const agentRows = shownAgents.map((a) => {
     const os = hasOrders ? orders.agents.find((r) => r.id === a.id) : null,
@@ -159,7 +161,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       a.name,
       os?.scheduled ?? null,
       os?.executed ?? null,
-      m?.totals.created ?? null,
+      z?.created ?? m?.totals.created ?? null,
       z?.closed ?? null,
       duration(z?.seconds),
       m?.requests ?? null,
@@ -189,6 +191,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     try {
       const result = await loadZohoActivity({
         ...period,
+        indicators: true,
         signal: c.signal,
         onProgress: setProgress,
       });
@@ -230,9 +233,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         label,
         values[key],
         key === 'seconds' ? 'segundos' : 'quantidade',
-        ['created', 'requests', 'activities'].includes(key)
+        manualMetric(key)
           ? 'Manual'
-          : key === 'seconds' || key === 'closed'
+          : key === 'seconds' || key === 'closed' || key === 'created'
             ? 'Zoho'
             : 'OS',
       ]),
@@ -243,7 +246,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         'Agente',
         'Agendados',
         'Executados efetivos',
-        'Criados · manual',
+        zoho?.created != null ? 'Abertos · Zoho' : 'Abertos · manual',
         'Fechados · Zoho',
         'Tempo apontado',
         'Equipamentos · manual',
@@ -272,6 +275,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         r.actor,
       ]),
     );
+    if (zoho?.categories)
+      report.push(
+        [],
+        ['Categoria atual no Zoho', 'Chamados fechados distintos'],
+        ...zoho.categories.map((r) => [r.label, r.value]),
+      );
     await download(
       csv(report),
       'text/csv;charset=utf-8',
@@ -393,8 +402,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             </div>
             <p className="scope">
               Zoho: até 31 dias por consulta. Tempo é a soma dos apontamentos nos chamados, não
-              tempo conectado. Chamados abertos pelo suporte e assuntos são manuais até a validação
-              da origem na API.
+              tempo conectado. Aberturas exigem autoria confirmada no histórico. Assuntos usam a
+              categoria atual dos chamados fechados. Sem consulta completa, os lançamentos manuais
+              são apresentados separadamente como alternativa.
             </p>
             <p className="scope">
               {store.loading
@@ -463,9 +473,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     <span>{metricLabels[key]}</span>
                     <strong>{format(key, values[key])}</strong>
                     <small>
-                      {['created', 'requests', 'activities'].includes(key)
+                      {manualMetric(key)
                         ? 'Manual · total informado'
-                        : key === 'seconds' || key === 'closed'
+                        : key === 'seconds' || key === 'closed' || key === 'created'
                           ? 'Zoho · eventos do período'
                           : 'OS · linhas da base'}
                     </small>
@@ -516,6 +526,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                   até sua referência de leitura.
                 </p>
               )}
+              {zoho?.creationUnknown && zohoData?.indicatorsAvailable && (
+                <p className="notice">
+                  Há criação sem autoria ou data confirmada no histórico. O total automático de
+                  aberturas permanece indisponível; o card usa somente o valor manual informado,
+                  quando houver.
+                </p>
+              )}
               <div className="si-sections">
                 {settings.sections.map((key) => (
                   <section className="si-panel" key={key}>
@@ -555,7 +572,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                             'Agente',
                             'Agendados · OS',
                             'Executados · OS',
-                            'Criados · manual',
+                            zoho?.created != null ? 'Abertos · Zoho' : 'Abertos · manual',
                             'Fechados · Zoho',
                             'Tempo · Zoho',
                             'Equipamentos · manual',
@@ -641,31 +658,49 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                         </div>
                       </div>
                     )}
-                    {key === 'subjects' && (
-                      <>
-                        <p className="scope">
-                          Classificação manual dos chamados atendidos. Categorias podem se sobrepor;
-                          não representam o total de chamados distintos.
-                        </p>
-                        <Chart
-                          compact
-                          title="Assuntos informados"
-                          items={subjects
-                            .filter(([key]) => manual?.totals[`subject_${key}`] != null)
-                            .map(([key, label]) => ({
+                    {key === 'subjects' &&
+                      (zoho?.categories != null ? (
+                        <>
+                          <p className="scope">
+                            Zoho · categoria atual dos chamados fechados pelo agente no período.
+                            Cada chamado conta uma vez por agente; o total da equipe deduplica
+                            chamados compartilhados. Não soma lançamentos manuais.
+                          </p>
+                          <Chart
+                            compact
+                            title="Categorias dos chamados fechados"
+                            items={zoho.categories}
+                          />
+                          <Table
+                            headers={['Categoria atual no Zoho', 'Chamados fechados distintos']}
+                            rows={zoho.categories.map((r) => [r.label, r.value])}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <p className="scope">
+                            Classificação manual dos chamados atendidos. Categorias podem se
+                            sobrepor; não representam o total de chamados distintos.
+                          </p>
+                          <Chart
+                            compact
+                            title="Assuntos informados"
+                            items={subjects
+                              .filter(([key]) => manual?.totals[`subject_${key}`] != null)
+                              .map(([key, label]) => ({
+                                label,
+                                value: manual.totals[`subject_${key}`],
+                              }))}
+                          />
+                          <Table
+                            headers={['Assunto', 'Quantidade informada']}
+                            rows={subjects.map(([key, label]) => [
                               label,
-                              value: manual.totals[`subject_${key}`],
-                            }))}
-                        />
-                        <Table
-                          headers={['Assunto', 'Quantidade informada']}
-                          rows={subjects.map(([key, label]) => [
-                            label,
-                            manual?.totals[`subject_${key}`] ?? null,
-                          ])}
-                        />
-                      </>
-                    )}
+                              manual?.totals[`subject_${key}`] ?? null,
+                            ])}
+                          />
+                        </>
+                      ))}
                     {key === 'manual' && (
                       <>
                         <ManualIndicatorForm

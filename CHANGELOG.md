@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.63.0 — 23/10/2026
+
+- Confere autoria de abertura dos chamados por evento TicketCreated e exclui clientes/importações. Histórico ausente ou ambíguo mantém o total automático indisponível, sem substituir por zero.
+- Indicadores Suporte passa a consultar categorias atuais dos chamados fechados pelo agente, deduplicando chamados por pessoa e no total da equipe. Não interpreta título livre como categoria nem soma dados automáticos aos manuais.
+- Acrescenta diagnóstico limitado de autoria e categorias, validado em amostra real. Consulta ampliada é optativa desta página, preservando o custo e comportamento das demais consultas Zoho. Exportação inclui categorias e origem dos valores.
+
 ## 0.62.0 — 23/10/2026
 
 - Acrescenta Indicadores Suporte como página independente no menu, com período e agente próprios, atalhos de semanas/mês, cards, gráficos, tabelas e exportação CSV/impresso.

@@ -7,6 +7,7 @@ import {
   zohoDay,
 } from '../src/shared/data/zohoActivity.js';
 import { closureReader } from './zohoClosures.js';
+import { ticketIndicatorEvidence } from './zohoIndicators.js';
 export class ZohoActivityError extends Error {
   constructor(message, status = 502) {
     super(message);
@@ -16,7 +17,12 @@ export class ZohoActivityError extends Error {
 }
 export function activityParameters(params, now = Date.now()) {
   const period = zohoPeriod(params.get('start'), params.get('end'));
-  if ([...params.keys()].some((key) => !['start', 'end', 'from', 'anchor'].includes(key)))
+  if (
+    [...params.keys()].some(
+      (key) => !['start', 'end', 'from', 'anchor', 'indicators'].includes(key),
+    ) ||
+    (params.has('indicators') && params.get('indicators') !== '1')
+  )
     throw new ZohoActivityError('Parâmetros de consulta inválidos.', 400);
   const from = Number(params.get('from') || 0);
   if (!Number.isInteger(from) || from < 0 || from > 495 || from % 5)
@@ -29,9 +35,9 @@ export function activityParameters(params, now = Date.now()) {
     Date.parse(anchor) < Date.parse(period.from)
   )
     throw new ZohoActivityError('Referência de coleta inválida.', 400);
-  return { period, from, anchor };
+  return { period, from, anchor, ...(params.has('indicators') ? { indicators: true } : {}) };
 }
-export async function collectZohoActivityBatch(get, { period, from, anchor }) {
+export async function collectZohoActivityBatch(get, { period, from, anchor, indicators = false }) {
   let calls = 0;
   const fetchPage = async (path) => {
     if (++calls > 42)
@@ -56,7 +62,8 @@ export async function collectZohoActivityBatch(get, { period, from, anchor }) {
     entries = [],
     review = [],
     metrics = [],
-    closures = [];
+    closures = [],
+    ticketIndicators = [];
   const readClosures = closureReader(fetchPage, (message) => new ZohoActivityError(message));
   const ticketIds = new Set();
   for (const ticket of tickets) {
@@ -67,6 +74,16 @@ export async function collectZohoActivityBatch(get, { period, from, anchor }) {
       );
     ticketIds.add(ticketId);
     const ticketClosures = await readClosures(ticket, period, anchor);
+    if (indicators) {
+      if (++calls > 42)
+        throw new ZohoActivityError('Limite de chamadas atingido. Reduza o período.');
+      const detail = await get(`/tickets/${ticketId}`);
+      if (zohoId(detail?.id) !== ticketId)
+        throw new ZohoActivityError('Detalhe de categoria divergente.');
+      ticketIndicators.push(
+        await ticketIndicatorEvidence(ticket, period, anchor, detail, fetchPage),
+      );
+    }
     const closedDay = zohoDay(ticket.closedTime);
     if (
       closedDay &&
@@ -198,6 +215,7 @@ export async function collectZohoActivityBatch(get, { period, from, anchor }) {
     review,
     metrics,
     closures,
+    ...(indicators ? { ticketIndicators } : {}),
     coverage:
       'Chamados acessíveis modificados desde o início do período até a referência da coleta; não inclui arquivos ou itens fora do acesso da conta. A indexação do Zoho pode atrasar.',
   };

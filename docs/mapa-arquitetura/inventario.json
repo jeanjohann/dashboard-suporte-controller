@@ -1,9 +1,9 @@
 {
-  "version": "0.62.0",
-  "base": "257fae1 · cópia da entrega",
+  "version": "0.63.0",
+  "base": "260f120 · cópia da entrega",
   "date": "2026-10-23",
-  "total": 497,
-  "tests": 102,
+  "total": 499,
+  "tests": 103,
   "folders": [
     {
       "path": "(raiz)",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 39
+      "count": 41
     },
     {
       "path": "server/persistence",
@@ -447,8 +447,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 96758,
-      "sha256": "b2a88b90405d7849abe9d6d59e698266f97edd74181edbf2edac8a88a038fe55",
+      "bytes": 97466,
+      "sha256": "185384f9bbcae50e9239bc445db36fed596f677d27b5235c3f483a191b8ace7e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -769,8 +769,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 10876,
-      "sha256": "771e49624467172461aa10eb69dac5e727e49e14329c18fccce03509200dfba0",
+      "bytes": 11444,
+      "sha256": "808734316bc000de96d9a2089760111768bcfdb79d9d05fcffca364d4b292614",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1288,7 +1288,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "dc52053d40aa59e993542ad7daf8225c5730d649da1f9c8f8771f33caccf41ab",
+      "sha256": "a133a583ab45e2849a823472c2644b9fb7b343483e507c74e5f20c6ca8d21d4b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1302,7 +1302,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "7654c4e9c5930716486d0cc8c26d697a0c335819678decb285faf72ddcb8e1ef",
+      "sha256": "c095509e4a8de3520b273ddd25f3412da06a8fca21c48430766941f8bb3a5881",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1465,8 +1465,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 50132,
-      "sha256": "7072bf1ce16ec3f58f366d9d180aeaff80553564f9eee64012a0d9fc1303f832",
+      "bytes": 50306,
+      "sha256": "228037aa555418ddba14a7c6a0ce3508972dbcc9e7b13389f6e0ff30ba1d2c40",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2430,15 +2430,20 @@
       "layer": "Backend",
       "description": "Coleta páginas de atividade Zoho com limites, normaliza apontamentos/respostas e preserva autoria e pendências.",
       "exports": ["ZohoActivityError", "activityParameters", "collectZohoActivityBatch"],
-      "imports": ["server/zohoClosures.js", "src/shared/data/zohoActivity.js"],
+      "imports": [
+        "server/zohoClosures.js",
+        "server/zohoIndicators.js",
+        "src/shared/data/zohoActivity.js"
+      ],
       "external": [],
       "importedBy": [
         "server/zoho.js",
         "server/zohoActivity.test.js",
-        "server/zohoClosures.test.js"
+        "server/zohoClosures.test.js",
+        "server/zohoIndicators.test.js"
       ],
-      "bytes": 7693,
-      "sha256": "7a6bb4d3c544110b1ea20aea61a47dc1b7ee9966e3aca7d957142e9ee952ba86",
+      "bytes": 8448,
+      "sha256": "72fa140a4711c8703c25e5e5a1b0251fa43f1cbcb66e7fa2c1dd7bcd8c110df7",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2489,6 +2494,38 @@
       "importedBy": [],
       "bytes": 7050,
       "sha256": "231424c06b82676eb5f7de2b5edf92e77a0a7e84d5d44c86dec0563dd105a3ec",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/zohoIndicators.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Confere eventos de criação dos chamados e categorias atuais, sem atribuir abertura ao responsável atual nem a clientes/importações.",
+      "exports": ["ticketIndicatorEvidence"],
+      "imports": ["src/shared/data/zohoActivity.js"],
+      "external": [],
+      "importedBy": ["server/zohoActivity.js", "server/zohoIndicators.test.js"],
+      "bytes": 1708,
+      "sha256": "429c2b173a10a0b9b3b42ff2fc951224cb7e8a11e7e372297f25c37568db9181",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/zohoIndicators.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica zoho Indicators no contexto de API Cloudflare. Exemplos: criação exige evento completo, data consistente, agente e ausência de importação; coleta de indicadores adiciona evidências sem modificar respostas e tempos existentes; assuntos contam fechados únicos por agente e a criação não usa o responsável atual.",
+      "exports": [],
+      "imports": [
+        "server/zohoActivity.js",
+        "server/zohoIndicators.js",
+        "src/modules/support-indicators/domain/indicators.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 3794,
+      "sha256": "e9d0a8f641e2cd8a7426c12bf21ada9b7eea0eee1a45cff7ab090775426d5f68",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -7106,8 +7143,8 @@
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 2172,
-      "sha256": "2e5badd440cd3a979387043e1a71abd26aa32427986dadb0c0a68e42748922bf",
+      "bytes": 3254,
+      "sha256": "5a91d81f094d9d005401a9a701bce99bee137356ef10d7deb2504ac884cac819",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8578,8 +8615,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 30266,
-      "sha256": "19b70d95a4797babee896e3d3599cccdb80e14b6e4dc5439964d1127331c62c4",
+      "bytes": 32214,
+      "sha256": "562e4f72a08696014741ae8ee32ccba08a306c46689d8476aebf49cff13c10b8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8648,14 +8685,15 @@
       ],
       "external": [],
       "importedBy": [
+        "server/zohoIndicators.test.js",
         "src/modules/support-indicators/components/IndicatorSettings.jsx",
         "src/modules/support-indicators/components/ManualIndicatorForm.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/support-indicators/domain/indicators.test.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js"
       ],
-      "bytes": 6699,
-      "sha256": "eb9ddf83d4123da39d62a38a99849a8b41da14e8a75c9c00f152000458565615",
+      "bytes": 7946,
+      "sha256": "62561893463c83d73f5c6a525d371e6fdb8b541c9eb2dd1f68d5f47caac2d392",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9077,6 +9115,7 @@
         "server/zohoActivity.test.js",
         "server/zohoClosures.js",
         "server/zohoClosures.test.js",
+        "server/zohoIndicators.js",
         "server/zohoTicketProfile.js",
         "src/modules/my-dashboard/domain/evaluate.js",
         "src/modules/my-dashboard/domain/evaluate.test.js",

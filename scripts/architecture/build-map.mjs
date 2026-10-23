@@ -64,6 +64,8 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'server/zohoIndicators.js':
+    'Confere eventos de criação dos chamados e categorias atuais, sem atribuir abertura ao responsável atual nem a clientes/importações.',
   'server/zohoTicketProfile.js':
     'Diagnóstico limitado de autoria da criação e categorias em dois chamados recentes, sem conteúdos de clientes nem inferência de totais.',
   'src/styles/support-indicators.css':
