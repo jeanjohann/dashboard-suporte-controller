@@ -1,9 +1,9 @@
 {
-  "version": "0.61.0",
-  "base": "2a13b29 · cópia da entrega",
-  "date": "2026-10-22",
-  "total": 484,
-  "tests": 99,
+  "version": "0.62.0",
+  "base": "e20f57d · cópia da entrega",
+  "date": "2026-10-23",
+  "total": 495,
+  "tests": 101,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 55
+      "count": 56
     },
     {
       "path": "docs/diagrams",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 35
+      "count": 37
     },
     {
       "path": "server/persistence",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 346
+      "count": 354
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 250
+      "count": 257
     },
     {
       "path": "src/modules/assistant",
@@ -286,6 +286,26 @@
       "count": 4
     },
     {
+      "path": "src/modules/support-indicators",
+      "description": "Módulo Indicadores Suporte: interface, regras e integração de seus dados.",
+      "count": 7
+    },
+    {
+      "path": "src/modules/support-indicators/components",
+      "description": "Página e painéis visuais de Indicadores Suporte.",
+      "count": 3
+    },
+    {
+      "path": "src/modules/support-indicators/domain",
+      "description": "Validação e cálculo das regras de negócio de Indicadores Suporte.",
+      "count": 3
+    },
+    {
+      "path": "src/modules/support-indicators/hooks",
+      "description": "Estado, efeitos e coordenação da sessão de Indicadores Suporte.",
+      "count": 1
+    },
+    {
       "path": "src/modules/users",
       "description": "Módulo Usuários: interface, regras e integração de seus dados.",
       "count": 1
@@ -343,7 +363,7 @@
     {
       "path": "src/styles",
       "description": "CSS global e refinamentos; a ordem é definida em main.jsx.",
-      "count": 23
+      "count": 24
     }
   ],
   "files": [
@@ -427,8 +447,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 95866,
-      "sha256": "883bd76538bac8702c3685b7c0b50799821f1c6ce79a540324be0ae12faa5222",
+      "bytes": 96758,
+      "sha256": "b2a88b90405d7849abe9d6d59e698266f97edd74181edbf2edac8a88a038fe55",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -740,6 +760,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "docs/INDICADORES-SUPORTE.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Uso, definições das fontes, limites de cobertura, gravação diária no D1 e validação do painel semanal de suporte.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 9688,
+      "sha256": "4d3a10ad2d3d3d2617f1366e6dcbb513a070aa4c78c0b723665cf055b2f4bf87",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "docs/INTEGRACAO-KORE-SAITRO.md",
       "folder": "docs",
       "module": "Documentação",
@@ -1015,8 +1049,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 38886,
-      "sha256": "f857b3dcc07c51f6efe07b84da29291825b0fefbfa16344d4c4c5246d8a489d2",
+      "bytes": 39580,
+      "sha256": "314fb1fc16103a887b42b69ff0e313c245e7372cb9ba29cd6f11f88e0b9de45a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1254,7 +1288,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "e3eb529506dda5c2b6b84a2e986b49f9fc1cdb68c6494638478836f482808bd6",
+      "sha256": "dc52053d40aa59e993542ad7daf8225c5730d649da1f9c8f8771f33caccf41ab",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1268,7 +1302,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "f0934581b27fe62bd5130a74f61a0055573f558b38ebfeee11e02e5981874626",
+      "sha256": "7654c4e9c5930716486d0cc8c26d697a0c335819678decb285faf72ddcb8e1ef",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1431,8 +1465,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 48316,
-      "sha256": "c42f174c46584d8142bbe108bdcab8e9ce492a8378e4b2aff928a3b4a29c402e",
+      "bytes": 49952,
+      "sha256": "ca209c5ae20a4db02ecfc4bea3d3e7cd20861dd24307ac704d8aa8c10e0c5638",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2124,7 +2158,8 @@
       "external": [],
       "importedBy": [
         "server/businessReminders.js",
-        "server/persistence/documentRepository.test.js"
+        "server/persistence/documentRepository.test.js",
+        "server/supportIndicators.js"
       ],
       "bytes": 2945,
       "sha256": "8f15586f1d8aa1385216414e452a067be093067a833fe5bfcaeb4f347947f0c9",
@@ -2264,7 +2299,8 @@
       "importedBy": [
         "server/monitoringStorage.test.js",
         "server/persistence/snapshotDownload.test.js",
-        "server/persistence/snapshotStore.test.js"
+        "server/persistence/snapshotStore.test.js",
+        "server/supportIndicators.test.js"
       ],
       "bytes": 1685,
       "sha256": "9180225007fd8fc1ddaece3903f5ce82d7b55617e47fe7d4bb9cdb0c719d198d",
@@ -2285,6 +2321,42 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "server/supportIndicators.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "API do piloto do proprietário para lançamentos diários e configuração dos Indicadores Suporte; grava no D1 com revisão e autoria do servidor.",
+      "exports": ["supportIndicatorsResponse"],
+      "imports": [
+        "server/persistence/d1DocumentAdapter.js",
+        "src/modules/support-indicators/domain/contracts.js",
+        "src/shared/persistence/documentRepository.js"
+      ],
+      "external": [],
+      "importedBy": ["server/supportIndicators.test.js", "server/worker.js"],
+      "bytes": 5162,
+      "sha256": "b71600c15c07f0441f5cdc57388e5a779fc57e98fa4fa7d9f5ea29fc2beec920",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/supportIndicators.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica support Indicators no contexto de API Cloudflare. Exemplos: D1 atualiza o mesmo dia/agente por CAS, preserva vazio/zero e registra ator do servidor; piloto recusa usuário comum, outro administrador, inativo, origem externa e conteúdo forjado; consulta por período pagina sem omitir o primeiro/último dia e isola outras coleções.",
+      "exports": [],
+      "imports": [
+        "server/persistence/snapshotTestDatabase.mjs",
+        "server/supportIndicators.js",
+        "src/modules/support-indicators/domain/contracts.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 6325,
+      "sha256": "e85bcf701d6637171f9f24c35010457be1c7f61d49040391a3791da03106f42c",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "server/worker.js",
       "folder": "server",
       "module": "API Cloudflare",
@@ -2299,13 +2371,14 @@
         "server/monitoring.js",
         "server/monitoringStorage.js",
         "server/schema.js",
+        "server/supportIndicators.js",
         "server/zoho.js",
         "src/shared/security/permissions.js"
       ],
       "external": ["jose"],
       "importedBy": ["server/worker.test.js"],
-      "bytes": 10618,
-      "sha256": "49f796c57e08fafe78617799cf99e46bd1c5cd21baf0b3428ef89e520121a573",
+      "bytes": 10818,
+      "sha256": "6fdc59b655b16eac8d152bf474df102bca4f767c3132227c95766a1c2b761af1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2459,10 +2532,11 @@
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersPage.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/users/components/UsersPage.jsx"
       ],
-      "bytes": 7242,
-      "sha256": "586096d6846bef4fbba46d806458b63693d56f0fa28edb30d2eb78a9fcd5f90b",
+      "bytes": 7291,
+      "sha256": "25ead60c6ed8b0f6bac8e2e7eb56d002f88d6365c59286f97c66428fb883e880",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2486,6 +2560,7 @@
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersPage.jsx",
         "src/modules/orders/components/OrdersReportMenu.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/users/components/UsersPage.jsx"
       ],
       "bytes": 1127,
@@ -2527,6 +2602,7 @@
         "src/modules/my-dashboard/hooks/DashboardSources.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersPage.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/users/components/UsersPage.jsx",
         "src/shared/persistence/useSavedSources.js",
         "src/shared/security/Access.jsx",
@@ -2535,8 +2611,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 11096,
-      "sha256": "bad00b0b4597aceade12e77bdba9e3b833bd089bc1ac127e3ec92a87976e8aa7",
+      "bytes": 11591,
+      "sha256": "a8936e0bc8a945f1d59401edf9955b53d2ee2dfb5161154344b8ceabef1b4bf1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2628,7 +2704,8 @@
         "src/modules/orders/components/Technicians.jsx",
         "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/park/components/ParkHistoryPanel.jsx",
-        "src/modules/park/components/ParkInsights.jsx"
+        "src/modules/park/components/ParkInsights.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
       "bytes": 9632,
       "sha256": "5cfa3c0a309f7f2b2b40c6c24f14c7795252ed63e4063d868c62e852ea333fa8",
@@ -2691,8 +2768,8 @@
         "src/modules/orders/components/SupportMetricCards.jsx",
         "src/modules/orders/components/SupportPeople.jsx"
       ],
-      "bytes": 4178,
-      "sha256": "145cd0a0b313ade8f0b874e2c7c9921444e8e06d872931f9dc1e3aa51e0baa6b",
+      "bytes": 4311,
+      "sha256": "73ab4413f278139d83eba63d6809b445e56daf35c7e865959d6fd3937eacc8a0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2984,7 +3061,8 @@
         "src/modules/orders/components/ZohoClosures.jsx",
         "src/modules/orders/components/ZohoPresenceResults.jsx",
         "src/modules/park/components/ParkHistoryPanel.jsx",
-        "src/modules/park/components/ParkInsights.jsx"
+        "src/modules/park/components/ParkInsights.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
       "bytes": 4774,
       "sha256": "79dbbf3ea59a14b0dbc8a84f7ce0c72c78f5c7de9d80777256174dac7b0ee79a",
@@ -3083,6 +3161,7 @@
         "src/styles/review-diagnostics.css",
         "src/styles/sidebar.css",
         "src/styles/style.css",
+        "src/styles/support-indicators.css",
         "src/styles/support-people.css",
         "src/styles/support-workspace.css",
         "src/styles/support.css",
@@ -3091,8 +3170,8 @@
       ],
       "external": ["react", "react-dom/client"],
       "importedBy": [],
-      "bytes": 1519,
-      "sha256": "6d38542731f6fce8e6f49a2aecfd784bb311fe865fc1efa2a9b85061ab97f941",
+      "bytes": 1561,
+      "sha256": "5eef81a30231e5a59efeeb215531df1d65996a9203034a62e0df1727e57872a9",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5567,7 +5646,8 @@
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
-        "src/modules/orders/hooks/ZohoSession.jsx"
+        "src/modules/orders/hooks/ZohoSession.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
       "bytes": 1278,
       "sha256": "f33d891c67deb06dbcea5f88964bb9a0037688219671ccbd64d6ae1e3a6adc3f",
@@ -6995,7 +7075,8 @@
       "external": [],
       "importedBy": [
         "server/zohoActivity.test.js",
-        "src/modules/orders/components/SupportZohoActivity.jsx"
+        "src/modules/orders/components/SupportZohoActivity.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
       "bytes": 2172,
       "sha256": "2e5badd440cd3a979387043e1a71abd26aa32427986dadb0c0a68e42748922bf",
@@ -7069,7 +7150,8 @@
         "src/modules/orders/domain/technicians.js",
         "src/modules/orders/domain/trackerReplacements.js",
         "src/modules/park/domain/parkAnalysis.js",
-        "src/modules/park/domain/parkHistory.js"
+        "src/modules/park/domain/parkHistory.js",
+        "src/modules/support-indicators/domain/indicators.js"
       ],
       "bytes": 548,
       "sha256": "23b0a19e748e5a34750312a7810998a365187c22a6d1cfb4bc9a7a71da458e2f",
@@ -7203,7 +7285,8 @@
         "src/modules/orders/domain/replacementRankings.js",
         "src/modules/orders/domain/supportPerformance.js",
         "src/modules/orders/domain/supportReport.js",
-        "src/modules/orders/domain/trackerReplacements.js"
+        "src/modules/orders/domain/trackerReplacements.js",
+        "src/modules/support-indicators/domain/indicators.js"
       ],
       "bytes": 4034,
       "sha256": "c40df112b01b51daa13e9925fdac6cf71173468d2570463ef8e7dc9e6c3e1984",
@@ -7554,7 +7637,8 @@
         "src/modules/orders/components/SupportPerformance.jsx",
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/orders/domain/lifecycle.test.js",
-        "src/modules/orders/hooks/useOrdersSession.js"
+        "src/modules/orders/hooks/useOrdersSession.js",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
       "bytes": 7414,
       "sha256": "74664a79d3bcb1d3c1e662b2d4008dcebb627c80eb657bbabc0e788ce2281845",
@@ -7947,7 +8031,8 @@
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/orders/domain/customerConsolidation.test.js",
         "src/modules/orders/domain/supportPerformance.test.js",
-        "src/modules/orders/domain/supportPerson.test.js"
+        "src/modules/orders/domain/supportPerson.test.js",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
       "bytes": 7143,
       "sha256": "148152a972ed21139da848272915a2f17074c87cd91a76bc79e0b2028dee6ec6",
@@ -8412,6 +8497,171 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/modules/support-indicators/components/IndicatorSettings.jsx",
+      "folder": "src/modules/support-indicators/components",
+      "module": "Indicadores Suporte",
+      "layer": "Interface React",
+      "description": "Escolhe cards e ordem das seções e define referências semanais da equipe.",
+      "exports": ["IndicatorSettings"],
+      "imports": ["src/modules/support-indicators/domain/indicators.js"],
+      "external": ["react"],
+      "importedBy": ["src/modules/support-indicators/components/SupportIndicatorsPage.jsx"],
+      "bytes": 4386,
+      "sha256": "651bdff30bdcd31c2aeb1bb95f44c83d8df3498acf76a8c07f24b9036ad85d56",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/support-indicators/components/ManualIndicatorForm.jsx",
+      "folder": "src/modules/support-indicators/components",
+      "module": "Indicadores Suporte",
+      "layer": "Interface React",
+      "description": "Edita um lançamento por data e agente, distingue vazio de zero e preserva edição diante de conflito.",
+      "exports": ["ManualIndicatorForm"],
+      "imports": ["src/modules/support-indicators/domain/indicators.js"],
+      "external": ["react"],
+      "importedBy": ["src/modules/support-indicators/components/SupportIndicatorsPage.jsx"],
+      "bytes": 6058,
+      "sha256": "8c4782d89ef4b6110e05f8a933558e5a33eba8fb2105a81e39dcd6c6982f8681",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
+      "folder": "src/modules/support-indicators/components",
+      "module": "Indicadores Suporte",
+      "layer": "Interface React",
+      "description": "Página independente no menu: período próprio, cards, gráficos, tabelas, origem dos dados e exportação.",
+      "exports": ["SupportIndicatorsPage"],
+      "imports": [
+        "src/app/Navigation.jsx",
+        "src/app/SidePanel.jsx",
+        "src/components/Chart.jsx",
+        "src/components/SortableTable.jsx",
+        "src/modules/my-dashboard/hooks/DashboardSources.jsx",
+        "src/modules/orders/data/zohoActivityClient.js",
+        "src/modules/orders/domain/lifecycle.js",
+        "src/modules/orders/domain/supportPerformance.js",
+        "src/modules/support-indicators/components/IndicatorSettings.jsx",
+        "src/modules/support-indicators/components/ManualIndicatorForm.jsx",
+        "src/modules/support-indicators/domain/indicators.js",
+        "src/modules/support-indicators/hooks/useIndicatorRecords.js",
+        "src/shared/export/exports.js",
+        "src/shared/security/Access.jsx",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/app/Workspace.jsx"],
+      "bytes": 27901,
+      "sha256": "1f53adcad0bb7fe445ab2aa0e8ca708cdccf729ca28ad0c0f7038a3272c0b08b",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/support-indicators/domain/contracts.js",
+      "folder": "src/modules/support-indicators/domain",
+      "module": "Indicadores Suporte",
+      "layer": "Domínio",
+      "description": "Define agentes, indicadores manuais, metas, validação de campos e períodos e soma somente quantidades informadas.",
+      "exports": [
+        "agents",
+        "blankEntry",
+        "defaultSettings",
+        "entryId",
+        "manualFields",
+        "manualSummary",
+        "metricLabels",
+        "periodDays",
+        "previousPeriod",
+        "sections",
+        "subjects",
+        "validateEntry",
+        "validateSettings"
+      ],
+      "imports": ["src/shared/data/isoDate.js", "src/shared/data/zohoActivity.js"],
+      "external": [],
+      "importedBy": [
+        "server/supportIndicators.js",
+        "server/supportIndicators.test.js",
+        "src/modules/support-indicators/domain/indicators.js"
+      ],
+      "bytes": 5405,
+      "sha256": "52b53e761af10cdedc68cbf67763ad4de641e8129a5ebf14360415f0b003886b",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/support-indicators/domain/indicators.js",
+      "folder": "src/modules/support-indicators/domain",
+      "module": "Indicadores Suporte",
+      "layer": "Domínio",
+      "description": "Separa datas e papéis da OS e agrega eventos do Zoho somente quando a consulta cobre o período inteiro.",
+      "exports": [
+        "agents",
+        "blankEntry",
+        "defaultSettings",
+        "duration",
+        "entryId",
+        "manualFields",
+        "manualSummary",
+        "metricLabels",
+        "orderAgentNames",
+        "ordersSummary",
+        "periodDays",
+        "previousPeriod",
+        "sections",
+        "subjects",
+        "validateEntry",
+        "validateSettings",
+        "zohoSummary"
+      ],
+      "imports": [
+        "src/modules/orders/domain/attendanceKind.js",
+        "src/modules/orders/domain/customerIdentity.js",
+        "src/modules/support-indicators/domain/contracts.js",
+        "src/shared/data/filters.js",
+        "src/shared/data/zohoActivity.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "src/modules/support-indicators/components/IndicatorSettings.jsx",
+        "src/modules/support-indicators/components/ManualIndicatorForm.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
+        "src/modules/support-indicators/domain/indicators.test.js",
+        "src/modules/support-indicators/hooks/useIndicatorRecords.js"
+      ],
+      "bytes": 6699,
+      "sha256": "eb9ddf83d4123da39d62a38a99849a8b41da14e8a75c9c00f152000458565615",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/support-indicators/domain/indicators.test.js",
+      "folder": "src/modules/support-indicators/domain",
+      "module": "Indicadores Suporte",
+      "layer": "Teste",
+      "description": "Verifica indicators no contexto de Indicadores Suporte. Exemplos: períodos civis validam limites e comparação atravessa o ano; manual mantém zero confirmado, vazio e filtro por data/pessoa distintos; contratos recusam agente desconhecido, campos extras, frações e metas inválidas.",
+      "exports": [],
+      "imports": ["src/modules/support-indicators/domain/indicators.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 5614,
+      "sha256": "6801daf3871be9076096f83ed80bb1fcd704c1a8a6480b062c711c4224f6c57d",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/support-indicators/hooks/useIndicatorRecords.js",
+      "folder": "src/modules/support-indicators/hooks",
+      "module": "Indicadores Suporte",
+      "layer": "Estado / coordenação",
+      "description": "Carrega lançamentos atuais e anteriores, configurações e gravações autenticadas sem sobrescrever outra revisão.",
+      "exports": ["useIndicatorRecords"],
+      "imports": [
+        "src/modules/support-indicators/domain/indicators.js",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/support-indicators/components/SupportIndicatorsPage.jsx"],
+      "bytes": 4110,
+      "sha256": "3da4b579454686a501f1b5254ab712c550989e5da3bdf74106a07eb3d2e9d59f",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/modules/users/components/UsersPage.jsx",
       "folder": "src/modules/users/components",
       "module": "Usuários",
@@ -8581,6 +8831,7 @@
         "src/modules/park/domain/parkAnalysis.js",
         "src/modules/park/domain/parkAnalysis.test.js",
         "src/modules/park/domain/parkHistory.js",
+        "src/modules/support-indicators/domain/indicators.js",
         "src/shared/data/filters.test.js",
         "src/shared/data/period.test.js",
         "src/shared/data/supportFilters.test.js"
@@ -8639,6 +8890,7 @@
         "src/modules/orders/domain/supportActivityPreview.js",
         "src/modules/orders/domain/zohoPresence.js",
         "src/modules/park/domain/parkHistory.js",
+        "src/modules/support-indicators/domain/contracts.js",
         "src/shared/data/zohoActivity.js",
         "src/shared/filters/savedViews.js"
       ],
@@ -8802,7 +9054,9 @@
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/orders/components/SupportZohoOverview.jsx",
         "src/modules/orders/components/ZohoClosures.jsx",
-        "src/modules/orders/data/zohoActivityClient.js"
+        "src/modules/orders/data/zohoActivityClient.js",
+        "src/modules/support-indicators/domain/contracts.js",
+        "src/modules/support-indicators/domain/indicators.js"
       ],
       "bytes": 8803,
       "sha256": "67aab23d90d368eda0609f66ac92dafd0bb07b7d4a418b2ce82083c5027e6369",
@@ -8853,6 +9107,7 @@
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx",
         "src/modules/park/domain/parkAnalysis.js",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/shared/export/exports.test.js"
       ],
       "bytes": 4272,
@@ -9167,6 +9422,7 @@
       "importedBy": [
         "server/businessReminders.js",
         "server/persistence/documentRepository.test.js",
+        "server/supportIndicators.js",
         "src/modules/consumption/data/historyRepository.test.js",
         "src/shared/persistence/documentValueAdapter.js",
         "src/shared/persistence/memoryDocumentAdapter.js",
@@ -9368,6 +9624,7 @@
         "src/modules/orders/hooks/useGoogleOrders.js",
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/users/components/UsersPage.jsx",
         "src/shared/filters/SavedViews.jsx"
       ],
@@ -9402,6 +9659,8 @@
         "src/modules/orders/data/zohoActivityClient.js",
         "src/modules/orders/hooks/useGoogleOrders.js",
         "src/modules/orders/hooks/useOrdersSession.js",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
+        "src/modules/support-indicators/hooks/useIndicatorRecords.js",
         "src/modules/users/components/UsersPage.jsx",
         "src/shared/export/exports.js",
         "src/shared/persistence/sourceSnapshotClient.js",
@@ -9718,6 +9977,20 @@
       "importedBy": ["src/main.jsx"],
       "bytes": 22590,
       "sha256": "ffc342a84e0940bf52ca797471bad929b886f7b5404e8dce9b38d1d5c1c89cc4",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/styles/support-indicators.css",
+      "folder": "src/styles",
+      "module": "Compartilhado",
+      "layer": "Estilo",
+      "description": "Layout responsivo e impressão dos Indicadores Suporte, com cards compactos, filtros, formulários e tabelas limitadas em altura.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": ["src/main.jsx"],
+      "bytes": 5325,
+      "sha256": "fc94b909b36547e6578d77390f599743e91b4897aad328c39a19c547e33448e5",
       "status": "Código ou documentação do ponto de referência"
     },
     {

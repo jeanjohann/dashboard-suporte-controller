@@ -1,0 +1,695 @@
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Navigation } from '../../../app/Navigation.jsx';
+import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
+import { useAccess } from '../../../shared/security/Access.jsx';
+import { authorizeAction } from '../../../shared/security/accessClient.js';
+import { useDashboardSources } from '../../my-dashboard/hooks/DashboardSources.jsx';
+import { loadZohoActivity } from '../../orders/data/zohoActivityClient.js';
+import { supportPeriod } from '../../orders/domain/supportPerformance.js';
+import { todaySaoPaulo } from '../../orders/domain/lifecycle.js';
+import { Chart } from '../../../components/Chart.jsx';
+import { SortableTable } from '../../../components/SortableTable.jsx';
+import { csv, download } from '../../../shared/export/exports.js';
+import {
+  agents,
+  subjects,
+  manualFields,
+  metricLabels,
+  sections,
+  periodDays,
+  previousPeriod,
+  manualSummary,
+  ordersSummary,
+  zohoSummary,
+  duration,
+} from '../domain/indicators.js';
+import { useIndicatorRecords } from '../hooks/useIndicatorRecords.js';
+import { ManualIndicatorForm } from './ManualIndicatorForm.jsx';
+import { IndicatorSettings } from './IndicatorSettings.jsx';
+
+const number = (n) => (n == null ? 'Sem dados' : n.toLocaleString('pt-BR'));
+const date = (d) => (d ? d.split('-').reverse().join('/') : '—');
+const valuesOf = (orders, zoho, manual) => ({
+  executed: orders && !orders.unavailable ? orders.executed : null,
+  scheduled: orders && !orders.unavailable ? orders.scheduled : null,
+  unproductive: orders && !orders.unavailable ? orders.unproductive : null,
+  created: manual?.totals.created ?? null,
+  closed: zoho?.closed ?? null,
+  seconds: zoho?.seconds ?? null,
+  requests: manual?.requests ?? null,
+  activities: manual?.activities ?? null,
+});
+const format = (key, value) => (key === 'seconds' ? duration(value) : number(value));
+function Table({ headers, rows }) {
+  return (
+    <div className="si-table">
+      <SortableTable>
+        <thead>
+          <tr>
+            {headers.map((h) => (
+              <th key={h}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i}>
+              {r.map((v, j) => (
+                <td key={j} data-sort={typeof v === 'number' ? v : undefined}>
+                  {v ?? 'Sem dados'}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </SortableTable>
+      {!rows.length && <p className="scope">Nenhum registro neste recorte.</p>}
+    </div>
+  );
+}
+export function SupportIndicatorsPage({ onPage, active = true }) {
+  const { user, managed } = useAccess(),
+    { sources } = useDashboardSources(),
+    today = todaySaoPaulo(),
+    [period, updatePeriod] = useState(() => supportPeriod('currentWeek', today)),
+    [manualDirty, setManualDirty] = useState(false),
+    [agentId, setAgent] = useState(''),
+    [ownZoho, setOwnZoho] = useState(null),
+    [busy, setBusy] = useState(false),
+    [progress, setProgress] = useState(0),
+    [error, setError] = useState('');
+  const pending = useRef(null);
+  function setPeriod(next) {
+    if (
+      manualDirty &&
+      !window.confirm('Descartar o lançamento manual ainda não salvo antes de mudar o período?')
+    )
+      return;
+    updatePeriod(next);
+  }
+  let valid = true;
+  try {
+    periodDays(period);
+  } catch {
+    valid = false;
+  }
+  const store = useIndicatorRecords(period, managed && valid),
+    rawOrders = sources.orders?.value?.data,
+    zohoData = ownZoho || sources.zoho?.value?.data;
+  const ordersData = useMemo(
+    () =>
+      rawOrders
+        ? { ...rawOrders, customerGrouping: 'consolidated', consolidateIdenticalNames: true }
+        : null,
+    [rawOrders],
+  );
+  const past = useMemo(() => (valid ? previousPeriod(period) : null), [period, valid]);
+  const orders = useMemo(
+    () => (valid ? ordersSummary(ordersData, period, agentId) : null),
+    [ordersData, period, agentId, valid],
+  );
+  const oldOrders = useMemo(
+    () => (past ? ordersSummary(ordersData, past, agentId) : null),
+    [ordersData, past, agentId],
+  );
+  const zoho = useMemo(
+    () => (valid ? zohoSummary(zohoData, period, agentId) : null),
+    [zohoData, period, agentId, valid],
+  );
+  const oldZoho = useMemo(
+    () => (past ? zohoSummary(zohoData, past, agentId) : null),
+    [zohoData, past, agentId],
+  );
+  const manual = useMemo(
+    () => (store.ready ? manualSummary(store.records, period, agentId) : null),
+    [store.ready, store.records, period, agentId],
+  );
+  const oldManual = useMemo(
+    () => (store.ready && past ? manualSummary(store.previous, past, agentId) : null),
+    [store.ready, store.previous, past, agentId],
+  );
+  const values = valuesOf(orders, zoho, manual),
+    oldValues = valuesOf(oldOrders, oldZoho, oldManual),
+    settings = store.settings,
+    hasOrders = orders && !orders.unavailable;
+  const shownAgents = agents.filter((a) => !agentId || a.id === agentId);
+  const agentRows = shownAgents.map((a) => {
+    const os = hasOrders ? orders.agents.find((r) => r.id === a.id) : null,
+      z = zoho?.agents.find((r) => r.id === a.id),
+      m = manual ? manualSummary(store.records, period, a.id) : null;
+    return [
+      a.name,
+      os?.scheduled ?? null,
+      os?.executed ?? null,
+      m?.totals.created ?? null,
+      z?.closed ?? null,
+      duration(z?.seconds),
+      m?.requests ?? null,
+      m?.activities ?? null,
+    ];
+  });
+  useEffect(() => () => pending.current?.abort(), []);
+  useEffect(() => {
+    if (!manualDirty) return;
+    const warn = (e) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [manualDirty]);
+  useEffect(() => {
+    if (!active) pending.current?.abort();
+  }, [active]);
+  async function loadZoho() {
+    if (pending.current) return;
+    const c = new AbortController();
+    pending.current = c;
+    setBusy(true);
+    setError('');
+    setProgress(0);
+    try {
+      const result = await loadZohoActivity({
+        ...period,
+        signal: c.signal,
+        onProgress: setProgress,
+      });
+      if (!c.signal.aborted) setOwnZoho(result);
+    } catch (e) {
+      setError(
+        c.signal.aborted ? 'Consulta cancelada. A leitura anterior foi preservada.' : e.message,
+      );
+    } finally {
+      pending.current = null;
+      setBusy(false);
+    }
+  }
+  function preset(key) {
+    setPeriod(supportPeriod(key, today));
+  }
+  async function exportReport() {
+    if (!(await authorizeAction('export'))) return;
+    const report = [
+      ['Indicadores Suporte'],
+      ['Início', period.start],
+      ['Fim', period.end],
+      ['Agente', agents.find((a) => a.id === agentId)?.name || 'Toda a equipe'],
+      ['OS', sources.orders?.value?.filename || 'Não carregada'],
+      ['Zoho consultado em', zoho ? zohoData.readAt : 'Não disponível para este período'],
+      [
+        'Critério',
+        'OS em linhas, execução efetiva exclui visita improdutiva; agenda usa data Agendamento, exclui status cancelado. Não somar agenda e execução.',
+      ],
+      [
+        'Manual',
+        'Totais dos campos preenchidos; vazios não equivalem a zero. Criados = abertos pelo suporte.',
+      ],
+      [],
+      ['Indicador', 'Valor', 'Unidade', 'Origem'],
+    ];
+    Object.entries(metricLabels).forEach(([key, label]) =>
+      report.push([
+        label,
+        values[key],
+        key === 'seconds' ? 'segundos' : 'quantidade',
+        ['created', 'requests', 'activities'].includes(key)
+          ? 'Manual'
+          : key === 'seconds' || key === 'closed'
+            ? 'Zoho'
+            : 'OS',
+      ]),
+    );
+    report.push(
+      [],
+      [
+        'Agente',
+        'Agendados',
+        'Executados efetivos',
+        'Criados · manual',
+        'Fechados · Zoho',
+        'Tempo apontado',
+        'Equipamentos · manual',
+        'Atividades · manual',
+      ],
+      ...agentRows,
+      [],
+      [
+        'Data',
+        'Agente',
+        ...manualFields.map(([, label]) => label),
+        'Observações',
+        'Algo novo?',
+        'Revisão',
+        'Salvo em',
+        'Responsável pela gravação',
+      ],
+      ...(manual?.entries || []).map((r) => [
+        r.value.date,
+        agents.find((a) => a.id === r.value.agentId)?.name,
+        ...manualFields.map(([key]) => r.value.values[key]),
+        r.value.note,
+        r.value.novelty,
+        r.revision,
+        r.updatedAt,
+        r.actor,
+      ]),
+    );
+    await download(
+      csv(report),
+      'text/csv;charset=utf-8',
+      `indicadores-suporte-${period.start}-${period.end}.csv`,
+    );
+  }
+  const weekly =
+    valid &&
+    periodDays(period) === 7 &&
+    new Date(period.start + 'T00:00:00Z').getUTCDay() === 1 &&
+    !agentId;
+  return (
+    <SidePanelProvider>
+      <div className="app support-indicators-page">
+        <Navigation page="support-indicators" onPage={onPage} />
+        <SidebarContent>
+          <p className="scope">
+            Filtros independentes por período e agente. Ajustes de exibição e lançamentos ficam
+            nesta página.
+          </p>
+        </SidebarContent>
+        <main>
+          <header className="si-heading">
+            <div>
+              <h1>Indicadores Suporte</h1>
+              <p>Atendimentos, serviços e atividades da equipe.</p>
+            </div>
+            <div className="si-toolbar">
+              <button disabled={!valid || busy || store.loading} onClick={exportReport}>
+                Exportar CSV
+              </button>
+              <button
+                onClick={async () => {
+                  if (await authorizeAction('export')) window.print();
+                }}
+              >
+                Imprimir / PDF
+              </button>
+            </div>
+          </header>
+          <section className="si-panel si-filters" aria-label="Filtros dos Indicadores Suporte">
+            <div className="si-toolbar">
+              <label>
+                De
+                <input
+                  type="date"
+                  value={period.start}
+                  disabled={busy}
+                  onChange={(e) => setPeriod({ ...period, start: e.target.value })}
+                />
+              </label>
+              <label>
+                Até
+                <input
+                  type="date"
+                  value={period.end}
+                  disabled={busy}
+                  onChange={(e) => setPeriod({ ...period, end: e.target.value })}
+                />
+              </label>
+              <label>
+                Agente
+                <select value={agentId} onChange={(e) => setAgent(e.target.value)}>
+                  <option value="">Toda a equipe</option>
+                  {agents.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="si-shortcuts">
+                {[
+                  ['currentWeek', 'Semana atual'],
+                  ['previousWeek', 'Semana anterior'],
+                  ['month', 'Mês atual'],
+                ].map(([key, label]) => (
+                  <button key={key} disabled={busy} onClick={() => preset(key)}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="scope">
+              {valid
+                ? `${date(period.start)} a ${date(period.end)} · filtros exclusivos desta página · comparação com ${date(past.start)} a ${date(past.end)}`
+                : 'Informe um intervalo válido de até 366 dias.'}
+            </p>
+            <IndicatorSettings
+              settings={settings}
+              revision={store.settingsRevision}
+              ready={store.settingsReady && !manualDirty}
+              busy={store.busy}
+              save={store.save}
+            />
+          </section>
+          <section className="si-panel si-sources" aria-label="Fontes e atualização">
+            <div>
+              <strong>OS</strong>
+              <small>{sources.orders?.value?.filename || 'Carregue a base em Importação.'}</small>
+              <strong>Zoho</strong>
+              <small>
+                {zoho
+                  ? `Consulta de ${date(zohoData.period.start)} a ${date(zohoData.period.end)} · ${new Date(zohoData.readAt).toLocaleString('pt-BR')}`
+                  : 'Sem consulta que cubra todo o período.'}
+              </small>
+            </div>
+            <div className="si-toolbar">
+              <button
+                disabled={!valid || busy || periodDaysSafe(period) > 31 || period.start > today}
+                onClick={loadZoho}
+              >
+                {busy ? `Consultando ${progress} chamados…` : 'Consultar Zoho neste período'}
+              </button>
+              {busy && <button onClick={() => pending.current?.abort()}>Cancelar</button>}
+              <button disabled={store.loading || store.busy} onClick={store.reload}>
+                Recarregar lançamentos
+              </button>
+            </div>
+            <p className="scope">
+              Zoho: até 31 dias por consulta. Tempo é a soma dos apontamentos nos chamados, não
+              tempo conectado. Chamados abertos pelo suporte e assuntos são manuais até a validação
+              da origem na API.
+            </p>
+            <p className="scope">
+              {store.loading
+                ? 'Carregando lançamentos do banco…'
+                : store.ready
+                  ? `${manual?.entries.length || 0} registros diários no recorte · ${manual?.filled || 0} campos preenchidos. Totais manuais podem estar incompletos.`
+                  : managed
+                    ? 'Lançamentos indisponíveis até a leitura ser confirmada.'
+                    : 'Modo local: abra o sistema autenticado para ler e gravar no D1.'}
+            </p>
+            {(error || store.error) && (
+              <p className="error" role="alert">
+                {error || store.error}
+              </p>
+            )}
+          </section>
+          {valid && (
+            <>
+              <div className="si-cards">
+                {settings.cards.map((key) => (
+                  <article className={`si-card si-card-${key}`} key={key}>
+                    <span>{metricLabels[key]}</span>
+                    <strong>{format(key, values[key])}</strong>
+                    <small>
+                      {['created', 'requests', 'activities'].includes(key)
+                        ? 'Manual · total informado'
+                        : key === 'seconds' || key === 'closed'
+                          ? 'Zoho · eventos do período'
+                          : 'OS · linhas da base'}
+                    </small>
+                    <small>
+                      {values[key] != null && oldValues[key] != null
+                        ? `Anterior: ${format(key, oldValues[key])} · diferença: ${format(key, Math.abs(values[key] - oldValues[key]))} ${values[key] > oldValues[key] ? 'a mais' : values[key] < oldValues[key] ? 'a menos' : '(igual)'}`
+                        : 'Comparação indisponível sem dados dos dois períodos.'}
+                    </small>
+                    {weekly && settings.weeklyGoals[key] != null && (
+                      <small>
+                        Meta semanal:{' '}
+                        {key === 'seconds'
+                          ? duration(settings.weeklyGoals[key] * 60)
+                          : number(settings.weeklyGoals[key])}
+                      </small>
+                    )}
+                  </article>
+                ))}
+              </div>
+              <p className="scope si-rules">
+                Agenda e execução são etapas diferentes e podem conter o mesmo serviço. Executados:
+                Concluída/Pago, sem Visita Improdutiva. A agenda não é histórico da ação de agendar:
+                usa a data marcada no arquivo. Ausência de registros na base não comprova ausência
+                de trabalho.
+              </p>
+              {hasOrders &&
+                (orders.unmapped > 0 ||
+                  orders.missingExecutionDate > 0 ||
+                  orders.missingScheduleDate > 0) && (
+                  <p className="notice">
+                    Revisão da base: {orders.unmapped} linhas no período sem vínculo explícito com
+                    Jean/Eduardo; {orders.missingExecutionDate} realizadas sem data válida e{' '}
+                    {orders.missingScheduleDate} com agendamento inválido fora da seleção por
+                    período. Linhas sem vínculo ficam fora dos totais da equipe. O filtro por agente
+                    usa nomes exatos Jean/Jean Johann e Eduardo/Eduardo Oliveira.
+                  </p>
+                )}
+              {orders?.unavailable && (
+                <p className="notice">
+                  OS indisponível: colunas ausentes {orders.unavailable.join(', ')}.
+                </p>
+              )}
+              {zoho && (
+                <p className="scope">
+                  Tempo médio por chamado com apontamento: {duration(zoho.meanSeconds)} ·{' '}
+                  {zoho.tickets} chamados com tempo · {zoho.reviewCount} apontamentos da consulta
+                  para conferir. A coleta considera chamados modificados desde o início do período
+                  até sua referência de leitura.
+                </p>
+              )}
+              <div className="si-sections">
+                {settings.sections.map((key) => (
+                  <section className="si-panel" key={key}>
+                    <h2>{sections[key]}</h2>
+                    {key === 'agents' && (
+                      <>
+                        <div className="si-chart-grid">
+                          <div>
+                            <h3>Execuções efetivas · OS</h3>
+                            <Chart
+                              compact
+                              title="Execuções efetivas por agente"
+                              items={
+                                hasOrders
+                                  ? orders.agents
+                                      .filter((a) => !agentId || a.id === agentId)
+                                      .map((a) => ({ label: a.name, value: a.executed }))
+                                  : []
+                              }
+                            />
+                          </div>
+                          <div>
+                            <h3>Tempo apontado · Zoho</h3>
+                            <Chart
+                              compact
+                              title="Tempo apontado por agente"
+                              items={(zoho?.agents || []).map((a) => ({
+                                label: a.name,
+                                value: a.seconds,
+                              }))}
+                              format={duration}
+                            />
+                          </div>
+                        </div>
+                        <Table
+                          headers={[
+                            'Agente',
+                            'Agendados · OS',
+                            'Executados · OS',
+                            'Criados · manual',
+                            'Fechados · Zoho',
+                            'Tempo · Zoho',
+                            'Equipamentos · manual',
+                            'Atividades · manual',
+                          ]}
+                          rows={agentRows}
+                        />
+                      </>
+                    )}
+                    {key === 'evolution' && (
+                      <div className="si-chart-grid">
+                        <div>
+                          <h3>Serviços efetivos por dia · OS</h3>
+                          <Chart
+                            compact
+                            title="Serviços efetivos por dia"
+                            type="line"
+                            items={
+                              hasOrders
+                                ? orders.daily.map((d) => ({
+                                    label: date(d.label),
+                                    value: d.executed,
+                                  }))
+                                : []
+                            }
+                          />
+                          <small>
+                            Somente datas com registros nas etapas de agenda ou execução.
+                          </small>
+                        </div>
+                        <div>
+                          <h3>Tempo apontado por dia · Zoho</h3>
+                          <Chart
+                            compact
+                            title="Tempo apontado por dia"
+                            type="line"
+                            items={(zoho?.daily || []).map((d) => ({
+                              label: date(d.label),
+                              value: d.value / 3600,
+                            }))}
+                            format={(n) =>
+                              `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}h`
+                            }
+                          />
+                          <small>
+                            Dias sem apontamentos não são preenchidos com tempo presumido.
+                          </small>
+                        </div>
+                      </div>
+                    )}
+                    {key === 'types' && (
+                      <div className="si-chart-grid">
+                        <div>
+                          <h3>Tipos de serviço · OS</h3>
+                          <Chart
+                            compact
+                            title="Execuções por tipo de serviço"
+                            items={
+                              hasOrders
+                                ? orders.types.map((d) => ({ label: d.label, value: d.executed }))
+                                : []
+                            }
+                          />
+                          <Table
+                            headers={['Tipo', 'Agendados', 'Executados efetivos']}
+                            rows={
+                              hasOrders
+                                ? orders.types.map((d) => [d.label, d.scheduled, d.executed])
+                                : []
+                            }
+                          />
+                        </div>
+                        <div>
+                          <h3>Clientes · OS</h3>
+                          <Table
+                            headers={['Cliente', 'Agendados', 'Executados efetivos']}
+                            rows={
+                              hasOrders
+                                ? orders.clients.map((d) => [d.label, d.scheduled, d.executed])
+                                : []
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {key === 'subjects' && (
+                      <>
+                        <p className="scope">
+                          Classificação manual dos chamados atendidos. Categorias podem se sobrepor;
+                          não representam o total de chamados distintos.
+                        </p>
+                        <Chart
+                          compact
+                          title="Assuntos informados"
+                          items={subjects
+                            .filter(([key]) => manual?.totals[`subject_${key}`] != null)
+                            .map(([key, label]) => ({
+                              label,
+                              value: manual.totals[`subject_${key}`],
+                            }))}
+                        />
+                        <Table
+                          headers={['Assunto', 'Quantidade informada']}
+                          rows={subjects.map(([key, label]) => [
+                            label,
+                            manual?.totals[`subject_${key}`] ?? null,
+                          ])}
+                        />
+                      </>
+                    )}
+                    {key === 'manual' && (
+                      <>
+                        <ManualIndicatorForm
+                          key={period.start + period.end}
+                          records={store.records}
+                          period={period}
+                          busy={store.busy}
+                          ready={store.ready}
+                          save={store.save}
+                          today={today}
+                          onDirty={setManualDirty}
+                        />
+                        <Table
+                          headers={['Indicador manual', 'Quantidade informada']}
+                          rows={manualFields
+                            .slice(10)
+                            .map(([key, label]) => [label, manual?.totals[key] ?? null])}
+                        />
+                        <details>
+                          <summary>Lançamentos, observações e origem</summary>
+                          <Table
+                            headers={[
+                              'Data',
+                              'Agente',
+                              'Campos informados',
+                              'Observações',
+                              'Algo novo?',
+                              'Revisão',
+                              'Salvo em',
+                            ]}
+                            rows={(manual?.entries || []).map((r) => [
+                              date(r.value.date),
+                              agents.find((a) => a.id === r.value.agentId)?.name,
+                              Object.values(r.value.values).filter((n) => n !== null).length,
+                              r.value.note,
+                              r.value.novelty,
+                              r.revision,
+                              new Date(r.updatedAt).toLocaleString('pt-BR'),
+                            ])}
+                          />
+                        </details>
+                      </>
+                    )}
+                  </section>
+                ))}
+              </div>
+              <details className="si-panel">
+                <summary>Critérios e conferência das linhas de OS</summary>
+                <p className="scope">
+                  Os volumes são linhas, não chamados distintos. Trocas podem ocupar duas linhas na
+                  OS. Dados manuais não substituem nem se somam ao indicador automático
+                  correspondente. As metas são referências fixas e alterações valem para todas as
+                  semanas.
+                </p>
+                <Table
+                  headers={[
+                    'Linha Excel',
+                    'Chamado',
+                    'Atendimento',
+                    'Agendamento',
+                    'Tipo',
+                    'Execução no período',
+                    'Agenda no período',
+                  ]}
+                  rows={(orders?.rows || []).map((r) => [
+                    r.sourceRow,
+                    r.os,
+                    date(r.executedAt),
+                    date(r.scheduledAt),
+                    r.type,
+                    r.execution ? (r.unproductive ? 'Improdutiva' : 'Efetiva') : '—',
+                    r.scheduling ? 'Sim' : '—',
+                  ])}
+                />
+              </details>
+            </>
+          )}
+        </main>
+      </div>
+    </SidePanelProvider>
+  );
+}
+function periodDaysSafe(period) {
+  try {
+    return periodDays(period);
+  } catch {
+    return 367;
+  }
+}

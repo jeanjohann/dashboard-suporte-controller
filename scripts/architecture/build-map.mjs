@@ -49,6 +49,7 @@ const esc = (v) =>
     .replaceAll('"', '&quot;');
 const title = (v) => v.replace(/([a-z])([A-Z])/g, '$1 $2').replaceAll('-', ' ');
 const moduleNames = {
+  'support-indicators': 'Indicadores Suporte',
   'my-dashboard': 'Meu Dashboard',
   orders: 'Ordens de Serviço',
   operational: 'Operacional',
@@ -63,6 +64,24 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'src/styles/support-indicators.css':
+    'Layout responsivo e impressão dos Indicadores Suporte, com cards compactos, filtros, formulários e tabelas limitadas em altura.',
+  'docs/INDICADORES-SUPORTE.md':
+    'Uso, definições das fontes, limites de cobertura, gravação diária no D1 e validação do painel semanal de suporte.',
+  'server/supportIndicators.js':
+    'API do piloto do proprietário para lançamentos diários e configuração dos Indicadores Suporte; grava no D1 com revisão e autoria do servidor.',
+  'src/modules/support-indicators/domain/contracts.js':
+    'Define agentes, indicadores manuais, metas, validação de campos e períodos e soma somente quantidades informadas.',
+  'src/modules/support-indicators/domain/indicators.js':
+    'Separa datas e papéis da OS e agrega eventos do Zoho somente quando a consulta cobre o período inteiro.',
+  'src/modules/support-indicators/hooks/useIndicatorRecords.js':
+    'Carrega lançamentos atuais e anteriores, configurações e gravações autenticadas sem sobrescrever outra revisão.',
+  'src/modules/support-indicators/components/SupportIndicatorsPage.jsx':
+    'Página independente no menu: período próprio, cards, gráficos, tabelas, origem dos dados e exportação.',
+  'src/modules/support-indicators/components/ManualIndicatorForm.jsx':
+    'Edita um lançamento por data e agente, distingue vazio de zero e preserva edição diante de conflito.',
+  'src/modules/support-indicators/components/IndicatorSettings.jsx':
+    'Escolhe cards e ordem das seções e define referências semanais da equipe.',
   'docs/EXCLUSAO-DE-LEMBRETES.md':
     'Exclusão confirmada da agenda, sincronização, histórico interno, proteção contra telas antigas e limites de recuperação.',
   'server/persistence/snapshotDownload.js':

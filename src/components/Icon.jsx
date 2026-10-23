@@ -4,6 +4,12 @@
  */
 import React from 'react';
 const paths = {
+  'support-indicators': (
+    <>
+      <path d="M3 3v18h18M7 16v-4M12 16V7M17 16v-7" />
+      <path d="m7 7 4-3 6 2" />
+    </>
+  ),
   'architecture-map': (
     <>
       <rect x="8" y="2" width="8" height="6" rx="1" />

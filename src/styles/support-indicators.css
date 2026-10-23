@@ -1,0 +1,280 @@
+.support-indicators-page main {
+  min-width: 0;
+  color: var(--ui-ink);
+}
+.support-indicators-page h1 {
+  font-size: 24px;
+  margin: 0 0 6px;
+}
+.support-indicators-page h2 {
+  font-size: 16px;
+  margin: 0 0 16px;
+}
+.support-indicators-page h3 {
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+.si-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.si-heading p {
+  color: var(--ui-muted);
+  margin: 0;
+  font-size: 13px;
+}
+.si-panel {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 14px;
+  min-width: 0;
+}
+.si-toolbar {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.si-toolbar label,
+.si-input-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ui-muted);
+  min-width: 0;
+}
+.si-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.support-indicators-page main button {
+  min-height: 34px;
+  padding: 7px 11px;
+  font-size: 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+  cursor: pointer;
+}
+.support-indicators-page main button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.support-indicators-page main .si-primary {
+  background: var(--ui-button-bg);
+  color: var(--ui-button-text);
+}
+.support-indicators-page input:not([type='checkbox']),
+.support-indicators-page select,
+.support-indicators-page textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+  padding: 7px 9px;
+  font: inherit;
+}
+.support-indicators-page textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+.support-indicators-page summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 0;
+}
+.si-settings {
+  border-top: 1px solid var(--ui-line);
+  padding-top: 8px;
+}
+.si-sources > div:first-child {
+  display: flex;
+  gap: 8px 14px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.si-sources small {
+  color: var(--ui-muted);
+}
+.si-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.si-card {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-top: 3px solid var(--chart-teal);
+  border-radius: 9px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.si-card span {
+  font-size: 12px;
+}
+.si-card strong {
+  font-size: clamp(22px, 2.5vw, 30px);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.si-card small {
+  font-size: 11px;
+  color: var(--ui-muted);
+}
+.si-card-created,
+.si-card-requests,
+.si-card-activities {
+  border-top-color: var(--chart-purple);
+}
+.si-card-closed,
+.si-card-seconds {
+  border-top-color: var(--chart-blue);
+}
+.si-card-unproductive {
+  border-top-color: var(--chart-amber);
+}
+.si-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+.si-chart-grid > div {
+  min-width: 0;
+}
+.si-table {
+  overflow: auto;
+  max-height: 460px;
+  margin-top: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+}
+.si-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.si-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--ui-soft);
+  text-align: left;
+}
+.si-table td,
+.si-table th {
+  padding: 10px;
+  border-bottom: 1px solid var(--ui-line);
+  overflow-wrap: anywhere;
+}
+.si-table td {
+  white-space: pre-wrap;
+}
+.si-table td[data-sort] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.support-indicators-page fieldset {
+  min-width: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+  margin: 14px 0;
+  padding: 14px;
+}
+.support-indicators-page legend {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 6px;
+}
+.si-input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 14px;
+}
+.si-input-grid + .si-input-grid {
+  margin-top: 14px;
+}
+.si-check-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  font-size: 12px;
+}
+.si-check-grid label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.si-settings ol {
+  padding-left: 20px;
+  font-size: 12px;
+}
+.si-settings li {
+  margin-top: 6px;
+}
+.si-settings li span {
+  display: inline-block;
+  min-width: 170px;
+}
+.si-settings li button {
+  margin-left: 6px;
+}
+.si-manual-form form {
+  padding-top: 10px;
+}
+.si-manual-form small {
+  display: block;
+  margin-top: 10px;
+  color: var(--ui-muted);
+}
+.si-rules {
+  margin-bottom: 18px;
+}
+@media (max-width: 900px) {
+  .si-chart-grid {
+    grid-template-columns: 1fr;
+  }
+  .si-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .si-panel {
+    padding: 14px;
+  }
+}
+@media print {
+  .support-indicators-page .si-filters,
+  .support-indicators-page .si-sources .si-toolbar,
+  .support-indicators-page .si-heading button,
+  .support-indicators-page .si-manual-form {
+    display: none;
+  }
+  .si-table {
+    max-height: none;
+    overflow: visible;
+  }
+  .si-panel,
+  .si-card {
+    break-inside: avoid;
+  }
+  .si-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

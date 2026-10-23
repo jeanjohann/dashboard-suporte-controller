@@ -10,6 +10,7 @@ import { zohoResponse } from './zoho.js';
 import { koreResponse } from './kore.js';
 import { businessRemindersResponse } from './businessReminders.js';
 import { businessSourcesResponse } from './businessSources.js';
+import { supportIndicatorsResponse } from './supportIndicators.js';
 import { storedMonitoringResponse, scheduledMonitoring } from './monitoringStorage.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
@@ -101,6 +102,8 @@ export function createHandler(authenticate = authenticatedEmail) {
           403,
         );
       if (url.pathname === '/api/me' && request.method === 'GET') return reply({ user });
+      if (url.pathname.startsWith('/api/support-indicators/'))
+        return supportIndicatorsResponse(request, env, user, owner);
       if (url.pathname.startsWith('/api/sources/'))
         return businessSourcesResponse(request, env, user, owner);
       if (

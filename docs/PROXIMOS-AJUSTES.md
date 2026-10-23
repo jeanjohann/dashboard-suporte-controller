@@ -1,5 +1,11 @@
 # Fila de implementação e ajustes
 
+## Indicadores Suporte 0.62.0 — 23/10/2026
+
+Página própria no menu, com filtros independentes, fontes OS/Zoho e lançamentos manuais diários por agente no D1 do piloto. Cards, evolução diária, assuntos, tipos, clientes, metas opcionais, configuração de seções e exportação. [Critérios, uso e validação](INDICADORES-SUPORTE.md).
+
+Próxima conferência: comparar uma semana real com as fontes e validar o preenchimento manual. Chamados criados pelo próprio suporte e assuntos ficam manuais até conferir a autoria e correspondência das categorias da API. Tempo nesta página significa apontamento nos chamados; a pendência de sessões para tempo conectado continua separada.
+
 ## Correção de abertura 0.61.0 — 22/10/2026
 
 Incluída também a exclusão de lembretes/agendamentos solicitada durante a rodada: confirmação, ocultação da agenda, auditoria interna e revisão crescente entre ciclos. [Critérios e uso](EXCLUSAO-DE-LEMBRETES.md).

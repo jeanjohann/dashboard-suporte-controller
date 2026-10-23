@@ -15,6 +15,7 @@ import {
 } from '../modules/assistant/domain/previewAccess.js';
 const pages = [
   ['my-dashboard', 'Meu Dashboard'],
+  ['support-indicators', 'Indicadores Suporte'],
   ['orders', 'Ordens de Serviço'],
   ['operational', 'Operacional'],
   ['lines', 'Consumo'],

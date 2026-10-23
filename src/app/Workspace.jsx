@@ -65,6 +65,11 @@ const MyDashboardPage = lazy(() =>
     default: module.MyDashboardPage,
   })),
 );
+const SupportIndicatorsPage = lazy(() =>
+  import('../modules/support-indicators/components/SupportIndicatorsPage.jsx').then((module) => ({
+    default: module.SupportIndicatorsPage,
+  })),
+);
 /** Mantém as bases da sessão e coordena páginas autorizadas e importações conjuntas. */
 export function Workspace() {
   return (
@@ -181,6 +186,14 @@ function WorkspaceContent() {
         onPage={navigate}
       >
         <MyDashboardPage onPage={navigate} />
+      </DeferredPage>
+      <DeferredPage
+        active={current === 'support-indicators'}
+        allowed={allowed('support-indicators')}
+        page="support-indicators"
+        onPage={navigate}
+      >
+        <SupportIndicatorsPage active={current === 'support-indicators'} onPage={navigate} />
       </DeferredPage>
       <DeferredPage
         active={current === 'assistant-lab'}

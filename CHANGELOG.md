@@ -7,6 +7,13 @@
 
 # Histórico de versões
 
+## 0.62.0 — 23/10/2026
+
+- Acrescenta Indicadores Suporte como página independente no menu, com período e agente próprios, atalhos de semanas/mês, cards, gráficos, tabelas e exportação CSV/impresso.
+- Combina execução/agenda da OS e eventos de fechamento/tempo apontado do Zoho com atividades manuais por data e agente. Fontes, cobertura e campos sem informação ficam explícitos; agenda e execução não são somadas como serviços distintos.
+- Salva lançamentos e configurações no D1 do proprietário, sem duplicar a mesma data/agente, com proteção contra revisões concorrentes. Permite escolher cards, ordem de seções e metas semanais opcionais. [Critérios e uso](docs/INDICADORES-SUPORTE.md).
+- Chamados criados pelo suporte e assuntos permanecem manuais até validar autoria e categorias reais da API. Não altera as fontes, permissões ou retenções existentes.
+
 ## 0.61.0 — 22/10/2026
 
 - Acrescenta Excluir lembrete no Monitoramento, com confirmação por veículo, exclusão sincronizada e histórico interno preservado. Novo agendamento mantém revisão crescente para recusar ações de telas antigas. [Funcionamento](docs/EXCLUSAO-DE-LEMBRETES.md).
