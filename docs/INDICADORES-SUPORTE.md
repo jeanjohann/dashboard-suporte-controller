@@ -33,6 +33,8 @@ Agenda e execução podem contar o mesmo serviço em etapas diferentes. Os volum
 
 ## Ausência, comparação e cobertura
 
+Eventos idênticos de alteração de status retornados mais de uma vez pelo Zoho são deduplicados, inclusive entre páginas. Uma página inteira repetida sem avanço interrompe a consulta e preserva a leitura anterior; o mesmo vale para status sem categoria identificada e histórico truncado. Eventos de agentes ou transições diferentes são preservados.
+
 Campo manual vazio é `null`, diferente de zero confirmado. Totais manuais somam somente os campos informados e mostram quantidade de registros/campos preenchidos. Não comprovam cobertura de todos os dias nem conclusão do preenchimento semanal. Ausência de OS na base também não comprova ausência de trabalho. Datas inválidas e responsáveis não vinculados são sinalizados.
 
 A comparação usa o intervalo imediatamente anterior de mesma duração, calculado com a mesma base atual de OS e os lançamentos salvos. Não representa uma fotografia histórica imutável. Zoho só compara quando a consulta disponível cobre os dois períodos. As limitações da coleta existente continuam: chamados acessíveis modificados desde o início do período até a referência da leitura, limite de 500 chamados, indexação e permissões do fornecedor. A página mantém a cobertura explícita e não dispara uma segunda consulta silenciosa para o período anterior.

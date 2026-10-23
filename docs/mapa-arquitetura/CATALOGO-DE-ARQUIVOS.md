@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.64.4 · referência e778e0a · cópia da entrega · 2026-10-23 · **502 arquivos / 103 arquivos de teste / 71 pastas**.
+Addlog 0.64.5 · referência aa5db0c · cópia da entrega · 2026-10-23 · **502 arquivos / 103 arquivos de teste / 71 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -1591,7 +1591,7 @@ Importado por: [server/zohoActivity.js](../../server/zohoActivity.js), [server/z
 
 ### server/zohoClosures.test.js
 
-**API Cloudflare · Teste** — Verifica zoho Closures no contexto de API Cloudflare. Exemplos: fechamento usa executor, categoria configurada e data de Brasília, incluindo reabertura posterior; paginação, status ambíguos, histórico incompleto e duplicado não viram contagens de zero; maior participação inclui outros agentes, tempo anterior ao período e empates; datas futuras não entram.
+**API Cloudflare · Teste** — Verifica zoho Closures no contexto de API Cloudflare. Exemplos: fechamento usa executor, categoria configurada e data de Brasília, incluindo reabertura posterior; eventos repetidos são contados uma vez; status ambíguos e histórico incompleto continuam bloqueados; sobreposição entre páginas preserva agentes e transições diferentes; página inteira repetida é rejeitada.
 
 [Abrir fonte](../../server/zohoClosures.test.js) · Código ou documentação do ponto de referência
 

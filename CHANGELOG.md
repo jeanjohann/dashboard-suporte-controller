@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.64.5 — 23/10/2026
+
+- Consulta Zoho aceita eventos idênticos de alteração de status repetidos no histórico, contando cada evento uma única vez, inclusive quando há sobreposição entre páginas.
+- Preserva a autoria e as transições distintas. Páginas inteiras repetidas sem avanço, categorias ambíguas e históricos truncados continuam bloqueando resultados incompletos.
+
 ## 0.64.4 — 23/10/2026
 
 - Indicadores Suporte consulta o histórico completo de cada chamado para conferir fechamentos, inclusive quando houve reabertura. Um evento válido não é descartado por divergir da data resumida closedTime.

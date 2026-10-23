@@ -72,12 +72,21 @@ export function closureReader(fetchPage, fail, { unfiltered = false } = {}) {
       catalogs.set(departmentId, states);
     }
     const closures = [],
-      seen = new Set();
+      seen = new Set(),
+      fullPages = new Set();
     for (let page = 0; page < 4; page++) {
       const rows = await fetchPage(
         `/tickets/${zohoId(ticket.id)}/History?from=${page * 50}&limit=50${unfiltered ? '' : '&fieldName=status'}`,
       );
       if (rows.length > 50) throw fail('O histórico não respeitou a paginação de fechamentos.');
+      // Sobreposição de eventos pode ocorrer enquanto o chamado recebe alterações.
+      // Uma página inteira repetida continua sendo falha de avanço da paginação.
+      if (rows.length === 50) {
+        const pageSignature = JSON.stringify(rows);
+        if (fullPages.has(pageSignature))
+          throw fail('O histórico repetiu uma página inteira sem avançar. Tente novamente.');
+        fullPages.add(pageSignature);
+      }
       for (const event of rows) {
         // Histórico completo contém notificações e apontamentos com a mesma assinatura
         // resumida. Apenas mudanças reais de Status entram na conferência de fechamento.
@@ -95,8 +104,7 @@ export function closureReader(fetchPage, fail, { unfiltered = false } = {}) {
           event.actor?.id,
           event.eventInfo,
         ]);
-        if (seen.has(signature))
-          throw fail('O histórico de status mudou ou repetiu registros durante a coleta.');
+        if (seen.has(signature)) continue;
         seen.add(signature);
         try {
           const closure = closureFromHistory(event, ticket, period, states, anchor);

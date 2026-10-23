@@ -1,6 +1,6 @@
 {
-  "version": "0.64.4",
-  "base": "e778e0a · cópia da entrega",
+  "version": "0.64.5",
+  "base": "aa5db0c · cópia da entrega",
   "date": "2026-10-23",
   "total": 502,
   "tests": 103,
@@ -447,8 +447,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 99645,
-      "sha256": "b07d1c007fcf04f94a936d24138f3ab3b393146e068de53d5381c1950093485f",
+      "bytes": 100034,
+      "sha256": "8d308520cf473dc1208c91af0b2149346c9b7ec5d9060d3cf291314c5ee229ef",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -769,8 +769,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 13493,
-      "sha256": "1c3a74bc436a5ef6a2c690995ff2cfe852b46debfac1e7625462421412e354b3",
+      "bytes": 13853,
+      "sha256": "b7393aa90499c298b55d68c4122961b766e8e7e4ef9d5599add30e9523f17c60",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1316,7 +1316,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 106621,
-      "sha256": "575dacd13223e64f64b9a76a3d50f3904254df7f28d52b14f0c4528d245c6e73",
+      "sha256": "f5037a01b029e04a4acdae58a103b8a6f2bcf03a9114bceb8e11afd52c7f975d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1329,8 +1329,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1330,
-      "sha256": "0e3cc726a4f31fe766b9dca201a320875611a4c34b87438c71a35af9b720134f",
+      "bytes": 1300,
+      "sha256": "188be07c25a4411be2be5c2ffc322232d5aff89343dc26a43414e97a0b91e56e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2762,8 +2762,8 @@
         "server/zohoActivity.js",
         "server/zohoClosures.test.js"
       ],
-      "bytes": 5221,
-      "sha256": "5aa1350de6ad202244c4e7b9449f48954772bc4fc91a751884bd3b8e99adb4bc",
+      "bytes": 5610,
+      "sha256": "142b1c4d51404aa197393eb52fc14f1f31d192e6c0d6c745be97524029c41917",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2771,7 +2771,7 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Teste",
-      "description": "Verifica zoho Closures no contexto de API Cloudflare. Exemplos: fechamento usa executor, categoria configurada e data de Brasília, incluindo reabertura posterior; paginação, status ambíguos, histórico incompleto e duplicado não viram contagens de zero; maior participação inclui outros agentes, tempo anterior ao período e empates; datas futuras não entram.",
+      "description": "Verifica zoho Closures no contexto de API Cloudflare. Exemplos: fechamento usa executor, categoria configurada e data de Brasília, incluindo reabertura posterior; eventos repetidos são contados uma vez; status ambíguos e histórico incompleto continuam bloqueados; sobreposição entre páginas preserva agentes e transições diferentes; página inteira repetida é rejeitada.",
       "exports": [],
       "imports": [
         "server/zohoActivity.js",
@@ -2783,8 +2783,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 7050,
-      "sha256": "231424c06b82676eb5f7de2b5edf92e77a0a7e84d5d44c86dec0563dd105a3ec",
+      "bytes": 8581,
+      "sha256": "452548aaf0dd18247f38366576b3093193f8a872ee2b1f0b39eb8b88f537381e",
       "status": "Código ou documentação do ponto de referência"
     },
     {

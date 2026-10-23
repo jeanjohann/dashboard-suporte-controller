@@ -107,7 +107,7 @@ test('fechamento usa executor, categoria configurada e data de Brasília, inclui
   );
 });
 
-test('paginação, status ambíguos, histórico incompleto e duplicado não viram contagens de zero', async () => {
+test('eventos repetidos são contados uma vez; status ambíguos e histórico incompleto continuam bloqueados', async () => {
   const metadata = {
     data: [
       {
@@ -124,7 +124,7 @@ test('paginação, status ambíguos, histórico incompleto e duplicado não vira
     async (path) => (path.startsWith('/organizationFields') ? metadata.data : [event(), event()]),
     fail,
   );
-  await assert.rejects(() => read(ticket, period, anchor), /repetiu/);
+  assert.equal((await read(ticket, period, anchor)).length, 1);
   const ambiguous = closureReader(
     async () => [
       {
@@ -153,6 +153,41 @@ test('paginação, status ambíguos, histórico incompleto e duplicado não vira
     fail,
   );
   await assert.rejects(() => incomplete(ticket, period, anchor), /200/);
+});
+
+test('sobreposição entre páginas preserva agentes e transições diferentes; página inteira repetida é rejeitada', async () => {
+  const metadata = [
+    {
+      apiName: 'status',
+      allowedValues: [...states].map(([value, statusType]) => ({ value, statusType })),
+    },
+  ];
+  const first = Array.from({ length: 50 }, (_, index) =>
+    event({ eventTime: new Date(Date.parse('2026-10-19T05:00:00Z') + index * 1000).toISOString() }),
+  );
+  const otherAgent = event({ ...first[49], actor: { id: jean.id, type: 'Agent' } });
+  const otherTransition = event({ ...first[49], eventInfo: change('Aberto', 'Encerrado') });
+  const read = closureReader(
+    async (path) => {
+      if (path.startsWith('/organizationFields')) return metadata;
+      return new URL('https://test' + path).searchParams.get('from') === '0'
+        ? first
+        : [first[49], otherAgent, otherTransition];
+    },
+    (message) => Error(message),
+    { unfiltered: true },
+  );
+  const closures = await read(ticket, period, anchor);
+  assert.equal(closures.length, 52);
+  assert.equal(new Set(closures.map((row) => row.id)).size, 52);
+  assert.equal(closures.filter((row) => row.agentId === jean.id).length, 1);
+  assert.equal(closures.filter((row) => row.status === 'Encerrado').length, 1);
+
+  const stalled = closureReader(
+    async (path) => (path.startsWith('/organizationFields') ? metadata : first),
+    (message) => Error(message),
+  );
+  await assert.rejects(() => stalled(ticket, period, anchor), /página inteira sem avançar/);
 });
 
 test('maior participação inclui outros agentes, tempo anterior ao período e empates; datas futuras não entram', async () => {
