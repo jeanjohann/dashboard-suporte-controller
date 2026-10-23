@@ -1,6 +1,6 @@
 {
-  "version": "0.64.3",
-  "base": "8082aab · cópia da entrega",
+  "version": "0.64.4",
+  "base": "a4417ed · cópia da entrega",
   "date": "2026-10-23",
   "total": 502,
   "tests": 103,
@@ -447,8 +447,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 99227,
-      "sha256": "669f4ba99ba6b8891b1eaf1dffa0d8c3745403c35ca5f941b956047a9b0c15bc",
+      "bytes": 99645,
+      "sha256": "b07d1c007fcf04f94a936d24138f3ab3b393146e068de53d5381c1950093485f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -769,8 +769,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 12944,
-      "sha256": "0b744b01142e11b22dd8050f33f20a8183c1bb8006e01eb1b6ca67f0b6d40c2e",
+      "bytes": 13493,
+      "sha256": "1c3a74bc436a5ef6a2c690995ff2cfe852b46debfac1e7625462421412e354b3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1316,7 +1316,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 106621,
-      "sha256": "7f9321250e08b9d5db4be1bf545cedc456b7872c069f66cbbd25fa8a04531ac8",
+      "sha256": "575dacd13223e64f64b9a76a3d50f3904254df7f28d52b14f0c4528d245c6e73",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1330,7 +1330,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1330,
-      "sha256": "2ca92eed811bd870563fa6cb88563c942cec863911936c051c7d051ae7a40596",
+      "sha256": "0e3cc726a4f31fe766b9dca201a320875611a4c34b87438c71a35af9b720134f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2719,8 +2719,8 @@
         "server/zohoClosures.test.js",
         "server/zohoIndicators.test.js"
       ],
-      "bytes": 9499,
-      "sha256": "d50c14af7bf2e6225bfe2a2f5362624177758b274bc282e318bde44e3329bd85",
+      "bytes": 8995,
+      "sha256": "52623d16ac3b428dde7443c49c7c1ac4d39051e6756b9b3ac987b0fd7de3d075",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2825,8 +2825,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 5688,
-      "sha256": "38785768f7a7bef39ffb48fee4d4e7ffaf4c768ad45dff991af1ac14533a2d03",
+      "bytes": 6594,
+      "sha256": "be451742dedd67ce9e83cfbb98d0fc96799d2aad91ae8e8bce41010799170327",
       "status": "Código ou documentação do ponto de referência"
     },
     {

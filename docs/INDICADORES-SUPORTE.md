@@ -62,6 +62,8 @@ Na versão 0.63.0, a consulta ampliada de Indicadores Suporte confere o históri
 
 ### Conferência dos fechamentos na conta real
 
+Correção 0.64.4: a consulta ampliada passa a ler o histórico completo diretamente. Fechamentos confirmados no período continuam válidos após uma reabertura; a data resumida `closedTime` não precisa coincidir exatamente com o evento. O contador usa a autoria da transição histórica, nunca o responsável atual. Quando `closedTime` indica fechamento no período mas nenhum evento pode ser identificado, a pendência permanece explícita. Testes incluem reabertura por resposta de cliente, divergência de timestamp e responsáveis distintos. Abaixo fica o registro da investigação anterior à correção.
+
 A consulta semanal de 19 a 25/10/2026 encontrou divergência entre closedTime e os eventos de fechamento, inclusive ao consultar o histórico sem filtro de campo. Na consulta ampliada, os chamados pendentes aparecem por referência; todo o total automático de fechamentos e a distribuição por categoria ficam indisponíveis. Não são exibidos os fechamentos parcialmente conferidos como total. Aberturas e tempo têm evidências independentes e podem ser exibidos. As consultas antigas permanecem estritas. Essa pendência exige comparar o chamado indicado com o histórico/relatório do Zoho, sem substituir a autoria pelo responsável atual.
 
 A consulta autenticada final confirmou a contagem de aberturas e o tempo apontado, com pendência de evidência de fechamento. Referências dos chamados e resultados internos permanecem apenas no registro local da validação.

@@ -65,7 +65,11 @@ export async function collectZohoActivityBatch(get, { period, from, anchor, indi
     closures = [],
     ticketIndicators = [],
     closureReview = [];
-  const readClosures = closureReader(fetchPage, (message) => new ZohoActivityError(message));
+  // Indicadores usam o histórico completo: a data resumida pode mudar em reaberturas
+  // e o filtro de campo do fornecedor pode omitir eventos de status.
+  const readClosures = closureReader(fetchPage, (message) => new ZohoActivityError(message), {
+    unfiltered: indicators,
+  });
   const ticketIds = new Set();
   for (const ticket of tickets) {
     const ticketId = zohoId(ticket?.id);
@@ -87,28 +91,15 @@ export async function collectZohoActivityBatch(get, { period, from, anchor, indi
     }
     const closedDay = zohoDay(ticket.closedTime);
     if (
-      indicators &&
       closedDay &&
       closedDay >= period.start &&
       closedDay <= period.end &&
       Date.parse(ticket.closedTime) <= Date.parse(anchor) &&
-      !ticketClosures.some(
-        (r) => Math.abs(Date.parse(r.closedAt) - Date.parse(ticket.closedTime)) < 1000,
-      )
-    ) {
-      const fullReader = closureReader(fetchPage, (message) => new ZohoActivityError(message), {
-        unfiltered: true,
-      });
-      ticketClosures = await fullReader(ticket, period, anchor);
-    }
-    if (
-      closedDay &&
-      closedDay >= period.start &&
-      closedDay <= period.end &&
-      Date.parse(ticket.closedTime) <= Date.parse(anchor) &&
-      !ticketClosures.some(
-        (row) => Math.abs(Date.parse(row.closedAt) - Date.parse(ticket.closedTime)) < 1000,
-      )
+      (indicators
+        ? !ticketClosures.length
+        : !ticketClosures.some(
+            (row) => Math.abs(Date.parse(row.closedAt) - Date.parse(ticket.closedTime)) < 1000,
+          ))
     ) {
       if (indicators) {
         closureReview.push({

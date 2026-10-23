@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.64.4 — 23/10/2026
+
+- Indicadores Suporte consulta o histórico completo de cada chamado para conferir fechamentos, inclusive quando houve reabertura. Um evento válido não é descartado por divergir da data resumida closedTime.
+- Preserva autoria por evento, deduplicação e bloqueio quando não há evidência de fechamento. Não substitui executor pelo responsável atual nem altera a coleta antiga de OS.
+
 ## 0.64.3 — 23/10/2026
 
 - Alinha cabeçalhos e valores numéricos das tabelas de Indicadores Suporte, com ordenação compacta, larguras mínimas e rolagem horizontal.
