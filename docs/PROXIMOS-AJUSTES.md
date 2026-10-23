@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+## Progresso central 0.64.2 — 23/10/2026
+
+Aviso das bases movido para modal compacto central, com progresso, fechamento sem cancelar a transferência e nova tentativa após erro. Publicação autorizada pelo proprietário, que também autorizou publicar futuros ajustes de pequeno impacto após validação, sem pedir confirmação a cada ajuste.
+
 ## Temas 0.64.1 — 23/10/2026
 
 Bruma Azul e Jardim adicionados ao seletor, com fundos neutros, gráficos em tons derivados e contraste conferido nos principais pares de texto/fundo. Verificação de imports, formatação, testes e build aprovados. Publicação autorizada pelo proprietário. O levantamento de refatoração abaixo permanece como planejamento, sem mudanças funcionais de desempenho ou exclusões nesta rodada.

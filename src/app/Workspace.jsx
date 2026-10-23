@@ -7,6 +7,7 @@ import { allowsPage, allowsSource } from '../shared/security/permissions.js';
 import { authorizeAction, accessUser } from '../shared/security/accessClient.js';
 import React, { lazy, useEffect, useState } from 'react';
 import { useSavedSources } from '../shared/persistence/useSavedSources.js';
+import { SavedSourcesStatus } from '../shared/persistence/SavedSourcesStatus.jsx';
 import { DeferredPage } from './DeferredPage.jsx';
 import {
   DashboardSourcesProvider,
@@ -169,17 +170,7 @@ function WorkspaceContent() {
     );
   return (
     <>
-      {(savedSources.loading || savedSources.busy || savedSources.error) && (
-        <div className="saved-sources-status" role={savedSources.error ? 'alert' : 'status'}>
-          {savedSources.error ||
-            (savedSources.busy
-              ? 'Salvando bases no banco…'
-              : `Carregando bases salvas… ${savedSources.progress || 0}%`)}
-          {savedSources.error && (
-            <button onClick={savedSources.reload}>Tentar carregar novamente</button>
-          )}
-        </div>
-      )}
+      <SavedSourcesStatus storage={savedSources} />
       <DeferredPage
         active={current === 'my-dashboard'}
         allowed={allowed('my-dashboard')}

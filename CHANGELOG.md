@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.64.2 — 23/10/2026
+
+- Substitui o aviso de carregamento das bases por uma janela compacta central, fora do fluxo da página, sem deslocar o conteúdo.
+- Mostra progresso de leitura, confirmação de gravação e tentativa de recarga em caso de erro. Fechar a janela ou pressionar Escape permite continuar navegando sem interromper a operação.
+
 ## 0.64.1 — 23/10/2026
 
 - Acrescenta Bruma Azul e Jardim ao seletor compacto de temas, com preferência salva no navegador.
