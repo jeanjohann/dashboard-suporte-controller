@@ -18,6 +18,8 @@ const themes = [
   { id: 'ocean', label: 'Azul e Âmbar' },
   { id: 'midnight', label: 'Noite Azul' },
   { id: 'electric', label: 'Lima Elétrica' },
+  { id: 'mist', label: 'Bruma Azul' },
+  { id: 'garden', label: 'Jardim' },
 ];
 const ThemeContext = createContext({ theme: 'light', selectTheme: () => {} });
 const storageKey = 'addlog-theme-v1';

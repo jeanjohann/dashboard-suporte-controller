@@ -1,6 +1,96 @@
-/* Cinco paletas adicionais: códigos originais nas amostras, tons derivados para leitura e estados semânticos preservados. */
+/* Paletas adicionais: tons derivados para leitura e estados semânticos preservados. */
 /* Somente tela: impressão e exportações mantêm as cores portáteis próprias. */
 @media screen {
+  /* Azul claro para áreas de apoio; marinho para texto e ações, sem saturar grandes superfícies. */
+  :root[data-theme='mist'] {
+    color-scheme: light;
+    --brand-surface: #1a2130;
+    --ui-background: #f3f3f3;
+    --ui-surface: #ffffff;
+    --ui-soft: #edf2f6;
+    --ui-ink: #1a2130;
+    --ui-muted: #59616e;
+    --ui-border: #cbd3dc;
+    --ui-line: #e5e5e5;
+    --ui-shadow: #1a213010;
+    --ui-button-bg: #1a2130;
+    --ui-button-text: #f3f3f3;
+    --ui-button-hover: #303d52;
+    --ui-accent: #b4d1e5;
+    --ui-on-accent: #1a2130;
+    --ui-accent-hover: #a1c4dd;
+    --ui-accent-ink: #345d7b;
+    --ui-accent-soft: #e8f1f8;
+    --ui-accent-border: #9ebbd0;
+    --ui-link: #345d7b;
+    --ui-coral: #a6533e;
+    --ui-info-bg: #e8f1f8;
+    --ui-info-ink: #345d7b;
+    --ui-success-bg: #e8f1ec;
+    --ui-success-ink: #31654b;
+    --ui-success-border: #b2cdbd;
+    --ui-warning-bg: #f6efdf;
+    --ui-warning-ink: #785a20;
+    --ui-error-bg: #f8eaec;
+    --ui-error-ink: #9c4053;
+    --ui-violet-bg: #eeebf5;
+    --ui-violet-ink: #6e568e;
+    --chart-primary: #4c7c9e;
+    --chart-blue: #4c7c9e;
+    --chart-teal: #4c8c83;
+    --chart-purple: #8a73aa;
+    --chart-coral: #bd7959;
+    --chart-slate: #78797e;
+    --chart-amber: #a28737;
+    --chart-rose: #ad6b8b;
+    --chart-other: #718577;
+    --chart-negative: #b45c73;
+  }
+  /* Petróleo para ações, verde e areia como apoio; variantes mais escuras nos gráficos. */
+  :root[data-theme='garden'] {
+    color-scheme: light;
+    --brand-surface: #346b70;
+    --ui-background: #f1f4ef;
+    --ui-surface: #f9f9f9;
+    --ui-soft: #eaf0e5;
+    --ui-ink: #243b3c;
+    --ui-muted: #536863;
+    --ui-border: #c4d2c6;
+    --ui-line: #dde4d7;
+    --ui-shadow: #294e4310;
+    --ui-button-bg: #346b70;
+    --ui-button-text: #ffffff;
+    --ui-button-hover: #28565b;
+    --ui-accent: #346b70;
+    --ui-on-accent: #ffffff;
+    --ui-accent-hover: #28565b;
+    --ui-accent-ink: #2d6260;
+    --ui-accent-soft: #e2eeea;
+    --ui-accent-border: #adcaa0;
+    --ui-link: #386b7a;
+    --ui-coral: #a65e43;
+    --ui-info-bg: #e5eff2;
+    --ui-info-ink: #386b7a;
+    --ui-success-bg: #e5efdf;
+    --ui-success-ink: #3d6539;
+    --ui-success-border: #adcaa0;
+    --ui-warning-bg: #f0f0df;
+    --ui-warning-ink: #6c622c;
+    --ui-error-bg: #f8eaeb;
+    --ui-error-ink: #9d4050;
+    --ui-violet-bg: #eeebf4;
+    --ui-violet-ink: #70588e;
+    --chart-primary: #367c79;
+    --chart-blue: #558e9e;
+    --chart-teal: #46928f;
+    --chart-purple: #8d78a8;
+    --chart-coral: #b87955;
+    --chart-slate: #687f87;
+    --chart-amber: #958139;
+    --chart-rose: #a76d89;
+    --chart-other: #729262;
+    --chart-negative: #b45970;
+  }
   :root[data-theme='sage'] {
     color-scheme: light;
     --brand-surface: #306c67;

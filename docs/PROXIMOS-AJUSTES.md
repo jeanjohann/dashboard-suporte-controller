@@ -1,5 +1,13 @@
 # Fila de implementação e ajustes
 
+## Temas 0.64.1 — 23/10/2026
+
+Bruma Azul e Jardim adicionados ao seletor, com fundos neutros, gráficos em tons derivados e contraste conferido nos principais pares de texto/fundo. Verificação de imports, formatação, testes e build aprovados. Publicação autorizada pelo proprietário. O levantamento de refatoração abaixo permanece como planejamento, sem mudanças funcionais de desempenho ou exclusões nesta rodada.
+
+## Levantamento futuro de refatoração — 23/10/2026
+
+Solicitado levantamento, sem iniciar refatoração ou exclusões. [Diagnóstico inicial, prioridades e protocolo de medição](PLANO-DE-REFATORACAO-E-DESEMPENHO.md). Ordem sugerida: medir travamentos no navegador; reduzir recálculos de OS/Operacional; controlar páginas e gráficos inativos; limitar grades extensas; isolar atualizações do Meu Dashboard; avaliar processamento fora da interface; dividir componentes e estilos; auditar arquivos e documentação antes de remover. Benchmark sintético de 1.800 veículos executado, com limites registrados no diagnóstico. Ainda não há causa dos travamentos comprovada nem lista de arquivos descartáveis validada.
+
 ## Menu e permissões 0.64.0 — 23/10/2026
 
 Publicada no GitHub (`1ea3091`) e Cloudflare, com 462 testes aprovados e revisão autenticada da tela. Remove expansões das páginas sem submenu e torna o Meu Dashboard uma permissão independente das bases. A tela administrativa lista também ferramentas novas e as regras de acesso das integrações em piloto. Cadastros anteriores preservam acesso até edição explícita. Migração `0002_dashboard_access.sql` aplicada após backup privado, com preservação dos cadastros e permissões conferida; nenhuma concessão real foi alterada na validação.

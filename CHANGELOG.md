@@ -7,6 +7,11 @@
 
 # Histórico de versões
 
+## 0.64.1 — 23/10/2026
+
+- Acrescenta Bruma Azul e Jardim ao seletor compacto de temas, com preferência salva no navegador.
+- Distribui as cores solicitadas entre superfícies, textos, ações e gráficos, com tons derivados para legibilidade. Principais pares de texto/fundo conferidos com contraste mínimo de 5:1; estados de alerta preservam distinção semântica.
+
 ## 0.64.0 — 23/10/2026
 
 - Menu expande somente páginas com categorias: OS, Operacional, Consumo, Parque e Monitoramento. Páginas sem submenu não exibem setas, explicações ou espaço de expansão.
