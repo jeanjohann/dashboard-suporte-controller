@@ -12,6 +12,8 @@ O servidor omite exclusões da listagem normal. A paginação atravessa páginas
 
 Não há alteração de esquema SQL nem migração de dados. Clientes locais antigos que não reconheçam a nova ação devem atualizar a aplicação antes de ler uma agenda local que contenha exclusões. O CSV normal usa a agenda visível; o histórico interno de uma exclusão permanece no armazenamento.
 
+Depois do primeiro uso, uma reversão de versão deve manter suporte ao estado/evento `deleted`/`delete`. Código anterior sem esse suporte recusa a agenda por incompatibilidade; não apagar registros para viabilizar downgrade.
+
 Validação cobre exclusão de registros ativos/encerrados, auditoria, nova agenda após exclusão, recusa de revisões antigas e paginação com exclusões. A inspeção visual interativa está pendente porque o controle de navegador está desativado nesta sessão.
 
-Estado: código preparado; publicação será registrada após conferência da versão ativa.
+Publicada em 22/10/2026: GitHub main `2a13b29`; upload Cloudflare `ac63fb37-8cf8-4f0b-a7e2-fc1ed9bbd845`; versão ativa `a5687c4c-fb63-4690-a4dc-93252137191c` com 100% do tráfego e mesmo etag do código. Bancos separados, piloto owner, login e cron existente conferidos. Verificações completas: importações, formatação, 445 testes aprovados, um ignorado previsto e compilação concluída. Nenhum lembrete real foi excluído durante a entrega.

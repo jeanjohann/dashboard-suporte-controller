@@ -1,6 +1,6 @@
 {
   "version": "0.61.0",
-  "base": "0ad28b0 · cópia da entrega",
+  "base": "2a13b29 · cópia da entrega",
   "date": "2026-10-22",
   "total": 484,
   "tests": 99,
@@ -539,8 +539,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 8778,
-      "sha256": "11fc07c7c60ead6dac09288d970d1a536892410f2274bbb104621faba53605ea",
+      "bytes": 9124,
+      "sha256": "ec2aa5b13360d48d921d09e0ad1412fa8c2eeabae95b150cba351cf55466c3b0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -651,8 +651,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 2316,
-      "sha256": "ce604d7dc1cb34ae735ca976823de0d4becbf0ae96db40fc46cc1403b8805da9",
+      "bytes": 2902,
+      "sha256": "579c478b917f8b322b89330900f89e36f37102d75fb69133802d7286c3ee93c9",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1015,8 +1015,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 38814,
-      "sha256": "ead90b37a28a24dd218b45911b1c5c532f6d7aa323dd678893999b0c67121915",
+      "bytes": 38886,
+      "sha256": "f857b3dcc07c51f6efe07b84da29291825b0fefbfa16344d4c4c5246d8a489d2",
       "status": "Código ou documentação do ponto de referência"
     },
     {

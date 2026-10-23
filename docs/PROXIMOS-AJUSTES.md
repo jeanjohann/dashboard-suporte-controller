@@ -3,7 +3,7 @@
 ## Correção de abertura 0.61.0 — 22/10/2026
 
 Incluída também a exclusão de lembretes/agendamentos solicitada durante a rodada: confirmação, ocultação da agenda, auditoria interna e revisão crescente entre ciclos. [Critérios e uso](EXCLUSAO-DE-LEMBRETES.md).
-Relato de um minuto de espera levou à revisão da leitura. Bases agora são transferidas em paralelo, por uma resposta contínua para cada fonte, com progresso e integridade. Redução de 81 para quatro requisições no cenário remoto verificado. Arquivos reais preservados no ensaio local. Tempo autenticado após publicação ainda requer conferência. [Diagnóstico e limites](BASES-SALVAS-E-COLETA.md).
+Relato de um minuto de espera levou à revisão da leitura. Bases agora são transferidas em paralelo, por uma resposta contínua para cada fonte, com progresso e integridade. Redução de 81 para quatro requisições no cenário remoto verificado. Publicada no GitHub (`2a13b29`) e Cloudflare, com 445 testes aprovados. Arquivos reais preservados no ensaio local. Tempo autenticado após publicação ainda requer conferência. [Diagnóstico e limites](BASES-SALVAS-E-COLETA.md).
 
 ## Permanência e refinamento 0.60.0 — 22/10/2026
 

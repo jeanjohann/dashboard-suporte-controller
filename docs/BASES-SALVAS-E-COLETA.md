@@ -10,7 +10,7 @@ O Worker envia o JSON original sem reconstruir o documento inteiro na memória. 
 
 Esta correção não converte as análises em consultas SQL: o navegador ainda recebe as bases completas e calcula os relatórios. Evoluções futuras podem introduzir consultas agregadas ou cache privado com validação de versão. Compressão HTTP fica a cargo do transporte Cloudflare, conforme a [documentação do runtime](https://developers.cloudflare.com/workers/runtime-apis/fetch/#how-the-accept-encoding-header-is-handled).
 
-Publicação da correção e tempo real após atualização ainda precisam ser conferidos. O controle de navegador continua indisponível nesta sessão; testes locais não substituem medição autenticada.
+Correção publicada em 22/10/2026 na 0.61.0: GitHub main `2a13b29`, versão ativa Cloudflare `a5687c4c-fb63-4690-a4dc-93252137191c` com 100% do tráfego. Código ativo, bindings e proteção Access da rota de download conferidos. Importações, formatação, 445 testes e compilação aprovados, com um teste previsto ignorado. O controle de navegador continua indisponível nesta sessão; o tempo real após atualização ainda precisa ser medido pelo proprietário. Atualizar a página carrega o cliente novo; não é necessário reenviar as bases.
 
 ## Funcionamento no piloto
 
