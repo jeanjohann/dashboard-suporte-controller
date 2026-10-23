@@ -2,7 +2,7 @@
 
 ## Menu e permissões 0.64.0 — 23/10/2026
 
-Remove expansões das páginas sem submenu e torna o Meu Dashboard uma permissão independente das bases. A tela administrativa lista também ferramentas novas e as regras de acesso das integrações em piloto. Cadastros anteriores preservam acesso até edição explícita. Migração `0002_dashboard_access.sql` acrescenta campo nulo, sem conceder ou revogar permissões; aplicar no banco de usuários antes da publicação.
+Publicada no GitHub (`1ea3091`) e Cloudflare, com 462 testes aprovados e revisão autenticada da tela. Remove expansões das páginas sem submenu e torna o Meu Dashboard uma permissão independente das bases. A tela administrativa lista também ferramentas novas e as regras de acesso das integrações em piloto. Cadastros anteriores preservam acesso até edição explícita. Migração `0002_dashboard_access.sql` aplicada após backup privado, com preservação dos cadastros e permissões conferida; nenhuma concessão real foi alterada na validação.
 
 ## Zoho nos indicadores 0.63.0 — 23/10/2026
 

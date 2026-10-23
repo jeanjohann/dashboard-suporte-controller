@@ -1,6 +1,6 @@
 # Mapa técnico Addlog 0.64.0
 
-Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.64.0 (3a401b0 · cópia da entrega, 2026-10-23). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
+Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.64.0 (1ea3091 · cópia da entrega, 2026-10-23). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
 
 ## Arquitetura geral
 

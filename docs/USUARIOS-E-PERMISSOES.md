@@ -2,6 +2,8 @@
 
 ## Atualização 0.64.0
 
+Publicada no GitHub (`1ea3091`) e no Cloudflare, com 462 testes aprovados, nenhuma falha e um teste previamente ignorado. Migração aplicada após backup privado; comparação em SQLite das cópias antes/depois confirmou preservação integral dos cadastros, versões e permissões anteriores, com o campo novo nulo. Revisão no navegador autenticado confirmou páginas sem expansão, novo checkbox e lista de restrições. A edição de teste foi descartada, sem salvar concessões reais. Versão ativa `9dd0e724-2a89-4248-8adb-87cdc41eaa53` com o mesmo código da versão enviada.
+
 Meu Dashboard tem controle próprio no formulário de usuário. Essa escolha permite abrir e organizar painéis, mas não libera indicadores de fontes não autorizadas. Páginas e ações Importar/Exportar continuam com controles separados. Importação depende de ação e base permitidas; KORE/Arqia seguem a página Consumo, sem liberar a integração privada.
 
 A seção recolhida Integrações e ferramentas adicionais apresenta Indicadores Suporte, Zoho, Google Sheets, fontes salvas/lembretes do banco, assistente local e administração/mapa. Mostra as restrições vigentes, sem oferecer concessões que seriam recusadas pelo servidor. O piloto do proprietário não é ampliado nesta atualização.
