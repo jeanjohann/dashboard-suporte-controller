@@ -15,7 +15,7 @@ export function SavedSourcesPanel({ storage }) {
         versões de OS, Operacional e Logística. Extratos de consumo permanecem no armazenamento
         anterior.
       </p>
-      {storage.loading && <p role="status">Carregando bases salvas…</p>}
+      {storage.loading && <p role="status">Carregando bases salvas… {storage.progress || 0}%</p>}
       {storage.error && (
         <p role="alert" className="error">
           {storage.error}

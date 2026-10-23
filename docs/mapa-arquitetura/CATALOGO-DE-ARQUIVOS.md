@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.60.0 · referência d1aeab2 · cópia da entrega · 2026-10-22 · **479 arquivos / 97 arquivos de teste / 67 pastas**.
+Addlog 0.61.0 · referência 0ad28b0 · cópia da entrega · 2026-10-22 · **484 arquivos / 99 arquivos de teste / 67 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -11,7 +11,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 ## Pastas
 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (54 arquivos, incluindo subpastas).
+- **docs** — Guias, critérios e histórico das implementações. (55 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (1 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
@@ -19,10 +19,10 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
 - **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (24 arquivos, incluindo subpastas).
 - **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (6 arquivos, incluindo subpastas).
-- **server** — API Cloudflare e adaptadores privados de integrações. (33 arquivos, incluindo subpastas).
-- **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (7 arquivos, incluindo subpastas).
+- **server** — API Cloudflare e adaptadores privados de integrações. (35 arquivos, incluindo subpastas).
+- **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (9 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (2 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (344 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (346 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
 - **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (250 arquivos, incluindo subpastas).
@@ -68,14 +68,14 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/park/domain** — Validação e cálculo das regras de negócio de Parque e Manutenção. (4 arquivos, incluindo subpastas).
 - **src/modules/users** — Módulo Usuários: interface, regras e integração de seus dados. (1 arquivos, incluindo subpastas).
 - **src/modules/users/components** — Página e painéis visuais de Usuários. (1 arquivos, incluindo subpastas).
-- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (46 arquivos, incluindo subpastas).
+- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (48 arquivos, incluindo subpastas).
 - **src/shared/charts** — Regras de representação e paleta de gráficos. (3 arquivos, incluindo subpastas).
 - **src/shared/config** — Endereços de serviços documentais sem credenciais. (1 arquivos, incluindo subpastas).
 - **src/shared/data** — Filtros, datas, ordenação e contratos normalizados. (14 arquivos, incluindo subpastas).
 - **src/shared/export** — Exportações e contexto de impressão. (5 arquivos, incluindo subpastas).
 - **src/shared/filters** — Seleção independente por categoria e visões salvas locais. (7 arquivos, incluindo subpastas).
 - **src/shared/layout** — Personalização de página e agrupamento dos relatórios. (5 arquivos, incluindo subpastas).
-- **src/shared/persistence** — Contratos de documentos, integridade e clientes das bases completas no piloto D1. (7 arquivos, incluindo subpastas).
+- **src/shared/persistence** — Contratos de documentos, integridade e clientes das bases completas no piloto D1. (9 arquivos, incluindo subpastas).
 - **src/shared/security** — Sessão, autorização e cliente da API protegida. (4 arquivos, incluindo subpastas).
 - **src/styles** — CSS global e refinamentos; a ordem é definida em main.jsx. (23 arquivos, incluindo subpastas).
 
@@ -286,6 +286,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Equipe de suporte. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/EQUIPE-DE-SUPORTE.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/EXCLUSAO-DE-LEMBRETES.md
+
+**Documentação · Documentação** — Exclusão confirmada da agenda, sincronização, histórico interno, proteção contra telas antigas e limites de recuperação.
+
+[Abrir fonte](../../docs/EXCLUSAO-DE-LEMBRETES.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -1173,7 +1183,7 @@ Importado por: [server/businessReminders.test.js](../../server/businessReminders
 
 ### server/businessReminders.test.js
 
-**API Cloudflare · Teste** — Verifica business Reminders no contexto de API Cloudflare. Exemplos: agenda D1 recusa acesso indevido e origem externa; status não abre dados; agenda D1 preserva histórico entre sessões, controla concorrência e usa relógio/ator do servidor; migração D1 é repetível, mantém encerrados, recusa divergências e valida lote antes de gravar.
+**API Cloudflare · Teste** — Verifica business Reminders no contexto de API Cloudflare. Exemplos: exclusão sai da agenda compartilhada, mantém auditoria e rejeita versões antigas após reagendar; agenda D1 recusa acesso indevido e origem externa; status não abre dados; agenda D1 preserva histórico entre sessões, controla concorrência e usa relógio/ator do servidor.
 
 [Abrir fonte](../../server/businessReminders.test.js) · Código ou documentação do ponto de referência
 
@@ -1191,9 +1201,9 @@ Dependências externas: `node:assert/strict`, `node:fs`, `node:sqlite`, `node:te
 
 Exporta: `businessReply`, `businessSourcesResponse`, `readBusinessBody`.
 
-Importa arquivos locais: [server/persistence/snapshotStore.js](../../server/persistence/snapshotStore.js), [src/shared/persistence/snapshotPayload.js](../../src/shared/persistence/snapshotPayload.js).
+Importa arquivos locais: [server/persistence/snapshotDownload.js](../../server/persistence/snapshotDownload.js), [server/persistence/snapshotStore.js](../../server/persistence/snapshotStore.js), [src/shared/persistence/snapshotPayload.js](../../src/shared/persistence/snapshotPayload.js).
 
-Importado por: [server/monitoringStorage.js](../../server/monitoringStorage.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js), [server/worker.js](../../server/worker.js).
+Importado por: [server/monitoringStorage.js](../../server/monitoringStorage.js), [server/persistence/snapshotDownload.test.js](../../server/persistence/snapshotDownload.test.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js), [server/worker.js](../../server/worker.js).
 
 ### server/googleOrders.js
 
@@ -1361,6 +1371,30 @@ Importa arquivos locais: nenhum identificado.
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
+### server/persistence/snapshotDownload.js
+
+**API Cloudflare · Backend** — Transmite uma base completa por resposta autenticada, com lotes internos limitados de partes, sem reconstruir o JSON inteiro no Worker.
+
+[Abrir fonte](../../server/persistence/snapshotDownload.js) · Preparação / contrato
+
+Exporta: `snapshotDownload`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [server/businessSources.js](../../server/businessSources.js).
+
+### server/persistence/snapshotDownload.test.js
+
+**API Cloudflare · Teste** — Verifica snapshot Download no contexto de API Cloudflare. Exemplos: base grande é transferida por uma requisição, preservando unicode, zeros e integridade; download incompleto ou corrompido é recusado; somente o proprietário recebe a base; catálogo inicia as três leituras em paralelo e não devolve lote parcial se uma falhar.
+
+[Abrir fonte](../../server/persistence/snapshotDownload.test.js) · Preparação / contrato
+
+Importa arquivos locais: [server/businessSources.js](../../server/businessSources.js), [server/persistence/snapshotStore.js](../../server/persistence/snapshotStore.js), [server/persistence/snapshotTestDatabase.mjs](../../server/persistence/snapshotTestDatabase.mjs), [src/shared/persistence/sourceSnapshotClient.js](../../src/shared/persistence/sourceSnapshotClient.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
 ### server/persistence/snapshotStore.js
 
 **API Cloudflare · Backend** — Armazena partes imutáveis e verifica hashes; publica ponteiros e revisões em transação, preservando cinco versões das planilhas.
@@ -1371,7 +1405,7 @@ Exporta: `SnapshotConflict`, `createSnapshotStore`.
 
 Importa arquivos locais: [src/shared/persistence/snapshotPayload.js](../../src/shared/persistence/snapshotPayload.js).
 
-Importado por: [server/businessSources.js](../../server/businessSources.js), [server/monitoringStorage.js](../../server/monitoringStorage.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js).
+Importado por: [server/businessSources.js](../../server/businessSources.js), [server/monitoringStorage.js](../../server/monitoringStorage.js), [server/persistence/snapshotDownload.test.js](../../server/persistence/snapshotDownload.test.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js).
 
 ### server/persistence/snapshotStore.test.js
 
@@ -1395,7 +1429,7 @@ Exporta: `snapshotTestDatabase`.
 
 Importa arquivos locais: nenhum identificado.
 
-Importado por: [server/monitoringStorage.test.js](../../server/monitoringStorage.test.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js).
+Importado por: [server/monitoringStorage.test.js](../../server/monitoringStorage.test.js), [server/persistence/snapshotDownload.test.js](../../server/persistence/snapshotDownload.test.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js).
 
 Dependências externas: `node:fs`, `node:sqlite`.
 
@@ -2799,7 +2833,7 @@ Importado por: [src/modules/monitoring/data/remoteReminderRepository.test.js](..
 
 ### src/modules/monitoring/data/remoteReminderRepository.test.js
 
-**Monitoramento Ativo · Teste** — Verifica remote Reminder Repository no contexto de Monitoramento Ativo. Exemplos: agenda remota falha sem fallback; somente status explícito permite modo local; migração exige escolha explícita, preserva cópia local e reconhece repetição; históricos divergentes não concluem migração nem liberam edição.
+**Monitoramento Ativo · Teste** — Verifica remote Reminder Repository no contexto de Monitoramento Ativo. Exemplos: leitura atravessa página composta somente por exclusões sem ocultar lembretes seguintes; agenda remota falha sem fallback; somente status explícito permite modo local; migração exige escolha explícita, preserva cópia local e reconhece repetição.
 
 [Abrir fonte](../../src/modules/monitoring/data/remoteReminderRepository.test.js) · Diagnóstico legado / consulta manual
 
@@ -2937,7 +2971,7 @@ Importado por: [src/modules/monitoring/components/MonitoringRegistry.jsx](../../
 
 [Abrir fonte](../../src/modules/monitoring/domain/monitoringReminders.js) · Diagnóstico legado / consulta manual
 
-Exporta: `changeReminder`, `reminderActions`, `reminderDueAt`, `reminderExportRows`, `reminderLabels`, `reminderLocalDate`, `reminderOverdue`, `validateReminderDocument`.
+Exporta: `changeReminder`, `matchesReminderRevision`, `reminderActions`, `reminderDueAt`, `reminderExportRows`, `reminderLabels`, `reminderLocalDate`, `reminderOverdue`, `validateReminderDocument`.
 
 Importa arquivos locais: [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js).
 
@@ -2945,7 +2979,7 @@ Importado por: [server/businessReminders.js](../../server/businessReminders.js),
 
 ### src/modules/monitoring/domain/monitoringReminders.test.js
 
-**Monitoramento Ativo · Teste** — Verifica monitoring Reminders no contexto de Monitoramento Ativo. Exemplos: agenda usa São Paulo explicitamente e rejeita datas normalizadas, ausentes e horários inválidos; só aceita agenda futura; vencimento é inclusivo e independe da telemetria; um ativo por veículo: reagendamento, conferência, cancelamento e novo ciclo conservam o histórico.
+**Monitoramento Ativo · Teste** — Verifica monitoring Reminders no contexto de Monitoramento Ativo. Exemplos: exclusão aceita agendas ativas ou encerradas e novo ciclo conserva revisão para recusar edição antiga; agenda usa São Paulo explicitamente e rejeita datas normalizadas, ausentes e horários inválidos; só aceita agenda futura; vencimento é inclusivo e independe da telemetria.
 
 [Abrir fonte](../../src/modules/monitoring/domain/monitoringReminders.test.js) · Diagnóstico legado / consulta manual
 
@@ -5563,17 +5597,41 @@ Importa arquivos locais: [src/modules/monitoring/data/snapshotContract.js](../..
 
 Importado por: [server/businessSources.js](../../server/businessSources.js), [server/persistence/snapshotStore.js](../../server/persistence/snapshotStore.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js), [src/shared/persistence/sourceSnapshotClient.js](../../src/shared/persistence/sourceSnapshotClient.js).
 
+### src/shared/persistence/sourceDownloadClient.js
+
+**Compartilhado · Infraestrutura compartilhada** — Decodifica o download incrementalmente, valida metadados/tamanho e informa progresso antes da conferência final de hash.
+
+[Abrir fonte](../../src/shared/persistence/sourceDownloadClient.js) · Preparação / contrato
+
+Exporta: `fetchSourceResponse`, `readSourceResponse`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/shared/persistence/sourceDownloadClient.test.js](../../src/shared/persistence/sourceDownloadClient.test.js), [src/shared/persistence/sourceSnapshotClient.js](../../src/shared/persistence/sourceSnapshotClient.js).
+
+### src/shared/persistence/sourceDownloadClient.test.js
+
+**Compartilhado · Teste** — Verifica source Download Client no contexto de Compartilhado. Exemplos: decodificação suporta rede dividindo caracteres UTF-8 e recusa metadados de outra versão.
+
+[Abrir fonte](../../src/shared/persistence/sourceDownloadClient.test.js) · Preparação / contrato
+
+Importa arquivos locais: [src/shared/persistence/sourceDownloadClient.js](../../src/shared/persistence/sourceDownloadClient.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
 ### src/shared/persistence/sourceSnapshotClient.js
 
 **Compartilhado · Infraestrutura compartilhada** — Carrega versões completas, confere integridade e só aplica uma importação depois da confirmação transacional do servidor.
 
 [Abrir fonte](../../src/shared/persistence/sourceSnapshotClient.js) · Preparação / contrato
 
-Exporta: `createSourceSnapshotClient`.
+Exporta: `createSourceSnapshotClient`, `readSourceCatalog`.
 
-Importa arquivos locais: [src/shared/persistence/snapshotPayload.js](../../src/shared/persistence/snapshotPayload.js), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
+Importa arquivos locais: [src/shared/persistence/snapshotPayload.js](../../src/shared/persistence/snapshotPayload.js), [src/shared/persistence/sourceDownloadClient.js](../../src/shared/persistence/sourceDownloadClient.js), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
 
-Importado por: [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js), [src/shared/persistence/useSavedSources.js](../../src/shared/persistence/useSavedSources.js).
+Importado por: [server/persistence/snapshotDownload.test.js](../../server/persistence/snapshotDownload.test.js), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js), [src/shared/persistence/useSavedSources.js](../../src/shared/persistence/useSavedSources.js).
 
 ### src/shared/persistence/useSavedSources.js
 

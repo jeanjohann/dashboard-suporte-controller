@@ -65,7 +65,7 @@ export function createConfiguredReminderRepository({
           }
           return records;
         }
-        if (!data.records.length) throw Error('Página vazia da agenda.');
+        // Uma página pode conter somente exclusões ocultas; o cursor validado ainda avança.
         after = data.next;
       }
       throw Error('Agenda excede o limite de leitura. Nenhum resultado parcial foi aplicado.');

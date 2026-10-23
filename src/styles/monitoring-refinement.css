@@ -1,4 +1,25 @@
 /* Tabelas semânticas e seções proporcionais ao conteúdo. */
+.monitoring-reminder-delete {
+  margin: 12px 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--ui-line);
+}
+.monitoring-reminder-delete > button {
+  background: transparent;
+  color: var(--ui-error-ink);
+  border: 1px solid var(--ui-border);
+}
+.monitoring-reminder-delete > [role='group'] {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--ui-error-bg);
+  color: var(--ui-error-ink);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.monitoring-reminder-delete p {
+  margin: 0 0 10px;
+}
 [data-client-name='true'] {
   text-transform: uppercase;
 }

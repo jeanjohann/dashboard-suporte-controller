@@ -1,6 +1,6 @@
 # Dashboard de suporte
 
-**Versão:** 0.60.0 — [permanência por sessões Zoho e refinamento visual](docs/PERMANENCIA-ZOHO-E-REFINAMENTO.md), com leitura CSV, comparação por agente e evolução diária. [Bases completas e coleta agendada no D1](docs/BASES-SALVAS-E-COLETA.md) seguem restritas ao proprietário no piloto. Consulte os guias para publicação e pendências de validação real.
+**Versão:** 0.61.0 — [carregamento otimizado das bases salvas](docs/BASES-SALVAS-E-COLETA.md), com transferência por fonte, paralelismo e progresso; [exclusão de lembretes](docs/EXCLUSAO-DE-LEMBRETES.md) com confirmação e sincronização. Inclui [permanência por sessões Zoho](docs/PERMANENCIA-ZOHO-E-REFINAMENTO.md), ainda aguardando CSV Session real. D1 segue restrito ao proprietário no piloto.
 
 ## Documentação do projeto
 

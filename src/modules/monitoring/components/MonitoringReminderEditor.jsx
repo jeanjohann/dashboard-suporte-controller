@@ -13,10 +13,12 @@ export function MonitoringReminderEditor({ vehicle, record, reminders }) {
   const [note, setNote] = useState('');
   const [outcome, setOutcome] = useState('');
   const [message, setMessage] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
   useEffect(() => {
     setLocalDate(record?.status === 'scheduled' ? reminderLocalDate(record.dueAt) : '');
     setNote(record?.status === 'scheduled' ? record.note : '');
     setOutcome('');
+    setConfirmDelete(false);
   }, [vehicle.key, record?.revision]);
   const active = record?.status === 'scheduled';
   const disabled =
@@ -29,13 +31,15 @@ export function MonitoringReminderEditor({ vehicle, record, reminders }) {
     try {
       await reminders.change(vehicle, record?.revision || 0, action, { localDate, note, outcome });
       setMessage(
-        action === 'complete'
-          ? 'Conferência registrada. A situação técnica do veículo permanece independente.'
-          : action === 'cancel'
-            ? 'Lembrete cancelado. Histórico preservado.'
-            : reminders.mode === 'remote'
-              ? 'Lembrete salvo no banco do sistema.'
-              : 'Lembrete salvo neste navegador.',
+        action === 'delete'
+          ? 'Lembrete excluído da agenda. A ação foi registrada no histórico interno.'
+          : action === 'complete'
+            ? 'Conferência registrada. A situação técnica do veículo permanece independente.'
+            : action === 'cancel'
+              ? 'Lembrete cancelado. Histórico preservado.'
+              : reminders.mode === 'remote'
+                ? 'Lembrete salvo no banco do sistema.'
+                : 'Lembrete salvo neste navegador.',
       );
     } catch (error) {
       setMessage(error.message);
@@ -116,6 +120,35 @@ export function MonitoringReminderEditor({ vehicle, record, reminders }) {
         <p className="scope" role="status">
           {message}
         </p>
+      )}
+      {record && (
+        <div className="monitoring-reminder-delete" data-no-print>
+          {!confirmDelete ? (
+            <button type="button" disabled={disabled} onClick={() => setConfirmDelete(true)}>
+              Excluir lembrete
+            </button>
+          ) : (
+            <div role="group" aria-label="Confirmar exclusão do lembrete">
+              <p>
+                Excluir o lembrete de {vehicle.plate || vehicle.vehicleId} da agenda? Ele deixará de
+                aparecer entre agendados, conferidos e cancelados. A exclusão ficará registrada no
+                histórico interno.
+              </p>
+              <div className="monitoring-actions">
+                <button type="button" disabled={disabled} onClick={() => save('delete')}>
+                  Confirmar exclusão
+                </button>
+                <button
+                  type="button"
+                  disabled={reminders.saving}
+                  onClick={() => setConfirmDelete(false)}
+                >
+                  Manter lembrete
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       )}
       {record?.history.length > 0 && (
         <details className="monitoring-history">

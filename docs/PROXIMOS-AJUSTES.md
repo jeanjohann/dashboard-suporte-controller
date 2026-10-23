@@ -1,5 +1,10 @@
 # Fila de implementação e ajustes
 
+## Correção de abertura 0.61.0 — 22/10/2026
+
+Incluída também a exclusão de lembretes/agendamentos solicitada durante a rodada: confirmação, ocultação da agenda, auditoria interna e revisão crescente entre ciclos. [Critérios e uso](EXCLUSAO-DE-LEMBRETES.md).
+Relato de um minuto de espera levou à revisão da leitura. Bases agora são transferidas em paralelo, por uma resposta contínua para cada fonte, com progresso e integridade. Redução de 81 para quatro requisições no cenário remoto verificado. Arquivos reais preservados no ensaio local. Tempo autenticado após publicação ainda requer conferência. [Diagnóstico e limites](BASES-SALVAS-E-COLETA.md).
+
 ## Permanência e refinamento 0.60.0 — 22/10/2026
 
 O proprietário confirmou tempo conectado dos agentes como prioridade; CSV Session real ainda precisa ser exportado. Versão publicada no GitHub (`d1aeab2`) e no Cloudflare, com 438 testes aprovados. Leitura local ampliada com filtro/ranking por agente, evolução diária, sessões e revisão exportáveis. Botão Adicionar indicador redimensionado e contraste corrigido também no Salvar painel. [Entrega e validação pendente](PERMANENCIA-ZOHO-E-REFINAMENTO.md). Não houve criação de fonte automática de sessões nem persistência da presença no banco.

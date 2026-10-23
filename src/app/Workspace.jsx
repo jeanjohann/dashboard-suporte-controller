@@ -166,7 +166,9 @@ function WorkspaceContent() {
       {(savedSources.loading || savedSources.busy || savedSources.error) && (
         <div className="saved-sources-status" role={savedSources.error ? 'alert' : 'status'}>
           {savedSources.error ||
-            (savedSources.busy ? 'Salvando bases no banco…' : 'Carregando bases salvas…')}
+            (savedSources.busy
+              ? 'Salvando bases no banco…'
+              : `Carregando bases salvas… ${savedSources.progress || 0}%`)}
           {savedSources.error && (
             <button onClick={savedSources.reload}>Tentar carregar novamente</button>
           )}

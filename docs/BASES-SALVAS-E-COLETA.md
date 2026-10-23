@@ -1,5 +1,17 @@
 # Bases salvas e coleta do Monitoramento — 0.59.0
 
+## Correção de carregamento — 0.61.0
+
+Em 22/10/2026, o proprietário relatou aproximadamente um minuto ao abrir a página. A implementação inicial lia quatro partes por requisição e esperava uma base terminar antes de iniciar a seguinte. A conferência remota de metadados encontrou 72 partes de OS e 234 do Operacional: eram 81 requisições, incluindo configuração e catálogo. A consulta SQL desses metadados levou 0,50 ms no banco, o que não inclui rede nem mede o carregamento completo.
+
+A leitura passa a uma resposta contínua por base, com até 32 partes por lote interno do servidor. As bases são buscadas em paralelo e aplicadas juntas somente após validar identidade, tamanho, SHA-256 e estrutura. Para as duas bases salvas, são quatro requisições de inicialização em vez de 81. Com as três planilhas locais, o ensaio reduziu 96 para cinco requisições, preservando todos os dados. Transferência/validação local levou cerca de 262 ms; isso não representa tempo de rede ou renderização em produção.
+
+O Worker envia o JSON original sem reconstruir o documento inteiro na memória. O navegador decodifica UTF-8 de forma incremental e mostra progresso, conservando a regra de recusar respostas parciais. Cancelamento ao sair ou reiniciar impede downloads antigos de substituir a sessão. As rotas antigas de partes continuam disponíveis para clientes anteriores. Não houve migração SQL, limpeza, novo cache público ou mudança nas versões salvas e permissões.
+
+Esta correção não converte as análises em consultas SQL: o navegador ainda recebe as bases completas e calcula os relatórios. Evoluções futuras podem introduzir consultas agregadas ou cache privado com validação de versão. Compressão HTTP fica a cargo do transporte Cloudflare, conforme a [documentação do runtime](https://developers.cloudflare.com/workers/runtime-apis/fetch/#how-the-accept-encoding-header-is-handled).
+
+Publicação da correção e tempo real após atualização ainda precisam ser conferidos. O controle de navegador continua indisponível nesta sessão; testes locais não substituem medição autenticada.
+
 ## Funcionamento no piloto
 
 Somente o administrador principal ativo acessa as novas bases compartilhadas. O Worker confirma identidade e autorização em cada requisição; o navegador não recebe credenciais do banco. `BUSINESS_DB` permanece separado de `USERS_DB`.

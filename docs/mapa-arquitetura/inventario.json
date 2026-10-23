@@ -1,9 +1,9 @@
 {
-  "version": "0.60.0",
-  "base": "d1aeab2 · cópia da entrega",
+  "version": "0.61.0",
+  "base": "0ad28b0 · cópia da entrega",
   "date": "2026-10-22",
-  "total": 479,
-  "tests": 97,
+  "total": 484,
+  "tests": 99,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 54
+      "count": 55
     },
     {
       "path": "docs/diagrams",
@@ -53,12 +53,12 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 33
+      "count": 35
     },
     {
       "path": "server/persistence",
       "description": "Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato.",
-      "count": 7
+      "count": 9
     },
     {
       "path": "server/persistence/migrations",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 344
+      "count": 346
     },
     {
       "path": "src/app",
@@ -298,7 +298,7 @@
     {
       "path": "src/shared",
       "description": "Contratos e infraestrutura compartilhados entre módulos.",
-      "count": 46
+      "count": 48
     },
     {
       "path": "src/shared/charts",
@@ -333,7 +333,7 @@
     {
       "path": "src/shared/persistence",
       "description": "Contratos de documentos, integridade e clientes das bases completas no piloto D1.",
-      "count": 7
+      "count": 9
     },
     {
       "path": "src/shared/security",
@@ -427,8 +427,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 95037,
-      "sha256": "a88522694488e9dc641c8a9dc07c297f3089c0a64b14c39997befc700efe544f",
+      "bytes": 95866,
+      "sha256": "883bd76538bac8702c3685b7c0b50799821f1c6ce79a540324be0ae12faa5222",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -441,8 +441,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 8184,
-      "sha256": "530c5c5a34255f0ebe0d6ee7a73130a0bac072e1c8fc23feb0d0b3693c73fd0f",
+      "bytes": 8221,
+      "sha256": "3b2442f2b67c44ae7ecdd393b6920b7636bf9eb4f4f5a821a09f812cb2a84046",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -525,8 +525,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 7428,
-      "sha256": "45c7e2fb98eb8da147e4a6dfc3620b4bddc42873425a53aac46ae642de008c45",
+      "bytes": 7698,
+      "sha256": "20ed68481135b047d9c3426544a4a3c11111465a876010bf10a5de376266d287",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -539,8 +539,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 6633,
-      "sha256": "9a5a11ce8e0ce4f90d85b7a9a3b8ef8c757d79d1c59d6c8753e81e626cf4a819",
+      "bytes": 8778,
+      "sha256": "11fc07c7c60ead6dac09288d970d1a536892410f2274bbb104621faba53605ea",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -639,6 +639,20 @@
       "importedBy": [],
       "bytes": 17610,
       "sha256": "d9b1342cfe251d3aa43fc02c3b7d58b75fd545900c970d26b25bc46480149f9f",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/EXCLUSAO-DE-LEMBRETES.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Exclusão confirmada da agenda, sincronização, histórico interno, proteção contra telas antigas e limites de recuperação.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 2316,
+      "sha256": "ce604d7dc1cb34ae735ca976823de0d4becbf0ae96db40fc46cc1403b8805da9",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1001,8 +1015,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 38133,
-      "sha256": "bc35f012c54c37550d984168ed49d7ab712ebe3085e0f43fee84ea7fe682ac3d",
+      "bytes": 38814,
+      "sha256": "ead90b37a28a24dd218b45911b1c5c532f6d7aa323dd678893999b0c67121915",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1240,7 +1254,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "4ef9943a3c1ec75ae9acaf2b8e43513cd36a1fbad1f7ffd0018e6d4ae3ee9731",
+      "sha256": "e3eb529506dda5c2b6b84a2e986b49f9fc1cdb68c6494638478836f482808bd6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1254,7 +1268,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "cc8bc604ef7a6577a1cba0f07a477650aa93899f168bfde906412b2fffc47c1f",
+      "sha256": "f0934581b27fe62bd5130a74f61a0055573f558b38ebfeee11e02e5981874626",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1417,8 +1431,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 47777,
-      "sha256": "7ac55962c11d4f6cd92a219ca9521812be442834bc4aaf156042dca66202fb2b",
+      "bytes": 48316,
+      "sha256": "c42f174c46584d8142bbe108bdcab8e9ce492a8378e4b2aff928a3b4a29c402e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1884,8 +1898,8 @@
       ],
       "external": [],
       "importedBy": ["server/businessReminders.test.js", "server/worker.js"],
-      "bytes": 9089,
-      "sha256": "63c52a74588dc53a023867ab323c5eb433bcc77d6f47563c401bc50b3b0e3abb",
+      "bytes": 9202,
+      "sha256": "bf9d9c53f8ff3d8a6b6009e9562e121b1fc1b3865fef74b8ff8ac6b04a81d92c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1893,7 +1907,7 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Teste",
-      "description": "Verifica business Reminders no contexto de API Cloudflare. Exemplos: agenda D1 recusa acesso indevido e origem externa; status não abre dados; agenda D1 preserva histórico entre sessões, controla concorrência e usa relógio/ator do servidor; migração D1 é repetível, mantém encerrados, recusa divergências e valida lote antes de gravar.",
+      "description": "Verifica business Reminders no contexto de API Cloudflare. Exemplos: exclusão sai da agenda compartilhada, mantém auditoria e rejeita versões antigas após reagendar; agenda D1 recusa acesso indevido e origem externa; status não abre dados; agenda D1 preserva histórico entre sessões, controla concorrência e usa relógio/ator do servidor.",
       "exports": [],
       "imports": [
         "server/businessReminders.js",
@@ -1901,8 +1915,8 @@
       ],
       "external": ["node:assert/strict", "node:fs", "node:sqlite", "node:test"],
       "importedBy": [],
-      "bytes": 6851,
-      "sha256": "c1bc8f8023b4478a4c81aced4fbfd6aa030c2731e6478eb8998a6baceda1cf68",
+      "bytes": 8671,
+      "sha256": "12ddb26f569d7a44ea030541042a8990af09623eb9c526376a2cd0eadd5e730b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1913,17 +1927,19 @@
       "description": "Rotas autenticadas de envio em partes, catálogo, leitura e publicação transacional das bases OS, Operacional e Logística no piloto.",
       "exports": ["businessReply", "businessSourcesResponse", "readBusinessBody"],
       "imports": [
+        "server/persistence/snapshotDownload.js",
         "server/persistence/snapshotStore.js",
         "src/shared/persistence/snapshotPayload.js"
       ],
       "external": [],
       "importedBy": [
         "server/monitoringStorage.js",
+        "server/persistence/snapshotDownload.test.js",
         "server/persistence/snapshotStore.test.js",
         "server/worker.js"
       ],
-      "bytes": 6956,
-      "sha256": "27ff6ee823156a8f215d6df9ad45475a8a4037e49f1eef34be044b97e08899f7",
+      "bytes": 7188,
+      "sha256": "d89438c93b0089bc78238a080fa35471bb48e23ca8d93835318f2d00d1c34f22",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2162,6 +2178,39 @@
       "status": "Preparação / contrato"
     },
     {
+      "path": "server/persistence/snapshotDownload.js",
+      "folder": "server/persistence",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Transmite uma base completa por resposta autenticada, com lotes internos limitados de partes, sem reconstruir o JSON inteiro no Worker.",
+      "exports": ["snapshotDownload"],
+      "imports": [],
+      "external": [],
+      "importedBy": ["server/businessSources.js"],
+      "bytes": 1958,
+      "sha256": "81eda4e1d8765b2bf11fc4d65ca3147ee1a989cacbba06eb773c7b44429762e2",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "server/persistence/snapshotDownload.test.js",
+      "folder": "server/persistence",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica snapshot Download no contexto de API Cloudflare. Exemplos: base grande é transferida por uma requisição, preservando unicode, zeros e integridade; download incompleto ou corrompido é recusado; somente o proprietário recebe a base; catálogo inicia as três leituras em paralelo e não devolve lote parcial se uma falhar.",
+      "exports": [],
+      "imports": [
+        "server/businessSources.js",
+        "server/persistence/snapshotStore.js",
+        "server/persistence/snapshotTestDatabase.mjs",
+        "src/shared/persistence/sourceSnapshotClient.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 3797,
+      "sha256": "9fcea366a1d8491dfa2d137635e29bbb6f30853abd7fb83d2e9fb4db394292b6",
+      "status": "Preparação / contrato"
+    },
+    {
       "path": "server/persistence/snapshotStore.js",
       "folder": "server/persistence",
       "module": "API Cloudflare",
@@ -2173,6 +2222,7 @@
       "importedBy": [
         "server/businessSources.js",
         "server/monitoringStorage.js",
+        "server/persistence/snapshotDownload.test.js",
         "server/persistence/snapshotStore.test.js"
       ],
       "bytes": 9043,
@@ -2198,8 +2248,8 @@
       ],
       "external": ["node:assert/strict", "node:test", "xlsx"],
       "importedBy": [],
-      "bytes": 10340,
-      "sha256": "255cb79395147a478b0c9e8de202afe08776efa1f29d13a53c4b5b626753c1d2",
+      "bytes": 10416,
+      "sha256": "470685beac3cdb135dfa23dbf2703d599929fc695429c270b43561744bc18a32",
       "status": "Preparação / contrato"
     },
     {
@@ -2213,6 +2263,7 @@
       "external": ["node:fs", "node:sqlite"],
       "importedBy": [
         "server/monitoringStorage.test.js",
+        "server/persistence/snapshotDownload.test.js",
         "server/persistence/snapshotStore.test.js"
       ],
       "bytes": 1685,
@@ -2267,8 +2318,8 @@
       "imports": ["server/worker.js"],
       "external": ["jose", "node:assert/strict", "node:sqlite", "node:test"],
       "importedBy": [],
-      "bytes": 15124,
-      "sha256": "ce56c90fdaaee782d0aab881bf14e1a2890f59f529b6f3b3171390d3b1c39dfa",
+      "bytes": 15183,
+      "sha256": "6006b93582448567c1680a353a8e3f019fb445db0561495acfd7f26c34d56e11",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2484,8 +2535,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 11037,
-      "sha256": "8fab57624f7e24771656e7eba17656b1938559309419bff6cc0e44d5b0eb6caf",
+      "bytes": 11096,
+      "sha256": "bad00b0b4597aceade12e77bdba9e3b833bd089bc1ac127e3ec92a87976e8aa7",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4410,8 +4461,8 @@
         "src/modules/monitoring/components/MonitoringQueue.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx"
       ],
-      "bytes": 4953,
-      "sha256": "6e3e9ad97f62b8ad1899b788bbbe7909fe5e65343309b106679d70c81071d0d6",
+      "bytes": 6329,
+      "sha256": "51148f539e9300911b8ede493fb0f2e5ac478ac81020bcdb22f2e3fe39d22afa",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4432,8 +4483,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 7254,
-      "sha256": "7419962d670e405a607a0d68bb93036ec39bf51f0317d53c2f16c8975e009f95",
+      "bytes": 7275,
+      "sha256": "2cb04e95829f47f86e6eb31e0b2f09a9138546909b1342f05d9150bbd15f85fd",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4531,8 +4582,8 @@
         "src/modules/monitoring/domain/monitoringReminders.test.js",
         "src/modules/monitoring/hooks/useMonitoringReminders.js"
       ],
-      "bytes": 3237,
-      "sha256": "85bc5ac5b9e26e71874413c2d31527832f724da8b5fb4d08cb0900919e599cba",
+      "bytes": 3408,
+      "sha256": "a01ec75120b95093b5d970b487fcff52ae02bf1eef8866e83c2fedfb7a411776",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4552,8 +4603,8 @@
         "src/modules/monitoring/data/remoteReminderRepository.test.js",
         "src/modules/monitoring/hooks/useMonitoringReminders.js"
       ],
-      "bytes": 4906,
-      "sha256": "02f3becf3da334d39126a52f70bf28546fdb6dcbc212b2707f5828d1a84070c3",
+      "bytes": 4927,
+      "sha256": "88cb1a638f2c31b99bd2ca7d3f96cec2b9efd7010b4594ae8cabe042cff75973",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4561,7 +4612,7 @@
       "folder": "src/modules/monitoring/data",
       "module": "Monitoramento Ativo",
       "layer": "Teste",
-      "description": "Verifica remote Reminder Repository no contexto de Monitoramento Ativo. Exemplos: agenda remota falha sem fallback; somente status explícito permite modo local; migração exige escolha explícita, preserva cópia local e reconhece repetição; históricos divergentes não concluem migração nem liberam edição.",
+      "description": "Verifica remote Reminder Repository no contexto de Monitoramento Ativo. Exemplos: leitura atravessa página composta somente por exclusões sem ocultar lembretes seguintes; agenda remota falha sem fallback; somente status explícito permite modo local; migração exige escolha explícita, preserva cópia local e reconhece repetição.",
       "exports": [],
       "imports": [
         "src/modules/monitoring/data/remoteReminderRepository.js",
@@ -4569,8 +4620,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 3810,
-      "sha256": "e7f4d4b7abe095f696d219bc12be72b2e33002306b8ce961f9eacdab3dd90c5e",
+      "bytes": 4271,
+      "sha256": "f91c0e7846e7ef1cbcd95fb7f9ec13d299f9f438af3808bf8d76f9f776746827",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4812,6 +4863,7 @@
       "description": "Valida lembretes, revisões, vencimentos e histórico por base/veículo no fuso de São Paulo.",
       "exports": [
         "changeReminder",
+        "matchesReminderRevision",
         "reminderActions",
         "reminderDueAt",
         "reminderExportRows",
@@ -4834,8 +4886,8 @@
         "src/modules/monitoring/domain/monitoringReminders.test.js",
         "src/modules/monitoring/domain/monitoringReport.js"
       ],
-      "bytes": 6045,
-      "sha256": "01a2a0381c354e145013b492692fb9a4b283aa8e3f13f537b5b6863ba0bc6488",
+      "bytes": 6651,
+      "sha256": "9f48c7e046b2bc070e5e9c0015a68ed24b60ffe9443a377c2af317f1acb92823",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4843,7 +4895,7 @@
       "folder": "src/modules/monitoring/domain",
       "module": "Monitoramento Ativo",
       "layer": "Teste",
-      "description": "Verifica monitoring Reminders no contexto de Monitoramento Ativo. Exemplos: agenda usa São Paulo explicitamente e rejeita datas normalizadas, ausentes e horários inválidos; só aceita agenda futura; vencimento é inclusivo e independe da telemetria; um ativo por veículo: reagendamento, conferência, cancelamento e novo ciclo conservam o histórico.",
+      "description": "Verifica monitoring Reminders no contexto de Monitoramento Ativo. Exemplos: exclusão aceita agendas ativas ou encerradas e novo ciclo conserva revisão para recusar edição antiga; agenda usa São Paulo explicitamente e rejeita datas normalizadas, ausentes e horários inválidos; só aceita agenda futura; vencimento é inclusivo e independe da telemetria.",
       "exports": [],
       "imports": [
         "src/modules/monitoring/data/demo.js",
@@ -4854,8 +4906,8 @@
       ],
       "external": ["node:assert/strict", "node:test", "xlsx"],
       "importedBy": [],
-      "bytes": 6883,
-      "sha256": "a3bcb5fc866239a5a4d3c4c76b3340c04c8f0168885c78e08001f2199481ea79",
+      "bytes": 8145,
+      "sha256": "93cfda9d90ea4ab47c99f3b64f80ce44218577b1ace2db07be4915c43d577997",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -9099,8 +9151,8 @@
       "imports": [],
       "external": ["react"],
       "importedBy": ["src/modules/imports/components/ImportPage.jsx"],
-      "bytes": 1920,
-      "sha256": "794755fbaa32a28a92c5eb936e207e343146db5e107d9b4eac06a63ea417caaa",
+      "bytes": 1945,
+      "sha256": "f91feb31eef46d907d704fccd3ff698ed706141907854e2f29efc77c19dd0053",
       "status": "Preparação / contrato"
     },
     {
@@ -9192,23 +9244,56 @@
       "status": "Preparação / contrato"
     },
     {
+      "path": "src/shared/persistence/sourceDownloadClient.js",
+      "folder": "src/shared/persistence",
+      "module": "Compartilhado",
+      "layer": "Infraestrutura compartilhada",
+      "description": "Decodifica o download incrementalmente, valida metadados/tamanho e informa progresso antes da conferência final de hash.",
+      "exports": ["fetchSourceResponse", "readSourceResponse"],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "src/shared/persistence/sourceDownloadClient.test.js",
+        "src/shared/persistence/sourceSnapshotClient.js"
+      ],
+      "bytes": 1969,
+      "sha256": "17eb3b0ceddee15497daa4808833f4390b0ee77a1700fd962fbf5d6cdc8be796",
+      "status": "Preparação / contrato"
+    },
+    {
+      "path": "src/shared/persistence/sourceDownloadClient.test.js",
+      "folder": "src/shared/persistence",
+      "module": "Compartilhado",
+      "layer": "Teste",
+      "description": "Verifica source Download Client no contexto de Compartilhado. Exemplos: decodificação suporta rede dividindo caracteres UTF-8 e recusa metadados de outra versão.",
+      "exports": [],
+      "imports": ["src/shared/persistence/sourceDownloadClient.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 1207,
+      "sha256": "b75654d7a2b66c1ad3b64b50da37d094c840e6fb315fa4d0d02d3177366cd2f8",
+      "status": "Preparação / contrato"
+    },
+    {
       "path": "src/shared/persistence/sourceSnapshotClient.js",
       "folder": "src/shared/persistence",
       "module": "Compartilhado",
       "layer": "Infraestrutura compartilhada",
       "description": "Carrega versões completas, confere integridade e só aplica uma importação depois da confirmação transacional do servidor.",
-      "exports": ["createSourceSnapshotClient"],
+      "exports": ["createSourceSnapshotClient", "readSourceCatalog"],
       "imports": [
         "src/shared/persistence/snapshotPayload.js",
+        "src/shared/persistence/sourceDownloadClient.js",
         "src/shared/security/accessClient.js"
       ],
       "external": [],
       "importedBy": [
+        "server/persistence/snapshotDownload.test.js",
         "server/persistence/snapshotStore.test.js",
         "src/shared/persistence/useSavedSources.js"
       ],
-      "bytes": 3921,
-      "sha256": "1ac7c2ed6d608e2ff1f7cd0415e1909985b1797ca197cc49a7b42e4e78b7f97c",
+      "bytes": 4095,
+      "sha256": "bac90f589f30a947205a3413e5ea3af6de06db11a07c40957cadc513b032d774",
       "status": "Preparação / contrato"
     },
     {
@@ -9221,8 +9306,8 @@
       "imports": ["src/shared/persistence/sourceSnapshotClient.js"],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 3677,
-      "sha256": "9777ce7489f85962654626a3370d93297ef5333b83c666721f5f87ae16375152",
+      "bytes": 4694,
+      "sha256": "27993582b1493fe3423eedd32ddeca4bc59b2ee46a9a633e12e3319280821127",
       "status": "Preparação / contrato"
     },
     {
@@ -9491,8 +9576,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 13122,
-      "sha256": "43345d2cd50e532789bc7e6756eb57554eb0edcdd90af5e786e141eae100d046",
+      "bytes": 13614,
+      "sha256": "1a46b1c6b20685283de954904ef50afd1fb646240164fd20752b59a86174c8ac",
       "status": "Código ou documentação do ponto de referência"
     },
     {

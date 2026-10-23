@@ -1,5 +1,9 @@
 /** Persistência exclusivamente local. Transação serializa abas; revisão impede edição sobre dados antigos. */
-import { changeReminder, validateReminderDocument } from '../domain/monitoringReminders.js';
+import {
+  changeReminder,
+  validateReminderDocument,
+  matchesReminderRevision,
+} from '../domain/monitoringReminders.js';
 import { vehicleKey } from '../domain/monitoring.js';
 
 export function reminderScope(user, managed, demo) {
@@ -73,14 +77,14 @@ export function createReminderRepository(scope) {
     });
   }
   return {
-    read: () => run(false),
+    read: async () => (await run(false)).filter((row) => row.status !== 'deleted'),
     change: (vehicle, expectedRevision, action, draft) =>
       run(true, (records) => {
         const previous = records.find((row) => row.key === vehicleKey(vehicle));
-        if ((previous?.revision || 0) !== expectedRevision)
+        if (!matchesReminderRevision(previous, expectedRevision, action))
           throw Error('Este lembrete foi alterado em outra aba. Reabra-o antes de salvar.');
         const next = changeReminder(previous, vehicle, action, draft);
         return [...records.filter((row) => row.key !== next.key), next];
-      }),
+      }).then((records) => records.filter((row) => row.status !== 'deleted')),
   };
 }

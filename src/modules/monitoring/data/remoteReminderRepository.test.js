@@ -31,6 +31,15 @@ function setup(request, records = []) {
     }),
   };
 }
+
+test('leitura atravessa página composta somente por exclusões sem ocultar lembretes seguintes', async () => {
+  const { repo } = setup(async (path) => {
+    if (path === '/api/business/status') return { version: 1, enabled: true, permitted: true };
+    if (path.includes('?after=')) return { version: 1, records: [record()], next: null };
+    return { version: 1, records: [], next: 'a'.repeat(64) };
+  });
+  assert.equal((await repo.read()).length, 1);
+});
 test('agenda remota falha sem fallback; somente status explícito permite modo local', async () => {
   let reads = 0;
   const { repo } = setup(async () => {

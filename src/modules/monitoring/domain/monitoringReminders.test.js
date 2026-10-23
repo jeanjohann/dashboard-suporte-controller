@@ -11,6 +11,7 @@ import {
   reminderOverdue,
   validateReminderDocument,
   reminderExportRows,
+  matchesReminderRevision,
 } from './monitoringReminders.js';
 import { reminderScope } from '../data/reminderRepository.js';
 import { monitoringReport, monitoringCsv, monitoringWorkbook } from './monitoringReport.js';
@@ -24,6 +25,31 @@ const vehicle = {
 const at = '2026-10-19T12:00:00Z';
 const draft = { localDate: '2026-10-20T15:00', note: 'Saída da manutenção' };
 const schedule = () => changeReminder(null, vehicle, 'schedule', draft, at);
+
+test('exclusão aceita agendas ativas ou encerradas e novo ciclo conserva revisão para recusar edição antiga', () => {
+  for (const action of [null, 'complete', 'cancel']) {
+    const first = schedule(),
+      previous = action ? changeReminder(first, vehicle, action, {}, at) : first;
+    const deleted = changeReminder(previous, vehicle, 'delete', {}, at);
+    assert.equal(deleted.status, 'deleted');
+    assert.equal(deleted.history.at(-1).action, 'delete');
+    assert.equal(deleted.revision, previous.revision + 1);
+    assert.equal(reminderOverdue(deleted, '2099-01-01T00:00:00Z'), false);
+    assert.equal(validateReminderDocument({ version: 1, records: [deleted] }).records.length, 1);
+    assert.throws(() => changeReminder(deleted, vehicle, 'delete', {}, at), /mudou/);
+    assert.equal(matchesReminderRevision(deleted, 0, 'schedule'), true);
+    const next = changeReminder(
+      deleted,
+      vehicle,
+      'schedule',
+      { ...draft, localDate: '2099-10-22T12:00' },
+      at,
+    );
+    assert.equal(next.revision, deleted.revision + 1);
+    assert.equal(matchesReminderRevision(next, first.revision, 'complete'), false);
+  }
+  assert.throws(() => changeReminder(null, vehicle, 'delete', {}, at), /mudou/);
+});
 
 test('agenda usa São Paulo explicitamente e rejeita datas normalizadas, ausentes e horários inválidos', () => {
   assert.equal(reminderDueAt('2026-10-20T15:00'), '2026-10-20T18:00:00.000Z');

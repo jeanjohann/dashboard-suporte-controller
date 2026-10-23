@@ -4,6 +4,7 @@ import { createDocumentRepository } from '../src/shared/persistence/documentRepo
 import {
   changeReminder,
   validateReminderDocument,
+  matchesReminderRevision,
 } from '../src/modules/monitoring/domain/monitoringReminders.js';
 import { vehicleKey } from '../src/modules/monitoring/domain/monitoring.js';
 
@@ -146,7 +147,7 @@ export async function businessRemindersResponse(request, env, user, owner) {
       const page = await repo.list({ after, limit: 25 });
       return reply({
         version: 1,
-        records: page.items.map((row) => row.value),
+        records: page.items.filter((row) => row.value.status !== 'deleted').map((row) => row.value),
         next: page.nextCursor,
       });
     } catch {
@@ -233,7 +234,10 @@ export async function businessRemindersResponse(request, env, user, owner) {
   try {
     const id = await reminderDocumentId(body.vehicle),
       previous = await repo.read(id);
-    if (previous?.deleted || (previous?.value.revision || 0) !== body.expectedRevision)
+    if (
+      previous?.deleted ||
+      !matchesReminderRevision(previous?.value, body.expectedRevision, body.action)
+    )
       return reply(
         { error: 'Este lembrete foi alterado. Recarregue antes de salvar.', code: 'CONFLICT' },
         409,

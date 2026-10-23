@@ -179,8 +179,8 @@ test('retenção conserva cinco versões publicadas por base, mantém a ativa e 
 test('cliente ponta a ponta restaura a versão ativa, reimporta sem somar linhas e respeita permissões/origem', async (t) => {
   const { database } = snapshotTestDatabase(t),
     env = { BUSINESS_DB: database };
-  const request = async (path, options = {}) => {
-    const r = await businessSourcesResponse(
+  const send = async (path, options = {}) =>
+    businessSourcesResponse(
       new Request('https://app.example' + path, {
         ...options,
         headers: { Origin: 'https://app.example', ...options.headers },
@@ -189,11 +189,13 @@ test('cliente ponta a ponta restaura a versão ativa, reimporta sem somar linhas
       user,
       owner,
     );
+  const request = async (path, options = {}) => {
+    const r = await send(path, options);
     const data = await r.json();
     if (!r.ok) throw Error(data.error);
     return data;
   };
-  const client = createSourceSnapshotClient(request),
+  const client = createSourceSnapshotClient(request, send),
     batch = { orders: orders() };
   const saved = await client.save(batch, await client.catalog());
   const repeated = await client.save(batch, saved.catalog);

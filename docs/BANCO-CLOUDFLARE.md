@@ -1,5 +1,7 @@
 # Banco de negócio no Cloudflare — piloto 0.58.0 e evolução 0.59.0
 
+**Evolução 0.61.0:** [leitura das bases com menos requisições](BASES-SALVAS-E-COLETA.md) e [exclusão manual de lembretes](EXCLUSAO-DE-LEMBRETES.md), preservando histórico interno e permissões do piloto. Não há migração SQL nem limpeza automática da agenda.
+
 Em 22/10/2026, o proprietário escolheu D1 e autorizou renovar o acesso técnico. O piloto é restrito ao administrador principal. Este documento registra a primeira conexão da agenda; não significa que todas as fontes foram migradas.
 
 ## Banco e acesso

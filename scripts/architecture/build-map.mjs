@@ -63,6 +63,12 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'docs/EXCLUSAO-DE-LEMBRETES.md':
+    'Exclusão confirmada da agenda, sincronização, histórico interno, proteção contra telas antigas e limites de recuperação.',
+  'server/persistence/snapshotDownload.js':
+    'Transmite uma base completa por resposta autenticada, com lotes internos limitados de partes, sem reconstruir o JSON inteiro no Worker.',
+  'src/shared/persistence/sourceDownloadClient.js':
+    'Decodifica o download incrementalmente, valida metadados/tamanho e informa progresso antes da conferência final de hash.',
   'docs/PERMANENCIA-ZOHO-E-REFINAMENTO.md':
     'Leitura CSV de permanência, recortes por agente/dia, exportação, refinamento do dashboard e validação real pendente.',
   'src/modules/orders/components/ZohoPresenceResults.jsx':

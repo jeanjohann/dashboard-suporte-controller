@@ -1,6 +1,6 @@
 /** Bases completas do piloto: carregamento inicial e confirmação do servidor antes da troca da sessão. */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createSourceSnapshotClient } from './sourceSnapshotClient.js';
+import { createSourceSnapshotClient, readSourceCatalog } from './sourceSnapshotClient.js';
 export function useSavedSources({ user, managed, onApply }) {
   const client = useMemo(() => createSourceSnapshotClient(), [user?.email]);
   const [state, setState] = useState({
@@ -10,12 +10,14 @@ export function useSavedSources({ user, managed, onApply }) {
     enabled: false,
     catalog: {},
     message: '',
+    progress: 0,
   });
   const current = useRef(null),
     catalog = useRef({}),
     ready = useRef(!managed),
     loadGeneration = useRef(0),
     locked = useRef(false),
+    loadingRequest = useRef(null),
     apply = useRef(onApply);
   apply.current = onApply;
   current.current = client;
@@ -23,8 +25,11 @@ export function useSavedSources({ user, managed, onApply }) {
     if (!managed || locked.current) return;
     const target = client,
       run = ++loadGeneration.current;
+    loadingRequest.current?.abort();
+    const controller = new AbortController();
+    loadingRequest.current = controller;
     ready.current = false;
-    setState((s) => ({ ...s, loading: true, error: '' }));
+    setState((s) => ({ ...s, loading: true, error: '', progress: 0 }));
     try {
       const status = await client.status();
       if (status.version !== 1 || typeof status.permitted !== 'boolean')
@@ -43,9 +48,25 @@ export function useSavedSources({ user, managed, onApply }) {
         return;
       }
       const next = await client.catalog(),
-        sources = {};
-      for (const [kind, head] of Object.entries(next))
-        sources[kind] = await client.read(kind, head);
+        totalBytes = Object.values(next).reduce((sum, head) => sum + (head?.bytes || 0), 0),
+        received = {},
+        sources = await readSourceCatalog(client, next, {
+          signal: controller.signal,
+          onProgress: (kind, bytes) => {
+            if (current.current !== target || loadGeneration.current !== run) return;
+            received[kind] = bytes;
+            const progress = totalBytes
+              ? Math.min(
+                  99,
+                  Math.floor(
+                    (Object.values(received).reduce((sum, value) => sum + value, 0) / totalBytes) *
+                      100,
+                  ),
+                )
+              : 0;
+            setState((s) => (s.progress === progress ? s : { ...s, progress }));
+          },
+        });
       if (current.current !== target || loadGeneration.current !== run) return;
       catalog.current = next;
       ready.current = true;
@@ -57,6 +78,7 @@ export function useSavedSources({ user, managed, onApply }) {
         error: '',
         catalog: next,
         message: '',
+        progress: 100,
       });
     } catch (error) {
       if (current.current === target && loadGeneration.current === run)
@@ -65,6 +87,8 @@ export function useSavedSources({ user, managed, onApply }) {
           loading: false,
           error: error.message || 'Não foi possível carregar as bases salvas.',
         }));
+    } finally {
+      if (loadingRequest.current === controller) loadingRequest.current = null;
     }
   }
   useEffect(() => {
@@ -74,6 +98,7 @@ export function useSavedSources({ user, managed, onApply }) {
     reload();
     return () => {
       current.current = null;
+      loadingRequest.current?.abort();
       loadGeneration.current++;
     };
   }, [client, managed]);

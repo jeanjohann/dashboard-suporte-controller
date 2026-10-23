@@ -109,6 +109,7 @@ test('bases e coletas salvas exigem identidade ativa e restringem o piloto ao pr
     });
     for (const path of [
       '/api/sources/catalog',
+      '/api/sources/orders/download?id=' + 'a'.repeat(64),
       '/api/monitoring/saved',
       '/api/monitoring/history',
     ]) {

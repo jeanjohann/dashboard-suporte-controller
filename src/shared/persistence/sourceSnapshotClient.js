@@ -1,5 +1,6 @@
 /** Só aplica bases depois da confirmação da publicação; nenhuma carga parcial substitui a sessão. */
 import { api } from '../security/accessClient.js';
+import { fetchSourceResponse, readSourceResponse } from './sourceDownloadClient.js';
 import {
   prepareSnapshot,
   sha256,
@@ -13,7 +14,7 @@ const post = (request, path, body) =>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-export function createSourceSnapshotClient(request = api) {
+export function createSourceSnapshotClient(request = api, download = fetchSourceResponse) {
   return {
     status: () => request('/api/sources/status'),
     async catalog() {
@@ -21,46 +22,26 @@ export function createSourceSnapshotClient(request = api) {
       if (data.version !== 1 || !data.catalog) throw Error('Catálogo incompatível.');
       return data.catalog;
     },
-    async read(kind, head) {
+    async read(kind, head, { signal, onProgress } = {}) {
       if (!head) return null;
-      const id = head.snapshotId;
-      const { manifest } = await request(`/api/sources/${kind}/manifest?id=${id}`);
       if (
-        !manifest ||
-        manifest.id !== id ||
-        manifest.kind !== kind ||
-        !Number.isInteger(manifest.partCount) ||
-        manifest.partCount < 1 ||
-        manifest.partCount > snapshotMaxParts ||
-        !Number.isSafeInteger(manifest.bytes) ||
-        manifest.bytes < 1 ||
-        manifest.bytes > snapshotMaxBytes ||
-        manifest.hash !== head.hash
+        !['orders', 'operational', 'logistics'].includes(kind) ||
+        !/^[a-f0-9]{64}$/.test(head.snapshotId) ||
+        !/^[a-f0-9]{64}$/.test(head.hash) ||
+        !Number.isInteger(head.partCount) ||
+        head.partCount < 1 ||
+        head.partCount > snapshotMaxParts ||
+        !Number.isSafeInteger(head.bytes) ||
+        head.bytes < 1 ||
+        head.bytes > snapshotMaxBytes
       )
         throw Error('Manifesto incompatível.');
-      const parts = [];
-      while (parts.length < manifest.partCount) {
-        const data = await request(`/api/sources/${kind}/parts?id=${id}&after=${parts.length - 1}`);
-        if (
-          data.version !== 1 ||
-          !Array.isArray(data.parts) ||
-          !data.parts.length ||
-          data.parts.length > 4
-        )
-          throw Error('Base incompleta.');
-        for (const p of data.parts) {
-          if (p.partIndex !== parts.length || typeof p.text !== 'string')
-            throw Error('Partes fora de ordem.');
-          parts.push(p.text);
-        }
-      }
-      if (parts.length !== manifest.partCount) throw Error('Base incompleta.');
-      const text = parts.join('');
-      if (
-        new TextEncoder().encode(text).length !== manifest.bytes ||
-        (await sha256(text)) !== manifest.hash
-      )
-        throw Error('Integridade da base inválida.');
+      const timeout = AbortSignal.timeout(60000);
+      const response = await download('/api/sources/' + kind + '/download?id=' + head.snapshotId, {
+        signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
+      });
+      const text = await readSourceResponse(response, head, { onProgress });
+      if ((await sha256(text)) !== head.hash) throw Error('Integridade da base inválida.');
       const source = JSON.parse(text);
       validateStoredSource(kind, source);
       return { ...source, cloud: head };
@@ -111,4 +92,20 @@ export function createSourceSnapshotClient(request = api) {
       };
     },
   };
+}
+
+/** As leituras são independentes; a aplicação das três bases continua indivisível. */
+export async function readSourceCatalog(client, catalog, options = {}) {
+  const results = await Promise.allSettled(
+    Object.entries(catalog).map(async ([kind, head]) => [
+      kind,
+      await client.read(kind, head, {
+        ...options,
+        onProgress: (bytes, total) => options.onProgress?.(kind, bytes, total),
+      }),
+    ]),
+  );
+  const failure = results.find((result) => result.status === 'rejected');
+  if (failure) throw failure.reason;
+  return Object.fromEntries(results.map((result) => result.value));
 }

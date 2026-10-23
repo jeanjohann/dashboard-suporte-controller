@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.61.0 — 22/10/2026
+
+- Acrescenta Excluir lembrete no Monitoramento, com confirmação por veículo, exclusão sincronizada e histórico interno preservado. Novo agendamento mantém revisão crescente para recusar ações de telas antigas. [Funcionamento](docs/EXCLUSAO-DE-LEMBRETES.md).
+- Corrige carregamento lento das bases: uma transferência por fonte, leitura em paralelo e progresso visível, com integridade e publicação completa preservadas. Para as duas bases remotas verificadas, reduz 81 requisições de abertura para quatro.
+- O servidor lê as partes em lotes internos e transmite o JSON original sem montar a base inteira na memória. Recusa respostas incompletas, versões divergentes e corrupção; cancelamento interrompe carregamentos antigos. [Diagnóstico e limites](docs/BASES-SALVAS-E-COLETA.md).
+
 ## 0.60.0 — 22/10/2026
 
 - Amplia a leitura de permanência por CSV Session do Zoho: filtro e comparação por agente, evolução diária com união de sobreposições, detalhes e exportação do recorte. Corrige sessão válida de duração zero no início do período. CSV real e fonte automática continuam pendentes.

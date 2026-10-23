@@ -1,6 +1,7 @@
 /** Somente fontes conhecidas; piloto do proprietário, sem credenciais ou coleções livres. */
 import { createSnapshotStore } from './persistence/snapshotStore.js';
 import { sourceKinds } from '../src/shared/persistence/snapshotPayload.js';
+import { snapshotDownload } from './persistence/snapshotDownload.js';
 export const businessReply = (body, status = 200) =>
   Response.json(body, {
     status,
@@ -90,7 +91,7 @@ export async function businessSourcesResponse(request, env, user, owner) {
       return businessReply({ version: 1, catalog });
     }
     const match = url.pathname.match(
-      /^\/api\/sources\/(orders|operational|logistics)\/(start|part|complete|manifest|parts|versions)$/,
+      /^\/api\/sources\/(orders|operational|logistics)\/(start|part|complete|manifest|parts|versions|download)$/,
     );
     if (!match) return businessReply({ error: 'Rota não encontrada.' }, 404);
     const [, kind, action] = match;
@@ -107,6 +108,8 @@ export async function businessSourcesResponse(request, env, user, owner) {
       const manifest = await store.manifest(id);
       if (!manifest || manifest.kind !== kind || manifest.state !== 'complete')
         return businessReply({ error: 'Base concluída não encontrada.' }, 404);
+      if (action === 'download' && [...url.searchParams.keys()].every((key) => key === 'id'))
+        return snapshotDownload(request, store, manifest);
       if (action === 'manifest' && [...url.searchParams.keys()].every((k) => k === 'id'))
         return businessReply({
           version: 1,

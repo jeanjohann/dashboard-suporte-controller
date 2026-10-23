@@ -5,13 +5,23 @@ export const reminderLabels = {
   scheduled: 'Agendado',
   completed: 'Conferido',
   cancelled: 'Cancelado',
+  deleted: 'Excluído',
 };
 export const reminderActions = {
   schedule: 'Agendado',
   reschedule: 'Reagendado',
   complete: 'Conferido',
   cancel: 'Cancelado',
+  delete: 'Excluído',
 };
+
+/** Depois da exclusão, novo agendamento preserva a revisão/histórico para impedir edições antigas. */
+export function matchesReminderRevision(previous, expectedRevision, action) {
+  return (
+    (previous?.status === 'deleted' && action === 'schedule' ? 0 : previous?.revision || 0) ===
+    expectedRevision
+  );
+}
 
 /** O formulário usa explicitamente o horário de São Paulo, independentemente do computador. */
 export function reminderLocalDate(value) {
@@ -63,7 +73,11 @@ export function changeReminder(
   const key = vehicleKey(vehicle);
   if (previous && previous.key !== key) throw Error('O lembrete pertence a outro veículo.');
   const active = previous?.status === 'scheduled';
-  if ((action === 'schedule' && active) || (action !== 'schedule' && !active))
+  if (
+    (action === 'schedule' && active) ||
+    (action === 'delete' && (!previous || previous.status === 'deleted')) ||
+    (!['schedule', 'delete'].includes(action) && !active)
+  )
     throw Error('O lembrete mudou. Atualize a página antes de continuar.');
   const scheduling = ['schedule', 'reschedule'].includes(action);
   const dueAt = scheduling ? reminderDueAt(draft.localDate) : previous.dueAt;
@@ -71,7 +85,13 @@ export function changeReminder(
     throw Error('Escolha uma data e hora no futuro.');
   const note = scheduling ? text(draft.note ?? '', 2000) : previous.note;
   const outcome = action === 'complete' ? text(draft.outcome ?? '', 2000) : '';
-  const status = scheduling ? 'scheduled' : action === 'complete' ? 'completed' : 'cancelled';
+  const status = scheduling
+    ? 'scheduled'
+    : action === 'complete'
+      ? 'completed'
+      : action === 'delete'
+        ? 'deleted'
+        : 'cancelled';
   if (action === 'reschedule' && dueAt === previous.dueAt && note === previous.note)
     throw Error('Altere a data, hora ou observação antes de salvar.');
   return {
@@ -129,7 +149,9 @@ export function validateReminderDocument(document) {
       ? 'scheduled'
       : last.action === 'complete'
         ? 'completed'
-        : 'cancelled';
+        : last.action === 'delete'
+          ? 'deleted'
+          : 'cancelled';
     if (last.dueAt !== row.dueAt || last.note !== row.note || expected !== row.status)
       throw Error('Histórico de lembrete inconsistente. Os dados foram preservados.');
     keys.add(row.key);

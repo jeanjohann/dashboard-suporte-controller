@@ -19,7 +19,7 @@ export function MonitoringReminders({ reminders, demo }) {
     .filter((row) => row.status === 'scheduled')
     .sort((a, b) => Date.parse(a.dueAt) - Date.parse(b.dueAt));
   const closed = reminders.records
-    .filter((row) => row.status !== 'scheduled')
+    .filter((row) => ['completed', 'cancelled'].includes(row.status))
     .sort((a, b) => Date.parse(b.history.at(-1).at) - Date.parse(a.history.at(-1).at));
   const due = active.filter((row) => reminderOverdue(row, reminders.now)).length;
   const detail = reminders.records.find((row) => row.key === selected);

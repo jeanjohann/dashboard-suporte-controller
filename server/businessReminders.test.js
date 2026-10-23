@@ -47,6 +47,68 @@ function req(path = '', body, origin = 'https://app.example') {
 }
 const draft = { localDate: '2099-10-22T12:00', note: 'Conferir', outcome: '' };
 const input = (expectedRevision = 0) => ({ vehicle, expectedRevision, action: 'schedule', draft });
+
+test('exclusão sai da agenda compartilhada, mantém auditoria e rejeita versões antigas após reagendar', async (t) => {
+  const env = { BUSINESS_DB: database(t) };
+  await businessRemindersResponse(req('', input()), env, user, owner);
+  const removed = await businessRemindersResponse(
+    req('', { ...input(1), action: 'delete' }),
+    env,
+    user,
+    owner,
+  );
+  assert.equal(removed.status, 200);
+  assert.deepEqual(
+    (await (await businessRemindersResponse(req(), env, user, owner)).json()).records,
+    [],
+  );
+  const stored = await env.BUSINESS_DB.prepare(
+    'SELECT payload_json,updated_by FROM business_documents',
+  ).first();
+  const record = JSON.parse(stored.payload_json);
+  assert.equal(record.status, 'deleted');
+  assert.equal(record.history.at(-1).action, 'delete');
+  assert.equal(stored.updated_by, owner);
+  assert.equal(
+    (await businessRemindersResponse(req('', { ...input(1), action: 'delete' }), env, user, owner))
+      .status,
+    409,
+  );
+  const again = await businessRemindersResponse(req('', input()), env, user, owner);
+  assert.equal(again.status, 200);
+  assert.equal((await again.json()).record.revision, 3);
+  assert.equal(
+    (
+      await businessRemindersResponse(
+        req('', { ...input(1), action: 'complete' }),
+        env,
+        user,
+        owner,
+      )
+    ).status,
+    409,
+  );
+  assert.equal(
+    (
+      await businessRemindersResponse(
+        req('', { ...input(3), action: 'complete' }),
+        env,
+        user,
+        owner,
+      )
+    ).status,
+    200,
+  );
+  assert.equal(
+    (await businessRemindersResponse(req('', { ...input(4), action: 'delete' }), env, user, owner))
+      .status,
+    200,
+  );
+  assert.deepEqual(
+    (await (await businessRemindersResponse(req(), env, user, owner)).json()).records,
+    [],
+  );
+});
 test('agenda D1 recusa acesso indevido e origem externa; status não abre dados', async (t) => {
   const env = { BUSINESS_DB: database(t) };
   assert.equal(
