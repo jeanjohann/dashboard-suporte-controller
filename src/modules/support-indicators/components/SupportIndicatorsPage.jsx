@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
-import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
+import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { authorizeAction, api } from '../../../shared/security/accessClient.js';
 import { useDashboardSources } from '../../my-dashboard/hooks/DashboardSources.jsx';
@@ -296,12 +296,6 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     <SidePanelProvider>
       <div className="app support-indicators-page">
         <Navigation page="support-indicators" onPage={onPage} />
-        <SidebarContent>
-          <p className="scope">
-            Filtros independentes por período e agente. Ajustes de exibição e lançamentos ficam
-            nesta página.
-          </p>
-        </SidebarContent>
         <main>
           <header className="si-heading">
             <div>

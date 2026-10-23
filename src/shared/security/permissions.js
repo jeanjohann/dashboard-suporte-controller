@@ -26,7 +26,8 @@ export function allowsPage(user, page) {
   if (user.role === 'admin') return true;
   if (page === 'users') return false;
   if (page === 'kore' || page === 'arqia') return user.pages?.includes('lines') === true;
-  if (page === 'my-dashboard') return moduleKeys.some((key) => user.pages?.includes(key));
+  if (page === 'my-dashboard')
+    return user.canDashboard ?? moduleKeys.some((key) => user.pages?.includes(key));
   if (page === 'imports') return user.canImport && user.pages?.length > 0;
   return moduleKeys.includes(page) && user.pages?.includes(page);
 }
@@ -58,7 +59,16 @@ export function allowsSource(user, type) {
 export function validateUser(input) {
   if (!input || typeof input !== 'object' || Array.isArray(input))
     throw Error('Cadastro inválido.');
-  const fields = ['email', 'role', 'active', 'pages', 'canImport', 'canExport', 'version'];
+  const fields = [
+    'email',
+    'role',
+    'active',
+    'pages',
+    'canImport',
+    'canExport',
+    'canDashboard',
+    'version',
+  ];
   if (Object.keys(input).some((key) => !fields.includes(key))) throw Error('Campo não permitido.');
   const email = normalizeEmail(input.email);
   if (!validEmail(email)) throw Error('Informe um e-mail válido.');
@@ -76,6 +86,8 @@ export function validateUser(input) {
   )
     throw Error('Páginas inválidas.');
   if (!Number.isInteger(input.version) || input.version < 0) throw Error('Versão inválida.');
+  if (input.canDashboard != null && typeof input.canDashboard !== 'boolean')
+    throw Error('Permissão do Meu Dashboard inválida.');
   return {
     email,
     role: input.role,
@@ -84,5 +96,8 @@ export function validateUser(input) {
     canImport: input.role === 'admin' || input.canImport,
     canExport: input.role === 'admin' || input.canExport,
     version: input.version,
+    ...(Object.hasOwn(input, 'canDashboard')
+      ? { canDashboard: input.role === 'admin' ? true : (input.canDashboard ?? null) }
+      : {}),
   };
 }

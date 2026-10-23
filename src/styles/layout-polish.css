@@ -230,6 +230,7 @@
 }
 .user-form > h2,
 .user-form > fieldset,
+.user-form > .permission-tool-scope,
 .user-form > p {
   grid-column: 1/-1;
 }

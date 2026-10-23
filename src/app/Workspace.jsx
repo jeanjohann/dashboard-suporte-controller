@@ -151,6 +151,7 @@ function WorkspaceContent() {
   const current = allowed(page)
     ? page
     : [
+        'my-dashboard',
         'orders',
         'operational',
         'lines',

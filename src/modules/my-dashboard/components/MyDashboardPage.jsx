@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
-import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
+import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { Icon } from '../../../components/Icon.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { useDashboardSources } from '../hooks/DashboardSources.jsx';
@@ -138,11 +138,6 @@ export function MyDashboardPage({ onPage, repository }) {
               (Brasília) · {state.dirty || !state.saved ? 'Edição não salva' : 'Painel salvo'}
             </p>
           </div>
-          <SidebarContent>
-            <div className="md-sidebar-note">
-              Seu espaço de acompanhamento. Escolha os indicadores que importam para você.
-            </div>
-          </SidebarContent>
           <header className="md-page-header">
             <div>
               <span className="md-eyebrow">SEU ESPAÇO DE ACOMPANHAMENTO</span>

@@ -7,7 +7,7 @@ import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { api } from '../../../shared/security/accessClient.js';
-import { moduleLabels } from '../../../shared/security/permissions.js';
+import { moduleLabels, allowsPage } from '../../../shared/security/permissions.js';
 const blank = () => ({
   email: '',
   role: 'user',
@@ -15,6 +15,7 @@ const blank = () => ({
   pages: [],
   canImport: false,
   canExport: false,
+  canDashboard: false,
   version: 0,
 });
 /** Lista e edita usuários por meio da API protegida. A liberação de login no Cloudflare permanece uma etapa separada. */
@@ -128,6 +129,14 @@ export function UsersPage({ onPage }) {
             </label>
             <fieldset disabled={busy || draft.role === 'admin'}>
               <legend>Páginas liberadas</legend>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={draft.role === 'admin' || Boolean(draft.canDashboard)}
+                  onChange={(e) => setDraft({ ...draft, canDashboard: e.target.checked })}
+                />
+                Meu Dashboard
+              </label>
               {Object.entries(moduleLabels).map(([key, label]) => (
                 <label key={key}>
                   <input
@@ -146,6 +155,66 @@ export function UsersPage({ onPage }) {
                 </label>
               ))}
             </fieldset>
+            <p className="scope">
+              Meu Dashboard controla a abertura do painel pessoal. Seus indicadores continuam
+              limitados às bases e páginas liberadas acima. Importação depende da ação Importar e
+              das bases autorizadas.
+            </p>
+            <details className="permission-tool-scope">
+              <summary>Integrações e ferramentas adicionais · regras de acesso</summary>
+              <p className="scope">
+                As permissões de página não ampliam o acesso às integrações privadas. O piloto e a
+                política de login permanecem separados.
+              </p>
+              <div className="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Ferramenta</th>
+                      <th>Acesso</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>KORE e Arqia</td>
+                      <td>
+                        Páginas vinculadas a Consumo M2M; a integração privada conserva a restrição
+                        administrativa do servidor.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Indicadores Suporte</td>
+                      <td>
+                        Página administrativa. Lançamentos no D1 e consulta Zoho restritos ao
+                        administrador principal no piloto.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Zoho Desk</td>
+                      <td>Consulta de chamados e tempos: administrador principal.</td>
+                    </tr>
+                    <tr>
+                      <td>Google Sheets</td>
+                      <td>
+                        Leitura conectada: administradores, conforme configuração do servidor.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Bases salvas, coleta e lembretes no D1</td>
+                      <td>Piloto restrito ao proprietário; não é liberado ao marcar uma página.</td>
+                    </tr>
+                    <tr>
+                      <td>Assistente de suporte · laboratório</td>
+                      <td>Restrito ao proprietário; sem concessão a usuários comuns.</td>
+                    </tr>
+                    <tr>
+                      <td>Usuários e permissões / Mapa de arquitetura</td>
+                      <td>Administração; o mapa mantém também sua proteção própria.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
             <fieldset disabled={busy || draft.role === 'admin'}>
               <legend>Ações permitidas</legend>
               <label>
@@ -185,6 +254,7 @@ export function UsersPage({ onPage }) {
                     <th>Situação</th>
                     <th>Páginas</th>
                     <th>Importar</th>
+                    <th>Meu Dashboard</th>
                     <th>Exportar</th>
                     <th>Ação</th>
                   </tr>
@@ -201,13 +271,17 @@ export function UsersPage({ onPage }) {
                           : u.pages.map((p) => moduleLabels[p]).join(', ') || 'Nenhuma'}
                       </td>
                       <td>{u.canImport ? 'Sim' : 'Não'}</td>
+                      <td>{allowsPage({ ...u, active: true }, 'my-dashboard') ? 'Sim' : 'Não'}</td>
                       <td>{u.canExport ? 'Sim' : 'Não'}</td>
                       <td>
                         <button
                           disabled={busy}
                           onClick={() => {
                             const { updatedAt, ...editable } = u;
-                            setDraft(editable);
+                            setDraft({
+                              ...editable,
+                              canDashboard: allowsPage({ ...u, active: true }, 'my-dashboard'),
+                            });
                             setMessage('');
                             setError('');
                           }}

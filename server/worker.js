@@ -58,6 +58,7 @@ export function recordUser(row) {
         pages: JSON.parse(row.pages),
         canImport: Boolean(row.can_import),
         canExport: Boolean(row.can_export),
+        canDashboard: row.can_dashboard == null ? null : Boolean(row.can_dashboard),
         version: row.version,
         updatedAt: row.updated_at,
       }
@@ -215,7 +216,7 @@ export function createHandler(authenticate = authenticatedEmail) {
       const statement =
         input.version === 0
           ? env.USERS_DB.prepare(
-              'INSERT OR IGNORE INTO app_users (email,role,active,pages,can_import,can_export,version,updated_at,updated_by) VALUES (?,?,?,?,?,?,1,?,?)',
+              'INSERT OR IGNORE INTO app_users (email,role,active,pages,can_import,can_export,version,updated_at,updated_by,can_dashboard) VALUES (?,?,?,?,?,?,1,?,?,?)',
             ).bind(
               input.email,
               input.role,
@@ -225,9 +226,10 @@ export function createHandler(authenticate = authenticatedEmail) {
               +input.canExport,
               now,
               email,
+              input.canDashboard == null ? null : +input.canDashboard,
             )
           : env.USERS_DB.prepare(
-              'UPDATE app_users SET role=?,active=?,pages=?,can_import=?,can_export=?,version=version+1,updated_at=?,updated_by=? WHERE email=? AND version=?',
+              'UPDATE app_users SET role=?,active=?,pages=?,can_import=?,can_export=?,version=version+1,updated_at=?,updated_by=?,can_dashboard=CASE WHEN ? THEN ? ELSE can_dashboard END WHERE email=? AND version=?',
             ).bind(
               input.role,
               +input.active,
@@ -236,6 +238,8 @@ export function createHandler(authenticate = authenticatedEmail) {
               +input.canExport,
               now,
               email,
+              Object.hasOwn(input, 'canDashboard') ? 1 : 0,
+              input.canDashboard == null ? null : +input.canDashboard,
               input.email,
               input.version,
             );

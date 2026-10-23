@@ -1,5 +1,19 @@
 # Usuários e permissões
 
+## Atualização 0.64.0
+
+Meu Dashboard tem controle próprio no formulário de usuário. Essa escolha permite abrir e organizar painéis, mas não libera indicadores de fontes não autorizadas. Páginas e ações Importar/Exportar continuam com controles separados. Importação depende de ação e base permitidas; KORE/Arqia seguem a página Consumo, sem liberar a integração privada.
+
+A seção recolhida Integrações e ferramentas adicionais apresenta Indicadores Suporte, Zoho, Google Sheets, fontes salvas/lembretes do banco, assistente local e administração/mapa. Mostra as restrições vigentes, sem oferecer concessões que seriam recusadas pelo servidor. O piloto do proprietário não é ampliado nesta atualização.
+
+O campo SQL opcional `can_dashboard` tem três estados: NULL conserva a regra anterior (acesso quando existe alguma página de dados liberada); 0 recusa o painel; 1 permite o painel. Ao editar um usuário legado, o formulário mostra seu acesso efetivo e somente Salvar confirma a escolha explícita. A migração não modifica concessões, versões ou metadados de usuários. Clientes antigos que omitem o campo em uma edição preservam a escolha gravada. Administradores continuam com acesso ao painel independentemente desse campo.
+
+Aplicar `migrations/0002_dashboard_access.sql` no banco **USERS_DB** antes de publicar o Worker novo, após backup local privado. A alteração é aditiva e aceita o Worker anterior em uma eventual reversão do código. Não usa BUSINESS_DB nem altera as bases operacionais. Novas instalações precisam aplicar todas as migrações de usuários; a criação inicial da tabela pelo Worker não substitui a migração adicional.
+
+O menu mostra expansão e categorias somente nas páginas com submenu. Meu Dashboard, Indicadores Suporte, Importação e Usuários abrem diretamente, sem textos laterais ou áreas vazias.
+
+Os parágrafos abaixo registram as regras e entregas anteriores; para integrações atuais, prevalecem as restrições descritas acima e a autorização do servidor.
+
 Em 0.23.0, o piloto Google Sheets é restrito a **administradores ativos**, tanto na interface quanto nas duas rotas do servidor. Permissão de OS/importação não libera a leitura conectada a um usuário comum. A consulta não recebe planilha ou URL do navegador. Ampliar o acesso requer decisão explícita sobre usuários e bases; dados dessa fonte transitam pelo Worker privado. [Configuração](GOOGLE-SHEETS.md).
 
 Em 0.21.0, Equipe de suporte segue a permissão de OS. A consulta futura `GET /api/monitoring/snapshot` exige JWT válido, usuário ativo e permissão de Monitoramento Ativo também no servidor, sem liberação por alterar o menu. Não há coletor configurado nesta entrega; D1 continua somente com usuários/permissões. O endpoint foi preparado para telemetria futura, sem receber planilhas locais, e não possui autorização por base nesta versão. [Contrato e ativação](INTEGRACAO-MONITORAMENTO.md).

@@ -23,6 +23,13 @@ const pages = [
   ['monitoring', 'Monitoramento Ativo'],
   ['imports', 'Importação'],
 ];
+const submenuPages = new Set([
+  'orders',
+  'operational',
+  'lines',
+  'operational-analysis',
+  'monitoring',
+]);
 /** Exibe somente as páginas autorizadas e mantém expansão, recolhimento e ferramentas da página ativa. */
 export function Navigation({ page, onPage }) {
   const { user, managed } = useAccess();
@@ -71,6 +78,7 @@ export function Navigation({ page, onPage }) {
       return;
     }
     if (key === page || (key === 'lines' && ['kore', 'arqia'].includes(page))) {
+      if (!submenuPages.has(key)) return;
       if (collapsed) {
         changeCollapsed(false);
         setMenuOpen(true);
@@ -109,13 +117,13 @@ export function Navigation({ page, onPage }) {
               }
               aria-current={page === key ? 'page' : undefined}
               aria-expanded={
-                key !== 'imports' &&
+                submenuPages.has(key) &&
                 (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page)))
                   ? !collapsed && menuOpen
                   : undefined
               }
               aria-controls={
-                key !== 'imports' &&
+                submenuPages.has(key) &&
                 (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page)))
                   ? `submenu-${key}`
                   : undefined
@@ -126,7 +134,7 @@ export function Navigation({ page, onPage }) {
                 <Icon name={['kore', 'arqia'].includes(key) ? 'lines' : key} />
               </span>
               <span className="navigation-label">{label}</span>
-              {key !== 'imports' &&
+              {submenuPages.has(key) &&
                 (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page))) && (
                   <span className="navigation-chevron" aria-hidden="true">
                     {<Icon name={menuOpen ? 'up' : 'down'} size={14} />}
@@ -162,7 +170,7 @@ export function Navigation({ page, onPage }) {
                 {page === 'lines' && <SidePanelTarget />}
               </div>
             )}
-            {page === key && key !== 'lines' && (
+            {page === key && submenuPages.has(key) && key !== 'lines' && (
               <div id={`submenu-${key}`} hidden={collapsed || !menuOpen}>
                 <SidePanelTarget />
               </div>

@@ -1,8 +1,8 @@
 {
-  "version": "0.63.0",
-  "base": "24f5fd4 · cópia da entrega",
+  "version": "0.64.0",
+  "base": "3a401b0 · cópia da entrega",
   "date": "2026-10-23",
-  "total": 499,
+  "total": 500,
   "tests": 103,
   "folders": [
     {
@@ -23,7 +23,7 @@
     {
       "path": "migrations",
       "description": "Migrações do banco ativo de usuários.",
-      "count": 1
+      "count": 2
     },
     {
       "path": "public",
@@ -447,8 +447,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 97466,
-      "sha256": "185384f9bbcae50e9239bc445db36fed596f677d27b5235c3f483a191b8ace7e",
+      "bytes": 98097,
+      "sha256": "94aea7d2eab2d40988497c91d9fbf1df9f524239b90abf9dfa19486cef6997d0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1049,8 +1049,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 40572,
-      "sha256": "010c59366853efe0ab00c6b9dbdab698eeab5e9081029ac5775e3e38ffc57a1e",
+      "bytes": 41045,
+      "sha256": "d1cec4d745eab67988ec674b8ce06c6e21a41851bdccca611c092cc9b67c3724",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1147,8 +1147,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 6050,
-      "sha256": "5c43e4336228e8b110691123e30387c23f2f3d64dab4f6c83e54d9bf87b73e2f",
+      "bytes": 8108,
+      "sha256": "848c20db929cf7fe25d77d73c185e8f3644d3513c05253ddfc1768f23356ee7d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1278,6 +1278,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "migrations/0002_dashboard_access.sql",
+      "folder": "migrations",
+      "module": "Configuração e entrega",
+      "layer": "Esquema SQL",
+      "description": "Permissão opcional do Meu Dashboard no banco de usuários; NULL conserva a regra anterior sem alterar concessões existentes.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 195,
+      "sha256": "367a0931b2379514e5c7b929f21d28c7b9ff7efc3fa1847ba47ea3223da3e139",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "package-lock.json",
       "folder": "(raiz)",
       "module": "Configuração e entrega",
@@ -1288,7 +1302,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "a133a583ab45e2849a823472c2644b9fb7b343483e507c74e5f20c6ca8d21d4b",
+      "sha256": "0ab77908c3e83f0db1604982bd998ff7664df3c9ffbc069dda3995b633f2c536",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1302,7 +1316,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "c095509e4a8de3520b273ddd25f3412da06a8fca21c48430766941f8bb3a5881",
+      "sha256": "df4f2c9d41104fa1d5c175efcbfab446d0c5632a85e9117e19598d57a0e93c06",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1465,8 +1479,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 50306,
-      "sha256": "228037aa555418ddba14a7c6a0ce3508972dbcc9e7b13389f6e0ff30ba1d2c40",
+      "bytes": 50482,
+      "sha256": "d5140b12dbbaf25c54a11d04f9c71d0de5651920bf232a2714e42b0057979995",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2377,8 +2391,8 @@
       ],
       "external": ["jose"],
       "importedBy": ["server/worker.test.js"],
-      "bytes": 10818,
-      "sha256": "6fdc59b655b16eac8d152bf474df102bca4f767c3132227c95766a1c2b761af1",
+      "bytes": 11177,
+      "sha256": "fe7003320ef505e2760af4418d3f4bfd886ba947f49770b8a047a43c296186bc",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2386,13 +2400,13 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Teste",
-      "description": "Verifica worker no contexto de API Cloudflare. Exemplos: agenda de negócio é autenticada e o piloto só libera o administrador principal; bases e coletas salvas exigem identidade ativa e restringem o piloto ao proprietário; sessão do Assistente local exige proprietário ativo, POST e mesma origem.",
+      "description": "Verifica worker no contexto de API Cloudflare. Exemplos: controle do Dashboard persiste e cliente antigo não redefine a escolha; não concede bases; agenda de negócio é autenticada e o piloto só libera o administrador principal; bases e coletas salvas exigem identidade ativa e restringem o piloto ao proprietário.",
       "exports": [],
       "imports": ["server/worker.js"],
-      "external": ["jose", "node:assert/strict", "node:sqlite", "node:test"],
+      "external": ["jose", "node:assert/strict", "node:fs", "node:sqlite", "node:test"],
       "importedBy": [],
-      "bytes": 15183,
-      "sha256": "6006b93582448567c1680a353a8e3f019fb445db0561495acfd7f26c34d56e11",
+      "bytes": 16759,
+      "sha256": "22f712530ef933ab86bf10c85749eede8bf3fc6222211f1f89ad84cbcdc419c2",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2600,8 +2614,8 @@
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/users/components/UsersPage.jsx"
       ],
-      "bytes": 7291,
-      "sha256": "25ead60c6ed8b0f6bac8e2e7eb56d002f88d6365c59286f97c66428fb883e880",
+      "bytes": 7487,
+      "sha256": "2568d76cf9f3a0f66e835e06efe2e0c46840dda64af323677b2ce31090d00045",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2676,8 +2690,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 11591,
-      "sha256": "a8936e0bc8a945f1d59401edf9955b53d2ee2dfb5161154344b8ceabef1b4bf1",
+      "bytes": 11615,
+      "sha256": "9265594757545ddd655c2964bab7c30f6e88f35c7e36534d14f48e166a95a5b3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5289,8 +5303,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 21201,
-      "sha256": "b3b3725412bb2941f245f73067a6be7e684c7d65f3dd75f4f12cf4f92365f772",
+      "bytes": 20972,
+      "sha256": "096d8bd595f7aae47959a7d2c990369a991f1da26bb546af6b06695ca51fdbd4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5714,8 +5728,8 @@
         "src/modules/orders/hooks/ZohoSession.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 1278,
-      "sha256": "f33d891c67deb06dbcea5f88964bb9a0037688219671ccbd64d6ae1e3a6adc3f",
+      "bytes": 1302,
+      "sha256": "61c75a7645aea9613421a912f52592c3438163cf4dfafec91f541f3945b1946e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8615,8 +8629,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 32768,
-      "sha256": "e959cf5dc31a39e94ebaec79a80f25c394f69ece24506c6e5b3482909729b97c",
+      "bytes": 32527,
+      "sha256": "34725c8f1564c2da412b991f5a3a216535ceea68c6d4f8df1a7423a4350e1353",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8743,8 +8757,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 8187,
-      "sha256": "de791ad070edd5a94260979457fce655860fb86f5b0301b64e4c57e0ceb291be",
+      "bytes": 11587,
+      "sha256": "156b6f44774a7efa6fd109b6989aeba8ef1d169dfa86f3140e4faf11cf531fa4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9777,8 +9791,8 @@
         "src/shared/security/accessClient.js",
         "src/shared/security/permissions.test.js"
       ],
-      "bytes": 3867,
-      "sha256": "4ab3a5b10fd41ca11f3a524632c34c69579470d07e9bf7a06a4543f182bf50b0",
+      "bytes": 4226,
+      "sha256": "12699be6818610561018630c6bc46b1c9508dab24123b8d7654b48e8805f92a0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9786,13 +9800,13 @@
       "folder": "src/shared/security",
       "module": "Compartilhado",
       "layer": "Teste",
-      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas.",
+      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas; Meu Dashboard tem controle próprio sem conceder bases e preserva usuários legados.",
       "exports": [],
       "imports": ["src/shared/security/permissions.js"],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 2222,
-      "sha256": "d35d00964f01cc84c3aded6170c57f5b537b9dc8fb048adf6d1f87a0548b9070",
+      "bytes": 2929,
+      "sha256": "5c5c9497cc3643ef841ce78e523a112fe8af7e18deb74ce851a33f526e0d0120",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9889,8 +9903,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 5796,
-      "sha256": "c54c6a89ad68f7a2ea177abb886f28a55265ec425a0eb3e9d4504ba0b0a5f9f1",
+      "bytes": 5833,
+      "sha256": "5676ee262d4ab67b5b12e86525f18ae20ce8091c282feb143ffbafc753c59178",
       "status": "Código ou documentação do ponto de referência"
     },
     {

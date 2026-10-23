@@ -26,6 +26,7 @@ export function DashboardSourcesProvider({ children }) {
     [...(user?.pages || [])].sort(),
     user?.canImport,
     user?.canExport,
+    user?.canDashboard,
   ]);
   return <Session key={key}>{children}</Session>;
 }

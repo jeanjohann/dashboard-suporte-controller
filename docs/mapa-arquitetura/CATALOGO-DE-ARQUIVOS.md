@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.63.0 · referência 24f5fd4 · cópia da entrega · 2026-10-23 · **499 arquivos / 103 arquivos de teste / 71 pastas**.
+Addlog 0.64.0 · referência 3a401b0 · cópia da entrega · 2026-10-23 · **500 arquivos / 103 arquivos de teste / 71 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -13,7 +13,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
 - **docs** — Guias, critérios e histórico das implementações. (56 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
-- **migrations** — Migrações do banco ativo de usuários. (1 arquivos, incluindo subpastas).
+- **migrations** — Migrações do banco ativo de usuários. (2 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
 - **public/brand** — Marca e símbolo usados pela interface. (6 arquivos, incluindo subpastas).
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
@@ -730,6 +730,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Configuração e entrega · Esquema SQL** — Migração SQL do cadastro de usuários e suas permissões; corresponde ao D1 ativo de acesso.
 
 [Abrir fonte](../../migrations/0001_users.sql) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### migrations/0002_dashboard_access.sql
+
+**Configuração e entrega · Esquema SQL** — Permissão opcional do Meu Dashboard no banco de usuários; NULL conserva a regra anterior sem alterar concessões existentes.
+
+[Abrir fonte](../../migrations/0002_dashboard_access.sql) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -1499,7 +1509,7 @@ Dependências externas: `jose`.
 
 ### server/worker.test.js
 
-**API Cloudflare · Teste** — Verifica worker no contexto de API Cloudflare. Exemplos: agenda de negócio é autenticada e o piloto só libera o administrador principal; bases e coletas salvas exigem identidade ativa e restringem o piloto ao proprietário; sessão do Assistente local exige proprietário ativo, POST e mesma origem.
+**API Cloudflare · Teste** — Verifica worker no contexto de API Cloudflare. Exemplos: controle do Dashboard persiste e cliente antigo não redefine a escolha; não concede bases; agenda de negócio é autenticada e o piloto só libera o administrador principal; bases e coletas salvas exigem identidade ativa e restringem o piloto ao proprietário.
 
 [Abrir fonte](../../server/worker.test.js) · Código ou documentação do ponto de referência
 
@@ -1507,7 +1517,7 @@ Importa arquivos locais: [server/worker.js](../../server/worker.js).
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
-Dependências externas: `jose`, `node:assert/strict`, `node:sqlite`, `node:test`.
+Dependências externas: `jose`, `node:assert/strict`, `node:fs`, `node:sqlite`, `node:test`.
 
 ### server/zoho.js
 
@@ -5865,7 +5875,7 @@ Importado por: [server/worker.js](../../server/worker.js), [src/app/Navigation.j
 
 ### src/shared/security/permissions.test.js
 
-**Compartilhado · Teste** — Verifica permissions no contexto de Compartilhado. Exemplos: permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas.
+**Compartilhado · Teste** — Verifica permissions no contexto de Compartilhado. Exemplos: permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas; Meu Dashboard tem controle próprio sem conceder bases e preserva usuários legados.
 
 [Abrir fonte](../../src/shared/security/permissions.test.js) · Código ou documentação do ponto de referência
 

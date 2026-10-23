@@ -2,6 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
+import { readFileSync } from 'node:fs';
 import { generateKeyPair, SignJWT } from 'jose';
 import { authenticatedEmail, createHandler } from './worker.js';
 const issuer = 'https://test-team.cloudflareaccess.com',
@@ -9,6 +10,8 @@ const issuer = 'https://test-team.cloudflareaccess.com',
   owner = 'jeancjohann@gmail.com';
 function database() {
   const db = new DatabaseSync(':memory:');
+  for (const file of ['0001_users.sql', '0002_dashboard_access.sql'])
+    db.exec(readFileSync(new URL('../migrations/' + file, import.meta.url), 'utf8'));
   return {
     prepare(sql) {
       return {
@@ -53,6 +56,37 @@ const input = {
   canExport: false,
   version: 0,
 };
+test('controle do Dashboard persiste e cliente antigo não redefine a escolha; não concede bases', async () => {
+  const db = database();
+  try {
+    const e = env(db),
+      admin = createHandler(async () => owner),
+      regular = createHandler(async () => input.email);
+    assert.equal((await admin(request('PUT', input), e)).status, 200);
+    let current = (await (await regular(request('GET', null, '/api/me'), e)).json()).user;
+    assert.equal(current.canDashboard, null);
+    assert.equal(
+      (await admin(request('PUT', { ...input, version: 1, canDashboard: false }), e)).status,
+      200,
+    );
+    current = (await (await regular(request('GET', null, '/api/me'), e)).json()).user;
+    assert.equal(current.canDashboard, false);
+    assert.deepEqual(current.pages, ['orders']);
+    assert.equal((await admin(request('PUT', { ...input, version: 2 }), e)).status, 200);
+    current = (await (await regular(request('GET', null, '/api/me'), e)).json()).user;
+    assert.equal(current.canDashboard, false);
+    assert.equal(
+      (await admin(request('PUT', { ...input, version: 3, pages: [], canDashboard: true }), e))
+        .status,
+      200,
+    );
+    current = (await (await regular(request('GET', null, '/api/me'), e)).json()).user;
+    assert.equal(current.canDashboard, true);
+    assert.deepEqual(current.pages, []);
+  } finally {
+    db.close();
+  }
+});
 
 test('agenda de negócio é autenticada e o piloto só libera o administrador principal', async () => {
   const db = database();

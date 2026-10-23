@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+## Menu e permissões 0.64.0 — 23/10/2026
+
+Remove expansões das páginas sem submenu e torna o Meu Dashboard uma permissão independente das bases. A tela administrativa lista também ferramentas novas e as regras de acesso das integrações em piloto. Cadastros anteriores preservam acesso até edição explícita. Migração `0002_dashboard_access.sql` acrescenta campo nulo, sem conceder ou revogar permissões; aplicar no banco de usuários antes da publicação.
+
 ## Zoho nos indicadores 0.63.0 — 23/10/2026
 
 Publicada no GitHub (`96a3210`) e Cloudflare, versão ativa `6bb3c56e-5ab0-46a0-a19a-124b08d9eb36` com 100% do tráfego. 460 testes aprovados. Diagnóstico real confirmou abertura por Contact/Email e por Agent/source nulo, além de categorias compatíveis com a planilha. O proprietário definiu os assuntos pelos chamados fechados por agente. Consulta ampliada agrega aberturas confirmadas e categoria atual dos fechados; manuais preservados e não somados. A consulta real identificou divergência entre data de fechamento e histórico; a página mantém fechamentos e assuntos indisponíveis nesse caso, sem impedir as métricas com evidências independentes. Conferir chamados indicados com relatório do proprietário. Tempo conectado continua aguardando CSV Session.

@@ -35,3 +35,15 @@ test('cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita
   assert.throws(() => validateUser({ ...input, active: 'true' }));
   assert.throws(() => validateUser({ ...input, pages: ['orders', 'orders'] }));
 });
+test('Meu Dashboard tem controle próprio sem conceder bases e preserva usuários legados', () => {
+  assert.equal(allowsPage(user, 'my-dashboard'), true);
+  assert.equal(allowsPage({ ...user, canDashboard: false }, 'my-dashboard'), false);
+  const dashboardOnly = { ...user, pages: [], canDashboard: true };
+  assert.equal(allowsPage(dashboardOnly, 'my-dashboard'), true);
+  assert.equal(allowsPage(dashboardOnly, 'orders'), false);
+  assert.equal(allowsSource(dashboardOnly, 'orders'), false);
+  assert.equal(allowsPage({ ...dashboardOnly, active: false }, 'my-dashboard'), false);
+  assert.throws(() =>
+    validateUser({ ...user, email: 'a@example.invalid', version: 0, canDashboard: 'sim' }),
+  );
+});

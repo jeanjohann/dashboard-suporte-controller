@@ -64,6 +64,8 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'migrations/0002_dashboard_access.sql':
+    'Permissão opcional do Meu Dashboard no banco de usuários; NULL conserva a regra anterior sem alterar concessões existentes.',
   'server/zohoIndicators.js':
     'Confere eventos de criação dos chamados e categorias atuais, sem atribuir abertura ao responsável atual nem a clientes/importações.',
   'server/zohoTicketProfile.js':

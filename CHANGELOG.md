@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.64.0 — 23/10/2026
+
+- Menu expande somente páginas com categorias: OS, Operacional, Consumo, Parque e Monitoramento. Páginas sem submenu não exibem setas, explicações ou espaço de expansão.
+- Usuários e permissões inclui controle próprio de abertura do Meu Dashboard e as regras de acesso das ferramentas novas e integrações. Liberar o painel não concede acesso às fontes de dados.
+- Campo opcional no banco de usuários preserva a regra de acesso dos cadastros existentes. Nenhum usuário recebe permissões novas automaticamente; pilotos e permissões de importação/exportação mantêm suas restrições.
+
 ## 0.63.0 — 23/10/2026
 
 - Confere autoria de abertura dos chamados por evento TicketCreated e exclui clientes/importações. Histórico ausente ou ambíguo mantém o total automático indisponível, sem substituir por zero.
