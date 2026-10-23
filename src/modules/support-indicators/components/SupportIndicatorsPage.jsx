@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
-import { authorizeAction } from '../../../shared/security/accessClient.js';
+import { authorizeAction, api } from '../../../shared/security/accessClient.js';
 import { useDashboardSources } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import { loadZohoActivity } from '../../orders/data/zohoActivityClient.js';
 import { supportPeriod } from '../../orders/domain/supportPerformance.js';
@@ -79,6 +79,24 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [progress, setProgress] = useState(0),
     [error, setError] = useState('');
   const pending = useRef(null);
+  const [profile, setProfile] = useState(null),
+    [profileBusy, setProfileBusy] = useState(false);
+  async function inspectProfile() {
+    if (profileBusy) return;
+    setProfileBusy(true);
+    setError('');
+    try {
+      setProfile(
+        await api(
+          '/api/zoho/activity?' + new URLSearchParams({ start: today, end: today, profile: '1' }),
+        ),
+      );
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setProfileBusy(false);
+    }
+  }
   function setPeriod(next) {
     if (
       manualDirty &&
@@ -387,6 +405,50 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     ? 'Lançamentos indisponíveis até a leitura ser confirmada.'
                     : 'Modo local: abra o sistema autenticado para ler e gravar no D1.'}
             </p>
+            <details>
+              <summary>Validar autoria de abertura e assuntos no Zoho</summary>
+              <p className="scope">
+                Amostra dos dois chamados recentes, sem alterar os indicadores manuais. Não usa o
+                filtro de período. Importações e aberturas por clientes não contam como abertura
+                pelo suporte.
+              </p>
+              <button disabled={profileBusy || busy} onClick={inspectProfile}>
+                {profileBusy ? 'Conferindo amostra…' : 'Consultar amostra de autoria e categorias'}
+              </button>
+              {profile && (
+                <>
+                  <p className="scope">{profile.coverage}</p>
+                  <Table
+                    headers={[
+                      'Chamado',
+                      'Criado em',
+                      'Tipo do autor',
+                      'ID do agente autor',
+                      'Origem',
+                      'Abertura pelo suporte confirmada',
+                      'Categoria',
+                      'Subcategoria',
+                      'Classificação',
+                    ]}
+                    rows={profile.samples.map((s) => [
+                      s.id,
+                      s.createdTime,
+                      s.creation?.actorType,
+                      s.creation?.agentId,
+                      s.creation?.source ?? 'Não informada / nula',
+                      s.creation
+                        ? s.creation.confirmedSupportOpening
+                          ? 'Sim'
+                          : 'Não confirmada'
+                        : 'Histórico incompleto ou criação não identificada',
+                      s.category,
+                      s.subCategory,
+                      s.classification,
+                    ])}
+                  />
+                </>
+              )}
+            </details>
             {(error || store.error) && (
               <p className="error" role="alert">
                 {error || store.error}

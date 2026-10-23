@@ -1,9 +1,9 @@
 {
   "version": "0.62.0",
-  "base": "2a1d303 · cópia da entrega",
+  "base": "257fae1 · cópia da entrega",
   "date": "2026-10-23",
-  "total": 495,
-  "tests": 101,
+  "total": 497,
+  "tests": 102,
   "folders": [
     {
       "path": "(raiz)",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 37
+      "count": 39
     },
     {
       "path": "server/persistence",
@@ -769,8 +769,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 10224,
-      "sha256": "4cd3c9812a4356a3431871f031019b8a70546f1074afdb7e1f718b9dbd9a37f7",
+      "bytes": 10876,
+      "sha256": "771e49624467172461aa10eb69dac5e727e49e14329c18fccce03509200dfba0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1465,8 +1465,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 49952,
-      "sha256": "ca209c5ae20a4db02ecfc4bea3d3e7cd20861dd24307ac704d8aa8c10e0c5638",
+      "bytes": 50132,
+      "sha256": "7072bf1ce16ec3f58f366d9d180aeaff80553564f9eee64012a0d9fc1303f832",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2402,11 +2402,11 @@
       "layer": "Backend",
       "description": "Piloto Zoho somente leitura. Segredos e tokens permanecem no Worker.",
       "exports": ["createZohoReader", "zohoConfigured", "zohoResponse"],
-      "imports": ["server/zohoActivity.js"],
+      "imports": ["server/zohoActivity.js", "server/zohoTicketProfile.js"],
       "external": [],
       "importedBy": ["server/worker.js", "server/zoho.test.js"],
-      "bytes": 11813,
-      "sha256": "b92a82eeeace543d2c17d8ab42182b6b0acb9512a6e7b1a30a8d28e03c2c553b",
+      "bytes": 12128,
+      "sha256": "869531772cd495e527cbe584a12eb5cf6eecbc9c6d817c9faa2589a686adf17d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2489,6 +2489,34 @@
       "importedBy": [],
       "bytes": 7050,
       "sha256": "231424c06b82676eb5f7de2b5edf92e77a0a7e84d5d44c86dec0563dd105a3ec",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/zohoTicketProfile.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Diagnóstico limitado de autoria da criação e categorias em dois chamados recentes, sem conteúdos de clientes nem inferência de totais.",
+      "exports": ["inspectZohoTicketProfile"],
+      "imports": ["src/shared/data/zohoActivity.js"],
+      "external": [],
+      "importedBy": ["server/zoho.js", "server/zohoTicketProfile.test.js"],
+      "bytes": 2401,
+      "sha256": "8f70eb506f2232338d2aa99582a7b8d6c231bbeefee077adb0ac422e90bb470a",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/zohoTicketProfile.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica zoho Ticket Profile no contexto de API Cloudflare. Exemplos: amostra distingue agente, importação e contato e não revela títulos ou descrições; histórico truncado não confirma autor nem infere criação pelo responsável atual.",
+      "exports": [],
+      "imports": ["server/zohoTicketProfile.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 1782,
+      "sha256": "51d992f8a92c55bfff266b1e11c2df8310185fee0ec3856c67d8d81b4f1ba905",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8550,8 +8578,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 27901,
-      "sha256": "1f53adcad0bb7fe445ab2aa0e8ca708cdccf729ca28ad0c0f7038a3272c0b08b",
+      "bytes": 30266,
+      "sha256": "19b70d95a4797babee896e3d3599cccdb80e14b6e4dc5439964d1127331c62c4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9049,6 +9077,7 @@
         "server/zohoActivity.test.js",
         "server/zohoClosures.js",
         "server/zohoClosures.test.js",
+        "server/zohoTicketProfile.js",
         "src/modules/my-dashboard/domain/evaluate.js",
         "src/modules/my-dashboard/domain/evaluate.test.js",
         "src/modules/orders/components/SupportZohoActivity.jsx",

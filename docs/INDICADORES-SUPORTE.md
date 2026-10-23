@@ -13,6 +13,8 @@ Página independente no menu principal, com filtros próprios por data e agente.
 
 ## Definições e fontes
 
+Diagnóstico adicional: em Fontes e atualização, **Validar autoria de abertura e assuntos no Zoho** lê dois chamados recentes e até 200 eventos de cada histórico. Confirma abertura pelo suporte somente quando há um único evento TicketCreated em histórico completo, actor Agent com ID válido e source nulo. Importações, clientes, histórico ausente/truncado e automações não confirmam abertura. Mostra categoria, subcategoria e classificação atuais, sem título, descrição ou contato. A amostra não substitui totais do período e não altera os valores manuais. Usa os segredos existentes e o mesmo acesso restrito ao proprietário.
+
 | Indicador                     | Regra                                                                                                                                                                                                                                              |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Serviços efetivos executados  | Linhas Concluída/Pago, sem Motivo Visita Improdutiva, pela Data de atendimento e Resp. Execução.                                                                                                                                                   |

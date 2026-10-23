@@ -1,5 +1,6 @@
 /** Piloto Zoho somente leitura. Segredos e tokens permanecem no Worker. */
 import { activityParameters, collectZohoActivityBatch, ZohoActivityError } from './zohoActivity.js';
+import { inspectZohoTicketProfile } from './zohoTicketProfile.js';
 const accountUrl = 'https://accounts.zoho.com/oauth/v2/token';
 const apiRoot = 'https://desk.zoho.com/api/v1';
 const idPattern = /^\d{1,40}$/;
@@ -250,8 +251,10 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
   };
   readZoho.activity = async (env, params) => {
     let parameters;
+    const query = new URLSearchParams(params);
+    if (query.get('profile') === '1') query.delete('profile');
     try {
-      parameters = activityParameters(params, now());
+      parameters = activityParameters(query, now());
     } catch (error) {
       throw error instanceof ZohoActivityError
         ? error
@@ -271,6 +274,8 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
     );
     if (id(organization?.id) !== env.ZOHO_ORG_ID)
       throw failure('ORGANIZATION', 'A organização da coleta não corresponde à configurada.');
+    if (params.get('profile') === '1')
+      return inspectZohoTicketProfile((path) => request(`${apiRoot}${path}`, options, 'ACTIVITY'));
     return collectZohoActivityBatch(
       (path) =>
         request(

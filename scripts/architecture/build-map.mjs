@@ -64,6 +64,8 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'server/zohoTicketProfile.js':
+    'Diagnóstico limitado de autoria da criação e categorias em dois chamados recentes, sem conteúdos de clientes nem inferência de totais.',
   'src/styles/support-indicators.css':
     'Layout responsivo e impressão dos Indicadores Suporte, com cards compactos, filtros, formulários e tabelas limitadas em altura.',
   'docs/INDICADORES-SUPORTE.md':

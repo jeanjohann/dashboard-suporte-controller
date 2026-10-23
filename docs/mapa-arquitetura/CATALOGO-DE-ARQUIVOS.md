@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.62.0 · referência 2a1d303 · cópia da entrega · 2026-10-23 · **495 arquivos / 101 arquivos de teste / 71 pastas**.
+Addlog 0.62.0 · referência 257fae1 · cópia da entrega · 2026-10-23 · **497 arquivos / 102 arquivos de teste / 71 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -19,7 +19,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
 - **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (24 arquivos, incluindo subpastas).
 - **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (6 arquivos, incluindo subpastas).
-- **server** — API Cloudflare e adaptadores privados de integrações. (37 arquivos, incluindo subpastas).
+- **server** — API Cloudflare e adaptadores privados de integrações. (39 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (9 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (2 arquivos, incluindo subpastas).
 - **src** — Aplicação executada no navegador. (354 arquivos, incluindo subpastas).
@@ -1517,7 +1517,7 @@ Dependências externas: `jose`, `node:assert/strict`, `node:sqlite`, `node:test`
 
 Exporta: `createZohoReader`, `zohoConfigured`, `zohoResponse`.
 
-Importa arquivos locais: [server/zohoActivity.js](../../server/zohoActivity.js).
+Importa arquivos locais: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoTicketProfile.js](../../server/zohoTicketProfile.js).
 
 Importado por: [server/worker.js](../../server/worker.js), [server/zoho.test.js](../../server/zoho.test.js).
 
@@ -1576,6 +1576,30 @@ Importado por: [server/zohoActivity.js](../../server/zohoActivity.js), [server/z
 [Abrir fonte](../../server/zohoClosures.test.js) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoClosures.js](../../server/zohoClosures.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
+### server/zohoTicketProfile.js
+
+**API Cloudflare · Backend** — Diagnóstico limitado de autoria da criação e categorias em dois chamados recentes, sem conteúdos de clientes nem inferência de totais.
+
+[Abrir fonte](../../server/zohoTicketProfile.js) · Código ou documentação do ponto de referência
+
+Exporta: `inspectZohoTicketProfile`.
+
+Importa arquivos locais: [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
+
+Importado por: [server/zoho.js](../../server/zoho.js), [server/zohoTicketProfile.test.js](../../server/zohoTicketProfile.test.js).
+
+### server/zohoTicketProfile.test.js
+
+**API Cloudflare · Teste** — Verifica zoho Ticket Profile no contexto de API Cloudflare. Exemplos: amostra distingue agente, importação e contato e não revela títulos ou descrições; histórico truncado não confirma autor nem infere criação pelo responsável atual.
+
+[Abrir fonte](../../server/zohoTicketProfile.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [server/zohoTicketProfile.js](../../server/zohoTicketProfile.js).
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
@@ -5449,7 +5473,7 @@ Exporta: `normalizeZohoEntry`, `normalizeZohoReply`, `summarizeZohoActivity`, `z
 
 Importa arquivos locais: [src/shared/data/isoDate.js](../../src/shared/data/isoDate.js).
 
-Importado por: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoActivity.test.js](../../server/zohoActivity.test.js), [server/zohoClosures.js](../../server/zohoClosures.js), [server/zohoClosures.test.js](../../server/zohoClosures.test.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/orders/components/SupportZohoActivity.jsx](../../src/modules/orders/components/SupportZohoActivity.jsx), [src/modules/orders/components/SupportZohoOverview.jsx](../../src/modules/orders/components/SupportZohoOverview.jsx), [src/modules/orders/components/ZohoClosures.jsx](../../src/modules/orders/components/ZohoClosures.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/support-indicators/domain/contracts.js](../../src/modules/support-indicators/domain/contracts.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js).
+Importado por: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoActivity.test.js](../../server/zohoActivity.test.js), [server/zohoClosures.js](../../server/zohoClosures.js), [server/zohoClosures.test.js](../../server/zohoClosures.test.js), [server/zohoTicketProfile.js](../../server/zohoTicketProfile.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/orders/components/SupportZohoActivity.jsx](../../src/modules/orders/components/SupportZohoActivity.jsx), [src/modules/orders/components/SupportZohoOverview.jsx](../../src/modules/orders/components/SupportZohoOverview.jsx), [src/modules/orders/components/ZohoClosures.jsx](../../src/modules/orders/components/ZohoClosures.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/support-indicators/domain/contracts.js](../../src/modules/support-indicators/domain/contracts.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js).
 
 ### src/shared/export/exports.js
 
