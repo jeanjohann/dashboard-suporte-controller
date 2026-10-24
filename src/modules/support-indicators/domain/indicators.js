@@ -80,7 +80,13 @@ export function ordersSummary(data, period, agentId = '') {
       result.missingScheduleDate++;
     if ((effective && within(executedAt) && !executor) || (within(scheduledAt) && !scheduler))
       result.unmapped++;
-    const execution = effective && within(executedAt) && selected(executor);
+    const unproductive = isUnproductive(data, row);
+    const performed = effective && within(executedAt) && selected(executor);
+    const execution = performed && !unproductive;
+    if (performed && unproductive) {
+      result.unproductive++;
+      result.agents.find((a) => a.id === executor).unproductive++;
+    }
     // Agenda conta linhas com data agendada, inclusive as já realizadas, excluindo canceladas.
     const scheduling =
       within(scheduledAt) && !['Cancelado', 'Cancelada'].includes(status) && selected(scheduler);
@@ -89,12 +95,6 @@ export function ordersSummary(data, period, agentId = '') {
       [scheduling, 'scheduled', scheduler, scheduledAt],
     ]) {
       if (!yes) continue;
-      if (key === 'executed' && isUnproductive(data, row)) {
-        result.unproductive++;
-        const agent = result.agents.find((a) => a.id === owner);
-        if (agent) agent.unproductive++;
-        continue;
-      }
       result[key]++;
       const agent = result.agents.find((a) => a.id === owner);
       if (agent) agent[key]++;
@@ -106,7 +106,7 @@ export function ordersSummary(data, period, agentId = '') {
         key,
       );
     }
-    if (execution || scheduling)
+    if (performed || scheduling)
       result.rows.push({
         sourceRow: row.sourceRow,
         os: String(row.os ?? ''),
@@ -116,7 +116,7 @@ export function ordersSummary(data, period, agentId = '') {
         scheduler,
         execution: Boolean(execution),
         scheduling: Boolean(scheduling),
-        unproductive: isUnproductive(data, row),
+        unproductive,
         type: text(row, 'Tipo de Serviço'),
       });
   }
@@ -170,6 +170,21 @@ export function zohoSummary(data, period, agentId = '') {
           return map;
         }, new Map())
       : null;
+  const closedTickets =
+    categories && closures
+      ? [...new Map(closures.map((row) => [`${row.agentId}:${row.ticketId}`, row])).values()]
+          .map((row) => ({
+            ticketId: row.ticketId,
+            number: row.number || row.ticketId,
+            agentId: row.agentId,
+            agent: agents.find((a) => a.id === row.agentId).name,
+            closedAt: row.closedAt,
+            category: evidence.get(row.ticketId).category || 'Categoria não informada',
+            subCategory: evidence.get(row.ticketId).subCategory || 'Não informada',
+            classification: evidence.get(row.ticketId).classification || 'Não informada',
+          }))
+          .sort((a, b) => b.closedAt.localeCompare(a.closedAt) || a.number.localeCompare(b.number))
+      : null;
   for (const row of entries) {
     const label = zohoDay(row.executedTime);
     daily.set(label, (daily.get(label) || 0) + row.seconds);
@@ -181,6 +196,25 @@ export function zohoSummary(data, period, agentId = '') {
       ? [...categories]
           .map(([label, value]) => ({ label, value }))
           .sort((a, b) => b.value - a.value)
+      : null,
+    closedTickets,
+    categoryAgents: closedTickets
+      ? [
+          ...closedTickets
+            .reduce((map, row) => {
+              const key = `${row.agentId}:${row.category}`;
+              const current = map.get(key) || {
+                agentId: row.agentId,
+                agent: row.agent,
+                category: row.category,
+                value: 0,
+              };
+              current.value++;
+              map.set(key, current);
+              return map;
+            }, new Map())
+            .values(),
+        ].sort((a, b) => a.agent.localeCompare(b.agent) || b.value - a.value)
       : null,
     seconds,
     meanSeconds: tickets ? seconds / tickets : null,
@@ -200,6 +234,23 @@ export function zohoSummary(data, period, agentId = '') {
           : null,
       })),
     reviewCount: (data.review || []).filter((r) => ids.has(r.agentId) && r.kind === 'entry').length,
+  };
+}
+/** Fotografia atual: deliberadamente não recebe filtro de período. */
+export function backlogSummary(data, agentId = '') {
+  if (!data?.complete) return null;
+  const selected = agents.filter((a) => !agentId || a.id === agentId);
+  const ids = new Set(selected.map((a) => a.id));
+  const tickets = data.tickets.filter((row) => ids.has(row.agentId));
+  return {
+    readAt: data.readAt,
+    total: tickets.length,
+    onHold: tickets.filter((row) => row.state === 'ONHOLD').length,
+    agents: selected.map((agent) => ({
+      ...agent,
+      pending: tickets.filter((row) => row.agentId === agent.id).length,
+    })),
+    tickets,
   };
 }
 export const duration = (seconds) =>

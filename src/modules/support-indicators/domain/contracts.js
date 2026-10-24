@@ -14,7 +14,7 @@ export const subjects = [
   ['other', 'Outras informações'],
 ];
 export const manualFields = [
-  ['created', 'Chamados abertos pelo suporte'],
+  ['created', 'Chamados criados pelo suporte'],
   ...subjects.map(([key, label]) => [`subject_${key}`, label]),
   ['trackers', 'Rastreadores solicitados'],
   ['collectors', 'Coletoras solicitadas'],
@@ -28,7 +28,7 @@ export const metricLabels = {
   executed: 'Serviços efetivos executados',
   scheduled: 'Serviços na agenda',
   unproductive: 'Visitas improdutivas',
-  created: 'Chamados abertos pelo suporte',
+  created: 'Chamados criados pelo suporte',
   closed: 'Chamados fechados',
   seconds: 'Tempo apontado nos chamados',
   requests: 'Equipamentos solicitados',

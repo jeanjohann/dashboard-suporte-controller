@@ -30,5 +30,11 @@ export async function ticketIndicatorEvidence(ticket, period, anchor, detail, fe
     else creation = { state: 'unknown' };
   }
   const label = (v) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 160) : null);
-  return { ticketId, creation, category: label(detail.category) };
+  return {
+    ticketId,
+    creation,
+    category: label(detail.category),
+    subCategory: label(detail.subCategory),
+    classification: label(detail.classification),
+  };
 }

@@ -63,6 +63,9 @@ export async function loadZohoActivity(
             !batch.ticketIds.includes(r.ticketId) ||
             !['support', 'outside', 'excluded', 'unknown'].includes(r.creation?.state) ||
             (r.category !== null && typeof r.category !== 'string') ||
+            ['subCategory', 'classification'].some(
+              (key) => r[key] != null && typeof r[key] !== 'string',
+            ) ||
             (r.creation.state === 'support' &&
               (!zohoId(r.creation.agentId) || !zohoDay(r.creation.at))),
         ))

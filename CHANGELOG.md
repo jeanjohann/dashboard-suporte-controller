@@ -7,6 +7,12 @@
 
 # Histórico de versões
 
+## 0.65.0 — 24/10/2026
+
+- Alinha o detalhamento dos Indicadores Suporte aos totais: visita improdutiva nunca é execução efetiva; conta na agenda somente pela data e pelo responsável de agendamento válidos.
+- Acrescenta consulta independente da carteira atual de chamados atribuídos a cada agente, incluindo Open e On Hold, sem restringir pela data de criação ou pelo período dos eventos. Consultas incompletas não aplicam totais parciais.
+- Distingue criados pelo agente, pendentes atuais e fechados pelo agente na tabela. Categorias dos fechados ganham distribuição por agente e relação paginada por chamado, com data, categoria, subcategoria e classificação atuais; CSV inclui a relação completa. Autoria continua exigindo evidência no histórico e categorias ausentes não são inventadas.
+
 ## 0.64.2 — 23/10/2026
 
 - Substitui o aviso de carregamento das bases por uma janela compacta central, fora do fluxo da página, sem deslocar o conteúdo.

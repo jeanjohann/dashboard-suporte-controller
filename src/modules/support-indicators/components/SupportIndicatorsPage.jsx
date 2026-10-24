@@ -5,6 +5,7 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { authorizeAction, api } from '../../../shared/security/accessClient.js';
 import { useDashboardSources } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import { loadZohoActivity } from '../../orders/data/zohoActivityClient.js';
+import { loadZohoBacklog } from '../data/zohoBacklogClient.js';
 import { supportPeriod } from '../../orders/domain/supportPerformance.js';
 import { todaySaoPaulo } from '../../orders/domain/lifecycle.js';
 import { Chart } from '../../../components/Chart.jsx';
@@ -21,6 +22,7 @@ import {
   manualSummary,
   ordersSummary,
   zohoSummary,
+  backlogSummary,
   duration,
 } from '../domain/indicators.js';
 import { useIndicatorRecords } from '../hooks/useIndicatorRecords.js';
@@ -29,6 +31,8 @@ import { IndicatorSettings } from './IndicatorSettings.jsx';
 
 const number = (n) => (n == null ? 'Sem dados' : n.toLocaleString('pt-BR'));
 const date = (d) => (d ? d.split('-').reverse().join('/') : '—');
+const timestamp = (value) =>
+  new Date(value).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 const valuesOf = (orders, zoho, manual) => ({
   executed: orders && !orders.unavailable ? orders.executed : null,
   scheduled: orders && !orders.unavailable ? orders.scheduled : null,
@@ -67,6 +71,49 @@ function Table({ headers, rows }) {
     </div>
   );
 }
+function ClosedTicketDetails({ rows }) {
+  const [page, setPage] = useState(0);
+  const last = Math.max(0, Math.ceil(rows.length / 25) - 1),
+    current = Math.min(page, last);
+  return (
+    <details>
+      <summary>Conferir {rows.length} chamados por agente e categoria</summary>
+      <Table
+        headers={[
+          'Chamado',
+          'Agente que fechou',
+          'Fechado em · São Paulo',
+          'Categoria atual',
+          'Subcategoria atual',
+          'Classificação atual',
+        ]}
+        rows={rows
+          .slice(current * 25, current * 25 + 25)
+          .map((r) => [
+            r.number,
+            r.agent,
+            timestamp(r.closedAt),
+            r.category,
+            r.subCategory,
+            r.classification,
+          ])}
+      />
+      {last > 0 && (
+        <div className="si-toolbar">
+          <button disabled={!current} onClick={() => setPage(current - 1)}>
+            Anterior
+          </button>
+          <span>
+            Página {current + 1} de {last + 1}
+          </span>
+          <button disabled={current === last} onClick={() => setPage(current + 1)}>
+            Próxima
+          </button>
+        </div>
+      )}
+    </details>
+  );
+}
 export function SupportIndicatorsPage({ onPage, active = true }) {
   const { user, managed } = useAccess(),
     { sources } = useDashboardSources(),
@@ -79,6 +126,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [progress, setProgress] = useState(0),
     [error, setError] = useState('');
   const pending = useRef(null);
+  const backlogRequest = useRef(null);
+  const [ownBacklog, setOwnBacklog] = useState(null),
+    [backlogBusy, setBacklogBusy] = useState(false),
+    [backlogProgress, setBacklogProgress] = useState(0),
+    [backlogError, setBacklogError] = useState('');
+  const backlog = useMemo(() => backlogSummary(ownBacklog, agentId), [ownBacklog, agentId]);
   const [profile, setProfile] = useState(null),
     [profileBusy, setProfileBusy] = useState(false);
   async function inspectProfile() {
@@ -162,13 +215,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       os?.scheduled ?? null,
       os?.executed ?? null,
       z?.created ?? m?.totals.created ?? null,
+      backlog?.agents.find((r) => r.id === a.id)?.pending ?? null,
       z?.closed ?? null,
       duration(z?.seconds),
       m?.requests ?? null,
       m?.activities ?? null,
     ];
   });
-  useEffect(() => () => pending.current?.abort(), []);
+  useEffect(
+    () => () => {
+      pending.current?.abort();
+      backlogRequest.current?.abort();
+    },
+    [],
+  );
   useEffect(() => {
     if (!manualDirty) return;
     const warn = (e) => {
@@ -179,10 +239,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     return () => window.removeEventListener('beforeunload', warn);
   }, [manualDirty]);
   useEffect(() => {
-    if (!active) pending.current?.abort();
+    if (!active) {
+      pending.current?.abort();
+      backlogRequest.current?.abort();
+    }
   }, [active]);
   async function loadZoho() {
-    if (pending.current) return;
+    if (pending.current || backlogRequest.current) return;
     const c = new AbortController();
     pending.current = c;
     setBusy(true);
@@ -203,6 +266,30 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     } finally {
       pending.current = null;
       setBusy(false);
+    }
+  }
+  async function loadBacklog() {
+    if (backlogRequest.current || pending.current) return;
+    const controller = new AbortController();
+    backlogRequest.current = controller;
+    setBacklogBusy(true);
+    setBacklogError('');
+    setBacklogProgress(0);
+    try {
+      const result = await loadZohoBacklog({
+        signal: controller.signal,
+        onProgress: setBacklogProgress,
+      });
+      if (!controller.signal.aborted) setOwnBacklog(result);
+    } catch (e) {
+      setBacklogError(
+        controller.signal.aborted
+          ? 'Consulta de pendências cancelada. A leitura anterior foi preservada.'
+          : e.message,
+      );
+    } finally {
+      backlogRequest.current = null;
+      setBacklogBusy(false);
     }
   }
   function preset(key) {
@@ -246,7 +333,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         'Agente',
         'Agendados',
         'Executados efetivos',
-        zoho?.created != null ? 'Abertos · Zoho' : 'Abertos · manual',
+        zoho?.created != null ? 'Criados pelo agente · Zoho' : 'Criados · manual',
+        'Pendentes agora · Zoho',
         'Fechados · Zoho',
         'Tempo apontado',
         'Equipamentos · manual',
@@ -281,6 +369,49 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         ['Categoria atual no Zoho', 'Chamados fechados distintos'],
         ...zoho.categories.map((r) => [r.label, r.value]),
       );
+    if (zoho?.closedTickets)
+      report.push(
+        [],
+        [
+          'Chamado',
+          'Agente que fechou',
+          'Fechado em',
+          'Categoria atual',
+          'Subcategoria atual',
+          'Classificação atual',
+        ],
+        ...zoho.closedTickets.map((r) => [
+          r.number,
+          r.agent,
+          r.closedAt,
+          r.category,
+          r.subCategory,
+          r.classification,
+        ]),
+      );
+    if (zoho?.categoryAgents)
+      report.push(
+        [],
+        ['Agente', 'Categoria atual', 'Fechados distintos por agente'],
+        ...zoho.categoryAgents.map((r) => [r.agent, r.category, r.value]),
+      );
+    if (backlog)
+      report.push(
+        [],
+        ['Pendências atuais consultadas em', backlog.readAt],
+        [
+          'Critério de pendências',
+          'Chamados atualmente atribuídos ao agente, categorias Open ou On Hold, independentemente do período selecionado.',
+        ],
+        ['Chamado', 'Responsável atual', 'Status atual', 'Categoria atual', 'Subcategoria atual'],
+        ...backlog.tickets.map((r) => [
+          r.number,
+          agents.find((a) => a.id === r.agentId)?.name,
+          r.status,
+          r.category,
+          r.subCategory,
+        ]),
+      );
     await download(
       csv(report),
       'text/csv;charset=utf-8',
@@ -303,7 +434,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <p>Atendimentos, serviços e atividades da equipe.</p>
             </div>
             <div className="si-toolbar">
-              <button disabled={!valid || busy || store.loading} onClick={exportReport}>
+              <button
+                disabled={!valid || busy || backlogBusy || store.loading}
+                onClick={exportReport}
+              >
                 Exportar CSV
               </button>
               <button
@@ -384,7 +518,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             </div>
             <div className="si-toolbar">
               <button
-                disabled={!valid || busy || periodDaysSafe(period) > 31 || period.start > today}
+                disabled={
+                  !valid ||
+                  busy ||
+                  backlogBusy ||
+                  periodDaysSafe(period) > 31 ||
+                  period.start > today
+                }
                 onClick={loadZoho}
               >
                 {busy ? `Consultando ${progress} chamados…` : 'Consultar Zoho neste período'}
@@ -416,7 +556,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 filtro de período. Importações e aberturas por clientes não contam como abertura
                 pelo suporte.
               </p>
-              <button disabled={profileBusy || busy} onClick={inspectProfile}>
+              <button disabled={profileBusy || busy || backlogBusy} onClick={inspectProfile}>
                 {profileBusy ? 'Conferindo amostra…' : 'Consultar amostra de autoria e categorias'}
               </button>
               {profile && (
@@ -459,6 +599,45 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               </p>
             )}
           </section>
+          <section className="si-panel" aria-label="Chamados pendentes atuais no Zoho">
+            <div className="si-backlog-heading">
+              <div>
+                <h2>Pendências atuais · Zoho</h2>
+                <p className="scope">
+                  Chamados atualmente atribuídos ao agente e não encerrados, incluindo em espera.
+                  Não usa o filtro de período.
+                </p>
+              </div>
+              <div className="si-toolbar">
+                {backlog && (
+                  <strong className="si-backlog-count">
+                    {number(backlog.total)} pendentes{' '}
+                    <small>· {number(backlog.onHold)} em espera</small>
+                  </strong>
+                )}
+                <button disabled={backlogBusy || busy} onClick={loadBacklog}>
+                  {backlogBusy
+                    ? `Conferindo ${backlogProgress} chamados…`
+                    : 'Consultar pendências atuais'}
+                </button>
+                {backlogBusy && (
+                  <button onClick={() => backlogRequest.current?.abort()}>
+                    Cancelar pendências
+                  </button>
+                )}
+              </div>
+            </div>
+            <p className="scope">
+              {backlog
+                ? `Consultado em ${timestamp(backlog.readAt)} · São Paulo. A carteira pode mudar após a leitura.`
+                : 'Consulte o Zoho para obter a carteira atual. Sem consulta completa, nenhum total é presumido.'}
+            </p>
+            {backlogError && (
+              <p className="error" role="alert">
+                {backlogError}
+              </p>
+            )}
+          </section>
           {valid && (
             <>
               <div className="si-cards">
@@ -491,9 +670,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               </div>
               <p className="scope si-rules">
                 Agenda e execução são etapas diferentes e podem conter o mesmo serviço. Executados:
-                Concluída/Pago, sem Visita Improdutiva. A agenda não é histórico da ação de agendar:
-                usa a data marcada no arquivo. Ausência de registros na base não comprova ausência
-                de trabalho.
+                Concluída/Pago, sem Visita Improdutiva. Improdutivas contam somente na agenda, pela
+                data e responsável de agendamento, e nunca como execução. A agenda não é histórico
+                da ação de agendar: usa a data marcada no arquivo. Ausência de registros na base não
+                comprova ausência de trabalho.
               </p>
               {hasOrders &&
                 (orders.unmapped > 0 ||
@@ -575,7 +755,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                             'Agente',
                             'Agendados · OS',
                             'Executados · OS',
-                            zoho?.created != null ? 'Abertos · Zoho' : 'Abertos · manual',
+                            zoho?.created != null
+                              ? 'Criados pelo agente · Zoho'
+                              : 'Criados · manual',
+                            'Pendentes agora · Zoho',
                             'Fechados · Zoho',
                             'Tempo · Zoho',
                             'Equipamentos · manual',
@@ -678,6 +861,22 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                             headers={['Categoria atual no Zoho', 'Chamados fechados distintos']}
                             rows={zoho.categories.map((r) => [r.label, r.value])}
                           />
+                          <Table
+                            headers={[
+                              'Agente que fechou',
+                              'Categoria atual',
+                              'Fechados distintos por agente',
+                            ]}
+                            rows={(zoho.categoryAgents || []).map((r) => [
+                              r.agent,
+                              r.category,
+                              r.value,
+                            ])}
+                          />
+                          <ClosedTicketDetails
+                            key={period.start + period.end + agentId}
+                            rows={zoho.closedTickets || []}
+                          />
                         </>
                       ) : (
                         <>
@@ -774,7 +973,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     date(r.executedAt),
                     date(r.scheduledAt),
                     r.type,
-                    r.execution ? (r.unproductive ? 'Improdutiva' : 'Efetiva') : '—',
+                    r.unproductive ? 'Não · improdutiva' : r.execution ? 'Efetiva' : '—',
                     r.scheduling ? 'Sim' : '—',
                   ])}
                 />

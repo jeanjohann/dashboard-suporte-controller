@@ -1,9 +1,9 @@
 {
-  "version": "0.64.0",
-  "base": "1ea3091 · cópia da entrega",
-  "date": "2026-10-23",
-  "total": 500,
-  "tests": 103,
+  "version": "0.65.0",
+  "base": "8082aab · cópia da entrega",
+  "date": "2026-10-24",
+  "total": 505,
+  "tests": 104,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 56
+      "count": 57
     },
     {
       "path": "docs/diagrams",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 41
+      "count": 43
     },
     {
       "path": "server/persistence",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 354
+      "count": 356
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 257
+      "count": 258
     },
     {
       "path": "src/modules/assistant",
@@ -288,12 +288,17 @@
     {
       "path": "src/modules/support-indicators",
       "description": "Módulo Indicadores Suporte: interface, regras e integração de seus dados.",
-      "count": 7
+      "count": 8
     },
     {
       "path": "src/modules/support-indicators/components",
       "description": "Página e painéis visuais de Indicadores Suporte.",
       "count": 3
+    },
+    {
+      "path": "src/modules/support-indicators/data",
+      "description": "Leitura, contratos e transporte de dados de Indicadores Suporte.",
+      "count": 1
     },
     {
       "path": "src/modules/support-indicators/domain",
@@ -318,7 +323,7 @@
     {
       "path": "src/shared",
       "description": "Contratos e infraestrutura compartilhados entre módulos.",
-      "count": 48
+      "count": 49
     },
     {
       "path": "src/shared/charts",
@@ -353,7 +358,7 @@
     {
       "path": "src/shared/persistence",
       "description": "Contratos de documentos, integridade e clientes das bases completas no piloto D1.",
-      "count": 9
+      "count": 10
     },
     {
       "path": "src/shared/security",
@@ -447,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 98097,
-      "sha256": "94aea7d2eab2d40988497c91d9fbf1df9f524239b90abf9dfa19486cef6997d0",
+      "bytes": 99636,
+      "sha256": "426572ebd6dc41a89cd81fa71c40363916274efa07c1c766bc8cb164555a5a2e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -769,8 +774,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 12877,
-      "sha256": "2314ebc2f5b77fb8cf5d62ed69cb964b724efcc53a6e3b91e812313ea2c96482",
+      "bytes": 16026,
+      "sha256": "d623f27b5abb019f595fab5cb30ff074fbf1875352b3e51b78d8ed5b622d72d5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -998,6 +1003,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "docs/PLANO-DE-REFATORACAO-E-DESEMPENHO.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Levantamento de recálculos, páginas inativas, grades e limpeza futura; distingue evidências de hipóteses e define como medir desempenho.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 11016,
+      "sha256": "dceb60ac5775138eb3e76ff80b3b1971573d3c2c67477d1587d8b18c2e5f7bfc",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "docs/PREPARACAO-BANCO-DE-DADOS.md",
       "folder": "docs",
       "module": "Documentação",
@@ -1049,8 +1068,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 41176,
-      "sha256": "b6abb6b86fe817ed4c005d34d53f905b0977945445eadf06c40ef58a2594eb4a",
+      "bytes": 43227,
+      "sha256": "470942aebc36299ba34f5ceee6ca4c86a3954e9eabe99399ff465a9072a4f729",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1302,7 +1321,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "0ab77908c3e83f0db1604982bd998ff7664df3c9ffbc069dda3995b633f2c536",
+      "sha256": "20685a6d2b5d30c928e684ba0aaea3bba8a11753544d2c2dd76e5d2d5743349e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1316,7 +1335,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "df4f2c9d41104fa1d5c175efcbfab446d0c5632a85e9117e19598d57a0e93c06",
+      "sha256": "2c047363efe7cc0162cf0a9cb12c5fba74754f7c6cde5c1d75e707805ca236c7",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1479,8 +1498,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 50482,
-      "sha256": "d5140b12dbbaf25c54a11d04f9c71d0de5651920bf232a2714e42b0057979995",
+      "bytes": 51254,
+      "sha256": "b50adfcfc3bf07ebe8274c0e87b0c228b7847b475217e9ec8c0af58180fe40b6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2416,11 +2435,11 @@
       "layer": "Backend",
       "description": "Piloto Zoho somente leitura. Segredos e tokens permanecem no Worker.",
       "exports": ["createZohoReader", "zohoConfigured", "zohoResponse"],
-      "imports": ["server/zohoActivity.js", "server/zohoTicketProfile.js"],
+      "imports": ["server/zohoActivity.js", "server/zohoBacklog.js", "server/zohoTicketProfile.js"],
       "external": [],
-      "importedBy": ["server/worker.js", "server/zoho.test.js"],
-      "bytes": 12128,
-      "sha256": "869531772cd495e527cbe584a12eb5cf6eecbc9c6d817c9faa2589a686adf17d",
+      "importedBy": ["server/worker.js", "server/zoho.test.js", "server/zohoBacklog.test.js"],
+      "bytes": 12593,
+      "sha256": "4795f65a1b23732fd7679633a1114e8f9cadbf90d23cc22fc0c0e65daba91fa0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2453,6 +2472,7 @@
       "importedBy": [
         "server/zoho.js",
         "server/zohoActivity.test.js",
+        "server/zohoBacklog.js",
         "server/zohoClosures.test.js",
         "server/zohoIndicators.test.js"
       ],
@@ -2476,6 +2496,39 @@
       "importedBy": [],
       "bytes": 10856,
       "sha256": "a887e1236911a8f4ae85c57c9f8004265ab53ce502c2ac9279df5db473cd56dd",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/zohoBacklog.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Pesquisa a carteira atual dos agentes do piloto, valida responsável e categoria de status e retorna somente pendências, sem recorte por período.",
+      "exports": ["backlogParameters", "collectZohoBacklogBatch"],
+      "imports": ["server/zohoActivity.js", "src/shared/data/zohoActivity.js"],
+      "external": [],
+      "importedBy": ["server/zoho.js", "server/zohoBacklog.test.js"],
+      "bytes": 2526,
+      "sha256": "cf864fcd19b69594077fb64bdf48f0f228912c894af3e91d96fb0d867448110e",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "server/zohoBacklog.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica zoho Backlog no contexto de API Cloudflare. Exemplos: pendências aceitam apenas agentes do piloto e paginação documentada, sem recorte por período; carteira inclui chamados antigos Open/On Hold, exclui Closed e não envia dados de contato; carteira não aplica status desconhecido, agente divergente, duplicação ou limite de pesquisa.",
+      "exports": [],
+      "imports": [
+        "server/zoho.js",
+        "server/zohoBacklog.js",
+        "src/modules/support-indicators/data/zohoBacklogClient.js",
+        "src/modules/support-indicators/domain/indicators.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 5173,
+      "sha256": "305e4ea4023ecdf649a29852a880db73e09203c093fdb259d8195cfa98112212",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2520,8 +2573,8 @@
       "imports": ["src/shared/data/zohoActivity.js"],
       "external": [],
       "importedBy": ["server/zohoActivity.js", "server/zohoIndicators.test.js"],
-      "bytes": 1708,
-      "sha256": "429c2b173a10a0b9b3b42ff2fc951224cb7e8a11e7e372297f25c37568db9181",
+      "bytes": 1817,
+      "sha256": "a8333e0f745c568fac0f89aea42c618134f0c4b17ba8a316878a064a820bee21",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2538,8 +2591,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 5551,
-      "sha256": "981ce601e0792b6a434d73cf434945c8619db0da33edabda14b43095f6d6b9c8",
+      "bytes": 6322,
+      "sha256": "f5cbae55fb6e359ffeaeffe59cf368f7d3ba3e1535815006e08591318ba9f3e7",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2656,8 +2709,8 @@
       "imports": [],
       "external": ["react"],
       "importedBy": ["src/app/Navigation.jsx", "src/main.jsx"],
-      "bytes": 3300,
-      "sha256": "05164b50751222d22de671bfafd41f6af88c915f49346e8ecf4acd73f1d40a9e",
+      "bytes": 3376,
+      "sha256": "f8cedf790ea3335a9274c1696b1af3c9b7d76dac09f9b1ed550b1d588178c5b2",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2683,6 +2736,7 @@
         "src/modules/orders/components/OrdersPage.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/users/components/UsersPage.jsx",
+        "src/shared/persistence/SavedSourcesStatus.jsx",
         "src/shared/persistence/useSavedSources.js",
         "src/shared/security/Access.jsx",
         "src/shared/security/accessClient.js",
@@ -2690,8 +2744,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 11615,
-      "sha256": "9265594757545ddd655c2964bab7c30f6e88f35c7e36534d14f48e166a95a5b3",
+      "bytes": 11234,
+      "sha256": "9c2011d20c3dc99939d80d86f4bf6955ddf1c641290fe5042f68ca497a3ca208",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -7157,8 +7211,8 @@
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 3561,
-      "sha256": "411f4092a3d47ead18ef74f3811d396b03bc821e773c3a1b4e5b26d225a7374b",
+      "bytes": 3699,
+      "sha256": "5cc95893ea46954698c9930036308585a8229fc3b692fddc0d3db53140648b55",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8621,6 +8675,7 @@
         "src/modules/orders/domain/supportPerformance.js",
         "src/modules/support-indicators/components/IndicatorSettings.jsx",
         "src/modules/support-indicators/components/ManualIndicatorForm.jsx",
+        "src/modules/support-indicators/data/zohoBacklogClient.js",
         "src/modules/support-indicators/domain/indicators.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js",
         "src/shared/export/exports.js",
@@ -8629,8 +8684,25 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 32527,
-      "sha256": "34725c8f1564c2da412b991f5a3a216535ceea68c6d4f8df1a7423a4350e1353",
+      "bytes": 39444,
+      "sha256": "9a7a9ae601d116254e65949d46a85805524d350af076072cf985ad584471f63c",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/support-indicators/data/zohoBacklogClient.js",
+      "folder": "src/modules/support-indicators/data",
+      "module": "Indicadores Suporte",
+      "layer": "Dados / transporte",
+      "description": "Completa as páginas das duas carteiras antes de aplicar pendências atuais; recusa duplicação, falha e cancelamento sem substituir a leitura anterior.",
+      "exports": ["loadZohoBacklog"],
+      "imports": ["src/shared/data/zohoActivity.js", "src/shared/security/accessClient.js"],
+      "external": [],
+      "importedBy": [
+        "server/zohoBacklog.test.js",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
+      ],
+      "bytes": 2669,
+      "sha256": "d6051e7089dbe4da24831fd5bf21b357aa2b9308ab4490dddb833de52e132f51",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8662,7 +8734,7 @@
         "src/modules/support-indicators/domain/indicators.js"
       ],
       "bytes": 5405,
-      "sha256": "52b53e761af10cdedc68cbf67763ad4de641e8129a5ebf14360415f0b003886b",
+      "sha256": "167abb9c85710137dc354187ddb3d1740b6756cef1d0e304f90a9cfe77c86e44",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8673,6 +8745,7 @@
       "description": "Separa datas e papéis da OS e agrega eventos do Zoho somente quando a consulta cobre o período inteiro.",
       "exports": [
         "agents",
+        "backlogSummary",
         "blankEntry",
         "defaultSettings",
         "duration",
@@ -8699,6 +8772,7 @@
       ],
       "external": [],
       "importedBy": [
+        "server/zohoBacklog.test.js",
         "server/zohoIndicators.test.js",
         "src/modules/support-indicators/components/IndicatorSettings.jsx",
         "src/modules/support-indicators/components/ManualIndicatorForm.jsx",
@@ -8706,8 +8780,8 @@
         "src/modules/support-indicators/domain/indicators.test.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js"
       ],
-      "bytes": 7989,
-      "sha256": "df630e10fa3d035f07cfa9f9ab65ca4ef0b2037cbba9aef44901c0db25b12d9d",
+      "bytes": 10029,
+      "sha256": "a0fe4f687970eaae092642d7f2147cf19c27fbbe643f32a737fa41bb30b1ee55",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8720,8 +8794,8 @@
       "imports": ["src/modules/support-indicators/domain/indicators.js"],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 5614,
-      "sha256": "6801daf3871be9076096f83ed80bb1fcd704c1a8a6480b062c711c4224f6c57d",
+      "bytes": 6360,
+      "sha256": "891cfa65d646bf0806de047d5f48e8fba4be63c3dd897ce3087d5d26c4ebf7e4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9127,6 +9201,7 @@
       "importedBy": [
         "server/zohoActivity.js",
         "server/zohoActivity.test.js",
+        "server/zohoBacklog.js",
         "server/zohoClosures.js",
         "server/zohoClosures.test.js",
         "server/zohoIndicators.js",
@@ -9137,6 +9212,7 @@
         "src/modules/orders/components/SupportZohoOverview.jsx",
         "src/modules/orders/components/ZohoClosures.jsx",
         "src/modules/orders/data/zohoActivityClient.js",
+        "src/modules/support-indicators/data/zohoBacklogClient.js",
         "src/modules/support-indicators/domain/contracts.js",
         "src/modules/support-indicators/domain/indicators.js"
       ],
@@ -9493,6 +9569,20 @@
       "status": "Preparação / contrato"
     },
     {
+      "path": "src/shared/persistence/SavedSourcesStatus.jsx",
+      "folder": "src/shared/persistence",
+      "module": "Compartilhado",
+      "layer": "Interface React",
+      "description": "Exibe progresso das bases em modal central que pode ser fechado sem cancelar a operação nem deslocar a página.",
+      "exports": ["SavedSourcesStatus"],
+      "imports": [],
+      "external": ["react"],
+      "importedBy": ["src/app/Workspace.jsx"],
+      "bytes": 1809,
+      "sha256": "4e5b37fb6e2fa9f036a6286f7da865cdbb802ffc8ef7eb8f25004e9c3eab8585",
+      "status": "Preparação / contrato"
+    },
+    {
       "path": "src/shared/persistence/documentRepository.js",
       "folder": "src/shared/persistence",
       "module": "Compartilhado",
@@ -9742,6 +9832,7 @@
         "src/modules/orders/hooks/useGoogleOrders.js",
         "src/modules/orders/hooks/useOrdersSession.js",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
+        "src/modules/support-indicators/data/zohoBacklogClient.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js",
         "src/modules/users/components/UsersPage.jsx",
         "src/shared/export/exports.js",
@@ -9903,8 +9994,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 5833,
-      "sha256": "5676ee262d4ab67b5b12e86525f18ae20ce8091c282feb143ffbafc753c59178",
+      "bytes": 6673,
+      "sha256": "62a9c8d7c20ab804445ef05dab590e5954914cb2362c7da3b7fb959bbb78b77a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10071,8 +10162,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 5325,
-      "sha256": "fc94b909b36547e6578d77390f599743e91b4897aad328c39a19c547e33448e5",
+      "bytes": 5662,
+      "sha256": "e089cb15df6ff37a360565f6265f4e46d69a90e4fe40b2756d2fd49795b7e8a6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10127,8 +10218,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 6071,
-      "sha256": "a36fc9abecec461e28f9ce62ba0278ee67120d46a18dbd208e35b981cc18214c",
+      "bytes": 8689,
+      "sha256": "a8bdf69762f40ebdc8c581501ab25f6032fc2ab7351148d79fb8a806c5aeb3cc",
       "status": "Código ou documentação do ponto de referência"
     },
     {

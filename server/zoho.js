@@ -1,6 +1,7 @@
 /** Piloto Zoho somente leitura. Segredos e tokens permanecem no Worker. */
 import { activityParameters, collectZohoActivityBatch, ZohoActivityError } from './zohoActivity.js';
 import { inspectZohoTicketProfile } from './zohoTicketProfile.js';
+import { backlogParameters, collectZohoBacklogBatch } from './zohoBacklog.js';
 const accountUrl = 'https://accounts.zoho.com/oauth/v2/token';
 const apiRoot = 'https://desk.zoho.com/api/v1';
 const idPattern = /^\d{1,40}$/;
@@ -252,9 +253,13 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
   readZoho.activity = async (env, params) => {
     let parameters;
     const query = new URLSearchParams(params);
+    if (query.has('backlog') && query.has('profile'))
+      throw new ZohoActivityError('Selecione apenas uma modalidade de consulta.', 400);
     if (query.get('profile') === '1') query.delete('profile');
     try {
-      parameters = activityParameters(query, now());
+      parameters = query.has('backlog')
+        ? backlogParameters(query)
+        : activityParameters(query, now());
     } catch (error) {
       throw error instanceof ZohoActivityError
         ? error
@@ -274,6 +279,12 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
     );
     if (id(organization?.id) !== env.ZOHO_ORG_ID)
       throw failure('ORGANIZATION', 'A organização da coleta não corresponde à configurada.');
+    if (params.has('backlog'))
+      return collectZohoBacklogBatch(
+        (path) => request(`${apiRoot}${path}`, options, 'SEARCH'),
+        parameters,
+        now,
+      );
     if (params.get('profile') === '1')
       return inspectZohoTicketProfile((path) => request(`${apiRoot}${path}`, options, 'ACTIVITY'));
     return collectZohoActivityBatch(

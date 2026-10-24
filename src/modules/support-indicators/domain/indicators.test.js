@@ -122,6 +122,9 @@ test('OS separa datas e papéis, improdutivas e canceladas, sem aproximar nome d
   assert.equal(all.executed, 1);
   assert.equal(all.unproductive, 1);
   assert.equal(all.scheduled, 2);
+  const unproductiveRow = all.rows.find((r) => r.unproductive);
+  assert.equal(unproductiveRow.execution, false);
+  assert.equal(unproductiveRow.scheduling, true);
   assert.equal(all.missingExecutionDate, 1);
   assert.equal(all.unmapped, 1);
   const jean = ordersSummary(data, period, agents[1].id);
@@ -135,6 +138,18 @@ test('OS separa datas e papéis, improdutivas e canceladas, sem aproximar nome d
   assert.equal(eduardo.scheduled, 1);
   assert.equal(ordersSummary(null, period), null);
   assert.ok(ordersSummary({ columns: [], rows: [] }, period).unavailable.includes('Status'));
+});
+
+test('improdutiva não inventa agendamento quando faltam data ou responsável, nem vira execução', () => {
+  const data = orders();
+  const row = data.rows[1];
+  const schedule = data.columns.find((c) => c.label === 'Agendamento').index;
+  row.cells[schedule] = { raw: null, display: '' };
+  const result = ordersSummary(data, period, agents[0].id);
+  assert.equal(result.executed, 0);
+  assert.equal(result.unproductive, 1);
+  assert.equal(result.rows.find((r) => r.unproductive).scheduling, false);
+  assert.equal(result.rows.find((r) => r.unproductive).execution, false);
 });
 test('Zoho exige cobertura completa, filtra eventos em São Paulo e deduplica por ticket e evento', () => {
   const entry = {

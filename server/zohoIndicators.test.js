@@ -61,7 +61,13 @@ test('coleta de indicadores adiciona evidências sem modificar respostas e tempo
 test('assuntos contam fechados únicos por agente e a criação não usa o responsável atual', () => {
   const creation = { state: 'support', agentId: agents[1].id, at: ticket.createdTime };
   const evidence = [
-    { ticketId: '1', creation, category: 'Cancelamentos/Desinstalação' },
+    {
+      ticketId: '1',
+      creation,
+      category: 'Cancelamentos/Desinstalação',
+      subCategory: 'Desinstalação',
+      classification: 'Solicitação',
+    },
     { ticketId: '2', creation: { state: 'excluded' }, category: 'Outras Informações' },
   ];
   const c = { ticketId: '1', id: 'a', agentId: agents[0].id, closedAt: ticket.createdTime };
@@ -80,6 +86,16 @@ test('assuntos contam fechados únicos por agente e a criação não usa o respo
   };
   const total = zohoSummary(data, period);
   assert.equal(total.created, 1);
+  assert.equal(total.closedTickets.length, 3);
+  assert.equal(total.closedTickets.filter((r) => r.ticketId === '1').length, 2);
+  assert.equal(total.closedTickets.find((r) => r.ticketId === '1').subCategory, 'Desinstalação');
+  assert.equal(total.closedTickets.find((r) => r.ticketId === '2').subCategory, 'Não informada');
+  assert.equal(
+    total.categoryAgents.reduce((n, r) => n + r.value, 0),
+    3,
+  );
+  assert.equal(zohoSummary(data, period, agents[0].id).closedTickets.length, 2);
+  assert.equal(zohoSummary(data, period, agents[1].id).closedTickets.length, 1);
   assert.deepEqual(total.categories, [
     { label: 'Cancelamentos/Desinstalação', value: 1 },
     { label: 'Outras Informações', value: 1 },
@@ -89,6 +105,7 @@ test('assuntos contam fechados únicos por agente e a criação não usa o respo
   assert.equal(zohoSummary({ ...data, closuresComplete: false }, period).created, 1);
   assert.equal(zohoSummary({ ...data, closuresComplete: false }, period).closed, null);
   assert.equal(zohoSummary({ ...data, closuresComplete: false }, period).categories, null);
+  assert.equal(zohoSummary({ ...data, closuresComplete: false }, period).closedTickets, null);
   evidence[0].creation = { state: 'unknown' };
   assert.equal(zohoSummary(data, period).created, null);
   assert.equal(zohoSummary({ ...data, indicatorsAvailable: false }, period).categories, null);

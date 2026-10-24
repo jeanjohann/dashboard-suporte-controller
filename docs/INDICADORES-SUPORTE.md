@@ -4,6 +4,20 @@ Página independente no menu principal, com filtros próprios por data e agente.
 
 ## Uso
 
+### Ajustes da versão 0.65.0
+
+- **Improdutivas:** os totais já excluíam Visita Improdutiva da execução efetiva. A relação de linhas agora segue exatamente a mesma regra e mostra “Não · improdutiva”. A linha pode contar na agenda, pela data Agendamento e pelo Resp. Agendamento; isso não transfere o crédito ao Resp. Execução nem inventa uma data ausente. O indicador diagnóstico de improdutivas continua separado.
+- **Criados pelo agente:** evento de criação confirmado, no período selecionado. Não equivale a pendências e não usa o responsável atual como autor. Sem evidência suficiente, o automático continua indisponível e eventual alternativa manual é identificada.
+- **Pendentes atuais:** botão **Consultar pendências atuais**, independente da consulta de eventos. Inclui todos os chamados atualmente atribuídos aos dois agentes do piloto nas categorias de status Open ou On Hold, inclusive chamados antigos sem alteração recente. Usa o filtro de agente, mas não o de período. A data da consulta fica explícita; não há comparação semanal de estoque atual com eventos históricos.
+- **Fechados e categorias:** **Consultar Zoho neste período** mantém a autoria confirmada pelo evento de fechamento. A seção Assuntos acrescenta contagem por agente e uma relação paginada de 25 itens com chamado, agente, data do fechamento e categoria/subcategoria/classificação atuais. Refechamentos do mesmo chamado pelo mesmo agente contam uma vez; agentes diferentes podem ter fechado o mesmo chamado no período. O total da equipe continua deduplicado por chamado. As categorias refletem o cadastro atual, não necessariamente o cadastro na data do fechamento. Valores ausentes aparecem como não informados; não há classificação por palavras do título.
+- **Exportação:** inclui contagens por agente, a lista completa de fechados/categorias e a fotografia das pendências quando consultada, com sua própria referência de leitura.
+
+As pendências usam a [pesquisa oficial de tickets do Zoho Desk](https://desk.zoho.com/DeskAPIDocument), por `assigneeId`, com páginas de 100 e limite de 5.000 chamados pesquisados por agente, incluindo os encerrados que precisam ser descartados. Status é conferido por `statusType`, não pelo nome traduzido/customizado. Agente divergente, duplicação, status desconhecido, limite ou falha de página impedem aplicar um total parcial; a consulta anterior permanece. A leitura é paginada durante um intervalo, não uma transação atômica do Zoho: alterações na carteira podem ocorrer durante ou após a consulta.
+
+São consultas somente de leitura, com as credenciais e permissões existentes do piloto do proprietário. Não criam novas gravações no D1, não enviam títulos/contatos na carteira e não alteram os lançamentos manuais. A conferência real com a carteira e relatórios do Zoho continua necessária, especialmente nos períodos com divergência de histórico de fechamento já identificada. Nessas condições, fechamentos e assuntos permanecem indisponíveis em vez de assumir que o responsável atual foi quem fechou.
+
+### Rotina da página
+
 1. Abra **Indicadores Suporte**. A base de OS usa a versão da sessão, carregada do banco ou importada no sistema.
 2. Escolha semana atual, semana anterior, mês atual ou um intervalo personalizado de até 366 dias. Semanas vão de segunda a domingo, pelo calendário de São Paulo. O filtro não altera OS, Meu Dashboard ou Monitoramento.
 3. Use **Consultar Zoho neste período** para carregar uma consulta completa de até 31 dias. Falha ou cancelamento preserva a consulta anterior, mas ela só é apresentada se cobrir integralmente o novo período. Uma consulta da sessão em OS também pode ser aproveitada, sem nova chamada automática ao fornecedor.

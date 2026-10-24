@@ -21,6 +21,25 @@
   gap: 16px;
   margin-bottom: 16px;
 }
+.si-backlog-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.si-backlog-heading h2 {
+  margin-bottom: 6px;
+}
+.si-backlog-count {
+  color: var(--ui-ink);
+  font-size: 18px;
+}
+.si-backlog-count small {
+  color: var(--ui-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
 .si-heading p {
   color: var(--ui-muted);
   margin: 0;

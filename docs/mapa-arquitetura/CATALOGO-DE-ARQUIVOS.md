@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.64.0 · referência 1ea3091 · cópia da entrega · 2026-10-23 · **500 arquivos / 103 arquivos de teste / 71 pastas**.
+Addlog 0.65.0 · referência 8082aab · cópia da entrega · 2026-10-24 · **505 arquivos / 104 arquivos de teste / 72 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -11,7 +11,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 ## Pastas
 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (56 arquivos, incluindo subpastas).
+- **docs** — Guias, critérios e histórico das implementações. (57 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (2 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
@@ -19,13 +19,13 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
 - **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (24 arquivos, incluindo subpastas).
 - **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (6 arquivos, incluindo subpastas).
-- **server** — API Cloudflare e adaptadores privados de integrações. (41 arquivos, incluindo subpastas).
+- **server** — API Cloudflare e adaptadores privados de integrações. (43 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (9 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (2 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (354 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (356 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
-- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (257 arquivos, incluindo subpastas).
+- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (258 arquivos, incluindo subpastas).
 - **src/modules/assistant** — Módulo Assistente: interface, regras e integração de seus dados. (6 arquivos, incluindo subpastas).
 - **src/modules/assistant/components** — Página e painéis visuais de Assistente. (2 arquivos, incluindo subpastas).
 - **src/modules/assistant/data** — Leitura, contratos e transporte de dados de Assistente. (2 arquivos, incluindo subpastas).
@@ -66,20 +66,21 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/park** — Módulo Parque e Manutenção: interface, regras e integração de seus dados. (6 arquivos, incluindo subpastas).
 - **src/modules/park/components** — Página e painéis visuais de Parque e Manutenção. (2 arquivos, incluindo subpastas).
 - **src/modules/park/domain** — Validação e cálculo das regras de negócio de Parque e Manutenção. (4 arquivos, incluindo subpastas).
-- **src/modules/support-indicators** — Módulo Indicadores Suporte: interface, regras e integração de seus dados. (7 arquivos, incluindo subpastas).
+- **src/modules/support-indicators** — Módulo Indicadores Suporte: interface, regras e integração de seus dados. (8 arquivos, incluindo subpastas).
 - **src/modules/support-indicators/components** — Página e painéis visuais de Indicadores Suporte. (3 arquivos, incluindo subpastas).
+- **src/modules/support-indicators/data** — Leitura, contratos e transporte de dados de Indicadores Suporte. (1 arquivos, incluindo subpastas).
 - **src/modules/support-indicators/domain** — Validação e cálculo das regras de negócio de Indicadores Suporte. (3 arquivos, incluindo subpastas).
 - **src/modules/support-indicators/hooks** — Estado, efeitos e coordenação da sessão de Indicadores Suporte. (1 arquivos, incluindo subpastas).
 - **src/modules/users** — Módulo Usuários: interface, regras e integração de seus dados. (1 arquivos, incluindo subpastas).
 - **src/modules/users/components** — Página e painéis visuais de Usuários. (1 arquivos, incluindo subpastas).
-- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (48 arquivos, incluindo subpastas).
+- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (49 arquivos, incluindo subpastas).
 - **src/shared/charts** — Regras de representação e paleta de gráficos. (3 arquivos, incluindo subpastas).
 - **src/shared/config** — Endereços de serviços documentais sem credenciais. (1 arquivos, incluindo subpastas).
 - **src/shared/data** — Filtros, datas, ordenação e contratos normalizados. (14 arquivos, incluindo subpastas).
 - **src/shared/export** — Exportações e contexto de impressão. (5 arquivos, incluindo subpastas).
 - **src/shared/filters** — Seleção independente por categoria e visões salvas locais. (7 arquivos, incluindo subpastas).
 - **src/shared/layout** — Personalização de página e agrupamento dos relatórios. (5 arquivos, incluindo subpastas).
-- **src/shared/persistence** — Contratos de documentos, integridade e clientes das bases completas no piloto D1. (9 arquivos, incluindo subpastas).
+- **src/shared/persistence** — Contratos de documentos, integridade e clientes das bases completas no piloto D1. (10 arquivos, incluindo subpastas).
 - **src/shared/security** — Sessão, autorização e cliente da API protegida. (4 arquivos, incluindo subpastas).
 - **src/styles** — CSS global e refinamentos; a ordem é definida em main.jsx. (24 arquivos, incluindo subpastas).
 
@@ -530,6 +531,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Personalização das páginas. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/PERSONALIZACAO-DE-PAGINAS.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/PLANO-DE-REFATORACAO-E-DESEMPENHO.md
+
+**Documentação · Documentação** — Levantamento de recálculos, páginas inativas, grades e limpeza futura; distingue evidências de hipóteses e define como medir desempenho.
+
+[Abrir fonte](../../docs/PLANO-DE-REFATORACAO-E-DESEMPENHO.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -1527,9 +1538,9 @@ Dependências externas: `jose`, `node:assert/strict`, `node:fs`, `node:sqlite`, 
 
 Exporta: `createZohoReader`, `zohoConfigured`, `zohoResponse`.
 
-Importa arquivos locais: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoTicketProfile.js](../../server/zohoTicketProfile.js).
+Importa arquivos locais: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoBacklog.js](../../server/zohoBacklog.js), [server/zohoTicketProfile.js](../../server/zohoTicketProfile.js).
 
-Importado por: [server/worker.js](../../server/worker.js), [server/zoho.test.js](../../server/zoho.test.js).
+Importado por: [server/worker.js](../../server/worker.js), [server/zoho.test.js](../../server/zoho.test.js), [server/zohoBacklog.test.js](../../server/zohoBacklog.test.js).
 
 ### server/zoho.test.js
 
@@ -1553,7 +1564,7 @@ Exporta: `ZohoActivityError`, `activityParameters`, `collectZohoActivityBatch`.
 
 Importa arquivos locais: [server/zohoClosures.js](../../server/zohoClosures.js), [server/zohoIndicators.js](../../server/zohoIndicators.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
 
-Importado por: [server/zoho.js](../../server/zoho.js), [server/zohoActivity.test.js](../../server/zohoActivity.test.js), [server/zohoClosures.test.js](../../server/zohoClosures.test.js), [server/zohoIndicators.test.js](../../server/zohoIndicators.test.js).
+Importado por: [server/zoho.js](../../server/zoho.js), [server/zohoActivity.test.js](../../server/zohoActivity.test.js), [server/zohoBacklog.js](../../server/zohoBacklog.js), [server/zohoClosures.test.js](../../server/zohoClosures.test.js), [server/zohoIndicators.test.js](../../server/zohoIndicators.test.js).
 
 ### server/zohoActivity.test.js
 
@@ -1562,6 +1573,30 @@ Importado por: [server/zoho.js](../../server/zoho.js), [server/zohoActivity.test
 [Abrir fonte](../../server/zohoActivity.test.js) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: [server/zohoActivity.js](../../server/zohoActivity.js), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
+### server/zohoBacklog.js
+
+**API Cloudflare · Backend** — Pesquisa a carteira atual dos agentes do piloto, valida responsável e categoria de status e retorna somente pendências, sem recorte por período.
+
+[Abrir fonte](../../server/zohoBacklog.js) · Código ou documentação do ponto de referência
+
+Exporta: `backlogParameters`, `collectZohoBacklogBatch`.
+
+Importa arquivos locais: [server/zohoActivity.js](../../server/zohoActivity.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
+
+Importado por: [server/zoho.js](../../server/zoho.js), [server/zohoBacklog.test.js](../../server/zohoBacklog.test.js).
+
+### server/zohoBacklog.test.js
+
+**API Cloudflare · Teste** — Verifica zoho Backlog no contexto de API Cloudflare. Exemplos: pendências aceitam apenas agentes do piloto e paginação documentada, sem recorte por período; carteira inclui chamados antigos Open/On Hold, exclui Closed e não envia dados de contato; carteira não aplica status desconhecido, agente divergente, duplicação ou limite de pesquisa.
+
+[Abrir fonte](../../server/zohoBacklog.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [server/zoho.js](../../server/zoho.js), [server/zohoBacklog.js](../../server/zohoBacklog.js), [src/modules/support-indicators/data/zohoBacklogClient.js](../../src/modules/support-indicators/data/zohoBacklogClient.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js).
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
@@ -1703,7 +1738,7 @@ Dependências externas: `react`.
 
 Exporta: `Workspace`.
 
-Importa arquivos locais: [src/app/DeferredPage.jsx](../../src/app/DeferredPage.jsx), [src/modules/assistant/components/AssistantPage.jsx](../../src/modules/assistant/components/AssistantPage.jsx), [src/modules/assistant/domain/previewAccess.js](../../src/modules/assistant/domain/previewAccess.js), [src/modules/consumption/components/CarrierPage.jsx](../../src/modules/consumption/components/CarrierPage.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/consumption/data/historyRepository.js](../../src/modules/consumption/data/historyRepository.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/OrdersPage.jsx](../../src/modules/orders/components/OrdersPage.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/persistence/useSavedSources.js](../../src/shared/persistence/useSavedSources.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
+Importa arquivos locais: [src/app/DeferredPage.jsx](../../src/app/DeferredPage.jsx), [src/modules/assistant/components/AssistantPage.jsx](../../src/modules/assistant/components/AssistantPage.jsx), [src/modules/assistant/domain/previewAccess.js](../../src/modules/assistant/domain/previewAccess.js), [src/modules/consumption/components/CarrierPage.jsx](../../src/modules/consumption/components/CarrierPage.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/consumption/data/historyRepository.js](../../src/modules/consumption/data/historyRepository.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/OrdersPage.jsx](../../src/modules/orders/components/OrdersPage.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/persistence/SavedSourcesStatus.jsx](../../src/shared/persistence/SavedSourcesStatus.jsx), [src/shared/persistence/useSavedSources.js](../../src/shared/persistence/useSavedSources.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
 Importado por: [src/main.jsx](../../src/main.jsx).
 
@@ -5221,11 +5256,23 @@ Dependências externas: `react`.
 
 Exporta: `SupportIndicatorsPage`.
 
-Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/domain/lifecycle.js](../../src/modules/orders/domain/lifecycle.js), [src/modules/orders/domain/supportPerformance.js](../../src/modules/orders/domain/supportPerformance.js), [src/modules/support-indicators/components/IndicatorSettings.jsx](../../src/modules/support-indicators/components/IndicatorSettings.jsx), [src/modules/support-indicators/components/ManualIndicatorForm.jsx](../../src/modules/support-indicators/components/ManualIndicatorForm.jsx), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
+Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/domain/lifecycle.js](../../src/modules/orders/domain/lifecycle.js), [src/modules/orders/domain/supportPerformance.js](../../src/modules/orders/domain/supportPerformance.js), [src/modules/support-indicators/components/IndicatorSettings.jsx](../../src/modules/support-indicators/components/IndicatorSettings.jsx), [src/modules/support-indicators/components/ManualIndicatorForm.jsx](../../src/modules/support-indicators/components/ManualIndicatorForm.jsx), [src/modules/support-indicators/data/zohoBacklogClient.js](../../src/modules/support-indicators/data/zohoBacklogClient.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
 
 Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx).
 
 Dependências externas: `react`.
+
+### src/modules/support-indicators/data/zohoBacklogClient.js
+
+**Indicadores Suporte · Dados / transporte** — Completa as páginas das duas carteiras antes de aplicar pendências atuais; recusa duplicação, falha e cancelamento sem substituir a leitura anterior.
+
+[Abrir fonte](../../src/modules/support-indicators/data/zohoBacklogClient.js) · Código ou documentação do ponto de referência
+
+Exporta: `loadZohoBacklog`.
+
+Importa arquivos locais: [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
+
+Importado por: [server/zohoBacklog.test.js](../../server/zohoBacklog.test.js), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx).
 
 ### src/modules/support-indicators/domain/contracts.js
 
@@ -5245,11 +5292,11 @@ Importado por: [server/supportIndicators.js](../../server/supportIndicators.js),
 
 [Abrir fonte](../../src/modules/support-indicators/domain/indicators.js) · Código ou documentação do ponto de referência
 
-Exporta: `agents`, `blankEntry`, `defaultSettings`, `duration`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `orderAgentNames`, `ordersSummary`, `periodDays`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`, `zohoSummary`.
+Exporta: `agents`, `backlogSummary`, `blankEntry`, `defaultSettings`, `duration`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `orderAgentNames`, `ordersSummary`, `periodDays`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`, `zohoSummary`.
 
 Importa arquivos locais: [src/modules/orders/domain/attendanceKind.js](../../src/modules/orders/domain/attendanceKind.js), [src/modules/orders/domain/customerIdentity.js](../../src/modules/orders/domain/customerIdentity.js), [src/modules/support-indicators/domain/contracts.js](../../src/modules/support-indicators/domain/contracts.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
 
-Importado por: [server/zohoIndicators.test.js](../../server/zohoIndicators.test.js), [src/modules/support-indicators/components/IndicatorSettings.jsx](../../src/modules/support-indicators/components/IndicatorSettings.jsx), [src/modules/support-indicators/components/ManualIndicatorForm.jsx](../../src/modules/support-indicators/components/ManualIndicatorForm.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/support-indicators/domain/indicators.test.js](../../src/modules/support-indicators/domain/indicators.test.js), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js).
+Importado por: [server/zohoBacklog.test.js](../../server/zohoBacklog.test.js), [server/zohoIndicators.test.js](../../server/zohoIndicators.test.js), [src/modules/support-indicators/components/IndicatorSettings.jsx](../../src/modules/support-indicators/components/IndicatorSettings.jsx), [src/modules/support-indicators/components/ManualIndicatorForm.jsx](../../src/modules/support-indicators/components/ManualIndicatorForm.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/support-indicators/domain/indicators.test.js](../../src/modules/support-indicators/domain/indicators.test.js), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js).
 
 ### src/modules/support-indicators/domain/indicators.test.js
 
@@ -5507,7 +5554,7 @@ Exporta: `normalizeZohoEntry`, `normalizeZohoReply`, `summarizeZohoActivity`, `z
 
 Importa arquivos locais: [src/shared/data/isoDate.js](../../src/shared/data/isoDate.js).
 
-Importado por: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoActivity.test.js](../../server/zohoActivity.test.js), [server/zohoClosures.js](../../server/zohoClosures.js), [server/zohoClosures.test.js](../../server/zohoClosures.test.js), [server/zohoIndicators.js](../../server/zohoIndicators.js), [server/zohoTicketProfile.js](../../server/zohoTicketProfile.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/orders/components/SupportZohoActivity.jsx](../../src/modules/orders/components/SupportZohoActivity.jsx), [src/modules/orders/components/SupportZohoOverview.jsx](../../src/modules/orders/components/SupportZohoOverview.jsx), [src/modules/orders/components/ZohoClosures.jsx](../../src/modules/orders/components/ZohoClosures.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/support-indicators/domain/contracts.js](../../src/modules/support-indicators/domain/contracts.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js).
+Importado por: [server/zohoActivity.js](../../server/zohoActivity.js), [server/zohoActivity.test.js](../../server/zohoActivity.test.js), [server/zohoBacklog.js](../../server/zohoBacklog.js), [server/zohoClosures.js](../../server/zohoClosures.js), [server/zohoClosures.test.js](../../server/zohoClosures.test.js), [server/zohoIndicators.js](../../server/zohoIndicators.js), [server/zohoTicketProfile.js](../../server/zohoTicketProfile.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/orders/components/SupportZohoActivity.jsx](../../src/modules/orders/components/SupportZohoActivity.jsx), [src/modules/orders/components/SupportZohoOverview.jsx](../../src/modules/orders/components/SupportZohoOverview.jsx), [src/modules/orders/components/ZohoClosures.jsx](../../src/modules/orders/components/ZohoClosures.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/support-indicators/data/zohoBacklogClient.js](../../src/modules/support-indicators/data/zohoBacklogClient.js), [src/modules/support-indicators/domain/contracts.js](../../src/modules/support-indicators/domain/contracts.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js).
 
 ### src/shared/export/exports.js
 
@@ -5737,6 +5784,20 @@ Importado por: [src/modules/imports/components/ImportPage.jsx](../../src/modules
 
 Dependências externas: `react`.
 
+### src/shared/persistence/SavedSourcesStatus.jsx
+
+**Compartilhado · Interface React** — Exibe progresso das bases em modal central que pode ser fechado sem cancelar a operação nem deslocar a página.
+
+[Abrir fonte](../../src/shared/persistence/SavedSourcesStatus.jsx) · Preparação / contrato
+
+Exporta: `SavedSourcesStatus`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx).
+
+Dependências externas: `react`.
+
 ### src/shared/persistence/documentRepository.js
 
 **Compartilhado · Infraestrutura compartilhada** — Contrato de documentos versionados, independente de React, rede e banco de dados.
@@ -5859,7 +5920,7 @@ Exporta: `accessManaged`, `accessUser`, `api`, `authorizeAction`, `setAccessSess
 
 Importa arquivos locais: [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
-Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/consumption/hooks/useLineFollowup.js](../../src/modules/consumption/hooks/useLineFollowup.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/monitoring/components/MonitoringCollectionHistory.jsx](../../src/modules/monitoring/components/MonitoringCollectionHistory.jsx), [src/modules/monitoring/data/remoteReminderRepository.js](../../src/modules/monitoring/data/remoteReminderRepository.js), [src/modules/monitoring/data/savedMonitoringClient.js](../../src/modules/monitoring/data/savedMonitoringClient.js), [src/modules/monitoring/hooks/useMonitoringSource.js](../../src/modules/monitoring/hooks/useMonitoringSource.js), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/SupportZohoPanel.jsx](../../src/modules/orders/components/SupportZohoPanel.jsx), [src/modules/orders/components/ZohoPresencePanel.jsx](../../src/modules/orders/components/ZohoPresencePanel.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/hooks/useGoogleOrders.js](../../src/modules/orders/hooks/useGoogleOrders.js), [src/modules/orders/hooks/useOrdersSession.js](../../src/modules/orders/hooks/useOrdersSession.js), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/persistence/sourceSnapshotClient.js](../../src/shared/persistence/sourceSnapshotClient.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
+Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/consumption/hooks/useLineFollowup.js](../../src/modules/consumption/hooks/useLineFollowup.js), [src/modules/imports/components/ImportPage.jsx](../../src/modules/imports/components/ImportPage.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/monitoring/components/MonitoringCollectionHistory.jsx](../../src/modules/monitoring/components/MonitoringCollectionHistory.jsx), [src/modules/monitoring/data/remoteReminderRepository.js](../../src/modules/monitoring/data/remoteReminderRepository.js), [src/modules/monitoring/data/savedMonitoringClient.js](../../src/modules/monitoring/data/savedMonitoringClient.js), [src/modules/monitoring/hooks/useMonitoringSource.js](../../src/modules/monitoring/hooks/useMonitoringSource.js), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/SupportZohoPanel.jsx](../../src/modules/orders/components/SupportZohoPanel.jsx), [src/modules/orders/components/ZohoPresencePanel.jsx](../../src/modules/orders/components/ZohoPresencePanel.jsx), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/hooks/useGoogleOrders.js](../../src/modules/orders/hooks/useGoogleOrders.js), [src/modules/orders/hooks/useOrdersSession.js](../../src/modules/orders/hooks/useOrdersSession.js), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/modules/support-indicators/data/zohoBacklogClient.js](../../src/modules/support-indicators/data/zohoBacklogClient.js), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js), [src/modules/users/components/UsersPage.jsx](../../src/modules/users/components/UsersPage.jsx), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/persistence/sourceSnapshotClient.js](../../src/shared/persistence/sourceSnapshotClient.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
 
 ### src/shared/security/permissions.js
 

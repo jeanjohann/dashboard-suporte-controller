@@ -64,6 +64,14 @@ const moduleNames = {
 
 // Os comentários específicos do código complementam as descrições editoriais abaixo.
 const descriptions = {
+  'server/zohoBacklog.js':
+    'Pesquisa a carteira atual dos agentes do piloto, valida responsável e categoria de status e retorna somente pendências, sem recorte por período.',
+  'src/modules/support-indicators/data/zohoBacklogClient.js':
+    'Completa as páginas das duas carteiras antes de aplicar pendências atuais; recusa duplicação, falha e cancelamento sem substituir a leitura anterior.',
+  'src/shared/persistence/SavedSourcesStatus.jsx':
+    'Exibe progresso das bases em modal central que pode ser fechado sem cancelar a operação nem deslocar a página.',
+  'docs/PLANO-DE-REFATORACAO-E-DESEMPENHO.md':
+    'Levantamento de recálculos, páginas inativas, grades e limpeza futura; distingue evidências de hipóteses e define como medir desempenho.',
   'migrations/0002_dashboard_access.sql':
     'Permissão opcional do Meu Dashboard no banco de usuários; NULL conserva a regra anterior sem alterar concessões existentes.',
   'server/zohoIndicators.js':
