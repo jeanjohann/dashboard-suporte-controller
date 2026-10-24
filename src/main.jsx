@@ -31,6 +31,7 @@ import './styles/analysis-workspace.css';
 import './styles/my-dashboard.css';
 import './styles/theme-presets.css';
 import './styles/support-indicators.css';
+import './styles/compact-density.css';
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <AccessProvider>

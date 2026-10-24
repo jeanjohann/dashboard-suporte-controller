@@ -170,6 +170,11 @@
   padding: 4px 8px 10px;
   font-size: 12px;
 }
+.theme-options > strong.theme-options-section {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ui-line);
+}
 .theme-options > small {
   display: block;
   padding: 8px;

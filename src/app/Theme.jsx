@@ -12,6 +12,7 @@ import React, {
 import { themes, defaultTheme, restoredTheme } from './themeOptions.js';
 const ThemeContext = createContext({ theme: defaultTheme, selectTheme: () => {} });
 const storageKey = 'addlog-theme-v1';
+const densityStorageKey = 'addlog-density-v1';
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
@@ -20,20 +21,36 @@ export function ThemeProvider({ children }) {
       return defaultTheme;
     }
   });
+  const [density, setDensity] = useState(() => {
+    try {
+      return localStorage.getItem(densityStorageKey) === 'compact' ? 'compact' : 'comfortable';
+    } catch {
+      return 'comfortable';
+    }
+  });
   useLayoutEffect(() => {
     document.documentElement.dataset.theme = theme;
     try {
       localStorage.setItem(storageKey, theme);
     } catch {}
   }, [theme]);
+  useLayoutEffect(() => {
+    document.documentElement.dataset.density = density;
+    try {
+      localStorage.setItem(densityStorageKey, density);
+    } catch {}
+  }, [density]);
   const value = useMemo(
     () => ({
       theme,
+      density,
       selectTheme: (next) => {
         if (themes.some((entry) => entry.id === next)) setTheme(next);
       },
+      toggleDensity: () =>
+        setDensity((current) => (current === 'compact' ? 'comfortable' : 'compact')),
     }),
-    [theme],
+    [density, theme],
   );
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
@@ -41,7 +58,7 @@ export const useTheme = () => useContext(ThemeContext);
 
 /** Seletor acessível, fechado por escolha, clique externo ou Escape; não muda a preferência ao apenas abrir. */
 export function ThemeToggle() {
-  const { theme, selectTheme } = useTheme();
+  const { theme, selectTheme, density, toggleDensity } = useTheme();
   const picker = useRef(null);
   useEffect(() => {
     const closeOutside = (event) => {
@@ -89,6 +106,15 @@ export function ThemeToggle() {
             <span>{entry.label}</span>
           </button>
         ))}
+        <strong className="theme-options-section">Espaçamento</strong>
+        <button
+          type="button"
+          className="theme-choice"
+          aria-pressed={density === 'compact'}
+          onClick={toggleDensity}
+        >
+          <span>{density === 'compact' ? 'Compacto' : 'Confortável'}</span>
+        </button>
         <small>Salvo neste navegador.</small>
       </div>
     </details>

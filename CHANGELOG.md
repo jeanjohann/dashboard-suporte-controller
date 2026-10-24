@@ -1,3 +1,8 @@
+## 0.69.11 — 24/10/2026
+
+- Adiciona uma preferência global opcional de layout compacto na área de aparência, válida nos módulos do sistema.
+- Reduz espaços de filtros, cards, tabelas, gráficos e cabeçalhos sem ocultar conteúdo; preserva a leitura confortável como padrão e mantém a escolha salva no navegador.
+
 ## 0.69.10 — 24/10/2026
 
 - Adiciona um modo compacto aos Indicadores Suporte, com filtros e cards mais enxutos e análises organizadas em duas colunas.
