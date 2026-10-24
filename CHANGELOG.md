@@ -1,3 +1,7 @@
+## 0.67.2 — 24/10/2026
+
+- Preserva o contraste do título dos avisos ao passar o mouse, em todos os temas.
+
 ## 0.67.1 — 24/10/2026
 
 - Exibe os avisos das coletas também quando o Monitoramento já tem uma fotografia carregada. Mantém a leitura do histórico no estado sem fotografia.

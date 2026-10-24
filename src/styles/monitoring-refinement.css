@@ -20,7 +20,8 @@
   align-items: center;
   gap: 8px;
 }
-.monitoring-events-heading > button {
+.monitoring-events-heading > button,
+.monitoring-events-heading > button:hover:not(:disabled) {
   background: transparent;
   color: var(--ui-ink);
   border: 0;
