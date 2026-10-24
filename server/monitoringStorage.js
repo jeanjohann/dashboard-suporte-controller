@@ -3,6 +3,7 @@ import { createSnapshotStore } from './persistence/snapshotStore.js';
 import { runMonitoringCollection } from './monitoringCollection.js';
 import { monitoringResponse } from './monitoring.js';
 import { businessReply } from './businessSources.js';
+import { monitoringEventsResponse } from './monitoringEvents.js';
 
 export const monitoringCron = '0 12,15,18,21 * * *'; // 09, 12, 15 e 18h em São Paulo (UTC-03).
 export function createMonitoringCollectionRepository(
@@ -179,12 +180,14 @@ export async function storedMonitoringResponse(request, env, user, owner) {
   const url = new URL(request.url),
     refresh = url.pathname === '/api/monitoring/refresh';
   const history = url.pathname === '/api/monitoring/history';
-  if ((!history && url.search) || request.method !== (refresh ? 'POST' : 'GET'))
+  const events = url.pathname === '/api/monitoring/events';
+  if ((!history && !events && url.search) || request.method !== (refresh ? 'POST' : 'GET'))
     return businessReply({ error: 'Consulta inválida.' }, 405);
   if (refresh && request.headers.get('Origin') !== url.origin)
     return businessReply({ error: 'Origem não permitida.' }, 403);
   const store = createSnapshotStore(env.BUSINESS_DB, { actor: user.email });
   try {
+    if (events) return await monitoringEventsResponse(store, url);
     if (history) {
       if ([...url.searchParams.keys()].some((key) => key !== 'before'))
         return businessReply({ error: 'Consulta inválida.' }, 400);

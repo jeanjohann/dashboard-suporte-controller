@@ -1,9 +1,9 @@
 {
-  "version": "0.66.2",
-  "base": "aaae16e · cópia da entrega",
+  "version": "0.67.0",
+  "base": "967f224 · cópia da entrega",
   "date": "2026-10-24",
-  "total": 516,
-  "tests": 107,
+  "total": 531,
+  "tests": 111,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 60
+      "count": 61
     },
     {
       "path": "docs/diagrams",
@@ -43,7 +43,7 @@
     {
       "path": "scripts",
       "description": "Ferramentas de build/verificação e serviços do laboratório local.",
-      "count": 24
+      "count": 25
     },
     {
       "path": "scripts/architecture",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 45
+      "count": 47
     },
     {
       "path": "server/persistence",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 362
+      "count": 373
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 263
+      "count": 273
     },
     {
       "path": "src/modules/assistant",
@@ -108,12 +108,12 @@
     {
       "path": "src/modules/consumption",
       "description": "Módulo Consumo M2M: interface, regras e integração de seus dados.",
-      "count": 51
+      "count": 58
     },
     {
       "path": "src/modules/consumption/components",
       "description": "Página e painéis visuais de Consumo M2M.",
-      "count": 15
+      "count": 17
     },
     {
       "path": "src/modules/consumption/config",
@@ -123,12 +123,12 @@
     {
       "path": "src/modules/consumption/data",
       "description": "Leitura, contratos e transporte de dados de Consumo M2M.",
-      "count": 6
+      "count": 7
     },
     {
       "path": "src/modules/consumption/domain",
       "description": "Validação e cálculo das regras de negócio de Consumo M2M.",
-      "count": 24
+      "count": 28
     },
     {
       "path": "src/modules/consumption/hooks",
@@ -173,12 +173,12 @@
     {
       "path": "src/modules/monitoring",
       "description": "Módulo Monitoramento Ativo: interface, regras e integração de seus dados.",
-      "count": 34
+      "count": 37
     },
     {
       "path": "src/modules/monitoring/components",
       "description": "Página e painéis visuais de Monitoramento Ativo.",
-      "count": 10
+      "count": 12
     },
     {
       "path": "src/modules/monitoring/data",
@@ -188,7 +188,7 @@
     {
       "path": "src/modules/monitoring/domain",
       "description": "Validação e cálculo das regras de negócio de Monitoramento Ativo.",
-      "count": 14
+      "count": 15
     },
     {
       "path": "src/modules/monitoring/hooks",
@@ -368,7 +368,7 @@
     {
       "path": "src/styles",
       "description": "CSS global e refinamentos; a ordem é definida em main.jsx.",
-      "count": 24
+      "count": 25
     }
   ],
   "files": [
@@ -452,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 102160,
-      "sha256": "20c661022c126c9d072954b451bf2046ae7612f93eb8765c6c17bbda097267dd",
+      "bytes": 102746,
+      "sha256": "0be1060be1b8292b23f9f329dca32a59facfeacf922f7b7990db328f8835455c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -538,6 +538,20 @@
       "importedBy": [],
       "bytes": 27453,
       "sha256": "1a14a0bdd98d4e13f1d144fe123510972ec8887b2357b5e3cb1c7c96e83b6c79",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/AVISOS-FRANQUIAS-E-REVISAO.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Avisos, franquias compartilhadas e revisão — 0.67.0. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 7881,
+      "sha256": "fff7b8d36a97a8e045786cbf775f2a074d18baaa9224824255490dac5cd6ff8c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1026,8 +1040,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 11016,
-      "sha256": "dceb60ac5775138eb3e76ff80b3b1971573d3c2c67477d1587d8b18c2e5f7bfc",
+      "bytes": 11906,
+      "sha256": "4b8728e0c015f336dc025fcc75a0b8a3dc79b315ae3df06e11cd125a3583cadd",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1082,8 +1096,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 45722,
-      "sha256": "5e9a6e2977fd2a69f52f5eb18169bab8272e2a658f09069b004b80cbeb25fe99",
+      "bytes": 47026,
+      "sha256": "9e9da40a2aba8ff9c02d2236bec712c37c1fde57a99d6c1002f49672bdd2f4ee",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1363,7 +1377,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "c7405060c3fd55c178cabd2b2f0a2d16ba1aa7a1627fa81d4e2e5b9f011f8017",
+      "sha256": "df36898a1194d14986887d93e220b90f9b86de9447ce33d3ea09508feb639cfc",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1376,8 +1390,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1300,
-      "sha256": "b7857471130b56ca3a0dc2227b99458dd99c17217eb116362058327eb73c0edd",
+      "bytes": 1361,
+      "sha256": "af7d93b7dea8e9334a3017f8f2090cbba8629770c8b4d09b1754c63582d932fb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1540,8 +1554,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 52019,
-      "sha256": "0e474654b9e68eed068268f9804a18cfb31188928a8b443fd9b9db001f066c70",
+      "bytes": 53551,
+      "sha256": "17fc0e4ecac16d57b1ac3eb9f8b56b87a33f0a5960840607f65ab558193918d3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1717,6 +1731,20 @@
       "importedBy": [],
       "bytes": 2987,
       "sha256": "cb5a4cb3ff19089e60f16a152cb7c2d94b0d0413242143545de84694986c79cd",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "scripts/benchmark-orders.mjs",
+      "folder": "scripts",
+      "module": "Ferramentas e laboratório",
+      "layer": "Script / serviço local",
+      "description": "Compara busca anterior e cache preparado com mil linhas sintéticas; registra custo frio e limites do ensaio em Node.",
+      "exports": [],
+      "imports": ["src/modules/orders/domain/orderRecords.js"],
+      "external": ["node:assert/strict", "node:fs", "node:perf_hooks"],
+      "importedBy": [],
+      "bytes": 1881,
+      "sha256": "70230c88b19b0b0f85677e892a248527baea0bcf6ee6bb6a5dbd3963373ca0af",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2042,6 +2070,7 @@
       ],
       "external": [],
       "importedBy": [
+        "server/monitoringEvents.js",
         "server/monitoringStorage.js",
         "server/persistence/snapshotDownload.test.js",
         "server/persistence/snapshotStore.test.js",
@@ -2179,6 +2208,38 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "server/monitoringEvents.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Consulta somente de leitura dos eventos existentes no D1, com filtro e cursor composto; mantém o acesso restrito do piloto.",
+      "exports": ["monitoringEventsResponse"],
+      "imports": ["server/businessSources.js", "src/modules/monitoring/domain/monitoringEvents.js"],
+      "external": [],
+      "importedBy": ["server/monitoringStorage.js"],
+      "bytes": 2302,
+      "sha256": "b43df402bd980b9e7373b119e1f265380ef4cd3e952045623ec965272891a2bc",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "server/monitoringEvents.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica monitoring Events no contexto de API Cloudflare. Exemplos: avisos paginam por execução/índice sem repetição; filtro de retorno e acesso do piloto; marcação de vistos é monotônica por coleta/execução/índice e não confunde eventos da mesma coleta.",
+      "exports": [],
+      "imports": [
+        "server/monitoringStorage.js",
+        "server/persistence/snapshotTestDatabase.mjs",
+        "src/modules/monitoring/domain/monitoringEvents.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 3289,
+      "sha256": "409ac508317d556d796a00a1ab0c1d884080edca3df661b4723b69d9c91cfab5",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "server/monitoringStorage.js",
       "folder": "server",
       "module": "API Cloudflare",
@@ -2196,12 +2257,17 @@
         "server/businessSources.js",
         "server/monitoring.js",
         "server/monitoringCollection.js",
+        "server/monitoringEvents.js",
         "server/persistence/snapshotStore.js"
       ],
       "external": [],
-      "importedBy": ["server/monitoringStorage.test.js", "server/worker.js"],
-      "bytes": 10550,
-      "sha256": "e6131731e15f87a9ceb130f187fbeff3e05b7722952a273207ab50352cca12bd",
+      "importedBy": [
+        "server/monitoringEvents.test.js",
+        "server/monitoringStorage.test.js",
+        "server/worker.js"
+      ],
+      "bytes": 10754,
+      "sha256": "4d775d6c024d5b064941a8642086a30ffec46c1acee84c588941f2d18c0686ab",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -2372,6 +2438,7 @@
       "imports": [],
       "external": ["node:fs", "node:sqlite"],
       "importedBy": [
+        "server/monitoringEvents.test.js",
         "server/monitoringStorage.test.js",
         "server/persistence/snapshotDownload.test.js",
         "server/persistence/snapshotStore.test.js",
@@ -2471,8 +2538,8 @@
       ],
       "external": ["jose"],
       "importedBy": ["server/worker.test.js"],
-      "bytes": 11177,
-      "sha256": "fe7003320ef505e2760af4418d3f4bfd886ba947f49770b8a047a43c296186bc",
+      "bytes": 11233,
+      "sha256": "bb9822fd1e035e3ed1bfbb01c0e603c9e768e182fe931a9bc126eb4a40f5e4e3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3012,6 +3079,8 @@
         "src/modules/consumption/components/ConsumptionInvoicesPanel.jsx",
         "src/modules/consumption/components/ConsumptionOverviewPanels.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
+        "src/modules/consumption/components/SharedAllowances.jsx",
+        "src/modules/monitoring/components/MonitoringEvents.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/AdvancedInsights.jsx",
         "src/modules/orders/components/CardInsights.jsx",
@@ -3368,6 +3437,7 @@
         "src/app/Workspace.jsx",
         "src/shared/security/Access.jsx",
         "src/styles/analysis-workspace.css",
+        "src/styles/consumption-pools.css",
         "src/styles/controls.css",
         "src/styles/filter-workspace.css",
         "src/styles/filters.css",
@@ -3394,8 +3464,8 @@
       ],
       "external": ["react", "react-dom/client"],
       "importedBy": [],
-      "bytes": 1561,
-      "sha256": "5eef81a30231e5a59efeeb215531df1d65996a9203034a62e0df1727e57872a9",
+      "bytes": 1602,
+      "sha256": "15d38ab7b90393e6784b6f8572460381e5847275e1124dd74ce8f32e85e715e1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3528,8 +3598,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 4223,
-      "sha256": "980b5f488c386547e9ee2029ce06c7a38e5fcdb556ee6be27a2d008f00b75fc1",
+      "bytes": 4366,
+      "sha256": "a01dda3ce0723393eb1e69d9308816f8de366f43050d2f14c0fe8cb949832732",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3723,8 +3793,29 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 16835,
-      "sha256": "313f637b0b23585e345faa87e7fd0addb650b54020560a2c4de783d64e3c8b3a",
+      "bytes": 16962,
+      "sha256": "8314fda58cfe6d46f9931f4ee9281ba15aa7471319ac67557268a15490b2a722",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/components/KoreReconciliation.jsx",
+      "folder": "src/modules/consumption/components",
+      "module": "Consumo M2M",
+      "layer": "Interface React",
+      "description": "Seletor do CSV independente, prévia por ciclo, conferência paginada e exportação completa da comparação KORE.",
+      "exports": ["KoreReconciliation"],
+      "imports": [
+        "src/modules/consumption/domain/koreReconciliation.js",
+        "src/modules/consumption/domain/lineConsumption.js",
+        "src/modules/consumption/domain/sharedAllowance.js",
+        "src/shared/export/exports.js",
+        "src/shared/security/Access.jsx",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
+      "bytes": 5640,
+      "sha256": "7424593967dc348d6a2959d59d44e230e40630fb82d861f8dcde8ebb1dc8d028",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3797,8 +3888,10 @@
         "src/modules/consumption/components/ConsumptionOverviewPanels.jsx",
         "src/modules/consumption/components/ConsumptionSourcePanel.jsx",
         "src/modules/consumption/components/KorePilotPanel.jsx",
+        "src/modules/consumption/components/KoreReconciliation.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/consumption/components/LineRecordsTable.jsx",
+        "src/modules/consumption/components/SharedAllowances.jsx",
         "src/modules/consumption/config/consumptionMenus.js",
         "src/modules/consumption/config/reportStories.js",
         "src/modules/consumption/domain/carrierWorkspace.js",
@@ -3818,8 +3911,30 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx", "src/modules/consumption/components/CarrierPage.jsx"],
-      "bytes": 32047,
-      "sha256": "d17e6bce51d39488ace142d092c95895906a765a80454240a2a480871e4d3771",
+      "bytes": 32731,
+      "sha256": "46a0fca760d183d2c75c62edc82b673a7b497caa5454157f1302d0d021dac975",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/components/SharedAllowances.jsx",
+      "folder": "src/modules/consumption/components",
+      "module": "Consumo M2M",
+      "layer": "Interface React",
+      "description": "Cadastro local de grupos de franquia nas operadoras, resumo consolidado, detalhes paginados e CSV.",
+      "exports": ["SharedAllowances"],
+      "imports": [
+        "src/components/InfoNote.jsx",
+        "src/modules/consumption/domain/lineConsumption.js",
+        "src/modules/consumption/domain/sharedAllowance.js",
+        "src/shared/data/localId.js",
+        "src/shared/export/exports.js",
+        "src/shared/security/Access.jsx",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
+      "bytes": 11823,
+      "sha256": "3532c7a85c4cdece04686007d3b8b729083eb3487dbf95a3e472496c6cecfc9b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3865,28 +3980,32 @@
       "exports": [
         "emptyHistory",
         "fileDigest",
+        "nextConsumptionRevision",
         "readConsumptionHistory",
         "validateBackup",
         "writeConsumptionHistory"
       ],
       "imports": [
         "src/modules/consumption/domain/lineConsumption.js",
+        "src/modules/consumption/domain/sharedAllowance.js",
         "src/modules/operational/domain/operational.js"
       ],
       "external": [],
       "importedBy": [
         "src/modules/consumption/data/consumptionHistory.test.js",
+        "src/modules/consumption/data/consumptionRevision.test.js",
         "src/modules/consumption/data/historyRepository.js",
         "src/modules/consumption/data/historyRepository.test.js",
         "src/modules/consumption/domain/carrierWorkspace.test.js",
+        "src/modules/consumption/domain/sharedAllowance.test.js",
         "src/modules/consumption/hooks/useConsumptionArchive.js",
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/imports/domain/bulkImport.js",
         "src/modules/imports/domain/bulkImport.test.js",
         "src/modules/operational/domain/operational.test.js"
       ],
-      "bytes": 7703,
-      "sha256": "66b729f6be66223c0ce15dd8ca2e98c5085d97dbb3442ad86c8d4c3249b9e0db",
+      "bytes": 9367,
+      "sha256": "9f665e38c6be8963436c5ebab44806d6b325ee99baf0f8c46857c7417116712b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3904,6 +4023,20 @@
       "importedBy": [],
       "bytes": 4157,
       "sha256": "cdb050213127a377997d083e0aebb45a9a278f3d482033c30f62a1d7997f6dd5",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/data/consumptionRevision.test.js",
+      "folder": "src/modules/consumption/data",
+      "module": "Consumo M2M",
+      "layer": "Teste",
+      "description": "Verifica consumption Revision no contexto de Consumo M2M. Exemplos: revisão local impede gravação atrasada sem importar a revisão de outro navegador.",
+      "exports": [],
+      "imports": ["src/modules/consumption/data/consumptionHistory.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 592,
+      "sha256": "4606ebdeb6e303064a99b0e652f2668784dd99462b77ad70077673c9056f2c93",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3989,6 +4122,7 @@
       "exports": ["carrierArchive", "carrierName", "koreStatementText", "restoreCarrierArchive"],
       "imports": [
         "src/modules/consumption/domain/lineConsumption.js",
+        "src/modules/consumption/domain/sharedAllowance.js",
         "src/shared/data/isoDate.js",
         "src/shared/export/exports.js"
       ],
@@ -3996,10 +4130,12 @@
       "importedBy": [
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/consumption/domain/carrierWorkspace.test.js",
+        "src/modules/consumption/domain/koreReconciliation.test.js",
+        "src/modules/consumption/domain/sharedAllowance.test.js",
         "src/modules/consumption/hooks/useConsumptionImports.js"
       ],
-      "bytes": 2383,
-      "sha256": "db19dc205c21291c19acb0b59cc13b56e1c237aa952792c81a2e5f6caeac6d85",
+      "bytes": 2696,
+      "sha256": "4caf543cc81110fdc9d5bc5c039a8dd9368d9bcf7992c9d5dc68da1d14d99272",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4346,6 +4482,44 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/modules/consumption/domain/koreReconciliation.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Domínio",
+      "description": "Compara KORE API com CSV no ciclo exato por ICCID/MSISDN, sem gravar ou presumir homologação.",
+      "exports": ["reconcileKoreCycle"],
+      "imports": [
+        "src/modules/consumption/domain/lineConsumption.js",
+        "src/shared/data/isoDate.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "src/modules/consumption/components/KoreReconciliation.jsx",
+        "src/modules/consumption/domain/koreReconciliation.test.js"
+      ],
+      "bytes": 3323,
+      "sha256": "0e9fb6ebec878ae4a6b25f00aa2aff5181f4b42876c6a8f68c15ccede50c3582",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/domain/koreReconciliation.test.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Teste",
+      "description": "Verifica kore Reconciliation no contexto de Consumo M2M. Exemplos: conferência exata não homologa ciclo por igualdade nem soma API e CSV; coleta incompleta, ciclo distinto e referência gerada pela própria API são recusados.",
+      "exports": [],
+      "imports": [
+        "src/modules/consumption/domain/carrierWorkspace.js",
+        "src/modules/consumption/domain/koreReconciliation.js",
+        "src/modules/consumption/domain/lineConsumption.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 2027,
+      "sha256": "169b8fe6cac1550727f9cc34ffcab82291b76c85c6ea81c2510c4eca862a5f33",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/modules/consumption/domain/lineConsumption.js",
       "folder": "src/modules/consumption/domain",
       "module": "Consumo M2M",
@@ -4387,9 +4561,11 @@
         "src/modules/consumption/components/ConsumptionOverviewPanels.jsx",
         "src/modules/consumption/components/ConsumptionSourcesPanel.jsx",
         "src/modules/consumption/components/KorePilotPanel.jsx",
+        "src/modules/consumption/components/KoreReconciliation.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/consumption/components/LineRecordsTable.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
+        "src/modules/consumption/components/SharedAllowances.jsx",
         "src/modules/consumption/data/consumptionHistory.js",
         "src/modules/consumption/domain/carrierWorkspace.js",
         "src/modules/consumption/domain/carrierWorkspace.test.js",
@@ -4405,7 +4581,11 @@
         "src/modules/consumption/domain/consumptionSelection.test.js",
         "src/modules/consumption/domain/csvParsing.test.js",
         "src/modules/consumption/domain/koreDisplay.test.js",
+        "src/modules/consumption/domain/koreReconciliation.js",
+        "src/modules/consumption/domain/koreReconciliation.test.js",
         "src/modules/consumption/domain/lineConsumption.test.js",
+        "src/modules/consumption/domain/sharedAllowance.js",
+        "src/modules/consumption/domain/sharedAllowance.test.js",
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/consumption/hooks/useLineFollowup.js",
         "src/modules/consumption/utils/consumptionFormatting.js",
@@ -4468,6 +4648,53 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/modules/consumption/domain/sharedAllowance.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Domínio",
+      "description": "Valida franquias compartilhadas por operadora/ciclo e participantes explícitos; calcula cobertura, consumo e excesso observado.",
+      "exports": [
+        "allowanceFromDraft",
+        "allowanceMB",
+        "sharedAllowanceReports",
+        "validateAllowances"
+      ],
+      "imports": [
+        "src/modules/consumption/domain/lineConsumption.js",
+        "src/shared/data/isoDate.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "src/modules/consumption/components/KoreReconciliation.jsx",
+        "src/modules/consumption/components/SharedAllowances.jsx",
+        "src/modules/consumption/data/consumptionHistory.js",
+        "src/modules/consumption/domain/carrierWorkspace.js",
+        "src/modules/consumption/domain/sharedAllowance.test.js"
+      ],
+      "bytes": 4859,
+      "sha256": "4699c9a903c93682975e2dc5f7b9a487b459b33361b702f0c0152de5386f071f",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/domain/sharedAllowance.test.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Teste",
+      "description": "Verifica shared Allowance no contexto de Consumo M2M. Exemplos: franquia usa membros explícitos, ciclo exato e não reduz denominador por ausência ou outra operadora; contratos sobrepostos não contam o mesmo ICCID duas vezes e backup isola operadora sem perder grupos.",
+      "exports": [],
+      "imports": [
+        "src/modules/consumption/data/consumptionHistory.js",
+        "src/modules/consumption/domain/carrierWorkspace.js",
+        "src/modules/consumption/domain/lineConsumption.js",
+        "src/modules/consumption/domain/sharedAllowance.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 2964,
+      "sha256": "ce827ef5f3b202ca07e52dd4679b438b1eb3ac181c7f79195f40a34d05ce95d7",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/modules/consumption/hooks/useConsumptionArchive.js",
       "folder": "src/modules/consumption/hooks",
       "module": "Consumo M2M",
@@ -4480,8 +4707,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 1788,
-      "sha256": "75db701bfae861f4257522ac748c67876d3c4deb439887d53fa39610638a824c",
+      "bytes": 1863,
+      "sha256": "3487668f53402b2f58a22c81be008d803911749766eca0a9d4fc00e53c332fea",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4503,8 +4730,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 8251,
-      "sha256": "1051271c046b40bc6f2019dfbbb192e846b57b42375a63168abbf69efe822c95",
+      "bytes": 8696,
+      "sha256": "969f372016a44a0f5d973743d0470b5139c3c0af4cbbd5d41d0c493d04a10612",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4707,6 +4934,20 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "src/modules/monitoring/components/MonitoringApiCoverage.jsx",
+      "folder": "src/modules/monitoring/components",
+      "module": "Monitoramento Ativo",
+      "layer": "Interface React",
+      "description": "Mostra cobertura real dos campos explícitos prefixo/ICCID/MSISDN e limites do contrato de consumo.",
+      "exports": ["MonitoringApiCoverage"],
+      "imports": ["src/modules/monitoring/domain/monitoring.js"],
+      "external": ["react"],
+      "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
+      "bytes": 1395,
+      "sha256": "b26145d8b28ad95f01f2b1ac9fe988ef46bdfd2e15ede6e0df84353900c9bbc1",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
       "folder": "src/modules/monitoring/components",
       "module": "Monitoramento Ativo",
@@ -4724,6 +4965,27 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "src/modules/monitoring/components/MonitoringEvents.jsx",
+      "folder": "src/modules/monitoring/components",
+      "module": "Monitoramento Ativo",
+      "layer": "Interface React",
+      "description": "Avisos internos paginados das coletas salvas, vistos locais, CSV e acesso à grade do veículo.",
+      "exports": ["MonitoringEvents"],
+      "imports": [
+        "src/components/InfoNote.jsx",
+        "src/modules/monitoring/domain/monitoring.js",
+        "src/modules/monitoring/domain/monitoringEvents.js",
+        "src/shared/export/exports.js",
+        "src/shared/security/Access.jsx",
+        "src/shared/security/accessClient.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
+      "bytes": 9505,
+      "sha256": "019517bf42e99fd2a7f5f3c381d79f3cbbd0f76363d51e8f72863943cb56ba2c",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "src/modules/monitoring/components/MonitoringPage.jsx",
       "folder": "src/modules/monitoring/components",
       "module": "Monitoramento Ativo",
@@ -4737,7 +4999,9 @@
         "src/components/MultiFilter.jsx",
         "src/components/Section.jsx",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringApiCoverage.jsx",
         "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
+        "src/modules/monitoring/components/MonitoringEvents.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
@@ -4758,8 +5022,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 24604,
-      "sha256": "09c53c571820d9c3c83ba36dfd6eff97e978691c6bf8f6da9ef08bb08db170f7",
+      "bytes": 25792,
+      "sha256": "8afa120d42d1ed8f7d117f3c9070492e5e7ea82cf51232899d94edeee49aca30",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -5086,7 +5350,9 @@
         "server/addlogDiagnostic.test.js",
         "server/businessReminders.js",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
+        "src/modules/monitoring/components/MonitoringApiCoverage.jsx",
         "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
+        "src/modules/monitoring/components/MonitoringEvents.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringQueue.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
@@ -5175,6 +5441,24 @@
       "status": "Diagnóstico legado / consulta manual"
     },
     {
+      "path": "src/modules/monitoring/domain/monitoringEvents.js",
+      "folder": "src/modules/monitoring/domain",
+      "module": "Monitoramento Ativo",
+      "layer": "Domínio",
+      "description": "Eventos observados em coletas, sem estimar início/fim de falhas entre leituras.",
+      "exports": ["eventCursor", "eventPosition", "isUnseenEvent", "monitoringEventLabels"],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "server/monitoringEvents.js",
+        "server/monitoringEvents.test.js",
+        "src/modules/monitoring/components/MonitoringEvents.jsx"
+      ],
+      "bytes": 1255,
+      "sha256": "f73c4e8c36c2a9796ef5a42a152bc00c22879d5dcfb45ea36b7451eff90c31f7",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
       "path": "src/modules/monitoring/domain/monitoringHistory.js",
       "folder": "src/modules/monitoring/domain",
       "module": "Monitoramento Ativo",
@@ -5184,8 +5468,8 @@
       "imports": ["src/modules/monitoring/domain/monitoring.js"],
       "external": [],
       "importedBy": ["server/monitoringCollection.js", "server/monitoringCollection.test.js"],
-      "bytes": 2549,
-      "sha256": "5aedbafdb6e1c555d6aae21561ab6f0d6ade6987e508eafc46e4eb33cdc81b76",
+      "bytes": 2669,
+      "sha256": "730a413203e5f8a6b9d9688a53c62f3167ef555c10f448c4918d452b3292bd62",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -6062,8 +6346,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 37758,
-      "sha256": "4626bf7238cb5cc54de780fad89a0b286bf173bf2a2d20c5a92d8cb7fa3bdc70",
+      "bytes": 37806,
+      "sha256": "82435f7ba886b04b3cb1bdc5390e96b92472055cd0978befd1dd541f91dfd390",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8114,15 +8398,16 @@
       "module": "Ordens de Serviço",
       "layer": "Domínio",
       "description": "Busca e ordena a grade original de OS; esse recorte de conferência não altera os indicadores.",
-      "exports": ["searchOrderRecords", "sortOrderRecords"],
+      "exports": ["createOrderRecordSearch", "searchOrderRecords", "sortOrderRecords"],
       "imports": ["src/shared/data/sorting.js"],
       "external": [],
       "importedBy": [
+        "scripts/benchmark-orders.mjs",
         "src/modules/orders/domain/orderRecords.test.js",
         "src/modules/orders/hooks/useOrdersSession.js"
       ],
-      "bytes": 994,
-      "sha256": "de452cf93cc9335112e7aa2087c9ab2576784aebc047415a1402bf4c38bba9be",
+      "bytes": 1543,
+      "sha256": "22771e1746c4f3f281c06670e3f4a45ce3fced01b481e7eb5ef7d212b15b0e5d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8130,13 +8415,13 @@
       "folder": "src/modules/orders/domain",
       "module": "Ordens de Serviço",
       "layer": "Teste",
-      "description": "Verifica order Records no contexto de Ordens de Serviço. Exemplos: busca usa conteúdo exibido sem alterar linhas, células ou ordem da base dos indicadores; ordena todo o recorte antes da paginação, mantém erros/ausências no fim e restaura a ordem original.",
+      "description": "Verifica order Records no contexto de Ordens de Serviço. Exemplos: cache de busca preserva semântica por célula e não reutiliza conteúdo de uma nova base; busca usa conteúdo exibido sem alterar linhas, células ou ordem da base dos indicadores; ordena todo o recorte antes da paginação, mantém erros/ausências no fim e restaura a ordem original.",
       "exports": [],
       "imports": ["src/modules/orders/domain/orderRecords.js"],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 1980,
-      "sha256": "cb22b9360cbb28171fcbf97e6ab73cf51e7c1fc2f3442faccb8ae7c34d26d2f7",
+      "bytes": 2740,
+      "sha256": "811794d0bfa76af4b47b2e1dabba560f9c674bc594c50117bb7281343cc058a6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8669,8 +8954,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/orders/components/OrdersPage.jsx"],
-      "bytes": 6097,
-      "sha256": "7f1bec17443f7f0ac0016d54caa6fbc3f445099b452504e2039f3212f3d6f79e",
+      "bytes": 6804,
+      "sha256": "26fb8f760264c08cd970b5fdae1ca96371477e363c22d7da11a94299a47c5049",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9227,6 +9512,8 @@
         "src/modules/consumption/domain/carrierWorkspace.js",
         "src/modules/consumption/domain/consumptionAttention.js",
         "src/modules/consumption/domain/consumptionSources.js",
+        "src/modules/consumption/domain/koreReconciliation.js",
+        "src/modules/consumption/domain/sharedAllowance.js",
         "src/modules/my-dashboard/domain/evaluate.js",
         "src/modules/my-dashboard/domain/layout.js",
         "src/modules/orders/domain/orderAttention.js",
@@ -9251,6 +9538,7 @@
       "imports": [],
       "external": [],
       "importedBy": [
+        "src/modules/consumption/components/SharedAllowances.jsx",
         "src/modules/consumption/hooks/useLineFollowup.js",
         "src/modules/my-dashboard/components/DashboardTools.jsx",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
@@ -9425,13 +9713,16 @@
         "src/components/Chart.jsx",
         "src/components/ReviewPanel.jsx",
         "src/modules/consumption/components/KorePilotPanel.jsx",
+        "src/modules/consumption/components/KoreReconciliation.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
+        "src/modules/consumption/components/SharedAllowances.jsx",
         "src/modules/consumption/domain/carrierWorkspace.js",
         "src/modules/consumption/domain/consumptionRecordsReport.js",
         "src/modules/consumption/domain/lineHistoryReport.js",
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/consumption/hooks/useLineFollowup.js",
         "src/modules/logistics/components/LogisticsPanel.jsx",
+        "src/modules/monitoring/components/MonitoringEvents.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
@@ -9953,11 +10244,14 @@
         "src/modules/consumption/components/ConsumptionImportPreview.jsx",
         "src/modules/consumption/components/ConsumptionInvestigationPanel.jsx",
         "src/modules/consumption/components/KorePilotPanel.jsx",
+        "src/modules/consumption/components/KoreReconciliation.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/consumption/components/LineRecordsTable.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
+        "src/modules/consumption/components/SharedAllowances.jsx",
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
+        "src/modules/monitoring/components/MonitoringEvents.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
@@ -10010,11 +10304,14 @@
       "importedBy": [
         "src/app/Workspace.jsx",
         "src/components/Section.jsx",
+        "src/modules/consumption/components/KoreReconciliation.jsx",
+        "src/modules/consumption/components/SharedAllowances.jsx",
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/consumption/hooks/useLineFollowup.js",
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
         "src/modules/monitoring/components/MonitoringCollectionHistory.jsx",
+        "src/modules/monitoring/components/MonitoringEvents.jsx",
         "src/modules/monitoring/data/remoteReminderRepository.js",
         "src/modules/monitoring/data/savedMonitoringClient.js",
         "src/modules/monitoring/hooks/useMonitoringSource.js",
@@ -10106,6 +10403,20 @@
       "importedBy": ["src/main.jsx"],
       "bytes": 9659,
       "sha256": "4a20401155db75df2b669749ae848b0ecea9a18cf0cd40646e056c7ba32c700a",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/styles/consumption-pools.css",
+      "folder": "src/styles",
+      "module": "Compartilhado",
+      "layer": "Estilo",
+      "description": "Estilos dos grupos de franquia e da conferência KORE: tabelas numéricas, formulários, paginação e contraste nos temas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": ["src/main.jsx"],
+      "bytes": 2740,
+      "sha256": "7f72db80ffa35045c1347f2bba3ba2156c686a47e5dc9ae771f47ff8f0d67e42",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10202,8 +10513,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 13614,
-      "sha256": "1a46b1c6b20685283de954904ef50afd1fb646240164fd20752b59a86174c8ac",
+      "bytes": 14551,
+      "sha256": "f49f0d3285271a5588fda05cb281cc810f640ed9b5de512f5562f94bf9f669da",
       "status": "Código ou documentação do ponto de referência"
     },
     {

@@ -1,6 +1,8 @@
 import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 import { MonitoringRegistry } from './MonitoringRegistry.jsx';
 import { MonitoringCollectionHistory } from './MonitoringCollectionHistory.jsx';
+import { MonitoringEvents } from './MonitoringEvents.jsx';
+import { MonitoringApiCoverage } from './MonitoringApiCoverage.jsx';
 import { monitoringThresholds, monitoringPeriodLabel } from '../domain/monitoringPeriods.js';
 /** Coordena acompanhamento e análise sem misturar demonstração e integração real. */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -67,6 +69,7 @@ export function MonitoringPage({ onPage, operational }) {
     initialFilters,
   );
   const [notes, setNotes] = useState({}),
+    [eventTarget, setEventTarget] = useState(null),
     [selected, setSelected] = useState(null),
     [page, setPage] = useState(0);
   const result = useMemo(
@@ -90,6 +93,23 @@ export function MonitoringPage({ onPage, operational }) {
     setPage(0);
     setSelected(null);
   }, [category]);
+  useEffect(() => {
+    if (category !== 'queue' || !eventTarget) return;
+    const index = queue?.rows.findIndex((row) => row.key === eventTarget) ?? -1;
+    if (index >= 0) {
+      setSelected(eventTarget);
+      setPage(Math.floor(index / 10));
+      setEventTarget(null);
+    }
+  }, [category, queue, eventTarget]);
+  function openEventVehicle(row) {
+    setFilters(
+      { ...initialFilters(), clients: [row.clientId], search: row.plate || row.trackerId || '' },
+      'queue',
+    );
+    setCategory('queue');
+    setEventTarget(JSON.stringify([row.clientId, row.vehicleId]));
+  }
   const bases = snapshot
     ? snapshot.collections.map((entry) => ({
         id: entry.clientId,
@@ -312,6 +332,13 @@ export function MonitoringPage({ onPage, operational }) {
             {!snapshot ? (
               <>
                 <MonitoringReminders reminders={reminders} demo={false} />
+                {savedMode && ['queue', 'reports'].includes(category) && (
+                  <MonitoringEvents
+                    savedAt={savedAt}
+                    snapshot={source}
+                    onVehicle={openEventVehicle}
+                  />
+                )}
                 <section className="panel monitoring-preparation">
                   <h2>Conexão com o sistema de rastreamento</h2>
                   <p>
@@ -539,6 +566,9 @@ export function MonitoringPage({ onPage, operational }) {
                   </Section>
                 </div>
                 {savedMode && category === 'reports' && <MonitoringCollectionHistory />}
+                {['registry', 'reports'].includes(category) && (
+                  <MonitoringApiCoverage source={source} />
+                )}
                 {modeNotice}
               </>
             )}

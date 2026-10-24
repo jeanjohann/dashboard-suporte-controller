@@ -108,9 +108,12 @@ export function createHandler(authenticate = authenticatedEmail) {
       if (url.pathname.startsWith('/api/sources/'))
         return businessSourcesResponse(request, env, user, owner);
       if (
-        ['/api/monitoring/saved', '/api/monitoring/refresh', '/api/monitoring/history'].includes(
-          url.pathname,
-        )
+        [
+          '/api/monitoring/saved',
+          '/api/monitoring/refresh',
+          '/api/monitoring/history',
+          '/api/monitoring/events',
+        ].includes(url.pathname)
       )
         return storedMonitoringResponse(request, env, user, owner);
       if (

@@ -148,6 +148,24 @@ const descriptions = {
     'Coleta KORE para administradores: lotes a cada dez minutos, cobertura, pausa, exportação e prévia de apuração com período confirmado.',
   'src/modules/consumption/domain/carrierWorkspace.js':
     'Isola backups por operadora e prepara apuração KORE somente de coleta completa e período confirmado.',
+  'src/modules/consumption/domain/sharedAllowance.js':
+    'Valida franquias compartilhadas por operadora/ciclo e participantes explícitos; calcula cobertura, consumo e excesso observado.',
+  'src/modules/consumption/components/SharedAllowances.jsx':
+    'Cadastro local de grupos de franquia nas operadoras, resumo consolidado, detalhes paginados e CSV.',
+  'src/styles/consumption-pools.css':
+    'Estilos dos grupos de franquia e da conferência KORE: tabelas numéricas, formulários, paginação e contraste nos temas.',
+  'src/modules/consumption/domain/koreReconciliation.js':
+    'Compara KORE API com CSV no ciclo exato por ICCID/MSISDN, sem gravar ou presumir homologação.',
+  'src/modules/consumption/components/KoreReconciliation.jsx':
+    'Seletor do CSV independente, prévia por ciclo, conferência paginada e exportação completa da comparação KORE.',
+  'src/modules/monitoring/components/MonitoringEvents.jsx':
+    'Avisos internos paginados das coletas salvas, vistos locais, CSV e acesso à grade do veículo.',
+  'src/modules/monitoring/components/MonitoringApiCoverage.jsx':
+    'Mostra cobertura real dos campos explícitos prefixo/ICCID/MSISDN e limites do contrato de consumo.',
+  'server/monitoringEvents.js':
+    'Consulta somente de leitura dos eventos existentes no D1, com filtro e cursor composto; mantém o acesso restrito do piloto.',
+  'scripts/benchmark-orders.mjs':
+    'Compara busca anterior e cache preparado com mil linhas sintéticas; registra custo frio e limites do ensaio em Node.',
   'src/modules/consumption/domain/consumptionFieldLink.js':
     'Confere ICCID e MSISDN conjuntos na fotografia recente do monitoramento e sinaliza conflito de equipamento.',
   'server/zohoCategoryCatalog.js':

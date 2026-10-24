@@ -240,8 +240,9 @@ export function KorePilotPanel({ visible, operational, onCollected, monitoring }
           <p className="notice">
             Consumo em MB (1 MB = 1.000.000 bytes) e horários em BRT (UTC-03:00). Sessões abertas
             podem levar de 5 minutos a 1 hora para atualizar, conforme a operadora. O período do
-            acumulado ainda precisa de confirmação; estes valores permanecem separados dos
-            indicadores dos CSVs.
+            acumulado ainda precisa de confirmação. A coleta bruta é uma prévia; para usá-la nos
+            relatórios, confirme o ciclo e salve a apuração na seção abaixo. A versão equivalente do
+            CSV não será somada outra vez.
           </p>
           <p className="scope">
             {operational?.data?.rows || operational?.rows

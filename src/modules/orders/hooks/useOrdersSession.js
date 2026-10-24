@@ -6,7 +6,7 @@ import { summarize, finance } from '../domain/analysis.js';
 import { applyFilters, attendanceExtent, monthlyCompleted } from '../../../shared/data/filters.js';
 import { equipment } from '../domain/equipment.js';
 import { observedPeriods, todaySaoPaulo } from '../domain/lifecycle.js';
-import { searchOrderRecords, sortOrderRecords } from '../domain/orderRecords.js';
+import { createOrderRecordSearch, sortOrderRecords } from '../domain/orderRecords.js';
 import { reviewOrderConsistency } from '../domain/orderReview.js';
 import { useScopedSelection } from '../../../shared/filters/useScopedSelection.js';
 
@@ -93,29 +93,48 @@ export function useOrdersSession({ source, onImport, scope = 'overview' }) {
   useEffect(() => {
     setPage(0);
   }, [scope]);
-  const importedPeriod = data ? attendanceExtent(data) : null;
-  const selected = data ? applyFilters(data, filters) : null;
-  const filtered = searchOrderRecords(selected?.rows ?? [], search);
-  const orderedRecords = sortOrderRecords(filtered, recordSort);
-  const pageCount = Math.max(1, Math.ceil(filtered.length / 50));
-  const summary = selected ? summarize(selected) : null;
-  const financial = selected ? finance(selected) : null;
-  const monthly = selected ? monthlyCompleted(selected) : null;
-  const devices = selected ? equipment(data, selected) : null;
-  const lifecycle = selected ? observedPeriods(data, selected, referenceDate) : null;
-  // Recorte local de apresentação: não altera os vínculos, a revisão ou outros relatórios.
-  const displayedPeriods = (lifecycle?.periods ?? []).filter(
-    (period) => cycleState === 'Todos' || period.state === cycleState,
+  // Busca, paginação e rascunhos não invalidam cálculos que dependem apenas da base/filtros.
+  const importedPeriod = useMemo(() => (data ? attendanceExtent(data) : null), [data]);
+  const selected = useMemo(() => (data ? applyFilters(data, filters) : null), [data, filters]);
+  const searchRecords = useMemo(() => createOrderRecordSearch(), [data]);
+  const filtered = useMemo(
+    () => searchRecords(selected?.rows ?? [], search),
+    [selected, search, searchRecords],
   );
-  const review = selected
-    ? [
-        ...selected.issues,
-        ...reviewOrderConsistency(selected),
-        ...(financial?.issues ?? []),
-        ...(devices?.issues ?? []),
-        ...(lifecycle?.review ?? []),
-      ]
-    : [];
+  const orderedRecords = useMemo(
+    () => sortOrderRecords(filtered, recordSort),
+    [filtered, recordSort],
+  );
+  const pageCount = Math.max(1, Math.ceil(filtered.length / 50));
+  const summary = useMemo(() => (selected ? summarize(selected) : null), [selected]);
+  const financial = useMemo(() => (selected ? finance(selected) : null), [selected]);
+  const monthly = useMemo(() => (selected ? monthlyCompleted(selected) : null), [selected]);
+  const devices = useMemo(() => (selected ? equipment(data, selected) : null), [data, selected]);
+  const lifecycle = useMemo(
+    () => (selected ? observedPeriods(data, selected, referenceDate) : null),
+    [data, selected, referenceDate],
+  );
+  // Recorte local de apresentação: não altera os vínculos, a revisão ou outros relatórios.
+  const displayedPeriods = useMemo(
+    () =>
+      (lifecycle?.periods ?? []).filter(
+        (period) => cycleState === 'Todos' || period.state === cycleState,
+      ),
+    [lifecycle, cycleState],
+  );
+  const review = useMemo(
+    () =>
+      selected
+        ? [
+            ...selected.issues,
+            ...reviewOrderConsistency(selected),
+            ...(financial?.issues ?? []),
+            ...(devices?.issues ?? []),
+            ...(lifecycle?.review ?? []),
+          ]
+        : [],
+    [selected, financial, devices, lifecycle],
+  );
   /** Recria filtros adicionais da configuração e reinicia somente busca e paginação. */
   function restoreFilters(saved) {
     setFilters(saved);

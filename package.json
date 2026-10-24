@@ -1,6 +1,6 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.66.2",
+  "version": "0.67.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,7 +13,8 @@
     "check:imports": "node scripts/check-imports.mjs",
     "format": "prettier --write src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
     "format:check": "prettier --check src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
-    "check": "npm run check:imports && npm run format:check && npm test && npm run build"
+    "check": "npm run check:imports && npm run format:check && npm test && npm run build",
+    "benchmark:orders": "node scripts/benchmark-orders.mjs"
   },
   "dependencies": {
     "jose": "^6.2.12",

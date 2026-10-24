@@ -30,6 +30,7 @@ export function ConsumptionArchivePanel({
             ['Arquivos guardados', archive.files.length],
             ['Versões em uso', archive.files.filter((file) => file.active !== false).length],
             ['Anotações salvas', archive.notes.length],
+            ['Grupos de franquia', (archive.allowances || []).length],
             ['Referência operacional', archive.operational?.filename || 'Não guardada'],
           ]}
           note="Histórico local desta operadora, independente dos filtros de consumo. O backup mantém suas versões e anotações."
@@ -57,7 +58,8 @@ export function ConsumptionArchivePanel({
       {backup && (
         <div className="notice">
           <strong>
-            Backup conferido: {backup.files.length} arquivos e {backup.notes.length} anotações.
+            Backup conferido: {backup.files.length} arquivos, {backup.notes.length} anotações e{' '}
+            {(backup.allowances || []).length} grupos de franquia.
           </strong>
           <p>
             A restauração substitui somente o histórico desta operadora. A outra operadora e a

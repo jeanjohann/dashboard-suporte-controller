@@ -1,5 +1,13 @@
 # Fila de implementação e ajustes
 
+## Avisos, consumo e refatoração inicial 0.67.0 — 24/10/2026
+
+Implementados avisos internos dos atrasos/retornos já salvos, histórico paginado, vistos locais e acesso ao veículo. Cobertura de prefixo/ICCID/MSISDN visível na fotografia recebida. KORE com comparação API × CSV por ciclo explícito; confirmação do período pela operadora ainda pendente. Franquia compartilhada cadastrável por operadora, grupo, ciclo e ICCIDs, com cobertura, excesso observado e backup isolado. Arqia permanece manual. Histórico local protegido contra abas antigas e gravações concorrentes.
+
+Primeira rodada de refatoração autorizada: cálculos de OS e cruzamentos do Operacional reaproveitados; busca OS com cache por base. Comparação local em navegador e benchmark sintético executados, com limites explícitos. [Uso, regras, medições e dependências](AVISOS-FRANQUIAS-E-REVISAO.md).
+
+Próximas frentes restantes: validar ciclo KORE com extrato real; obter endpoint de consumo do monitoramento, se disponível; tempo conectado Zoho aguardando CSV Session; ampliar persistência no D1 para consumo/Zoho/painéis; continuar revisão de páginas inativas, grades e Dashboard; auditar candidatos antes de qualquer exclusão. Nenhum arquivo do usuário foi apagado e nenhum canal externo foi ativado.
+
 ## Claro e Escuro 0.66.2 — 24/10/2026
 
 Correção da interpretação: Claro e Escuro permanecem como opções próprias, além de Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul. Claro usa off-white neutro, texto grafite e botões cinza-escuro; Escuro usa cinza profundo com destaques menta, azul e violeta. Preferência atual preservada; IDs light/dark novamente válidos, sem migração para outras paletas. Contraste dos tokens conferidos: Claro com mínimo de 4,88:1 no texto e 3,56:1 nos gráficos; Escuro com 6,34:1 e 6,42:1. Mesma limitação de revisão visual interativa do ambiente.

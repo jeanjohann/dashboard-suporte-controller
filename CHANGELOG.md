@@ -1,3 +1,10 @@
+## 0.67.0 — 24/10/2026
+
+- Avisos internos dos atrasos/retornos salvos, com paginação, vistos locais, CSV e acesso ao veículo; cobertura dos campos da API visível.
+- Franquias compartilhadas por operadora/grupo/ciclo/ICCID, com cobertura, consumo e excesso observado; conferência KORE API × CSV sem presumir ciclo.
+- Proteção do histórico local contra gravações concorrentes e clientes antigos, com dados existentes preservados.
+- Reaproveitamento de cálculos OS/Operacional e cache de busca por base; benchmark sintético e revisão inicial de candidatos sem exclusões.
+
 ## 0.66.2 — 24/10/2026
 
 - Restaura Claro e Escuro como opções próprias, além das quatro paletas.

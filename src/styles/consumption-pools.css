@@ -1,0 +1,115 @@
+/* Franquias compartilhadas e conferência de ciclo, sem interferir nos estilos do Monitoramento. */
+.consumption-allowances button,
+.consumption-kore-reconciliation button {
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  min-height: 32px;
+  font-size: 12px;
+}
+.consumption-allowances button:hover:not(:disabled),
+.consumption-kore-reconciliation button:hover:not(:disabled) {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-ink);
+}
+.consumption-allowances input,
+.consumption-allowances textarea,
+.consumption-kore-reconciliation select {
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  padding: 7px 9px;
+  font: inherit;
+}
+.consumption-allowances td:nth-child(n + 3):nth-child(-n + 6),
+.consumption-allowances th:nth-child(n + 3):nth-child(-n + 6),
+.consumption-kore-reconciliation td:nth-child(n + 4),
+.consumption-kore-reconciliation th:nth-child(n + 4) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.consumption-allowances {
+  padding: 14px;
+  margin: 12px 0;
+  min-width: 0;
+}
+.consumption-allowances h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+.consumption-allowances table,
+.consumption-kore-reconciliation table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.consumption-allowances th,
+.consumption-allowances td,
+.consumption-kore-reconciliation th,
+.consumption-kore-reconciliation td {
+  padding: 8px;
+  border-bottom: 1px solid var(--ui-line);
+  font-size: 12px;
+  text-align: left;
+}
+.consumption-allowances .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.consumption-pool-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.consumption-pool-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+}
+.consumption-pool-form input,
+.consumption-pool-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+.consumption-pool-members,
+.consumption-pool-form > p,
+.consumption-pool-form > .toolbar {
+  grid-column: 1 / -1;
+}
+.consumption-pool-detail {
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--ui-soft);
+  border-radius: 8px;
+}
+.consumption-pool-detail > button {
+  margin-left: 10px;
+}
+.consumption-pool-detail ul {
+  max-height: 240px;
+  overflow: auto;
+}
+.consumption-kore-reconciliation {
+  margin-top: 12px;
+}
+.consumption-kore-reconciliation > label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .consumption-pool-form {
+    grid-template-columns: 1fr;
+  }
+}

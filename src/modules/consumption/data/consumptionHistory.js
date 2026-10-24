@@ -4,10 +4,12 @@
  */
 import { importLineStatement } from '../domain/lineConsumption.js';
 import { operationalCell, operationalLayout } from '../../operational/domain/operational.js';
+import { validateAllowances } from '../domain/sharedAllowance.js';
 export const emptyHistory = () => ({
   version: 1,
   files: [],
   notes: [],
+  allowances: [],
   operational: null,
   settings: { periods: {}, factor: 2 },
 });
@@ -15,12 +17,25 @@ const DB = 'addlog-consumption-history',
   STORE = 'archive';
 async function database() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB, 1);
-    request.onupgradeneeded = () => request.result.createObjectStore(STORE);
-    request.onsuccess = () => resolve(request.result);
+    let blocked = false;
+    // Mantém o conteúdo existente; clientes antigos que abrem v1 precisam atualizar antes de gravar.
+    const request = indexedDB.open(DB, 2);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains(STORE)) request.result.createObjectStore(STORE);
+    };
+    request.onsuccess = () => {
+      if (blocked) request.result.close();
+      else resolve(request.result);
+    };
     request.onerror = () => reject(request.error);
-    request.onblocked = () =>
-      reject(new Error('Feche outra aba do dashboard para liberar o histórico.'));
+    request.onblocked = () => {
+      blocked = true;
+      reject(
+        new Error(
+          'Feche outra aba do dashboard para liberar o histórico e recarregue esta página.',
+        ),
+      );
+    };
   });
 }
 /** Lê o arquivo consolidado do IndexedDB local e fecha a conexão ao concluir ou falhar. */
@@ -29,7 +44,11 @@ export async function readConsumptionHistory() {
   try {
     return await new Promise((resolve, reject) => {
       const request = db.transaction(STORE).objectStore(STORE).get('history');
-      request.onsuccess = () => resolve(request.result || emptyHistory());
+      request.onsuccess = () =>
+        resolve({
+          ...(request.result || emptyHistory()),
+          _revision: request.result?._revision ?? 0,
+        });
       request.onerror = () => reject(request.error);
     });
   } finally {
@@ -41,16 +60,46 @@ export async function writeConsumptionHistory(history) {
   const db = await database();
   try {
     return await new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORE, 'readwrite');
-      transaction.objectStore(STORE).put(history, 'history');
-      transaction.oncomplete = () => resolve();
+      const transaction = db.transaction(STORE, 'readwrite'),
+        store = transaction.objectStore(STORE);
+      let saved, failure;
+      const request = store.get('history');
+      request.onsuccess = () => {
+        try {
+          saved = {
+            ...history,
+            _revision: nextConsumptionRevision(
+              history._revision ?? 0,
+              request.result?._revision ?? 0,
+            ),
+          };
+          store.put(saved, 'history');
+        } catch (error) {
+          failure = error;
+          transaction.abort();
+        }
+      };
+      transaction.oncomplete = () => resolve(saved);
       transaction.onerror = () => reject(transaction.error);
       transaction.onabort = () =>
-        reject(transaction.error || new Error('Não foi possível salvar o histórico.'));
+        reject(failure || transaction.error || new Error('Não foi possível salvar o histórico.'));
     });
   } finally {
     db.close();
   }
+}
+/** Revisão local só avança a partir do histórico lido; restauração não impõe a revisão do backup. */
+export function nextConsumptionRevision(expected, current) {
+  if (
+    ![expected, current].every((value) => Number.isSafeInteger(value) && value >= 0) ||
+    current === Number.MAX_SAFE_INTEGER
+  )
+    throw Error('Revisão do histórico inválida. Recarregue a página.');
+  if (expected !== current)
+    throw Error(
+      'Outra aba atualizou o histórico. Recarregue a página antes de salvar; a versão atual foi preservada.',
+    );
+  return current + 1;
 }
 /** Calcula SHA-256 do conteúdo para reconhecer arquivos idênticos sem depender do nome. */
 export async function fileDigest(text) {
@@ -194,6 +243,7 @@ export async function validateBackup(text) {
     version: 1,
     files,
     notes,
+    allowances: validateAllowances(value.allowances === undefined ? [] : value.allowances),
     operational,
     settings: {
       factor: Number.isFinite(factor) && factor >= 1 && factor <= 100 ? factor : 2,

@@ -38,8 +38,8 @@ export function useConsumptionArchive(reloadToken, repository = consumptionHisto
     setError('');
     try {
       // Só apresenta o novo histórico depois de o armazenamento confirmar a transação.
-      await repository.write(next);
-      setArchive(next);
+      const saved = await repository.write(next);
+      setArchive(saved?.version === 1 && Array.isArray(saved.files) ? saved : next);
       setMessage(success);
     } catch (e) {
       setError('Não foi possível salvar. O histórico anterior foi mantido. ' + e.message);

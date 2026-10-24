@@ -1,5 +1,11 @@
 # Levantamento de refatoração e desempenho
 
+## Primeira rodada autorizada — 24/10/2026, 0.67.0
+
+Executados reaproveitamento dos cálculos de OS, cache local de busca por versão da base e reaproveitamento do cruzamento Operacional × OS. Não altera critérios nem totais. Ensaio em navegador com dados fictícios e benchmark de busca isolada registrados em [Avisos, franquias e revisão](AVISOS-FRANQUIAS-E-REVISAO.md), incluindo o custo de preparação fria do cache. Os ganhos medidos não equivalem ao tempo total de abertura.
+
+Continua pendente: páginas/gráficos inativos, demais grades extensas, isolamento de fontes do Meu Dashboard, processamento fora da interface quando justificado e divisão dos componentes maiores. CarrierPage.jsx, ConsumptionSourcesPanel.jsx e seletores theme-track são candidatos de revisão; nada foi excluído. O levantamento original abaixo é a referência histórica anterior a essa rodada.
+
 Referência: 23/10/2026, versão 0.64.0. Levantamento inicial por leitura do código e benchmark sintético existente. Não inclui refatoração funcional, exclusões ou publicação. As prioridades abaixo são propostas para uma rodada futura.
 
 ## Diagnóstico inicial

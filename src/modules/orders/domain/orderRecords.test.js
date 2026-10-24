@@ -1,7 +1,21 @@
 /** Regressão da busca isolada e ordenação completa da tabela de OS. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { searchOrderRecords, sortOrderRecords } from './orderRecords.js';
+import { searchOrderRecords, sortOrderRecords, createOrderRecordSearch } from './orderRecords.js';
+
+test('cache de busca preserva semântica por célula e não reutiliza conteúdo de uma nova base', () => {
+  const search = createOrderRecordSearch();
+  const rows = [
+    { sourceRow: 2, cells: [{ display: 'Cliente ÁGUA' }, { display: '123' }] },
+    { sourceRow: 3, cells: [{ display: 'ab' }, { display: 'cd' }] },
+  ];
+  for (const term of ['Água', '123', 'bc', '', 'não existe', 'CLI'])
+    assert.deepEqual(search(rows, term), searchOrderRecords(rows, term));
+  const replacement = [{ ...rows[0], cells: [{ display: 'Outro cliente' }] }];
+  assert.deepEqual(search(replacement, 'água'), []);
+  assert.equal(search(replacement, 'Outro').length, 1);
+  assert.deepEqual(createOrderRecordSearch()(replacement, 'Água'), []);
+});
 
 test('busca usa conteúdo exibido sem alterar linhas, células ou ordem da base dos indicadores', () => {
   const rows = [

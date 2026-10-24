@@ -3,6 +3,8 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { consumptionRecordsCsv } from '../domain/consumptionRecordsReport.js';
+import { SharedAllowances } from './SharedAllowances.jsx';
+import { KoreReconciliation } from './KoreReconciliation.jsx';
 import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import {
   consumptionCategories as categories,
@@ -433,6 +435,11 @@ export function LinesPage({
                         Revisar apuração API
                       </PermissionButton>
                     </div>
+                    <KoreReconciliation
+                      snapshot={koreSnapshot}
+                      period={korePeriod}
+                      files={archive.files}
+                    />
                   </details>
                 )}
                 {category !== 'kore' && (
@@ -536,6 +543,17 @@ export function LinesPage({
                     Importe os extratos na página da operadora correspondente. Confira o mapeamento
                     e salve a apuração no histórico.
                   </ViewState>
+                )}
+                {ready && (
+                  <SharedAllowances
+                    key={operator || pageId}
+                    archive={archive}
+                    rows={globalRows}
+                    operator={operator}
+                    ready={ready}
+                    busy={busy}
+                    commit={commit}
+                  />
                 )}
                 {ready &&
                   !!statements.length &&

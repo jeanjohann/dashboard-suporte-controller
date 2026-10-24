@@ -1,6 +1,7 @@
 import { importLineStatement } from './lineConsumption.js';
 import { validISODate } from '../../../shared/data/isoDate.js';
 import { csv } from '../../../shared/export/exports.js';
+import { validateAllowances } from './sharedAllowance.js';
 
 export const carrierName = (key) => (key === 'kore' ? 'Kore' : key === 'arqia' ? 'Arqia' : '');
 export function carrierArchive(archive, operator) {
@@ -11,6 +12,7 @@ export function carrierArchive(archive, operator) {
       (file) => importLineStatement(file.text, file.filename, file.id).operator === operator,
     ),
     notes: archive.notes.filter((note) => note.operator === operator),
+    allowances: (archive.allowances || []).filter((pool) => pool.operator === operator),
   };
 }
 export function restoreCarrierArchive(current, backup, operator) {
@@ -25,6 +27,10 @@ export function restoreCarrierArchive(current, backup, operator) {
       ...incoming.files,
     ],
     notes: [...current.notes.filter((note) => note.operator !== operator), ...incoming.notes],
+    allowances: validateAllowances([
+      ...(current.allowances || []).filter((pool) => pool.operator !== operator),
+      ...(incoming.allowances || []),
+    ]),
   };
 }
 /** O período do acumulado deve ser confirmado explicitamente; não se presume o mês atual. */

@@ -122,7 +122,9 @@ export function useConsumptionImports({
       setPending([]);
       onResetFilters();
       onClearDetail();
-    } catch {}
+    } catch (error) {
+      setError(error.message);
+    }
   }
   async function loadOperational(event) {
     if (!(await authorizeAction('import'))) {
@@ -173,8 +175,13 @@ export function useConsumptionImports({
     setError('');
     try {
       if (!expectedOperator) throw Error('Restaure o backup na página da operadora.');
-      setBackup(carrierArchive(await validateBackup(await file.text()), expectedOperator));
-      onReviewBackup();
+      const candidate = carrierArchive(await validateBackup(await file.text()), expectedOperator);
+      if (!candidate.files.length && !candidate.notes.length && !candidate.allowances?.length)
+        throw Error('O backup não contém dados desta operadora. Abra a página correspondente.');
+      if (operatorRef.current === expectedOperator) {
+        setBackup(candidate);
+        onReviewBackup();
+      }
     } catch (e) {
       setError(e.message);
     } finally {
@@ -196,12 +203,18 @@ export function useConsumptionImports({
       onResetFilters();
       onClearDetail();
       onClearTracked();
-    } catch {}
+    } catch (error) {
+      setError(error.message);
+    }
   }
   function exportBackup() {
     download(
       JSON.stringify(
-        { ...carrierArchive(archive, expectedOperator), exportedAt: new Date().toISOString() },
+        {
+          ...carrierArchive(archive, expectedOperator),
+          _revision: undefined,
+          exportedAt: new Date().toISOString(),
+        },
         null,
         2,
       ),

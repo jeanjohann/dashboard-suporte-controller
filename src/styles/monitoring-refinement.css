@@ -1,4 +1,53 @@
 /* Tabelas semânticas e seções proporcionais ao conteúdo. */
+.monitoring-events button,
+.monitoring-events select {
+  background: var(--ui-soft);
+  color: var(--ui-ink);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  min-height: 32px;
+  font-size: 12px;
+}
+.monitoring-events,
+.monitoring-api-coverage {
+  padding: 10px 14px;
+  margin: 10px 0;
+  min-width: 0;
+}
+.monitoring-events-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.monitoring-events-heading > button {
+  background: transparent;
+  color: var(--ui-ink);
+  border: 0;
+  font-weight: 600;
+  text-align: left;
+}
+.monitoring-events .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: end;
+  margin: 8px 0;
+}
+.monitoring-events .table-scroll {
+  max-height: 360px;
+}
+.monitoring-events th,
+.monitoring-events td {
+  padding: 8px;
+  font-size: 12px;
+  text-align: left;
+}
+.monitoring-events td small {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
 .monitoring-reminder-delete {
   margin: 12px 0;
   padding-top: 12px;

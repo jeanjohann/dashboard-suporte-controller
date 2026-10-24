@@ -9,6 +9,7 @@ import { Workspace } from './app/Workspace.jsx';
 // CSS do Monitoramento continua antes dos estilos globais, mesmo com sua página carregada sob demanda.
 import './styles/monitoring.css';
 import './styles/monitoring-refinement.css';
+import './styles/consumption-pools.css';
 import './styles/support.css';
 import './styles/style.css';
 import './styles/identity.css';

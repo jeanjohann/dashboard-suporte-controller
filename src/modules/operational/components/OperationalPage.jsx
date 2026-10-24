@@ -12,7 +12,7 @@ import {
 } from '../../../shared/security/accessClient.js';
 import { allowsSource } from '../../../shared/security/permissions.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { importOperational, linkOperational } from '../domain/operational.js';
 import {
@@ -181,7 +181,7 @@ export function OperationalPage({
   const analysis = page === 'operational-analysis',
     logisticsView = analysis && menuCategory === 'logistics',
     data = source?.data,
-    linked = data ? linkOperational(data, orders?.data) : [],
+    linked = useMemo(() => (data ? linkOperational(data, orders?.data) : []), [data, orders?.data]),
     rows = linked.filter(
       (row) =>
         ['client', 'model', 'plan', 'status'].every(
