@@ -167,6 +167,7 @@ test('Zoho exige cobertura completa, filtra eventos em São Paulo e deduplica po
   };
   const data = {
     period: { start: '2026-10-01', end: '2026-10-31' },
+    closureBasis: 'current-status-v1',
     entries: [
       entry,
       entry,

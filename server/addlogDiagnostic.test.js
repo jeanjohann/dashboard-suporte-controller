@@ -29,6 +29,21 @@ const sample = () => ({
   ],
 });
 
+test('campos explícitos de chip/prefixo preservam zeros; identificadores numéricos não são presumidos', () => {
+  const input = sample();
+  Object.assign(input.vehicles[0], {
+    prefix: '007',
+    iccid: '00001234567890123456',
+    msisdn: '05511999999999',
+  });
+  const row = normalizeMonitoringSnapshot(normalizeAddlogDiagnostic(input, at)).vehicles[0];
+  assert.equal(row.prefix, '007');
+  assert.equal(row.iccid, input.vehicles[0].iccid);
+  assert.equal(row.msisdn, input.vehicles[0].msisdn);
+  input.vehicles[0].iccid = 123456;
+  assert.throws(() => normalizeAddlogDiagnostic(input, at));
+});
+
 test('diagnóstico preserva zeros, IDs, UTC e metadados em ambas as validações e na exportação', () => {
   const input = sample();
   input.token = 'private-sentinel';

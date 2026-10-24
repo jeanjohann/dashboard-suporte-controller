@@ -1,5 +1,10 @@
 import { api } from '../../../shared/security/accessClient.js';
-import { zohoPeriod, zohoId, zohoDay } from '../../../shared/data/zohoActivity.js';
+import {
+  zohoPeriod,
+  zohoId,
+  zohoDay,
+  supportClosureBasis,
+} from '../../../shared/data/zohoActivity.js';
 
 /** Só entrega uma coleta quando todas as páginas terminam. Falhas/cancelamento descartam o lote. */
 export async function loadZohoActivity(
@@ -19,6 +24,7 @@ export async function loadZohoActivity(
     indicatorsAvailable: true,
     closureReview: [],
     closuresComplete: true,
+    closureBasis: indicators ? supportClosureBasis : 'historical-events',
   };
   const seen = new Set();
   let from = 0,
@@ -77,13 +83,39 @@ export async function loadZohoActivity(
       result.ticketIndicators.push(...batch.ticketIndicators);
     else result.indicatorsAvailable = false;
     if (indicators) {
+      if (batch.closureBasis !== supportClosureBasis)
+        throw Error('A regra de fechamentos mudou. Atualize a página e consulte novamente.');
       if (!Array.isArray(batch.closureReview)) throw Error('Conferência de fechamentos ausente.');
       result.closureReview.push(...batch.closureReview);
       if (batch.closureReview.length) result.closuresComplete = false;
     }
     onProgress(result.ticketIds.length);
-    if (batch.next == null)
-      return { ...result, anchor, readAt: new Date().toISOString(), coverage: batch.coverage };
+    if (batch.next == null) {
+      let categoryCatalog = null;
+      if (indicators) {
+        try {
+          const catalog = await apiImpl('/api/zoho/activity?catalog=1', { signal });
+          if (
+            catalog.version === 1 &&
+            Array.isArray(catalog.categories) &&
+            catalog.categories.every(
+              (label) => typeof label === 'string' && label.trim() && label.length <= 160,
+            )
+          )
+            categoryCatalog = [...new Set(catalog.categories)];
+        } catch {
+          signal?.throwIfAborted();
+        }
+      }
+      signal?.throwIfAborted();
+      return {
+        ...result,
+        categoryCatalog,
+        anchor,
+        readAt: new Date().toISOString(),
+        coverage: batch.coverage,
+      };
+    }
     if (batch.next !== from + 5)
       throw Error('A paginação do Zoho não avançou corretamente. A leitura anterior foi mantida.');
     from = batch.next;

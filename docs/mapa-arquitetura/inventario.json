@@ -1,9 +1,9 @@
 {
-  "version": "0.65.0",
-  "base": "98d486c · cópia da entrega",
+  "version": "0.66.0",
+  "base": "3e60828 · cópia da entrega",
   "date": "2026-10-24",
-  "total": 505,
-  "tests": 104,
+  "total": 514,
+  "tests": 107,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 57
+      "count": 59
     },
     {
       "path": "docs/diagrams",
@@ -53,7 +53,7 @@
     {
       "path": "server",
       "description": "API Cloudflare e adaptadores privados de integrações.",
-      "count": 43
+      "count": 45
     },
     {
       "path": "server/persistence",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 356
+      "count": 361
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 258
+      "count": 263
     },
     {
       "path": "src/modules/assistant",
@@ -108,7 +108,7 @@
     {
       "path": "src/modules/consumption",
       "description": "Módulo Consumo M2M: interface, regras e integração de seus dados.",
-      "count": 48
+      "count": 51
     },
     {
       "path": "src/modules/consumption/components",
@@ -128,7 +128,7 @@
     {
       "path": "src/modules/consumption/domain",
       "description": "Validação e cálculo das regras de negócio de Consumo M2M.",
-      "count": 21
+      "count": 24
     },
     {
       "path": "src/modules/consumption/hooks",
@@ -173,12 +173,12 @@
     {
       "path": "src/modules/monitoring",
       "description": "Módulo Monitoramento Ativo: interface, regras e integração de seus dados.",
-      "count": 32
+      "count": 34
     },
     {
       "path": "src/modules/monitoring/components",
       "description": "Página e painéis visuais de Monitoramento Ativo.",
-      "count": 9
+      "count": 10
     },
     {
       "path": "src/modules/monitoring/data",
@@ -188,7 +188,7 @@
     {
       "path": "src/modules/monitoring/domain",
       "description": "Validação e cálculo das regras de negócio de Monitoramento Ativo.",
-      "count": 13
+      "count": 14
     },
     {
       "path": "src/modules/monitoring/hooks",
@@ -452,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 100849,
-      "sha256": "9a2b58e515464827af11bdc40658c3dd9a839612aafd51e77de301b7bea89650",
+      "bytes": 101484,
+      "sha256": "eb29fcd56dd632572c3a1c19a7c43b3bb71a45c5fc951d94a3f1c0e325d0b012",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -774,8 +774,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 17087,
-      "sha256": "b1f0ea7a72dd538292313ba97bc1514ab0f7b833156f82c0725065fe3a1e079b",
+      "bytes": 17935,
+      "sha256": "d077179d4095f3aa049e125806357caabbb68423a82f370109ac45e9d6eca501",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -888,6 +888,20 @@
       "importedBy": [],
       "bytes": 8565,
       "sha256": "4344094827febf5a4b82829df97d0e6c48c3d2509e3f082426884d240d8f546a",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/MATRIZ-DE-REGRAS-E-REVISAO.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Matriz de regras e revisão dos indicadores. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 48381,
+      "sha256": "ad3e99780eda22fbe2d46db5b59855dde227a5805e5e87218e79a70f5e721a43",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1068,8 +1082,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 43610,
-      "sha256": "6469b71f37aa63819780572847c60a828ed4eba648d3e1671f271d43a125b0fe",
+      "bytes": 45230,
+      "sha256": "db8914563c9351770a19386288e2cd0a7cbbdde73a0067e5a1849fc37c672af7",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1084,6 +1098,20 @@
       "importedBy": [],
       "bytes": 7153,
       "sha256": "140d95d25f69e446aca60aaf1a5ef270efebe475ce24cefad04429fc011d8ebe",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/REGRAS-E-CONSUMO-066.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Regras e apresentação — 0.66.0. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 5900,
+      "sha256": "ab513b9c02d91ad683d14a1f3b43fe39c2b2d3c0c069f07647199ef3bfca8b0c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1320,8 +1348,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 106621,
-      "sha256": "82d76823bf22548b24638d4cffc57c8fde161338519544550e22da94dfabe125",
+      "bytes": 103424,
+      "sha256": "6306a7ced27a8098e707d8421d40fb862b8fc198735670fa6917f1320d91c5b1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1334,8 +1362,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1330,
-      "sha256": "ace09e847c3f6e69372bd03d3853cae5c518dd292e00a917c9929f8274598cb8",
+      "bytes": 1300,
+      "sha256": "2b8a74db1f935c41ec16c1df705bb188135a7db346028701f82d13b8aec5558a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1498,8 +1526,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 51254,
-      "sha256": "b50adfcfc3bf07ebe8274c0e87b0c228b7847b475217e9ec8c0af58180fe40b6",
+      "bytes": 51894,
+      "sha256": "289588761afb36d87fef38fbd3a6d149e376d13ae98b492e24101fff2c5eac23",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1898,8 +1926,8 @@
       "imports": ["src/modules/monitoring/data/snapshotContract.js"],
       "external": [],
       "importedBy": ["server/addlogDiagnostic.test.js", "server/monitoring.js"],
-      "bytes": 5041,
-      "sha256": "f5ff07a46628706e7f7a7f6c28c113e40b26b1f95fa6269a593afbfcb18e1361",
+      "bytes": 5751,
+      "sha256": "521570c019823fc530325f8f5fa3ebce685faa81c86ca330601252d6de329aad",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -1907,7 +1935,7 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Teste",
-      "description": "Verifica addlog Diagnostic no contexto de API Cloudflare. Exemplos: diagnóstico preserva zeros, IDs, UTC e metadados em ambas as validações e na exportação; ausência de posição não vira defeito ou consumo zero; perfis vazios continuam ausentes; datas impossíveis ou futuras ficam neutras para revisão, incluindo hora e minuto inválidos.",
+      "description": "Verifica addlog Diagnostic no contexto de API Cloudflare. Exemplos: campos explícitos de chip/prefixo preservam zeros; identificadores numéricos não são presumidos; diagnóstico preserva zeros, IDs, UTC e metadados em ambas as validações e na exportação; ausência de posição não vira defeito ou consumo zero; perfis vazios continuam ausentes.",
       "exports": [],
       "imports": [
         "server/addlogDiagnostic.js",
@@ -1918,8 +1946,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 7287,
-      "sha256": "42a42c4d1c05760719c7b73aff2309385130737aa98c290ec500666781491cf8",
+      "bytes": 7892,
+      "sha256": "3aeaf9cee9f9e2e14b5843c4c84e59b1a851ad3c1fe58e7a3d3140790918ec0e",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -2390,6 +2418,25 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "server/supportRulesRound.test.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Teste",
+      "description": "Verifica support Rules Round no contexto de API Cloudflare. Exemplos: fechamento final do estado atual substitui eventos anteriores e respeita o período final; catálogo nativo inclui categorias sem chamados e não infere catálogo ausente; espera por agente é subconjunto da carteira, sem somar novamente aos pendentes.",
+      "exports": [],
+      "imports": [
+        "server/zohoActivity.js",
+        "server/zohoCategoryCatalog.js",
+        "src/modules/orders/data/zohoActivityClient.js",
+        "src/modules/support-indicators/domain/indicators.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 4753,
+      "sha256": "82720be5f7e7bd4fee150ac59a0c8d44aaf3f2914077e2ad1a855d7d502b0854",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "server/worker.js",
       "folder": "server",
       "module": "API Cloudflare",
@@ -2435,11 +2482,16 @@
       "layer": "Backend",
       "description": "Piloto Zoho somente leitura. Segredos e tokens permanecem no Worker.",
       "exports": ["createZohoReader", "zohoConfigured", "zohoResponse"],
-      "imports": ["server/zohoActivity.js", "server/zohoBacklog.js", "server/zohoTicketProfile.js"],
+      "imports": [
+        "server/zohoActivity.js",
+        "server/zohoBacklog.js",
+        "server/zohoCategoryCatalog.js",
+        "server/zohoTicketProfile.js"
+      ],
       "external": [],
       "importedBy": ["server/worker.js", "server/zoho.test.js", "server/zohoBacklog.test.js"],
-      "bytes": 12593,
-      "sha256": "4795f65a1b23732fd7679633a1114e8f9cadbf90d23cc22fc0c0e65daba91fa0",
+      "bytes": 13081,
+      "sha256": "3f581956d02c2b263fb196ed0cd96b18a8d7abf74150efcc2eb4c16dbdc9cb45",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2470,14 +2522,15 @@
       ],
       "external": [],
       "importedBy": [
+        "server/supportRulesRound.test.js",
         "server/zoho.js",
         "server/zohoActivity.test.js",
         "server/zohoBacklog.js",
         "server/zohoClosures.test.js",
         "server/zohoIndicators.test.js"
       ],
-      "bytes": 9233,
-      "sha256": "5aadace3aa19d4a537437158aece6792f8f60fbb240c83d9103b1718112973da",
+      "bytes": 10040,
+      "sha256": "78efae44d06e7de4fff81a2de575f79a385d2eb683973f7d37aa9985294567f4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2532,6 +2585,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "server/zohoCategoryCatalog.js",
+      "folder": "server",
+      "module": "API Cloudflare",
+      "layer": "Backend",
+      "description": "Consulta o catálogo nativo de categorias para apresentar zeros somente quando a lista é confirmada.",
+      "exports": ["readZohoCategoryCatalog"],
+      "imports": [],
+      "external": [],
+      "importedBy": ["server/supportRulesRound.test.js", "server/zoho.js"],
+      "bytes": 1006,
+      "sha256": "3d9b14ce14b6c141c8374066bfe20164fdbd3d4813d5255179ab8ab06d963081",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "server/zohoClosures.js",
       "folder": "server",
       "module": "API Cloudflare",
@@ -2541,8 +2608,8 @@
       "imports": ["src/shared/data/zohoActivity.js"],
       "external": [],
       "importedBy": ["server/zohoActivity.js", "server/zohoClosures.test.js"],
-      "bytes": 5730,
-      "sha256": "4c738257a54acf2ef40ec79ca754c446201e8936120c1277d4ff84e50e2e4220",
+      "bytes": 5610,
+      "sha256": "142b1c4d51404aa197393eb52fc14f1f31d192e6c0d6c745be97524029c41917",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2559,8 +2626,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 8848,
-      "sha256": "f6e50a9bc800e0582a31b185f6be08a7401fe8a1ef69acd640c27b0cb6e85eaf",
+      "bytes": 8581,
+      "sha256": "452548aaf0dd18247f38366576b3093193f8a872ee2b1f0b39eb8b88f537381e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2591,8 +2658,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 7896,
-      "sha256": "ee741efb9629eaa045caac2866873c7f9479fa83843fd4d18da55bd4b818c3e8",
+      "bytes": 8105,
+      "sha256": "229e422350fe2e8c2777f088c47366760f8eff0014dde2aac52b459831e2d9c6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2657,7 +2724,6 @@
       "importedBy": [
         "src/app/DeferredPage.jsx",
         "src/modules/assistant/components/AssistantPage.jsx",
-        "src/modules/consumption/components/CarrierPage.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
@@ -2667,8 +2733,8 @@
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/users/components/UsersPage.jsx"
       ],
-      "bytes": 7487,
-      "sha256": "2568d76cf9f3a0f66e835e06efe2e0c46840dda64af323677b2ce31090d00045",
+      "bytes": 7943,
+      "sha256": "41ad8abf254aa99f5e8472c5e94f82a8857b7363505266f154a1a5f2fc017d94",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2684,7 +2750,6 @@
         "src/app/DeferredPage.jsx",
         "src/app/Navigation.jsx",
         "src/modules/assistant/components/AssistantPage.jsx",
-        "src/modules/consumption/components/CarrierPage.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/monitoring/components/MonitoringPage.jsx",
@@ -2724,11 +2789,8 @@
         "src/app/DeferredPage.jsx",
         "src/modules/assistant/components/AssistantPage.jsx",
         "src/modules/assistant/domain/previewAccess.js",
-        "src/modules/consumption/components/CarrierPage.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
-        "src/modules/consumption/data/historyRepository.js",
         "src/modules/imports/components/ImportPage.jsx",
-        "src/modules/imports/domain/bulkImport.js",
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
         "src/modules/my-dashboard/hooks/DashboardSources.jsx",
@@ -2744,8 +2806,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 11234,
-      "sha256": "9c2011d20c3dc99939d80d86f4bf6955ddf1c641290fe5042f68ca497a3ca208",
+      "bytes": 10146,
+      "sha256": "836a56c0dbdea917fe676156c1e645af892ebb087c4e6cc93f3d54ce0391cfc4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2946,7 +3008,8 @@
         "src/modules/orders/components/SupportPerformance.jsx",
         "src/modules/orders/components/Technicians.jsx",
         "src/modules/orders/components/ZohoActivitySummary.jsx",
-        "src/modules/park/components/ParkInsights.jsx"
+        "src/modules/park/components/ParkInsights.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
       "bytes": 3591,
       "sha256": "e5421cff7f0adff4bfdb8694b76170b95dd9bf7dcdf71f55986960c8a274a1ee",
@@ -3088,8 +3151,8 @@
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersRecordsPanel.jsx"
       ],
-      "bytes": 7809,
-      "sha256": "0b196ad77e8443f83726cefbaccbd0b7693b83da8ad9bfa1a139b6c3e581f3ea",
+      "bytes": 9331,
+      "sha256": "61d7aad1d6769ab67e1017116a52759d8f45f4b80d7fa11324ff773e737c6c22",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3413,15 +3476,11 @@
       "layer": "Interface React",
       "description": "Acompanhamento por operadora, com acesso herdado de Consumo e consulta KORE restrita no servidor.",
       "exports": ["CarrierPage"],
-      "imports": [
-        "src/app/Navigation.jsx",
-        "src/app/SidePanel.jsx",
-        "src/modules/consumption/components/KorePilotPanel.jsx"
-      ],
+      "imports": ["src/modules/consumption/components/LinesPage.jsx"],
       "external": ["react"],
-      "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 1517,
-      "sha256": "bb7aaa9c8887114fe513380226d34694703080050ba23b794acab9922a54d5cd",
+      "importedBy": [],
+      "bytes": 285,
+      "sha256": "50f7b56c678cae184438045dcade703476934b089462491ffbae7d807e5fcb1d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3441,8 +3500,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 4224,
-      "sha256": "2b2fe55b0fb988da769b35ee84db3573f07d66bd2b4758082dbfc77897149fb8",
+      "bytes": 4223,
+      "sha256": "980b5f488c386547e9ee2029ce06c7a38e5fcdb556ee6be27a2d008f00b75fc1",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3495,8 +3554,8 @@
       "imports": ["src/components/PageSettings.jsx", "src/shared/security/Access.jsx"],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 1720,
-      "sha256": "85376856033c68ba310f627cdae2e5951d4bda4c9fbaa744c480edeee67258db",
+      "bytes": 1763,
+      "sha256": "51e6acba71b0d168f0703cfdd0ccbae9d7af2dc5be9c601c896820e2cf79d4d8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3592,8 +3651,8 @@
       "imports": ["src/components/SortableTable.jsx", "src/components/TableScroll.jsx"],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 2856,
-      "sha256": "b3f0e8d9f991124e09eeb55f6a81ee507294c43f1fe106a1d7665f743345fee4",
+      "bytes": 3053,
+      "sha256": "7de90e223150cd1668e11df342d0840f6884bcf7cd53dd6d8aca5f0303d3c298",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3611,7 +3670,7 @@
         "src/modules/consumption/utils/consumptionFormatting.js"
       ],
       "external": ["react"],
-      "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
+      "importedBy": [],
       "bytes": 6582,
       "sha256": "911ead7bc92ebb276d79ab3dc43500e877faf5151987015114436088ac3d2644",
       "status": "Código ou documentação do ponto de referência"
@@ -3621,7 +3680,7 @@
       "folder": "src/modules/consumption/components",
       "module": "Consumo M2M",
       "layer": "Interface React",
-      "description": "Coleta KORE para administradores: lotes a cada dez minutos, cobertura, pausa e exportação em memória, isolada dos indicadores CSV.",
+      "description": "Coleta KORE para administradores: lotes a cada dez minutos, cobertura, pausa, exportação e prévia de apuração com período confirmado.",
       "exports": ["KorePilotPanel"],
       "imports": [
         "src/components/ReportSummary.jsx",
@@ -3635,9 +3694,9 @@
         "src/shared/security/Access.jsx"
       ],
       "external": ["react"],
-      "importedBy": ["src/modules/consumption/components/CarrierPage.jsx"],
-      "bytes": 16727,
-      "sha256": "3a555c1813cc95d96ca6c7410490d1489f9e5f92ef3fd0f46e17a0c8c5efb792",
+      "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
+      "bytes": 16835,
+      "sha256": "313f637b0b23585e345faa87e7fd0addb650b54020560a2c4de783d64e3c8b3a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3709,11 +3768,12 @@
         "src/modules/consumption/components/ConsumptionInvoicesPanel.jsx",
         "src/modules/consumption/components/ConsumptionOverviewPanels.jsx",
         "src/modules/consumption/components/ConsumptionSourcePanel.jsx",
-        "src/modules/consumption/components/ConsumptionSourcesPanel.jsx",
+        "src/modules/consumption/components/KorePilotPanel.jsx",
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/consumption/components/LineRecordsTable.jsx",
         "src/modules/consumption/config/consumptionMenus.js",
         "src/modules/consumption/config/reportStories.js",
+        "src/modules/consumption/domain/carrierWorkspace.js",
         "src/modules/consumption/domain/consumptionAttention.js",
         "src/modules/consumption/domain/consumptionFilters.js",
         "src/modules/consumption/domain/consumptionRecordsReport.js",
@@ -3729,9 +3789,9 @@
         "src/shared/security/Access.jsx"
       ],
       "external": ["react"],
-      "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 27330,
-      "sha256": "da0830ae326ecc13b78b215f4307045cbce3f420dcc963d4be86a96fc7494025",
+      "importedBy": ["src/app/Workspace.jsx", "src/modules/consumption/components/CarrierPage.jsx"],
+      "bytes": 32047,
+      "sha256": "d17e6bce51d39488ace142d092c95895906a765a80454240a2a480871e4d3771",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3790,14 +3850,15 @@
         "src/modules/consumption/data/consumptionHistory.test.js",
         "src/modules/consumption/data/historyRepository.js",
         "src/modules/consumption/data/historyRepository.test.js",
+        "src/modules/consumption/domain/carrierWorkspace.test.js",
         "src/modules/consumption/hooks/useConsumptionArchive.js",
         "src/modules/consumption/hooks/useConsumptionImports.js",
         "src/modules/imports/domain/bulkImport.js",
         "src/modules/imports/domain/bulkImport.test.js",
         "src/modules/operational/domain/operational.test.js"
       ],
-      "bytes": 7494,
-      "sha256": "4512f1993667cf131533e3c9c9acbb87fe326efcba70571c8b0360b84f618571",
+      "bytes": 7703,
+      "sha256": "66b729f6be66223c0ce15dd8ca2e98c5085d97dbb3442ad86c8d4c3249b9e0db",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3827,7 +3888,6 @@
       "imports": ["src/modules/consumption/data/consumptionHistory.js"],
       "external": [],
       "importedBy": [
-        "src/app/Workspace.jsx",
         "src/modules/consumption/data/historyRepository.test.js",
         "src/modules/consumption/domain/lineHistoryReport.test.js",
         "src/modules/consumption/hooks/useConsumptionArchive.js"
@@ -3890,6 +3950,47 @@
       ],
       "bytes": 3450,
       "sha256": "af930b56e5b82f0f0f19b96cc1c200ce2560c358243c08865514a545abbf0c47",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/domain/carrierWorkspace.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Domínio",
+      "description": "Isola backups por operadora e prepara apuração KORE somente de coleta completa e período confirmado.",
+      "exports": ["carrierArchive", "carrierName", "koreStatementText", "restoreCarrierArchive"],
+      "imports": [
+        "src/modules/consumption/domain/lineConsumption.js",
+        "src/shared/data/isoDate.js",
+        "src/shared/export/exports.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "src/modules/consumption/components/LinesPage.jsx",
+        "src/modules/consumption/domain/carrierWorkspace.test.js",
+        "src/modules/consumption/hooks/useConsumptionImports.js"
+      ],
+      "bytes": 2383,
+      "sha256": "db19dc205c21291c19acb0b59cc13b56e1c237aa952792c81a2e5f6caeac6d85",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/domain/carrierWorkspace.test.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Teste",
+      "description": "Verifica carrier Workspace no contexto de Consumo M2M. Exemplos: API KORE exige coleta completa e datas confirmadas; bytes não são somados outra vez com CSV; backup por operadora preserva a outra base, suas notas e referência operacional; API de campo só confirma o chip com ICCID/número conjuntos e coleta recente; conflito não ganha vínculo.",
+      "exports": [],
+      "imports": [
+        "src/modules/consumption/data/consumptionHistory.js",
+        "src/modules/consumption/domain/carrierWorkspace.js",
+        "src/modules/consumption/domain/consumptionFieldLink.js",
+        "src/modules/consumption/domain/lineConsumption.js"
+      ],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 3978,
+      "sha256": "77e9fed5fd0c69d401d9735c547ed3af244f9a398140174f0505198afd652e19",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3970,6 +4071,23 @@
       "importedBy": [],
       "bytes": 2160,
       "sha256": "93a9cce6d54cdb3dd7613e927f83eb0a570306f62d9880830daf7f092ce82331",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/consumption/domain/consumptionFieldLink.js",
+      "folder": "src/modules/consumption/domain",
+      "module": "Consumo M2M",
+      "layer": "Domínio",
+      "description": "Confere ICCID e MSISDN conjuntos na fotografia recente do monitoramento e sinaliza conflito de equipamento.",
+      "exports": ["attachFieldEvidence"],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "src/modules/consumption/domain/carrierWorkspace.test.js",
+        "src/modules/consumption/domain/lineConsumption.js"
+      ],
+      "bytes": 3052,
+      "sha256": "abfb1180669bdc1ac030716678138feeb16acd7965ad71b17beea875fd95311e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4060,8 +4178,8 @@
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/consumption/domain/consumptionRecordsReport.test.js"
       ],
-      "bytes": 2543,
-      "sha256": "857602eed7d35dbb8a64d2fbb2887f9f66b64b1cf0623fef618c4a3c47f181be",
+      "bytes": 2802,
+      "sha256": "9b71a86567bff55f9624024dd75150a32f517fc188ed9b6fbc05230b93befbb6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4228,6 +4346,7 @@
       ],
       "imports": [
         "src/modules/consumption/domain/consumption.js",
+        "src/modules/consumption/domain/consumptionFieldLink.js",
         "src/modules/operational/domain/operational.js",
         "src/modules/orders/domain/trackerModels.js"
       ],
@@ -4244,6 +4363,8 @@
         "src/modules/consumption/components/LineRecordsTable.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/consumption/data/consumptionHistory.js",
+        "src/modules/consumption/domain/carrierWorkspace.js",
+        "src/modules/consumption/domain/carrierWorkspace.test.js",
         "src/modules/consumption/domain/consumptionAttention.js",
         "src/modules/consumption/domain/consumptionAttention.test.js",
         "src/modules/consumption/domain/consumptionFilters.js",
@@ -4266,8 +4387,8 @@
         "src/modules/my-dashboard/domain/evaluate.test.js",
         "src/modules/operational/domain/operational.test.js"
       ],
-      "bytes": 16138,
-      "sha256": "34c69b157bb7ef984ed33308b3cbbc6408464f1b0f4ce6411a8867e65ba82d55",
+      "bytes": 16399,
+      "sha256": "9e95d93ea6bf73ab9ddaf1a8101a3976fc33ff2d2a98d05cf5206233c5ab953d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4344,6 +4465,7 @@
       "exports": ["useConsumptionImports"],
       "imports": [
         "src/modules/consumption/data/consumptionHistory.js",
+        "src/modules/consumption/domain/carrierWorkspace.js",
         "src/modules/consumption/domain/lineConsumption.js",
         "src/modules/consumption/utils/consumptionFormatting.js",
         "src/modules/operational/domain/operational.js",
@@ -4353,8 +4475,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/consumption/components/LinesPage.jsx"],
-      "bytes": 6457,
-      "sha256": "e9eef1d868342a2d808889c647adeaa0022348e32aa4453a6fbcade8122c9909",
+      "bytes": 8251,
+      "sha256": "1051271c046b40bc6f2019dfbbb192e846b57b42375a63168abbf69efe822c95",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4420,8 +4542,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 9279,
-      "sha256": "e9d166327fd95ceb6f7ccc02f2923240b5fc14577959bb5ffbc392073237e518",
+      "bytes": 9439,
+      "sha256": "4ef3a9954b1ca2aea80a8da6070a865908acb757af7e3b11aa2360c871c8ab2f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -4445,7 +4567,6 @@
       ],
       "external": ["xlsx"],
       "importedBy": [
-        "src/app/Workspace.jsx",
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/imports/domain/bulkImport.test.js"
       ],
@@ -4644,6 +4765,7 @@
       "imports": [
         "src/components/Section.jsx",
         "src/components/TableScroll.jsx",
+        "src/modules/monitoring/components/RegistryEquivalences.jsx",
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringRegistry.js",
         "src/shared/data/clientDisplay.js",
@@ -4653,8 +4775,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 8113,
-      "sha256": "fb2ae4b2ae25d25e10fad51a6699c498b30640ad9ba5a96cb00078a152639a55",
+      "bytes": 9852,
+      "sha256": "e1394fb6ed193a9970723579180b772fcce62aa0b32919a2c097a71113443f54",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4739,6 +4861,20 @@
       "importedBy": ["src/modules/monitoring/components/MonitoringAnalytics.jsx"],
       "bytes": 12873,
       "sha256": "bd44ba35906966dd2a3ab9bebc3c3cf86c3a54de7408eceeb828d3266fed8d70",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/components/RegistryEquivalences.jsx",
+      "folder": "src/modules/monitoring/components",
+      "module": "Monitoramento Ativo",
+      "layer": "Interface React",
+      "description": "Permite equivalência explícita base API/cliente Operacional, salva localmente por usuário.",
+      "exports": ["RegistryEquivalences"],
+      "imports": ["src/shared/security/Access.jsx"],
+      "external": ["react"],
+      "importedBy": ["src/modules/monitoring/components/MonitoringRegistry.jsx"],
+      "bytes": 3139,
+      "sha256": "c4758ead791ede2d9c10baa75c964ebd1c38286ec0bf211895bcb590f0552faa",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -4872,8 +5008,8 @@
         "src/modules/monitoring/data/snapshotContract.test.js",
         "src/shared/persistence/snapshotPayload.js"
       ],
-      "bytes": 5006,
-      "sha256": "738c8cd55019748cb5ea0d5a16dd4cef9c199e992d7da7c37a2b1721238b492f",
+      "bytes": 5190,
+      "sha256": "7ca549828fd9d1f5e18c0f71c66253655b72439fe936cdb7fe24da3024945e5d",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -5051,8 +5187,13 @@
       "folder": "src/modules/monitoring/domain",
       "module": "Monitoramento Ativo",
       "layer": "Domínio",
-      "description": "Cruza seriais numéricos exatos e únicos, preserva duplicidades e imprecisão e compara placa, cliente/base e modelo sem inferir equivalências.",
-      "exports": ["reconcileMonitoringRegistry", "registryExportRows", "registryStates"],
+      "description": "Cruza seriais exatos, preserva ambiguidades e compara sete campos com API como referência e equivalências somente explícitas.",
+      "exports": [
+        "reconcileMonitoringRegistry",
+        "registryComparisons",
+        "registryExportRows",
+        "registryStates"
+      ],
       "imports": [
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/operational/domain/operational.js",
@@ -5061,10 +5202,25 @@
       "external": [],
       "importedBy": [
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
+        "src/modules/monitoring/domain/monitoringRegistry.test.js",
         "src/modules/monitoring/domain/monitoringWorkspace.test.js"
       ],
-      "bytes": 5919,
-      "sha256": "dae6742931591f9901d22097feb4f51190cb9da0c5c405d4eed3d922b8e1e02a",
+      "bytes": 8390,
+      "sha256": "baf2025c0cfa86de92dfb91ac9417800068ed98cb5191bff4888afd5467270f1",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/domain/monitoringRegistry.test.js",
+      "folder": "src/modules/monitoring/domain",
+      "module": "Monitoramento Ativo",
+      "layer": "Teste",
+      "description": "Verifica monitoring Registry no contexto de Monitoramento Ativo. Exemplos: cadastro compara sete campos, usa equivalência explícita e não inventa campos ausentes da API.",
+      "exports": [],
+      "imports": ["src/modules/monitoring/domain/monitoringRegistry.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 1693,
+      "sha256": "430d408bd1165300a65617e380aa6f9379ebaa753dea244837e13cfea2638aad",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -5977,8 +6133,8 @@
         "src/modules/park/domain/parkAnalysis.js",
         "src/modules/park/domain/parkAnalysis.test.js"
       ],
-      "bytes": 10352,
-      "sha256": "d2c4b9d750b262d1728a7e4b3768bf088c039a82411162bf197988190706381e",
+      "bytes": 10811,
+      "sha256": "03430aa0665a6fae5dc8cdd24a829c63c7078da69d20a5afcea766383ae98d33",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -7207,12 +7363,13 @@
       "imports": ["src/shared/data/zohoActivity.js", "src/shared/security/accessClient.js"],
       "external": [],
       "importedBy": [
+        "server/supportRulesRound.test.js",
         "server/zohoActivity.test.js",
         "src/modules/orders/components/SupportZohoActivity.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 3699,
-      "sha256": "5cc95893ea46954698c9930036308585a8229fc3b692fddc0d3db53140648b55",
+      "bytes": 4605,
+      "sha256": "99121a60c13ec9432a7cb3178b945b7dfafa2513a2fc67f2b9b1c3fa3d6497ac",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8668,6 +8825,7 @@
         "src/app/Navigation.jsx",
         "src/app/SidePanel.jsx",
         "src/components/Chart.jsx",
+        "src/components/InfoNote.jsx",
         "src/components/SortableTable.jsx",
         "src/modules/my-dashboard/hooks/DashboardSources.jsx",
         "src/modules/orders/data/zohoActivityClient.js",
@@ -8678,14 +8836,15 @@
         "src/modules/support-indicators/data/zohoBacklogClient.js",
         "src/modules/support-indicators/domain/indicators.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js",
+        "src/shared/data/zohoActivity.js",
         "src/shared/export/exports.js",
         "src/shared/security/Access.jsx",
         "src/shared/security/accessClient.js"
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 40528,
-      "sha256": "2ce7c05bb724ecf4d22b5892afcdd6414045185ad6443c9033d63075633fe855",
+      "bytes": 45411,
+      "sha256": "a39b2edbb20efa79c1e56df178562937c0de5e6240233327d5ea9fb3af84683b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8772,6 +8931,7 @@
       ],
       "external": [],
       "importedBy": [
+        "server/supportRulesRound.test.js",
         "server/zohoBacklog.test.js",
         "server/zohoIndicators.test.js",
         "src/modules/support-indicators/components/IndicatorSettings.jsx",
@@ -8780,8 +8940,8 @@
         "src/modules/support-indicators/domain/indicators.test.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js"
       ],
-      "bytes": 10029,
-      "sha256": "a0fe4f687970eaae092642d7f2147cf19c27fbbe643f32a737fa41bb30b1ee55",
+      "bytes": 11556,
+      "sha256": "795174d421dc4826de690fc21bd1f02d8c0dfcd0c1204429f54b2aa65eb4c166",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8794,8 +8954,8 @@
       "imports": ["src/modules/support-indicators/domain/indicators.js"],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 6360,
-      "sha256": "891cfa65d646bf0806de047d5f48e8fba4be63c3dd897ce3087d5d26c4ebf7e4",
+      "bytes": 6399,
+      "sha256": "0f1d53e447396a0ce24e5e400b074b15068568394bdde13fc6c23c0ba0bb3f06",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9036,6 +9196,7 @@
       "imports": [],
       "external": [],
       "importedBy": [
+        "src/modules/consumption/domain/carrierWorkspace.js",
         "src/modules/consumption/domain/consumptionAttention.js",
         "src/modules/consumption/domain/consumptionSources.js",
         "src/modules/my-dashboard/domain/evaluate.js",
@@ -9108,12 +9269,12 @@
       "module": "Compartilhado",
       "layer": "Dados / transporte",
       "description": "Diagnósticos comuns às fontes; não modifica valores nem decide correções.",
-      "exports": ["reviewDiagnostics"],
+      "exports": ["reviewDiagnostics", "reviewRules"],
       "imports": [],
       "external": [],
       "importedBy": ["src/components/ReviewPanel.jsx", "src/shared/data/reviewDiagnostics.test.js"],
-      "bytes": 2685,
-      "sha256": "37375e6bf28b225ba82064af204e45d3f0cda2e29f19de0269468d6159cf4f61",
+      "bytes": 6167,
+      "sha256": "deed8d2318373f9adfc425f1487403eae5cc92c6834a9852d9051861dd7e3c53",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9121,13 +9282,13 @@
       "folder": "src/shared/data",
       "module": "Compartilhado",
       "layer": "Teste",
-      "description": "Verifica review Diagnostics no contexto de Compartilhado. Exemplos: diagnóstico conserva origem, valores e incerteza; reúne somente apontamentos idênticos.",
+      "description": "Verifica review Diagnostics no contexto de Compartilhado. Exemplos: diagnóstico contextual de estoque não inventa identificadores e preserva o original; diagnóstico conserva origem, valores e incerteza; reúne somente apontamentos idênticos.",
       "exports": [],
       "imports": ["src/shared/data/reviewDiagnostics.js"],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 960,
-      "sha256": "b67fcf70f7aaa2735bdb9540823ce90b721a5db8ebb4b78c713953c23e23c8fb",
+      "bytes": 1555,
+      "sha256": "64325c2bbf9efc0d3d71768b874411a0ee38a77f8b1cdb51f3a8825cc154c314",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9190,10 +9351,12 @@
         "normalizeZohoEntry",
         "normalizeZohoReply",
         "summarizeZohoActivity",
+        "supportClosureBasis",
         "zohoDay",
         "zohoId",
         "zohoPeriod",
         "zohoSeconds",
+        "zohoStatusType",
         "zohoTeam"
       ],
       "imports": ["src/shared/data/isoDate.js"],
@@ -9212,12 +9375,13 @@
         "src/modules/orders/components/SupportZohoOverview.jsx",
         "src/modules/orders/components/ZohoClosures.jsx",
         "src/modules/orders/data/zohoActivityClient.js",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/modules/support-indicators/data/zohoBacklogClient.js",
         "src/modules/support-indicators/domain/contracts.js",
         "src/modules/support-indicators/domain/indicators.js"
       ],
-      "bytes": 8803,
-      "sha256": "67aab23d90d368eda0609f66ac92dafd0bb07b7d4a418b2ce82083c5027e6369",
+      "bytes": 9063,
+      "sha256": "b8ba8c55dbdb493f21029f551e793936b1251b7021552e38413ad0e7bd21c8d6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9234,6 +9398,7 @@
         "src/components/ReviewPanel.jsx",
         "src/modules/consumption/components/KorePilotPanel.jsx",
         "src/modules/consumption/components/LinesPage.jsx",
+        "src/modules/consumption/domain/carrierWorkspace.js",
         "src/modules/consumption/domain/consumptionRecordsReport.js",
         "src/modules/consumption/domain/lineHistoryReport.js",
         "src/modules/consumption/hooks/useConsumptionImports.js",
@@ -9768,6 +9933,7 @@
         "src/modules/monitoring/components/MonitoringPage.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringReminders.jsx",
+        "src/modules/monitoring/components/RegistryEquivalences.jsx",
         "src/modules/monitoring/hooks/useMonitoringReminders.js",
         "src/modules/monitoring/hooks/useMonitoringSource.js",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
@@ -9882,8 +10048,8 @@
         "src/shared/security/accessClient.js",
         "src/shared/security/permissions.test.js"
       ],
-      "bytes": 4226,
-      "sha256": "12699be6818610561018630c6bc46b1c9508dab24123b8d7654b48e8805f92a0",
+      "bytes": 4251,
+      "sha256": "5ebeb34ec1723cd7d424819fcab22ec3b6d3a5dfcc72dc0a313c738553a010a9",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -9891,13 +10057,13 @@
       "folder": "src/shared/security",
       "module": "Compartilhado",
       "layer": "Teste",
-      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas; Meu Dashboard tem controle próprio sem conceder bases e preserva usuários legados.",
+      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas.",
       "exports": [],
       "imports": ["src/shared/security/permissions.js"],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 2929,
-      "sha256": "5c5c9497cc3643ef841ce78e523a112fe8af7e18deb74ce851a33f526e0d0120",
+      "bytes": 3298,
+      "sha256": "baab2df8e2e7b6af562400e61c20b48c5c2c376146e2e757fc5688d8ba68f64f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10162,8 +10328,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 6652,
-      "sha256": "6f5f9cbdd29bdde06697130bdb9e6f7e71ca3b324a46275a91224593cf4288f5",
+      "bytes": 8527,
+      "sha256": "2497559ab15b2d4743a3e3b656d4455eccb939e99da4f00ccaf34e686fc913a4",
       "status": "Código ou documentação do ponto de referência"
     },
     {

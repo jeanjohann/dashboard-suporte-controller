@@ -30,6 +30,7 @@ const submenuPages = new Set([
   'operational-analysis',
   'monitoring',
 ]);
+const consumptionPages = ['lines', 'kore', 'arqia', 'consumption-followup'];
 /** Exibe somente as páginas autorizadas e mantém expansão, recolhimento e ferramentas da página ativa. */
 export function Navigation({ page, onPage }) {
   const { user, managed } = useAccess();
@@ -77,7 +78,7 @@ export function Navigation({ page, onPage }) {
       window.open(architectureMapUrl, '_blank', 'noopener,noreferrer');
       return;
     }
-    if (key === page || (key === 'lines' && ['kore', 'arqia'].includes(page))) {
+    if (key === page || (key === 'lines' && consumptionPages.includes(page))) {
       if (!submenuPages.has(key)) return;
       if (collapsed) {
         changeCollapsed(false);
@@ -111,20 +112,18 @@ export function Navigation({ page, onPage }) {
               title={label}
               aria-label={label}
               className={
-                page === key || (key === 'lines' && ['kore', 'arqia'].includes(page))
-                  ? 'active'
-                  : ''
+                page === key || (key === 'lines' && consumptionPages.includes(page)) ? 'active' : ''
               }
               aria-current={page === key ? 'page' : undefined}
               aria-expanded={
                 submenuPages.has(key) &&
-                (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page)))
+                (page === key || (key === 'lines' && consumptionPages.includes(page)))
                   ? !collapsed && menuOpen
                   : undefined
               }
               aria-controls={
                 submenuPages.has(key) &&
-                (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page)))
+                (page === key || (key === 'lines' && consumptionPages.includes(page)))
                   ? `submenu-${key}`
                   : undefined
               }
@@ -135,13 +134,13 @@ export function Navigation({ page, onPage }) {
               </span>
               <span className="navigation-label">{label}</span>
               {submenuPages.has(key) &&
-                (page === key || (key === 'lines' && ['kore', 'arqia'].includes(page))) && (
+                (page === key || (key === 'lines' && consumptionPages.includes(page))) && (
                   <span className="navigation-chevron" aria-hidden="true">
                     {<Icon name={menuOpen ? 'up' : 'down'} size={14} />}
                   </span>
                 )}
             </button>
-            {key === 'lines' && ['lines', 'kore', 'arqia'].includes(page) && (
+            {key === 'lines' && consumptionPages.includes(page) && (
               <div
                 id="submenu-lines"
                 hidden={collapsed || !menuOpen}
@@ -149,8 +148,19 @@ export function Navigation({ page, onPage }) {
               >
                 <div className="sidebar-tools">
                   <nav className="category-navigation" aria-label="Acompanhamento de operadoras">
-                    <button type="button" onClick={() => onPage('lines')}>
-                      Visão do consumo
+                    <button
+                      type="button"
+                      className={page === 'lines' ? 'active' : ''}
+                      onClick={() => onPage('lines')}
+                    >
+                      Relatórios
+                    </button>
+                    <button
+                      type="button"
+                      className={page === 'consumption-followup' ? 'active' : ''}
+                      onClick={() => onPage('consumption-followup')}
+                    >
+                      Acompanhamento
                     </button>
                     {['kore', 'arqia']
                       .filter((carrier) => allowsPage(user, carrier))

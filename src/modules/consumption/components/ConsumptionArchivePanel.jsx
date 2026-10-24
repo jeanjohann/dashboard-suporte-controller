@@ -32,7 +32,7 @@ export function ConsumptionArchivePanel({
             ['Anotações salvas', archive.notes.length],
             ['Referência operacional', archive.operational?.filename || 'Não guardada'],
           ]}
-          note="Histórico local completo deste navegador, independente dos filtros de consumo. Não há sincronização entre usuários; o backup mantém versões e anotações."
+          note="Histórico local desta operadora, independente dos filtros de consumo. O backup mantém suas versões e anotações."
         />
       }
     >
@@ -60,12 +60,12 @@ export function ConsumptionArchivePanel({
             Backup conferido: {backup.files.length} arquivos e {backup.notes.length} anotações.
           </strong>
           <p>
-            A restauração substitui o histórico deste navegador. Baixe o backup atual antes de
-            prosseguir, se quiser preservá-lo.
+            A restauração substitui somente o histórico desta operadora. A outra operadora e a
+            referência operacional serão preservadas. Baixe o backup atual antes de prosseguir.
           </p>
           <div className="line-actions">
             <PermissionButton action="import" disabled={busy} onClick={onRestore}>
-              Restaurar substituindo o histórico atual
+              Restaurar histórico desta operadora
             </PermissionButton>
             <button disabled={busy} onClick={onCancel}>
               Cancelar restauração

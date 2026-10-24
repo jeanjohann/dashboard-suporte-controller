@@ -1,3 +1,10 @@
+## 0.66.0 — 24/10/2026
+
+- Indicadores Suporte compacto, com ajuda contextual, categorias zeradas quando o catálogo é confirmado, espera por agente e fechados pelo status atual/último autor confirmado.
+- Conferência API × Operacional em sete campos, equivalências explícitas de bases e diagnósticos de revisão com regra, impacto e aplicabilidade.
+- Consumo reorganizado por operadora, acompanhamento e relatórios consolidados, prévia de coleta KORE com período confirmado e backups isolados.
+- Preserva contagem OS por linha, improdutivas separadas, CNPJ C, dados manuais e regras de equipamentos. Nenhuma migração D1.
+
 ## Análises complementares do suporte
 
 - Motivos de manutenção, serviços absorvidos pela Addlog e distribuição por UF/cidade.

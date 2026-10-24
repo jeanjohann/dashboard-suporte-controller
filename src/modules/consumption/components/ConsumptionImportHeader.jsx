@@ -2,32 +2,37 @@
 import React from 'react';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
 import { PageSettingsButton } from '../../../components/PageSettings.jsx';
-export function ConsumptionImportHeader({ busy, ready, imports, settingsAvailable }) {
+export function ConsumptionImportHeader({
+  busy,
+  ready,
+  imports,
+  settingsAvailable,
+  operator = '',
+  title = 'Relatórios de consumo',
+}) {
   const { input, operationalInput, backupInput, load, loadOperational, readBackup } = imports;
   return (
     <header>
       <div>
         <div className="eyebrow">CONTROLE DE LINHAS</div>
-        <h1>Controle de Consumo M2M</h1>
-        <p>Arqia e Kore · histórico salvo neste navegador, com backup exportável.</p>
+        <h1>{operator || title}</h1>
+        <p>
+          {operator
+            ? `${operator === 'Kore' ? 'API e extratos KORE' : 'Extratos manuais Arqia'} · histórico local e backup por operadora.`
+            : 'KORE e Arqia · fontes identificadas, apurações e vínculos preservados.'}
+        </p>
       </div>
       <div className="line-actions">
-        <PermissionButton
-          className="primary-action"
-          action="import"
-          disabled={busy || !ready}
-          onClick={() => input.current.click()}
-        >
-          Importar extratos
-        </PermissionButton>
-        <PermissionButton
-          action="import"
-          source="operational"
-          disabled={busy || !ready}
-          onClick={() => operationalInput.current.click()}
-        >
-          Importar operacional
-        </PermissionButton>
+        {operator && (
+          <PermissionButton
+            className="primary-action"
+            action="import"
+            disabled={busy || !ready}
+            onClick={() => input.current.click()}
+          >
+            Importar extratos
+          </PermissionButton>
+        )}
         <PageSettingsButton available={settingsAvailable} />
       </div>
       <input hidden ref={input} type="file" accept=".csv,text/csv" multiple onChange={load} />

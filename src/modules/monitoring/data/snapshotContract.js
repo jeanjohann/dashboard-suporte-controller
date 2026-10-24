@@ -47,6 +47,7 @@ export function normalizeMonitoringSnapshot(input) {
       !optionalText(row.clientName) ||
       !optionalText(row.profile) ||
       !optionalText(row.identifier, 200) ||
+      !['prefix', 'iccid', 'msisdn'].every((key) => optionalText(row[key], 200)) ||
       !optionalText(row.deviceModel, 200) ||
       !(
         row.positions24h == null ||
@@ -79,6 +80,9 @@ export function normalizeMonitoringSnapshot(input) {
       supplyVoltageV: row.supplyVoltageV ?? null,
       profile: row.profile ?? null,
       identifier: row.identifier ?? null,
+      prefix: row.prefix ?? null,
+      iccid: row.iccid ?? null,
+      msisdn: row.msisdn ?? null,
       deviceModel: row.deviceModel ?? null,
       positions24h: row.positions24h ?? null,
       externalPowerFailure: row.externalPowerFailure ?? null,

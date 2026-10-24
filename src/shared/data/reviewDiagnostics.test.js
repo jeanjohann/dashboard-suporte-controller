@@ -1,6 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { reviewDiagnostics } from './reviewDiagnostics.js';
+
+test('diagnóstico contextual de estoque não inventa identificadores e preserva o original', () => {
+  const data = {
+    columns: [{ label: 'Situação' }],
+    rows: [{ sourceRow: 4, cells: [{ raw: 'Estoque' }] }],
+  };
+  const before = JSON.stringify(data);
+  const [result] = reviewDiagnostics(
+    [{ row: 4, column: 'Placa', value: '', reason: 'Campo ausente' }],
+    { data },
+  );
+  assert.equal(result.rule, 'RV06');
+  assert.match(result.applicability, /ausência pode ser legítima/);
+  assert.match(result.action, /não invente/);
+  assert.equal(JSON.stringify(data), before);
+});
 test('diagnóstico conserva origem, valores e incerteza; reúne somente apontamentos idênticos', () => {
   const issue = {
     address: 'BH12',

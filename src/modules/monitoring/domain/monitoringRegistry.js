@@ -15,6 +15,45 @@ const text = (value) => String(value ?? '').trim();
 const plate = (value) => text(value).toLocaleUpperCase('pt-BR').replace(/[\s-]/g, '');
 const name = (value) => clientDisplay(text(value)).replace(/\s+/g, ' ');
 const model = (value) => name(value).replace(/[\s-]/g, '');
+const digits = (value) => text(value).replace(/[\s()+-]/g, '');
+export function registryComparisons(api, op, equivalences = {}) {
+  const mapped =
+    Object.hasOwn(equivalences, api.clientId) && typeof equivalences[api.clientId] === 'string'
+      ? equivalences[api.clientId]
+      : null;
+  return [
+    ['Placa', api.plate, op.plate, plate, 'plate', true],
+    ['Prefixo', api.prefix, op.prefix, name, 'prefix', false],
+    ['ID rastreador', api.trackerId, op.serial, text, 'serial', true],
+    ['Modelo', api.deviceModel, op.model, model, 'model', true],
+    ['ICCID', api.iccid, op.iccid, text, 'iccid', false],
+    ['MSISDN', api.msisdn, op.phone, digits, 'phone', false],
+    ['Cliente/base', api.clientName || api.clientId, op.client, name, 'client', true],
+  ].map(([field, reference, original, normalize, key, required]) => {
+    const comparisonReference = field === 'Cliente/base' && mapped ? mapped : reference;
+    const state = !text(reference)
+      ? 'api-missing'
+      : operationalCell(op, key)?.error || !text(original)
+        ? 'operational-missing'
+        : normalize(comparisonReference) === normalize(original)
+          ? 'equal'
+          : 'different';
+    return {
+      field,
+      reference: text(reference),
+      original: text(original),
+      state,
+      required,
+      equivalent: field === 'Cliente/base' ? mapped : null,
+      action:
+        state === 'different' || state === 'operational-missing'
+          ? 'Conferir e atualizar o lançamento do Operacional com a referência atual da API; confirmar troca/transferência antes de editar.'
+          : state === 'api-missing'
+            ? 'Campo não fornecido pela API: não concluir divergência deste campo.'
+            : 'Sem divergência no campo comparado.',
+    };
+  });
+}
 function serial(row, source) {
   const value = source === 'api' ? row.trackerId : row.serial;
   const cell = source === 'operational' ? operationalCell(row, 'serial') : null;
@@ -26,7 +65,7 @@ function serial(row, source) {
     return '';
   return /^\d+$/.test(text(value)) ? text(value) : '';
 }
-export function reconcileMonitoringRegistry(snapshot, operational) {
+export function reconcileMonitoringRegistry(snapshot, operational, equivalences = {}) {
   if (
     !snapshot ||
     snapshot.demonstration ||
@@ -71,28 +110,35 @@ export function reconcileMonitoringRegistry(snapshot, operational) {
     } else if (!api.length) state = registryStates[4];
     else if (!op.length) state = registryStates[3];
     else {
-      const pairs = [
-        ['Placa', api[0].plate, op[0].plate, plate],
-        ['Cliente/base', api[0].clientName || api[0].clientId, op[0].client, name],
-        ['Modelo', api[0].deviceModel, op[0].model, model],
-      ];
-      for (const [label, left, right, normalize] of pairs) {
-        const field = label === 'Cliente/base' ? 'client' : label === 'Placa' ? 'plate' : 'model';
-        if (operationalCell(op[0], field)?.error || !text(left) || !text(right))
-          issues.push(`${label}: informação ausente ou inválida em uma das fontes.`);
-        else if (normalize(left) !== normalize(right))
+      for (const item of registryComparisons(api[0], op[0], equivalences)) {
+        if (item.state === 'different')
           issues.push(
-            label === 'Placa'
-              ? 'Placa: valores diferentes nas duas fontes.'
-              : `${label}: valores diferentes; conferir equivalência de nomes/códigos${label === 'Modelo' ? ' e variante do modelo' : ''}.`,
+            `${item.field}: valores diferentes. API é a referência atual; conferir o Operacional${item.field === 'Cliente/base' ? ' e equivalência de nomes/códigos' : ''}.`,
           );
+        else if (item.state === 'operational-missing')
+          issues.push(
+            `${item.field}: informação ausente ou inválida no Operacional; referência disponível na API.`,
+          );
+        else if (item.state === 'api-missing' && item.required)
+          issues.push(`${item.field}: API sem informação; conferência incompleta.`);
       }
       state = issues.length ? registryStates[1] : registryStates[0];
     }
-    result.push({ key: `serial:${id}`, serial: id, state, ...sources, issues });
+    result.push({
+      key: `serial:${id}`,
+      serial: id,
+      state,
+      ...sources,
+      issues,
+      comparisons:
+        api.length === 1 && op.length === 1 ? registryComparisons(api[0], op[0], equivalences) : [],
+    });
   }
   return {
     rows: result,
+    missingApiFields: ['prefix', 'iccid', 'msisdn'].filter(
+      (key) => !snapshot.vehicles.some((row) => text(row[key])),
+    ),
     apiRows: snapshot.vehicles.length,
     operationalRows: operational.rows.length,
     referenceAt: snapshot.referenceAt,
@@ -133,6 +179,13 @@ export function registryExportRows(report, { filename = '', filters = {} } = {})
       'Condição da coleta',
       'Arquivo Operacional',
       'Filtros da conferência',
+      'Prefixos API',
+      'ICCID API',
+      'MSISDN API',
+      'Prefixos Operacional',
+      'ICCID Operacional',
+      'MSISDN Operacional',
+      'Comparação por campo e referência',
     ],
     ...report.rows.map((row) => [
       row.serial,
@@ -151,6 +204,13 @@ export function registryExportRows(report, { filename = '', filters = {} } = {})
       report.stale ? 'Antiga ou indisponível; atualizar antes de concluir' : 'Coleta utilizável',
       filename,
       JSON.stringify(filters),
+      row.api.map((r) => r.prefix ?? '').join(' | '),
+      row.api.map((r) => r.iccid ?? '').join(' | '),
+      row.api.map((r) => r.msisdn ?? '').join(' | '),
+      row.operational.map((r) => r.prefix ?? '').join(' | '),
+      row.operational.map((r) => r.iccid ?? '').join(' | '),
+      row.operational.map((r) => r.phone ?? '').join(' | '),
+      JSON.stringify(row.comparisons || []),
     ]),
   ];
 }

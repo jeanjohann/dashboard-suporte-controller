@@ -49,6 +49,9 @@ export function consumptionRecordsCsv(
       'Arquivo',
       'Linha CSV',
       'Revisão',
+      'Fonte do vínculo atual',
+      'Conferência na API de campo',
+      'Referência da API de campo',
     ],
     ...exporting.map((row) => [
       row.operator,
@@ -72,6 +75,9 @@ export function consumptionRecordsCsv(
       row.filename,
       row.sourceRow,
       row.problems.join('; '),
+      row.linkSource || (row.link ? 'Operacional' : 'Não vinculado'),
+      row.apiLinkStatus || 'Não consultada',
+      row.fieldReferenceAt || '',
     ]),
   ]);
 }

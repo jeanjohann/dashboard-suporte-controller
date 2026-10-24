@@ -37,6 +37,10 @@ export function ImportPage({ onPage, onApply, orders, operational, logistics, sa
         const file = files[index];
         try {
           const inspected = await inspectImportFile(file);
+          if (inspected.types.includes('consumption'))
+            throw Error(
+              'Extrato de consumo: importe na página KORE ou Arqia para manter a fonte separada.',
+            );
           if (accessManaged() && inspected.types.some((type) => !allowsSource(accessUser(), type)))
             throw Error('Você não tem acesso a todas as bases deste arquivo.');
           results.push({ ...inspected, key: index, selected: true });
@@ -90,19 +94,15 @@ export function ImportPage({ onPage, onApply, orders, operational, logistics, sa
             <div>
               <div className="eyebrow">CENTRAL DE ARQUIVOS</div>
               <h1>Importação</h1>
-              <p>Carregue OS, operacional, logística e extratos de consumo em uma única seleção.</p>
+              <p>
+                Carregue OS, Operacional e Logística. Extratos de consumo são importados nas páginas
+                KORE e Arqia.
+              </p>
             </div>
             <PermissionButton action="import" disabled={busy} onClick={() => input.current.click()}>
               {busy ? 'Processando…' : 'Selecionar arquivos'}
             </PermissionButton>
-            <input
-              hidden
-              ref={input}
-              type="file"
-              accept=".xlsx,.xls,.csv"
-              multiple
-              onChange={inspect}
-            />
+            <input hidden ref={input} type="file" accept=".xlsx,.xls" multiple onChange={inspect} />
           </header>
           <SavedSourcesPanel storage={savedSources} />
           <div className="notice">

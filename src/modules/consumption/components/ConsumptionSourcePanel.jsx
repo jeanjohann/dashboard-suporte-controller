@@ -14,6 +14,12 @@ export function ConsumptionSourcePanel({ row, statements, onClose }) {
           <p className="scope">
             {row.filename} · linha {row.sourceRow}.{' '}
             {row.problems.join('; ') || 'Sem problemas na apuração de dados.'} {row.linkState}.
+            {row.apiLinkStatus && (
+              <>
+                {' '}
+                API de campo: {row.apiLinkStatus} · referência {row.fieldReferenceAt}.
+              </>
+            )}
           </p>
           <TableScroll label="Dados originais do extrato">
             <SortableTable>

@@ -14,6 +14,8 @@ import { ConsumptionInvestigationPanel } from './ConsumptionInvestigationPanel.j
 import { ConsumptionEquipmentPanels } from './ConsumptionEquipmentPanels.jsx';
 import { ConsumptionInvoicesPanel } from './ConsumptionInvoicesPanel.jsx';
 import { ConsumptionSourcePanel } from './ConsumptionSourcePanel.jsx';
+import { KorePilotPanel } from './KorePilotPanel.jsx';
+import { carrierName, carrierArchive } from '../domain/carrierWorkspace.js';
 import { ConsumptionImportPreview } from './ConsumptionImportPreview.jsx';
 import { ConsumptionImportHeader } from './ConsumptionImportHeader.jsx';
 import { ConsumptionFiltersPanel } from './ConsumptionFiltersPanel.jsx';
@@ -46,10 +48,9 @@ import {
   periodOptions,
   historyStatements,
 } from '../domain/lineConsumption.js';
-import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
+import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { LineHistoryPanel } from './LineHistoryPanel.jsx';
 import { ConsumptionArchivePanel } from './ConsumptionArchivePanel.jsx';
-import { ConsumptionSourcesPanel } from './ConsumptionSourcesPanel.jsx';
 import { useLineFollowup } from '../hooks/useLineFollowup.js';
 import { useConsumptionArchive } from '../hooks/useConsumptionArchive.js';
 import { ReportStories } from '../../../shared/layout/ReportStories.jsx';
@@ -68,25 +69,46 @@ export function LinesPage({
   reloadToken = 0,
   repository,
   centralSources = false,
+  pageId = 'lines',
+  active = true,
+  monitoring,
 }) {
+  const operator = carrierName(pageId);
   const history = useConsumptionArchive(reloadToken, repository);
   const layout = usePageLayout('consumption');
   const [attentionLimits, setAttentionLimits] = useState(defaultConsumptionAttention);
   const { archive, ready, busy, error, message, setError, commit } = history;
-  const [category, setCategory] = useState('overview'),
+  const [reportCategory, setReportCategory] = useState('overview'),
     [detail, setDetail] = useState(null),
     [expansion, setExpansion] = useState(null),
     [rankMeasure, setRankMeasure] = useState('daily'),
     [queueView, setQueueView] = useState('eligible');
-  const { filters, setFilters, search, setSearch, resetSelections, counts } =
-    useScopedSelection(category);
+  const category = operator
+    ? 'history'
+    : pageId === 'consumption-followup'
+      ? 'investigation'
+      : reportCategory;
+  const setCategory = (key) =>
+    key === 'investigation'
+      ? onPage('consumption-followup')
+      : setReportCategory(key === 'history' ? 'overview' : key);
+  const [koreSnapshot, setKoreSnapshot] = useState(null),
+    [korePeriod, setKorePeriod] = useState({ start: '', end: '', confirmed: false });
+  const { filters, setFilters, search, setSearch, resetSelections, counts } = useScopedSelection(
+    `${pageId}:${category}`,
+  );
   useEffect(() => {
     setDetail(null);
-  }, [category]);
+  }, [category, pageId]);
   const historyAnchor = useRef();
   const sourceAnchor = useRef();
   const [historyReveal, setHistoryReveal] = useState(0);
-  const statements = useMemo(() => historyStatements(archive.files), [archive.files]);
+  const allStatements = useMemo(() => historyStatements(archive.files), [archive.files]);
+  const statements = useMemo(
+    () => (operator ? allStatements.filter((s) => s.operator === operator) : allStatements),
+    [allStatements, operator],
+  );
+  const scopedArchive = useMemo(() => carrierArchive(archive, operator), [archive, operator]);
   const reference = centralSources
     ? operational
     : operational?.data
@@ -95,20 +117,26 @@ export function LinesPage({
   const linked = useMemo(
     () =>
       linkConsumption(
-        statements.flatMap((statement) => statement.rows),
+        allStatements.flatMap((statement) => statement.rows),
         reference,
+        monitoring,
       ),
-    [statements, reference],
+    [allStatements, reference, monitoring],
   );
   const baselines = useMemo(() => baselineByPeriod(linked), [linked]);
-  const allRows = useMemo(
+  const globalRows = useMemo(
     () => attachBaselines(linked, baselines, archive.settings.factor),
     [linked, baselines, archive.settings.factor],
   );
+  const allRows = useMemo(
+    () => (operator ? globalRows.filter((row) => row.operator === operator) : globalRows),
+    [globalRows, operator],
+  );
   const followup = useLineFollowup({ allRows, archive, commit, setError });
   const dashboardSource = useMemo(
-    () => (ready && statements.length ? { rows: allRows, statements, error } : null),
-    [ready, statements, allRows, error],
+    () =>
+      ready && allStatements.length ? { rows: globalRows, statements: allStatements, error } : null,
+    [ready, allStatements, globalRows, error],
   );
   usePublishDashboardSource('consumption', dashboardSource);
   const { tracked, setTracked, setLineSearch } = followup;
@@ -155,6 +183,7 @@ export function LinesPage({
     setHistoryReveal((previous) => previous + 1);
   }
   const imports = useConsumptionImports({
+    expectedOperator: operator,
     centralSources,
     history,
     operational,
@@ -249,7 +278,7 @@ export function LinesPage({
   const chartNote =
     'Apurações: ' +
     providerStats.map((item) => item.operator + ' ' + (item.period?.label || '—')).join(' / ') +
-    '. Dados móveis; SMS e frete separados. Vínculos usam a referência operacional importada.';
+    '. Dados móveis; SMS e frete separados. Vínculos usam Operacional e, quando disponível, conferência atual do chip na API.';
   const selectedIDs = new Set(
     selected.map((row) => JSON.stringify([row.operator, row.iccid, row.start, row.end])),
   );
@@ -315,28 +344,97 @@ export function LinesPage({
             }}
           >
             <div className="app lines-page">
-              <Navigation page="lines" onPage={onPage} />
+              <Navigation page={pageId} onPage={onPage} />
               <main>
-                <SidebarContent>
-                  <nav className="category-navigation" aria-label="Análises de consumo">
-                    {categories.map(([key, label]) => (
-                      <button
-                        key={key}
-                        className={category === key ? 'active' : ''}
-                        onClick={() => setCategory(key)}
-                      >
-                        {label}
-                        <FilterCount count={counts[key]} />
-                      </button>
-                    ))}
-                  </nav>
-                </SidebarContent>
+                {!operator && pageId === 'lines' && (
+                  <div className="consumption-report-tabs">
+                    <nav className="category-navigation" aria-label="Análises de consumo">
+                      {categories
+                        .filter(([key]) => ['overview', 'equipment'].includes(key))
+                        .map(([key, label]) => (
+                          <button
+                            key={key}
+                            className={category === key ? 'active' : ''}
+                            onClick={() => setCategory(key)}
+                          >
+                            {label}
+                            <FilterCount count={counts[`${pageId}:${key}`]} />
+                          </button>
+                        ))}
+                    </nav>
+                  </div>
+                )}
                 <ConsumptionImportHeader
                   busy={busy}
                   ready={ready}
                   imports={imports}
                   settingsAvailable={ready && (!!statements.length || category === 'history')}
+                  operator={operator}
+                  title={
+                    pageId === 'consumption-followup'
+                      ? 'Acompanhamento do consumo'
+                      : 'Relatórios de consumo'
+                  }
                 />
+                <KorePilotPanel
+                  visible={active && pageId === 'kore'}
+                  operational={operational}
+                  onCollected={setKoreSnapshot}
+                  monitoring={monitoring}
+                />
+                {pageId === 'kore' && koreSnapshot?.complete && (
+                  <details className="panel" style={{ padding: 14 }}>
+                    <summary>Preparar coleta API para acompanhamento e relatórios</summary>
+                    <p className="scope">
+                      Confirme com a operadora o período real do acumulado. A consulta não informa o
+                      ciclo. Após a prévia, salvar cria uma versão KORE desse período, substituindo
+                      a versão ativa equivalente sem somar CSV e API.
+                    </p>
+                    <div className="toolbar">
+                      <label>
+                        Início da apuração
+                        <input
+                          type="date"
+                          value={korePeriod.start}
+                          onChange={(e) =>
+                            setKorePeriod((p) => ({
+                              ...p,
+                              start: e.target.value,
+                              confirmed: false,
+                            }))
+                          }
+                        />
+                      </label>
+                      <label>
+                        Fim da apuração
+                        <input
+                          type="date"
+                          value={korePeriod.end}
+                          onChange={(e) =>
+                            setKorePeriod((p) => ({ ...p, end: e.target.value, confirmed: false }))
+                          }
+                        />
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={korePeriod.confirmed}
+                          onChange={(e) =>
+                            setKorePeriod((p) => ({ ...p, confirmed: e.target.checked }))
+                          }
+                        />
+                        Confirmo que essas datas correspondem ao acumulado da API
+                      </label>
+                      <PermissionButton
+                        action="import"
+                        disabled={!ready || busy || !korePeriod.confirmed}
+                        onClick={() => imports.previewKore(koreSnapshot, korePeriod)}
+                      >
+                        Revisar apuração API
+                      </PermissionButton>
+                    </div>
+                  </details>
+                )}
                 {category !== 'kore' && (
                   <ConsumptionFiltersPanel
                     scope={`Consumo → ${categories.find(([key]) => key === category)[1]}`}
@@ -374,19 +472,21 @@ export function LinesPage({
                     {message}
                   </p>
                 )}
-                <ConsumptionImportPreview
-                  pending={pending}
-                  archive={archive}
-                  busy={busy}
-                  savePending={savePending}
-                  setPending={setPending}
-                />
+                {operator && (
+                  <ConsumptionImportPreview
+                    pending={pending}
+                    archive={archive}
+                    busy={busy}
+                    savePending={savePending}
+                    setPending={setPending}
+                  />
+                )}
                 {!!statements.length && category !== 'kore' && (
                   <>
                     <div className="source">
                       <span>
-                        {archive.files.length} arquivos guardados · {statements.length} versões em
-                        uso
+                        {scopedArchive.files.length} arquivos guardados · {statements.length}{' '}
+                        versões em uso
                       </span>
                       <span>{summary.lines} chips no recorte</span>
                       <span>Referência: {reference?.filename || 'operacional não importado'}</span>
@@ -407,25 +507,34 @@ export function LinesPage({
                     title="Guarde seus extratos e acompanhe a evolução"
                     action={
                       <>
-                        <PermissionButton
-                          action="import"
-                          disabled={busy}
-                          onClick={() => input.current.click()}
-                        >
-                          Selecionar extratos
-                        </PermissionButton>
-                        <PermissionButton
-                          action="import"
-                          disabled={busy}
-                          onClick={() => backupInput.current.click()}
-                        >
-                          Restaurar backup
-                        </PermissionButton>
+                        {operator ? (
+                          <PermissionButton
+                            action="import"
+                            disabled={busy}
+                            onClick={() => input.current.click()}
+                          >
+                            Selecionar extratos
+                          </PermissionButton>
+                        ) : (
+                          <>
+                            <button onClick={() => onPage('kore')}>Abrir KORE</button>
+                            <button onClick={() => onPage('arqia')}>Abrir Arqia</button>
+                          </>
+                        )}
+                        {operator && (
+                          <PermissionButton
+                            action="import"
+                            disabled={busy}
+                            onClick={() => backupInput.current.click()}
+                          >
+                            Restaurar backup
+                          </PermissionButton>
+                        )}
                       </>
                     }
                   >
-                    Importe os consolidados da Arqia e da Kore. Confira o mapeamento e salve a
-                    apuração no histórico.
+                    Importe os extratos na página da operadora correspondente. Confira o mapeamento
+                    e salve a apuração no histórico.
                   </ViewState>
                 )}
                 {ready &&
@@ -603,7 +712,7 @@ export function LinesPage({
                 />
                 <ConsumptionArchivePanel
                   visible={shown('Arquivos e histórico')}
-                  archive={archive}
+                  archive={scopedArchive}
                   operational={operational}
                   ready={ready}
                   busy={busy}
@@ -614,10 +723,6 @@ export function LinesPage({
                   onCancel={() => setBackup(null)}
                   onSaveOperational={saveOperationalReference}
                   onChangeVersion={changeVersion}
-                />
-                <ConsumptionSourcesPanel
-                  archive={archive}
-                  visible={shown('Fontes de consumo e preparação das APIs')}
                 />
                 <div ref={sourceAnchor}>
                   <ConsumptionSourcePanel

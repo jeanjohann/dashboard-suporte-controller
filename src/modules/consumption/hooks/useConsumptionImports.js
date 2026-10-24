@@ -1,5 +1,5 @@
 /** Fluxos de importação, versões e backups. Valida e autoriza antes de gravar pelo repositório existente. */
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   authorizeAction,
   accessManaged,
@@ -15,6 +15,11 @@ import {
 import { fileDigest, validateBackup } from '../data/consumptionHistory.js';
 import { download } from '../../../shared/export/exports.js';
 import { currentDate as today } from '../utils/consumptionFormatting.js';
+import {
+  carrierArchive,
+  restoreCarrierArchive,
+  koreStatementText,
+} from '../domain/carrierWorkspace.js';
 const decode = (buffer) => {
   let text = new TextDecoder('utf-8').decode(buffer);
   return text.includes('\uFFFD') ? new TextDecoder('windows-1252').decode(buffer) : text;
@@ -29,6 +34,7 @@ export function useConsumptionImports({
   onClearTracked,
   onReviewBackup,
   centralSources = false,
+  expectedOperator = '',
 }) {
   const { archive, setBusy, setError, setMessage, commit } = history;
   const [pending, setPending] = useState([]),
@@ -36,6 +42,12 @@ export function useConsumptionImports({
   const input = useRef(),
     operationalInput = useRef(),
     backupInput = useRef();
+  const operatorRef = useRef(expectedOperator);
+  operatorRef.current = expectedOperator;
+  useEffect(() => {
+    setPending([]);
+    setBackup(null);
+  }, [expectedOperator]);
   async function load(event) {
     if (!(await authorizeAction('import'))) {
       event.target.value = '';
@@ -47,12 +59,17 @@ export function useConsumptionImports({
     setError('');
     setMessage('');
     try {
+      if (!expectedOperator) throw Error('Importe os extratos na página KORE ou Arqia.');
       const candidates = [];
       for (const file of files) {
         const text = decode(await file.arrayBuffer()),
           id = await fileDigest(text);
         const record = { id, text, filename: file.name, importedAt: new Date().toISOString() },
           parsed = importLineStatement(text, file.name, id);
+        if (parsed.operator !== expectedOperator)
+          throw Error(
+            `Este extrato é ${parsed.operator}. Abra a página da operadora correspondente.`,
+          );
         candidates.push({ file: record, parsed });
       }
       // Confere conflitos antes de oferecer a prévia; nenhum extrato é gravado só por selecionar um arquivo.
@@ -60,7 +77,7 @@ export function useConsumptionImports({
         archive.files,
         candidates.map((item) => item.file),
       );
-      setPending(candidates);
+      if (operatorRef.current === expectedOperator) setPending(candidates);
     } catch (e) {
       setError(e.message + ' Os arquivos do histórico foram mantidos.');
     } finally {
@@ -68,10 +85,35 @@ export function useConsumptionImports({
       setBusy(false);
     }
   }
+  async function previewKore(snapshot, period) {
+    if (!(await authorizeAction('import'))) return;
+    setError('');
+    try {
+      if (expectedOperator !== 'Kore') throw Error('Abra a página KORE.');
+      const text = koreStatementText(snapshot, period),
+        id = await fileDigest(text);
+      const filename = `KORE-API-${period.start}-${period.end}.csv`;
+      const file = {
+        id,
+        text,
+        filename,
+        importedAt: new Date().toISOString(),
+        origin: 'kore-api',
+        apiReadAt: snapshot.readAt,
+      };
+      const parsed = importLineStatement(text, filename, id);
+      mergeHistoryFiles(archive.files, [file]);
+      if (operatorRef.current === expectedOperator) setPending([{ file, parsed }]);
+    } catch (e) {
+      setError(e.message);
+    }
+  }
   async function savePending() {
     // Reconsulta a autorização e valida o lote novamente, considerando o histórico atual.
     if (!(await authorizeAction('import'))) return;
     try {
+      if (!expectedOperator || pending.some((item) => item.parsed.operator !== expectedOperator))
+        throw Error('Confira os extratos na página da operadora correspondente.');
       const files = mergeHistoryFiles(
         archive.files,
         pending.map((item) => item.file),
@@ -130,7 +172,8 @@ export function useConsumptionImports({
     setBusy(true);
     setError('');
     try {
-      setBackup(await validateBackup(await file.text()));
+      if (!expectedOperator) throw Error('Restaure o backup na página da operadora.');
+      setBackup(carrierArchive(await validateBackup(await file.text()), expectedOperator));
       onReviewBackup();
     } catch (e) {
       setError(e.message);
@@ -143,15 +186,12 @@ export function useConsumptionImports({
     // O backup foi validado na revisão; a substituição ocorre somente nesta confirmação explícita.
     if (!(await authorizeAction('import'))) return;
     try {
-      if (accessManaged() && backup?.operational && !allowsSource(accessUser(), 'operational'))
-        throw Error('Este backup contém uma base operacional que você não pode importar.');
       await commit(
-        backup,
+        restoreCarrierArchive(archive, backup, expectedOperator),
         centralSources
           ? 'Consumo restaurado neste navegador. A base operacional do banco foi mantida.'
           : 'Backup restaurado neste navegador.',
       );
-      if (backup.operational && !centralSources) await onOperationalChange?.(backup.operational);
       setBackup(null);
       onResetFilters();
       onClearDetail();
@@ -160,14 +200,20 @@ export function useConsumptionImports({
   }
   function exportBackup() {
     download(
-      JSON.stringify({ ...archive, exportedAt: new Date().toISOString() }, null, 2),
+      JSON.stringify(
+        { ...carrierArchive(archive, expectedOperator), exportedAt: new Date().toISOString() },
+        null,
+        2,
+      ),
       'application/json',
-      'addlog-historico-consumo-' + today() + '.json',
+      'addlog-historico-consumo-' + expectedOperator + '-' + today() + '.json',
     );
   }
 
   async function changeVersion(file) {
     try {
+      if (importLineStatement(file.text, file.filename, file.id).operator !== expectedOperator)
+        throw Error('Altere versões na página da operadora correspondente.');
       const files = toggleHistoryFile(archive.files, file.id);
       await commit(
         { ...archive, files },
@@ -195,6 +241,7 @@ export function useConsumptionImports({
     operationalInput,
     backupInput,
     load,
+    previewKore,
     loadOperational,
     savePending,
     readBackup,

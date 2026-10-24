@@ -77,28 +77,31 @@ test('assuntos contam fechados únicos por agente e a criação não usa o respo
     closures: [
       c,
       { ...c, id: 'b' },
-      { ...c, id: 'c', agentId: agents[1].id },
+      { ...c, id: 'c', agentId: agents[1].id, closedAt: '2026-10-22T11:00:00Z' },
       { ...c, id: 'd', ticketId: '2' },
     ],
     review: [],
     ticketIndicators: evidence,
     indicatorsAvailable: true,
+    closureBasis: 'current-status-v1',
+    categoryCatalog: ['Cancelamentos/Desinstalação', 'Outras Informações', 'Configuração'],
   };
   const total = zohoSummary(data, period);
   assert.equal(total.created, 1);
-  assert.equal(total.closedTickets.length, 3);
-  assert.equal(total.closedTickets.filter((r) => r.ticketId === '1').length, 2);
+  assert.equal(total.closedTickets.length, 2);
+  assert.equal(total.closedTickets.filter((r) => r.ticketId === '1').length, 1);
   assert.equal(total.closedTickets.find((r) => r.ticketId === '1').subCategory, 'Desinstalação');
   assert.equal(total.closedTickets.find((r) => r.ticketId === '2').subCategory, 'Não informada');
   assert.equal(
     total.categoryAgents.reduce((n, r) => n + r.value, 0),
-    3,
+    2,
   );
-  assert.equal(zohoSummary(data, period, agents[0].id).closedTickets.length, 2);
+  assert.equal(zohoSummary(data, period, agents[0].id).closedTickets.length, 1);
   assert.equal(zohoSummary(data, period, agents[1].id).closedTickets.length, 1);
   assert.deepEqual(total.categories, [
     { label: 'Cancelamentos/Desinstalação', value: 1 },
     { label: 'Outras Informações', value: 1 },
+    { label: 'Configuração', value: 0 },
   ]);
   assert.equal(zohoSummary(data, period, agents[0].id).created, 0);
   assert.equal(zohoSummary(data, period, agents[1].id).created, 1);
@@ -110,8 +113,9 @@ test('assuntos contam fechados únicos por agente e a criação não usa o respo
   assert.equal(zohoSummary(data, period).created, null);
   assert.equal(zohoSummary({ ...data, indicatorsAvailable: false }, period).categories, null);
 });
-test('histórico completo conserva fechamento após reabertura e divergência da data resumida, com autoria explícita', async () => {
+test('indicadores excluem reabertos e contam o fechamento final atualmente encerrado', async () => {
   let includeClosure = true;
+  let currentState = 'Open';
   const t = {
     ...ticket,
     createdTime: '2020-01-01T10:00:00Z',
@@ -176,15 +180,18 @@ test('histórico completo conserva fechamento após reabertura e divergência da
             ]
           : [],
       };
-    if (path === '/tickets/1') return { ...t, category: 'Treinamento' };
+    if (path === '/tickets/1') return { ...t, statusType: currentState, category: 'Treinamento' };
     if (path.endsWith('/metrics')) return {};
     return { data: [] };
   };
   const result = await collectZohoActivityBatch(get, { period, anchor, from: 0, indicators: true });
-  assert.equal(result.closures.length, 1);
-  assert.equal(result.closures[0].agentId, event.actor.id);
-  assert.equal(result.closures[0].ownerId, agents[0].id);
+  assert.equal(result.closures.length, 0);
   assert.equal(result.closureReview.length, 0);
+  currentState = 'Closed';
+  const closed = await collectZohoActivityBatch(get, { period, anchor, from: 0, indicators: true });
+  assert.equal(closed.closures.length, 1);
+  assert.equal(closed.closures[0].agentId, event.actor.id);
+  assert.equal(closed.closures[0].ownerId, agents[0].id);
   includeClosure = false;
   const unknown = await collectZohoActivityBatch(get, {
     period,

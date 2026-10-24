@@ -11,6 +11,7 @@ import {
   registryExportRows,
 } from '../domain/monitoringRegistry.js';
 import { monitoringDate } from '../domain/monitoring.js';
+import { RegistryEquivalences } from './RegistryEquivalences.jsx';
 
 /** Leitura conjunta apenas das fontes autorizadas da sessão, sem consultas ou correções automáticas. */
 export function MonitoringRegistry({ snapshot, operational, onPage }) {
@@ -19,12 +20,13 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
   const [state, setState] = useState('all'),
     [search, setSearch] = useState(''),
     [page, setPage] = useState(0);
+  const [equivalences, setEquivalences] = useState({});
   const report = useMemo(
     () =>
       permitted && operational?.data && snapshot && !snapshot.demonstration
-        ? reconcileMonitoringRegistry(snapshot, operational.data)
+        ? reconcileMonitoringRegistry(snapshot, operational.data, equivalences)
         : null,
-    [permitted, operational, snapshot],
+    [permitted, operational, snapshot, equivalences],
   );
   const rows = useMemo(
     () =>
@@ -34,8 +36,22 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
           clientDisplay(
             [
               row.serial,
-              ...row.api.flatMap((r) => [r.plate, r.clientName, r.clientId]),
-              ...row.operational.flatMap((r) => [r.plate, r.client, r.sourceRow]),
+              ...row.api.flatMap((r) => [
+                r.plate,
+                r.prefix,
+                r.iccid,
+                r.msisdn,
+                r.clientName,
+                r.clientId,
+              ]),
+              ...row.operational.flatMap((r) => [
+                r.plate,
+                r.prefix,
+                r.iccid,
+                r.phone,
+                r.client,
+                r.sourceRow,
+              ]),
             ].join(' '),
           ).includes(clientDisplay(search.trim())),
       ) || [],
@@ -95,6 +111,16 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
           </button>
         ))}
       </div>
+      <RegistryEquivalences
+        snapshot={snapshot}
+        operational={operational}
+        onChange={setEquivalences}
+      />
+      <p className="scope">
+        API como referência atual. Campos opcionais não fornecidos no retrato:{' '}
+        {report.missingApiFields.join(', ') || 'todos disponíveis'}. Ausência na API não comprova
+        erro do Operacional.
+      </p>
       <div className="monitoring-registry-controls">
         <label>
           Conferência
@@ -181,7 +207,27 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
                     </div>
                   ))}
                 </td>
-                <td>{row.issues.join(' ') || 'Sem diferenças nos campos disponíveis.'}</td>
+                <td>
+                  {row.issues.join(' ') || 'Sem diferenças nos campos disponíveis.'}
+                  {!!row.comparisons?.length && (
+                    <details>
+                      <summary>Conferir os sete campos</summary>
+                      <dl>
+                        {row.comparisons.map((item) => (
+                          <div key={item.field}>
+                            <dt>{item.field}</dt>
+                            <dd>
+                              API: {item.reference || 'Não fornecido'} · Operacional:{' '}
+                              {item.original || 'Não informado'}
+                              {item.equivalent && <> · Equivalência: {item.equivalent}</>}
+                              <small className="monitoring-cell-note">{item.action}</small>
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </details>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

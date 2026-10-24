@@ -5,6 +5,7 @@
 import { parseCsv, parseMB, consumptionDate, displayDate, MB_SCALE } from './consumption.js';
 import { operationalCell } from '../../operational/domain/operational.js';
 import { trackerModel } from '../../orders/domain/trackerModels.js';
+import { attachFieldEvidence } from './consumptionFieldLink.js';
 
 // MB and KB are summed exactly, without rounding each CSV row.
 export const VOLUME_SCALE = MB_SCALE * 1024;
@@ -237,18 +238,21 @@ export function attachBaselines(rows, baselines, factor = 2) {
   });
 }
 /** Vincula linhas ao parque por identificadores e mantém ambiguidades ou ausência de referência para revisão. */
-export function linkConsumption(rows, source) {
+export function linkConsumption(rows, source, monitoring) {
   const operational = source?.data || source;
   if (!operational?.rows)
-    return rows.map((row) => ({
-      ...row,
-      linkState: 'Operacional não importado',
-      link: null,
-      candidates: [],
-      client: 'Não vinculado',
-      serial: 'Não informado',
-      model: 'Não informado',
-    }));
+    return attachFieldEvidence(
+      rows.map((row) => ({
+        ...row,
+        linkState: 'Operacional não importado',
+        link: null,
+        candidates: [],
+        client: 'Não vinculado',
+        serial: 'Não informado',
+        model: 'Não informado',
+      })),
+      monitoring,
+    );
   const indexes = { iccid: new Map(), phone: new Map() };
   for (const row of operational.rows)
     for (const key of ['iccid', 'phone']) {
@@ -264,42 +268,45 @@ export function linkConsumption(rows, source) {
       if (!indexes[key].has(value)) indexes[key].set(value, []);
       indexes[key].get(value).push(row);
     }
-  return rows.map((row) => {
-    const a = indexes.iccid.get(row.iccid) || [],
-      b = indexes.phone.get(row.number) || [],
-      candidates = [...new Map([...a, ...b].map((item) => [item.sourceRow, item])).values()];
-    let linkState,
-      link = null;
-    if (a.length > 1 || b.length > 1) linkState = 'Vínculo ambíguo';
-    else if (a.length && b.length) {
-      if (a[0].sourceRow === b[0].sourceRow) {
-        linkState = 'ICCID e número conferidos';
-        link = a[0];
-        const serialCell = operationalCell(link, 'serial');
-        if (
-          !validID(link.serial) ||
-          serialCell?.error ||
-          (typeof serialCell?.raw === 'number' &&
-            (!Number.isSafeInteger(serialCell.raw) || link.serial.length > 15))
-        )
-          link = { ...link, serial: '' };
-      } else linkState = 'Chip e número apontam para registros diferentes';
-    } else if (a.length) linkState = 'Somente ICCID corresponde — revisar';
-    else if (b.length) linkState = 'Somente número corresponde — revisar';
-    else linkState = 'Sem correspondência';
-    return {
-      ...row,
-      linkState,
-      link,
-      candidates,
-      client: link?.client || 'Não vinculado',
-      serial: link?.serial || 'Não informado',
-      model: link
-        ? trackerModel({ raw: link.serial, issue: operationalCell(link, 'serial')?.error }) ||
-          'Modelo não identificado pelo serial'
-        : 'Não informado',
-    };
-  });
+  return attachFieldEvidence(
+    rows.map((row) => {
+      const a = indexes.iccid.get(row.iccid) || [],
+        b = indexes.phone.get(row.number) || [],
+        candidates = [...new Map([...a, ...b].map((item) => [item.sourceRow, item])).values()];
+      let linkState,
+        link = null;
+      if (a.length > 1 || b.length > 1) linkState = 'Vínculo ambíguo';
+      else if (a.length && b.length) {
+        if (a[0].sourceRow === b[0].sourceRow) {
+          linkState = 'ICCID e número conferidos';
+          link = a[0];
+          const serialCell = operationalCell(link, 'serial');
+          if (
+            !validID(link.serial) ||
+            serialCell?.error ||
+            (typeof serialCell?.raw === 'number' &&
+              (!Number.isSafeInteger(serialCell.raw) || link.serial.length > 15))
+          )
+            link = { ...link, serial: '' };
+        } else linkState = 'Chip e número apontam para registros diferentes';
+      } else if (a.length) linkState = 'Somente ICCID corresponde — revisar';
+      else if (b.length) linkState = 'Somente número corresponde — revisar';
+      else linkState = 'Sem correspondência';
+      return {
+        ...row,
+        linkState,
+        link,
+        candidates,
+        client: link?.client || 'Não vinculado',
+        serial: link?.serial || 'Não informado',
+        model: link
+          ? trackerModel({ raw: link.serial, issue: operationalCell(link, 'serial')?.error }) ||
+            'Modelo não identificado pelo serial'
+          : 'Não informado',
+      };
+    }),
+    monitoring,
+  );
 }
 /** Identifica o conjunto de operadora e períodos do extrato para controlar versões do histórico. */
 export function statementSignature(statement) {

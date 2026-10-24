@@ -96,6 +96,24 @@ export function normalizeAddlogDiagnostic(input, receivedAt = new Date().toISOSt
       vehicleId: row.vehicleId,
       trackerId: identifier(row.deviceId),
       identifier: identifier(row.identifier),
+      // Apenas campos explícitos; identifier não é presumido como prefixo e ICCID nunca vira número.
+      prefix: row.prefix == null ? null : identifier(row.prefix),
+      iccid:
+        row.iccid == null
+          ? null
+          : typeof row.iccid === 'string' && /^\d{1,32}$/.test(row.iccid)
+            ? row.iccid
+            : (() => {
+                throw Error('ICCID incompatível no diagnóstico.');
+              })(),
+      msisdn:
+        row.msisdn == null
+          ? null
+          : typeof row.msisdn === 'string' && /^\d{1,32}$/.test(row.msisdn)
+            ? row.msisdn
+            : (() => {
+                throw Error('MSISDN incompatível no diagnóstico.');
+              })(),
       plate: row.plate,
       deviceModel: row.deviceModel,
       lastRecordAt: diagnosticInstant(row.lastUpdate),

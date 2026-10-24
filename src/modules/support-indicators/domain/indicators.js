@@ -1,5 +1,5 @@
 /** Indicadores de gestão: fontes separadas, período civil e ausência distinta de zero. */
-import { zohoDay } from '../../../shared/data/zohoActivity.js';
+import { zohoDay, supportClosureBasis } from '../../../shared/data/zohoActivity.js';
 import { attendanceDate, field } from '../../../shared/data/filters.js';
 import { isUnproductive } from '../../orders/domain/attendanceKind.js';
 import { customerAnalysisIdentity } from '../../orders/domain/customerIdentity.js';
@@ -138,9 +138,22 @@ export function zohoSummary(data, period, agentId = '') {
   };
   const unique = (rows) => [...new Map(rows.map((r) => [`${r.ticketId}:${r.id}`, r])).values()];
   const entries = unique(data.entries).filter((r) => ids.has(r.agentId) && within(r.executedTime));
+  const latestClosures = new Map();
+  const ambiguousTickets = new Set();
+  for (const row of unique(data.closures || [])) {
+    const old = latestClosures.get(row.ticketId);
+    if (!old || Date.parse(row.closedAt) > Date.parse(old.closedAt)) {
+      latestClosures.set(row.ticketId, row);
+      ambiguousTickets.delete(row.ticketId);
+    } else if (Date.parse(row.closedAt) === Date.parse(old.closedAt) && row.agentId !== old.agentId)
+      ambiguousTickets.add(row.ticketId);
+  }
   const closures =
-    Array.isArray(data.closures) && data.closuresComplete !== false
-      ? unique(data.closures).filter((r) => ids.has(r.agentId) && within(r.closedAt))
+    data.closureBasis === supportClosureBasis &&
+    Array.isArray(data.closures) &&
+    data.closuresComplete !== false &&
+    !ambiguousTickets.size
+      ? [...latestClosures.values()].filter((r) => ids.has(r.agentId) && within(r.closedAt))
       : null;
   const seconds = entries.reduce((n, r) => n + r.seconds, 0),
     tickets = new Set(entries.map((r) => r.ticketId)).size;
@@ -164,11 +177,14 @@ export function zohoSummary(data, period, agentId = '') {
         ).size;
   const categories =
     usable && closures && closures.every((r) => evidence.has(r.ticketId))
-      ? [...new Set(closures.map((r) => r.ticketId))].reduce((map, id) => {
-          const label = evidence.get(id).category || 'Categoria não informada';
-          map.set(label, (map.get(label) || 0) + 1);
-          return map;
-        }, new Map())
+      ? [...new Set(closures.map((r) => r.ticketId))].reduce(
+          (map, id) => {
+            const label = evidence.get(id).category || 'Categoria não informada';
+            map.set(label, (map.get(label) || 0) + 1);
+            return map;
+          },
+          new Map((data.categoryCatalog || []).map((label) => [label, 0])),
+        )
       : null;
   const closedTickets =
     categories && closures
@@ -201,18 +217,30 @@ export function zohoSummary(data, period, agentId = '') {
     categoryAgents: closedTickets
       ? [
           ...closedTickets
-            .reduce((map, row) => {
-              const key = `${row.agentId}:${row.category}`;
-              const current = map.get(key) || {
-                agentId: row.agentId,
-                agent: row.agent,
-                category: row.category,
-                value: 0,
-              };
-              current.value++;
-              map.set(key, current);
-              return map;
-            }, new Map())
+            .reduce(
+              (map, row) => {
+                const key = `${row.agentId}:${row.category}`;
+                const current = map.get(key) || {
+                  agentId: row.agentId,
+                  agent: row.agent,
+                  category: row.category,
+                  value: 0,
+                };
+                current.value++;
+                map.set(key, current);
+                return map;
+              },
+              new Map(
+                agents
+                  .filter((a) => ids.has(a.id))
+                  .flatMap((a) =>
+                    (data.categoryCatalog || []).map((category) => [
+                      `${a.id}:${category}`,
+                      { agentId: a.id, agent: a.name, category, value: 0 },
+                    ]),
+                  ),
+              ),
+            )
             .values(),
         ].sort((a, b) => a.agent.localeCompare(b.agent) || b.value - a.value)
       : null,
@@ -249,6 +277,15 @@ export function backlogSummary(data, agentId = '') {
     agents: selected.map((agent) => ({
       ...agent,
       pending: tickets.filter((row) => row.agentId === agent.id).length,
+      open: tickets.filter((row) => row.agentId === agent.id && row.state === 'OPEN').length,
+      onHold: tickets.filter((row) => row.agentId === agent.id && row.state === 'ONHOLD').length,
+      holdStatuses: [
+        ...new Set(
+          tickets
+            .filter((row) => row.agentId === agent.id && row.state === 'ONHOLD')
+            .map((row) => row.status || 'Status não informado'),
+        ),
+      ],
     })),
     tickets,
   };

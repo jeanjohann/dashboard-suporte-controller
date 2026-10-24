@@ -1,4 +1,4 @@
-/** Consulta manual KORE restrita a administradores; uma página isolada, sem gravar ou combinar dados com CSV. */
+/** Consulta KORE restrita a administradores; publica coleta para prévia com período confirmado. */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { SortableTable } from '../../../components/SortableTable.jsx';
@@ -13,7 +13,7 @@ import { koreMegabytes, formatKoreMegabytes } from '../domain/koreDisplay.js';
 const show = (value) => (value == null || value === '' ? 'Não informado' : value);
 const yes = (value) => (value == null ? 'Não informado' : value ? 'Sim' : 'Não');
 
-export function KorePilotPanel({ visible, operational }) {
+export function KorePilotPanel({ visible, operational, onCollected, monitoring }) {
   const { user } = useAccess();
   const allowed = user?.role === 'admin';
   const [status, setStatus] = useState(null),
@@ -25,6 +25,9 @@ export function KorePilotPanel({ visible, operational }) {
     [viewPage, setViewPage] = useState(1);
   const request = useRef(null),
     retryAt = useRef(0);
+  useEffect(() => {
+    onCollected?.(page);
+  }, [page, onCollected]);
   useEffect(() => {
     if (!visible || !allowed) return;
     const controller = new AbortController();
@@ -137,8 +140,8 @@ export function KorePilotPanel({ visible, operational }) {
   }
   const summary = page ? korePageSummary(page) : null;
   const linkedRows = useMemo(
-    () => linkConsumption(page?.rows ?? [], operational),
-    [page, operational],
+    () => linkConsumption(page?.rows ?? [], operational, monitoring),
+    [page, operational, monitoring],
   );
   function exportPage() {
     const header = [

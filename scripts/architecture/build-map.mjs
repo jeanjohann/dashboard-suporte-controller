@@ -145,13 +145,21 @@ const descriptions = {
   'server/kore.js':
     'Consulta KORE em lotes de até oito páginas por token, com validação e encerramento somente do token utilizado.',
   'src/modules/consumption/components/KorePilotPanel.jsx':
-    'Coleta KORE para administradores: lotes a cada dez minutos, cobertura, pausa e exportação em memória, isolada dos indicadores CSV.',
+    'Coleta KORE para administradores: lotes a cada dez minutos, cobertura, pausa, exportação e prévia de apuração com período confirmado.',
+  'src/modules/consumption/domain/carrierWorkspace.js':
+    'Isola backups por operadora e prepara apuração KORE somente de coleta completa e período confirmado.',
+  'src/modules/consumption/domain/consumptionFieldLink.js':
+    'Confere ICCID e MSISDN conjuntos na fotografia recente do monitoramento e sinaliza conflito de equipamento.',
+  'server/zohoCategoryCatalog.js':
+    'Consulta o catálogo nativo de categorias para apresentar zeros somente quando a lista é confirmada.',
+  'src/modules/monitoring/components/RegistryEquivalences.jsx':
+    'Permite equivalência explícita base API/cliente Operacional, salva localmente por usuário.',
   'src/styles/theme-presets.css':
     'Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.',
   'src/modules/monitoring/components/MonitoringRegistry.jsx':
     'Conferência autorizada API × Operacional, com grupos, filtros, referências de origem e CSV; não modifica os cadastros.',
   'src/modules/monitoring/domain/monitoringRegistry.js':
-    'Cruza seriais numéricos exatos e únicos, preserva duplicidades e imprecisão e compara placa, cliente/base e modelo sem inferir equivalências.',
+    'Cruza seriais exatos, preserva ambiguidades e compara sete campos com API como referência e equivalências somente explícitas.',
   'src/modules/monitoring/domain/monitoringPeriods.js':
     'Define limites de 48/72/96 horas e 30/60/90 dias e as faixas exclusivas de duração usadas na análise.',
   'src/shared/data/clientDisplay.js':

@@ -9,6 +9,8 @@ import { loadZohoBacklog } from '../data/zohoBacklogClient.js';
 import { supportPeriod } from '../../orders/domain/supportPerformance.js';
 import { todaySaoPaulo } from '../../orders/domain/lifecycle.js';
 import { Chart } from '../../../components/Chart.jsx';
+import { InfoNote } from '../../../components/InfoNote.jsx';
+import { supportClosureBasis } from '../../../shared/data/zohoActivity.js';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import {
@@ -226,6 +228,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       os?.executed ?? null,
       z?.created ?? m?.totals.created ?? null,
       backlog?.agents.find((r) => r.id === a.id)?.pending ?? null,
+      backlog?.agents.find((r) => r.id === a.id)?.onHold ?? null,
       z?.closed ?? (zohoData?.closureReview?.length ? 'Em conferência' : null),
       duration(z?.seconds),
       m?.requests ?? null,
@@ -345,6 +348,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         'Executados efetivos',
         zoho?.created != null ? 'Criados pelo agente · Zoho' : 'Criados · manual',
         'Pendentes agora · Zoho',
+        'Em espera agora · incluídos nos pendentes',
         'Fechados · Zoho',
         'Tempo apontado',
         'Equipamentos · manual',
@@ -544,64 +548,69 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 Recarregar lançamentos
               </button>
             </div>
-            <p className="scope">
-              Zoho: até 31 dias por consulta. Tempo é a soma dos apontamentos nos chamados, não
-              tempo conectado. Aberturas exigem autoria confirmada no histórico. Assuntos usam a
-              categoria atual dos chamados fechados. Sem consulta completa, os lançamentos manuais
-              são apresentados separadamente como alternativa.
-            </p>
-            <p className="scope">
-              {store.loading
-                ? 'Carregando lançamentos do banco…'
-                : store.ready
-                  ? `${manual?.entries.length || 0} registros diários no recorte · ${manual?.filled || 0} campos preenchidos. Totais manuais podem estar incompletos.`
-                  : managed
-                    ? 'Lançamentos indisponíveis até a leitura ser confirmada.'
-                    : 'Modo local: abra o sistema autenticado para ler e gravar no D1.'}
-            </p>
-            <details>
-              <summary>Validar autoria de abertura e assuntos no Zoho</summary>
+            <details className="si-source-details">
+              <summary>Fontes, critérios e diagnósticos</summary>
               <p className="scope">
-                Amostra dos dois chamados recentes, sem alterar os indicadores manuais. Não usa o
-                filtro de período. Importações e aberturas por clientes não contam como abertura
-                pelo suporte.
+                Zoho: até 31 dias por consulta. Tempo é a soma dos apontamentos nos chamados, não
+                tempo conectado. Aberturas exigem autoria confirmada no histórico. Assuntos usam a
+                categoria atual dos chamados fechados. Sem consulta completa, os lançamentos manuais
+                são apresentados separadamente como alternativa.
               </p>
-              <button disabled={profileBusy || busy || backlogBusy} onClick={inspectProfile}>
-                {profileBusy ? 'Conferindo amostra…' : 'Consultar amostra de autoria e categorias'}
-              </button>
-              {profile && (
-                <>
-                  <p className="scope">{profile.coverage}</p>
-                  <Table
-                    headers={[
-                      'Chamado',
-                      'Criado em',
-                      'Tipo do autor',
-                      'ID do agente autor',
-                      'Origem',
-                      'Abertura pelo suporte confirmada',
-                      'Categoria',
-                      'Subcategoria',
-                      'Classificação',
-                    ]}
-                    rows={profile.samples.map((s) => [
-                      s.id,
-                      s.createdTime,
-                      s.creation?.actorType,
-                      s.creation?.agentId,
-                      s.creation?.source ?? 'Não informada / nula',
-                      s.creation
-                        ? s.creation.confirmedSupportOpening
-                          ? 'Sim'
-                          : 'Não confirmada'
-                        : 'Histórico incompleto ou criação não identificada',
-                      s.category,
-                      s.subCategory,
-                      s.classification,
-                    ])}
-                  />
-                </>
-              )}
+              <p className="scope">
+                {store.loading
+                  ? 'Carregando lançamentos do banco…'
+                  : store.ready
+                    ? `${manual?.entries.length || 0} registros diários no recorte · ${manual?.filled || 0} campos preenchidos. Totais manuais podem estar incompletos.`
+                    : managed
+                      ? 'Lançamentos indisponíveis até a leitura ser confirmada.'
+                      : 'Modo local: abra o sistema autenticado para ler e gravar no D1.'}
+              </p>
+              <details>
+                <summary>Validar autoria de abertura e assuntos no Zoho</summary>
+                <p className="scope">
+                  Amostra dos dois chamados recentes, sem alterar os indicadores manuais. Não usa o
+                  filtro de período. Importações e aberturas por clientes não contam como abertura
+                  pelo suporte.
+                </p>
+                <button disabled={profileBusy || busy || backlogBusy} onClick={inspectProfile}>
+                  {profileBusy
+                    ? 'Conferindo amostra…'
+                    : 'Consultar amostra de autoria e categorias'}
+                </button>
+                {profile && (
+                  <>
+                    <p className="scope">{profile.coverage}</p>
+                    <Table
+                      headers={[
+                        'Chamado',
+                        'Criado em',
+                        'Tipo do autor',
+                        'ID do agente autor',
+                        'Origem',
+                        'Abertura pelo suporte confirmada',
+                        'Categoria',
+                        'Subcategoria',
+                        'Classificação',
+                      ]}
+                      rows={profile.samples.map((s) => [
+                        s.id,
+                        s.createdTime,
+                        s.creation?.actorType,
+                        s.creation?.agentId,
+                        s.creation?.source ?? 'Não informada / nula',
+                        s.creation
+                          ? s.creation.confirmedSupportOpening
+                            ? 'Sim'
+                            : 'Não confirmada'
+                          : 'Histórico incompleto ou criação não identificada',
+                        s.category,
+                        s.subCategory,
+                        s.classification,
+                      ])}
+                    />
+                  </>
+                )}
+              </details>
             </details>
             {(error || store.error) && (
               <p className="error" role="alert">
@@ -612,11 +621,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
           <section className="si-panel" aria-label="Chamados pendentes atuais no Zoho">
             <div className="si-backlog-heading">
               <div>
-                <h2>Pendências atuais · Zoho</h2>
-                <p className="scope">
-                  Chamados atualmente atribuídos ao agente e não encerrados, incluindo em espera.
-                  Não usa o filtro de período.
-                </p>
+                <h2>
+                  Pendências atuais · Zoho{' '}
+                  <InfoNote label="Critérios das pendências atuais">
+                    Chamados atualmente atribuídos ao agente e não encerrados, incluindo em espera.
+                    Não usa o filtro de período. Em espera corresponde a On Hold; os nomes dos
+                    status configurados devem confirmar quando significam aguardar retorno do
+                    cliente.
+                    {backlog?.agents.map((agent) => (
+                      <span key={agent.id} style={{ display: 'block', marginTop: 6 }}>
+                        {agent.name}: {agent.holdStatuses.join(', ') || 'nenhum status em espera'}.
+                      </span>
+                    ))}
+                  </InfoNote>
+                </h2>
               </div>
               <div className="si-toolbar">
                 {backlog && (
@@ -640,7 +658,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             <p className="scope">
               {backlog
                 ? `Consultado em ${timestamp(backlog.readAt)} · São Paulo. A carteira pode mudar após a leitura.`
-                : 'Consulte o Zoho para obter a carteira atual. Sem consulta completa, nenhum total é presumido.'}
+                : 'Consulta da carteira atual pendente.'}
             </p>
             {backlogError && (
               <p className="error" role="alert">
@@ -653,7 +671,26 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <div className="si-cards">
                 {settings.cards.map((key) => (
                   <article className={`si-card si-card-${key}`} key={key}>
-                    <span>{metricLabels[key]}</span>
+                    <span className="si-card-label">
+                      {metricLabels[key]}
+                      <InfoNote label={`Regras de ${metricLabels[key]}`}>
+                        {key === 'executed'
+                          ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
+                          : key === 'scheduled'
+                            ? 'Uma linha com data de Agendamento e responsável válidos; exclui canceladas e pode incluir improdutivas.'
+                            : key === 'unproductive'
+                              ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
+                              : key === 'closed'
+                                ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
+                                : key === 'seconds'
+                                  ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
+                                  : key === 'created'
+                                    ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
+                                    : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
+                        Comparação exige dados dos dois períodos e não soma indicadores manuais aos
+                        automáticos.
+                      </InfoNote>
+                    </span>
                     <strong>
                       {key === 'closed' && values[key] == null && zohoData?.closureReview?.length
                         ? 'Em conferência'
@@ -666,18 +703,22 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                         significa zero fechamentos.
                       </small>
                     )}
-                    <small>
+                    <small className="si-card-origin">
                       {manualMetric(key)
                         ? 'Manual · total informado'
                         : key === 'seconds' || key === 'closed' || key === 'created'
-                          ? 'Zoho · eventos do período'
+                          ? key === 'closed'
+                            ? 'Zoho · fechados atuais'
+                            : 'Zoho · eventos do período'
                           : 'OS · linhas da base'}
                     </small>
-                    <small>
-                      {values[key] != null && oldValues[key] != null
-                        ? `Anterior: ${format(key, oldValues[key])} · diferença: ${format(key, Math.abs(values[key] - oldValues[key]))} ${values[key] > oldValues[key] ? 'a mais' : values[key] < oldValues[key] ? 'a menos' : '(igual)'}`
-                        : 'Comparação indisponível sem dados dos dois períodos.'}
-                    </small>
+                    {values[key] != null && oldValues[key] != null && (
+                      <small>
+                        {values[key] != null && oldValues[key] != null
+                          ? `Anterior: ${format(key, oldValues[key])} · diferença: ${format(key, Math.abs(values[key] - oldValues[key]))} ${values[key] > oldValues[key] ? 'a mais' : values[key] < oldValues[key] ? 'a menos' : '(igual)'}`
+                          : ''}
+                      </small>
+                    )}
                     {weekly && settings.weeklyGoals[key] != null && (
                       <small>
                         Meta semanal:{' '}
@@ -689,24 +730,33 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                   </article>
                 ))}
               </div>
-              <p className="scope si-rules">
-                Agenda e execução são etapas diferentes e podem conter o mesmo serviço. Executados:
-                Concluída/Pago, sem Visita Improdutiva. Improdutivas contam somente na agenda, pela
-                data e responsável de agendamento, e nunca como execução. A agenda não é histórico
-                da ação de agendar: usa a data marcada no arquivo. Ausência de registros na base não
-                comprova ausência de trabalho.
-              </p>
+              <details className="si-rule-summary">
+                <summary>Critérios da OS e cobertura</summary>
+                <p className="scope si-rules">
+                  Agenda e execução são etapas diferentes e podem conter o mesmo serviço.
+                  Executados: Concluída/Pago, sem Visita Improdutiva. Improdutivas contam somente na
+                  agenda, pela data e responsável de agendamento, e nunca como execução. A agenda
+                  não é histórico da ação de agendar: usa a data marcada no arquivo. Ausência de
+                  registros na base não comprova ausência de trabalho.
+                </p>
+              </details>
               {hasOrders &&
                 (orders.unmapped > 0 ||
                   orders.missingExecutionDate > 0 ||
                   orders.missingScheduleDate > 0) && (
-                  <p className="notice">
-                    Revisão da base: {orders.unmapped} linhas no período sem vínculo explícito com
-                    Jean/Eduardo; {orders.missingExecutionDate} realizadas sem data válida e{' '}
-                    {orders.missingScheduleDate} com agendamento inválido fora da seleção por
-                    período. Linhas sem vínculo ficam fora dos totais da equipe. O filtro por agente
-                    usa nomes exatos Jean/Jean Johann e Eduardo/Eduardo Oliveira.
-                  </p>
+                  <details className="notice si-review">
+                    <summary>
+                      {orders.unmapped + orders.missingExecutionDate + orders.missingScheduleDate}{' '}
+                      pontos na base para conferir
+                    </summary>
+                    <p>
+                      Revisão da base: {orders.unmapped} linhas no período sem vínculo explícito com
+                      Jean/Eduardo; {orders.missingExecutionDate} realizadas sem data válida e{' '}
+                      {orders.missingScheduleDate} com agendamento inválido fora da seleção por
+                      período. Linhas sem vínculo ficam fora dos totais da equipe. O filtro por
+                      agente usa nomes exatos Jean/Jean Johann e Eduardo/Eduardo Oliveira.
+                    </p>
+                  </details>
                 )}
               {orders?.unavailable && (
                 <p className="notice">
@@ -716,9 +766,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               {zoho && (
                 <p className="scope">
                   Tempo médio por chamado com apontamento: {duration(zoho.meanSeconds)} ·{' '}
-                  {zoho.tickets} chamados com tempo · {zoho.reviewCount} apontamentos da consulta
-                  para conferir. A coleta considera chamados modificados desde o início do período
-                  até sua referência de leitura.
+                  {zoho.tickets} chamados com tempo · {zoho.reviewCount} apontamentos para conferir.
+                </p>
+              )}
+              {zoho && zohoData.closureBasis !== supportClosureBasis && (
+                <p className="notice">
+                  Atualize a consulta Zoho nesta página para conferir fechados e categorias pelo
+                  status atual. A consulta anterior continua válida para os apontamentos.
                 </p>
               )}
               {zoho?.creationUnknown && zohoData?.indicatorsAvailable && (
@@ -740,7 +794,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <div className="si-sections">
                 {settings.sections.map((key) => (
                   <section className="si-panel" key={key}>
-                    <h2>{sections[key]}</h2>
+                    <h2>
+                      {sections[key]}{' '}
+                      <InfoNote label={`Regras de ${sections[key]}`}>
+                        {key === 'agents'
+                          ? 'Atendimentos OS por linha. Criados/fechados usam o período; pendentes e espera são a carteira atual, sem filtro temporal. Em espera já está incluído nos pendentes.'
+                          : key === 'subjects'
+                            ? 'Categorias atuais do Zoho nos chamados atualmente fechados. Catálogo confirmado inclui zero. Cada chamado conta pelo último agente que o fechou; categorias não são inferidas pelo título.'
+                            : key === 'evolution'
+                              ? 'Datas próprias da fonte; dias sem dados não representam ausência de trabalho.'
+                              : key === 'types'
+                                ? 'Linhas elegíveis de OS, com agenda e execução em bases distintas.'
+                                : 'Lançamentos manuais por data e agente; campos vazios não são zero e não são somados ao mesmo indicador automático.'}
+                      </InfoNote>
+                    </h2>
                     {key === 'agents' && (
                       <>
                         <div className="si-chart-grid">
@@ -772,7 +839,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                           </div>
                         </div>
                         <Table
-                          numericColumns={[1, 2, 3, 4, 5, 6, 7, 8]}
+                          numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
                           headers={[
                             'Agente',
                             'Agendados · OS',
@@ -781,6 +848,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                               ? 'Criados pelo agente · Zoho'
                               : 'Criados · manual',
                             'Pendentes agora · Zoho',
+                            'Em espera agora · Zoho',
                             'Fechados · Zoho',
                             'Tempo · Zoho',
                             'Equipamentos · manual',
@@ -870,31 +938,37 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                       (zoho?.categories != null ? (
                         <>
                           <p className="scope">
-                            Zoho · categoria atual dos chamados fechados pelo agente no período.
-                            Cada chamado conta uma vez por agente; o total da equipe deduplica
-                            chamados compartilhados. Não soma lançamentos manuais.
+                            {zohoData?.categoryCatalog
+                              ? 'Catálogo Zoho · inclui categorias zeradas.'
+                              : 'Catálogo indisponível · somente categorias encontradas.'}
                           </p>
                           <Chart
                             compact
                             title="Categorias dos chamados fechados"
                             items={zoho.categories}
                           />
-                          <Table
-                            headers={['Categoria atual no Zoho', 'Chamados fechados distintos']}
-                            rows={zoho.categories.map((r) => [r.label, r.value])}
-                          />
-                          <Table
-                            headers={[
-                              'Agente que fechou',
-                              'Categoria atual',
-                              'Fechados distintos por agente',
-                            ]}
-                            rows={(zoho.categoryAgents || []).map((r) => [
-                              r.agent,
-                              r.category,
-                              r.value,
-                            ])}
-                          />
+                          <details>
+                            <summary>Tabela por categoria</summary>
+                            <Table
+                              headers={['Categoria atual no Zoho', 'Chamados fechados distintos']}
+                              rows={zoho.categories.map((r) => [r.label, r.value])}
+                            />
+                          </details>
+                          <details>
+                            <summary>Distribuição por agente e categoria</summary>
+                            <Table
+                              headers={[
+                                'Agente que fechou',
+                                'Categoria atual',
+                                'Fechados distintos por agente',
+                              ]}
+                              rows={(zoho.categoryAgents || []).map((r) => [
+                                r.agent,
+                                r.category,
+                                r.value,
+                              ])}
+                            />
+                          </details>
                           <ClosedTicketDetails
                             key={period.start + period.end + agentId}
                             rows={zoho.closedTickets || []}

@@ -11,6 +11,7 @@ import { SavedSourcesStatus } from '../shared/persistence/SavedSourcesStatus.jsx
 import { DeferredPage } from './DeferredPage.jsx';
 import {
   DashboardSourcesProvider,
+  useDashboardSources,
   usePublishDashboardSource,
 } from '../modules/my-dashboard/hooks/DashboardSources.jsx';
 import {
@@ -34,11 +35,6 @@ const UsersPage = lazy(() =>
 const LinesPage = lazy(() =>
   import('../modules/consumption/components/LinesPage.jsx').then((module) => ({
     default: module.LinesPage,
-  })),
-);
-const CarrierPage = lazy(() =>
-  import('../modules/consumption/components/CarrierPage.jsx').then((module) => ({
-    default: module.CarrierPage,
   })),
 );
 const OperationalPage = lazy(() =>
@@ -80,6 +76,7 @@ export function Workspace() {
   );
 }
 function WorkspaceContent() {
+  const dashboardSources = useDashboardSources();
   const { user, managed } = useAccess();
   const allowed = (key) =>
     key === 'assistant-lab' ? canOpenAssistantPreview(user) : allowsPage(user, key);
@@ -88,8 +85,7 @@ function WorkspaceContent() {
     ),
     [orders, setOrders] = useState(null),
     [operational, setOperational] = useState(null),
-    [logistics, setLogistics] = useState(null),
-    [consumptionRevision, setConsumptionRevision] = useState(0);
+    [logistics, setLogistics] = useState(null);
   const savedSources = useSavedSources({
     user,
     managed,
@@ -124,6 +120,7 @@ function WorkspaceContent() {
   // A autorização é reconsultada antes de aplicar o lote; ocultar um botão não basta.
   async function applyBatch(batch) {
     if (!(await authorizeAction('import'))) throw Error('Importação não autorizada.');
+    if (batch.consumption.length) throw Error('Importe extratos na página KORE ou Arqia.');
     for (const [key, value] of Object.entries(batch))
       if ((Array.isArray(value) ? value.length : value) && !allowsSource(accessUser() || user, key))
         throw Error('Você não tem permissão para importar esta base.');
@@ -132,21 +129,6 @@ function WorkspaceContent() {
         .filter((kind) => batch[kind])
         .map((kind) => [kind, batch[kind]]),
     );
-    if (savedSources.enabled && batch.consumption.length && Object.keys(sources).length)
-      throw Error(
-        'No piloto, importe os extratos de consumo em um lote separado das bases salvas, para evitar confirmação parcial.',
-      );
-    if (batch.consumption.length) {
-      // Dependências do lote são carregadas somente quando há consumo a gravar.
-      const [{ consumptionHistoryRepository }, { mergeBulkHistory }] = await Promise.all([
-        import('../modules/consumption/data/historyRepository.js'),
-        import('../modules/imports/domain/bulkImport.js'),
-      ]);
-      // Confirma a gravação local antes de atualizar as outras bases e avisar a tela de consumo.
-      const archive = await consumptionHistoryRepository.read();
-      await consumptionHistoryRepository.write(mergeBulkHistory(archive, batch));
-      setConsumptionRevision((value) => value + 1);
-    }
     if (Object.keys(sources).length) await savedSources.save(sources);
   }
   const current = allowed(page)
@@ -245,7 +227,7 @@ function WorkspaceContent() {
         />
       </DeferredPage>
       <DeferredPage
-        active={current === 'lines'}
+        active={['lines', 'kore', 'arqia', 'consumption-followup'].includes(current)}
         allowed={allowed('lines')}
         page="lines"
         onPage={navigate}
@@ -255,25 +237,13 @@ function WorkspaceContent() {
           onPage={navigate}
           operational={operational}
           onOperationalChange={(value) => saveSource('operational', value)}
-          reloadToken={consumptionRevision}
+          pageId={
+            ['lines', 'kore', 'arqia', 'consumption-followup'].includes(current) ? current : 'lines'
+          }
+          active={['lines', 'kore', 'arqia', 'consumption-followup'].includes(current)}
+          monitoring={dashboardSources.sources.monitoring?.value?.snapshot}
         />
       </DeferredPage>
-      {['kore', 'arqia'].map((carrier) => (
-        <DeferredPage
-          key={carrier}
-          active={current === carrier}
-          allowed={allowed(carrier)}
-          page={carrier}
-          onPage={navigate}
-        >
-          <CarrierPage
-            carrier={carrier}
-            active={current === carrier}
-            onPage={navigate}
-            operational={operational}
-          />
-        </DeferredPage>
-      ))}
       <DeferredPage
         active={['operational', 'operational-analysis'].includes(current)}
         allowed={allowed('operational') || allowed('operational-analysis')}

@@ -131,8 +131,8 @@
 }
 .si-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
   margin-bottom: 12px;
 }
 .si-card {
@@ -299,6 +299,9 @@
   margin-bottom: 18px;
 }
 @media (max-width: 900px) {
+  .si-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .si-chart-grid {
     grid-template-columns: 1fr;
   }
@@ -308,6 +311,98 @@
   }
   .si-panel {
     padding: 14px;
+  }
+}
+@media screen {
+  .support-indicators-page .si-panel {
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .support-indicators-page .si-panel h2 {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .support-indicators-page .si-card {
+    padding: 12px;
+    min-height: 108px;
+    gap: 5px;
+  }
+  .support-indicators-page .si-card-label {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    min-height: 30px;
+    font-size: 12px;
+  }
+  .support-indicators-page .si-card > strong {
+    font-size: clamp(22px, 2.3vw, 30px);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .support-indicators-page .si-card > small {
+    margin: 0;
+    font-size: 11px;
+  }
+  .support-indicators-page .si-card-origin {
+    overflow-wrap: anywhere;
+  }
+  .support-indicators-page main button.info-trigger {
+    min-height: 20px;
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    border: 0;
+    background: transparent;
+  }
+  .support-indicators-page .si-source-details {
+    flex-basis: 100%;
+    margin-top: 6px;
+  }
+  .support-indicators-page .si-sources {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .support-indicators-page .si-sources > div:first-child {
+    margin-bottom: 0;
+  }
+  .support-indicators-page .si-review {
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .support-indicators-page .si-review p {
+    margin: 6px 0;
+  }
+  .support-indicators-page .si-rule-summary {
+    margin: 4px 0 8px;
+  }
+  .support-indicators-page .si-rule-summary p {
+    margin: 6px 0;
+  }
+  .support-indicators-page .si-backlog-heading h2 {
+    margin-bottom: 0;
+  }
+  .support-indicators-page .si-backlog-heading + .scope {
+    margin: 6px 0 0;
+    font-size: 11px;
+  }
+  .support-indicators-page .si-heading {
+    margin-bottom: 10px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .support-indicators-page .si-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .support-indicators-page .si-card {
+    min-height: 100px;
+    padding: 10px;
   }
 }
 @media print {

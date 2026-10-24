@@ -6,16 +6,18 @@ import { TableScroll } from './TableScroll.jsx';
 
 /** Mesmo padrão de diagnóstico para OS e Operacional, com origem e orientação. */
 export function ReviewPanel({ issues, data, filename = '', category = '', onCategoryChange }) {
-  const diagnostics = useMemo(() => reviewDiagnostics(issues), [issues]);
+  const diagnostics = useMemo(() => reviewDiagnostics(issues, { data }), [issues, data]);
   const [localCategory, setCategory] = useState(''),
     [search, setSearch] = useState(''),
     [page, setPage] = useState(0),
     [selected, setSelected] = useState(null);
+  const [severity, setSeverity] = useState('');
   const activeCategory = onCategoryChange ? category : localCategory;
   const filtered = diagnostics.filter(
     (item) =>
       (!activeCategory || item.category === activeCategory) &&
-      [item.address, item.column, item.value, item.reason, item.row]
+      (!severity || item.severity === severity) &&
+      [item.address, item.column, item.value, item.reason, item.row, item.rule, item.severity]
         .join(' ')
         .toLocaleLowerCase('pt-BR')
         .includes(search.toLocaleLowerCase('pt-BR')),
@@ -39,6 +41,11 @@ export function ReviewPanel({ issues, data, filename = '', category = '', onCate
           'Diagnóstico',
           'Impacto',
           'Como conferir',
+          'Regra',
+          'Impacto/classificação',
+          'Indicadores afetados',
+          'Aplicabilidade',
+          'Critério de resolução',
         ],
         ...filtered.map((item) => [
           item.category,
@@ -49,6 +56,11 @@ export function ReviewPanel({ issues, data, filename = '', category = '', onCate
           item.reason,
           item.impact,
           item.action,
+          item.rule,
+          item.severity,
+          item.indicators.join(' · '),
+          item.applicability,
+          item.resolution,
         ]),
       ]),
       'text/csv;charset=utf-8',
@@ -110,6 +122,21 @@ export function ReviewPanel({ issues, data, filename = '', category = '', onCate
         <PermissionButton action="export" onClick={exportReview}>
           Exportar diagnóstico CSV
         </PermissionButton>
+        <label>
+          Impacto
+          <select
+            value={severity}
+            onChange={(e) => {
+              setSeverity(e.target.value);
+              setPage(0);
+            }}
+          >
+            <option value="">Todos</option>
+            {[...new Set(diagnostics.map((item) => item.severity))].sort().map((label) => (
+              <option key={label}>{label}</option>
+            ))}
+          </select>
+        </label>
       </div>
       <p className="scope">
         {filtered.length} de {diagnostics.length} apontamentos no recorte da página. Os valores
@@ -137,6 +164,18 @@ export function ReviewPanel({ issues, data, filename = '', category = '', onCate
           </p>
           <p>
             <strong>Como conferir:</strong> {detail.action}
+          </p>
+          <p>
+            <strong>Regra:</strong> {detail.rule} · {detail.severity}
+          </p>
+          <p>
+            <strong>Indicadores afetados:</strong> {detail.indicators.join(' · ')}
+          </p>
+          <p>
+            <strong>Aplicabilidade:</strong> {detail.applicability}
+          </p>
+          <p>
+            <strong>Para resolver:</strong> {detail.resolution}
           </p>
           {row && (
             <details>
@@ -179,7 +218,15 @@ export function ReviewPanel({ issues, data, filename = '', category = '', onCate
           <tbody>
             {filtered.slice(current * 15, (current + 1) * 15).map((item) => (
               <tr key={item.key}>
-                <td>{item.category}</td>
+                <td>
+                  {item.category}
+                  <small className="scope">
+                    {' '}
+                    · {item.rule}
+                    <br />
+                    {item.severity}
+                  </small>
+                </td>
                 <td>{item.address || (item.row ? `Linha ${item.row}` : 'Origem não informada')}</td>
                 <td>
                   {item.column}

@@ -6,6 +6,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { allowsPage, allowsSource, allowsAction, validateUser } from './permissions.js';
 const user = { role: 'user', active: true, pages: ['orders'], canImport: true, canExport: false };
+
+test('acompanhamento e operadoras herdam somente a permissão de Consumo', () => {
+  for (const page of ['kore', 'arqia', 'consumption-followup']) {
+    assert.equal(allowsPage(user, page), false);
+    assert.equal(allowsPage({ ...user, pages: ['lines'] }, page), true);
+    assert.equal(allowsPage({ ...user, pages: ['lines'], active: false }, page), false);
+  }
+});
 test('permissões recusam páginas, ações e bases não concedidas', () => {
   assert.equal(allowsPage(user, 'orders'), true);
   assert.equal(allowsPage(user, 'users'), false);

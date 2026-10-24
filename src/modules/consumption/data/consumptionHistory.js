@@ -89,6 +89,11 @@ export async function validateBackup(text) {
       text: file.text,
       importedAt: file.importedAt,
       active: file.active !== false,
+      ...(file.origin === 'kore-api' &&
+      typeof file.apiReadAt === 'string' &&
+      Number.isFinite(Date.parse(file.apiReadAt))
+        ? { origin: 'kore-api', apiReadAt: file.apiReadAt }
+        : {}),
     });
   }
   if (new Set(files.map((file) => file.id)).size !== files.length)

@@ -1,15 +1,14 @@
 # Fila de implementação e ajustes
 
-## Revisão de regras — definições de 24/10/2026
+## Próxima rodada de temas — solicitada em 24/10/2026
 
-Referência atual para esta frente: [matriz de regras e diagnósticos por indicador](MATRIZ-DE-REGRAS-E-REVISAO.md). Levantamento documental, sem alterar os cálculos ou publicar novas regras nesta rodada.
+Manter no seletor somente Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul. Rever a aparência clara com base off-white e a escura com cinza-escuro e detalhes neon moderados, preservando legibilidade e estados semânticos. Definir a distribuição dessas duas aparências entre as quatro opções e a migração das preferências antigas nessa rodada. Pedido para a fila: não remover nem modificar os temas durante a entrega das regras/integrações.
 
-- Confirmado: atendimentos do suporte continuam por linha; pares de retirada/instalação continuam sendo eventos próprios de troca/ciclo. Retirada a proposta de consolidar linhas para reduzir atendimentos.
-- Ajustar Zoho: categorias conhecidas também zeradas após consulta completa, espera por agente e fechados pelo estado atual da consulta. A versão 0.65.0 ainda conta eventos de fechamento no período, inclusive se houver reabertura: não considerar essa nova regra entregue.
-- API é referência do cadastro atual. Ampliar conferência com placa, prefixo, rastreador, modelo, ICCID, MSISDN e base, conforme campos efetivamente disponibilizados; contrato integrado atual ainda não conserva ICCID/MSISDN.
-- KORE com API e importações na própria página; Arqia manual na própria página. Acompanhamento e Relatórios serão as visões consolidadas. Arqia paga não será pré-requisito dessa organização. Vínculo pelo Operacional e, quando disponível, monitoramento em campo.
-- A08 (faturamento esperado/competência/pró-rata) fora da fila ativa por orientação do proprietário. Demonstrativos dos valores já lançados preservados. CNPJ C e consolidação por nomes idênticos continuam confirmados.
-- Rever todos os diagnósticos de revisão com aplicabilidade, evidência, impacto e ação; lista inicial RV01–RV15 na matriz. Não apagar ou corrigir planilhas automaticamente.
+## Regras, consumo e layout 0.66.0 — 24/10/2026
+
+Implementados os ajustes aprovados: fechados pelo status atual e último autor, catálogo de categorias zeradas, espera por agente, conferência de cadastro em sete campos, equivalências explícitas, diagnósticos contextualizados e consumo organizado por operadora. Indicadores Suporte compacto, com regras na ajuda e detalhes recolhidos. Contagem por linha e improdutivas separadas preservadas. [Entrega, uso e limitações](REGRAS-E-CONSUMO-066.md); [inventário por indicador](MATRIZ-DE-REGRAS-E-REVISAO.md).
+
+479 testes aprovados, um previamente ignorado, imports e build conferidos. Homologação visual interativa e comparação autenticada com relatórios reais ainda pendentes: navegador automatizado desabilitado neste ambiente. Prefixo/ICCID/MSISDN dependem de campos explícitos no payload real. Tempo conectado Zoho segue aguardando CSV Session. Faturamento esperado/pró-rata fora da fila ativa. Temas permanecem na próxima rodada, conforme pedido acima.
 
 ## Indicadores Suporte 0.65.0 — 24/10/2026
 

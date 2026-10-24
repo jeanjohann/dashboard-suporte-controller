@@ -81,6 +81,7 @@ export function operationalLayout(columns) {
   throw new Error('Confira os cabeçalhos da aba Equipamentos: o layout não foi reconhecido.');
 }
 export function operationalCell(row, key) {
+  if (key === 'prefix') return row.cells?.[row.prefixIndex] ?? null;
   const fields = row.layout === 'compact' ? compactFields : operationalFields;
   return row.cells?.[XLSX.utils.decode_col(fields[key])];
 }
@@ -122,6 +123,11 @@ export function importOperationalSheet(sheet, date1904 = false) {
       category,
     });
   const last = XLSX.utils.decode_range(sheet['!ref']).e.r + 1;
+  const prefixColumns = columns.filter((c) =>
+    ['prefixo', 'prefixo veículo', 'prefixo veiculo'].includes(
+      c.label.trim().toLocaleLowerCase('pt-BR'),
+    ),
+  );
   let skipped = 0;
   for (let r = 2; r <= last; r++) {
     if (!clean(sheet['A' + r]?.v)) {
@@ -143,6 +149,10 @@ export function importOperationalSheet(sheet, date1904 = false) {
     };
     for (const [key, letter] of Object.entries(fields))
       row[key] = clean(row.cells[XLSX.utils.decode_col(letter)].raw);
+    if (prefixColumns.length === 1) {
+      row.prefixIndex = prefixColumns[0].index;
+      row.prefix = clean(row.cells[row.prefixIndex]?.raw);
+    }
     rows.push(row);
     for (const c of columns) {
       const cell = row.cells[c.index];
@@ -157,7 +167,12 @@ export function importOperationalSheet(sheet, date1904 = false) {
     }
     for (const key of ['client', 'serial', 'plate', 'iccid'])
       if (!row[key])
-        issue(row, fields[key], 'Campo ausente; conferir conforme a situação do equipamento.');
+        issue(
+          row,
+          fields[key],
+          'Campo ausente; conferir conforme a situação do equipamento.',
+          'Conferência',
+        );
     for (const key of ['serial', 'iccid']) {
       const cell = row.cells[XLSX.utils.decode_col(fields[key])];
       if (row[key] && !/^\d+$/.test(row[key]))

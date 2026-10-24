@@ -2,6 +2,7 @@
 import { activityParameters, collectZohoActivityBatch, ZohoActivityError } from './zohoActivity.js';
 import { inspectZohoTicketProfile } from './zohoTicketProfile.js';
 import { backlogParameters, collectZohoBacklogBatch } from './zohoBacklog.js';
+import { readZohoCategoryCatalog } from './zohoCategoryCatalog.js';
 const accountUrl = 'https://accounts.zoho.com/oauth/v2/token';
 const apiRoot = 'https://desk.zoho.com/api/v1';
 const idPattern = /^\d{1,40}$/;
@@ -253,13 +254,18 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
   readZoho.activity = async (env, params) => {
     let parameters;
     const query = new URLSearchParams(params);
-    if (query.has('backlog') && query.has('profile'))
+    if (['backlog', 'profile', 'catalog'].filter((key) => query.has(key)).length > 1)
       throw new ZohoActivityError('Selecione apenas uma modalidade de consulta.', 400);
     if (query.get('profile') === '1') query.delete('profile');
     try {
-      parameters = query.has('backlog')
-        ? backlogParameters(query)
-        : activityParameters(query, now());
+      if (query.has('catalog')) {
+        if (query.get('catalog') !== '1' || [...query.keys()].some((key) => key !== 'catalog'))
+          throw new ZohoActivityError('Parâmetros de catálogo inválidos.', 400);
+        parameters = {};
+      } else
+        parameters = query.has('backlog')
+          ? backlogParameters(query)
+          : activityParameters(query, now());
     } catch (error) {
       throw error instanceof ZohoActivityError
         ? error
@@ -279,6 +285,8 @@ export function createZohoReader({ fetchImpl = fetch, now = Date.now } = {}) {
     );
     if (id(organization?.id) !== env.ZOHO_ORG_ID)
       throw failure('ORGANIZATION', 'A organização da coleta não corresponde à configurada.');
+    if (params.has('catalog'))
+      return readZohoCategoryCatalog((path) => request(`${apiRoot}${path}`, options, 'ACTIVITY'));
     if (params.has('backlog'))
       return collectZohoBacklogBatch(
         (path) => request(`${apiRoot}${path}`, options, 'SEARCH'),

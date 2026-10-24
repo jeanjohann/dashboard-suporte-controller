@@ -1,3 +1,11 @@
+# Atualização 0.66.0 — 24/10/2026
+
+As regras de fechados desta seção substituem as descrições históricas das versões anteriores: status atual Closed e último fechamento confirmado dentro do período, somente pelo autor desse último fechamento. Reabertos ficam fora; responsável atual não substitui autoria. Consultas anteriores precisam ser atualizadas nesta página para aplicar esta regra.
+
+Catálogo nativo confirmado permite exibir categorias zeradas, inclusive por agente. Sem catálogo, somente categorias observadas são apresentadas. On Hold aparece separado por agente e já está incluído nos pendentes. Nomes de status ficam na ajuda para conferir quando significam aguardar retorno do cliente.
+
+Cards compactos, ajuda nos ícones e detalhes expansíveis priorizam números e gráficos. Alertas relevantes continuam resumidos à vista. [Critérios e limites completos da entrega](REGRAS-E-CONSUMO-066.md).
+
 # Indicadores Suporte
 
 Página independente no menu principal, com filtros próprios por data e agente. As referências iniciais são as três abas do modelo semanal fornecido em 23/10/2026. O arquivo original não foi alterado nem importado como resultado realizado: seus campos estão predominantemente vazios e datas diárias se repetem entre semanas.

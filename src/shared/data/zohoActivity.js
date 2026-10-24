@@ -4,6 +4,11 @@ export const zohoTeam = [
   { id: '103932000029960050', name: 'Eduardo Oliveira' },
   { id: '103932000027400001', name: 'Jean Johann' },
 ];
+export const supportClosureBasis = 'current-status-v1';
+export function zohoStatusType(value) {
+  const state = typeof value === 'string' ? value.toUpperCase().replace(/[ _-]/g, '') : '';
+  return ['OPEN', 'ONHOLD', 'CLOSED'].includes(state) ? state : null;
+}
 export const zohoId = (value) =>
   typeof value === 'number'
     ? Number.isSafeInteger(value) && value >= 0
