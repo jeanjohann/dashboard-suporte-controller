@@ -50,6 +50,8 @@ export function MonitoringQueue({
   onSelect,
   page,
   setPage,
+  pageSize,
+  setPageSize,
   visible,
   actions,
 }) {
@@ -59,13 +61,27 @@ export function MonitoringQueue({
   const [draft, setDraft] = useState({ status: monitoringStages[0], owner: '', text: '' });
   const [message, setMessage] = useState('');
   const [sort, setSort] = useState(null);
-  const [technical, setTechnical] = useState(false);
-  const optionalColumns = ['supplyVoltageV', 'profile', 'positions24h'];
+  const [visibleColumns, setVisibleColumns] = useState(() => {
+    const defaults = columns
+      .map(([key]) => key)
+      .filter((key) => !['supplyVoltageV', 'profile', 'positions24h'].includes(key));
+    try {
+      const saved = JSON.parse(localStorage.getItem('addlog-monitoring-columns-v1') || 'null');
+      if (Array.isArray(saved) && saved.every((key) => columns.some(([column]) => column === key)))
+        return [...new Set(['plate', ...saved])];
+    } catch {}
+    return defaults;
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem('addlog-monitoring-columns-v1', JSON.stringify(visibleColumns));
+    } catch {}
+  }, [visibleColumns]);
   const orderedRows = useMemo(
     () => sortMonitoringRows(result.rows, sort, notes),
     [result.rows, sort, notes],
   );
-  const pages = Math.max(1, Math.ceil(result.rows.length / 10));
+  const pages = Math.max(1, Math.ceil(result.rows.length / pageSize));
   useEffect(() => {
     if (page >= pages) setPage(pages - 1);
     if (selected && !detail) onSelect(null);
@@ -118,18 +134,35 @@ export function MonitoringQueue({
           {actions}
         </div>
       )}
-      <label className="monitoring-queue-columns">
-        <input
-          type="checkbox"
-          checked={technical}
-          onChange={(e) => {
-            setTechnical(e.target.checked);
-            setSort(null);
-            setPage(0);
-          }}
-        />
-        Exibir alimentação, perfil e posições na grade
-      </label>
+      <div className="monitoring-queue-columns">
+        <span>Colunas da grade</span>
+        <details className="monitoring-column-picker">
+          <summary>
+            Escolher colunas · {visibleColumns.length} de {columns.length}
+          </summary>
+          <div role="group" aria-label="Colunas visíveis">
+            {columns.map(([key, label]) => (
+              <label key={key}>
+                <input
+                  type="checkbox"
+                  checked={visibleColumns.includes(key)}
+                  disabled={key === 'plate'}
+                  onChange={(event) => {
+                    setVisibleColumns((previous) =>
+                      event.target.checked
+                        ? [...previous, key]
+                        : previous.filter((column) => column !== key),
+                    );
+                    setSort(null);
+                    setPage(0);
+                  }}
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </details>
+      </div>
       <div className="monitoring-legend" aria-label="Legenda do tempo sem atualização">
         {legend.map(([tone, label]) => (
           <span key={tone}>
@@ -143,7 +176,7 @@ export function MonitoringQueue({
           <thead>
             <tr>
               {columns
-                .filter(([key]) => technical || !optionalColumns.includes(key))
+                .filter(([key]) => visibleColumns.includes(key))
                 .map(([key, label]) => (
                   <th
                     key={key}
@@ -163,78 +196,89 @@ export function MonitoringQueue({
             </tr>
           </thead>
           <tbody>
-            {orderedRows.slice(page * 10, page * 10 + 10).map((row) => {
+            {orderedRows.slice(page * pageSize, page * pageSize + pageSize).map((row) => {
               const signal = monitoringIndicator(row);
               const reminder = reminders.records.find((record) => record.key === row.key);
               return (
                 <tr key={row.key} data-signal={signal.tone}>
-                  <td>
-                    <span className="monitoring-plate">
-                      <i
-                        className={`monitoring-age-dot monitoring-tone-${signal.tone}`}
-                        aria-hidden="true"
-                      />
-                      <span>{row.plate || 'Não informado'}</span>
-                    </span>
-                  </td>
-                  <td>
-                    {row.trackerId || 'Não informado'}
-                    <small className="monitoring-cell-note">
-                      {row.deviceModel || 'Modelo não informado'}
-                    </small>
-                  </td>
-                  <td>
-                    {clientDisplay(row.clientName || row.clientId)}
-                    <small className="monitoring-cell-note">{row.clientId}</small>
-                  </td>
-                  <td>{monitoringDate(row.lastRecordAt)}</td>
-                  {technical && <td>{monitoringVoltage(row.supplyVoltageV)}</td>}
-                  {technical && (
-                    <td>
-                      {row.profile == null || row.profile === ''
-                        ? 'Não informado'
-                        : String(row.profile)}
-                    </td>
-                  )}
-                  {technical && (
-                    <td>
-                      {row.positions24h == null
-                        ? 'Não informado'
-                        : row.positions24h.toLocaleString('pt-BR')}
-                    </td>
-                  )}
-                  <td>
-                    {monitoringDuration(row.hours)}
-                    <small className="monitoring-cell-note">{signal.label}</small>
-                  </td>
-                  <td>{monitoringStates[row.state]}</td>
-                  <td>
-                    <button
-                      type="button"
-                      className="monitoring-followup-button"
-                      aria-label={`Histórico de ${row.plate} · ${row.clientName}`}
-                      aria-expanded={selected === row.key}
-                      aria-controls={
-                        selected === row.key ? 'monitoring-selected-history' : undefined
-                      }
-                      onClick={() => onSelect(selected === row.key ? null : row.key)}
-                    >
-                      {notes[row.key]?.status || monitoringStages[0]}
-                      <Icon name={selected === row.key ? 'up' : 'down'} size={12} />
-                    </button>
-                    {reminder?.status === 'scheduled' && (
-                      <small
-                        className="monitoring-reminder-tag"
-                        data-overdue={reminderOverdue(reminder, reminders.now)}
-                      >
-                        {reminderOverdue(reminder, reminders.now)
-                          ? 'Conferência pendente'
-                          : 'Lembrete agendado'}
-                        {' · '}
-                        {monitoringDate(reminder.dueAt)}
-                      </small>
-                    )}
-                  </td>
+                  {columns
+                    .filter(([key]) => visibleColumns.includes(key))
+                    .map(([key]) => (
+                      <td key={key}>
+                        {key === 'plate' ? (
+                          <span className="monitoring-plate">
+                            <i
+                              className={`monitoring-age-dot monitoring-tone-${signal.tone}`}
+                              aria-hidden="true"
+                            />
+                            <span>{row.plate || 'Não informado'}</span>
+                          </span>
+                        ) : key === 'trackerId' ? (
+                          <>
+                            {row.trackerId || 'Não informado'}
+                            <small className="monitoring-cell-note">
+                              {row.deviceModel || 'Modelo não informado'}
+                            </small>
+                          </>
+                        ) : key === 'client' ? (
+                          <>
+                            {clientDisplay(row.clientName || row.clientId)}
+                            <small className="monitoring-cell-note">{row.clientId}</small>
+                          </>
+                        ) : key === 'lastRecordAt' ? (
+                          monitoringDate(row.lastRecordAt)
+                        ) : key === 'supplyVoltageV' ? (
+                          monitoringVoltage(row.supplyVoltageV)
+                        ) : key === 'profile' ? (
+                          row.profile == null || row.profile === '' ? (
+                            'Não informado'
+                          ) : (
+                            String(row.profile)
+                          )
+                        ) : key === 'positions24h' ? (
+                          row.positions24h == null ? (
+                            'Não informado'
+                          ) : (
+                            row.positions24h.toLocaleString('pt-BR')
+                          )
+                        ) : key === 'hours' ? (
+                          <>
+                            {monitoringDuration(row.hours)}
+                            <small className="monitoring-cell-note">{signal.label}</small>
+                          </>
+                        ) : key === 'state' ? (
+                          monitoringStates[row.state]
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              className="monitoring-followup-button"
+                              aria-label={`Histórico de ${row.plate} · ${row.clientName}`}
+                              aria-expanded={selected === row.key}
+                              aria-controls={
+                                selected === row.key ? 'monitoring-selected-history' : undefined
+                              }
+                              onClick={() => onSelect(selected === row.key ? null : row.key)}
+                            >
+                              {notes[row.key]?.status || monitoringStages[0]}
+                              <Icon name={selected === row.key ? 'up' : 'down'} size={12} />
+                            </button>
+                            {reminder?.status === 'scheduled' && (
+                              <small
+                                className="monitoring-reminder-tag"
+                                data-overdue={reminderOverdue(reminder, reminders.now)}
+                              >
+                                {reminderOverdue(reminder, reminders.now)
+                                  ? 'Conferência pendente'
+                                  : 'Lembrete agendado'}
+                                {' · '}
+                                {monitoringDate(reminder.dueAt)}
+                              </small>
+                            )}
+                          </>
+                        )}
+                      </td>
+                    ))}
                 </tr>
               );
             })}
@@ -245,7 +289,28 @@ export function MonitoringQueue({
         <p className="scope">Nenhum veículo corresponde aos filtros da tabela.</p>
       )}
       <div className="monitoring-actions monitoring-pagination" data-no-print>
-        <span>{result.rows.length} veículos no recorte</span>
+        <span>
+          Exibindo {result.rows.length ? page * pageSize + 1 : 0}–
+          {Math.min((page + 1) * pageSize, result.rows.length)} de {result.rows.length} veículos
+        </span>
+        <label>
+          Linhas por página
+          <select
+            aria-label="Linhas por página"
+            value={pageSize}
+            onChange={(event) => {
+              setPageSize(Number(event.target.value));
+              setPage(0);
+              onSelect(null);
+            }}
+          >
+            {[10, 25, 50, 100].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </label>
         <button
           disabled={page === 0}
           onClick={() => {
@@ -256,10 +321,10 @@ export function MonitoringQueue({
           Anterior
         </button>
         <span>
-          Página {page + 1} de {Math.max(1, Math.ceil(result.rows.length / 10))}
+          Página {page + 1} de {Math.max(1, Math.ceil(result.rows.length / pageSize))}
         </span>
         <button
-          disabled={(page + 1) * 10 >= result.rows.length}
+          disabled={(page + 1) * pageSize >= result.rows.length}
           onClick={() => {
             setPage((value) => value + 1);
             onSelect(null);
@@ -269,9 +334,9 @@ export function MonitoringQueue({
         </button>
         <button
           type="button"
-          disabled={(page + 1) * 10 >= result.rows.length}
+          disabled={(page + 1) * pageSize >= result.rows.length}
           onClick={() => {
-            setPage(Math.max(0, Math.ceil(result.rows.length / 10) - 1));
+            setPage(Math.max(0, Math.ceil(result.rows.length / pageSize) - 1));
             onSelect(null);
           }}
         >

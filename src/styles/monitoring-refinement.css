@@ -618,3 +618,195 @@
     max-height: none;
   }
 }
+.monitoring-priorities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+}
+.monitoring-page .monitoring-priority-card {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+  min-width: 0;
+  min-height: 94px;
+  padding: 11px 13px;
+  text-align: left;
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-top: 3px solid var(--ui-accent);
+  border-radius: 9px;
+}
+.monitoring-page .monitoring-priority-card:hover:not(:disabled) {
+  background: var(--ui-soft);
+  border-color: var(--ui-accent-border);
+}
+.monitoring-page .monitoring-priority-card[aria-pressed='true'] {
+  background: var(--ui-accent-soft);
+}
+.monitoring-page .monitoring-priority-card > span {
+  color: var(--ui-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.monitoring-page .monitoring-priority-card > strong {
+  font-size: 22px;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.monitoring-page .monitoring-priority-card > small {
+  color: var(--ui-muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+.monitoring-page .monitoring-priority-critical {
+  border-top-color: var(--ui-error-ink);
+}
+.monitoring-page .monitoring-priority-reminders {
+  border-top-color: var(--ui-warning-ink);
+}
+.monitoring-page .monitoring-priority-registry {
+  border-top-color: var(--ui-accent-ink);
+}
+.monitoring-queue-columns {
+  flex-wrap: wrap;
+  gap: 7px 10px;
+}
+.monitoring-column-picker {
+  position: relative;
+}
+.monitoring-column-picker > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 6px 9px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+}
+.monitoring-column-picker > summary::-webkit-details-marker {
+  display: none;
+}
+.monitoring-column-picker > div {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 5px);
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(135px, 1fr));
+  gap: 4px 10px;
+  min-width: min(350px, calc(100vw - 50px));
+  padding: 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+  background: var(--ui-surface);
+  box-shadow: 0 8px 24px var(--ui-shadow);
+}
+.monitoring-column-picker > div > label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 5px 2px;
+  font-size: 11px;
+}
+.monitoring-column-picker input {
+  width: 14px;
+  min-height: 14px !important;
+  margin: 0;
+}
+.monitoring-page .monitoring-pagination > label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.monitoring-page .monitoring-pagination select {
+  min-height: 30px;
+  padding: 4px 8px;
+}
+.monitoring-field-comparisons {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 2px;
+}
+.monitoring-field-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 7px;
+}
+.monitoring-field-flags > span {
+  padding: 3px 6px;
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  color: var(--ui-muted);
+  background: var(--ui-soft);
+  font-size: 9px;
+  line-height: 1.25;
+}
+.monitoring-field-flags > span[data-comparison='different'],
+.monitoring-field-flags > span[data-comparison='operational-missing'] {
+  border-color: var(--ui-warning-ink);
+  color: var(--ui-warning-ink);
+}
+.monitoring-field-comparisons > div {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.55fr) minmax(0, 1.45fr);
+  gap: 8px 12px;
+  padding: 8px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+  background: var(--ui-background);
+}
+.monitoring-field-comparisons dt {
+  font-weight: 650;
+}
+.monitoring-field-comparisons dt small {
+  display: block;
+  margin-top: 3px;
+  color: var(--ui-muted);
+  font-size: 10px;
+  font-weight: 450;
+}
+.monitoring-field-comparisons dd {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 10px;
+  margin: 0;
+}
+.monitoring-field-comparisons dd > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.monitoring-field-comparisons dd b {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ui-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.monitoring-field-comparisons dd > small {
+  grid-column: 1 / -1;
+}
+.monitoring-field-comparisons [data-comparison='different'] dt small,
+.monitoring-field-comparisons [data-comparison='operational-missing'] dt small {
+  color: var(--ui-warning-ink);
+  font-weight: 650;
+}
+@media (max-width: 950px) {
+  .monitoring-priorities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .monitoring-priorities {
+    grid-template-columns: 1fr;
+  }
+  .monitoring-field-comparisons > div {
+    grid-template-columns: 1fr;
+  }
+}

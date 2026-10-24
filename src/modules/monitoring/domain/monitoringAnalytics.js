@@ -1,6 +1,7 @@
 /** Indicadores do retrato atual: não inferem episódios, recuperação ou falha confirmada. */
 import { monitoringStages } from './monitoring.js';
 import { matchesTelemetryFocus } from './monitoringTelemetry.js';
+import { reminderOverdue } from './monitoringReminders.js';
 
 export const monitoringFocusLabels = {
   all: 'Todos os veículos',
@@ -23,6 +24,7 @@ export const monitoringFocusLabels = {
   'power-unknown': 'Sem informação de alimentação',
   'positions-active': 'Com posições nas últimas 24 h',
   'positions-zero': 'Zero posições nas últimas 24 h',
+  'overdue-reminders': 'Lembretes vencidos',
 };
 const status = (row, notes) =>
   monitoringStages.includes(notes[row.key]?.status) ? notes[row.key].status : monitoringStages[0];
@@ -55,10 +57,17 @@ export function monitoringAnalytics(result, notes = {}) {
 }
 
 /** Filtro de apresentação para a grade e exportação. Busca não altera os cards nem a origem. */
-export function filterMonitoringQueue(result, filters, notes = {}) {
+export function filterMonitoringQueue(result, filters, notes = {}, reminders = [], now = '') {
   const { focus = 'all', stage = 'all', search = '' } = filters;
   if (!(focus in monitoringFocusLabels)) throw Error('Recorte de acompanhamento inválido.');
   const tokens = normalized(search).trim().split(/\s+/).filter(Boolean);
+  const overdueKeys = new Set(
+    focus === 'overdue-reminders'
+      ? reminders
+          .filter((reminder) => reminderOverdue(reminder, now))
+          .map((reminder) => reminder.key)
+      : [],
+  );
   const stageFocus = {
     unstarted: monitoringStages[0],
     analysis: monitoringStages[1],
@@ -82,6 +91,7 @@ export function filterMonitoringQueue(result, filters, notes = {}) {
         return false;
       if (focus === 'missing' && row.state !== 'missing') return false;
       if (focus === 'unknown' && ['recent', 'delayed'].includes(row.state)) return false;
+      if (focus === 'overdue-reminders' && !overdueKeys.has(row.key)) return false;
       if (
         stageFocus[focus] &&
         (row.state !== 'delayed' || status(row, notes) !== stageFocus[focus])

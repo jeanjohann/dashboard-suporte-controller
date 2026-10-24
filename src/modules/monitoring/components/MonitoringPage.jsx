@@ -1,5 +1,6 @@
 import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 import { MonitoringRegistry } from './MonitoringRegistry.jsx';
+import { MonitoringPriorityCards } from './MonitoringPriorityCards.jsx';
 import { MonitoringCollectionHistory } from './MonitoringCollectionHistory.jsx';
 import { MonitoringEvents } from './MonitoringEvents.jsx';
 import { MonitoringApiCoverage } from './MonitoringApiCoverage.jsx';
@@ -33,6 +34,8 @@ import { useScopedSelection } from '../../../shared/filters/useScopedSelection.j
 import { filterChips, filterDisplay } from '../../../shared/filters/scopedSelection.js';
 import { FilterPanel, FilterCount } from '../../../components/FilterPanel.jsx';
 import { modelLabel, monitoringModel } from '../domain/monitoringTelemetry.js';
+import { reconcileMonitoringRegistry } from '../domain/monitoringRegistry.js';
+import { reminderOverdue } from '../domain/monitoringReminders.js';
 
 const initialFilters = () => ({
   clients: [],
@@ -73,18 +76,56 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
   const [notes, setNotes] = useState({}),
     [eventTarget, setEventTarget] = useState(null),
     [selected, setSelected] = useState(null),
-    [page, setPage] = useState(0);
+    [page, setPage] = useState(0),
+    [pageSize, setPageSize] = useState(10),
+    [registryEquivalences, setRegistryEquivalences] = useState({}),
+    [registryFilter, setRegistryFilter] = useState('all');
+  const demo = snapshot?.demonstration === true;
+  const reminders = useMonitoringReminders(demo, active);
   const analysisSnapshot = useRetainedValue(snapshot, active);
   const result = useMemo(
     () => (analysisSnapshot ? monitorSnapshot(analysisSnapshot, filters) : null),
     [analysisSnapshot, filters.clients, filters.models, filters.threshold, filters.state],
   );
   const queue = useMemo(
-    () => (result ? filterMonitoringQueue(result, filters, notes) : null),
-    [result, filters, notes],
+    () =>
+      result
+        ? filterMonitoringQueue(result, filters, notes, reminders.records, reminders.now)
+        : null,
+    [result, filters, notes, reminders.records, reminders.now],
   );
-  const demo = snapshot?.demonstration === true;
-  const reminders = useMonitoringReminders(demo, active);
+  const registryReport = useMemo(
+    () =>
+      canReview && operational?.data && snapshot && !demo
+        ? reconcileMonitoringRegistry(snapshot, operational.data, registryEquivalences)
+        : null,
+    [canReview, operational?.data, snapshot, demo, registryEquivalences],
+  );
+  useEffect(() => {
+    let saved = {};
+    try {
+      const value = JSON.parse(
+        localStorage.getItem(`monitoring-base-equivalences-v1:${user?.email || 'local'}`) || '{}',
+      );
+      if (
+        value &&
+        !Array.isArray(value) &&
+        typeof value === 'object' &&
+        Object.values(value).every((entry) => typeof entry === 'string' && entry.length <= 300)
+      )
+        saved = value;
+    } catch {}
+    setRegistryEquivalences(saved);
+  }, [user?.email]);
+  const overdueCount = useMemo(() => {
+    if (!result) return 0;
+    const keys = new Set(
+      reminders.records
+        .filter((record) => reminderOverdue(record, reminders.now))
+        .map((record) => record.key),
+    );
+    return result.scoped.filter((row) => keys.has(row.key)).length;
+  }, [result, reminders.records, reminders.now]);
   // Identidades da demonstração nunca compartilham anotações com veículos reais.
   useEffect(() => {
     setNotes({});
@@ -101,10 +142,10 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
     const index = queue?.rows.findIndex((row) => row.key === eventTarget) ?? -1;
     if (index >= 0) {
       setSelected(eventTarget);
-      setPage(Math.floor(index / 10));
+      setPage(Math.floor(index / pageSize));
       setEventTarget(null);
     }
-  }, [category, queue, eventTarget]);
+  }, [category, queue, eventTarget, pageSize]);
   function openEventVehicle(row) {
     setFilters(
       { ...initialFilters(), clients: [row.clientId], search: row.plate || row.trackerId || '' },
@@ -270,7 +311,10 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                   key={key}
                   className={category === key ? 'active' : ''}
                   aria-pressed={category === key}
-                  onClick={() => setCategory(key)}
+                  onClick={() => {
+                    if (key === 'registry') setRegistryFilter('all');
+                    setCategory(key);
+                  }}
                 >
                   {label}
                   <FilterCount count={counts[key]} />
@@ -496,6 +540,25 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     )}
                   </FilterPanel>
                 )}
+                {category === 'queue' && result && (
+                  <MonitoringPriorityCards
+                    result={result}
+                    overdue={overdueCount}
+                    canReview={canReview}
+                    registryCount={
+                      registryReport?.rows.filter(
+                        (row) => row.state !== 'Compatível nos campos comparados',
+                      ).length
+                    }
+                    registryReady={!!registryReport}
+                    activeFocus={filters.focus}
+                    onFocus={(focus) => openQueue(focus)}
+                    onRegistry={() => {
+                      setRegistryFilter('review');
+                      setCategory('registry');
+                    }}
+                  />
+                )}
                 <MonitoringReminders reminders={reminders} demo={false} />
                 {savedMode && ['queue', 'reports'].includes(category) && (
                   <MonitoringEvents
@@ -532,12 +595,17 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     onSelect={setSelected}
                     page={page}
                     setPage={setPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
                   />
                 </RetainedContent>
                 {category === 'registry' && (
                   <MonitoringRegistry
                     snapshot={snapshot}
                     operational={operational}
+                    report={registryReport}
+                    initialState={registryFilter}
+                    onEquivalences={setRegistryEquivalences}
                     onPage={onPage}
                   />
                 )}

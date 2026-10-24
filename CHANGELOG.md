@@ -1,3 +1,9 @@
+## 0.69.12 — 24/10/2026
+
+- Adiciona atalhos de prioridade no Monitoramento Ativo para alertas, veículos há 4 dias sem atualização, lembretes vencidos e cadastros a conferir.
+- Compara os campos da API e do Operacional lado a lado, distinguindo divergências e dados ausentes sem presumir erro.
+- Permite escolher colunas e exibir 10, 25, 50 ou 100 linhas por página na fila.
+
 ## 0.69.11 — 24/10/2026
 
 - Adiciona uma preferência global opcional de layout compacto na área de aparência, válida nos módulos do sistema.

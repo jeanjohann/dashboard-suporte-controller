@@ -1,38 +1,40 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
 import { TableScroll } from '../../../components/TableScroll.jsx';
 import { PermissionButton, useAccess } from '../../../shared/security/Access.jsx';
 import { allowsPage } from '../../../shared/security/permissions.js';
 import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 import { csv, download } from '../../../shared/export/exports.js';
-import {
-  reconcileMonitoringRegistry,
-  registryStates,
-  registryExportRows,
-} from '../domain/monitoringRegistry.js';
+import { registryStates, registryExportRows } from '../domain/monitoringRegistry.js';
 import { monitoringDate } from '../domain/monitoring.js';
 import { RegistryEquivalences } from './RegistryEquivalences.jsx';
 
 /** Leitura conjunta apenas das fontes autorizadas da sessão, sem consultas ou correções automáticas. */
-export function MonitoringRegistry({ snapshot, operational, onPage }) {
+export function MonitoringRegistry({
+  snapshot,
+  operational,
+  report,
+  initialState = 'all',
+  onEquivalences,
+  onPage,
+}) {
   const { user } = useAccess();
   const permitted = allowsPage(user, 'operational') || allowsPage(user, 'operational-analysis');
-  const [state, setState] = useState('all'),
+  const [state, setState] = useState(initialState),
     [search, setSearch] = useState(''),
     [page, setPage] = useState(0);
-  const [equivalences, setEquivalences] = useState({});
-  const report = useMemo(
-    () =>
-      permitted && operational?.data && snapshot && !snapshot.demonstration
-        ? reconcileMonitoringRegistry(snapshot, operational.data, equivalences)
-        : null,
-    [permitted, operational, snapshot, equivalences],
-  );
+  useEffect(() => {
+    setState(initialState);
+    setPage(0);
+  }, [initialState]);
   const rows = useMemo(
     () =>
       report?.rows.filter(
         (row) =>
-          (state === 'all' || row.state === state) &&
+          (state === 'all' ||
+            (state === 'review'
+              ? row.state !== 'Compatível nos campos comparados'
+              : row.state === state)) &&
           clientDisplay(
             [
               row.serial,
@@ -114,7 +116,7 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
       <RegistryEquivalences
         snapshot={snapshot}
         operational={operational}
-        onChange={setEquivalences}
+        onChange={onEquivalences}
       />
       <p className="scope">
         API como referência atual. Campos opcionais não fornecidos no retrato:{' '}
@@ -133,6 +135,7 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
             }}
           >
             <option value="all">Todas</option>
+            <option value="review">Tudo para revisar</option>
             {registryStates.map((label) => (
               <option key={label}>{label}</option>
             ))}
@@ -209,17 +212,60 @@ export function MonitoringRegistry({ snapshot, operational, onPage }) {
                 </td>
                 <td>
                   {row.issues.join(' ') || 'Sem diferenças nos campos disponíveis.'}
+                  {!!row.comparisons?.some((item) => item.state !== 'equal') && (
+                    <div className="monitoring-field-flags" aria-label="Campos para conferir">
+                      {row.comparisons
+                        .filter((item) => item.state !== 'equal')
+                        .map((item) => (
+                          <span key={item.field} data-comparison={item.state}>
+                            {item.field}
+                            {item.state === 'different'
+                              ? ' · Divergente'
+                              : item.state === 'operational-missing'
+                                ? ' · Ausente no Operacional'
+                                : ' · Sem dado na API'}
+                          </span>
+                        ))}
+                    </div>
+                  )}
                   {!!row.comparisons?.length && (
                     <details>
-                      <summary>Conferir os sete campos</summary>
-                      <dl>
+                      <summary>
+                        Valores por campo ·{' '}
+                        {row.comparisons.filter((item) => item.state !== 'equal').length} para
+                        conferir
+                      </summary>
+                      <dl className="monitoring-field-comparisons">
                         {row.comparisons.map((item) => (
-                          <div key={item.field}>
-                            <dt>{item.field}</dt>
+                          <div key={item.field} data-comparison={item.state}>
+                            <dt>
+                              {item.field}
+                              <small>
+                                {
+                                  {
+                                    equal: 'Compatível',
+                                    different: 'Divergente',
+                                    'api-missing': 'Sem dado na API',
+                                    'operational-missing': 'Ausente no Operacional',
+                                  }[item.state]
+                                }
+                              </small>
+                            </dt>
                             <dd>
-                              API: {item.reference || 'Não fornecido'} · Operacional:{' '}
-                              {item.original || 'Não informado'}
-                              {item.equivalent && <> · Equivalência: {item.equivalent}</>}
+                              <span>
+                                <b>API</b>
+                                {item.reference || 'Não fornecido'}
+                              </span>
+                              <span>
+                                <b>Operacional</b>
+                                {item.original || 'Não informado'}
+                              </span>
+                              {item.equivalent && (
+                                <span>
+                                  <b>Equivalência</b>
+                                  {item.equivalent}
+                                </span>
+                              )}
                               <small className="monitoring-cell-note">{item.action}</small>
                             </dd>
                           </div>
