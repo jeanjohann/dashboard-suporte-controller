@@ -6,6 +6,9 @@ import { PermissionButton } from '../shared/security/Access.jsx';
 import { authorizeAction } from '../shared/security/accessClient.js';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { InfoNote } from './InfoNote.jsx';
+import { RetainedContent } from './RetainedContent.jsx';
+import { usePrintMode, PrintPreparationContext } from '../shared/charts/usePrintMode.js';
+import { flushSync } from 'react-dom';
 import { alignHelp, helpChildren } from './HelpLayout.jsx';
 import { reportHelpFor } from './reportHelp.js';
 import { useLayoutContext } from '../shared/layout/PageLayout.jsx';
@@ -18,6 +21,8 @@ export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
 /** Agrupa relatório, ajuda e impressão isolada com contexto de arquivo, filtros e referência temporal. */
 export function Section({ title, visible = true, defaultOpen = true, summary, help, children }) {
+  const printing = usePrintMode();
+  const [preparingPrint, setPreparingPrint] = useState(false);
   const [open, setOpen] = useState(defaultOpen);
   const [compact, setCompact] = useState(false);
   const hasSummary = Boolean(summary);
@@ -61,6 +66,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
   const description = help ?? reportHelpFor(title);
   async function print() {
     if (!(await authorizeAction('export'))) return;
+    flushSync(() => setPreparingPrint(true));
     const frame = document.createElement('iframe');
     frame.title = 'Impressão da seção';
     frame.style.cssText = 'position:fixed;width:1px;height:1px;left:-9999px';
@@ -80,6 +86,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
       metadata.append(item);
     }
     const clone = section.current.cloneNode(true);
+    setPreparingPrint(false);
     clone.querySelectorAll('.summary-card').forEach((element) => {
       const card = doc.createElement('div');
       card.className = 'summary-card';
@@ -190,15 +197,28 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
         <div className="section-body" hidden={!open || (hasSummary && compact)}>
           <div className="section-content" ref={section}>
             {description && <span className="info-print">{description}</span>}
-            {content.map((child, index) =>
-              notes.includes(child) ? (
-                <span key={`note-${index}`} className="info-print">
-                  {child.props.children}
-                </span>
-              ) : (
-                alignHelp(child)
-              ),
-            )}
+            <PrintPreparationContext.Provider value={printing || preparingPrint}>
+              <RetainedContent
+                active={
+                  printing ||
+                  preparingPrint ||
+                  (available &&
+                    open &&
+                    !(hasSummary && compact) &&
+                    (!story || story.active === title))
+                }
+              >
+                {content.map((child, index) =>
+                  notes.includes(child) ? (
+                    <span key={`note-${index}`} className="info-print">
+                      {child.props.children}
+                    </span>
+                  ) : (
+                    alignHelp(child)
+                  ),
+                )}
+              </RetainedContent>
+            </PrintPreparationContext.Provider>
           </div>
         </div>
       </section>

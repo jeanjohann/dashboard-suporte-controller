@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.67.1 · referência 67c4f86 · cópia da entrega · 2026-10-24 · **531 arquivos / 111 arquivos de teste / 72 pastas**.
+Addlog 0.68.0 · referência 2744c75 · cópia da entrega · 2026-10-24 · **544 arquivos / 114 arquivos de teste / 72 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -11,21 +11,21 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 ## Pastas
 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (61 arquivos, incluindo subpastas).
+- **docs** — Guias, critérios e histórico das implementações. (63 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (2 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
 - **public/brand** — Marca e símbolo usados pela interface. (6 arquivos, incluindo subpastas).
 - **public/fonts** — Arquivos de fonte Inter servidos localmente. (2 arquivos, incluindo subpastas).
-- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (25 arquivos, incluindo subpastas).
+- **scripts** — Ferramentas de build/verificação e serviços do laboratório local. (26 arquivos, incluindo subpastas).
 - **scripts/architecture** — Geração do inventário, diagramas e empacotamento do mapa protegido. (6 arquivos, incluindo subpastas).
 - **server** — API Cloudflare e adaptadores privados de integrações. (47 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (9 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (2 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (373 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (383 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (6 arquivos, incluindo subpastas).
-- **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
-- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (273 arquivos, incluindo subpastas).
+- **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (20 arquivos, incluindo subpastas).
+- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (280 arquivos, incluindo subpastas).
 - **src/modules/assistant** — Módulo Assistente: interface, regras e integração de seus dados. (6 arquivos, incluindo subpastas).
 - **src/modules/assistant/components** — Página e painéis visuais de Assistente. (2 arquivos, incluindo subpastas).
 - **src/modules/assistant/data** — Leitura, contratos e transporte de dados de Assistente. (2 arquivos, incluindo subpastas).
@@ -48,15 +48,15 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/monitoring/data** — Leitura, contratos e transporte de dados de Monitoramento Ativo. (8 arquivos, incluindo subpastas).
 - **src/modules/monitoring/domain** — Validação e cálculo das regras de negócio de Monitoramento Ativo. (15 arquivos, incluindo subpastas).
 - **src/modules/monitoring/hooks** — Estado, efeitos e coordenação da sessão de Monitoramento Ativo. (2 arquivos, incluindo subpastas).
-- **src/modules/my-dashboard** — Módulo Meu Dashboard: interface, regras e integração de seus dados. (25 arquivos, incluindo subpastas).
+- **src/modules/my-dashboard** — Módulo Meu Dashboard: interface, regras e integração de seus dados. (29 arquivos, incluindo subpastas).
 - **src/modules/my-dashboard/components** — Página e painéis visuais de Meu Dashboard. (7 arquivos, incluindo subpastas).
 - **src/modules/my-dashboard/data** — Leitura, contratos e transporte de dados de Meu Dashboard. (1 arquivos, incluindo subpastas).
-- **src/modules/my-dashboard/domain** — Validação e cálculo das regras de negócio de Meu Dashboard. (13 arquivos, incluindo subpastas).
+- **src/modules/my-dashboard/domain** — Validação e cálculo das regras de negócio de Meu Dashboard. (17 arquivos, incluindo subpastas).
 - **src/modules/my-dashboard/hooks** — Estado, efeitos e coordenação da sessão de Meu Dashboard. (4 arquivos, incluindo subpastas).
-- **src/modules/operational** — Módulo Operacional: interface, regras e integração de seus dados. (8 arquivos, incluindo subpastas).
-- **src/modules/operational/components** — Página e painéis visuais de Operacional. (1 arquivos, incluindo subpastas).
+- **src/modules/operational** — Módulo Operacional: interface, regras e integração de seus dados. (11 arquivos, incluindo subpastas).
+- **src/modules/operational/components** — Página e painéis visuais de Operacional. (2 arquivos, incluindo subpastas).
 - **src/modules/operational/config** — Categorias e catálogos de apresentação de Operacional. (2 arquivos, incluindo subpastas).
-- **src/modules/operational/domain** — Validação e cálculo das regras de negócio de Operacional. (5 arquivos, incluindo subpastas).
+- **src/modules/operational/domain** — Validação e cálculo das regras de negócio de Operacional. (7 arquivos, incluindo subpastas).
 - **src/modules/orders** — Módulo Ordens de Serviço: interface, regras e integração de seus dados. (118 arquivos, incluindo subpastas).
 - **src/modules/orders/components** — Página e painéis visuais de Ordens de Serviço. (45 arquivos, incluindo subpastas).
 - **src/modules/orders/config** — Categorias e catálogos de apresentação de Ordens de Serviço. (4 arquivos, incluindo subpastas).
@@ -73,10 +73,10 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/support-indicators/hooks** — Estado, efeitos e coordenação da sessão de Indicadores Suporte. (1 arquivos, incluindo subpastas).
 - **src/modules/users** — Módulo Usuários: interface, regras e integração de seus dados. (1 arquivos, incluindo subpastas).
 - **src/modules/users/components** — Página e painéis visuais de Usuários. (1 arquivos, incluindo subpastas).
-- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (49 arquivos, incluindo subpastas).
-- **src/shared/charts** — Regras de representação e paleta de gráficos. (3 arquivos, incluindo subpastas).
+- **src/shared** — Contratos e infraestrutura compartilhados entre módulos. (51 arquivos, incluindo subpastas).
+- **src/shared/charts** — Regras de representação e paleta de gráficos. (4 arquivos, incluindo subpastas).
 - **src/shared/config** — Endereços de serviços documentais sem credenciais. (1 arquivos, incluindo subpastas).
-- **src/shared/data** — Filtros, datas, ordenação e contratos normalizados. (14 arquivos, incluindo subpastas).
+- **src/shared/data** — Filtros, datas, ordenação e contratos normalizados. (15 arquivos, incluindo subpastas).
 - **src/shared/export** — Exportações e contexto de impressão. (5 arquivos, incluindo subpastas).
 - **src/shared/filters** — Seleção independente por categoria e visões salvas locais. (7 arquivos, incluindo subpastas).
 - **src/shared/layout** — Personalização de página e agrupamento dos relatórios. (5 arquivos, incluindo subpastas).
@@ -436,6 +436,16 @@ Importa arquivos locais: nenhum identificado.
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
+### docs/LEVANTAMENTO-DESEMPENHO-0672.md
+
+**Documentação · Documentação** — Documento: Levantamento de desempenho — 24/10/2026. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+
+[Abrir fonte](../../docs/LEVANTAMENTO-DESEMPENHO-0672.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
 ### docs/LOGISTICA-DE-EQUIPAMENTOS.md
 
 **Documentação · Documentação** — Documento: Logística de equipamentos — 0.18.0. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
@@ -601,6 +611,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Fila de implementação e ajustes. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/PROXIMOS-AJUSTES.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/REFATORACAO-068.md
+
+**Documentação · Documentação** — Documento: Refatoração de apresentação e Dashboard — 0.68.0. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+
+[Abrir fonte](../../docs/REFATORACAO-068.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -1043,6 +1063,18 @@ Importado por: [scripts/local-assistant.test.mjs](../../scripts/local-assistant.
 Importa arquivos locais: nenhum identificado.
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### scripts/benchmark-dashboard.mjs
+
+**Ferramentas e laboratório · Script / serviço local** — Consultas equivalentes em Node; não mede DOM, rede, banco ou abertura total.
+
+[Abrir fonte](../../scripts/benchmark-dashboard.mjs) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluationCache.js](../../src/modules/my-dashboard/domain/evaluationCache.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:fs`, `node:perf_hooks`.
 
 ### scripts/benchmark-monitoring.mjs
 
@@ -1782,7 +1814,7 @@ Dependências externas: `node:assert/strict`, `node:test`.
 
 Exporta: `DeferredPage`.
 
-Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx).
+Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/components/RetainedContent.jsx](../../src/components/RetainedContent.jsx).
 
 Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx).
 
@@ -2038,6 +2070,20 @@ Importado por: [src/modules/consumption/components/ConsumptionArchivePanel.jsx](
 
 Dependências externas: `react`.
 
+### src/components/RetainedContent.jsx
+
+**Compartilhado · Interface React** — Pausa atualizações vindas do pai enquanto oculto, sem desmontar estado e rascunhos. Contextos de segurança continuam propagando; tarefas internas precisam de atividade explícita.
+
+[Abrir fonte](../../src/components/RetainedContent.jsx) · Código ou documentação do ponto de referência
+
+Exporta: `RetainedContent`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/app/DeferredPage.jsx](../../src/app/DeferredPage.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx).
+
+Dependências externas: `react`.
+
 ### src/components/ReviewPanel.jsx
 
 **Compartilhado · Interface React** — Busca, paginação, exportação e detalhamento dos apontamentos de revisão, com origem preservada.
@@ -2060,11 +2106,11 @@ Dependências externas: `react`.
 
 Exporta: `ExpansionContext`, `HiddenSectionsContext`, `PrintContext`, `Section`.
 
-Importa arquivos locais: [src/components/HelpLayout.jsx](../../src/components/HelpLayout.jsx), [src/components/InfoNote.jsx](../../src/components/InfoNote.jsx), [src/components/reportHelp.js](../../src/components/reportHelp.js), [src/shared/export/printContext.js](../../src/shared/export/printContext.js), [src/shared/export/reportPrintStyles.js](../../src/shared/export/reportPrintStyles.js), [src/shared/layout/PageLayout.jsx](../../src/shared/layout/PageLayout.jsx), [src/shared/layout/ReportStories.jsx](../../src/shared/layout/ReportStories.jsx), [src/shared/layout/pageLayout.js](../../src/shared/layout/pageLayout.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
+Importa arquivos locais: [src/components/HelpLayout.jsx](../../src/components/HelpLayout.jsx), [src/components/InfoNote.jsx](../../src/components/InfoNote.jsx), [src/components/RetainedContent.jsx](../../src/components/RetainedContent.jsx), [src/components/reportHelp.js](../../src/components/reportHelp.js), [src/shared/charts/usePrintMode.js](../../src/shared/charts/usePrintMode.js), [src/shared/export/printContext.js](../../src/shared/export/printContext.js), [src/shared/export/reportPrintStyles.js](../../src/shared/export/reportPrintStyles.js), [src/shared/layout/PageLayout.jsx](../../src/shared/layout/PageLayout.jsx), [src/shared/layout/ReportStories.jsx](../../src/shared/layout/ReportStories.jsx), [src/shared/layout/pageLayout.js](../../src/shared/layout/pageLayout.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
 
 Importado por: [src/modules/consumption/components/ConsumptionArchivePanel.jsx](../../src/modules/consumption/components/ConsumptionArchivePanel.jsx), [src/modules/consumption/components/ConsumptionEquipmentPanels.jsx](../../src/modules/consumption/components/ConsumptionEquipmentPanels.jsx), [src/modules/consumption/components/ConsumptionInvestigationPanel.jsx](../../src/modules/consumption/components/ConsumptionInvestigationPanel.jsx), [src/modules/consumption/components/ConsumptionInvoicesPanel.jsx](../../src/modules/consumption/components/ConsumptionInvoicesPanel.jsx), [src/modules/consumption/components/ConsumptionOverviewPanels.jsx](../../src/modules/consumption/components/ConsumptionOverviewPanels.jsx), [src/modules/consumption/components/ConsumptionSourcesPanel.jsx](../../src/modules/consumption/components/ConsumptionSourcesPanel.jsx), [src/modules/consumption/components/KorePilotPanel.jsx](../../src/modules/consumption/components/KorePilotPanel.jsx), [src/modules/consumption/components/LineHistoryPanel.jsx](../../src/modules/consumption/components/LineHistoryPanel.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx), [src/modules/monitoring/components/MonitoringTelemetry.jsx](../../src/modules/monitoring/components/MonitoringTelemetry.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/AdvancedInsights.jsx](../../src/modules/orders/components/AdvancedInsights.jsx), [src/modules/orders/components/DescriptiveReport.jsx](../../src/modules/orders/components/DescriptiveReport.jsx), [src/modules/orders/components/Explorers.jsx](../../src/modules/orders/components/Explorers.jsx), [src/modules/orders/components/ExtendedInsights.jsx](../../src/modules/orders/components/ExtendedInsights.jsx), [src/modules/orders/components/FieldLifePanel.jsx](../../src/modules/orders/components/FieldLifePanel.jsx), [src/modules/orders/components/GeographyComparison.jsx](../../src/modules/orders/components/GeographyComparison.jsx), [src/modules/orders/components/MaintenanceMatrix.jsx](../../src/modules/orders/components/MaintenanceMatrix.jsx), [src/modules/orders/components/OrdersLifecyclePanel.jsx](../../src/modules/orders/components/OrdersLifecyclePanel.jsx), [src/modules/orders/components/OrdersPage.jsx](../../src/modules/orders/components/OrdersPage.jsx), [src/modules/orders/components/OrdersRecordsPanel.jsx](../../src/modules/orders/components/OrdersRecordsPanel.jsx), [src/modules/orders/components/OrdersSwapsPanel.jsx](../../src/modules/orders/components/OrdersSwapsPanel.jsx), [src/modules/orders/components/OrdersTotalsPanels.jsx](../../src/modules/orders/components/OrdersTotalsPanels.jsx), [src/modules/orders/components/OverviewInlinePanels.jsx](../../src/modules/orders/components/OverviewInlinePanels.jsx), [src/modules/orders/components/ReplacementRankings.jsx](../../src/modules/orders/components/ReplacementRankings.jsx), [src/modules/orders/components/SummaryCards.jsx](../../src/modules/orders/components/SummaryCards.jsx), [src/modules/orders/components/SupportPerformance.jsx](../../src/modules/orders/components/SupportPerformance.jsx), [src/modules/orders/components/Technicians.jsx](../../src/modules/orders/components/Technicians.jsx), [src/modules/park/components/ParkHistoryPanel.jsx](../../src/modules/park/components/ParkHistoryPanel.jsx), [src/modules/park/components/ParkInsights.jsx](../../src/modules/park/components/ParkInsights.jsx).
 
-Dependências externas: `react`.
+Dependências externas: `react`, `react-dom`.
 
 ### src/components/SortableTable.jsx
 
@@ -2076,7 +2122,7 @@ Exporta: `SortableTable`, `compareValues`, `plainText`.
 
 Importa arquivos locais: [src/shared/data/sorting.js](../../src/shared/data/sorting.js).
 
-Importado por: [src/modules/consumption/components/ConsumptionArchivePanel.jsx](../../src/modules/consumption/components/ConsumptionArchivePanel.jsx), [src/modules/consumption/components/ConsumptionInvoicesPanel.jsx](../../src/modules/consumption/components/ConsumptionInvoicesPanel.jsx), [src/modules/consumption/components/ConsumptionOverviewPanels.jsx](../../src/modules/consumption/components/ConsumptionOverviewPanels.jsx), [src/modules/consumption/components/ConsumptionSourcePanel.jsx](../../src/modules/consumption/components/ConsumptionSourcePanel.jsx), [src/modules/consumption/components/KorePilotPanel.jsx](../../src/modules/consumption/components/KorePilotPanel.jsx), [src/modules/consumption/components/LineHistoryPanel.jsx](../../src/modules/consumption/components/LineHistoryPanel.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/monitoring/components/MonitoringSummaryTable.jsx](../../src/modules/monitoring/components/MonitoringSummaryTable.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/AdvancedInsights.jsx](../../src/modules/orders/components/AdvancedInsights.jsx), [src/modules/orders/components/CustomerIdentityNote.jsx](../../src/modules/orders/components/CustomerIdentityNote.jsx), [src/modules/orders/components/DescriptiveReport.jsx](../../src/modules/orders/components/DescriptiveReport.jsx), [src/modules/orders/components/Explorers.jsx](../../src/modules/orders/components/Explorers.jsx), [src/modules/orders/components/ExtendedInsights.jsx](../../src/modules/orders/components/ExtendedInsights.jsx), [src/modules/orders/components/FieldLifePanel.jsx](../../src/modules/orders/components/FieldLifePanel.jsx), [src/modules/orders/components/GeographyComparison.jsx](../../src/modules/orders/components/GeographyComparison.jsx), [src/modules/orders/components/OrdersLifecyclePanel.jsx](../../src/modules/orders/components/OrdersLifecyclePanel.jsx), [src/modules/orders/components/OrdersSwapsPanel.jsx](../../src/modules/orders/components/OrdersSwapsPanel.jsx), [src/modules/orders/components/OrdersTotalsPanels.jsx](../../src/modules/orders/components/OrdersTotalsPanels.jsx), [src/modules/orders/components/RecordDetails.jsx](../../src/modules/orders/components/RecordDetails.jsx), [src/modules/orders/components/ReplacementRankings.jsx](../../src/modules/orders/components/ReplacementRankings.jsx), [src/modules/orders/components/SupportComparison.jsx](../../src/modules/orders/components/SupportComparison.jsx), [src/modules/orders/components/SupportPeople.jsx](../../src/modules/orders/components/SupportPeople.jsx), [src/modules/orders/components/SupportPerformance.jsx](../../src/modules/orders/components/SupportPerformance.jsx), [src/modules/orders/components/SupportZohoActivity.jsx](../../src/modules/orders/components/SupportZohoActivity.jsx), [src/modules/orders/components/SupportZohoPanel.jsx](../../src/modules/orders/components/SupportZohoPanel.jsx), [src/modules/orders/components/Technicians.jsx](../../src/modules/orders/components/Technicians.jsx), [src/modules/orders/components/ZohoActivitySummary.jsx](../../src/modules/orders/components/ZohoActivitySummary.jsx), [src/modules/orders/components/ZohoClosures.jsx](../../src/modules/orders/components/ZohoClosures.jsx), [src/modules/orders/components/ZohoPresenceResults.jsx](../../src/modules/orders/components/ZohoPresenceResults.jsx), [src/modules/park/components/ParkHistoryPanel.jsx](../../src/modules/park/components/ParkHistoryPanel.jsx), [src/modules/park/components/ParkInsights.jsx](../../src/modules/park/components/ParkInsights.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx).
+Importado por: [src/modules/consumption/components/ConsumptionArchivePanel.jsx](../../src/modules/consumption/components/ConsumptionArchivePanel.jsx), [src/modules/consumption/components/ConsumptionInvoicesPanel.jsx](../../src/modules/consumption/components/ConsumptionInvoicesPanel.jsx), [src/modules/consumption/components/ConsumptionOverviewPanels.jsx](../../src/modules/consumption/components/ConsumptionOverviewPanels.jsx), [src/modules/consumption/components/ConsumptionSourcePanel.jsx](../../src/modules/consumption/components/ConsumptionSourcePanel.jsx), [src/modules/consumption/components/KorePilotPanel.jsx](../../src/modules/consumption/components/KorePilotPanel.jsx), [src/modules/consumption/components/LineHistoryPanel.jsx](../../src/modules/consumption/components/LineHistoryPanel.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/monitoring/components/MonitoringSummaryTable.jsx](../../src/modules/monitoring/components/MonitoringSummaryTable.jsx), [src/modules/operational/components/OperationalLinksTable.jsx](../../src/modules/operational/components/OperationalLinksTable.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/AdvancedInsights.jsx](../../src/modules/orders/components/AdvancedInsights.jsx), [src/modules/orders/components/CustomerIdentityNote.jsx](../../src/modules/orders/components/CustomerIdentityNote.jsx), [src/modules/orders/components/DescriptiveReport.jsx](../../src/modules/orders/components/DescriptiveReport.jsx), [src/modules/orders/components/Explorers.jsx](../../src/modules/orders/components/Explorers.jsx), [src/modules/orders/components/ExtendedInsights.jsx](../../src/modules/orders/components/ExtendedInsights.jsx), [src/modules/orders/components/FieldLifePanel.jsx](../../src/modules/orders/components/FieldLifePanel.jsx), [src/modules/orders/components/GeographyComparison.jsx](../../src/modules/orders/components/GeographyComparison.jsx), [src/modules/orders/components/OrdersLifecyclePanel.jsx](../../src/modules/orders/components/OrdersLifecyclePanel.jsx), [src/modules/orders/components/OrdersSwapsPanel.jsx](../../src/modules/orders/components/OrdersSwapsPanel.jsx), [src/modules/orders/components/OrdersTotalsPanels.jsx](../../src/modules/orders/components/OrdersTotalsPanels.jsx), [src/modules/orders/components/RecordDetails.jsx](../../src/modules/orders/components/RecordDetails.jsx), [src/modules/orders/components/ReplacementRankings.jsx](../../src/modules/orders/components/ReplacementRankings.jsx), [src/modules/orders/components/SupportComparison.jsx](../../src/modules/orders/components/SupportComparison.jsx), [src/modules/orders/components/SupportPeople.jsx](../../src/modules/orders/components/SupportPeople.jsx), [src/modules/orders/components/SupportPerformance.jsx](../../src/modules/orders/components/SupportPerformance.jsx), [src/modules/orders/components/SupportZohoActivity.jsx](../../src/modules/orders/components/SupportZohoActivity.jsx), [src/modules/orders/components/SupportZohoPanel.jsx](../../src/modules/orders/components/SupportZohoPanel.jsx), [src/modules/orders/components/Technicians.jsx](../../src/modules/orders/components/Technicians.jsx), [src/modules/orders/components/ZohoActivitySummary.jsx](../../src/modules/orders/components/ZohoActivitySummary.jsx), [src/modules/orders/components/ZohoClosures.jsx](../../src/modules/orders/components/ZohoClosures.jsx), [src/modules/orders/components/ZohoPresenceResults.jsx](../../src/modules/orders/components/ZohoPresenceResults.jsx), [src/modules/park/components/ParkHistoryPanel.jsx](../../src/modules/park/components/ParkHistoryPanel.jsx), [src/modules/park/components/ParkInsights.jsx](../../src/modules/park/components/ParkInsights.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx).
 
 Dependências externas: `react`.
 
@@ -2090,7 +2136,7 @@ Exporta: `TableScroll`.
 
 Importa arquivos locais: nenhum identificado.
 
-Importado por: [src/components/ReviewPanel.jsx](../../src/components/ReviewPanel.jsx), [src/modules/consumption/components/ConsumptionArchivePanel.jsx](../../src/modules/consumption/components/ConsumptionArchivePanel.jsx), [src/modules/consumption/components/ConsumptionInvoicesPanel.jsx](../../src/modules/consumption/components/ConsumptionInvoicesPanel.jsx), [src/modules/consumption/components/ConsumptionOverviewPanels.jsx](../../src/modules/consumption/components/ConsumptionOverviewPanels.jsx), [src/modules/consumption/components/ConsumptionSourcePanel.jsx](../../src/modules/consumption/components/ConsumptionSourcePanel.jsx), [src/modules/consumption/components/LineHistoryPanel.jsx](../../src/modules/consumption/components/LineHistoryPanel.jsx), [src/modules/consumption/components/LineRecordsTable.jsx](../../src/modules/consumption/components/LineRecordsTable.jsx), [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx), [src/modules/monitoring/components/MonitoringSummaryTable.jsx](../../src/modules/monitoring/components/MonitoringSummaryTable.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/MaintenanceMatrix.jsx](../../src/modules/orders/components/MaintenanceMatrix.jsx), [src/modules/orders/components/OrdersRecordsPanel.jsx](../../src/modules/orders/components/OrdersRecordsPanel.jsx), [src/modules/orders/components/RecordDetails.jsx](../../src/modules/orders/components/RecordDetails.jsx), [src/modules/orders/components/ZohoPresenceResults.jsx](../../src/modules/orders/components/ZohoPresenceResults.jsx), [src/modules/park/components/ParkHistoryPanel.jsx](../../src/modules/park/components/ParkHistoryPanel.jsx), [src/modules/park/components/ParkInsights.jsx](../../src/modules/park/components/ParkInsights.jsx).
+Importado por: [src/components/ReviewPanel.jsx](../../src/components/ReviewPanel.jsx), [src/modules/consumption/components/ConsumptionArchivePanel.jsx](../../src/modules/consumption/components/ConsumptionArchivePanel.jsx), [src/modules/consumption/components/ConsumptionInvoicesPanel.jsx](../../src/modules/consumption/components/ConsumptionInvoicesPanel.jsx), [src/modules/consumption/components/ConsumptionOverviewPanels.jsx](../../src/modules/consumption/components/ConsumptionOverviewPanels.jsx), [src/modules/consumption/components/ConsumptionSourcePanel.jsx](../../src/modules/consumption/components/ConsumptionSourcePanel.jsx), [src/modules/consumption/components/LineHistoryPanel.jsx](../../src/modules/consumption/components/LineHistoryPanel.jsx), [src/modules/consumption/components/LineRecordsTable.jsx](../../src/modules/consumption/components/LineRecordsTable.jsx), [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx), [src/modules/monitoring/components/MonitoringSummaryTable.jsx](../../src/modules/monitoring/components/MonitoringSummaryTable.jsx), [src/modules/operational/components/OperationalLinksTable.jsx](../../src/modules/operational/components/OperationalLinksTable.jsx), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/orders/components/MaintenanceMatrix.jsx](../../src/modules/orders/components/MaintenanceMatrix.jsx), [src/modules/orders/components/OrdersRecordsPanel.jsx](../../src/modules/orders/components/OrdersRecordsPanel.jsx), [src/modules/orders/components/RecordDetails.jsx](../../src/modules/orders/components/RecordDetails.jsx), [src/modules/orders/components/ZohoPresenceResults.jsx](../../src/modules/orders/components/ZohoPresenceResults.jsx), [src/modules/park/components/ParkHistoryPanel.jsx](../../src/modules/park/components/ParkHistoryPanel.jsx), [src/modules/park/components/ParkInsights.jsx](../../src/modules/park/components/ParkInsights.jsx).
 
 Dependências externas: `react`.
 
@@ -3088,7 +3134,7 @@ Dependências externas: `react`.
 
 Exporta: `MonitoringPage`.
 
-Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/components/FilterPanel.jsx](../../src/components/FilterPanel.jsx), [src/components/MultiFilter.jsx](../../src/components/MultiFilter.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringApiCoverage.jsx](../../src/modules/monitoring/components/MonitoringApiCoverage.jsx), [src/modules/monitoring/components/MonitoringCollectionHistory.jsx](../../src/modules/monitoring/components/MonitoringCollectionHistory.jsx), [src/modules/monitoring/components/MonitoringEvents.jsx](../../src/modules/monitoring/components/MonitoringEvents.jsx), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringPeriods.js](../../src/modules/monitoring/domain/monitoringPeriods.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js), [src/modules/monitoring/domain/monitoringTelemetry.js](../../src/modules/monitoring/domain/monitoringTelemetry.js), [src/modules/monitoring/hooks/useMonitoringReminders.js](../../src/modules/monitoring/hooks/useMonitoringReminders.js), [src/modules/monitoring/hooks/useMonitoringSource.js](../../src/modules/monitoring/hooks/useMonitoringSource.js), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/shared/data/clientDisplay.js](../../src/shared/data/clientDisplay.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/filters/scopedSelection.js](../../src/shared/filters/scopedSelection.js), [src/shared/filters/useScopedSelection.js](../../src/shared/filters/useScopedSelection.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
+Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/components/FilterPanel.jsx](../../src/components/FilterPanel.jsx), [src/components/MultiFilter.jsx](../../src/components/MultiFilter.jsx), [src/components/RetainedContent.jsx](../../src/components/RetainedContent.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringApiCoverage.jsx](../../src/modules/monitoring/components/MonitoringApiCoverage.jsx), [src/modules/monitoring/components/MonitoringCollectionHistory.jsx](../../src/modules/monitoring/components/MonitoringCollectionHistory.jsx), [src/modules/monitoring/components/MonitoringEvents.jsx](../../src/modules/monitoring/components/MonitoringEvents.jsx), [src/modules/monitoring/components/MonitoringQueue.jsx](../../src/modules/monitoring/components/MonitoringQueue.jsx), [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx), [src/modules/monitoring/components/MonitoringReminders.jsx](../../src/modules/monitoring/components/MonitoringReminders.jsx), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringPeriods.js](../../src/modules/monitoring/domain/monitoringPeriods.js), [src/modules/monitoring/domain/monitoringReport.js](../../src/modules/monitoring/domain/monitoringReport.js), [src/modules/monitoring/domain/monitoringTelemetry.js](../../src/modules/monitoring/domain/monitoringTelemetry.js), [src/modules/monitoring/hooks/useMonitoringReminders.js](../../src/modules/monitoring/hooks/useMonitoringReminders.js), [src/modules/monitoring/hooks/useMonitoringSource.js](../../src/modules/monitoring/hooks/useMonitoringSource.js), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/shared/data/clientDisplay.js](../../src/shared/data/clientDisplay.js), [src/shared/data/useRetainedValue.js](../../src/shared/data/useRetainedValue.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/filters/scopedSelection.js](../../src/shared/filters/scopedSelection.js), [src/shared/filters/useScopedSelection.js](../../src/shared/filters/useScopedSelection.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
 Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx).
 
@@ -3550,7 +3596,7 @@ Dependências externas: `react`.
 
 Exporta: `DashboardWidget`, `WidgetContext`.
 
-Importa arquivos locais: [src/modules/my-dashboard/components/DashboardDialog.jsx](../../src/modules/my-dashboard/components/DashboardDialog.jsx), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/my-dashboard/domain/catalog.js](../../src/modules/my-dashboard/domain/catalog.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/presentation.js](../../src/modules/my-dashboard/domain/presentation.js).
+Importa arquivos locais: [src/modules/my-dashboard/components/DashboardDialog.jsx](../../src/modules/my-dashboard/components/DashboardDialog.jsx), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/my-dashboard/domain/catalog.js](../../src/modules/my-dashboard/domain/catalog.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluationCache.js](../../src/modules/my-dashboard/domain/evaluationCache.js), [src/modules/my-dashboard/domain/presentation.js](../../src/modules/my-dashboard/domain/presentation.js), [src/shared/charts/usePrintMode.js](../../src/shared/charts/usePrintMode.js).
 
 Importado por: [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx).
 
@@ -3592,7 +3638,7 @@ Dependências externas: `react`.
 
 Exporta: `ValuesTable`, `WidgetVisualization`.
 
-Importa arquivos locais: [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/presentation.js](../../src/modules/my-dashboard/domain/presentation.js), [src/shared/charts/palette.js](../../src/shared/charts/palette.js).
+Importa arquivos locais: [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/presentation.js](../../src/modules/my-dashboard/domain/presentation.js), [src/shared/charts/palette.js](../../src/shared/charts/palette.js), [src/shared/charts/usePrintMode.js](../../src/shared/charts/usePrintMode.js).
 
 Importado por: [src/modules/my-dashboard/components/DashboardWidget.jsx](../../src/modules/my-dashboard/components/DashboardWidget.jsx).
 
@@ -3644,7 +3690,7 @@ Exporta: `canUseDashboardModule`, `dashboardCatalog`, `dashboardMetric`, `dashbo
 
 Importa arquivos locais: [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
-Importado por: [src/modules/my-dashboard/components/DashboardCatalog.jsx](../../src/modules/my-dashboard/components/DashboardCatalog.jsx), [src/modules/my-dashboard/components/DashboardTools.jsx](../../src/modules/my-dashboard/components/DashboardTools.jsx), [src/modules/my-dashboard/components/DashboardWidget.jsx](../../src/modules/my-dashboard/components/DashboardWidget.jsx), [src/modules/my-dashboard/components/WidgetEditor.jsx](../../src/modules/my-dashboard/components/WidgetEditor.jsx), [src/modules/my-dashboard/domain/boardActions.js](../../src/modules/my-dashboard/domain/boardActions.js), [src/modules/my-dashboard/domain/customQuery.test.js](../../src/modules/my-dashboard/domain/customQuery.test.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/my-dashboard/domain/layout.js](../../src/modules/my-dashboard/domain/layout.js), [src/modules/my-dashboard/domain/presentation.js](../../src/modules/my-dashboard/domain/presentation.js), [src/modules/my-dashboard/domain/presentation.test.js](../../src/modules/my-dashboard/domain/presentation.test.js), [src/modules/my-dashboard/domain/templates.js](../../src/modules/my-dashboard/domain/templates.js).
+Importado por: [src/modules/my-dashboard/components/DashboardCatalog.jsx](../../src/modules/my-dashboard/components/DashboardCatalog.jsx), [src/modules/my-dashboard/components/DashboardTools.jsx](../../src/modules/my-dashboard/components/DashboardTools.jsx), [src/modules/my-dashboard/components/DashboardWidget.jsx](../../src/modules/my-dashboard/components/DashboardWidget.jsx), [src/modules/my-dashboard/components/WidgetEditor.jsx](../../src/modules/my-dashboard/components/WidgetEditor.jsx), [src/modules/my-dashboard/domain/boardActions.js](../../src/modules/my-dashboard/domain/boardActions.js), [src/modules/my-dashboard/domain/customQuery.test.js](../../src/modules/my-dashboard/domain/customQuery.test.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/my-dashboard/domain/evaluationCache.js](../../src/modules/my-dashboard/domain/evaluationCache.js), [src/modules/my-dashboard/domain/layout.js](../../src/modules/my-dashboard/domain/layout.js), [src/modules/my-dashboard/domain/presentation.js](../../src/modules/my-dashboard/domain/presentation.js), [src/modules/my-dashboard/domain/presentation.test.js](../../src/modules/my-dashboard/domain/presentation.test.js), [src/modules/my-dashboard/domain/templates.js](../../src/modules/my-dashboard/domain/templates.js).
 
 ### src/modules/my-dashboard/domain/customComparison.test.js
 
@@ -3690,9 +3736,9 @@ Dependências externas: `node:assert/strict`, `node:test`.
 
 Exporta: `dashboardFilterOptions`, `dashboardPeriods`, `dateRange`, `evaluateDashboardWidget`, `formatMetric`, `shortDate`, `timestampLabel`.
 
-Importa arquivos locais: [src/modules/consumption/domain/consumptionFilters.js](../../src/modules/consumption/domain/consumptionFilters.js), [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/modules/logistics/domain/logistics.js](../../src/modules/logistics/domain/logistics.js), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/my-dashboard/domain/catalog.js](../../src/modules/my-dashboard/domain/catalog.js), [src/modules/my-dashboard/domain/customQuery.js](../../src/modules/my-dashboard/domain/customQuery.js), [src/modules/operational/domain/operational.js](../../src/modules/operational/domain/operational.js), [src/modules/orders/domain/dashboard.js](../../src/modules/orders/domain/dashboard.js), [src/modules/orders/domain/supportPerformance.js](../../src/modules/orders/domain/supportPerformance.js), [src/modules/park/domain/parkAnalysis.js](../../src/modules/park/domain/parkAnalysis.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/data/isoDate.js](../../src/shared/data/isoDate.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
+Importa arquivos locais: [src/modules/consumption/domain/consumptionFilters.js](../../src/modules/consumption/domain/consumptionFilters.js), [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/modules/logistics/domain/logistics.js](../../src/modules/logistics/domain/logistics.js), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/my-dashboard/domain/catalog.js](../../src/modules/my-dashboard/domain/catalog.js), [src/modules/my-dashboard/domain/customQuery.js](../../src/modules/my-dashboard/domain/customQuery.js), [src/modules/operational/domain/linkCache.js](../../src/modules/operational/domain/linkCache.js), [src/modules/orders/domain/dashboard.js](../../src/modules/orders/domain/dashboard.js), [src/modules/orders/domain/supportPerformance.js](../../src/modules/orders/domain/supportPerformance.js), [src/modules/park/domain/parkAnalysis.js](../../src/modules/park/domain/parkAnalysis.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/data/isoDate.js](../../src/shared/data/isoDate.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
 
-Importado por: [src/modules/my-dashboard/components/DashboardTools.jsx](../../src/modules/my-dashboard/components/DashboardTools.jsx), [src/modules/my-dashboard/components/DashboardWidget.jsx](../../src/modules/my-dashboard/components/DashboardWidget.jsx), [src/modules/my-dashboard/components/WidgetEditor.jsx](../../src/modules/my-dashboard/components/WidgetEditor.jsx), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/my-dashboard/domain/customQuery.test.js](../../src/modules/my-dashboard/domain/customQuery.test.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/my-dashboard/domain/presentation.test.js](../../src/modules/my-dashboard/domain/presentation.test.js).
+Importado por: [scripts/benchmark-dashboard.mjs](../../scripts/benchmark-dashboard.mjs), [src/modules/my-dashboard/components/DashboardTools.jsx](../../src/modules/my-dashboard/components/DashboardTools.jsx), [src/modules/my-dashboard/components/DashboardWidget.jsx](../../src/modules/my-dashboard/components/DashboardWidget.jsx), [src/modules/my-dashboard/components/WidgetEditor.jsx](../../src/modules/my-dashboard/components/WidgetEditor.jsx), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/my-dashboard/domain/customQuery.test.js](../../src/modules/my-dashboard/domain/customQuery.test.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/my-dashboard/domain/evaluationCache.js](../../src/modules/my-dashboard/domain/evaluationCache.js), [src/modules/my-dashboard/domain/presentation.test.js](../../src/modules/my-dashboard/domain/presentation.test.js).
 
 ### src/modules/my-dashboard/domain/evaluate.test.js
 
@@ -3701,6 +3747,30 @@ Importado por: [src/modules/my-dashboard/components/DashboardTools.jsx](../../sr
 [Abrir fonte](../../src/modules/my-dashboard/domain/evaluate.test.js) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/modules/logistics/domain/logistics.js](../../src/modules/logistics/domain/logistics.js), [src/modules/my-dashboard/domain/catalog.js](../../src/modules/my-dashboard/domain/catalog.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/operational/domain/operational.js](../../src/modules/operational/domain/operational.js), [src/modules/orders/domain/dashboard.js](../../src/modules/orders/domain/dashboard.js), [src/modules/park/domain/parkAnalysis.js](../../src/modules/park/domain/parkAnalysis.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
+### src/modules/my-dashboard/domain/evaluationCache.js
+
+**Meu Dashboard · Domínio** — Formato fixo para dependências React, incluindo complementos e comparação do parque com OS.
+
+[Abrir fonte](../../src/modules/my-dashboard/domain/evaluationCache.js) · Código ou documentação do ponto de referência
+
+Exporta: `createDashboardEvaluator`, `dashboardSourcesForWidget`, `evaluateCachedWidget`.
+
+Importa arquivos locais: [src/modules/my-dashboard/domain/catalog.js](../../src/modules/my-dashboard/domain/catalog.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js).
+
+Importado por: [scripts/benchmark-dashboard.mjs](../../scripts/benchmark-dashboard.mjs), [src/modules/my-dashboard/components/DashboardWidget.jsx](../../src/modules/my-dashboard/components/DashboardWidget.jsx), [src/modules/my-dashboard/domain/evaluationCache.test.js](../../src/modules/my-dashboard/domain/evaluationCache.test.js).
+
+### src/modules/my-dashboard/domain/evaluationCache.test.js
+
+**Meu Dashboard · Teste** — Verifica evaluation Cache no contexto de Meu Dashboard. Exemplos: cards equivalentes compartilham cálculo; mudança independente não invalida e nova OS invalida; fontes de parque incluem OS e complementos; troca de conta/permissão não reutiliza resultados; cache limitado descarta consultas antigas.
+
+[Abrir fonte](../../src/modules/my-dashboard/domain/evaluationCache.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [src/modules/my-dashboard/domain/evaluationCache.js](../../src/modules/my-dashboard/domain/evaluationCache.js).
 
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
@@ -3754,6 +3824,30 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 Dependências externas: `node:assert/strict`, `node:test`.
 
+### src/modules/my-dashboard/domain/sourceStore.js
+
+**Meu Dashboard · Domínio** — Assinaturas por fonte; publicar não obriga os produtores a assinarem todas as bases.
+
+[Abrir fonte](../../src/modules/my-dashboard/domain/sourceStore.js) · Código ou documentação do ponto de referência
+
+Exporta: `createSourceStore`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/modules/my-dashboard/domain/sourceStore.test.js](../../src/modules/my-dashboard/domain/sourceStore.test.js), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx).
+
+### src/modules/my-dashboard/domain/sourceStore.test.js
+
+**Meu Dashboard · Teste** — Verifica source Store no contexto de Meu Dashboard. Exemplos: publicação preserva a identidade das fontes independentes e não notifica valores idênticos.
+
+[Abrir fonte](../../src/modules/my-dashboard/domain/sourceStore.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [src/modules/my-dashboard/domain/sourceStore.js](../../src/modules/my-dashboard/domain/sourceStore.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
 ### src/modules/my-dashboard/domain/templates.js
 
 **Meu Dashboard · Domínio** — Fornece painéis iniciais permitidos para gestão, suporte, parque e consumo.
@@ -3772,9 +3866,9 @@ Importado por: [src/modules/my-dashboard/components/DashboardTools.jsx](../../sr
 
 [Abrir fonte](../../src/modules/my-dashboard/hooks/DashboardSources.jsx) · Código ou documentação do ponto de referência
 
-Exporta: `DashboardSourcesProvider`, `useDashboardSources`, `usePublishDashboardSource`.
+Exporta: `DashboardSourcesProvider`, `useDashboardSource`, `useDashboardSources`, `usePublishDashboardSource`.
 
-Importa arquivos locais: [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
+Importa arquivos locais: [src/modules/my-dashboard/domain/sourceStore.js](../../src/modules/my-dashboard/domain/sourceStore.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx).
 
 Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/orders/hooks/ZohoSession.jsx](../../src/modules/orders/hooks/ZohoSession.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx).
 
@@ -3822,6 +3916,20 @@ Importado por: [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../s
 
 Dependências externas: `react`.
 
+### src/modules/operational/components/OperationalLinksTable.jsx
+
+**Operacional · Interface React** — Vínculos paginados com ordenação global e preparação integral para impressão.
+
+[Abrir fonte](../../src/modules/operational/components/OperationalLinksTable.jsx) · Código ou documentação do ponto de referência
+
+Exporta: `OperationalLinksTable`.
+
+Importa arquivos locais: [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/components/TableScroll.jsx](../../src/components/TableScroll.jsx), [src/shared/charts/usePrintMode.js](../../src/shared/charts/usePrintMode.js).
+
+Importado por: [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx).
+
+Dependências externas: `react`.
+
 ### src/modules/operational/components/OperationalPage.jsx
 
 **Operacional · Interface React** — Compartilha a base operacional entre revisão e Parque e Manutenção, mantendo filtros e categorias da página.
@@ -3830,7 +3938,7 @@ Dependências externas: `react`.
 
 Exporta: `OperationalPage`.
 
-Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/components/AnalysisMetrics.jsx](../../src/components/AnalysisMetrics.jsx), [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/FilterPanel.jsx](../../src/components/FilterPanel.jsx), [src/components/InfoNote.jsx](../../src/components/InfoNote.jsx), [src/components/MultiFilter.jsx](../../src/components/MultiFilter.jsx), [src/components/PageSettings.jsx](../../src/components/PageSettings.jsx), [src/components/PeriodFilter.jsx](../../src/components/PeriodFilter.jsx), [src/components/ReportControls.jsx](../../src/components/ReportControls.jsx), [src/components/ReviewPanel.jsx](../../src/components/ReviewPanel.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/components/TableScroll.jsx](../../src/components/TableScroll.jsx), [src/components/ViewState.jsx](../../src/components/ViewState.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/operational/config/operationalMenus.js](../../src/modules/operational/config/operationalMenus.js), [src/modules/operational/config/reportStories.js](../../src/modules/operational/config/reportStories.js), [src/modules/operational/domain/googleOperational.js](../../src/modules/operational/domain/googleOperational.js), [src/modules/operational/domain/operational.js](../../src/modules/operational/domain/operational.js), [src/modules/operational/domain/operationalRecords.js](../../src/modules/operational/domain/operationalRecords.js), [src/modules/orders/components/OrdersGooglePanel.jsx](../../src/modules/orders/components/OrdersGooglePanel.jsx), [src/modules/orders/hooks/useGoogleOrders.js](../../src/modules/orders/hooks/useGoogleOrders.js), [src/modules/park/components/ParkInsights.jsx](../../src/modules/park/components/ParkInsights.jsx), [src/modules/park/domain/parkAnalysis.js](../../src/modules/park/domain/parkAnalysis.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/filters/scopedSelection.js](../../src/shared/filters/scopedSelection.js), [src/shared/filters/useScopedSelection.js](../../src/shared/filters/useScopedSelection.js), [src/shared/layout/PageLayout.jsx](../../src/shared/layout/PageLayout.jsx), [src/shared/layout/ReportStories.jsx](../../src/shared/layout/ReportStories.jsx), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
+Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/components/AnalysisMetrics.jsx](../../src/components/AnalysisMetrics.jsx), [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/FilterPanel.jsx](../../src/components/FilterPanel.jsx), [src/components/InfoNote.jsx](../../src/components/InfoNote.jsx), [src/components/MultiFilter.jsx](../../src/components/MultiFilter.jsx), [src/components/PageSettings.jsx](../../src/components/PageSettings.jsx), [src/components/PeriodFilter.jsx](../../src/components/PeriodFilter.jsx), [src/components/ReportControls.jsx](../../src/components/ReportControls.jsx), [src/components/ReviewPanel.jsx](../../src/components/ReviewPanel.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/components/TableScroll.jsx](../../src/components/TableScroll.jsx), [src/components/ViewState.jsx](../../src/components/ViewState.jsx), [src/modules/logistics/components/LogisticsPanel.jsx](../../src/modules/logistics/components/LogisticsPanel.jsx), [src/modules/operational/components/OperationalLinksTable.jsx](../../src/modules/operational/components/OperationalLinksTable.jsx), [src/modules/operational/config/operationalMenus.js](../../src/modules/operational/config/operationalMenus.js), [src/modules/operational/config/reportStories.js](../../src/modules/operational/config/reportStories.js), [src/modules/operational/domain/googleOperational.js](../../src/modules/operational/domain/googleOperational.js), [src/modules/operational/domain/operational.js](../../src/modules/operational/domain/operational.js), [src/modules/operational/domain/operationalRecords.js](../../src/modules/operational/domain/operationalRecords.js), [src/modules/orders/components/OrdersGooglePanel.jsx](../../src/modules/orders/components/OrdersGooglePanel.jsx), [src/modules/orders/hooks/useGoogleOrders.js](../../src/modules/orders/hooks/useGoogleOrders.js), [src/modules/park/components/ParkInsights.jsx](../../src/modules/park/components/ParkInsights.jsx), [src/modules/park/domain/parkAnalysis.js](../../src/modules/park/domain/parkAnalysis.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/filters/scopedSelection.js](../../src/shared/filters/scopedSelection.js), [src/shared/filters/useScopedSelection.js](../../src/shared/filters/useScopedSelection.js), [src/shared/layout/PageLayout.jsx](../../src/shared/layout/PageLayout.jsx), [src/shared/layout/ReportStories.jsx](../../src/shared/layout/ReportStories.jsx), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js), [src/shared/security/permissions.js](../../src/shared/security/permissions.js).
 
 Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx).
 
@@ -3872,6 +3980,30 @@ Importa arquivos locais: [src/modules/operational/domain/operational.js](../../s
 
 Importado por: [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/operational/domain/operational.test.js](../../src/modules/operational/domain/operational.test.js).
 
+### src/modules/operational/domain/linkCache.js
+
+**Operacional · Domínio** — Reaproveita vínculos por identidade imutável das bases, usando referências fracas.
+
+[Abrir fonte](../../src/modules/operational/domain/linkCache.js) · Código ou documentação do ponto de referência
+
+Exporta: `cachedOperationalLinks`.
+
+Importa arquivos locais: [src/modules/operational/domain/operational.js](../../src/modules/operational/domain/operational.js).
+
+Importado por: [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/operational/domain/linkCache.test.js](../../src/modules/operational/domain/linkCache.test.js).
+
+### src/modules/operational/domain/linkCache.test.js
+
+**Operacional · Teste** — Verifica link Cache no contexto de Operacional. Exemplos: vínculo compartilhado é invalidado por qualquer base; OS ausente não herda histórico anterior.
+
+[Abrir fonte](../../src/modules/operational/domain/linkCache.test.js) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: [src/modules/operational/domain/linkCache.js](../../src/modules/operational/domain/linkCache.js).
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+Dependências externas: `node:assert/strict`, `node:test`.
+
 ### src/modules/operational/domain/operational.js
 
 **Operacional · Domínio** — Importa e normaliza a fotografia operacional; filtra, resume e cruza equipamentos com o histórico de OS.
@@ -3882,7 +4014,7 @@ Exporta: `importOperational`, `importOperationalSheet`, `linkOperational`, `oper
 
 Importa arquivos locais: [src/modules/orders/domain/trackerModels.js](../../src/modules/orders/domain/trackerModels.js), [src/shared/data/filters.js](../../src/shared/data/filters.js).
 
-Importado por: [scripts/assistant-demo-queries.mjs](../../scripts/assistant-demo-queries.mjs), [scripts/local-acervo.mjs](../../scripts/local-acervo.mjs), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js), [src/modules/consumption/data/consumptionHistory.js](../../src/modules/consumption/data/consumptionHistory.js), [src/modules/consumption/data/consumptionHistory.test.js](../../src/modules/consumption/data/consumptionHistory.test.js), [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/monitoring/domain/monitoringRegistry.js](../../src/modules/monitoring/domain/monitoringRegistry.js), [src/modules/my-dashboard/domain/customQuery.js](../../src/modules/my-dashboard/domain/customQuery.js), [src/modules/my-dashboard/domain/customQuery.test.js](../../src/modules/my-dashboard/domain/customQuery.test.js), [src/modules/my-dashboard/domain/evaluate.js](../../src/modules/my-dashboard/domain/evaluate.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/operational/domain/googleOperational.js](../../src/modules/operational/domain/googleOperational.js), [src/modules/operational/domain/operational.test.js](../../src/modules/operational/domain/operational.test.js), [src/modules/park/domain/parkAnalysis.js](../../src/modules/park/domain/parkAnalysis.js), [src/modules/park/domain/parkAnalysis.test.js](../../src/modules/park/domain/parkAnalysis.test.js).
+Importado por: [scripts/assistant-demo-queries.mjs](../../scripts/assistant-demo-queries.mjs), [scripts/local-acervo.mjs](../../scripts/local-acervo.mjs), [server/persistence/snapshotStore.test.js](../../server/persistence/snapshotStore.test.js), [src/modules/consumption/data/consumptionHistory.js](../../src/modules/consumption/data/consumptionHistory.js), [src/modules/consumption/data/consumptionHistory.test.js](../../src/modules/consumption/data/consumptionHistory.test.js), [src/modules/consumption/domain/lineConsumption.js](../../src/modules/consumption/domain/lineConsumption.js), [src/modules/consumption/hooks/useConsumptionImports.js](../../src/modules/consumption/hooks/useConsumptionImports.js), [src/modules/imports/domain/bulkImport.js](../../src/modules/imports/domain/bulkImport.js), [src/modules/monitoring/domain/monitoringRegistry.js](../../src/modules/monitoring/domain/monitoringRegistry.js), [src/modules/my-dashboard/domain/customQuery.js](../../src/modules/my-dashboard/domain/customQuery.js), [src/modules/my-dashboard/domain/customQuery.test.js](../../src/modules/my-dashboard/domain/customQuery.test.js), [src/modules/my-dashboard/domain/evaluate.test.js](../../src/modules/my-dashboard/domain/evaluate.test.js), [src/modules/operational/components/OperationalPage.jsx](../../src/modules/operational/components/OperationalPage.jsx), [src/modules/operational/domain/googleOperational.js](../../src/modules/operational/domain/googleOperational.js), [src/modules/operational/domain/linkCache.js](../../src/modules/operational/domain/linkCache.js), [src/modules/operational/domain/operational.test.js](../../src/modules/operational/domain/operational.test.js), [src/modules/park/domain/parkAnalysis.js](../../src/modules/park/domain/parkAnalysis.js), [src/modules/park/domain/parkAnalysis.test.js](../../src/modules/park/domain/parkAnalysis.test.js).
 
 Dependências externas: `xlsx`.
 
@@ -5676,6 +5808,20 @@ Importa arquivos locais: nenhum identificado.
 
 Importado por: [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/orders/components/AdvancedInsights.jsx](../../src/modules/orders/components/AdvancedInsights.jsx), [src/modules/orders/components/DashboardOverview.jsx](../../src/modules/orders/components/DashboardOverview.jsx), [src/modules/orders/components/GeographyComparison.jsx](../../src/modules/orders/components/GeographyComparison.jsx), [src/modules/orders/components/ZohoActivitySummary.jsx](../../src/modules/orders/components/ZohoActivitySummary.jsx), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/export/exports.test.js](../../src/shared/export/exports.test.js), [src/shared/export/reportPrintStyles.js](../../src/shared/export/reportPrintStyles.js).
 
+### src/shared/charts/usePrintMode.js
+
+**Compartilhado · Infraestrutura compartilhada** — Inclui conteúdo completo antes do snapshot de impressão, inclusive Ctrl+P.
+
+[Abrir fonte](../../src/shared/charts/usePrintMode.js) · Código ou documentação do ponto de referência
+
+Exporta: `PrintPreparationContext`, `usePrintMode`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/my-dashboard/components/DashboardWidget.jsx](../../src/modules/my-dashboard/components/DashboardWidget.jsx), [src/modules/my-dashboard/components/WidgetVisualization.jsx](../../src/modules/my-dashboard/components/WidgetVisualization.jsx), [src/modules/operational/components/OperationalLinksTable.jsx](../../src/modules/operational/components/OperationalLinksTable.jsx).
+
+Dependências externas: `react`, `react-dom`.
+
 ### src/shared/config/architectureMap.js
 
 **Compartilhado · Catálogo** — Endereço documental independente; o visitante informa a senha compartilhada, sem conta no sistema.
@@ -5845,6 +5991,20 @@ Importa arquivos locais: [src/modules/orders/domain/dashboard.js](../../src/modu
 Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
 
 Dependências externas: `node:assert/strict`, `node:test`.
+
+### src/shared/data/useRetainedValue.js
+
+**Compartilhado · Dados / transporte** — Mantém a última entrada da apresentação enquanto inativa; retoma com a fonte mais recente.
+
+[Abrir fonte](../../src/shared/data/useRetainedValue.js) · Código ou documentação do ponto de referência
+
+Exporta: `useRetainedValue`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx).
+
+Dependências externas: `react`.
 
 ### src/shared/data/zohoActivity.js
 

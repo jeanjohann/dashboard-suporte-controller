@@ -1,11 +1,18 @@
 import React, { useMemo, useState } from 'react';
 import { dashboardMetric, dashboardModules } from '../domain/catalog.js';
-import { evaluateDashboardWidget, timestampLabel, formatMetric } from '../domain/evaluate.js';
+import { timestampLabel, formatMetric } from '../domain/evaluate.js';
 import { effectiveWidget, sizeLabels } from '../domain/presentation.js';
 import { WidgetVisualization } from './WidgetVisualization.jsx';
 import { DashboardDialog } from './DashboardDialog.jsx';
+import { usePrintMode } from '../../../shared/charts/usePrintMode.js';
+import { dashboardSourcesForWidget, evaluateCachedWidget } from '../domain/evaluationCache.js';
 
 export function WidgetContext({ result, title }) {
+  const [auditOpen, setAuditOpen] = useState(false);
+  const [auditPage, setAuditPage] = useState(0);
+  const printing = usePrintMode();
+  const auditLast = Math.max(0, Math.ceil((result.queryAudit?.length || 0) / 25) - 1);
+  const current = Math.min(auditPage, auditLast);
   return (
     <div className="md-widget-meta">
       {title && <strong>{title}</strong>}
@@ -29,32 +36,59 @@ export function WidgetContext({ result, title }) {
         </p>
         <p>{result.note}</p>
         {result.queryAudit && (
-          <details>
+          <details
+            onToggle={(event) => {
+              if (event.target === event.currentTarget) setAuditOpen(event.currentTarget.open);
+            }}
+          >
             <summary>Conferir cálculo e linhas de origem</summary>
-            <div className="md-table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Grupo</th>
-                    <th>Valor</th>
-                    <th>Válidos / excluídos da medida</th>
-                    <th>Linhas Excel</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.queryAudit.map((item) => (
-                    <tr key={item.label}>
-                      <th>{item.label}</th>
-                      <td>{formatMetric(item.value, result.unit)}</td>
-                      <td>
-                        {item.valid} / {item.excluded}
-                      </td>
-                      <td>{item.rows.join(', ') || 'Nenhuma'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {(auditOpen || printing) && (
+              <>
+                <div className="md-table-scroll">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Grupo</th>
+                        <th>Valor</th>
+                        <th>Válidos / excluídos da medida</th>
+                        <th>Linhas Excel</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(printing
+                        ? result.queryAudit
+                        : result.queryAudit.slice(current * 25, current * 25 + 25)
+                      ).map((item) => (
+                        <tr key={item.label}>
+                          <th>{item.label}</th>
+                          <td>{formatMetric(item.value, result.unit)}</td>
+                          <td>
+                            {item.valid} / {item.excluded}
+                          </td>
+                          <td>{item.rows.join(', ') || 'Nenhuma'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {auditLast > 0 && !printing && (
+                  <div className="md-pagination">
+                    <button disabled={!current} onClick={() => setAuditPage(current - 1)}>
+                      Anterior
+                    </button>
+                    <span>
+                      {current + 1} de {auditLast + 1} · {result.queryAudit.length} grupos
+                    </span>
+                    <button
+                      disabled={current === auditLast}
+                      onClick={() => setAuditPage(current + 1)}
+                    >
+                      Próxima
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </details>
         )}
       </details>
@@ -80,9 +114,12 @@ export function DashboardWidget({
   boardFilters,
 }) {
   const metric = dashboardMetric(widget.metric);
+  const relevantSources = dashboardSourcesForWidget(widget, sources);
+  // Entradas estáveis: fonte não relacionada não invalida os cálculos deste bloco.
+  const selectedSources = useMemo(() => relevantSources, Object.values(relevantSources));
   const result = useMemo(
-    () => evaluateDashboardWidget(effectiveWidget(widget, boardFilters), sources, user),
-    [widget, boardFilters, sources, user],
+    () => evaluateCachedWidget(effectiveWidget(widget, boardFilters), selectedSources, user),
+    [widget, boardFilters, selectedSources, user],
   );
   const [expanded, setExpanded] = useState(false),
     [asTable, setAsTable] = useState(false);
@@ -90,16 +127,20 @@ export function DashboardWidget({
     () =>
       (widget.companions || []).map((part) => ({
         widget: part,
-        result: evaluateDashboardWidget(effectiveWidget(part, boardFilters), sources, user),
+        result: evaluateCachedWidget(effectiveWidget(part, boardFilters), selectedSources, user),
       })),
-    [widget.companions, boardFilters, sources, user],
+    [widget.companions, boardFilters, selectedSources, user],
   );
   const comparison = useMemo(
     () =>
       widget.comparison
-        ? evaluateDashboardWidget(effectiveWidget(widget.comparison, boardFilters), sources, user)
+        ? evaluateCachedWidget(
+            effectiveWidget(widget.comparison, boardFilters),
+            selectedSources,
+            user,
+          )
         : null,
-    [widget.comparison, boardFilters, sources, user],
+    [widget.comparison, boardFilters, selectedSources, user],
   );
   const restricted = result.status === 'restricted';
   const comparisonReady = comparison?.status === 'ready' ? comparison : null;

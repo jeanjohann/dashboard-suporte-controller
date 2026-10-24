@@ -4,7 +4,7 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { reminderScope } from '../data/reminderRepository.js';
 import { createConfiguredReminderRepository } from '../data/remoteReminderRepository.js';
 
-export function useMonitoringReminders(demo) {
+export function useMonitoringReminders(demo, active = true) {
   const { user, managed } = useAccess();
   const scope = reminderScope(user, managed, demo);
   const repository = useMemo(
@@ -34,6 +34,7 @@ export function useMonitoringReminders(demo) {
     }
   }
   useEffect(() => {
+    if (!active) return;
     reload();
     const refresh = () => {
       setNow(new Date().toISOString());
@@ -62,7 +63,7 @@ export function useMonitoringReminders(demo) {
       document.removeEventListener('visibilitychange', visibility);
       channel.current?.close();
     };
-  }, [repository]);
+  }, [repository, active]);
   const available = state.repository === repository;
   async function change(vehicle, revision, action, draft) {
     if (!available || state.loading || state.error || saving)

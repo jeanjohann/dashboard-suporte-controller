@@ -1,9 +1,9 @@
 {
-  "version": "0.67.1",
-  "base": "67c4f86 · cópia da entrega",
+  "version": "0.68.0",
+  "base": "2744c75 · cópia da entrega",
   "date": "2026-10-24",
-  "total": 531,
-  "tests": 111,
+  "total": 544,
+  "tests": 114,
   "folders": [
     {
       "path": "(raiz)",
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 61
+      "count": 63
     },
     {
       "path": "docs/diagrams",
@@ -43,7 +43,7 @@
     {
       "path": "scripts",
       "description": "Ferramentas de build/verificação e serviços do laboratório local.",
-      "count": 25
+      "count": 26
     },
     {
       "path": "scripts/architecture",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 373
+      "count": 383
     },
     {
       "path": "src/app",
@@ -78,12 +78,12 @@
     {
       "path": "src/components",
       "description": "Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão.",
-      "count": 19
+      "count": 20
     },
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 273
+      "count": 280
     },
     {
       "path": "src/modules/assistant",
@@ -198,7 +198,7 @@
     {
       "path": "src/modules/my-dashboard",
       "description": "Módulo Meu Dashboard: interface, regras e integração de seus dados.",
-      "count": 25
+      "count": 29
     },
     {
       "path": "src/modules/my-dashboard/components",
@@ -213,7 +213,7 @@
     {
       "path": "src/modules/my-dashboard/domain",
       "description": "Validação e cálculo das regras de negócio de Meu Dashboard.",
-      "count": 13
+      "count": 17
     },
     {
       "path": "src/modules/my-dashboard/hooks",
@@ -223,12 +223,12 @@
     {
       "path": "src/modules/operational",
       "description": "Módulo Operacional: interface, regras e integração de seus dados.",
-      "count": 8
+      "count": 11
     },
     {
       "path": "src/modules/operational/components",
       "description": "Página e painéis visuais de Operacional.",
-      "count": 1
+      "count": 2
     },
     {
       "path": "src/modules/operational/config",
@@ -238,7 +238,7 @@
     {
       "path": "src/modules/operational/domain",
       "description": "Validação e cálculo das regras de negócio de Operacional.",
-      "count": 5
+      "count": 7
     },
     {
       "path": "src/modules/orders",
@@ -323,12 +323,12 @@
     {
       "path": "src/shared",
       "description": "Contratos e infraestrutura compartilhados entre módulos.",
-      "count": 49
+      "count": 51
     },
     {
       "path": "src/shared/charts",
       "description": "Regras de representação e paleta de gráficos.",
-      "count": 3
+      "count": 4
     },
     {
       "path": "src/shared/config",
@@ -338,7 +338,7 @@
     {
       "path": "src/shared/data",
       "description": "Filtros, datas, ordenação e contratos normalizados.",
-      "count": 14
+      "count": 15
     },
     {
       "path": "src/shared/export",
@@ -452,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 102926,
-      "sha256": "fc411d55800d24ba1fd2fadcad58c18fb6ed441b01a0e9942045b026ab7698d8",
+      "bytes": 103592,
+      "sha256": "657a989564fddd2e4952e374ded6b5f619f18c08eb66ee8ce96c74ba6381f50c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -863,6 +863,20 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "docs/LEVANTAMENTO-DESEMPENHO-0672.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Levantamento de desempenho — 24/10/2026. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 11057,
+      "sha256": "cb4404c234fb27fcdcca8f54299d4d8b942fe7ee4c887c117405832831d710cd",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "docs/LOGISTICA-DE-EQUIPAMENTOS.md",
       "folder": "docs",
       "module": "Documentação",
@@ -1040,8 +1054,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 11906,
-      "sha256": "4b8728e0c015f336dc025fcc75a0b8a3dc79b315ae3df06e11cd125a3583cadd",
+      "bytes": 12852,
+      "sha256": "71160d04bfd3c025bbb54dfc1e26c295ddc45763e25744213389326d90aed698",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1096,8 +1110,22 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 47026,
-      "sha256": "9e9da40a2aba8ff9c02d2236bec712c37c1fde57a99d6c1002f49672bdd2f4ee",
+      "bytes": 47885,
+      "sha256": "ef1d4453a428b061db5b34041ebe5521b91c26b4bbe392e2b02a046b989ef0c9",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/REFATORACAO-068.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Refatoração de apresentação e Dashboard — 0.68.0. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 7688,
+      "sha256": "2d4acd4d8067757176a17c253b43588c8e109de356a816f33df669d21957690e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1377,7 +1405,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "5dd14133db9162e4dc0ba056fa88c8896aacaf761658c7ed6d28be117f38452a",
+      "sha256": "2d8100314018626bed70dad140800243743b6aa651d1e245044f7f5a5d1f6d1c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1390,8 +1418,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1361,
-      "sha256": "788aca8098c3f3d8385df316dff19758123dd95ec161cb49e8b05c4a7bec0128",
+      "bytes": 1428,
+      "sha256": "c5d18438be97754bf73555052ad2a47e0502eb547c98676cefc06bd0c9c006f4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1712,6 +1740,23 @@
       "importedBy": [],
       "bytes": 1294,
       "sha256": "e63d1a8a50dda1c716c7278896fa0750be0c441a1bfe518232fbd94e75f91021",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "scripts/benchmark-dashboard.mjs",
+      "folder": "scripts",
+      "module": "Ferramentas e laboratório",
+      "layer": "Script / serviço local",
+      "description": "Consultas equivalentes em Node; não mede DOM, rede, banco ou abertura total.",
+      "exports": [],
+      "imports": [
+        "src/modules/my-dashboard/domain/evaluate.js",
+        "src/modules/my-dashboard/domain/evaluationCache.js"
+      ],
+      "external": ["node:assert/strict", "node:fs", "node:perf_hooks"],
+      "importedBy": [],
+      "bytes": 2501,
+      "sha256": "d10638d75936e9ce75a4c9a8b882df20dc201eb5196f15bc07aa39cf64172149",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2778,11 +2823,15 @@
       "layer": "Interface React",
       "description": "Carrega uma página na primeira visita e mantém sua instância durante a navegação autorizada.",
       "exports": ["DeferredPage"],
-      "imports": ["src/app/Navigation.jsx", "src/app/SidePanel.jsx"],
+      "imports": [
+        "src/app/Navigation.jsx",
+        "src/app/SidePanel.jsx",
+        "src/components/RetainedContent.jsx"
+      ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 2531,
-      "sha256": "4e930967f3d189d0ef4f33c1bf3eef7f8d21c2a2f91a7fdafaa8711d4a11eeec",
+      "bytes": 2732,
+      "sha256": "288d018f2ceee7e2220151579d13dedb82ced1636b6aa7e288ff893df59c073b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2887,8 +2936,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/main.jsx"],
-      "bytes": 10146,
-      "sha256": "836a56c0dbdea917fe676156c1e645af892ebb087c4e6cc93f3d54ce0391cfc4",
+      "bytes": 10627,
+      "sha256": "81e342580707d9b34855f8bf9eaaa3d375e66a0bab5334dc8899b1afa66f69b6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3231,6 +3280,24 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/components/RetainedContent.jsx",
+      "folder": "src/components",
+      "module": "Compartilhado",
+      "layer": "Interface React",
+      "description": "Pausa atualizações vindas do pai enquanto oculto, sem desmontar estado e rascunhos. Contextos de segurança continuam propagando; tarefas internas precisam de atividade explícita.",
+      "exports": ["RetainedContent"],
+      "imports": [],
+      "external": ["react"],
+      "importedBy": [
+        "src/app/DeferredPage.jsx",
+        "src/components/Section.jsx",
+        "src/modules/monitoring/components/MonitoringPage.jsx"
+      ],
+      "bytes": 397,
+      "sha256": "0899c65ffc769f5a768521590ddd19aebf07f5062175fb5abd5399f47b2eb454",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/components/ReviewPanel.jsx",
       "folder": "src/components",
       "module": "Compartilhado",
@@ -3262,7 +3329,9 @@
       "imports": [
         "src/components/HelpLayout.jsx",
         "src/components/InfoNote.jsx",
+        "src/components/RetainedContent.jsx",
         "src/components/reportHelp.js",
+        "src/shared/charts/usePrintMode.js",
         "src/shared/export/printContext.js",
         "src/shared/export/reportPrintStyles.js",
         "src/shared/layout/PageLayout.jsx",
@@ -3271,7 +3340,7 @@
         "src/shared/security/Access.jsx",
         "src/shared/security/accessClient.js"
       ],
-      "external": ["react"],
+      "external": ["react", "react-dom"],
       "importedBy": [
         "src/modules/consumption/components/ConsumptionArchivePanel.jsx",
         "src/modules/consumption/components/ConsumptionEquipmentPanels.jsx",
@@ -3309,8 +3378,8 @@
         "src/modules/park/components/ParkHistoryPanel.jsx",
         "src/modules/park/components/ParkInsights.jsx"
       ],
-      "bytes": 12563,
-      "sha256": "01caea6cc4c868f0d9556106a31a21bd362cfa5369bb27fac989f79eb754d02d",
+      "bytes": 13442,
+      "sha256": "841bd9d7072facced40c45834e4a4fac8bcc6031c5d683e3c4d724ce64aac0e5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3331,6 +3400,7 @@
         "src/modules/consumption/components/LineHistoryPanel.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
         "src/modules/monitoring/components/MonitoringSummaryTable.jsx",
+        "src/modules/operational/components/OperationalLinksTable.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/AdvancedInsights.jsx",
         "src/modules/orders/components/CustomerIdentityNote.jsx",
@@ -3380,6 +3450,7 @@
         "src/modules/consumption/components/LineRecordsTable.jsx",
         "src/modules/monitoring/components/MonitoringRegistry.jsx",
         "src/modules/monitoring/components/MonitoringSummaryTable.jsx",
+        "src/modules/operational/components/OperationalLinksTable.jsx",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/MaintenanceMatrix.jsx",
         "src/modules/orders/components/OrdersRecordsPanel.jsx",
@@ -4997,6 +5068,7 @@
         "src/app/SidePanel.jsx",
         "src/components/FilterPanel.jsx",
         "src/components/MultiFilter.jsx",
+        "src/components/RetainedContent.jsx",
         "src/components/Section.jsx",
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringApiCoverage.jsx",
@@ -5014,6 +5086,7 @@
         "src/modules/monitoring/hooks/useMonitoringSource.js",
         "src/modules/my-dashboard/hooks/DashboardSources.jsx",
         "src/shared/data/clientDisplay.js",
+        "src/shared/data/useRetainedValue.js",
         "src/shared/export/exports.js",
         "src/shared/filters/scopedSelection.js",
         "src/shared/filters/useScopedSelection.js",
@@ -5022,8 +5095,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 26068,
-      "sha256": "b0448b2a6cd48b79f0b5b84aa180e25bd5ef14041a475ed18eb9127902bd38c9",
+      "bytes": 26671,
+      "sha256": "54e09790728fe64cb72c9574b3eb9437f0d3c5aa982a121a7a14bea65eacde4c",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -5695,8 +5768,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 3939,
-      "sha256": "94d775c149147f2cc0ba8144739c5a6b19bdbcd2e2ea74fc852eaf0eaeffee98",
+      "bytes": 3987,
+      "sha256": "68dfee6ec378953168cd0d8d1fbb128cd7dea4cd917546ca8065a2baf682c846",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -5714,8 +5787,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
-      "bytes": 6294,
-      "sha256": "7fcb38d623834c0e7da2e820d0b2710f69a6c938d2de0911fadf6ea2232a91e3",
+      "bytes": 6574,
+      "sha256": "3e4c49b3084f14813f28109ace5c955dea0ff9338d6d2ad95b6c893cf5db3010",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -5787,12 +5860,14 @@
         "src/modules/my-dashboard/components/WidgetVisualization.jsx",
         "src/modules/my-dashboard/domain/catalog.js",
         "src/modules/my-dashboard/domain/evaluate.js",
-        "src/modules/my-dashboard/domain/presentation.js"
+        "src/modules/my-dashboard/domain/evaluationCache.js",
+        "src/modules/my-dashboard/domain/presentation.js",
+        "src/shared/charts/usePrintMode.js"
       ],
       "external": ["react"],
       "importedBy": ["src/modules/my-dashboard/components/MyDashboardPage.jsx"],
-      "bytes": 11793,
-      "sha256": "8739c142b77d53ee21b9b0b8abb9ddadef6b60ad14a2653d170279d6dfa13e84",
+      "bytes": 13705,
+      "sha256": "8bc234615c500f846344697f92ad982463d4e4c326ec99af8e19502350e0108e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5825,8 +5900,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 20972,
-      "sha256": "096d8bd595f7aae47959a7d2c990369a991f1da26bb546af6b06695ca51fdbd4",
+      "bytes": 20993,
+      "sha256": "850b6c589f9cad092bf8c180676b624c7791a8305506c6d765682539213d59a5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5863,12 +5938,13 @@
         "src/modules/consumption/domain/lineConsumption.js",
         "src/modules/my-dashboard/domain/evaluate.js",
         "src/modules/my-dashboard/domain/presentation.js",
-        "src/shared/charts/palette.js"
+        "src/shared/charts/palette.js",
+        "src/shared/charts/usePrintMode.js"
       ],
       "external": ["react", "recharts"],
       "importedBy": ["src/modules/my-dashboard/components/DashboardWidget.jsx"],
-      "bytes": 11040,
-      "sha256": "4bc6f19edded6a2e1863374c688400508695e31ba920b1632099d258a61f53ba",
+      "bytes": 11201,
+      "sha256": "699d74e4da8d3b5ea3401836edfa47d661831c0f5476823fc2476df5f7255802",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5962,6 +6038,7 @@
         "src/modules/my-dashboard/domain/customQuery.test.js",
         "src/modules/my-dashboard/domain/evaluate.js",
         "src/modules/my-dashboard/domain/evaluate.test.js",
+        "src/modules/my-dashboard/domain/evaluationCache.js",
         "src/modules/my-dashboard/domain/layout.js",
         "src/modules/my-dashboard/domain/presentation.js",
         "src/modules/my-dashboard/domain/presentation.test.js",
@@ -6065,7 +6142,7 @@
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/my-dashboard/domain/catalog.js",
         "src/modules/my-dashboard/domain/customQuery.js",
-        "src/modules/operational/domain/operational.js",
+        "src/modules/operational/domain/linkCache.js",
         "src/modules/orders/domain/dashboard.js",
         "src/modules/orders/domain/supportPerformance.js",
         "src/modules/park/domain/parkAnalysis.js",
@@ -6075,16 +6152,18 @@
       ],
       "external": [],
       "importedBy": [
+        "scripts/benchmark-dashboard.mjs",
         "src/modules/my-dashboard/components/DashboardTools.jsx",
         "src/modules/my-dashboard/components/DashboardWidget.jsx",
         "src/modules/my-dashboard/components/WidgetEditor.jsx",
         "src/modules/my-dashboard/components/WidgetVisualization.jsx",
         "src/modules/my-dashboard/domain/customQuery.test.js",
         "src/modules/my-dashboard/domain/evaluate.test.js",
+        "src/modules/my-dashboard/domain/evaluationCache.js",
         "src/modules/my-dashboard/domain/presentation.test.js"
       ],
-      "bytes": 16214,
-      "sha256": "3d35bccd6667e6c94931fae0da8fb1322ab9fabadc9473740d9f63943aaed165",
+      "bytes": 16238,
+      "sha256": "d3a1a1d85f601a457d8bf1e02bdbd727c32b72d1834dc12e3964ac735a67fb89",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6108,6 +6187,41 @@
       "importedBy": [],
       "bytes": 13353,
       "sha256": "8f7dd6d01b9ce1be7966149af0415cf34ff11cee2919afd34d51f6e32c5e88a2",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/my-dashboard/domain/evaluationCache.js",
+      "folder": "src/modules/my-dashboard/domain",
+      "module": "Meu Dashboard",
+      "layer": "Domínio",
+      "description": "Formato fixo para dependências React, incluindo complementos e comparação do parque com OS.",
+      "exports": ["createDashboardEvaluator", "dashboardSourcesForWidget", "evaluateCachedWidget"],
+      "imports": [
+        "src/modules/my-dashboard/domain/catalog.js",
+        "src/modules/my-dashboard/domain/evaluate.js"
+      ],
+      "external": [],
+      "importedBy": [
+        "scripts/benchmark-dashboard.mjs",
+        "src/modules/my-dashboard/components/DashboardWidget.jsx",
+        "src/modules/my-dashboard/domain/evaluationCache.test.js"
+      ],
+      "bytes": 2560,
+      "sha256": "175570ce65792dcf70844933785027b624bcd4fbb1bf28e1d23723652c1a0873",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/my-dashboard/domain/evaluationCache.test.js",
+      "folder": "src/modules/my-dashboard/domain",
+      "module": "Meu Dashboard",
+      "layer": "Teste",
+      "description": "Verifica evaluation Cache no contexto de Meu Dashboard. Exemplos: cards equivalentes compartilham cálculo; mudança independente não invalida e nova OS invalida; fontes de parque incluem OS e complementos; troca de conta/permissão não reutiliza resultados; cache limitado descarta consultas antigas.",
+      "exports": [],
+      "imports": ["src/modules/my-dashboard/domain/evaluationCache.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 3135,
+      "sha256": "3872f2bf006b20b8738c254b2a773409b9c8eda645f2856e430ec0acc0424328",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6217,6 +6331,37 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/modules/my-dashboard/domain/sourceStore.js",
+      "folder": "src/modules/my-dashboard/domain",
+      "module": "Meu Dashboard",
+      "layer": "Domínio",
+      "description": "Assinaturas por fonte; publicar não obriga os produtores a assinarem todas as bases.",
+      "exports": ["createSourceStore"],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "src/modules/my-dashboard/domain/sourceStore.test.js",
+        "src/modules/my-dashboard/hooks/DashboardSources.jsx"
+      ],
+      "bytes": 607,
+      "sha256": "66483ee48788af9eac33a933682b52c5c65761bd88c314964b554b9c5a1e6f2d",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/my-dashboard/domain/sourceStore.test.js",
+      "folder": "src/modules/my-dashboard/domain",
+      "module": "Meu Dashboard",
+      "layer": "Teste",
+      "description": "Verifica source Store no contexto de Meu Dashboard. Exemplos: publicação preserva a identidade das fontes independentes e não notifica valores idênticos.",
+      "exports": [],
+      "imports": ["src/modules/my-dashboard/domain/sourceStore.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 834,
+      "sha256": "bd4fac1bf705c62071a73ae0e3d8ed0076519181e85675d45a1468bf693654f3",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/modules/my-dashboard/domain/templates.js",
       "folder": "src/modules/my-dashboard/domain",
       "module": "Meu Dashboard",
@@ -6239,8 +6384,16 @@
       "module": "Meu Dashboard",
       "layer": "Estado / coordenação",
       "description": "Publica fontes autorizadas carregadas na sessão e as compartilha com Meu Dashboard.",
-      "exports": ["DashboardSourcesProvider", "useDashboardSources", "usePublishDashboardSource"],
-      "imports": ["src/shared/security/Access.jsx"],
+      "exports": [
+        "DashboardSourcesProvider",
+        "useDashboardSource",
+        "useDashboardSources",
+        "usePublishDashboardSource"
+      ],
+      "imports": [
+        "src/modules/my-dashboard/domain/sourceStore.js",
+        "src/shared/security/Access.jsx"
+      ],
       "external": ["react"],
       "importedBy": [
         "src/app/Workspace.jsx",
@@ -6250,8 +6403,8 @@
         "src/modules/orders/hooks/ZohoSession.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 1302,
-      "sha256": "61c75a7645aea9613421a912f52592c3438163cf4dfafec91f541f3945b1946e",
+      "bytes": 1625,
+      "sha256": "f30f5f7e7fefb6c53fbd1827b6f01b0300772794c99e6303b4d9d2afc5acfda0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6264,8 +6417,8 @@
       "imports": ["src/modules/my-dashboard/domain/boardActions.js"],
       "external": ["react"],
       "importedBy": ["src/modules/my-dashboard/components/MyDashboardPage.jsx"],
-      "bytes": 2983,
-      "sha256": "de12ed8297ede028cfd19da006f1764b2650f53ff47f4bec228d7756d0204c3e",
+      "bytes": 3641,
+      "sha256": "514200f84ce46ed00168e5ae2eca8f79a580dc04532e41014d2572272b382d47",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6278,8 +6431,8 @@
       "imports": [],
       "external": ["react"],
       "importedBy": ["src/modules/my-dashboard/components/MyDashboardPage.jsx"],
-      "bytes": 2170,
-      "sha256": "8dbd8bbdbdefe8af13929630855306eade4dda67a23e9df4ca981db132252495",
+      "bytes": 2745,
+      "sha256": "55b16e6f510b2c7f14313ae3aa0c187d9ed028ebe31d024285b350d3234cc74f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6297,8 +6450,26 @@
       ],
       "external": ["react"],
       "importedBy": ["src/modules/my-dashboard/components/MyDashboardPage.jsx"],
-      "bytes": 5348,
-      "sha256": "3cb676571a975d2fa250e0b837158b0c31d840cabea528ea5c808db05120719a",
+      "bytes": 5489,
+      "sha256": "e8e44e2608e712eeef23c47b0687d91adee7d11737efd4226a18541cccb44559",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/operational/components/OperationalLinksTable.jsx",
+      "folder": "src/modules/operational/components",
+      "module": "Operacional",
+      "layer": "Interface React",
+      "description": "Vínculos paginados com ordenação global e preparação integral para impressão.",
+      "exports": ["OperationalLinksTable"],
+      "imports": [
+        "src/components/SortableTable.jsx",
+        "src/components/TableScroll.jsx",
+        "src/shared/charts/usePrintMode.js"
+      ],
+      "external": ["react"],
+      "importedBy": ["src/modules/operational/components/OperationalPage.jsx"],
+      "bytes": 2954,
+      "sha256": "4dba74e5f5bed5591bf0a180e43309570cf211138a92c5aa21feefe6b7d4eeed",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6325,6 +6496,7 @@
         "src/components/TableScroll.jsx",
         "src/components/ViewState.jsx",
         "src/modules/logistics/components/LogisticsPanel.jsx",
+        "src/modules/operational/components/OperationalLinksTable.jsx",
         "src/modules/operational/config/operationalMenus.js",
         "src/modules/operational/config/reportStories.js",
         "src/modules/operational/domain/googleOperational.js",
@@ -6346,8 +6518,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 37806,
-      "sha256": "82435f7ba886b04b3cb1bdc5390e96b92472055cd0978befd1dd541f91dfd390",
+      "bytes": 36842,
+      "sha256": "ddfe83a3234ac827d7eafce40e2b2173960866e18c511cda53e20e42dc8c05ba",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6409,6 +6581,37 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/modules/operational/domain/linkCache.js",
+      "folder": "src/modules/operational/domain",
+      "module": "Operacional",
+      "layer": "Domínio",
+      "description": "Reaproveita vínculos por identidade imutável das bases, usando referências fracas.",
+      "exports": ["cachedOperationalLinks"],
+      "imports": ["src/modules/operational/domain/operational.js"],
+      "external": [],
+      "importedBy": [
+        "src/modules/my-dashboard/domain/evaluate.js",
+        "src/modules/operational/domain/linkCache.test.js"
+      ],
+      "bytes": 689,
+      "sha256": "93ce13dcfac17735ba7e0c11d95082b6670f2314c52806ba26079063405b44f2",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/modules/operational/domain/linkCache.test.js",
+      "folder": "src/modules/operational/domain",
+      "module": "Operacional",
+      "layer": "Teste",
+      "description": "Verifica link Cache no contexto de Operacional. Exemplos: vínculo compartilhado é invalidado por qualquer base; OS ausente não herda histórico anterior.",
+      "exports": [],
+      "imports": ["src/modules/operational/domain/linkCache.js"],
+      "external": ["node:assert/strict", "node:test"],
+      "importedBy": [],
+      "bytes": 1029,
+      "sha256": "17dd3409f2f6a7a22ebe32132867a3a748d56c3614ba886c90ccd544e2dad073",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/modules/operational/domain/operational.js",
       "folder": "src/modules/operational/domain",
       "module": "Operacional",
@@ -6437,10 +6640,10 @@
         "src/modules/monitoring/domain/monitoringRegistry.js",
         "src/modules/my-dashboard/domain/customQuery.js",
         "src/modules/my-dashboard/domain/customQuery.test.js",
-        "src/modules/my-dashboard/domain/evaluate.js",
         "src/modules/my-dashboard/domain/evaluate.test.js",
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/operational/domain/googleOperational.js",
+        "src/modules/operational/domain/linkCache.js",
         "src/modules/operational/domain/operational.test.js",
         "src/modules/park/domain/parkAnalysis.js",
         "src/modules/park/domain/parkAnalysis.test.js"
@@ -9366,6 +9569,25 @@
       "status": "Código ou documentação do ponto de referência"
     },
     {
+      "path": "src/shared/charts/usePrintMode.js",
+      "folder": "src/shared/charts",
+      "module": "Compartilhado",
+      "layer": "Infraestrutura compartilhada",
+      "description": "Inclui conteúdo completo antes do snapshot de impressão, inclusive Ctrl+P.",
+      "exports": ["PrintPreparationContext", "usePrintMode"],
+      "imports": [],
+      "external": ["react", "react-dom"],
+      "importedBy": [
+        "src/components/Section.jsx",
+        "src/modules/my-dashboard/components/DashboardWidget.jsx",
+        "src/modules/my-dashboard/components/WidgetVisualization.jsx",
+        "src/modules/operational/components/OperationalLinksTable.jsx"
+      ],
+      "bytes": 1113,
+      "sha256": "3dc470f5c038756314f5abac7363541709e61274184455dbfac65e79c2fe44d6",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
       "path": "src/shared/config/architectureMap.js",
       "folder": "src/shared/config",
       "module": "Compartilhado",
@@ -9655,6 +9877,20 @@
       "importedBy": [],
       "bytes": 2525,
       "sha256": "0dc599de4a815616c110434ab5a5e0b74a63d08b1e2680ba3e749e19da118a84",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/shared/data/useRetainedValue.js",
+      "folder": "src/shared/data",
+      "module": "Compartilhado",
+      "layer": "Dados / transporte",
+      "description": "Mantém a última entrada da apresentação enquanto inativa; retoma com a fonte mais recente.",
+      "exports": ["useRetainedValue"],
+      "imports": [],
+      "external": ["react"],
+      "importedBy": ["src/modules/monitoring/components/MonitoringPage.jsx"],
+      "bytes": 316,
+      "sha256": "9b3e2780a6c7384b28fec0d6463cbacf80ec3ab32752b658208b89852fa57ae9",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10513,8 +10749,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 14551,
-      "sha256": "f49f0d3285271a5588fda05cb281cc810f640ed9b5de512f5562f94bf9f669da",
+      "bytes": 14609,
+      "sha256": "43e38982834e255be9ca7401e414d78b26685a8345d564d28167b0cb11c46b44",
       "status": "Código ou documentação do ponto de referência"
     },
     {

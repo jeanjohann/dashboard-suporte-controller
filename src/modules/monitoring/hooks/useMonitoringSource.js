@@ -5,7 +5,7 @@ import { useAccess } from '../../../shared/security/Access.jsx';
 import { api } from '../../../shared/security/accessClient.js';
 import { fetchSavedMonitoring } from '../data/savedMonitoringClient.js';
 
-export function useMonitoringSource() {
+export function useMonitoringSource(active = true) {
   const { user, managed } = useAccess();
   const persistent = useRef(false),
     ready = useRef(!managed);
@@ -85,7 +85,7 @@ export function useMonitoringSource() {
     }
   }
   useEffect(() => {
-    if (!savedMode) return;
+    if (!savedMode || !active) return;
     const tick = () => {
       if (document.visibilityState === 'visible') reloadSaved();
     };
@@ -95,20 +95,26 @@ export function useMonitoringSource() {
       clearInterval(timer);
       window.removeEventListener('focus', tick);
     };
-  }, [savedMode]);
+  }, [savedMode, active]);
+  const previousActive = useRef(active);
   useEffect(() => {
-    if (!nextReadAt) return;
+    if (active && !previousActive.current) reloadSaved();
+    previousActive.current = active;
+  }, [active]);
+  useEffect(() => {
+    if (!nextReadAt || !active) return;
     const update = () => setCooldown(Math.max(0, Math.ceil((nextReadAt - Date.now()) / 1000)));
     update();
     const timer = setInterval(update, 1000);
     return () => clearInterval(timer);
-  }, [nextReadAt]);
+  }, [nextReadAt, active]);
   useEffect(() => {
-    if (!real) return;
+    if (!real || !active) return;
+    setNow(new Date().toISOString());
     // Atualiza a idade dos dados localmente; isto não consulta a API nem executa o coletor.
     const timer = setInterval(() => setNow(new Date().toISOString()), 60000);
     return () => clearInterval(timer);
-  }, [Boolean(real)]);
+  }, [Boolean(real), active]);
   useEffect(
     () => () => {
       generation.current++;

@@ -28,13 +28,27 @@ export function useDashboardPresentation(root) {
     };
   }, [presenting]);
   useEffect(() => {
+    const before = () => {
+      if (!root.current || root.current.closest('[hidden]') || restorePrint.current) return;
+      const details = [...root.current.querySelectorAll('details')].map((el) => [el, el.open]);
+      restorePrint.current = () =>
+        details.forEach(([el, open]) => {
+          el.open = open;
+        });
+      details.forEach(([el]) => {
+        el.open = true;
+      });
+      document.body.classList.add('md-dashboard-printing');
+    };
     const done = () => {
       document.body.classList.remove('md-dashboard-printing');
       restorePrint.current?.();
       restorePrint.current = null;
     };
+    window.addEventListener('beforeprint', before);
     window.addEventListener('afterprint', done);
     return () => {
+      window.removeEventListener('beforeprint', before);
       window.removeEventListener('afterprint', done);
       done();
     };

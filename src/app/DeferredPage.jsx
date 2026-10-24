@@ -2,6 +2,7 @@
 import React, { Component, Suspense, useEffect, useState } from 'react';
 import { Navigation } from './Navigation.jsx';
 import { SidePanelProvider } from './SidePanel.jsx';
+import { RetainedContent } from '../components/RetainedContent.jsx';
 
 /** Mantém o menu disponível durante o carregamento ou uma falha isolada do módulo. */
 function PageStatus({ page, onPage, failed = false }) {
@@ -54,7 +55,15 @@ class PageBoundary extends Component {
 }
 
 /** Sem permissão, o conteúdo não é montado. Ao sair de uma página visitada, apenas a oculta. */
-export function DeferredPage({ active, allowed, page, onPage, keepMounted = true, children }) {
+export function DeferredPage({
+  active,
+  allowed,
+  page,
+  onPage,
+  keepMounted = true,
+  backgroundActive = false,
+  children,
+}) {
   const [visited, setVisited] = useState(active);
   useEffect(() => {
     if (active) setVisited(true);
@@ -63,7 +72,9 @@ export function DeferredPage({ active, allowed, page, onPage, keepMounted = true
   return (
     <div hidden={!active}>
       <PageBoundary page={page} onPage={onPage}>
-        <Suspense fallback={<PageStatus page={page} onPage={onPage} />}>{children}</Suspense>
+        <Suspense fallback={<PageStatus page={page} onPage={onPage} />}>
+          <RetainedContent active={active || backgroundActive}>{children}</RetainedContent>
+        </Suspense>
       </PageBoundary>
     </div>
   );

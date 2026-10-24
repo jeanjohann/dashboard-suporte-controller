@@ -1,3 +1,10 @@
+## 0.68.0 — 24/10/2026
+
+- Pagina vínculos operacionais e monta tabelas completas/auditorias apenas quando necessárias, preservando impressão e exportação.
+- Pausa atualizações de apresentação inativa e controla atividade do Monitoramento sem alterar o agendamento remoto.
+- Isola assinaturas por fonte, compartilha consultas equivalentes e vínculos do Dashboard com invalidação por identidade, permissões e bases.
+- Agrupa prévias de gestos por quadro e reaproveita detecção de edição do painel; levantamento e medições registrados.
+
 ## 0.67.2 — 24/10/2026
 
 - Preserva o contraste do título dos avisos ao passar o mouse, em todos os temas.

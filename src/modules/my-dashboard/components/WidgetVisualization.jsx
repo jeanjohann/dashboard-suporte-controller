@@ -17,9 +17,11 @@ import { formatMetric } from '../domain/evaluate.js';
 import { compareSeries, donutSeries } from '../domain/presentation.js';
 import { VOLUME_SCALE } from '../../consumption/domain/lineConsumption.js';
 import { categoricalColors } from '../../../shared/charts/palette.js';
+import { usePrintMode } from '../../../shared/charts/usePrintMode.js';
 
 const colors = categoricalColors;
 export function ValuesTable({ rows, unit, titles }) {
+  const printing = usePrintMode();
   const [page, setPage] = useState(0),
     last = Math.max(0, Math.ceil(rows.length / 10) - 1),
     current = Math.min(page, last);
@@ -45,7 +47,7 @@ export function ValuesTable({ rows, unit, titles }) {
           <tbody className="md-screen-rows">
             {body(rows.slice(current * 10, current * 10 + 10))}
           </tbody>
-          <tbody className="md-print-rows">{body(rows)}</tbody>
+          {printing && <tbody className="md-print-rows">{body(rows)}</tbody>}
         </table>
       </div>
       {rows.length > 10 && (
@@ -101,7 +103,7 @@ function CategoryTick({ x, y, payload, width }) {
     </text>
   );
 }
-export function WidgetVisualization({
+export const WidgetVisualization = React.memo(function WidgetVisualization({
   widget,
   result,
   comparison,
@@ -333,4 +335,4 @@ export function WidgetVisualization({
       )}
     </>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { localId } from '../../../shared/data/localId.js';
 import { emptyDashboardDocument } from '../domain/layout.js';
 import { dashboardRepository } from '../data/dashboardRepository.js';
@@ -14,7 +14,7 @@ export function useDashboards(owner, repository = dashboardRepository) {
   const setDraft = (update) =>
     setEdition((old) => {
       const next = typeof update === 'function' ? update(old.draft) : update;
-      if (JSON.stringify(next) === JSON.stringify(old.draft)) return old;
+      if (next === old.draft || JSON.stringify(next) === JSON.stringify(old.draft)) return old;
       return { draft: next, past: [...old.past, old.draft].slice(-30) };
     });
   const [ready, setReady] = useState(false),
@@ -40,8 +40,10 @@ export function useDashboards(owner, repository = dashboardRepository) {
     };
   }, [owner, repository]);
   const saved = document.dashboards.find((board) => board.id === draft.id);
+  const savedText = useMemo(() => JSON.stringify(saved), [saved]);
+  const draftText = useMemo(() => JSON.stringify(draft), [draft]);
   const dirty = saved
-    ? JSON.stringify(saved) !== JSON.stringify(draft)
+    ? savedText !== draftText
     : Boolean(draft.widgets.length || draft.name !== 'Meu primeiro painel');
   async function commit(next, after, success = 'Dashboard salvo neste navegador.') {
     setBusy(true);

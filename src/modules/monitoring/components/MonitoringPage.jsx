@@ -3,6 +3,8 @@ import { MonitoringRegistry } from './MonitoringRegistry.jsx';
 import { MonitoringCollectionHistory } from './MonitoringCollectionHistory.jsx';
 import { MonitoringEvents } from './MonitoringEvents.jsx';
 import { MonitoringApiCoverage } from './MonitoringApiCoverage.jsx';
+import { RetainedContent } from '../../../components/RetainedContent.jsx';
+import { useRetainedValue } from '../../../shared/data/useRetainedValue.js';
 import { monitoringThresholds, monitoringPeriodLabel } from '../domain/monitoringPeriods.js';
 /** Coordena acompanhamento e análise sem misturar demonstração e integração real. */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -43,7 +45,7 @@ const initialFilters = () => ({
 });
 
 /** Bases/limite pertencem à análise; busca, situação, status e recorte pertencem à fila/exportação. */
-export function MonitoringPage({ onPage, operational }) {
+export function MonitoringPage({ onPage, operational, active = true, sourceActive = active }) {
   const { user } = useAccess();
   const canReview = allowsPage(user, 'operational') || allowsPage(user, 'operational-analysis');
   const {
@@ -57,7 +59,7 @@ export function MonitoringPage({ onPage, operational }) {
     savedAt,
     lastAttempt,
     reloadSaved,
-  } = useMonitoringSource();
+  } = useMonitoringSource(sourceActive);
   const dashboardSource = useMemo(
     () => (snapshot ? { snapshot, error } : null),
     [source, snapshot?.referenceAt, error],
@@ -72,16 +74,17 @@ export function MonitoringPage({ onPage, operational }) {
     [eventTarget, setEventTarget] = useState(null),
     [selected, setSelected] = useState(null),
     [page, setPage] = useState(0);
+  const analysisSnapshot = useRetainedValue(snapshot, active);
   const result = useMemo(
-    () => (snapshot ? monitorSnapshot(snapshot, filters) : null),
-    [snapshot, filters.clients, filters.models, filters.threshold, filters.state],
+    () => (analysisSnapshot ? monitorSnapshot(analysisSnapshot, filters) : null),
+    [analysisSnapshot, filters.clients, filters.models, filters.threshold, filters.state],
   );
   const queue = useMemo(
     () => (result ? filterMonitoringQueue(result, filters, notes) : null),
     [result, filters, notes],
   );
   const demo = snapshot?.demonstration === true;
-  const reminders = useMonitoringReminders(demo);
+  const reminders = useMonitoringReminders(demo, active);
   // Identidades da demonstração nunca compartilham anotações com veículos reais.
   useEffect(() => {
     setNotes({});
@@ -515,18 +518,22 @@ export function MonitoringPage({ onPage, operational }) {
                     {result.issues.length}.
                   </p>
                 )}
-                <MonitoringQueue
-                  visible={category === 'queue'}
-                  actions={exportActions}
-                  result={queue}
-                  notes={notes}
-                  reminders={reminders}
-                  onRecord={(key, value) => setNotes((previous) => ({ ...previous, [key]: value }))}
-                  selected={selected}
-                  onSelect={setSelected}
-                  page={page}
-                  setPage={setPage}
-                />
+                <RetainedContent active={active && category === 'queue'}>
+                  <MonitoringQueue
+                    visible={category === 'queue'}
+                    actions={exportActions}
+                    result={queue}
+                    notes={notes}
+                    reminders={reminders}
+                    onRecord={(key, value) =>
+                      setNotes((previous) => ({ ...previous, [key]: value }))
+                    }
+                    selected={selected}
+                    onSelect={setSelected}
+                    page={page}
+                    setPage={setPage}
+                  />
+                </RetainedContent>
                 {category === 'registry' && (
                   <MonitoringRegistry
                     snapshot={snapshot}
@@ -535,13 +542,15 @@ export function MonitoringPage({ onPage, operational }) {
                   />
                 )}
                 {analyticsOpened && (
-                  <MonitoringAnalytics
-                    visible={category === 'overview'}
-                    result={result}
-                    notes={notes}
-                    threshold={filters.threshold}
-                    onQueue={openQueue}
-                  />
+                  <RetainedContent active={active && category === 'overview'}>
+                    <MonitoringAnalytics
+                      visible={category === 'overview'}
+                      result={result}
+                      notes={notes}
+                      threshold={filters.threshold}
+                      onQueue={openQueue}
+                    />
+                  </RetainedContent>
                 )}
                 <div hidden={category !== 'reports'}>
                   <Section

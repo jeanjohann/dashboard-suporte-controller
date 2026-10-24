@@ -11,7 +11,7 @@ import { SavedSourcesStatus } from '../shared/persistence/SavedSourcesStatus.jsx
 import { DeferredPage } from './DeferredPage.jsx';
 import {
   DashboardSourcesProvider,
-  useDashboardSources,
+  useDashboardSource,
   usePublishDashboardSource,
 } from '../modules/my-dashboard/hooks/DashboardSources.jsx';
 import {
@@ -76,7 +76,7 @@ export function Workspace() {
   );
 }
 function WorkspaceContent() {
-  const dashboardSources = useDashboardSources();
+  const monitoringSource = useDashboardSource('monitoring');
   const { user, managed } = useAccess();
   const allowed = (key) =>
     key === 'assistant-lab' ? canOpenAssistantPreview(user) : allowsPage(user, key);
@@ -159,7 +159,7 @@ function WorkspaceContent() {
         page="my-dashboard"
         onPage={navigate}
       >
-        <MyDashboardPage onPage={navigate} />
+        <MyDashboardPage active={current === 'my-dashboard'} onPage={navigate} />
       </DeferredPage>
       <DeferredPage
         active={current === 'support-indicators'}
@@ -188,11 +188,30 @@ function WorkspaceContent() {
       </DeferredPage>
       <DeferredPage
         active={current === 'monitoring'}
+        backgroundActive={[
+          'my-dashboard',
+          'lines',
+          'kore',
+          'arqia',
+          'consumption-followup',
+        ].includes(current)}
         allowed={allowed('monitoring')}
         page="monitoring"
         onPage={navigate}
       >
-        <MonitoringPage onPage={navigate} operational={operational} />
+        <MonitoringPage
+          active={current === 'monitoring'}
+          sourceActive={[
+            'monitoring',
+            'my-dashboard',
+            'lines',
+            'kore',
+            'arqia',
+            'consumption-followup',
+          ].includes(current)}
+          onPage={navigate}
+          operational={operational}
+        />
       </DeferredPage>
       <DeferredPage
         active={current === 'imports'}
@@ -241,7 +260,7 @@ function WorkspaceContent() {
             ['lines', 'kore', 'arqia', 'consumption-followup'].includes(current) ? current : 'lines'
           }
           active={['lines', 'kore', 'arqia', 'consumption-followup'].includes(current)}
-          monitoring={dashboardSources.sources.monitoring?.value?.snapshot}
+          monitoring={monitoringSource?.value?.snapshot}
         />
       </DeferredPage>
       <DeferredPage

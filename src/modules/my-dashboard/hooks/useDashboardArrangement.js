@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { placeWidget, widgetDimensions } from '../domain/boardActions.js';
 
 /** Gestos de mouse/caneta/toque. A edição é confirmada uma vez ao soltar; Escape/cancelar não grava. */
@@ -6,10 +6,19 @@ export function useDashboardArrangement({ enabled, widgets, onChange }) {
   const grid = useRef(null),
     gesture = useRef(null);
   const [preview, setPreview] = useState(null);
+  const frame = useRef(null);
   const cancel = () => {
+    if (frame.current !== null) cancelAnimationFrame(frame.current);
+    frame.current = null;
     gesture.current = null;
     setPreview(null);
   };
+  useEffect(() => {
+    if (!enabled) cancel();
+    return () => {
+      if (frame.current !== null) cancelAnimationFrame(frame.current);
+    };
+  }, [enabled]);
   function start(event, id, kind) {
     if (!enabled || event.button !== 0) return;
     const article = event.currentTarget.closest('[data-widget-id]');
@@ -58,7 +67,18 @@ export function useDashboardArrangement({ enabled, widgets, onChange }) {
       if (event.clientY < 70) window.scrollBy(0, -18);
       else if (event.clientY > window.innerHeight - 70) window.scrollBy(0, 18);
     }
-    setPreview(current.next);
+    if (frame.current === null)
+      frame.current = requestAnimationFrame(() => {
+        frame.current = null;
+        const next = gesture.current?.next;
+        if (!next) return;
+        setPreview((old) =>
+          old &&
+          ['kind', 'id', 'size', 'height', 'target', 'after'].every((key) => old[key] === next[key])
+            ? old
+            : next,
+        );
+      });
   }
   function finish() {
     const next = gesture.current?.next;

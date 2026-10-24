@@ -1,20 +1,18 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { useAccess } from '../../../shared/security/Access.jsx';
+import { createSourceStore } from '../domain/sourceStore.js';
 
 const SourceContext = createContext(null);
 function Session({ children }) {
-  const [sources, setSources] = useState({});
-  const publish = useCallback(
-    (key, value) =>
-      setSources((old) =>
-        old[key]?.value === value
-          ? old
-          : { ...old, [key]: value ? { value, loadedAt: new Date().toISOString() } : null },
-      ),
-    [],
-  );
-  const value = useMemo(() => ({ sources, publish }), [sources, publish]);
-  return <SourceContext.Provider value={value}>{children}</SourceContext.Provider>;
+  const [store] = useState(createSourceStore);
+  return <SourceContext.Provider value={store}>{children}</SourceContext.Provider>;
 }
 export function DashboardSourcesProvider({ children }) {
   const { user, managed } = useAccess();
@@ -30,7 +28,21 @@ export function DashboardSourcesProvider({ children }) {
   ]);
   return <Session key={key}>{children}</Session>;
 }
-export const useDashboardSources = () => useContext(SourceContext);
+const empty = {};
+const noop = () => () => {};
+export function useDashboardSources(active = true) {
+  const store = useContext(SourceContext);
+  const retained = useRef(store?.getSnapshot() || empty);
+  const sources = useSyncExternalStore(active ? store?.subscribe || noop : noop, () =>
+    active ? store?.getSnapshot() || empty : retained.current,
+  );
+  if (active) retained.current = sources;
+  return { sources, publish: store?.publish };
+}
+export function useDashboardSource(key) {
+  const store = useContext(SourceContext);
+  return useSyncExternalStore(store?.subscribe || noop, () => store?.getSnapshot()[key]);
+}
 export function usePublishDashboardSource(key, value) {
   const publish = useContext(SourceContext)?.publish;
   useEffect(() => {

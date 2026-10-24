@@ -1,6 +1,6 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.67.2",
+  "version": "0.68.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,8 @@
     "format": "prettier --write src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
     "format:check": "prettier --check src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
     "check": "npm run check:imports && npm run format:check && npm test && npm run build",
-    "benchmark:orders": "node scripts/benchmark-orders.mjs"
+    "benchmark:orders": "node scripts/benchmark-orders.mjs",
+    "benchmark:dashboard": "node scripts/benchmark-dashboard.mjs"
   },
   "dependencies": {
     "jose": "^6.2.12",

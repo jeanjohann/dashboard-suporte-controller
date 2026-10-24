@@ -1,5 +1,11 @@
 # Fila de implementação e ajustes
 
+## Refatoração de apresentação e Dashboard 0.68.0 — 24/10/2026
+
+Rodada autorizada após levantamento: vínculos paginados, impressão/auditoria sob demanda, pausa de atualizações em páginas/seções inativas, atividade explícita do Monitoramento, assinaturas por fonte, cache limitado de consultas e cruzamentos do Dashboard e gestos agrupados por quadro. Estados, regras e fontes preservados; sem exclusões ou migrações. [Entrega, medições e limites](REFATORACAO-068.md).
+
+Próximas frentes: revisão e limpeza com comprovação de desuso; persistência adicional no D1; homologação dos indicadores com semana real; CSV Session Zoho; confirmação do ciclo KORE; endpoint de chip/consumo do Monitoramento. Refatoração adicional de memória/importação/virtualização depende de novas medições, não de uma troca geral de bibliotecas.
+
 ## Avisos, consumo e refatoração inicial 0.67.0 — 24/10/2026
 
 Implementados avisos internos dos atrasos/retornos já salvos, histórico paginado, vistos locais e acesso ao veículo. Cobertura de prefixo/ICCID/MSISDN visível na fotografia recebida. KORE com comparação API × CSV por ciclo explícito; confirmação do período pela operadora ainda pendente. Franquia compartilhada cadastrável por operadora, grupo, ciclo e ICCIDs, com cobertura, excesso observado e backup isolado. Arqia permanece manual. Histórico local protegido contra abas antigas e gravações concorrentes.

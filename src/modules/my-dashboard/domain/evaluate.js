@@ -6,7 +6,7 @@ import { field, attendanceExtent } from '../../../shared/data/filters.js';
 import { dashboardData } from '../../orders/domain/dashboard.js';
 import { supportPerformance, supportRoles } from '../../orders/domain/supportPerformance.js';
 import { summarizeZohoActivity, zohoTeam } from '../../../shared/data/zohoActivity.js';
-import { linkOperational } from '../../operational/domain/operational.js';
+import { cachedOperationalLinks as linkOperational } from '../../operational/domain/linkCache.js';
 import { parkAnalysis } from '../../park/domain/parkAnalysis.js';
 import { selectLogistics } from '../../logistics/domain/logistics.js';
 import {

@@ -1,5 +1,13 @@
 # Levantamento de refatoração e desempenho
 
+## Rodada de apresentação e Dashboard — 24/10/2026, 0.68.0
+
+Implementadas as frentes do levantamento 0.67.2: tabelas/detalhes, atividade de páginas e fontes, consultas do Dashboard e prévias de gestos. [Critérios, medições e limitações](REFATORACAO-068.md). Não houve exclusão de arquivos, migração de dados nem promessa de eliminação de toda tarefa longa. Importação em Worker, virtualização geral e retenção de memória prolongada permanecem condicionadas a evidência adicional.
+
+## Levantamento atualizado — 24/10/2026, 0.67.2
+
+Solicitado levantamento antes de continuar a implementação. [Evidências atuais e sequência de execução](LEVANTAMENTO-DESEMPENHO-0672.md): atividade do Monitoramento e fontes compartilhadas, vínculos sem paginação, cópias completas para impressão, auditorias fechadas, dependências dos cards e gestos. Somente documentação nesta rodada; ganhos adicionais ainda não medidos.
+
 ## Primeira rodada autorizada — 24/10/2026, 0.67.0
 
 Executados reaproveitamento dos cálculos de OS, cache local de busca por versão da base e reaproveitamento do cruzamento Operacional × OS. Não altera critérios nem totais. Ensaio em navegador com dados fictícios e benchmark de busca isolada registrados em [Avisos, franquias e revisão](AVISOS-FRANQUIAS-E-REVISAO.md), incluindo o custo de preparação fria do cache. Os ganhos medidos não equivalem ao tempo total de abertura.

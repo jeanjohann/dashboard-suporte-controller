@@ -1,3 +1,4 @@
+import { OperationalLinksTable } from './OperationalLinksTable.jsx';
 /**
  * Página operacional e integração dos filtros com as análises de Parque e Manutenção.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
@@ -182,18 +183,38 @@ export function OperationalPage({
     logisticsView = analysis && menuCategory === 'logistics',
     data = source?.data,
     linked = useMemo(() => (data ? linkOperational(data, orders?.data) : []), [data, orders?.data]),
-    rows = linked.filter(
-      (row) =>
-        ['client', 'model', 'plan', 'status'].every(
-          (key) => !filters[key]?.length || filters[key].includes(row[key] || 'Não informado'),
-        ) &&
-        (!search ||
-          [row.client, row.serial, row.plate, row.iccid, row.status, row.model, row.plan].some(
-            (value) => value.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')),
-          )),
+    rows = useMemo(
+      () =>
+        linked.filter(
+          (row) =>
+            ['client', 'model', 'plan', 'status'].every(
+              (key) => !filters[key]?.length || filters[key].includes(row[key] || 'Não informado'),
+            ) &&
+            (!search ||
+              [row.client, row.serial, row.plate, row.iccid, row.status, row.model, row.plan].some(
+                (value) =>
+                  value.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')),
+              )),
+        ),
+      [linked, filters.client, filters.model, filters.plan, filters.status, search],
     );
-  const orderedRecords = sortOperationalRecords(rows, recordSort);
-  const selected = new Set(rows.map((row) => row.sourceRow)),
+  const orderedRecords = useMemo(
+    () => sortOperationalRecords(rows, recordSort),
+    [rows, recordSort],
+  );
+  const filterOptions = useMemo(
+    () =>
+      Object.fromEntries(
+        ['client', 'model', 'plan', 'status'].map((key) => [
+          key,
+          [...new Set(linked.map((row) => row[key] || 'Não informado'))].sort((a, b) =>
+            a.localeCompare(b, 'pt-BR'),
+          ),
+        ]),
+      ),
+    [linked],
+  );
+  const selected = useMemo(() => new Set(rows.map((row) => row.sourceRow)), [rows]),
     issues =
       data?.issues.filter(
         (issue) => selected.has(issue.row) && (!category || issue.category === category),
@@ -205,14 +226,16 @@ export function OperationalPage({
   const canLink =
     orders &&
     ['ID Rastreador', 'Placa'].every((label) => orders.data.columns.some((c) => c.label === label));
-  const grouped = new Map();
-  for (const row of rows) {
-    const label = row[group] || 'Não informado';
-    grouped.set(label, (grouped.get(label) || 0) + 1);
-  }
-  const items = [...grouped]
-    .map(([label, value]) => ({ label, value }))
-    .sort((a, b) => b.value - a.value);
+  const items = useMemo(() => {
+    const grouped = new Map();
+    for (const row of rows) {
+      const label = row[group] || 'Não informado';
+      grouped.set(label, (grouped.get(label) || 0) + 1);
+    }
+    return [...grouped]
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value);
+  }, [rows, group]);
   const cards = analysis
     ? [
         ['Equipamentos na seleção', rows.length],
@@ -420,9 +443,7 @@ export function OperationalPage({
                                   key={key}
                                   label={label}
                                   values={filters[key] || []}
-                                  options={[
-                                    ...new Set(linked.map((row) => row[key] || 'Não informado')),
-                                  ].sort((a, b) => a.localeCompare(b, 'pt-BR'))}
+                                  options={filterOptions[key]}
                                   onChange={(values) => {
                                     setFilters((previous) => ({ ...previous, [key]: values }));
                                     setOffset(0);
@@ -626,36 +647,7 @@ export function OperationalPage({
                                 Rastreador e Placa para habilitar o cruzamento.
                               </p>
                             )}
-                            <TableScroll label="Registros do operacional">
-                              <SortableTable>
-                                <thead>
-                                  <tr>
-                                    <th>Linha operacional</th>
-                                    <th>Cliente</th>
-                                    <th>Serial</th>
-                                    <th>Placa</th>
-                                    <th>Vínculo</th>
-                                    <th>Linhas OS</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {rows.map((r) => (
-                                    <tr key={r.sourceRow}>
-                                      <td>{r.sourceRow}</td>
-                                      <td>{r.client}</td>
-                                      <td>{r.serial}</td>
-                                      <td>{r.plate}</td>
-                                      <td>{r.state}</td>
-                                      <td>
-                                        {r.state === 'Com histórico disponível'
-                                          ? r.services.map((s) => s.sourceRow).join(', ')
-                                          : '—'}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </SortableTable>
-                            </TableScroll>
+                            <OperationalLinksTable rows={rows} />
                           </Section>
                         </ReportStories>
                       ) : (

@@ -24,9 +24,9 @@ import { WidgetEditor } from './WidgetEditor.jsx';
 import { DashboardWidget } from './DashboardWidget.jsx';
 import { DashboardDialog } from './DashboardDialog.jsx';
 
-export function MyDashboardPage({ onPage, repository }) {
+export function MyDashboardPage({ onPage, repository, active = true }) {
   const { user, managed } = useAccess(),
-    { sources } = useDashboardSources();
+    { sources } = useDashboardSources(active);
   const owner = `${managed ? 'account' : 'local'}:${user.email.trim().toLowerCase()}`;
   const state = useDashboards(owner, repository),
     { draft, setDraft } = state;
