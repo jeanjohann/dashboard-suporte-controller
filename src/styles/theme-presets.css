@@ -1,6 +1,95 @@
-/* Quatro paletas: superfícies neutras, contraste de leitura e cores semânticas preservadas. */
+/* Claro, Escuro e quatro paletas: superfícies neutras, contraste de leitura e cores semânticas preservadas. */
 /* Somente tela: impressão mantém os tokens próprios definidos em theme.css. */
 @media screen {
+  :root[data-theme='light'] {
+    color-scheme: light;
+    --brand-surface: #2d353a;
+    --ui-background: #f5f3ee;
+    --ui-surface: #fcfbf8;
+    --ui-soft: #eeede7;
+    --ui-ink: #282d31;
+    --ui-muted: #62676a;
+    --ui-border: #d3d4cc;
+    --ui-line: #e2e3db;
+    --ui-shadow: #1a213010;
+    --ui-button-bg: #3a4045;
+    --ui-button-text: #ffffff;
+    --ui-button-hover: #505a62;
+    --ui-accent: #3e7069;
+    --ui-on-accent: #ffffff;
+    --ui-accent-hover: #315c56;
+    --ui-accent-ink: #315e56;
+    --ui-accent-soft: #e6efea;
+    --ui-accent-border: #a6c1b5;
+    --ui-link: #3b6664;
+    --ui-coral: #a6533e;
+    --ui-info-bg: #e8f1f8;
+    --ui-info-ink: #345d7b;
+    --ui-success-bg: #e8f1ec;
+    --ui-success-ink: #31654b;
+    --ui-success-border: #b2cdbd;
+    --ui-warning-bg: #f6efdf;
+    --ui-warning-ink: #785a20;
+    --ui-error-bg: #f8eaec;
+    --ui-error-ink: #9c4053;
+    --ui-violet-bg: #eeebf5;
+    --ui-violet-ink: #6e568e;
+    --chart-primary: #3e7971;
+    --chart-blue: #517c9f;
+    --chart-teal: #39857c;
+    --chart-purple: #876e9f;
+    --chart-coral: #b87551;
+    --chart-slate: #707d88;
+    --chart-amber: #96772d;
+    --chart-rose: #a46882;
+    --chart-other: #70856c;
+    --chart-negative: #b45c73;
+  }
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --brand-surface: #25292e;
+    --ui-background: #202226;
+    --ui-surface: #2a2d32;
+    --ui-soft: #35393f;
+    --ui-ink: #eef2f4;
+    --ui-muted: #bdc6cc;
+    --ui-border: #545b64;
+    --ui-line: #40464e;
+    --ui-shadow: #00000035;
+    --ui-button-bg: #414a53;
+    --ui-button-text: #f5f7fb;
+    --ui-button-hover: #4e5d68;
+    --ui-accent: #69e3c1;
+    --ui-on-accent: #15372e;
+    --ui-accent-hover: #8af0d3;
+    --ui-accent-ink: #8af0d3;
+    --ui-accent-soft: #263e37;
+    --ui-accent-border: #4f927e;
+    --ui-link: #8bceff;
+    --ui-coral: #ffb18c;
+    --ui-success-bg: #203d33;
+    --ui-success-ink: #a1e1b7;
+    --ui-success-border: #4c8369;
+    --ui-warning-bg: #413721;
+    --ui-warning-ink: #f5d58c;
+    --ui-error-bg: #452935;
+    --ui-error-ink: #ffb5c1;
+    --ui-info-bg: #233c55;
+    --ui-info-ink: #b6d9f2;
+    --ui-violet-bg: #372e50;
+    --ui-violet-ink: #d1c1f3;
+    --chart-primary: #69e3c1;
+    --chart-blue: #84c7ff;
+    --chart-teal: #56ddc9;
+    --chart-purple: #c4a0fa;
+    --chart-coral: #ffb28b;
+    --chart-slate: #a1b9ce;
+    --chart-amber: #f0d174;
+    --chart-rose: #f3a6d0;
+    --chart-other: #adc8b8;
+    --chart-negative: #f59eb7;
+  }
+
   :root[data-theme='lime'] {
     color-scheme: dark;
     --brand-surface: #24272a;

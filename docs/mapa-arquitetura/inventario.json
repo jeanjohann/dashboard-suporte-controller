@@ -1,6 +1,6 @@
 {
-  "version": "0.66.1",
-  "base": "a2fe79a · cópia da entrega",
+  "version": "0.66.2",
+  "base": "aaae16e · cópia da entrega",
   "date": "2026-10-24",
   "total": 516,
   "tests": 107,
@@ -452,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 101854,
-      "sha256": "d3f85710ee7b62f756a47ce0378a6b403a03d082a61c867a96d188d55f6bbf00",
+      "bytes": 102160,
+      "sha256": "20c661022c126c9d072954b451bf2046ae7612f93eb8765c6c17bbda097267dd",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1082,8 +1082,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 45124,
-      "sha256": "c4705644c90d404f794de084a189a240b28afcf48a377726a4a07509d176acfe",
+      "bytes": 45722,
+      "sha256": "5e9a6e2977fd2a69f52f5eb18169bab8272e2a658f09069b004b80cbeb25fe99",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1175,13 +1175,13 @@
       "folder": "docs",
       "module": "Documentação",
       "layer": "Documentação",
-      "description": "Documento: Aparência — 0.66.1. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "description": "Documento: Aparência — correção 0.66.2. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
       "exports": [],
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 2420,
-      "sha256": "255cbd98bc101170c88e6dcec0902522de8a646dff2839896a7b9c4041b7e6b4",
+      "bytes": 3095,
+      "sha256": "2b0ca02309e740a7be0010db428d660f24b5a80ae9f784511b9ae405016df4ef",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1363,7 +1363,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "0f7dd38304fac3de82d84b29f49b8561b355ec204f8a68052d6a99d496626f97",
+      "sha256": "c7405060c3fd55c178cabd2b2f0a2d16ba1aa7a1627fa81d4e2e5b9f011f8017",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1377,7 +1377,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "0d71d22ae10b3ce7d9b83664b2e127547baeb93d8132c64c41ad33179cf714f3",
+      "sha256": "b7857471130b56ca3a0dc2227b99458dd99c17217eb116362058327eb73c0edd",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1540,8 +1540,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 52011,
-      "sha256": "7306cfb67286de8cc2fc2b25ffd9efe55d3028c16c15047170558397875f51d4",
+      "bytes": 52019,
+      "sha256": "0e474654b9e68eed068268f9804a18cfb31188928a8b443fd9b9db001f066c70",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2829,13 +2829,13 @@
       "folder": "src/app",
       "module": "Shell da aplicação",
       "layer": "Configuração",
-      "description": "Define as quatro opções de tema, IDs estáveis, preferência padrão e migração dos temas antigos.",
+      "description": "Define Claro/Escuro e quatro paletas, IDs estáveis, preferência padrão e migração dos temas removidos.",
       "exports": ["defaultTheme", "restoredTheme", "themes"],
       "imports": [],
       "external": [],
       "importedBy": ["src/app/Theme.jsx"],
-      "bytes": 645,
-      "sha256": "392f0e62f5ca2144175130997e288d0c24c2b14a825e0aadec01e4f3d4150a15",
+      "bytes": 681,
+      "sha256": "b48cf94741d45e1a998f23b507382c7fb08bb83515e13cd1a4fdf39b215fe4a5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10407,13 +10407,13 @@
       "folder": "src/styles",
       "module": "Compartilhado",
       "layer": "Estilo",
-      "description": "Quatro paletas de tela: Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul; fundos off-white/cinza escuro e tokens de leitura, estados e gráficos.",
+      "description": "Claro e Escuro mais quatro paletas: Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul; superfícies neutras e tokens de leitura, estados e gráficos.",
       "exports": [],
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 5087,
-      "sha256": "4620b4730b1300c2922e05aba3c4f9d80103bace8aefe60b6a8c424fa199f62f",
+      "bytes": 7558,
+      "sha256": "2147b8d47e84cad74a14429db418dff825544f65bd6efa07afcd0b390b6b03a9",
       "status": "Código ou documentação do ponto de referência"
     },
     {

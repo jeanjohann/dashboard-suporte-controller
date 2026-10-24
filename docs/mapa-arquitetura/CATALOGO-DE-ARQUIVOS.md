@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.66.1 · referência a2fe79a · cópia da entrega · 2026-10-24 · **516 arquivos / 107 arquivos de teste / 72 pastas**.
+Addlog 0.66.2 · referência aaae16e · cópia da entrega · 2026-10-24 · **516 arquivos / 107 arquivos de teste / 72 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -658,7 +658,7 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 
 ### docs/TEMAS-0661.md
 
-**Documentação · Documentação** — Documento: Aparência — 0.66.1. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+**Documentação · Documentação** — Documento: Aparência — correção 0.66.2. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/TEMAS-0661.md) · Código ou documentação do ponto de referência
 
@@ -1800,7 +1800,7 @@ Dependências externas: `react`.
 
 ### src/app/themeOptions.js
 
-**Shell da aplicação · Configuração** — Define as quatro opções de tema, IDs estáveis, preferência padrão e migração dos temas antigos.
+**Shell da aplicação · Configuração** — Define Claro/Escuro e quatro paletas, IDs estáveis, preferência padrão e migração dos temas removidos.
 
 [Abrir fonte](../../src/app/themeOptions.js) · Código ou documentação do ponto de referência
 
@@ -6296,7 +6296,7 @@ Importado por: [src/main.jsx](../../src/main.jsx).
 
 ### src/styles/theme-presets.css
 
-**Compartilhado · Estilo** — Quatro paletas de tela: Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul; fundos off-white/cinza escuro e tokens de leitura, estados e gráficos.
+**Compartilhado · Estilo** — Claro e Escuro mais quatro paletas: Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul; superfícies neutras e tokens de leitura, estados e gráficos.
 
 [Abrir fonte](../../src/styles/theme-presets.css) · Código ou documentação do ponto de referência
 

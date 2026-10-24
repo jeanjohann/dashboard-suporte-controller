@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+## Claro e Escuro 0.66.2 — 24/10/2026
+
+Correção da interpretação: Claro e Escuro permanecem como opções próprias, além de Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul. Claro usa off-white neutro, texto grafite e botões cinza-escuro; Escuro usa cinza profundo com destaques menta, azul e violeta. Preferência atual preservada; IDs light/dark novamente válidos, sem migração para outras paletas. Contraste dos tokens conferidos: Claro com mínimo de 4,88:1 no texto e 3,56:1 nos gráficos; Escuro com 6,34:1 e 6,42:1. Mesma limitação de revisão visual interativa do ambiente.
+
 ## Temas 0.66.1 — 24/10/2026
 
 Rodada autorizada e implementada: somente Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul. Bruma Azul e Azul e Âmbar usam off-white; Grafite e Lima e Noite usam cinza escuro com destaques luminosos moderados. Seletor compacto e migração de preferências antigas. [Paletas, migração e limites de validação](TEMAS-0661.md). Sem alterações de dados ou permissões.

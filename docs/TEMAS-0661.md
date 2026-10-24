@@ -1,4 +1,10 @@
-# Aparência — 0.66.1
+# Aparência — correção 0.66.2
+
+Claro e Escuro foram restaurados como opções próprias, além das quatro paletas abaixo. A retirada deles em 0.66.1 decorreu de interpretação incorreta do pedido. O seletor atual tem seis opções. Preferências light/dark são preservadas em vez de convertidas; escolhas já feitas nas outras paletas continuam salvas.
+
+Claro usa off-white neutro, texto grafite, botões cinza-escuro e acentos discretos. Escuro usa cinza profundo com destaques menta, azul e violeta luminosos. Contraste mínimo nos pares conferidos: Claro 4,88:1 para texto e 3,56:1 para gráficos; Escuro 6,34:1 e 6,42:1. Impressão continua independente.
+
+## Histórico da versão 0.66.1
 
 Rodada de temas autorizada em 24/10/2026. Seletor com quatro nomes, fonte compacta e preferência local por navegador.
 

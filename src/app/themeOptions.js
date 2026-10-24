@@ -1,5 +1,7 @@
-/** IDs estáveis das quatro paletas e migração das preferências antigas deste navegador. */
+/** Claro, Escuro e quatro paletas adicionais; preserva preferências válidas deste navegador. */
 export const themes = [
+  { id: 'light', label: 'Claro' },
+  { id: 'dark', label: 'Escuro' },
   { id: 'lime', label: 'Grafite e Lima' },
   { id: 'ocean', label: 'Azul e Âmbar' },
   { id: 'midnight', label: 'Noite' },
@@ -7,8 +9,6 @@ export const themes = [
 ];
 export const defaultTheme = 'mist';
 const legacyThemes = {
-  light: 'mist',
-  dark: 'midnight',
   electric: 'lime',
   sage: 'mist',
   lagoon: 'ocean',

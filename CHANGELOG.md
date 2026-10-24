@@ -1,3 +1,9 @@
+## 0.66.2 — 24/10/2026
+
+- Restaura Claro e Escuro como opções próprias, além das quatro paletas.
+- Claro com off-white, texto grafite e botões cinza-escuro; Escuro com cinza profundo e detalhes neon moderados.
+- Preserva IDs light/dark e preferências atuais; contraste dos novos tokens conferido.
+
 ## 0.66.1 — 24/10/2026
 
 - Seletor reduzido a Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul, com fonte compacta.
