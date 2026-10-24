@@ -831,7 +831,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 aria-pressed={compactView}
                 onClick={() => setCompactView((value) => !value)}
               >
-                {compactView ? 'Leitura completa' : 'Leitura compacta'}
+                {compactView ? 'Modo completo' : 'Modo compacto'}
               </button>
               <button
                 disabled={!valid || busy || backlogBusy || store.loading}
@@ -1187,7 +1187,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                       </header>
                       <div className="si-story-sections">
                         {groupSections.map((key) => (
-                          <section className="si-story-section" key={key}>
+                          <section className="si-story-section" data-section={key} key={key}>
                             <h3>
                               {sections[key]}{' '}
                               <InfoNote label={`Regras de ${sections[key]}`}>

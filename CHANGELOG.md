@@ -1,3 +1,8 @@
+## 0.69.10 — 24/10/2026
+
+- Adiciona um modo compacto aos Indicadores Suporte, com filtros e cards mais enxutos e análises organizadas em duas colunas.
+- Mantém o resumo por agente visível e adapta a composição para telas menores; o modo completo segue disponível.
+
 ## 0.69.9 — 24/10/2026
 
 - Evolui o tema Escuro para Grafite e Azul, com azul profundo e realces luminosos.
