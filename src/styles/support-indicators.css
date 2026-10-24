@@ -178,6 +178,45 @@
 .si-chart-grid > div {
   min-width: 0;
 }
+.si-sections {
+  display: grid;
+  gap: 8px;
+}
+.si-story-heading {
+  margin-bottom: 10px;
+}
+.si-story-heading h2 {
+  margin-bottom: 4px;
+}
+.si-story-heading p {
+  color: var(--ui-muted);
+  margin: 0;
+  font-size: 12px;
+}
+.si-story-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.si-story-section + .si-story-section {
+  border-top: 1px solid var(--ui-line);
+  padding-top: 12px;
+}
+.si-story-section > h3 {
+  font-size: 14px;
+  margin: 0 0 10px;
+}
+.si-story-section h4 {
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+.si-card-comparison {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
 .si-table {
   overflow: auto;
   max-height: 460px;

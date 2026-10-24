@@ -47,6 +47,43 @@ const valuesOf = (orders, zoho, manual) => ({
   activities: manual?.activities ?? null,
 });
 const format = (key, value) => (key === 'seconds' ? duration(value) : number(value));
+const sectionStories = {
+  agents: 'team',
+  evolution: 'service-flow',
+  types: 'service-flow',
+  subjects: 'support-profile',
+  manual: 'support-profile',
+};
+const stories = {
+  team: {
+    title: 'Desempenho da equipe',
+    description: 'Compare serviços efetivos, chamados e tempo apontado por agente.',
+  },
+  'service-flow': {
+    title: 'Ritmo dos atendimentos',
+    description: 'Acompanhe a evolução no período e a distribuição dos serviços e clientes.',
+  },
+  'support-profile': {
+    title: 'Perfil do suporte',
+    description: 'Explore as categorias dos chamados e as atividades registradas manualmente.',
+  },
+};
+function MetricComparison({ metric, current, previous }) {
+  const difference = current - previous;
+  const percentage = previous === 0 ? null : Math.round((Math.abs(difference) / previous) * 100);
+  const change =
+    difference === 0
+      ? 'sem variação'
+      : `${difference > 0 ? '↑' : '↓'} ${format(metric, Math.abs(difference))} ${difference > 0 ? 'a mais' : 'a menos'}${percentage == null ? ' · base anterior zero' : ` · ${percentage}%`}`;
+  return (
+    <small
+      className="si-card-comparison"
+      title="Variação quantitativa em relação ao período equivalente anterior; aumento não significa melhora."
+    >
+      Anterior: {format(metric, previous)} · {change}
+    </small>
+  );
+}
 function Table({ headers, rows, numericColumns = [] }) {
   const numeric = new Set([
     ...numericColumns,
@@ -127,7 +164,15 @@ function ClosedTicketDetails({ rows }) {
     </details>
   );
 }
-function IndicatorCards({ settings, values, oldValues, zohoData, weekly, manualMetric }) {
+function IndicatorCards({
+  settings,
+  values,
+  oldValues,
+  zohoData,
+  weekly,
+  manualMetric,
+  comparisonAvailable,
+}) {
   return (
     <div className="si-cards">
       {settings.cards.map((key) => (
@@ -172,10 +217,8 @@ function IndicatorCards({ settings, values, oldValues, zohoData, weekly, manualM
                   : 'Zoho · eventos do período'
                 : 'OS · linhas da base'}
           </small>
-          {values[key] != null && oldValues[key] != null && (
-            <small>
-              {`Anterior: ${format(key, oldValues[key])} · diferença: ${format(key, Math.abs(values[key] - oldValues[key]))} ${values[key] > oldValues[key] ? 'a mais' : values[key] < oldValues[key] ? 'a menos' : '(igual)'}`}
-            </small>
+          {comparisonAvailable(key) && values[key] != null && oldValues[key] != null && (
+            <MetricComparison metric={key} current={values[key]} previous={oldValues[key]} />
           )}
           {weekly && settings.weeklyGoals[key] != null && (
             <small>
@@ -281,7 +324,25 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     hasOrders = orders && !orders.unavailable;
   const manualMetric = (key) =>
     ['requests', 'activities'].includes(key) || (key === 'created' && zoho?.created == null);
+  const comparisonAvailable = (key) => {
+    if (['executed', 'scheduled', 'unproductive'].includes(key))
+      return hasOrders && oldOrders && !oldOrders.unavailable;
+    if (key === 'created') {
+      const zohoComparison = zoho?.created != null && oldZoho?.created != null;
+      const manualComparison =
+        zoho?.created == null &&
+        oldZoho?.created == null &&
+        manual?.totals.created != null &&
+        oldManual?.totals.created != null;
+      return zohoComparison || manualComparison;
+    }
+    if (['closed', 'seconds'].includes(key)) return zoho?.[key] != null && oldZoho?.[key] != null;
+    if (['requests', 'activities'].includes(key))
+      return manual?.[key] != null && oldManual?.[key] != null;
+    return false;
+  };
   const shownAgents = agents.filter((a) => !agentId || a.id === agentId);
+  const storyOrder = [...new Set(settings.sections.map((key) => sectionStories[key]))];
   const agentRows = shownAgents.map((a) => {
     const os = hasOrders ? orders.agents.find((r) => r.id === a.id) : null,
       z = zoho?.agents.find((r) => r.id === a.id),
@@ -591,6 +652,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               zohoData={zohoData}
               weekly={weekly}
               manualMetric={manualMetric}
+              comparisonAvailable={comparisonAvailable}
             />
           )}
           <section className="si-panel si-sources" aria-label="Fontes e atualização">
@@ -816,258 +878,291 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 </p>
               )}
               <div className="si-sections">
-                {settings.sections.map((key) => (
-                  <section className="si-panel" key={key}>
-                    <h2>
-                      {sections[key]}{' '}
-                      <InfoNote label={`Regras de ${sections[key]}`}>
-                        {key === 'agents'
-                          ? 'Atendimentos OS por linha. Criados/fechados usam o período; pendentes e espera são a carteira atual, sem filtro temporal. Em espera já está incluído nos pendentes.'
-                          : key === 'subjects'
-                            ? 'Categorias atuais do Zoho nos chamados atualmente fechados. Catálogo confirmado inclui zero. Cada chamado conta pelo último agente que o fechou; categorias não são inferidas pelo título.'
-                            : key === 'evolution'
-                              ? 'Datas próprias da fonte; dias sem dados não representam ausência de trabalho.'
-                              : key === 'types'
-                                ? 'Linhas elegíveis de OS, com agenda e execução em bases distintas.'
-                                : 'Lançamentos manuais por data e agente; campos vazios não são zero e não são somados ao mesmo indicador automático.'}
-                      </InfoNote>
-                    </h2>
-                    {key === 'agents' && (
-                      <>
-                        <div className="si-chart-grid">
-                          <div>
-                            <h3>Execuções efetivas · OS</h3>
-                            <Chart
-                              compact
-                              title="Execuções efetivas por agente"
-                              items={
-                                hasOrders
-                                  ? orders.agents
-                                      .filter((a) => !agentId || a.id === agentId)
-                                      .map((a) => ({ label: a.name, value: a.executed }))
-                                  : []
-                              }
-                            />
-                          </div>
-                          <div>
-                            <h3>Tempo apontado · Zoho</h3>
-                            <Chart
-                              compact
-                              title="Tempo apontado por agente"
-                              items={(zoho?.agents || []).map((a) => ({
-                                label: a.name,
-                                value: a.seconds,
-                              }))}
-                              format={duration}
-                            />
-                          </div>
-                        </div>
-                        <Table
-                          numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-                          headers={[
-                            'Agente',
-                            'Agendados · OS',
-                            'Executados · OS',
-                            zoho?.created != null
-                              ? 'Criados pelo agente · Zoho'
-                              : 'Criados · manual',
-                            'Pendentes agora · Zoho',
-                            'Em espera agora · Zoho',
-                            'Fechados · Zoho',
-                            'Tempo · Zoho',
-                            'Equipamentos · manual',
-                            'Atividades · manual',
-                          ]}
-                          rows={agentRows}
-                        />
-                      </>
-                    )}
-                    {key === 'evolution' && (
-                      <div className="si-chart-grid">
+                {storyOrder.map((storyKey) => {
+                  const story = stories[storyKey];
+                  const groupSections = settings.sections.filter(
+                    (key) => sectionStories[key] === storyKey,
+                  );
+                  return (
+                    <section className="si-panel si-story" key={storyKey}>
+                      <header className="si-story-heading">
                         <div>
-                          <h3>Serviços efetivos por dia · OS</h3>
-                          <Chart
-                            compact
-                            title="Serviços efetivos por dia"
-                            type="line"
-                            items={
-                              hasOrders
-                                ? orders.daily.map((d) => ({
-                                    label: date(d.label),
-                                    value: d.executed,
-                                  }))
-                                : []
-                            }
-                          />
-                          <small>
-                            Somente datas com registros nas etapas de agenda ou execução.
-                          </small>
+                          <h2>{story.title}</h2>
+                          <p>{story.description}</p>
                         </div>
-                        <div>
-                          <h3>Tempo apontado por dia · Zoho</h3>
-                          <Chart
-                            compact
-                            title="Tempo apontado por dia"
-                            type="line"
-                            items={(zoho?.daily || []).map((d) => ({
-                              label: date(d.label),
-                              value: d.value / 3600,
-                            }))}
-                            format={(n) =>
-                              `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}h`
-                            }
-                          />
-                          <small>
-                            Dias sem apontamentos não são preenchidos com tempo presumido.
-                          </small>
-                        </div>
+                      </header>
+                      <div className="si-story-sections">
+                        {groupSections.map((key) => (
+                          <section className="si-story-section" key={key}>
+                            <h3>
+                              {sections[key]}{' '}
+                              <InfoNote label={`Regras de ${sections[key]}`}>
+                                {key === 'agents'
+                                  ? 'Atendimentos OS por linha. Criados/fechados usam o período; pendentes e espera são a carteira atual, sem filtro temporal. Em espera já está incluído nos pendentes.'
+                                  : key === 'subjects'
+                                    ? 'Categorias atuais do Zoho nos chamados atualmente fechados. Catálogo confirmado inclui zero. Cada chamado conta pelo último agente que o fechou; categorias não são inferidas pelo título.'
+                                    : key === 'evolution'
+                                      ? 'Datas próprias da fonte; dias sem dados não representam ausência de trabalho.'
+                                      : key === 'types'
+                                        ? 'Linhas elegíveis de OS, com agenda e execução em bases distintas.'
+                                        : 'Lançamentos manuais por data e agente; campos vazios não são zero e não são somados ao mesmo indicador automático.'}
+                              </InfoNote>
+                            </h3>
+                            {key === 'agents' && (
+                              <>
+                                <div className="si-chart-grid">
+                                  <div>
+                                    <h4>Execuções efetivas · OS</h4>
+                                    <Chart
+                                      compact
+                                      title="Execuções efetivas por agente"
+                                      items={
+                                        hasOrders
+                                          ? orders.agents
+                                              .filter((a) => !agentId || a.id === agentId)
+                                              .map((a) => ({ label: a.name, value: a.executed }))
+                                          : []
+                                      }
+                                    />
+                                  </div>
+                                  <div>
+                                    <h4>Tempo apontado · Zoho</h4>
+                                    <Chart
+                                      compact
+                                      title="Tempo apontado por agente"
+                                      items={(zoho?.agents || []).map((a) => ({
+                                        label: a.name,
+                                        value: a.seconds,
+                                      }))}
+                                      format={duration}
+                                    />
+                                  </div>
+                                </div>
+                                <Table
+                                  numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+                                  headers={[
+                                    'Agente',
+                                    'Agendados · OS',
+                                    'Executados · OS',
+                                    zoho?.created != null
+                                      ? 'Criados pelo agente · Zoho'
+                                      : 'Criados · manual',
+                                    'Pendentes agora · Zoho',
+                                    'Em espera agora · Zoho',
+                                    'Fechados · Zoho',
+                                    'Tempo · Zoho',
+                                    'Equipamentos · manual',
+                                    'Atividades · manual',
+                                  ]}
+                                  rows={agentRows}
+                                />
+                              </>
+                            )}
+                            {key === 'evolution' && (
+                              <div className="si-chart-grid">
+                                <div>
+                                  <h4>Serviços efetivos por dia · OS</h4>
+                                  <Chart
+                                    compact
+                                    title="Serviços efetivos por dia"
+                                    type="line"
+                                    items={
+                                      hasOrders
+                                        ? orders.daily.map((d) => ({
+                                            label: date(d.label),
+                                            value: d.executed,
+                                          }))
+                                        : []
+                                    }
+                                  />
+                                  <small>
+                                    Somente datas com registros nas etapas de agenda ou execução.
+                                  </small>
+                                </div>
+                                <div>
+                                  <h4>Tempo apontado por dia · Zoho</h4>
+                                  <Chart
+                                    compact
+                                    title="Tempo apontado por dia"
+                                    type="line"
+                                    items={(zoho?.daily || []).map((d) => ({
+                                      label: date(d.label),
+                                      value: d.value / 3600,
+                                    }))}
+                                    format={(n) =>
+                                      `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}h`
+                                    }
+                                  />
+                                  <small>
+                                    Dias sem apontamentos não são preenchidos com tempo presumido.
+                                  </small>
+                                </div>
+                              </div>
+                            )}
+                            {key === 'types' && (
+                              <div className="si-chart-grid">
+                                <div>
+                                  <h4>Tipos de serviço · OS</h4>
+                                  <Chart
+                                    compact
+                                    title="Execuções por tipo de serviço"
+                                    items={
+                                      hasOrders
+                                        ? orders.types.map((d) => ({
+                                            label: d.label,
+                                            value: d.executed,
+                                          }))
+                                        : []
+                                    }
+                                  />
+                                  <Table
+                                    headers={['Tipo', 'Agendados', 'Executados efetivos']}
+                                    rows={
+                                      hasOrders
+                                        ? orders.types.map((d) => [
+                                            d.label,
+                                            d.scheduled,
+                                            d.executed,
+                                          ])
+                                        : []
+                                    }
+                                  />
+                                </div>
+                                <div>
+                                  <h4>Clientes · OS</h4>
+                                  <Table
+                                    headers={['Cliente', 'Agendados', 'Executados efetivos']}
+                                    rows={
+                                      hasOrders
+                                        ? orders.clients.map((d) => [
+                                            d.label,
+                                            d.scheduled,
+                                            d.executed,
+                                          ])
+                                        : []
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            {key === 'subjects' &&
+                              (zoho?.categories != null ? (
+                                <>
+                                  <p className="scope">
+                                    {zohoData?.categoryCatalog
+                                      ? 'Catálogo Zoho · inclui categorias zeradas.'
+                                      : 'Catálogo indisponível · somente categorias encontradas.'}
+                                  </p>
+                                  <Chart
+                                    compact
+                                    title="Categorias dos chamados fechados"
+                                    items={zoho.categories}
+                                  />
+                                  <details>
+                                    <summary>Tabela por categoria</summary>
+                                    <Table
+                                      headers={[
+                                        'Categoria atual no Zoho',
+                                        'Chamados fechados distintos',
+                                      ]}
+                                      rows={zoho.categories.map((r) => [r.label, r.value])}
+                                    />
+                                  </details>
+                                  <details>
+                                    <summary>Distribuição por agente e categoria</summary>
+                                    <Table
+                                      headers={[
+                                        'Agente que fechou',
+                                        'Categoria atual',
+                                        'Fechados distintos por agente',
+                                      ]}
+                                      rows={(zoho.categoryAgents || []).map((r) => [
+                                        r.agent,
+                                        r.category,
+                                        r.value,
+                                      ])}
+                                    />
+                                  </details>
+                                  <ClosedTicketDetails
+                                    key={period.start + period.end + agentId}
+                                    rows={zoho.closedTickets || []}
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <p className="scope">
+                                    Classificação manual dos chamados atendidos. Categorias podem se
+                                    sobrepor; não representam o total de chamados distintos.
+                                  </p>
+                                  <Chart
+                                    compact
+                                    title="Assuntos informados"
+                                    items={subjects
+                                      .filter(([key]) => manual?.totals[`subject_${key}`] != null)
+                                      .map(([key, label]) => ({
+                                        label,
+                                        value: manual.totals[`subject_${key}`],
+                                      }))}
+                                  />
+                                  <Table
+                                    headers={['Assunto', 'Quantidade informada']}
+                                    rows={subjects.map(([key, label]) => [
+                                      label,
+                                      manual?.totals[`subject_${key}`] ?? null,
+                                    ])}
+                                  />
+                                </>
+                              ))}
+                            {key === 'manual' && (
+                              <>
+                                <ManualIndicatorForm
+                                  key={period.start + period.end}
+                                  records={store.records}
+                                  period={period}
+                                  busy={store.busy}
+                                  ready={store.ready}
+                                  save={store.save}
+                                  today={today}
+                                  onDirty={setManualDirty}
+                                />
+                                <Table
+                                  headers={['Indicador manual', 'Quantidade informada']}
+                                  rows={manualFields
+                                    .slice(10)
+                                    .map(([key, label]) => [label, manual?.totals[key] ?? null])}
+                                />
+                                <details>
+                                  <summary>Lançamentos, observações e origem</summary>
+                                  <Table
+                                    headers={[
+                                      'Data',
+                                      'Agente',
+                                      'Campos informados',
+                                      'Observações',
+                                      'Algo novo?',
+                                      'Revisão',
+                                      'Salvo em',
+                                    ]}
+                                    rows={(manual?.entries || []).map((r) => [
+                                      date(r.value.date),
+                                      agents.find((a) => a.id === r.value.agentId)?.name,
+                                      Object.values(r.value.values).filter((n) => n !== null)
+                                        .length,
+                                      r.value.note,
+                                      r.value.novelty,
+                                      r.revision,
+                                      new Date(r.updatedAt).toLocaleString('pt-BR'),
+                                    ])}
+                                  />
+                                </details>
+                              </>
+                            )}
+                          </section>
+                        ))}
                       </div>
-                    )}
-                    {key === 'types' && (
-                      <div className="si-chart-grid">
-                        <div>
-                          <h3>Tipos de serviço · OS</h3>
-                          <Chart
-                            compact
-                            title="Execuções por tipo de serviço"
-                            items={
-                              hasOrders
-                                ? orders.types.map((d) => ({ label: d.label, value: d.executed }))
-                                : []
-                            }
-                          />
-                          <Table
-                            headers={['Tipo', 'Agendados', 'Executados efetivos']}
-                            rows={
-                              hasOrders
-                                ? orders.types.map((d) => [d.label, d.scheduled, d.executed])
-                                : []
-                            }
-                          />
-                        </div>
-                        <div>
-                          <h3>Clientes · OS</h3>
-                          <Table
-                            headers={['Cliente', 'Agendados', 'Executados efetivos']}
-                            rows={
-                              hasOrders
-                                ? orders.clients.map((d) => [d.label, d.scheduled, d.executed])
-                                : []
-                            }
-                          />
-                        </div>
-                      </div>
-                    )}
-                    {key === 'subjects' &&
-                      (zoho?.categories != null ? (
-                        <>
-                          <p className="scope">
-                            {zohoData?.categoryCatalog
-                              ? 'Catálogo Zoho · inclui categorias zeradas.'
-                              : 'Catálogo indisponível · somente categorias encontradas.'}
-                          </p>
-                          <Chart
-                            compact
-                            title="Categorias dos chamados fechados"
-                            items={zoho.categories}
-                          />
-                          <details>
-                            <summary>Tabela por categoria</summary>
-                            <Table
-                              headers={['Categoria atual no Zoho', 'Chamados fechados distintos']}
-                              rows={zoho.categories.map((r) => [r.label, r.value])}
-                            />
-                          </details>
-                          <details>
-                            <summary>Distribuição por agente e categoria</summary>
-                            <Table
-                              headers={[
-                                'Agente que fechou',
-                                'Categoria atual',
-                                'Fechados distintos por agente',
-                              ]}
-                              rows={(zoho.categoryAgents || []).map((r) => [
-                                r.agent,
-                                r.category,
-                                r.value,
-                              ])}
-                            />
-                          </details>
-                          <ClosedTicketDetails
-                            key={period.start + period.end + agentId}
-                            rows={zoho.closedTickets || []}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <p className="scope">
-                            Classificação manual dos chamados atendidos. Categorias podem se
-                            sobrepor; não representam o total de chamados distintos.
-                          </p>
-                          <Chart
-                            compact
-                            title="Assuntos informados"
-                            items={subjects
-                              .filter(([key]) => manual?.totals[`subject_${key}`] != null)
-                              .map(([key, label]) => ({
-                                label,
-                                value: manual.totals[`subject_${key}`],
-                              }))}
-                          />
-                          <Table
-                            headers={['Assunto', 'Quantidade informada']}
-                            rows={subjects.map(([key, label]) => [
-                              label,
-                              manual?.totals[`subject_${key}`] ?? null,
-                            ])}
-                          />
-                        </>
-                      ))}
-                    {key === 'manual' && (
-                      <>
-                        <ManualIndicatorForm
-                          key={period.start + period.end}
-                          records={store.records}
-                          period={period}
-                          busy={store.busy}
-                          ready={store.ready}
-                          save={store.save}
-                          today={today}
-                          onDirty={setManualDirty}
-                        />
-                        <Table
-                          headers={['Indicador manual', 'Quantidade informada']}
-                          rows={manualFields
-                            .slice(10)
-                            .map(([key, label]) => [label, manual?.totals[key] ?? null])}
-                        />
-                        <details>
-                          <summary>Lançamentos, observações e origem</summary>
-                          <Table
-                            headers={[
-                              'Data',
-                              'Agente',
-                              'Campos informados',
-                              'Observações',
-                              'Algo novo?',
-                              'Revisão',
-                              'Salvo em',
-                            ]}
-                            rows={(manual?.entries || []).map((r) => [
-                              date(r.value.date),
-                              agents.find((a) => a.id === r.value.agentId)?.name,
-                              Object.values(r.value.values).filter((n) => n !== null).length,
-                              r.value.note,
-                              r.value.novelty,
-                              r.revision,
-                              new Date(r.updatedAt).toLocaleString('pt-BR'),
-                            ])}
-                          />
-                        </details>
-                      </>
-                    )}
-                  </section>
-                ))}
+                    </section>
+                  );
+                })}
               </div>
               <details className="si-panel">
                 <summary>Critérios e conferência das linhas de OS</summary>

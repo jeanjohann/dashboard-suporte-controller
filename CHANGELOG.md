@@ -1,3 +1,8 @@
+## 0.69.5 — 24/10/2026
+
+- Agrupa os gráficos dos Indicadores Suporte em três blocos de leitura: equipe, ritmo dos atendimentos e perfil do suporte.
+- Mostra nos cards a comparação com o período equivalente anterior em valor e percentual, somente quando as fontes são compatíveis.
+
 ## 0.69.4 — 24/10/2026
 
 - Aplica o alinhamento ao bloco correto de status das fontes, mantendo título e barra de filtros inalterados.
