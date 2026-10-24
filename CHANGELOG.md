@@ -1,3 +1,8 @@
+## 0.69.8 — 24/10/2026
+
+- Remove o fundo do controle da logo e alterna entre variantes claras/escuras conforme o tema.
+- Recupera a paleta anterior de Lima e Grafite.
+
 ## 0.69.7 — 24/10/2026
 
 - Mantém somente os temas Claro, Escuro e Lima e Grafite.

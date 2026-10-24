@@ -2,9 +2,9 @@
 /* Paleta compartilhada: superfícies, texto e controles. */
 :root {
   color-scheme: light;
-  --brand-logo-url: url('/brand/addlog-white.svg');
-  --brand-symbol-url: url('/brand/addlog-symbol-white.svg');
-  --brand-surface: #2e3b39;
+  --brand-logo-url: url('/brand/addlog.svg');
+  --brand-symbol-url: url('/brand/addlog-symbol.svg');
+  --brand-surface: transparent;
   --ui-background: #f5f4ef;
   --ui-surface: #fffefa;
   --ui-soft: #eeeee8;

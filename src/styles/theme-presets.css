@@ -3,7 +3,9 @@
 @media screen {
   :root[data-theme='light'] {
     color-scheme: light;
-    --brand-surface: #2e3b39;
+    --brand-logo-url: url('/brand/addlog.svg');
+    --brand-symbol-url: url('/brand/addlog-symbol.svg');
+    --brand-surface: transparent;
     --ui-background: #f5f4ef;
     --ui-surface: #fffefa;
     --ui-soft: #eeeee8;
@@ -47,7 +49,9 @@
   }
   :root[data-theme='dark'] {
     color-scheme: dark;
-    --brand-surface: #242a2d;
+    --brand-logo-url: url('/brand/addlog-dark.svg');
+    --brand-symbol-url: url('/brand/addlog-symbol-white.svg');
+    --brand-surface: transparent;
     --ui-background: #1e2225;
     --ui-surface: #282d30;
     --ui-soft: #343a3e;
@@ -92,25 +96,27 @@
 
   :root[data-theme='lime'] {
     color-scheme: dark;
-    --brand-surface: #242922;
-    --ui-background: #1f231e;
-    --ui-surface: #292e28;
-    --ui-soft: #353b33;
-    --ui-ink: #f1f3ec;
-    --ui-muted: #bbc4b6;
-    --ui-border: #515b4e;
-    --ui-line: #3d453b;
-    --ui-shadow: #00000038;
-    --ui-button-bg: #3c4638;
+    --brand-logo-url: url('/brand/addlog-dark.svg');
+    --brand-symbol-url: url('/brand/addlog-symbol-white.svg');
+    --brand-surface: transparent;
+    --ui-background: #202224;
+    --ui-surface: #2b2e31;
+    --ui-soft: #353a3c;
+    --ui-ink: #f0f3ed;
+    --ui-muted: #bbc6bd;
+    --ui-border: #525c5f;
+    --ui-line: #40494b;
+    --ui-shadow: #00000035;
+    --ui-button-bg: #424c3a;
     --ui-button-text: #f4f7ef;
-    --ui-button-hover: #4d5a46;
-    --ui-accent: #addc60;
+    --ui-button-hover: #535f48;
+    --ui-accent: #b9ed69;
     --ui-on-accent: #23300d;
-    --ui-accent-hover: #c5ec81;
-    --ui-accent-ink: #c3e895;
-    --ui-accent-soft: #37442b;
-    --ui-accent-border: #6d8b46;
-    --ui-link: #c5e992;
+    --ui-accent-hover: #cdf88f;
+    --ui-accent-ink: #c8f28b;
+    --ui-accent-soft: #38452c;
+    --ui-accent-border: #738d4e;
+    --ui-link: #c8f28b;
     --ui-coral: #ffb18c;
     --ui-success-bg: #203d33;
     --ui-success-ink: #a1e1b7;
@@ -123,16 +129,16 @@
     --ui-info-ink: #b6d9f2;
     --ui-violet-bg: #372e50;
     --ui-violet-ink: #d1c1f3;
-    --chart-primary: #addc60;
-    --chart-blue: #80b8f2;
-    --chart-teal: #60d0ba;
-    --chart-purple: #c2a0eb;
-    --chart-coral: #f2a77f;
-    --chart-slate: #a9bab3;
-    --chart-amber: #e3c364;
-    --chart-rose: #e6a1ba;
-    --chart-other: #aecf87;
-    --chart-negative: #f28c9e;
+    --chart-primary: #b9ed69;
+    --chart-blue: #7fc8f8;
+    --chart-teal: #64ddc2;
+    --chart-purple: #c9a3f2;
+    --chart-coral: #f6aa7e;
+    --chart-slate: #a7bdb6;
+    --chart-amber: #edcf78;
+    --chart-rose: #efacd3;
+    --chart-other: #a9c6a0;
+    --chart-negative: #f49cab;
   }
 }
 .theme-options {
