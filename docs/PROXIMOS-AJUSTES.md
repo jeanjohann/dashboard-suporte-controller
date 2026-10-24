@@ -1,5 +1,11 @@
 # Fila de implementação e ajustes
 
+## Acervo no banco 0.69.0 — 24/10/2026
+
+Preparada a persistência de consumo, franquias compartilhadas, configurações de painéis e últimas consultas Zoho (suporte, indicadores, pendências e sessões). Piloto restrito ao proprietário, migração local explícita, revisão atômica e partes deduplicadas. Sem migração SQL, exclusão de cópias ou atualização extra do fornecedor. Publicação e migração real permanecem etapas de ativação. [Uso, segurança, limites e homologação](PERSISTENCIA-DO-ACERVO-069.md).
+
+Permanecem: revisão/limpeza de arquivos com comprovação de desuso; conferência de indicadores com relatórios reais; CSV Session real; confirmação do ciclo KORE; endpoint de chip/consumo do Monitoramento; política de limpeza/recuperação das versões deste novo acervo. A retenção das fontes anteriores não mudou.
+
 ## Refatoração de apresentação e Dashboard 0.68.0 — 24/10/2026
 
 Rodada autorizada após levantamento: vínculos paginados, impressão/auditoria sob demanda, pausa de atualizações em páginas/seções inativas, atividade explícita do Monitoramento, assinaturas por fonte, cache limitado de consultas e cruzamentos do Dashboard e gestos agrupados por quadro. Estados, regras e fontes preservados; sem exclusões ou migrações. [Entrega, medições e limites](REFATORACAO-068.md).

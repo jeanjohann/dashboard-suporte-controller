@@ -1,3 +1,9 @@
+## 0.69.0 — 24/10/2026
+
+- Amplia o D1 para consumo/franquias, painéis e últimas consultas Zoho, no piloto exclusivo do proprietário.
+- Migração local explícita, revisões atômicas, upload deduplicado e indicação da origem/data de dados salvos; cópias locais preservadas.
+- Mantém esquema, permissões das outras contas e agendamento existentes. Preparação e homologação não migram dados reais automaticamente.
+
 ## 0.68.0 — 24/10/2026
 
 - Pagina vínculos operacionais e monta tabelas completas/auditorias apenas quando necessárias, preservando impressão e exportação.

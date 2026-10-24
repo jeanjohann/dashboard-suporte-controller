@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { WorkspaceQueryPanel } from '../../../shared/persistence/WorkspaceQueryPanel.jsx';
 import { zohoTeam, summarizeZohoActivity } from '../../../shared/data/zohoActivity.js';
 import { todaySaoPaulo } from '../domain/lifecycle.js';
 import { supportPerformance } from '../domain/supportPerformance.js';
@@ -12,8 +13,16 @@ import { ZohoClosures } from './ZohoClosures.jsx';
 const date = (text) =>
   text ? new Date(text).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : '—';
 export function SupportZohoActivity({ active, ordersData }) {
-  const { data, setData, reviewedReplies, setReviewedReplies, mapping, setMapping } =
-    useZohoSession();
+  const {
+    data,
+    setData,
+    reviewedReplies,
+    setReviewedReplies,
+    mapping,
+    setMapping,
+    columns,
+    setColumns,
+  } = useZohoSession();
   const today = todaySaoPaulo();
   const [start, setStart] = useState(data?.period.start || today),
     [end, setEnd] = useState(data?.period.end || today);
@@ -105,6 +114,19 @@ export function SupportZohoActivity({ active, ordersData }) {
   if (!active) return null;
   return (
     <section className="zoho-activity" aria-label="Atividade Zoho de Eduardo e Jean">
+      <WorkspaceQueryPanel
+        kind="zoho-support"
+        value={data ? { data, reviewedReplies, mapping, columns } : null}
+        disabled={busy}
+        onLoad={(saved) => {
+          setData(saved.data);
+          setReviewedReplies(!!saved.reviewedReplies);
+          setMapping(saved.mapping || {});
+          if (saved.columns) setColumns(saved.columns);
+          setStart(saved.data.period.start);
+          setEnd(saved.data.period.end);
+        }}
+      />
       <div className="orders-google-actions zoho-period-toolbar">
         <label>
           De{' '}

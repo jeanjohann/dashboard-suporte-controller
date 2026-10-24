@@ -24,7 +24,7 @@ export function useConsumptionArchive(reloadToken, repository = consumptionHisto
       .catch((e) => {
         if (live) {
           setError(
-            'Não foi possível abrir o histórico local. Recarregue a página antes de importar arquivos: ' +
+            'Não foi possível abrir o histórico. Recarregue a página antes de importar arquivos: ' +
               e.message,
           );
         }
@@ -49,5 +49,29 @@ export function useConsumptionArchive(reloadToken, repository = consumptionHisto
     }
   }
 
-  return { archive, ready, busy, error, message, setBusy, setError, setMessage, commit };
+  async function migrateLocal() {
+    if (busy) return;
+    setBusy(true);
+    setError('');
+    try {
+      setArchive(await repository.migrate());
+      setMessage('Histórico migrado para o banco. A cópia local foi preservada.');
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return {
+    archive,
+    ready,
+    busy,
+    error,
+    message,
+    setBusy,
+    setError,
+    setMessage,
+    commit,
+    migrateLocal,
+  };
 }

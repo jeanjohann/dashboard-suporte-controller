@@ -1,4 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+import { createPilotRepository } from '../../../shared/persistence/workspaceClient.js';
+import { RepositoryStorageStatus } from '../../../shared/persistence/RepositoryStorageStatus.jsx';
+import { dashboardRepository } from '../data/dashboardRepository.js';
+import { emptyDashboardDocument } from '../domain/layout.js';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { Icon } from '../../../components/Icon.jsx';
@@ -28,7 +32,20 @@ export function MyDashboardPage({ onPage, repository, active = true }) {
   const { user, managed } = useAccess(),
     { sources } = useDashboardSources(active);
   const owner = `${managed ? 'account' : 'local'}:${user.email.trim().toLowerCase()}`;
-  const state = useDashboards(owner, repository),
+  const configuredRepository = useMemo(
+    () =>
+      createPilotRepository({
+        kind: 'dashboards',
+        managed,
+        readLocal: dashboardRepository.read,
+        writeLocal: dashboardRepository.write,
+        empty: emptyDashboardDocument,
+        revisionField: 'revision',
+      }),
+    [managed, user.email],
+  );
+  const selectedRepository = repository || configuredRepository;
+  const state = useDashboards(owner, selectedRepository),
     { draft, setDraft } = state;
   const [catalog, setCatalog] = useState(false),
     [editor, setEditor] = useState(null),
@@ -309,6 +326,11 @@ export function MyDashboardPage({ onPage, repository, active = true }) {
               movem os blocos. Use Desfazer para reverter e Salvar painel para guardar.
             </p>
           )}
+          <RepositoryStorageStatus
+            repository={selectedRepository}
+            busy={working || !state.ready}
+            onMigrate={() => request(() => state.migrateLocal())}
+          />
           {state.error && (
             <div className="md-error" role="alert">
               <p>{state.error}</p>
@@ -329,8 +351,8 @@ export function MyDashboardPage({ onPage, repository, active = true }) {
               na sessão
             </p>
             <p>
-              Configurações salvas por usuário neste navegador. Carregue ou atualize os dados nos
-              módulos de origem.
+              Configurações salvas no armazenamento indicado acima. Carregue ou atualize os dados
+              nos módulos de origem.
             </p>
           </div>
           {!draft.widgets.length ? (
@@ -476,7 +498,7 @@ export function MyDashboardPage({ onPage, repository, active = true }) {
                 {pending.kind === 'import'
                   ? `${pending.boards.length} painel(is) serão adicionados como novas cópias. Nomes repetidos serão diferenciados; os painéis existentes não serão substituídos. As fontes não estão no backup.`
                   : pending.kind === 'delete'
-                    ? `O painel “${state.saved?.name}” será removido dos salvos neste navegador.`
+                    ? `O painel “${state.saved?.name}” será removido dos painéis salvos.`
                     : 'As alterações desta edição serão descartadas. Você pode voltar e salvar o painel antes de continuar.'}
               </p>
               {pending.kind === 'import' && (

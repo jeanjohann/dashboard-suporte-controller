@@ -45,7 +45,7 @@ export function useDashboards(owner, repository = dashboardRepository) {
   const dirty = saved
     ? savedText !== draftText
     : Boolean(draft.widgets.length || draft.name !== 'Meu primeiro painel');
-  async function commit(next, after, success = 'Dashboard salvo neste navegador.') {
+  async function commit(next, after, success = 'Dashboard salvo.') {
     setBusy(true);
     setError('');
     setMessage('');
@@ -73,6 +73,20 @@ export function useDashboards(owner, repository = dashboardRepository) {
     dirty,
     saved,
     canUndo: past.length > 0,
+    async migrateLocal() {
+      setBusy(true);
+      setError('');
+      try {
+        const next = await repository.migrate(owner);
+        setDocument(next);
+        resetDraft(next.dashboards[0] || freshBoard());
+        setMessage('Dashboards migrados para o banco. A cópia local foi preservada.');
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setBusy(false);
+      }
+    },
     undo() {
       setEdition((old) =>
         old.past.length
@@ -131,7 +145,7 @@ export function useDashboards(owner, repository = dashboardRepository) {
       return commit(
         { ...document, dashboards: document.dashboards.filter((row) => row.id !== draft.id) },
         (next) => resetDraft(next.dashboards[0] || freshBoard()),
-        'Painel excluído dos salvos neste navegador.',
+        'Painel excluído dos salvos.',
       );
     },
     duplicate() {

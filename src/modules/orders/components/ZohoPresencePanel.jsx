@@ -1,4 +1,5 @@
 import { useZohoSession } from '../hooks/ZohoSession.jsx';
+import { WorkspaceQueryPanel } from '../../../shared/persistence/WorkspaceQueryPanel.jsx';
 import { parseCsv } from '../../consumption/domain/consumption.js';
 import React, { useEffect, useId, useState } from 'react';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
@@ -57,12 +58,25 @@ export function ZohoPresencePanel() {
   return (
     <details className="zoho-detail-group zoho-presence">
       <summary>Permanência no Zoho · sessões dos agentes</summary>
+      <WorkspaceQueryPanel
+        kind="zoho-presence"
+        value={source ? { source, mapping, offset, start, end, report } : null}
+        disabled={busy}
+        onLoad={(saved) => {
+          setSource(saved.source);
+          setMapping(saved.mapping);
+          setOffset(saved.offset);
+          setStart(saved.start);
+          setEnd(saved.end);
+          setReport(saved.report);
+        }}
+      />
       <details className="zoho-presence-setup" open={!report}>
         <summary>Fonte, colunas e período</summary>
         <p>
           Importe o CSV de Agent Availability → Session e confirme as colunas e o fuso. Os dados
-          ficam nesta sessão do navegador. Permanência por sessões e tempo apontado em chamados são
-          medidas distintas.
+          podem ser salvos no banco pelo administrador do piloto. Permanência por sessões e tempo
+          apontado em chamados são medidas distintas.
         </p>
         {!source && (
           <p className="scope">

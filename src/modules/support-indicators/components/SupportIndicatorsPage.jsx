@@ -1,3 +1,4 @@
+import { WorkspaceQueryPanel } from '../../../shared/persistence/WorkspaceQueryPanel.jsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
@@ -520,6 +521,18 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             />
           </section>
           <section className="si-panel si-sources" aria-label="Fontes e atualização">
+            <WorkspaceQueryPanel
+              kind="zoho-indicators"
+              value={ownZoho ? { data: ownZoho } : null}
+              disabled={busy || backlogBusy || manualDirty}
+              onLoad={(saved) => setOwnZoho(saved.data)}
+            />
+            <WorkspaceQueryPanel
+              kind="zoho-backlog"
+              value={ownBacklog ? { data: ownBacklog } : null}
+              disabled={busy || backlogBusy}
+              onLoad={(saved) => setOwnBacklog(saved.data)}
+            />
             <div>
               <strong>OS</strong>
               <small>{sources.orders?.value?.filename || 'Carregue a base em Importação.'}</small>

@@ -3,6 +3,11 @@
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
 import { consumptionRecordsCsv } from '../domain/consumptionRecordsReport.js';
+import { useAccess } from '../../../shared/security/Access.jsx';
+import { createPilotRepository } from '../../../shared/persistence/workspaceClient.js';
+import { RepositoryStorageStatus } from '../../../shared/persistence/RepositoryStorageStatus.jsx';
+import { consumptionHistoryRepository } from '../data/historyRepository.js';
+import { emptyHistory } from '../data/consumptionHistory.js';
 import { SharedAllowances } from './SharedAllowances.jsx';
 import { KoreReconciliation } from './KoreReconciliation.jsx';
 import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
@@ -76,7 +81,21 @@ export function LinesPage({
   monitoring,
 }) {
   const operator = carrierName(pageId);
-  const history = useConsumptionArchive(reloadToken, repository);
+  const { user, managed } = useAccess();
+  const configuredRepository = useMemo(
+    () =>
+      createPilotRepository({
+        kind: 'consumption',
+        managed,
+        readLocal: consumptionHistoryRepository.read,
+        writeLocal: consumptionHistoryRepository.write,
+        empty: emptyHistory,
+        revisionField: '_revision',
+      }),
+    [managed, user.email],
+  );
+  const selectedRepository = repository || configuredRepository;
+  const history = useConsumptionArchive(reloadToken, selectedRepository);
   const layout = usePageLayout('consumption');
   const [attentionLimits, setAttentionLimits] = useState(defaultConsumptionAttention);
   const { archive, ready, busy, error, message, setError, commit } = history;
@@ -464,9 +483,15 @@ export function LinesPage({
                     setFilters={setFilters}
                   />
                 )}
+                <RepositoryStorageStatus
+                  repository={selectedRepository}
+                  busy={busy || !ready}
+                  onMigrate={history.migrateLocal}
+                />
                 {!ready && !error && (
                   <ViewState busy compact title="Abrindo histórico…">
-                    Os arquivos e as anotações serão exibidos após a leitura do armazenamento local.
+                    Os arquivos e as anotações serão exibidos após a leitura do armazenamento
+                    configurado.
                   </ViewState>
                 )}
                 {error && (
@@ -655,7 +680,7 @@ export function LinesPage({
                         note={`Visualização: ${queueView === 'eligible' ? 'consumo válido' : 'fora dos totais'}. Mesmas apurações, busca e filtros da grade; registros inválidos/duplicados não entram no consumo. Notas locais não confirmam resolução.`}
                       />
                     }
-                    help="Uma única grade para consulta, seleção e acompanhamento. Registros válidos entram nos totais; a opção Fora dos totais permite conferir dados inválidos/duplicados do mesmo recorte, sem somá-los. Respeita operadora, apuração, busca e filtros da categoria. Ordem inicial: maior consumo total em MB, sem somar períodos sobrepostos. Compare períodos de durações diferentes também por MB por dia. Clique nas colunas para ordenar o recorte antes de paginar. Acompanhamento mostra a última ação salva por data para operadora + ICCID; empates usam a última entrada. Clicar no status abre o histórico abaixo com todas as apurações em uso do chip. As notas são confirmadas em Salvar acompanhamento e ficam neste navegador. Cliente e placa vêm da referência operacional atual. Consumo alto e status administrativo não confirmam defeito nem resolução."
+                    help="Uma única grade para consulta, seleção e acompanhamento. Registros válidos entram nos totais; a opção Fora dos totais permite conferir dados inválidos/duplicados do mesmo recorte, sem somá-los. Respeita operadora, apuração, busca e filtros da categoria. Ordem inicial: maior consumo total em MB, sem somar períodos sobrepostos. Compare períodos de durações diferentes também por MB por dia. Clique nas colunas para ordenar o recorte antes de paginar. Acompanhamento mostra a última ação salva por data para operadora + ICCID; empates usam a última entrada. Clicar no status abre o histórico abaixo com todas as apurações em uso do chip. As notas são confirmadas em Salvar acompanhamento e usam o armazenamento indicado nesta página. Cliente e placa vêm da referência operacional atual. Consumo alto e status administrativo não confirmam defeito nem resolução."
                   >
                     <label className="consumption-queue-view">
                       Registros da grade

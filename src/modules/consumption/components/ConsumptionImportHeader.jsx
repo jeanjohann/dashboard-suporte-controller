@@ -18,7 +18,7 @@ export function ConsumptionImportHeader({
         <h1>{operator || title}</h1>
         <p>
           {operator
-            ? `${operator === 'Kore' ? 'API e extratos KORE' : 'Extratos manuais Arqia'} · histórico local e backup por operadora.`
+            ? `${operator === 'Kore' ? 'API e extratos KORE' : 'Extratos manuais Arqia'} · histórico e backup por operadora.`
             : 'KORE e Arqia · fontes identificadas, apurações e vínculos preservados.'}
         </p>
       </div>
