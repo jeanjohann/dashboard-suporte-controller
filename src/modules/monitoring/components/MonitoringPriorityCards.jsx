@@ -53,6 +53,8 @@ export function MonitoringPriorityCards({
             type="button"
             className={`summary-card monitoring-priority-card monitoring-priority-${card.key}`}
             key={card.key}
+            title={card.note}
+            aria-label={`${card.label}: ${card.value}. ${card.note}`}
             aria-pressed={!!card.focus && activeFocus === card.focus}
             onClick={card.onClick}
           >

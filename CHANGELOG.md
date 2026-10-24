@@ -1,3 +1,9 @@
+## 0.69.13 — 24/10/2026
+
+- Reduz o espaço ocupado por filtros, cartões de prioridade, lembretes e indicadores do Monitoramento Ativo.
+- Move o histórico de avisos para depois da fila de acompanhamento e amplia a área útil da grade.
+- Compacta também as páginas analítica e de conferência, preservando notas explicativas dos dados.
+
 ## 0.69.12 — 24/10/2026
 
 - Adiciona atalhos de prioridade no Monitoramento Ativo para alertas, veículos há 4 dias sem atualização, lembretes vencidos e cadastros a conferir.

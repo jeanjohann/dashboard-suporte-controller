@@ -418,6 +418,188 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* Mais área útil para a fila e menos altura nos controles acima dela. */
+.monitoring-page .monitoring-saved-status {
+  gap: 5px 8px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  line-height: 1.35;
+}
+.monitoring-page .monitoring-saved-status > span {
+  flex-basis: 280px;
+}
+.monitoring-page .monitoring-saved-status button {
+  min-height: 26px;
+  padding: 4px 8px;
+}
+.monitoring-page .filter-workspace {
+  padding: 7px 10px;
+  margin-bottom: 7px;
+}
+.monitoring-page .filter-workspace-heading {
+  margin-bottom: 3px;
+  gap: 5px 8px;
+}
+.monitoring-page .filter-workspace-title {
+  gap: 5px 8px;
+  line-height: 1.35;
+}
+.monitoring-page .filter-workspace-editor > summary {
+  padding: 4px 0;
+}
+.monitoring-page .filter-workspace-summary {
+  padding-top: 5px;
+  margin-top: 3px;
+  gap: 5px 8px;
+}
+.monitoring-page .filter-workspace-source {
+  padding-top: 4px;
+  margin-top: 4px;
+  font-size: 9px;
+  line-height: 1.3;
+}
+.monitoring-page .filter-workspace .saved-views > summary {
+  padding: 4px 0;
+}
+.monitoring-page .monitoring-priorities {
+  gap: 7px;
+  margin-bottom: 8px;
+}
+.monitoring-page .monitoring-priority-card {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 8px;
+  min-height: 58px;
+  padding: 7px 10px;
+  border-top-width: 2px;
+}
+.monitoring-page .monitoring-priority-card > span {
+  font-size: 10px;
+}
+.monitoring-page .monitoring-priority-card > strong {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 20px;
+}
+.monitoring-page .monitoring-priority-card > small {
+  display: none;
+}
+.monitoring-page .monitoring-reminders {
+  padding: 0 9px;
+  margin: 0 0 7px;
+}
+.monitoring-page .monitoring-reminders-content > summary {
+  min-height: 32px;
+  padding: 5px 0;
+  gap: 5px 8px;
+}
+.monitoring-page .monitoring-reminders-content > summary strong,
+.monitoring-page .monitoring-reminders-content > summary span {
+  font-size: 10px;
+}
+.monitoring-page .monitoring-events {
+  padding: 4px 10px;
+  margin: 6px 0;
+}
+.monitoring-page .monitoring-events-heading {
+  min-height: 30px;
+}
+.monitoring-page .monitoring-events-heading > button {
+  min-height: 26px;
+  padding: 4px 2px;
+  font-size: 10px;
+}
+.monitoring-page .monitoring-queue-actions {
+  gap: 6px;
+  margin-bottom: 7px;
+}
+.monitoring-page .monitoring-queue-columns {
+  margin-bottom: 6px;
+}
+.monitoring-page .monitoring-legend {
+  gap: 4px 10px;
+  margin-bottom: 5px;
+}
+.monitoring-page .monitoring-queue-table {
+  max-height: min(76vh, 840px);
+}
+.monitoring-page .monitoring-priority-card:focus-visible,
+.monitoring-page .monitoring-events-heading > button:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+}
+.monitoring-page .monitoring-cards {
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+.monitoring-page .monitoring-cards > .summary-card {
+  gap: 5px;
+  min-height: 94px;
+  padding: 10px;
+}
+.monitoring-page .monitoring-cards > .summary-card > span {
+  min-height: 0;
+  font-size: 10px;
+}
+.monitoring-page .monitoring-cards > .summary-card > strong {
+  font-size: 19px;
+}
+.monitoring-page .monitoring-cards > .summary-card > small {
+  margin-top: 2px;
+  font-size: 9px;
+  line-height: 1.25;
+}
+.monitoring-page .monitoring-registry-counts {
+  gap: 7px;
+  margin: 8px 0;
+}
+.monitoring-page .monitoring-registry-counts > .summary-card {
+  min-height: 66px;
+  gap: 5px;
+  padding: 9px 11px;
+}
+.monitoring-page .monitoring-registry-counts > .summary-card > strong {
+  font-size: 20px;
+}
+.monitoring-page .monitoring-registry-controls {
+  gap: 7px 9px;
+  margin: 8px 0;
+}
+.monitoring-page .monitoring-registry-table th,
+.monitoring-page .monitoring-registry-table td {
+  padding: 8px 9px;
+  line-height: 1.4;
+}
+.monitoring-page .monitoring-registry-table td > div + div {
+  margin-top: 5px;
+  padding-top: 5px;
+}
+.monitoring-page .monitoring-charts {
+  gap: 12px;
+}
+.monitoring-page .monitoring-summary-table {
+  gap: 8px;
+}
+.monitoring-page .monitoring-summary-table .table-scroll {
+  max-height: min(62vh, 620px);
+}
+.monitoring-page .monitoring-summary-table th,
+.monitoring-page .monitoring-summary-table td {
+  padding: 8px 9px;
+}
+@media (max-width: 600px) {
+  .monitoring-page .monitoring-saved-status {
+    align-items: flex-start;
+  }
+  .monitoring-page .monitoring-priorities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .monitoring-page .monitoring-priority-card {
+    min-height: 54px;
+  }
+}
 @media (max-width: 1050px) {
   .monitoring-page .monitoring-filter-fields {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

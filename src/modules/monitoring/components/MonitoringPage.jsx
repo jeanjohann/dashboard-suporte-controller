@@ -560,13 +560,6 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                   />
                 )}
                 <MonitoringReminders reminders={reminders} demo={false} />
-                {savedMode && ['queue', 'reports'].includes(category) && (
-                  <MonitoringEvents
-                    savedAt={savedAt}
-                    snapshot={source}
-                    onVehicle={openEventVehicle}
-                  />
-                )}
                 {exportError && (
                   <p role="alert" className="notice">
                     {exportError}
@@ -599,6 +592,13 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     setPageSize={setPageSize}
                   />
                 </RetainedContent>
+                {savedMode && category === 'queue' && (
+                  <MonitoringEvents
+                    savedAt={savedAt}
+                    snapshot={source}
+                    onVehicle={openEventVehicle}
+                  />
+                )}
                 {category === 'registry' && (
                   <MonitoringRegistry
                     snapshot={snapshot}
@@ -649,6 +649,13 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     </p>
                   </Section>
                 </div>
+                {savedMode && category === 'reports' && (
+                  <MonitoringEvents
+                    savedAt={savedAt}
+                    snapshot={source}
+                    onVehicle={openEventVehicle}
+                  />
+                )}
                 {savedMode && category === 'reports' && <MonitoringCollectionHistory />}
                 {['registry', 'reports'].includes(category) && (
                   <MonitoringApiCoverage source={source} />
