@@ -1,18 +1,18 @@
-/** Claro, Escuro e quatro paletas adicionais; preserva preferências válidas deste navegador. */
+/** Temas disponíveis; preferências antigas são migradas sem invalidar a sessão. */
 export const themes = [
   { id: 'light', label: 'Claro' },
   { id: 'dark', label: 'Escuro' },
-  { id: 'lime', label: 'Grafite e Lima' },
-  { id: 'ocean', label: 'Azul e Âmbar' },
-  { id: 'midnight', label: 'Noite' },
-  { id: 'mist', label: 'Bruma Azul' },
+  { id: 'lime', label: 'Lima e Grafite' },
 ];
-export const defaultTheme = 'mist';
+export const defaultTheme = 'light';
 const legacyThemes = {
   electric: 'lime',
-  sage: 'mist',
-  lagoon: 'ocean',
-  garden: 'mist',
+  sage: 'light',
+  lagoon: 'light',
+  garden: 'light',
+  ocean: 'light',
+  midnight: 'dark',
+  mist: 'light',
 };
 export function restoredTheme(saved) {
   if (themes.some((entry) => entry.id === saved)) return saved;

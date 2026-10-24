@@ -1,15 +1,15 @@
 /** Tokens acompanham o tema; exportações em fundo branco usam cores concretas portáteis. */
 const printColors = {
-  primary: '#158579',
-  blue: '#3c7cc4',
-  teal: '#169d8c',
-  purple: '#8b62c0',
-  coral: '#d4764e',
-  slate: '#648399',
-  amber: '#b18720',
-  rose: '#ba5e8a',
-  other: '#85968f',
-  negative: '#b75470',
+  primary: '#19786f',
+  blue: '#3d6fa1',
+  teal: '#238779',
+  purple: '#77589d',
+  coral: '#b45d42',
+  slate: '#586d7b',
+  amber: '#8a691e',
+  rose: '#a55176',
+  other: '#607b57',
+  negative: '#ac4058',
 };
 export const chartColors = Object.fromEntries(
   Object.keys(printColors).map((key) => [key, `var(--chart-${key})`]),

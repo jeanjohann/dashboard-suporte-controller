@@ -1,3 +1,9 @@
+## 0.69.7 — 24/10/2026
+
+- Mantém somente os temas Claro, Escuro e Lima e Grafite.
+- Renova as três paletas com superfícies off-white, grafite e acentos mais claros, mantendo contraste e distinção nos gráficos.
+- Migra preferências salvas dos temas removidos para uma opção equivalente.
+
 ## 0.69.6 — 24/10/2026
 
 - Permite abrir e exportar os registros de OS e Zoho que formam categorias e pontos dos gráficos.
