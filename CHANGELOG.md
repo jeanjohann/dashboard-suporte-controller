@@ -1,3 +1,8 @@
+## 0.69.1 — 24/10/2026
+
+- Coloca os cards principais logo após os filtros em Indicadores Suporte e reduz espaçamentos de cards e gráficos.
+- Mantém a ordem do conteúdo igual para leitura visual, teclado e tecnologias assistivas.
+
 ## 0.69.0 — 24/10/2026
 
 - Amplia o D1 para consumo/franquias, painéis e últimas consultas Zoho, no piloto exclusivo do proprietário.

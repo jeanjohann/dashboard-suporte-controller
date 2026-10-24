@@ -127,6 +127,69 @@ function ClosedTicketDetails({ rows }) {
     </details>
   );
 }
+function IndicatorCards({ settings, values, oldValues, zohoData, weekly, manualMetric }) {
+  return (
+    <div className="si-cards">
+      {settings.cards.map((key) => (
+        <article className={`si-card si-card-${key}`} key={key}>
+          <span className="si-card-label">
+            {metricLabels[key]}
+            <InfoNote label={`Regras de ${metricLabels[key]}`}>
+              {key === 'executed'
+                ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
+                : key === 'scheduled'
+                  ? 'Uma linha com data de Agendamento e responsável válidos; exclui canceladas e pode incluir improdutivas.'
+                  : key === 'unproductive'
+                    ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
+                    : key === 'closed'
+                      ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
+                      : key === 'seconds'
+                        ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
+                        : key === 'created'
+                          ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
+                          : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
+              Comparação exige dados dos dois períodos e não soma indicadores manuais aos
+              automáticos.
+            </InfoNote>
+          </span>
+          <strong>
+            {key === 'closed' && values[key] == null && zohoData?.closureReview?.length
+              ? 'Em conferência'
+              : format(key, values[key])}
+          </strong>
+          {key === 'closed' && zohoData?.closureReview?.length > 0 && (
+            <small>
+              Histórico pendente: {zohoData.closureReview.map((row) => row.number).join(', ')}. Isso
+              não significa zero fechamentos.
+            </small>
+          )}
+          <small className="si-card-origin">
+            {manualMetric(key)
+              ? 'Manual · total informado'
+              : key === 'seconds' || key === 'closed' || key === 'created'
+                ? key === 'closed'
+                  ? 'Zoho · fechados atuais'
+                  : 'Zoho · eventos do período'
+                : 'OS · linhas da base'}
+          </small>
+          {values[key] != null && oldValues[key] != null && (
+            <small>
+              {`Anterior: ${format(key, oldValues[key])} · diferença: ${format(key, Math.abs(values[key] - oldValues[key]))} ${values[key] > oldValues[key] ? 'a mais' : values[key] < oldValues[key] ? 'a menos' : '(igual)'}`}
+            </small>
+          )}
+          {weekly && settings.weeklyGoals[key] != null && (
+            <small>
+              Meta semanal:{' '}
+              {key === 'seconds'
+                ? duration(settings.weeklyGoals[key] * 60)
+                : number(settings.weeklyGoals[key])}
+            </small>
+          )}
+        </article>
+      ))}
+    </div>
+  );
+}
 export function SupportIndicatorsPage({ onPage, active = true }) {
   const { user, managed } = useAccess(),
     { sources } = useDashboardSources(),
@@ -520,6 +583,16 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               save={store.save}
             />
           </section>
+          {valid && (
+            <IndicatorCards
+              settings={settings}
+              values={values}
+              oldValues={oldValues}
+              zohoData={zohoData}
+              weekly={weekly}
+              manualMetric={manualMetric}
+            />
+          )}
           <section className="si-panel si-sources" aria-label="Fontes e atualização">
             <WorkspaceQueryPanel
               kind="zoho-indicators"
@@ -631,7 +704,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               </p>
             )}
           </section>
-          <section className="si-panel" aria-label="Chamados pendentes atuais no Zoho">
+          <section className="si-panel si-backlog" aria-label="Chamados pendentes atuais no Zoho">
             <div className="si-backlog-heading">
               <div>
                 <h2>
@@ -681,68 +754,6 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
           </section>
           {valid && (
             <>
-              <div className="si-cards">
-                {settings.cards.map((key) => (
-                  <article className={`si-card si-card-${key}`} key={key}>
-                    <span className="si-card-label">
-                      {metricLabels[key]}
-                      <InfoNote label={`Regras de ${metricLabels[key]}`}>
-                        {key === 'executed'
-                          ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
-                          : key === 'scheduled'
-                            ? 'Uma linha com data de Agendamento e responsável válidos; exclui canceladas e pode incluir improdutivas.'
-                            : key === 'unproductive'
-                              ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
-                              : key === 'closed'
-                                ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
-                                : key === 'seconds'
-                                  ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
-                                  : key === 'created'
-                                    ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
-                                    : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
-                        Comparação exige dados dos dois períodos e não soma indicadores manuais aos
-                        automáticos.
-                      </InfoNote>
-                    </span>
-                    <strong>
-                      {key === 'closed' && values[key] == null && zohoData?.closureReview?.length
-                        ? 'Em conferência'
-                        : format(key, values[key])}
-                    </strong>
-                    {key === 'closed' && zohoData?.closureReview?.length > 0 && (
-                      <small>
-                        Histórico pendente:{' '}
-                        {zohoData.closureReview.map((row) => row.number).join(', ')}. Isso não
-                        significa zero fechamentos.
-                      </small>
-                    )}
-                    <small className="si-card-origin">
-                      {manualMetric(key)
-                        ? 'Manual · total informado'
-                        : key === 'seconds' || key === 'closed' || key === 'created'
-                          ? key === 'closed'
-                            ? 'Zoho · fechados atuais'
-                            : 'Zoho · eventos do período'
-                          : 'OS · linhas da base'}
-                    </small>
-                    {values[key] != null && oldValues[key] != null && (
-                      <small>
-                        {values[key] != null && oldValues[key] != null
-                          ? `Anterior: ${format(key, oldValues[key])} · diferença: ${format(key, Math.abs(values[key] - oldValues[key]))} ${values[key] > oldValues[key] ? 'a mais' : values[key] < oldValues[key] ? 'a menos' : '(igual)'}`
-                          : ''}
-                      </small>
-                    )}
-                    {weekly && settings.weeklyGoals[key] != null && (
-                      <small>
-                        Meta semanal:{' '}
-                        {key === 'seconds'
-                          ? duration(settings.weeklyGoals[key] * 60)
-                          : number(settings.weeklyGoals[key])}
-                      </small>
-                    )}
-                  </article>
-                ))}
-              </div>
               <details className="si-rule-summary">
                 <summary>Critérios da OS e cobertura</summary>
                 <p className="scope si-rules">

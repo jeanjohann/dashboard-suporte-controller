@@ -172,7 +172,7 @@
 .si-chart-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  gap: 16px;
   align-items: start;
 }
 .si-chart-grid > div {
@@ -316,7 +316,7 @@
 @media screen {
   .support-indicators-page .si-panel {
     padding: 12px 14px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .support-indicators-page .si-panel h2 {
     margin-bottom: 10px;
@@ -325,9 +325,9 @@
     align-items: center;
   }
   .support-indicators-page .si-card {
-    padding: 12px;
-    min-height: 108px;
-    gap: 5px;
+    padding: 11px 12px;
+    min-height: 96px;
+    gap: 4px;
   }
   .support-indicators-page .si-card-label {
     display: flex;
@@ -394,6 +394,16 @@
   }
   .support-indicators-page .si-heading {
     margin-bottom: 10px;
+  }
+  .support-indicators-page .si-cards {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .support-indicators-page .si-chart-grid {
+    gap: 12px;
+  }
+  .support-indicators-page .si-backlog-heading + .scope {
+    margin-bottom: 0;
   }
 }
 @media screen and (max-width: 480px) {
