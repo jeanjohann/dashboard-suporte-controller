@@ -1,4 +1,4 @@
-/* Claro, Escuro e Lima e Grafite; contraste de leitura e semântica de dados preservados. */
+/* Claro, Grafite e Azul, Lima e Grafite; contraste e semântica preservados. */
 /* Somente tela: impressão mantém os tokens próprios definidos em theme.css. */
 @media screen {
   :root[data-theme='light'] {
@@ -52,24 +52,24 @@
     --brand-logo-url: url('/brand/addlog-dark.svg');
     --brand-symbol-url: url('/brand/addlog-symbol-white.svg');
     --brand-surface: transparent;
-    --ui-background: #1e2225;
-    --ui-surface: #282d30;
-    --ui-soft: #343a3e;
-    --ui-ink: #eff3f2;
-    --ui-muted: #bbc5c6;
-    --ui-border: #4e595d;
-    --ui-line: #3a4347;
-    --ui-shadow: #00000038;
-    --ui-button-bg: #3b454a;
-    --ui-button-text: #f6f8f8;
-    --ui-button-hover: #4b595e;
-    --ui-accent: #63ddc2;
-    --ui-on-accent: #16382f;
-    --ui-accent-hover: #86efd4;
-    --ui-accent-ink: #84e9cf;
-    --ui-accent-soft: #253d37;
-    --ui-accent-border: #448673;
-    --ui-link: #83cdf5;
+    --ui-background: #171b21;
+    --ui-surface: #20262e;
+    --ui-soft: #2a3440;
+    --ui-ink: #eff4fb;
+    --ui-muted: #b5c2d1;
+    --ui-border: #435161;
+    --ui-line: #333d49;
+    --ui-shadow: #00000042;
+    --ui-button-bg: #303b47;
+    --ui-button-text: #f6f9ff;
+    --ui-button-hover: #3e4d5d;
+    --ui-accent: #3a8dff;
+    --ui-on-accent: #06172b;
+    --ui-accent-hover: #5aa2ff;
+    --ui-accent-ink: #7ebeff;
+    --ui-accent-soft: #1c324c;
+    --ui-accent-border: #2d70bd;
+    --ui-link: #72c1ff;
     --ui-coral: #ffb18c;
     --ui-success-bg: #203d33;
     --ui-success-ink: #a1e1b7;
@@ -82,16 +82,16 @@
     --ui-info-ink: #b6d9f2;
     --ui-violet-bg: #372e50;
     --ui-violet-ink: #d1c1f3;
-    --chart-primary: #63ddc2;
-    --chart-blue: #84bcf5;
-    --chart-teal: #55d4c0;
-    --chart-purple: #c1a0ee;
-    --chart-coral: #ffad82;
-    --chart-slate: #a5bac3;
-    --chart-amber: #f0cd6b;
-    --chart-rose: #ec9fc1;
-    --chart-other: #a7c6a5;
-    --chart-negative: #f28fa3;
+    --chart-primary: #57a6ff;
+    --chart-blue: #68d8ff;
+    --chart-teal: #39d9c1;
+    --chart-purple: #bd9cff;
+    --chart-coral: #ff9d79;
+    --chart-slate: #a6bacf;
+    --chart-amber: #f4d36c;
+    --chart-rose: #ff96c2;
+    --chart-other: #a2ce9b;
+    --chart-negative: #ff8399;
   }
 
   :root[data-theme='lime'] {

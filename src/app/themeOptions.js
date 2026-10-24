@@ -1,7 +1,7 @@
 /** Temas disponíveis; preferências antigas são migradas sem invalidar a sessão. */
 export const themes = [
   { id: 'light', label: 'Claro' },
-  { id: 'dark', label: 'Escuro' },
+  { id: 'dark', label: 'Grafite e Azul' },
   { id: 'lime', label: 'Lima e Grafite' },
 ];
 export const defaultTheme = 'light';

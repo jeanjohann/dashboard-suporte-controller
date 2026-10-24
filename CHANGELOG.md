@@ -1,3 +1,8 @@
+## 0.69.9 — 24/10/2026
+
+- Evolui o tema Escuro para Grafite e Azul, com azul profundo e realces luminosos.
+- Mantém três temas e preserva os nomes e preferências salvos dos demais.
+
 ## 0.69.8 — 24/10/2026
 
 - Remove o fundo do controle da logo e alterna entre variantes claras/escuras conforme o tema.
