@@ -2,7 +2,7 @@
 
 ## Acervo no banco 0.69.0 — 24/10/2026
 
-Preparada a persistência de consumo, franquias compartilhadas, configurações de painéis e últimas consultas Zoho (suporte, indicadores, pendências e sessões). Piloto restrito ao proprietário, migração local explícita, revisão atômica e partes deduplicadas. Sem migração SQL, exclusão de cópias ou atualização extra do fornecedor. Publicação e migração real permanecem etapas de ativação. [Uso, segurança, limites e homologação](PERSISTENCIA-DO-ACERVO-069.md).
+Publicada e ativada a persistência de consumo, franquias compartilhadas, configurações de painéis e últimas consultas Zoho (suporte, indicadores, pendências e sessões). Piloto restrito ao proprietário, migração local explícita, revisão atômica e partes deduplicadas. Sem migração SQL, exclusão de cópias ou atualização extra do fornecedor. Acesso e interface conferidos em produção; transferência dos dados locais permanece uma ação do proprietário. [Uso, segurança, limites e homologação](PERSISTENCIA-DO-ACERVO-069.md).
 
 Permanecem: revisão/limpeza de arquivos com comprovação de desuso; conferência de indicadores com relatórios reais; CSV Session real; confirmação do ciclo KORE; endpoint de chip/consumo do Monitoramento; política de limpeza/recuperação das versões deste novo acervo. A retenção das fontes anteriores não mudou.
 

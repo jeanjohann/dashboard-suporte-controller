@@ -2,6 +2,8 @@
 
 Preparada em 24/10/2026, após autorização para ampliar o banco. A publicação/ativação é uma etapa separada. Piloto exclusivo do administrador principal; nenhum dado real foi migrado automaticamente durante a preparação.
 
+**Ativada em 24/10/2026 com autorização explícita:** código `bfe5b26` publicado no GitHub e no Cloudflare. Implantação ativa conferida com 100% do tráfego; as duas versões registradas na publicação têm o mesmo etag de Worker. Sessão autenticada confirmou `permitted: true`, leitura dos recursos no D1 e indicação **Banco do sistema** no Dashboard, sem erro. A migração real continua sendo uma ação do proprietário no navegador de origem. Validação final: 500 testes aprovados, nenhum com falha e um previamente ignorado; formatação, imports, build e preparação do Worker conferidos.
+
 ## O que vai para o D1
 
 | Recurso            | Conteúdo e funcionamento                                                                                                                                                                                                                      |
