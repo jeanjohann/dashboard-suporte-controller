@@ -118,7 +118,7 @@
   border-top: 1px solid var(--ui-line);
   padding-top: 8px;
 }
-.si-sources > div:first-child {
+.si-source-status {
   display: flex;
   gap: 8px 14px;
   align-items: baseline;
@@ -309,7 +309,7 @@
     align-items: start;
     flex-direction: column;
   }
-  .support-indicators-page .si-sources > div:first-child {
+  .support-indicators-page .si-source-status {
     grid-template-columns: max-content minmax(0, 1fr);
   }
   .si-panel {
@@ -372,7 +372,7 @@
     flex-wrap: wrap;
     gap: 4px 12px;
   }
-  .support-indicators-page .si-sources > div:first-child {
+  .support-indicators-page .si-source-status {
     flex: 1 1 100%;
     display: grid;
     grid-template-columns: max-content minmax(0, 1fr) max-content minmax(0, 1fr);
@@ -380,7 +380,7 @@
     gap: 4px 10px;
     margin-bottom: 0;
   }
-  .support-indicators-page .si-sources > div:first-child > small {
+  .support-indicators-page .si-source-status > small {
     min-width: 0;
     overflow-wrap: anywhere;
   }

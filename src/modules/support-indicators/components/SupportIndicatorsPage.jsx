@@ -507,7 +507,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         <Navigation page="support-indicators" onPage={onPage} />
         <main>
           <header className="si-heading">
-            <div>
+            <div className="si-source-status">
               <h1>Indicadores Suporte</h1>
               <p>Atendimentos, serviços e atividades da equipe.</p>
             </div>

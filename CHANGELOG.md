@@ -1,3 +1,7 @@
+## 0.69.3 — 24/10/2026
+
+- Identifica explicitamente o bloco das fontes em Indicadores Suporte para alinhar os rótulos mesmo quando os painéis de consulta do banco estão visíveis.
+
 ## 0.69.2 — 24/10/2026
 
 - Alinha os nomes e os valores das fontes de Indicadores Suporte para facilitar a conferência da base e da consulta Zoho.
