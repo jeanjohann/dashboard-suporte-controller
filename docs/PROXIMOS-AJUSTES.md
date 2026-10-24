@@ -1,5 +1,16 @@
 # Fila de implementação e ajustes
 
+## Revisão de regras — definições de 24/10/2026
+
+Referência atual para esta frente: [matriz de regras e diagnósticos por indicador](MATRIZ-DE-REGRAS-E-REVISAO.md). Levantamento documental, sem alterar os cálculos ou publicar novas regras nesta rodada.
+
+- Confirmado: atendimentos do suporte continuam por linha; pares de retirada/instalação continuam sendo eventos próprios de troca/ciclo. Retirada a proposta de consolidar linhas para reduzir atendimentos.
+- Ajustar Zoho: categorias conhecidas também zeradas após consulta completa, espera por agente e fechados pelo estado atual da consulta. A versão 0.65.0 ainda conta eventos de fechamento no período, inclusive se houver reabertura: não considerar essa nova regra entregue.
+- API é referência do cadastro atual. Ampliar conferência com placa, prefixo, rastreador, modelo, ICCID, MSISDN e base, conforme campos efetivamente disponibilizados; contrato integrado atual ainda não conserva ICCID/MSISDN.
+- KORE com API e importações na própria página; Arqia manual na própria página. Acompanhamento e Relatórios serão as visões consolidadas. Arqia paga não será pré-requisito dessa organização. Vínculo pelo Operacional e, quando disponível, monitoramento em campo.
+- A08 (faturamento esperado/competência/pró-rata) fora da fila ativa por orientação do proprietário. Demonstrativos dos valores já lançados preservados. CNPJ C e consolidação por nomes idênticos continuam confirmados.
+- Rever todos os diagnósticos de revisão com aplicabilidade, evidência, impacto e ação; lista inicial RV01–RV15 na matriz. Não apagar ou corrigir planilhas automaticamente.
+
 ## Indicadores Suporte 0.65.0 — 24/10/2026
 
 Regra de improdutivas alinhada entre totais e linhas de conferência. Acrescenta carteira atual de pendências atribuídas por agente, independente do período, e categorias por agente com detalhe paginado dos chamados fechados. CSV mantém todos os detalhes. Sem mudança de permissões, credenciais ou gravações no D1. A conferência de fechamentos continua exigindo histórico válido do Zoho; não substitui autoria por responsável atual. [Uso, limites e critérios](INDICADORES-SUPORTE.md).
