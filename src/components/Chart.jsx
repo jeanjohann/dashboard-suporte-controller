@@ -173,6 +173,11 @@ export function Chart({
             );
           })}
         </div>
+        {onItemClick && (
+          <small className="chart-drilldown-hint">
+            Selecione uma categoria para conferir os registros que compõem o valor.
+          </small>
+        )}
       </div>
     );
   }
@@ -218,7 +223,15 @@ export function Chart({
               <Tooltip formatter={format} />
             </PieChart>
           ) : type === 'line' ? (
-            <LineChart data={items} margin={{ left: 20, right: 30, bottom: 40 }}>
+            <LineChart
+              data={items}
+              margin={{ left: 20, right: 30, bottom: 40 }}
+              onClick={(event) => {
+                const point = event?.activePayload?.[0]?.payload;
+                if (point && onItemClick) onItemClick(point);
+              }}
+              style={onItemClick ? { cursor: 'crosshair' } : undefined}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="label" angle={-25} textAnchor="end" height={70} />
               <YAxis width={110} tickFormatter={format} />
@@ -242,6 +255,27 @@ export function Chart({
           )}
         </ResponsiveContainer>
       </div>
+      {compact && type === 'line' && onItemClick && (
+        <>
+          <small className="chart-drilldown-hint">
+            Clique em um ponto da linha ou escolha uma data para conferir os registros.
+          </small>
+          <details className="chart-drilldown-picker">
+            <summary>Conferir registros por data</summary>
+            <div>
+              {items.map((item) => (
+                <button
+                  type="button"
+                  key={item.detailKey || item.label}
+                  onClick={() => onItemClick(item)}
+                >
+                  {item.label} · {format(item.value)}
+                </button>
+              ))}
+            </div>
+          </details>
+        </>
+      )}
       {circular && (
         <>
           <p hidden={compact} className="scope">

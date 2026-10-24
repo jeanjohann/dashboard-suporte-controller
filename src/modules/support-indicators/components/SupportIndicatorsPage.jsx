@@ -11,7 +11,8 @@ import { supportPeriod } from '../../orders/domain/supportPerformance.js';
 import { todaySaoPaulo } from '../../orders/domain/lifecycle.js';
 import { Chart } from '../../../components/Chart.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
-import { supportClosureBasis } from '../../../shared/data/zohoActivity.js';
+import { supportClosureBasis, zohoDay } from '../../../shared/data/zohoActivity.js';
+import { attendanceExtent } from '../../../shared/data/filters.js';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import {
@@ -233,6 +234,149 @@ function IndicatorCards({
     </div>
   );
 }
+function SourceCoverage({ ordersData, orders, zohoData, zoho, manual, store, period, valid }) {
+  const extent = useMemo(() => (ordersData ? attendanceExtent(ordersData) : null), [ordersData]);
+  const fullZoho = Boolean(zoho && zohoData);
+  const zohoRange = zohoData?.period;
+  const manualStatus = store.loading
+    ? 'Carregando os lançamentos manuais.'
+    : store.ready
+      ? `${manual?.entries.length || 0} lançamentos no recorte · ${manual?.filled || 0} campos preenchidos.`
+      : 'Lançamentos manuais indisponíveis.';
+  return (
+    <section className="si-coverage" aria-label="Cobertura das fontes no período">
+      <div>
+        <strong>OS</strong>
+        <span>
+          {!valid
+            ? 'Período inválido; ajuste o intervalo para conferir a cobertura.'
+            : !ordersData
+              ? 'Base ainda não carregada.'
+              : orders?.unavailable
+                ? `Indisponível · faltam ${orders.unavailable.join(', ')}.`
+                : `${ordersData.rows.length.toLocaleString('pt-BR')} linhas na base · ${orders?.rows.length || 0} linhas elegíveis no recorte.`}
+        </span>
+        {extent?.start && (
+          <small>
+            Datas de atendimento presentes: {date(extent.start)} a {date(extent.end)}
+            {extent.missing ? ` · ${extent.missing} sem data válida na base` : ''}
+          </small>
+        )}
+        {orders &&
+          !orders.unavailable &&
+          (orders.missingExecutionDate > 0 || orders.missingScheduleDate > 0) && (
+            <small>
+              Fora dos totais por falta de data: {orders.missingExecutionDate} execuções e{' '}
+              {orders.missingScheduleDate} agendamentos.
+            </small>
+          )}
+      </div>
+      <div>
+        <strong>Zoho Desk</strong>
+        <span>
+          {!valid
+            ? 'A cobertura será conferida após corrigir o período.'
+            : fullZoho
+              ? `Consulta cobre todo o período · ${(zoho.timeEntries?.length || 0).toLocaleString('pt-BR')} apontamentos válidos.`
+              : zohoRange
+                ? `Consulta de ${date(zohoRange.start)} a ${date(zohoRange.end)} · não cobre todo o recorte.`
+                : 'Sem consulta que cubra todo o período.'}
+        </span>
+        {zohoData?.readAt && <small>Atualizado em {timestamp(zohoData.readAt)}.</small>}
+      </div>
+      <div>
+        <strong>Manual</strong>
+        <span>{manualStatus}</span>
+        <small>
+          Campos vazios não equivalem a zero; dados manuais permanecem separados dos automáticos.
+        </small>
+      </div>
+      <p className="si-coverage-period">
+        Recorte analisado: {date(period.start)} a {date(period.end)}. Linhas sem evidência
+        suficiente ficam fora dos totais, sem serem tratadas como zero.
+      </p>
+    </section>
+  );
+}
+function DrilldownDialog({ detail, onClose }) {
+  const dialog = useRef(null);
+  const [page, setPage] = useState(0);
+  useEffect(() => setPage(0), [detail]);
+  useEffect(() => {
+    if (detail && dialog.current && !dialog.current.open) dialog.current.showModal();
+  }, [detail]);
+  if (!detail) return null;
+  const pageSize = 25;
+  const lastPage = Math.max(0, Math.ceil(detail.rows.length / pageSize) - 1);
+  const selectedPage = Math.min(page, lastPage);
+  return (
+    <dialog
+      ref={dialog}
+      className="si-drilldown"
+      onClose={onClose}
+      aria-labelledby="si-drilldown-title"
+    >
+      <header>
+        <div>
+          <h2 id="si-drilldown-title">{detail.title}</h2>
+          <p>
+            {detail.source} · {detail.rows.length.toLocaleString('pt-BR')} registros
+          </p>
+        </div>
+        <div className="si-toolbar">
+          <button
+            type="button"
+            onClick={async () => {
+              if (!(await authorizeAction('export'))) return;
+              const filename = detail.title
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLocaleLowerCase('pt-BR')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+              await download(
+                csv([detail.headers, ...detail.rows]),
+                'text/csv;charset=utf-8',
+                `indicadores-suporte-${filename || 'detalhes'}.csv`,
+              );
+            }}
+          >
+            Exportar CSV
+          </button>
+          <button type="button" onClick={() => dialog.current?.close()}>
+            Fechar
+          </button>
+        </div>
+      </header>
+      {detail.rows.length ? (
+        <>
+          <Table
+            headers={detail.headers}
+            rows={detail.rows.slice(selectedPage * pageSize, selectedPage * pageSize + pageSize)}
+          />
+          {lastPage > 0 && (
+            <div className="si-toolbar">
+              <button disabled={!selectedPage} onClick={() => setPage(selectedPage - 1)}>
+                Anterior
+              </button>
+              <span>
+                Página {selectedPage + 1} de {lastPage + 1}
+              </span>
+              <button
+                disabled={selectedPage === lastPage}
+                onClick={() => setPage(selectedPage + 1)}
+              >
+                Próxima
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="scope">Nenhum registro compõe este valor no recorte atual.</p>
+      )}
+    </dialog>
+  );
+}
 export function SupportIndicatorsPage({ onPage, active = true }) {
   const { user, managed } = useAccess(),
     { sources } = useDashboardSources(),
@@ -241,6 +385,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [manualDirty, setManualDirty] = useState(false),
     [agentId, setAgent] = useState(''),
     [ownZoho, setOwnZoho] = useState(null),
+    [drilldown, setDrilldown] = useState(null),
+    [compactView, setCompactView] = useState(false),
     [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(0),
     [error, setError] = useState('');
@@ -360,6 +506,81 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       m?.activities ?? null,
     ];
   });
+  function showOrderDetails(title, predicate, stage = 'execution') {
+    const rows = (orders?.rows || []).filter(predicate).map((row) => {
+      const scheduled = stage === 'scheduling';
+      return [
+        row.os || 'Sem OS informada',
+        row.sourceRow,
+        date(scheduled ? row.scheduledAt : row.executedAt),
+        row.type || 'Não informado',
+        scheduled ? (row.unproductive ? 'Visita improdutiva' : 'Agendamento') : 'Execução efetiva',
+        scheduled ? row.schedulerName : row.executorName,
+      ];
+    });
+    setDrilldown({
+      title,
+      source: 'OS · linhas da base',
+      headers: ['OS', 'Linha na planilha', 'Data', 'Tipo de serviço', 'Etapa', 'Responsável'],
+      rows,
+    });
+  }
+  function showZohoTimeDetails(title, predicate) {
+    const filtered = (zoho?.timeEntries || []).filter(predicate);
+    setDrilldown({
+      title,
+      source: 'Zoho Desk · apontamentos do período',
+      headers: ['Chamado', 'Agente', 'Data do apontamento', 'Tempo apontado'],
+      rows: filtered.map((row) => [
+        zoho?.closedTickets?.find((ticket) => ticket.ticketId === row.ticketId)?.number ||
+          row.ticketId,
+        row.agent,
+        timestamp(row.executedTime),
+        duration(row.seconds),
+      ]),
+    });
+  }
+  function showClosedTicketDetails(title, predicate) {
+    const rows = (zoho?.closedTickets || []).filter(predicate);
+    setDrilldown({
+      title,
+      source: 'Zoho Desk · chamados fechados atuais no período',
+      headers: [
+        'Chamado',
+        'Agente que fechou',
+        'Fechado em',
+        'Categoria',
+        'Subcategoria',
+        'Classificação',
+      ],
+      rows: rows.map((row) => [
+        row.number,
+        row.agent,
+        timestamp(row.closedAt),
+        row.category,
+        row.subCategory,
+        row.classification,
+      ]),
+    });
+  }
+  function showManualSubjectDetails(title, key) {
+    const fieldKey = `subject_${key}`;
+    const rows = (manual?.entries || [])
+      .filter((entry) => entry.value.values[fieldKey] != null)
+      .map((entry) => [
+        date(entry.value.date),
+        agents.find((agent) => agent.id === entry.value.agentId)?.name || 'Sem agente',
+        entry.value.values[fieldKey],
+        entry.value.note || 'Sem observação',
+        entry.revision,
+      ]);
+    setDrilldown({
+      title,
+      source: 'Indicadores manuais · lançamentos do período',
+      headers: ['Data', 'Agente', 'Quantidade informada', 'Observação', 'Revisão'],
+      rows,
+    });
+  }
   useEffect(
     () => () => {
       pending.current?.abort();
@@ -439,9 +660,30 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       ['Indicadores Suporte'],
       ['Início', period.start],
       ['Fim', period.end],
+      ['Comparação com', `${past?.start || '—'} a ${past?.end || '—'}`],
       ['Agente', agents.find((a) => a.id === agentId)?.name || 'Toda a equipe'],
       ['OS', sources.orders?.value?.filename || 'Não carregada'],
       ['Zoho consultado em', zoho ? zohoData.readAt : 'Não disponível para este período'],
+      [
+        'Cobertura OS',
+        ordersData
+          ? `${ordersData.rows.length} linhas na base · ${orders?.rows.length || 0} linhas elegíveis no recorte`
+          : 'Sem base carregada',
+      ],
+      [
+        'Cobertura Zoho',
+        zoho
+          ? `Consulta completa de ${zohoData.period.start} a ${zohoData.period.end}`
+          : zohoData?.period
+            ? `Consulta de ${zohoData.period.start} a ${zohoData.period.end}; cobertura parcial`
+            : 'Sem consulta completa',
+      ],
+      [
+        'Cobertura manual',
+        store.ready
+          ? `${manual?.entries.length || 0} lançamentos · ${manual?.filled || 0} campos preenchidos no recorte`
+          : 'Lançamentos indisponíveis',
+      ],
       [
         'Critério',
         'OS em linhas, execução efetiva exclui visita improdutiva; agenda usa data Agendamento, exclui status cancelado. Não somar agenda e execução.',
@@ -451,20 +693,31 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         'Totais dos campos preenchidos; vazios não equivalem a zero. Criados = abertos pelo suporte.',
       ],
       [],
-      ['Indicador', 'Valor', 'Unidade', 'Origem'],
+      ['Indicador', 'Valor atual', 'Valor anterior', 'Variação', 'Variação %', 'Unidade', 'Origem'],
     ];
-    Object.entries(metricLabels).forEach(([key, label]) =>
+    Object.entries(metricLabels).forEach(([key, label]) => {
+      const comparable = comparisonAvailable(key) && values[key] != null && oldValues[key] != null;
+      const difference = comparable ? values[key] - oldValues[key] : null;
+      const percentage =
+        comparable && oldValues[key] !== 0
+          ? `${Math.round((Math.abs(difference) / oldValues[key]) * 100)}%`
+          : comparable
+            ? 'Base anterior zero'
+            : null;
       report.push([
         label,
         values[key],
+        comparable ? oldValues[key] : null,
+        difference,
+        percentage,
         key === 'seconds' ? 'segundos' : 'quantidade',
         manualMetric(key)
           ? 'Manual'
           : key === 'seconds' || key === 'closed' || key === 'created'
             ? 'Zoho'
             : 'OS',
-      ]),
-    );
+      ]);
+    });
     report.push(
       [],
       [
@@ -564,7 +817,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     !agentId;
   return (
     <SidePanelProvider>
-      <div className="app support-indicators-page">
+      <div className={`app support-indicators-page${compactView ? ' si-compact-mode' : ''}`}>
         <Navigation page="support-indicators" onPage={onPage} />
         <main>
           <header className="si-heading">
@@ -573,6 +826,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <p>Atendimentos, serviços e atividades da equipe.</p>
             </div>
             <div className="si-toolbar">
+              <button
+                type="button"
+                aria-pressed={compactView}
+                onClick={() => setCompactView((value) => !value)}
+              >
+                {compactView ? 'Leitura completa' : 'Leitura compacta'}
+              </button>
               <button
                 disabled={!valid || busy || backlogBusy || store.loading}
                 onClick={exportReport}
@@ -588,6 +848,30 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               </button>
             </div>
           </header>
+          <section className="si-print-summary" aria-label="Escopo e critérios do relatório">
+            <h2>Escopo e critérios</h2>
+            <p>
+              Período: {date(period.start)} a {date(period.end)} · Agente:{' '}
+              {agents.find((agent) => agent.id === agentId)?.name || 'Toda a equipe'}.
+            </p>
+            <p>
+              OS: {sources.orders?.value?.filename || 'base não carregada'} ·{' '}
+              {ordersData ? `${ordersData.rows.length} linhas na base` : 'sem cobertura confirmada'}
+              . Execuções efetivas excluem visitas improdutivas; agendamentos usam a data marcada e
+              não devem ser somados às execuções.
+            </p>
+            <p>
+              Zoho:{' '}
+              {zohoData?.period
+                ? `${date(zohoData.period.start)} a ${date(zohoData.period.end)}`
+                : 'sem consulta completa'}
+              . Fechados usam o status atual; tempo é a soma dos apontamentos, não tempo conectado.
+            </p>
+            <p>
+              Manual: {manual?.entries.length || 0} lançamentos no recorte. Campos vazios não
+              representam zero e não são combinados com indicadores automáticos.
+            </p>
+          </section>
           <section className="si-panel si-filters" aria-label="Filtros dos Indicadores Suporte">
             <div className="si-toolbar">
               <label>
@@ -655,6 +939,16 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               comparisonAvailable={comparisonAvailable}
             />
           )}
+          <SourceCoverage
+            ordersData={ordersData}
+            orders={orders}
+            zohoData={zohoData}
+            zoho={zoho}
+            manual={manual}
+            store={store}
+            period={period}
+            valid={valid}
+          />
           <section className="si-panel si-sources" aria-label="Fontes e atualização">
             <WorkspaceQueryPanel
               kind="zoho-indicators"
@@ -920,8 +1214,18 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         hasOrders
                                           ? orders.agents
                                               .filter((a) => !agentId || a.id === agentId)
-                                              .map((a) => ({ label: a.name, value: a.executed }))
+                                              .map((a) => ({
+                                                id: a.id,
+                                                label: a.name,
+                                                value: a.executed,
+                                              }))
                                           : []
+                                      }
+                                      onItemClick={(item) =>
+                                        showOrderDetails(
+                                          `Execuções efetivas · ${item.label}`,
+                                          (row) => row.execution && row.executor === item.id,
+                                        )
                                       }
                                     />
                                   </div>
@@ -931,10 +1235,17 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       compact
                                       title="Tempo apontado por agente"
                                       items={(zoho?.agents || []).map((a) => ({
+                                        id: a.id,
                                         label: a.name,
                                         value: a.seconds,
                                       }))}
                                       format={duration}
+                                      onItemClick={(item) =>
+                                        showZohoTimeDetails(
+                                          `Tempo apontado · ${item.label}`,
+                                          (row) => row.agentId === item.id,
+                                        )
+                                      }
                                     />
                                   </div>
                                 </div>
@@ -970,9 +1281,16 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       hasOrders
                                         ? orders.daily.map((d) => ({
                                             label: date(d.label),
+                                            detailKey: d.label,
                                             value: d.executed,
                                           }))
                                         : []
+                                    }
+                                    onItemClick={(item) =>
+                                      showOrderDetails(
+                                        `Execuções efetivas · ${item.label}`,
+                                        (row) => row.execution && row.executedAt === item.detailKey,
+                                      )
                                     }
                                   />
                                   <small>
@@ -987,10 +1305,17 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     type="line"
                                     items={(zoho?.daily || []).map((d) => ({
                                       label: date(d.label),
+                                      detailKey: d.label,
                                       value: d.value / 3600,
                                     }))}
                                     format={(n) =>
                                       `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}h`
+                                    }
+                                    onItemClick={(item) =>
+                                      showZohoTimeDetails(
+                                        `Tempo apontado · ${item.label}`,
+                                        (row) => zohoDay(row.executedTime) === item.detailKey,
+                                      )
                                     }
                                   />
                                   <small>
@@ -1013,6 +1338,14 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                             value: d.executed,
                                           }))
                                         : []
+                                    }
+                                    onItemClick={(item) =>
+                                      showOrderDetails(
+                                        `Execuções efetivas · ${item.label}`,
+                                        (row) =>
+                                          row.execution &&
+                                          (row.type || 'Não informado') === item.label,
+                                      )
                                     }
                                   />
                                   <Table
@@ -1057,8 +1390,14 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     compact
                                     title="Categorias dos chamados fechados"
                                     items={zoho.categories}
+                                    onItemClick={(item) =>
+                                      showClosedTicketDetails(
+                                        `Chamados fechados · ${item.label}`,
+                                        (row) => row.category === item.label,
+                                      )
+                                    }
                                   />
-                                  <details>
+                                  <details className="si-report-expandable">
                                     <summary>Tabela por categoria</summary>
                                     <Table
                                       headers={[
@@ -1068,7 +1407,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       rows={zoho.categories.map((r) => [r.label, r.value])}
                                     />
                                   </details>
-                                  <details>
+                                  <details className="si-report-expandable">
                                     <summary>Distribuição por agente e categoria</summary>
                                     <Table
                                       headers={[
@@ -1100,9 +1439,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     items={subjects
                                       .filter(([key]) => manual?.totals[`subject_${key}`] != null)
                                       .map(([key, label]) => ({
+                                        detailKey: key,
                                         label,
                                         value: manual.totals[`subject_${key}`],
                                       }))}
+                                    onItemClick={(item) =>
+                                      showManualSubjectDetails(item.label, item.detailKey)
+                                    }
                                   />
                                   <Table
                                     headers={['Assunto', 'Quantidade informada']}
@@ -1196,6 +1539,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             </>
           )}
         </main>
+        <DrilldownDialog detail={drilldown} onClose={() => setDrilldown(null)} />
       </div>
     </SidePanelProvider>
   );

@@ -1,3 +1,9 @@
+## 0.69.6 — 24/10/2026
+
+- Permite abrir e exportar os registros de OS e Zoho que formam categorias e pontos dos gráficos.
+- Expõe a cobertura do período e o estado de cada fonte junto aos indicadores.
+- Adiciona leitura compacta e melhora o relatório para impressão/PDF com escopo, fontes, critérios e comparações.
+
 ## 0.69.5 — 24/10/2026
 
 - Agrupa os gráficos dos Indicadores Suporte em três blocos de leitura: equipe, ritmo dos atendimentos e perfil do suporte.

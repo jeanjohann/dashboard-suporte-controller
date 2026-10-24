@@ -217,6 +217,109 @@
   font-variant-numeric: tabular-nums;
   line-height: 1.35;
 }
+.si-coverage {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 16px;
+  padding: 9px 12px;
+  margin: 0 0 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-soft);
+  font-size: 11px;
+}
+.si-coverage > div {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  min-width: 0;
+}
+.si-coverage strong {
+  font-size: 11px;
+}
+.si-coverage span,
+.si-coverage small,
+.si-coverage-period {
+  color: var(--ui-muted);
+  overflow-wrap: anywhere;
+}
+.si-coverage-period {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 10px;
+}
+.si-drilldown {
+  width: min(1000px, calc(100vw - 32px));
+  max-width: 1000px;
+  max-height: min(85vh, 850px);
+  padding: 16px;
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+}
+.si-drilldown::backdrop {
+  background: rgb(0 0 0 / 55%);
+  backdrop-filter: blur(2px);
+}
+.si-drilldown > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.si-drilldown h2 {
+  margin: 0 0 4px;
+}
+.si-drilldown header p {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 12px;
+}
+.si-drilldown .si-table {
+  max-height: min(60vh, 570px);
+}
+.si-drilldown .si-toolbar {
+  justify-content: end;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.si-print-summary {
+  display: none;
+}
+.chart-drilldown-hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+.chart-drilldown-picker > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 6px;
+}
+.chart-drilldown-picker button {
+  min-height: 28px !important;
+  padding: 4px 7px !important;
+  font-size: 10px !important;
+}
+.si-compact-mode .si-story-section .si-table,
+.si-compact-mode .si-story-section details,
+.si-compact-mode .si-story-section .si-manual-form {
+  display: none;
+}
+.si-compact-mode .si-story-section details.chart-drilldown-picker {
+  display: block;
+}
+.si-compact-mode .si-story-sections {
+  gap: 8px;
+}
+.si-compact-mode .si-story-section + .si-story-section {
+  padding-top: 8px;
+}
 .si-table {
   overflow: auto;
   max-height: 460px;
@@ -348,6 +451,9 @@
     align-items: start;
     flex-direction: column;
   }
+  .si-coverage {
+    grid-template-columns: 1fr;
+  }
   .support-indicators-page .si-source-status {
     grid-template-columns: max-content minmax(0, 1fr);
   }
@@ -472,6 +578,51 @@
   .support-indicators-page .si-heading button,
   .support-indicators-page .si-manual-form {
     display: none;
+  }
+  .support-indicators-page .si-sources,
+  .support-indicators-page .si-drilldown,
+  .support-indicators-page .si-coverage-period {
+    display: none !important;
+  }
+  .support-indicators-page .si-print-summary {
+    display: block;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    color: #111;
+    font-size: 10pt;
+  }
+  .support-indicators-page .si-print-summary h2 {
+    margin: 0 0 6px;
+  }
+  .support-indicators-page .si-print-summary p {
+    margin: 4px 0;
+  }
+  .support-indicators-page details.si-report-expandable > summary {
+    display: none;
+  }
+  .support-indicators-page details.si-report-expandable > :not(summary) {
+    display: block !important;
+  }
+  .support-indicators-page .si-compact-mode .si-story-section .si-table,
+  .support-indicators-page .si-compact-mode .si-story-section details {
+    display: block !important;
+  }
+  .support-indicators-page .si-story,
+  .support-indicators-page .si-story-section,
+  .support-indicators-page .si-coverage {
+    color: #111;
+    background: #fff;
+    box-shadow: none;
+  }
+  .support-indicators-page .si-coverage {
+    border-color: #aaa;
+  }
+  .support-indicators-page .si-coverage strong,
+  .support-indicators-page .si-coverage span,
+  .support-indicators-page .si-coverage small {
+    color: #111;
   }
   .si-table {
     max-height: none;

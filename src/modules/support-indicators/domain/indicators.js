@@ -114,9 +114,12 @@ export function ordersSummary(data, period, agentId = '') {
         scheduledAt,
         executor,
         scheduler,
+        executorName: agents.find((a) => a.id === executor)?.name || '',
+        schedulerName: agents.find((a) => a.id === scheduler)?.name || '',
         execution: Boolean(execution),
         scheduling: Boolean(scheduling),
         unproductive,
+        status,
         type: text(row, 'Tipo de Serviço'),
       });
   }
@@ -214,6 +217,13 @@ export function zohoSummary(data, period, agentId = '') {
           .sort((a, b) => b.value - a.value)
       : null,
     closedTickets,
+    timeEntries: entries.map((row) => ({
+      ticketId: row.ticketId,
+      agentId: row.agentId,
+      agent: agents.find((a) => a.id === row.agentId)?.name || 'Agente não identificado',
+      executedTime: row.executedTime,
+      seconds: row.seconds,
+    })),
     categoryAgents: closedTickets
       ? [
           ...closedTickets
