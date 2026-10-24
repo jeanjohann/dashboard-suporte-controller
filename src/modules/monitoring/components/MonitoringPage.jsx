@@ -494,6 +494,13 @@ export function MonitoringPage({ onPage, operational }) {
                   </FilterPanel>
                 )}
                 <MonitoringReminders reminders={reminders} demo={false} />
+                {savedMode && ['queue', 'reports'].includes(category) && (
+                  <MonitoringEvents
+                    savedAt={savedAt}
+                    snapshot={source}
+                    onVehicle={openEventVehicle}
+                  />
+                )}
                 {exportError && (
                   <p role="alert" className="notice">
                     {exportError}

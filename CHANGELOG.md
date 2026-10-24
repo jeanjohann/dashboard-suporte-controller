@@ -1,3 +1,7 @@
+## 0.67.1 — 24/10/2026
+
+- Exibe os avisos das coletas também quando o Monitoramento já tem uma fotografia carregada. Mantém a leitura do histórico no estado sem fotografia.
+
 ## 0.67.0 — 24/10/2026
 
 - Avisos internos dos atrasos/retornos salvos, com paginação, vistos locais, CSV e acesso ao veículo; cobertura dos campos da API visível.

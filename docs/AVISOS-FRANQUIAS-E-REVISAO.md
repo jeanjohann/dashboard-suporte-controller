@@ -1,5 +1,7 @@
 # Avisos, franquias compartilhadas e revisão — 0.67.0
 
+Correção 0.67.1: painel de avisos integrado também ao estado com fotografia carregada. Página completa com fonte fictícia, expansão dos avisos e abertura do histórico do veículo conferidas no navegador. Checagem final com 487 testes aprovados e um previamente ignorado.
+
 Rodada autorizada em 24/10/2026. O proprietário definiu avisos dentro do sistema, franquias compartilhadas e preparação da conferência KORE enquanto o ciclo do acumulado não é confirmado pela operadora. Refatoração e revisão foram autorizadas na sequência.
 
 ## Monitoramento

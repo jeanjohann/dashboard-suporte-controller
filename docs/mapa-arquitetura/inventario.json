@@ -1,6 +1,6 @@
 {
-  "version": "0.67.0",
-  "base": "967f224 · cópia da entrega",
+  "version": "0.67.1",
+  "base": "67c4f86 · cópia da entrega",
   "date": "2026-10-24",
   "total": 531,
   "tests": 111,
@@ -452,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 102746,
-      "sha256": "0be1060be1b8292b23f9f329dca32a59facfeacf922f7b7990db328f8835455c",
+      "bytes": 102926,
+      "sha256": "fc411d55800d24ba1fd2fadcad58c18fb6ed441b01a0e9942045b026ab7698d8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -550,8 +550,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 7881,
-      "sha256": "fff7b8d36a97a8e045786cbf775f2a074d18baaa9224824255490dac5cd6ff8c",
+      "bytes": 8160,
+      "sha256": "c4323a4a962d08f58e9ebac092f5df1b081a3e274144d6a94d05eae9a4878ec4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1377,7 +1377,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "df36898a1194d14986887d93e220b90f9b86de9447ce33d3ea09508feb639cfc",
+      "sha256": "5dd14133db9162e4dc0ba056fa88c8896aacaf761658c7ed6d28be117f38452a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1391,7 +1391,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1361,
-      "sha256": "af7d93b7dea8e9334a3017f8f2090cbba8629770c8b4d09b1754c63582d932fb",
+      "sha256": "788aca8098c3f3d8385df316dff19758123dd95ec161cb49e8b05c4a7bec0128",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5022,8 +5022,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 25792,
-      "sha256": "8afa120d42d1ed8f7d117f3c9070492e5e7ea82cf51232899d94edeee49aca30",
+      "bytes": 26068,
+      "sha256": "b0448b2a6cd48b79f0b5b84aa180e25bd5ef14041a475ed18eb9127902bd38c9",
       "status": "Diagnóstico legado / consulta manual"
     },
     {

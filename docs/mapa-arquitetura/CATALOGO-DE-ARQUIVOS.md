@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.67.0 · referência 967f224 · cópia da entrega · 2026-10-24 · **531 arquivos / 111 arquivos de teste / 72 pastas**.
+Addlog 0.67.1 · referência 67c4f86 · cópia da entrega · 2026-10-24 · **531 arquivos / 111 arquivos de teste / 72 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
