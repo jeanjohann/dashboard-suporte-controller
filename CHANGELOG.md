@@ -1,3 +1,9 @@
+## 0.66.1 — 24/10/2026
+
+- Seletor reduzido a Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul, com fonte compacta.
+- Duas paletas claras off-white e duas escuras grafite com destaques luminosos moderados; cores semânticas preservadas.
+- Migração de preferências antigas, contraste dos principais tokens conferido e impressão independente da aparência de tela.
+
 ## 0.66.0 — 24/10/2026
 
 - Indicadores Suporte compacto, com ajuda contextual, categorias zeradas quando o catálogo é confirmado, espera por agente e fechados pelo status atual/último autor confirmado.

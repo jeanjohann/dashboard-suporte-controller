@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.66.0 · referência 3e60828 · cópia da entrega · 2026-10-24 · **514 arquivos / 107 arquivos de teste / 72 pastas**.
+Addlog 0.66.1 · referência a2fe79a · cópia da entrega · 2026-10-24 · **516 arquivos / 107 arquivos de teste / 72 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -11,7 +11,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 ## Pastas
 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (59 arquivos, incluindo subpastas).
+- **docs** — Guias, critérios e histórico das implementações. (60 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (2 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
@@ -22,8 +22,8 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **server** — API Cloudflare e adaptadores privados de integrações. (45 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (9 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (2 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (361 arquivos, incluindo subpastas).
-- **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (5 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (362 arquivos, incluindo subpastas).
+- **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (6 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (19 arquivos, incluindo subpastas).
 - **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (263 arquivos, incluindo subpastas).
 - **src/modules/assistant** — Módulo Assistente: interface, regras e integração de seus dados. (6 arquivos, incluindo subpastas).
@@ -651,6 +651,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Alimentação, posições e equipamentos — Monitoramento Ativo. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/TELEMETRIA-MONITORAMENTO.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/TEMAS-0661.md
+
+**Documentação · Documentação** — Documento: Aparência — 0.66.1. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+
+[Abrir fonte](../../docs/TEMAS-0661.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -1768,7 +1778,7 @@ Dependências externas: `react`, `react-dom`.
 
 Exporta: `ThemeProvider`, `ThemeToggle`, `useTheme`.
 
-Importa arquivos locais: nenhum identificado.
+Importa arquivos locais: [src/app/themeOptions.js](../../src/app/themeOptions.js).
 
 Importado por: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/main.jsx](../../src/main.jsx).
 
@@ -1787,6 +1797,18 @@ Importa arquivos locais: [src/app/DeferredPage.jsx](../../src/app/DeferredPage.j
 Importado por: [src/main.jsx](../../src/main.jsx).
 
 Dependências externas: `react`.
+
+### src/app/themeOptions.js
+
+**Shell da aplicação · Configuração** — Define as quatro opções de tema, IDs estáveis, preferência padrão e migração dos temas antigos.
+
+[Abrir fonte](../../src/app/themeOptions.js) · Código ou documentação do ponto de referência
+
+Exporta: `defaultTheme`, `restoredTheme`, `themes`.
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/app/Theme.jsx](../../src/app/Theme.jsx).
 
 ### src/components/AnalysisMetrics.jsx
 
@@ -6274,7 +6296,7 @@ Importado por: [src/main.jsx](../../src/main.jsx).
 
 ### src/styles/theme-presets.css
 
-**Compartilhado · Estilo** — Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.
+**Compartilhado · Estilo** — Quatro paletas de tela: Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul; fundos off-white/cinza escuro e tokens de leitura, estados e gráficos.
 
 [Abrir fonte](../../src/styles/theme-presets.css) · Código ou documentação do ponto de referência
 

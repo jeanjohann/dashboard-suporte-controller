@@ -1,8 +1,8 @@
 # Fila de implementação e ajustes
 
-## Próxima rodada de temas — solicitada em 24/10/2026
+## Temas 0.66.1 — 24/10/2026
 
-Manter no seletor somente Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul. Rever a aparência clara com base off-white e a escura com cinza-escuro e detalhes neon moderados, preservando legibilidade e estados semânticos. Definir a distribuição dessas duas aparências entre as quatro opções e a migração das preferências antigas nessa rodada. Pedido para a fila: não remover nem modificar os temas durante a entrega das regras/integrações.
+Rodada autorizada e implementada: somente Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul. Bruma Azul e Azul e Âmbar usam off-white; Grafite e Lima e Noite usam cinza escuro com destaques luminosos moderados. Seletor compacto e migração de preferências antigas. [Paletas, migração e limites de validação](TEMAS-0661.md). Sem alterações de dados ou permissões.
 
 ## Regras, consumo e layout 0.66.0 — 24/10/2026
 

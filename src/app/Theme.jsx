@@ -9,27 +9,15 @@ import React, {
   useRef,
 } from 'react';
 
-const themes = [
-  { id: 'light', label: 'Claro' },
-  { id: 'dark', label: 'Escuro' },
-  { id: 'lime', label: 'Grafite e Lima' },
-  { id: 'sage', label: 'Sálvia e Areia' },
-  { id: 'lagoon', label: 'Lagoa' },
-  { id: 'ocean', label: 'Azul e Âmbar' },
-  { id: 'midnight', label: 'Noite Azul' },
-  { id: 'electric', label: 'Lima Elétrica' },
-  { id: 'mist', label: 'Bruma Azul' },
-  { id: 'garden', label: 'Jardim' },
-];
-const ThemeContext = createContext({ theme: 'light', selectTheme: () => {} });
+import { themes, defaultTheme, restoredTheme } from './themeOptions.js';
+const ThemeContext = createContext({ theme: defaultTheme, selectTheme: () => {} });
 const storageKey = 'addlog-theme-v1';
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
-      const saved = localStorage.getItem(storageKey);
-      return themes.some((entry) => entry.id === saved) ? saved : 'light';
+      return restoredTheme(localStorage.getItem(storageKey));
     } catch {
-      return 'light';
+      return defaultTheme;
     }
   });
   useLayoutEffect(() => {

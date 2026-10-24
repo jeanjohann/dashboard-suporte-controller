@@ -155,7 +155,9 @@ const descriptions = {
   'src/modules/monitoring/components/RegistryEquivalences.jsx':
     'Permite equivalência explícita base API/cliente Operacional, salva localmente por usuário.',
   'src/styles/theme-presets.css':
-    'Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.',
+    'Quatro paletas de tela: Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul; fundos off-white/cinza escuro e tokens de leitura, estados e gráficos.',
+  'src/app/themeOptions.js':
+    'Define as quatro opções de tema, IDs estáveis, preferência padrão e migração dos temas antigos.',
   'src/modules/monitoring/components/MonitoringRegistry.jsx':
     'Conferência autorizada API × Operacional, com grupos, filtros, referências de origem e CSV; não modifica os cadastros.',
   'src/modules/monitoring/domain/monitoringRegistry.js':

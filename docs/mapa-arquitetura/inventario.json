@@ -1,8 +1,8 @@
 {
-  "version": "0.66.0",
-  "base": "3e60828 · cópia da entrega",
+  "version": "0.66.1",
+  "base": "a2fe79a · cópia da entrega",
   "date": "2026-10-24",
-  "total": 514,
+  "total": 516,
   "tests": 107,
   "folders": [
     {
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 59
+      "count": 60
     },
     {
       "path": "docs/diagrams",
@@ -68,12 +68,12 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 361
+      "count": 362
     },
     {
       "path": "src/app",
       "description": "Shell, navegação, tema e bases compartilhadas da sessão.",
-      "count": 5
+      "count": 6
     },
     {
       "path": "src/components",
@@ -452,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 101484,
-      "sha256": "eb29fcd56dd632572c3a1c19a7c43b3bb71a45c5fc951d94a3f1c0e325d0b012",
+      "bytes": 101854,
+      "sha256": "d3f85710ee7b62f756a47ce0378a6b403a03d082a61c867a96d188d55f6bbf00",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1082,8 +1082,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 45230,
-      "sha256": "db8914563c9351770a19386288e2cd0a7cbbdde73a0067e5a1849fc37c672af7",
+      "bytes": 45124,
+      "sha256": "c4705644c90d404f794de084a189a240b28afcf48a377726a4a07509d176acfe",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1168,6 +1168,20 @@
       "importedBy": [],
       "bytes": 3138,
       "sha256": "0b3d89bfe87dba2204300df8521cea85629f0a9391dc55816d614ffe040b4151",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/TEMAS-0661.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Aparência — 0.66.1. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 2420,
+      "sha256": "255cbd98bc101170c88e6dcec0902522de8a646dff2839896a7b9c4041b7e6b4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1349,7 +1363,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 103424,
-      "sha256": "6306a7ced27a8098e707d8421d40fb862b8fc198735670fa6917f1320d91c5b1",
+      "sha256": "0f7dd38304fac3de82d84b29f49b8561b355ec204f8a68052d6a99d496626f97",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1363,7 +1377,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1300,
-      "sha256": "2b8a74db1f935c41ec16c1df705bb188135a7db346028701f82d13b8aec5558a",
+      "sha256": "0d71d22ae10b3ce7d9b83664b2e127547baeb93d8132c64c41ad33179cf714f3",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1526,8 +1540,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 51894,
-      "sha256": "289588761afb36d87fef38fbd3a6d149e376d13ae98b492e24101fff2c5eac23",
+      "bytes": 52011,
+      "sha256": "7306cfb67286de8cc2fc2b25ffd9efe55d3028c16c15047170558397875f51d4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2771,11 +2785,11 @@
       "layer": "Interface React",
       "description": "Temas globais, com preferência local preservada e escolha explícita de paleta.",
       "exports": ["ThemeProvider", "ThemeToggle", "useTheme"],
-      "imports": [],
+      "imports": ["src/app/themeOptions.js"],
       "external": ["react"],
       "importedBy": ["src/app/Navigation.jsx", "src/main.jsx"],
-      "bytes": 3376,
-      "sha256": "f8cedf790ea3335a9274c1696b1af3c9b7d76dac09f9b1ed550b1d588178c5b2",
+      "bytes": 2970,
+      "sha256": "65f3feb2c79c4eac5d5f385bbdf2f962dbfa85a80f2dac724ff7213078e8449d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2808,6 +2822,20 @@
       "importedBy": ["src/main.jsx"],
       "bytes": 10146,
       "sha256": "836a56c0dbdea917fe676156c1e645af892ebb087c4e6cc93f3d54ce0391cfc4",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "src/app/themeOptions.js",
+      "folder": "src/app",
+      "module": "Shell da aplicação",
+      "layer": "Configuração",
+      "description": "Define as quatro opções de tema, IDs estáveis, preferência padrão e migração dos temas antigos.",
+      "exports": ["defaultTheme", "restoredTheme", "themes"],
+      "imports": [],
+      "external": [],
+      "importedBy": ["src/app/Theme.jsx"],
+      "bytes": 645,
+      "sha256": "392f0e62f5ca2144175130997e288d0c24c2b14a825e0aadec01e4f3d4150a15",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10300,8 +10328,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 16013,
-      "sha256": "940020ecb197499a62bcb9936ba4e2da3330604fe8f5c3702d73872177367ff3",
+      "bytes": 14781,
+      "sha256": "714bd5662e6b616101d710a59f1add2b104e1683696eddb7e41fe3057f566b8b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10379,13 +10407,13 @@
       "folder": "src/styles",
       "module": "Compartilhado",
       "layer": "Estilo",
-      "description": "Cinco paletas adicionais para tela, com superfícies claras/escuras, tokens de leitura e gráficos; mantém cores próprias da impressão e rolagem no seletor de temas.",
+      "description": "Quatro paletas de tela: Grafite e Lima, Azul e Âmbar, Noite e Bruma Azul; fundos off-white/cinza escuro e tokens de leitura, estados e gráficos.",
       "exports": [],
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 8689,
-      "sha256": "a8bdf69762f40ebdc8c581501ab25f6032fc2ab7351148d79fb8a806c5aeb3cc",
+      "bytes": 5087,
+      "sha256": "4620b4730b1300c2922e05aba3c4f9d80103bace8aefe60b6a8c424fa199f62f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10398,8 +10426,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 20866,
-      "sha256": "0a71feff2cb05edc2597df5edf104cd132cad9b117886c2502b4ee964e740e9c",
+      "bytes": 18455,
+      "sha256": "8daa04231f8f12b820ffc0b8b3ffe45e9692a0e18e626b085d7c97fdfe1ddbc0",
       "status": "Código ou documentação do ponto de referência"
     },
     {
