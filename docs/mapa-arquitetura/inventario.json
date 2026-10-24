@@ -1,6 +1,6 @@
 {
   "version": "0.65.0",
-  "base": "8082aab · cópia da entrega",
+  "base": "98d486c · cópia da entrega",
   "date": "2026-10-24",
   "total": 505,
   "tests": 104,
@@ -452,8 +452,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 99636,
-      "sha256": "426572ebd6dc41a89cd81fa71c40363916274efa07c1c766bc8cb164555a5a2e",
+      "bytes": 100849,
+      "sha256": "9a2b58e515464827af11bdc40658c3dd9a839612aafd51e77de301b7bea89650",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -774,8 +774,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 16026,
-      "sha256": "d623f27b5abb019f595fab5cb30ff074fbf1875352b3e51b78d8ed5b622d72d5",
+      "bytes": 17087,
+      "sha256": "b1f0ea7a72dd538292313ba97bc1514ab0f7b833156f82c0725065fe3a1e079b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1068,8 +1068,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 43227,
-      "sha256": "470942aebc36299ba34f5ceee6ca4c86a3954e9eabe99399ff465a9072a4f729",
+      "bytes": 43610,
+      "sha256": "6469b71f37aa63819780572847c60a828ed4eba648d3e1671f271d43a125b0fe",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1320,8 +1320,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 103424,
-      "sha256": "20685a6d2b5d30c928e684ba0aaea3bba8a11753544d2c2dd76e5d2d5743349e",
+      "bytes": 106621,
+      "sha256": "82d76823bf22548b24638d4cffc57c8fde161338519544550e22da94dfabe125",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1334,8 +1334,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1300,
-      "sha256": "2c047363efe7cc0162cf0a9cb12c5fba74754f7c6cde5c1d75e707805ca236c7",
+      "bytes": 1330,
+      "sha256": "ace09e847c3f6e69372bd03d3853cae5c518dd292e00a917c9929f8274598cb8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2476,8 +2476,8 @@
         "server/zohoClosures.test.js",
         "server/zohoIndicators.test.js"
       ],
-      "bytes": 9252,
-      "sha256": "be16066486b6b1b4fd0bd65688d83d5639bd110ece2704dbd25947664436b8fb",
+      "bytes": 9233,
+      "sha256": "5aadace3aa19d4a537437158aece6792f8f60fbb240c83d9103b1718112973da",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2541,8 +2541,8 @@
       "imports": ["src/shared/data/zohoActivity.js"],
       "external": [],
       "importedBy": ["server/zohoActivity.js", "server/zohoClosures.test.js"],
-      "bytes": 4742,
-      "sha256": "c5c0fe38cbf5b694bd5852293a817b791aba88b56df2b7f5b79299a13b8cd49c",
+      "bytes": 5730,
+      "sha256": "4c738257a54acf2ef40ec79ca754c446201e8936120c1277d4ff84e50e2e4220",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2550,7 +2550,7 @@
       "folder": "server",
       "module": "API Cloudflare",
       "layer": "Teste",
-      "description": "Verifica zoho Closures no contexto de API Cloudflare. Exemplos: fechamento usa executor, categoria configurada e data de Brasília, incluindo reabertura posterior; paginação, status ambíguos, histórico incompleto e duplicado não viram contagens de zero; maior participação inclui outros agentes, tempo anterior ao período e empates; datas futuras não entram.",
+      "description": "Verifica zoho Closures no contexto de API Cloudflare. Exemplos: fechamento usa executor, categoria configurada e data de Brasília, incluindo reabertura posterior; eventos repetidos são contados uma vez; status ambíguos e histórico incompleto continuam bloqueados; sobreposição entre páginas preserva agentes e transições diferentes; página inteira repetida é rejeitada.",
       "exports": [],
       "imports": [
         "server/zohoActivity.js",
@@ -2559,8 +2559,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 7050,
-      "sha256": "231424c06b82676eb5f7de2b5edf92e77a0a7e84d5d44c86dec0563dd105a3ec",
+      "bytes": 8848,
+      "sha256": "f6e50a9bc800e0582a31b185f6be08a7401fe8a1ef69acd640c27b0cb6e85eaf",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2591,8 +2591,8 @@
       ],
       "external": ["node:assert/strict", "node:test"],
       "importedBy": [],
-      "bytes": 6322,
-      "sha256": "f5cbae55fb6e359ffeaeffe59cf368f7d3ba3e1535815006e08591318ba9f3e7",
+      "bytes": 7896,
+      "sha256": "ee741efb9629eaa045caac2866873c7f9479fa83843fd4d18da55bd4b818c3e8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -8684,8 +8684,8 @@
       ],
       "external": ["react"],
       "importedBy": ["src/app/Workspace.jsx"],
-      "bytes": 39444,
-      "sha256": "9a7a9ae601d116254e65949d46a85805524d350af076072cf985ad584471f63c",
+      "bytes": 40528,
+      "sha256": "2ce7c05bb724ecf4d22b5892afcdd6414045185ad6443c9033d63075633fe855",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -10162,8 +10162,8 @@
       "imports": [],
       "external": [],
       "importedBy": ["src/main.jsx"],
-      "bytes": 5662,
-      "sha256": "e089cb15df6ff37a360565f6265f4e46d69a90e4fe40b2756d2fd49795b7e8a6",
+      "bytes": 6652,
+      "sha256": "6f5f9cbdd29bdde06697130bdb9e6f7e71ca3b324a46275a91224593cf4288f5",
       "status": "Código ou documentação do ponto de referência"
     },
     {

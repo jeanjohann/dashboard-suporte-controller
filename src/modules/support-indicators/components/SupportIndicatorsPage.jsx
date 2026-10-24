@@ -44,14 +44,20 @@ const valuesOf = (orders, zoho, manual) => ({
   activities: manual?.activities ?? null,
 });
 const format = (key, value) => (key === 'seconds' ? duration(value) : number(value));
-function Table({ headers, rows }) {
+function Table({ headers, rows, numericColumns = [] }) {
+  const numeric = new Set([
+    ...numericColumns,
+    ...headers.map((_, index) => (rows.some((row) => typeof row[index] === 'number') ? index : -1)),
+  ]);
   return (
     <div className="si-table">
       <SortableTable>
         <thead>
           <tr>
             {headers.map((h) => (
-              <th key={h}>{h}</th>
+              <th key={h} className={numeric.has(headers.indexOf(h)) ? 'si-numeric' : undefined}>
+                {h}
+              </th>
             ))}
           </tr>
         </thead>
@@ -59,7 +65,11 @@ function Table({ headers, rows }) {
           {rows.map((r, i) => (
             <tr key={i}>
               {r.map((v, j) => (
-                <td key={j} data-sort={typeof v === 'number' ? v : undefined}>
+                <td
+                  key={j}
+                  className={numeric.has(j) ? 'si-numeric' : undefined}
+                  data-sort={typeof v === 'number' ? v : undefined}
+                >
                   {v ?? 'Sem dados'}
                 </td>
               ))}
@@ -216,7 +226,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       os?.executed ?? null,
       z?.created ?? m?.totals.created ?? null,
       backlog?.agents.find((r) => r.id === a.id)?.pending ?? null,
-      z?.closed ?? null,
+      z?.closed ?? (zohoData?.closureReview?.length ? 'Em conferência' : null),
       duration(z?.seconds),
       m?.requests ?? null,
       m?.activities ?? null,
@@ -644,7 +654,18 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 {settings.cards.map((key) => (
                   <article className={`si-card si-card-${key}`} key={key}>
                     <span>{metricLabels[key]}</span>
-                    <strong>{format(key, values[key])}</strong>
+                    <strong>
+                      {key === 'closed' && values[key] == null && zohoData?.closureReview?.length
+                        ? 'Em conferência'
+                        : format(key, values[key])}
+                    </strong>
+                    {key === 'closed' && zohoData?.closureReview?.length > 0 && (
+                      <small>
+                        Histórico pendente:{' '}
+                        {zohoData.closureReview.map((row) => row.number).join(', ')}. Isso não
+                        significa zero fechamentos.
+                      </small>
+                    )}
                     <small>
                       {manualMetric(key)
                         ? 'Manual · total informado'
@@ -751,6 +772,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                           </div>
                         </div>
                         <Table
+                          numericColumns={[1, 2, 3, 4, 5, 6, 7, 8]}
                           headers={[
                             'Agente',
                             'Agendados · OS',

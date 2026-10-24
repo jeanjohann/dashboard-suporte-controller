@@ -4,7 +4,7 @@
 
 Regra de improdutivas alinhada entre totais e linhas de conferência. Acrescenta carteira atual de pendências atribuídas por agente, independente do período, e categorias por agente com detalhe paginado dos chamados fechados. CSV mantém todos os detalhes. Sem mudança de permissões, credenciais ou gravações no D1. A conferência de fechamentos continua exigindo histórico válido do Zoho; não substitui autoria por responsável atual. [Uso, limites e critérios](INDICADORES-SUPORTE.md).
 
-Imports, formatação, 468 testes e compilação aprovados, com um teste previamente ignorado. Carteira, paginação, limites, cancelamento, autoria e categorias conferidos com dados fictícios. Não houve consulta autenticada à carteira real nesta rodada; homologação com os relatórios do proprietário permanece pendente. Mapa de arquitetura regenerado com os novos arquivos.
+Imports, formatação, 469 testes e compilação aprovados após incorporar as correções remotas de histórico Zoho e alinhamento das tabelas, com um teste previamente ignorado. Carteira, paginação, limites, cancelamento, autoria e categorias conferidos com dados fictícios. Não houve consulta autenticada à carteira real nesta rodada; homologação com os relatórios do proprietário permanece pendente. Mapa de arquitetura regenerado com os novos arquivos.
 
 ## Progresso central 0.64.2 — 23/10/2026
 

@@ -110,8 +110,15 @@ test('assuntos contam fechados únicos por agente e a criação não usa o respo
   assert.equal(zohoSummary(data, period).created, null);
   assert.equal(zohoSummary({ ...data, indicatorsAvailable: false }, period).categories, null);
 });
-test('histórico completo recupera fechamento omitido pelo filtro sem inventar autoria', async () => {
-  const t = { ...ticket, createdTime: '2020-01-01T10:00:00Z', closedTime: '2026-10-22T10:00:00Z' };
+test('histórico completo conserva fechamento após reabertura e divergência da data resumida, com autoria explícita', async () => {
+  let includeClosure = true;
+  const t = {
+    ...ticket,
+    createdTime: '2020-01-01T10:00:00Z',
+    closedTime: '2026-10-22T10:00:00Z',
+    status: 'Aberto',
+    assigneeId: agents[0].id,
+  };
   const get = async (path) => {
     if (path.startsWith('/tickets/search')) return { data: [t] };
     if (path.startsWith('/organizationFields'))
@@ -129,20 +136,45 @@ test('histórico completo recupera fechamento omitido pelo filtro sem inventar a
     if (path.includes('fieldName=status')) return { data: [] };
     if (path.includes('/History?'))
       return {
-        data: [
-          {
-            eventName: 'TicketUpdated',
-            eventTime: t.closedTime,
-            actor: event.actor,
-            eventInfo: [
+        data: includeClosure
+          ? [
               {
-                systemProperty: true,
-                propertyName: 'Status',
-                propertyValue: { previousValue: 'Aberto', updatedValue: 'Fechado' },
+                eventName: 'TimeEntryCreated',
+                eventTime: '2026-10-22T10:02:00Z',
+                actor: event.actor,
               },
-            ],
-          },
-        ],
+              {
+                eventName: 'TimeEntryCreated',
+                eventTime: '2026-10-22T10:02:00Z',
+                actor: event.actor,
+              },
+              {
+                eventName: 'TicketUpdated',
+                eventTime: '2026-10-22T10:02:00Z',
+                actor: event.actor,
+                eventInfo: [
+                  {
+                    systemProperty: true,
+                    propertyName: 'Status',
+                    propertyValue: { previousValue: 'Aberto', updatedValue: 'Fechado' },
+                  },
+                ],
+              },
+              {
+                eventName: 'TicketUpdated',
+                eventTime: '2026-10-23T10:00:00Z',
+                actor: null,
+                source: 'IncomingResponse',
+                eventInfo: [
+                  {
+                    systemProperty: true,
+                    propertyName: 'Status',
+                    propertyValue: { previousValue: 'Fechado', updatedValue: 'Aberto' },
+                  },
+                ],
+              },
+            ]
+          : [],
       };
     if (path === '/tickets/1') return { ...t, category: 'Treinamento' };
     if (path.endsWith('/metrics')) return {};
@@ -151,4 +183,15 @@ test('histórico completo recupera fechamento omitido pelo filtro sem inventar a
   const result = await collectZohoActivityBatch(get, { period, anchor, from: 0, indicators: true });
   assert.equal(result.closures.length, 1);
   assert.equal(result.closures[0].agentId, event.actor.id);
+  assert.equal(result.closures[0].ownerId, agents[0].id);
+  assert.equal(result.closureReview.length, 0);
+  includeClosure = false;
+  const unknown = await collectZohoActivityBatch(get, {
+    period,
+    anchor,
+    from: 0,
+    indicators: true,
+  });
+  assert.equal(unknown.closures.length, 0);
+  assert.equal(unknown.closureReview.length, 1);
 });

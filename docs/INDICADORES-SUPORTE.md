@@ -47,6 +47,8 @@ Agenda e execução podem contar o mesmo serviço em etapas diferentes. Os volum
 
 ## Ausência, comparação e cobertura
 
+Eventos idênticos de alteração de status retornados mais de uma vez pelo Zoho são deduplicados, inclusive entre páginas. Uma página inteira repetida sem avanço interrompe a consulta e preserva a leitura anterior; o mesmo vale para status sem categoria identificada e histórico truncado. Eventos de agentes ou transições diferentes são preservados.
+
 Campo manual vazio é `null`, diferente de zero confirmado. Totais manuais somam somente os campos informados e mostram quantidade de registros/campos preenchidos. Não comprovam cobertura de todos os dias nem conclusão do preenchimento semanal. Ausência de OS na base também não comprova ausência de trabalho. Datas inválidas e responsáveis não vinculados são sinalizados.
 
 A comparação usa o intervalo imediatamente anterior de mesma duração, calculado com a mesma base atual de OS e os lançamentos salvos. Não representa uma fotografia histórica imutável. Zoho só compara quando a consulta disponível cobre os dois períodos. As limitações da coleta existente continuam: chamados acessíveis modificados desde o início do período até a referência da leitura, limite de 500 chamados, indexação e permissões do fornecedor. A página mantém a cobertura explícita e não dispara uma segunda consulta silenciosa para o período anterior.
@@ -75,6 +77,8 @@ Pendente de conferência pelo usuário: comparar totais reais de uma semana com 
 Na versão 0.63.0, a consulta ampliada de Indicadores Suporte confere o histórico de criação no período e as categorias dos fechados por agente, conforme confirmação do proprietário. As outras consultas mantêm o comportamento anterior. Totais exigem todas as páginas e evidências por chamado. O diagnóstico real validou o contrato; a conferência dos totais com o relatório do usuário continua necessária. A documentação oficial de histórico distingue ações de agentes, clientes e automação: [eventos do histórico](https://help.zoho.com/portal/en/kb/desk/developer-space/rest-apis/articles/events-supported-in-get-ticket-history-api). Esta entrega não acrescenta escopos OAuth. A categoria atual pode diferir da categoria histórica na data do fechamento.
 
 ### Conferência dos fechamentos na conta real
+
+Correção 0.64.4: a consulta ampliada passa a ler o histórico completo diretamente. Fechamentos confirmados no período continuam válidos após uma reabertura; a data resumida `closedTime` não precisa coincidir exatamente com o evento. O contador usa a autoria da transição histórica, nunca o responsável atual. Quando `closedTime` indica fechamento no período mas nenhum evento pode ser identificado, a pendência permanece explícita. Testes incluem reabertura por resposta de cliente, divergência de timestamp e responsáveis distintos. Abaixo fica o registro da investigação anterior à correção.
 
 A consulta semanal de 19 a 25/10/2026 encontrou divergência entre closedTime e os eventos de fechamento, inclusive ao consultar o histórico sem filtro de campo. Na consulta ampliada, os chamados pendentes aparecem por referência; todo o total automático de fechamentos e a distribuição por categoria ficam indisponíveis. Não são exibidos os fechamentos parcialmente conferidos como total. Aberturas e tempo têm evidências independentes e podem ser exibidos. As consultas antigas permanecem estritas. Essa pendência exige comparar o chamado indicado com o histórico/relatório do Zoho, sem substituir a autoria pelo responsável atual.
 

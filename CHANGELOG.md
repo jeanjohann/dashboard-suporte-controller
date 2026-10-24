@@ -13,6 +13,21 @@
 - Acrescenta consulta independente da carteira atual de chamados atribuídos a cada agente, incluindo Open e On Hold, sem restringir pela data de criação ou pelo período dos eventos. Consultas incompletas não aplicam totais parciais.
 - Distingue criados pelo agente, pendentes atuais e fechados pelo agente na tabela. Categorias dos fechados ganham distribuição por agente e relação paginada por chamado, com data, categoria, subcategoria e classificação atuais; CSV inclui a relação completa. Autoria continua exigindo evidência no histórico e categorias ausentes não são inventadas.
 
+## 0.64.5 — 23/10/2026
+
+- Consulta Zoho aceita eventos idênticos de alteração de status repetidos no histórico, contando cada evento uma única vez, inclusive quando há sobreposição entre páginas.
+- Preserva a autoria e as transições distintas. Páginas inteiras repetidas sem avanço, categorias ambíguas e históricos truncados continuam bloqueando resultados incompletos.
+
+## 0.64.4 — 23/10/2026
+
+- Indicadores Suporte consulta o histórico completo de cada chamado para conferir fechamentos, inclusive quando houve reabertura. Um evento válido não é descartado por divergir da data resumida closedTime.
+- Preserva autoria por evento, deduplicação e bloqueio quando não há evidência de fechamento. Não substitui executor pelo responsável atual nem altera a coleta antiga de OS.
+
+## 0.64.3 — 23/10/2026
+
+- Alinha cabeçalhos e valores numéricos das tabelas de Indicadores Suporte, com ordenação compacta, larguras mínimas e rolagem horizontal.
+- Fechamentos sem conferência completa passam a mostrar Em conferência e as referências pendentes no card, em vez de apresentar ausência genérica de dados. Não altera a autoria nem substitui o histórico pelo responsável atual.
+
 ## 0.64.2 — 23/10/2026
 
 - Substitui o aviso de carregamento das bases por uma janela compacta central, fora do fluxo da página, sem deslocar o conteúdo.

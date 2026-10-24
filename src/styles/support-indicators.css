@@ -210,6 +210,38 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+.support-indicators-page main .si-table .sort-heading {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  font: inherit;
+  text-align: inherit;
+  white-space: normal;
+}
+.si-table th.si-numeric,
+.si-table td.si-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.support-indicators-page main .si-table th.si-numeric .sort-heading {
+  justify-content: flex-end;
+}
+.si-table td.si-numeric {
+  white-space: nowrap;
+}
+.si-table th {
+  min-width: 100px;
+  vertical-align: bottom;
+}
+.si-table th:first-child {
+  min-width: 170px;
+}
 .support-indicators-page fieldset {
   min-width: 0;
   border: 1px solid var(--ui-border);
