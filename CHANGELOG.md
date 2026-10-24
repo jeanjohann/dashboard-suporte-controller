@@ -1,3 +1,7 @@
+## 0.69.4 — 24/10/2026
+
+- Aplica o alinhamento ao bloco correto de status das fontes, mantendo título e barra de filtros inalterados.
+
 ## 0.69.3 — 24/10/2026
 
 - Identifica explicitamente o bloco das fontes em Indicadores Suporte para alinhar os rótulos mesmo quando os painéis de consulta do banco estão visíveis.

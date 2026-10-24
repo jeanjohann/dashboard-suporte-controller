@@ -507,7 +507,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         <Navigation page="support-indicators" onPage={onPage} />
         <main>
           <header className="si-heading">
-            <div className="si-source-status">
+            <div>
               <h1>Indicadores Suporte</h1>
               <p>Atendimentos, serviços e atividades da equipe.</p>
             </div>
@@ -606,7 +606,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               disabled={busy || backlogBusy}
               onLoad={(saved) => setOwnBacklog(saved.data)}
             />
-            <div>
+            <div className="si-source-status">
               <strong>OS</strong>
               <small>{sources.orders?.value?.filename || 'Carregue a base em Importação.'}</small>
               <strong>Zoho</strong>
