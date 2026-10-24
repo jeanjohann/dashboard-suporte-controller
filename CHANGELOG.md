@@ -1,3 +1,7 @@
+## 0.69.2 — 24/10/2026
+
+- Alinha os nomes e os valores das fontes de Indicadores Suporte para facilitar a conferência da base e da consulta Zoho.
+
 ## 0.69.1 — 24/10/2026
 
 - Coloca os cards principais logo após os filtros em Indicadores Suporte e reduz espaçamentos de cards e gráficos.

@@ -309,6 +309,9 @@
     align-items: start;
     flex-direction: column;
   }
+  .support-indicators-page .si-sources > div:first-child {
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
   .si-panel {
     padding: 14px;
   }
@@ -370,7 +373,16 @@
     gap: 4px 12px;
   }
   .support-indicators-page .si-sources > div:first-child {
+    flex: 1 1 100%;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content minmax(0, 1fr);
+    align-items: baseline;
+    gap: 4px 10px;
     margin-bottom: 0;
+  }
+  .support-indicators-page .si-sources > div:first-child > small {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .support-indicators-page .si-review {
     padding: 8px 12px;
