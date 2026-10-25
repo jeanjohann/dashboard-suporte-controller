@@ -1,3 +1,7 @@
+# Apresentação 0.69.28 — 25/10/2026
+
+Na página **Indicadores Suporte**, abra **Apresentação** para preparar uma saída visual. Os filtros por período e agente continuam disponíveis antes da impressão. Selecione os blocos desejados — indicadores, resultados por agente, evolução diária, serviços e clientes, assuntos ou atividades complementares — e escolha **Compacto** para priorizar densidade ou **Editorial** para manter a narrativa dos grupos. **Imprimir apresentação** abre a impressão/PDF somente com os blocos selecionados e identificação do recorte; painéis operacionais e explicações de diagnóstico são omitidos. O modo revela a tabela por agente e tipo de serviço, participação por tipo, clientes e serviços, categorias Zoho por agente e solicitações/atividades manuais por agente. Seções desativadas em Configurações não aparecem como opções.
+
 # Atualização 0.66.0 — 24/10/2026
 
 As regras de fechados desta seção substituem as descrições históricas das versões anteriores: status atual Closed e último fechamento confirmado dentro do período, somente pelo autor desse último fechamento. Reabertos ficam fora; responsável atual não substitui autoria. Consultas anteriores precisam ser atualizadas nesta página para aplicar esta regra.

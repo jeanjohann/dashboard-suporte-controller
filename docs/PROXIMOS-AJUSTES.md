@@ -1,5 +1,9 @@
 # Fila de implementação e ajustes
 
+## Publicação 0.69.28 — 25/10/2026
+
+Indicadores Suporte agora tem modo **Apresentação** para escolher blocos, manter o filtro de período/agente e imprimir uma versão limpa em estilo Compacto ou Editorial. A comparação com a planilha semanal identificou e incluiu serviço por agente/tipo, participação por tipo, categorias Zoho por agente e equipamentos/atividades manuais por agente. O resumo impresso omite controles de fonte e dados de auditoria dos lançamentos. A seção Serviços e Clientes também foi alinhada; a apresentação por cliente mostra os serviços em linha no modo compacto. O tema Claro usa realces azuis em vez de verdes, alinhados a Grafite e Azul.
+
 ## Acervo no banco 0.69.0 — 24/10/2026
 
 Publicada e ativada a persistência de consumo, franquias compartilhadas, configurações de painéis e últimas consultas Zoho (suporte, indicadores, pendências e sessões). Piloto restrito ao proprietário, migração local explícita, revisão atômica e partes deduplicadas. Sem migração SQL, exclusão de cópias ou atualização extra do fornecedor. Acesso e interface conferidos em produção; transferência dos dados locais permanece uma ação do proprietário. [Uso, segurança, limites e homologação](PERSISTENCIA-DO-ACERVO-069.md).

@@ -70,6 +70,14 @@ const stories = {
     description: 'Explore as categorias dos chamados e as atividades registradas manualmente.',
   },
 };
+const presentationOptions = [
+  { key: 'summary', label: 'Indicadores principais' },
+  { key: 'agents', label: 'Resultados por agente' },
+  { key: 'evolution', label: 'Evolução diária' },
+  { key: 'types', label: 'Serviços e clientes' },
+  { key: 'subjects', label: 'Assuntos dos chamados' },
+  { key: 'manual', label: 'Atividades complementares' },
+];
 function MetricComparison({ metric, current, previous }) {
   const difference = current - previous;
   const percentage = previous === 0 ? null : Math.round((Math.abs(difference) / previous) * 100);
@@ -156,7 +164,7 @@ function ClosedTicketDetails({ rows }) {
   const last = Math.max(0, Math.ceil(rows.length / 25) - 1),
     current = Math.min(page, last);
   return (
-    <details>
+    <details className="si-closed-ticket-records">
       <summary>Conferir {rows.length} chamados por agente e categoria</summary>
       <Table
         headers={[
@@ -202,10 +210,17 @@ function IndicatorCards({
   weekly,
   manualMetric,
   comparisonAvailable,
+  presentationMode = false,
 }) {
+  const cardKeys = presentationMode
+    ? [
+        ...settings.cards.filter((key) => key !== 'seconds'),
+        ...settings.cards.filter((key) => key === 'seconds'),
+      ]
+    : settings.cards;
   return (
     <div className="si-cards">
-      {settings.cards.map((key) => (
+      {cardKeys.map((key) => (
         <article className={`si-card si-card-${key}`} key={key}>
           <span className="si-card-label">
             {metricLabels[key]}
@@ -595,10 +610,18 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [ownZoho, setOwnZoho] = useState(null),
     [drilldown, setDrilldown] = useState(null),
     [serviceChartOpen, setServiceChartOpen] = useState(false),
+    [presentationMode, setPresentationMode] = useState(false),
+    [presentationStyle, setPresentationStyle] = useState(
+      density === 'editorial' ? 'editorial' : 'compact',
+    ),
+    [presentationSelection, setPresentationSelection] = useState(
+      () => new Set(presentationOptions.map((option) => option.key)),
+    ),
     [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(0),
     [error, setError] = useState('');
   const viewMode = density;
+  const contentViewMode = presentationMode ? presentationStyle : viewMode;
   const pending = useRef(null);
   const backlogRequest = useRef(null);
   const [ownBacklog, setOwnBacklog] = useState(null),
@@ -698,6 +721,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
   };
   const shownAgents = agents.filter((a) => !agentId || a.id === agentId);
   const storyOrder = [...new Set(settings.sections.map((key) => sectionStories[key]))];
+  const availablePresentationOptions = presentationOptions.filter(
+    (option) => option.key === 'summary' || settings.sections.includes(option.key),
+  );
+  const selectedPresentationCount = availablePresentationOptions.filter((option) =>
+    presentationSelection.has(option.key),
+  ).length;
   const agentRows = shownAgents.map((a) => {
     const os = hasOrders ? orders.agents.find((r) => r.id === a.id) : null,
       z = zoho?.agents.find((r) => r.id === a.id),
@@ -710,11 +739,44 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       backlog?.agents.find((r) => r.id === a.id)?.pending ?? null,
       backlog?.agents.find((r) => r.id === a.id)?.onHold ?? null,
       z?.closed ?? (zohoData?.closureReview?.length ? 'Em conferência' : null),
+      z?.created != null && z?.closed != null ? z.created + z.closed : null,
       duration(z?.seconds),
       m?.requests ?? null,
       m?.activities ?? null,
     ];
   });
+  const agentServiceRows = hasOrders
+    ? orders.agentServices
+        .filter((row) => !agentId || row.agentId === agentId)
+        .map((row) => [row.agent, row.label, row.scheduled, row.executed])
+    : [];
+  const manualEquipmentRows = shownAgents.map((agent) => {
+    const summary = store.ready ? manualSummary(store.records, period, agent.id) : null;
+    return [
+      agent.name,
+      summary?.totals.trackers ?? null,
+      summary?.totals.collectors ?? null,
+      summary?.totals.identifiers ?? null,
+      summary?.totals.blockers ?? null,
+      summary?.requests ?? null,
+    ];
+  });
+  const manualActivityRows = shownAgents.map((agent) => {
+    const summary = store.ready ? manualSummary(store.records, period, agent.id) : null;
+    return [
+      agent.name,
+      summary?.totals.videos ?? null,
+      summary?.totals.technicians ?? null,
+      summary?.totals.procedures ?? null,
+      summary?.activities ?? null,
+    ];
+  });
+  const manualSubjectRows = subjects.flatMap(([key, label]) =>
+    shownAgents.map((agent) => {
+      const summary = store.ready ? manualSummary(store.records, period, agent.id) : null;
+      return [agent.name, label, summary?.totals[`subject_${key}`] ?? null];
+    }),
+  );
   function showOrderDetails(title, predicate, stage = 'execution') {
     const rows = (orders?.rows || []).filter(predicate).map((row) => {
       const scheduled = stage === 'scheduling';
@@ -1026,7 +1088,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     !agentId;
   return (
     <SidePanelProvider>
-      <div className={`app support-indicators-page si-${viewMode}-mode`}>
+      <div
+        className={`app support-indicators-page ${presentationMode ? `si-presentation-mode si-presentation-${presentationStyle} si-${presentationStyle}-mode` : `si-${viewMode}-mode`}`}
+      >
         <Navigation page="support-indicators" onPage={onPage} />
         <main>
           <header className="si-heading">
@@ -1058,14 +1122,41 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 Exportar CSV
               </button>
               <button
-                onClick={async () => {
-                  if (await authorizeAction('export')) window.print();
-                }}
+                aria-pressed={presentationMode}
+                onClick={() => setPresentationMode((current) => !current)}
               >
-                Imprimir / PDF
+                {presentationMode ? 'Sair da apresentação' : 'Apresentação'}
               </button>
+              {presentationMode && (
+                <button
+                  onClick={async () => {
+                    if (selectedPresentationCount && (await authorizeAction('export')))
+                      window.print();
+                  }}
+                  disabled={!selectedPresentationCount}
+                >
+                  Imprimir apresentação
+                </button>
+              )}
             </div>
           </header>
+          <section className="si-presentation-print-title" aria-hidden="true">
+            <span>INDICADORES SUPORTE</span>
+            <h1>
+              {agentId ? agents.find((agent) => agent.id === agentId)?.name : 'Resumo da equipe'}
+            </h1>
+            <p>
+              {date(period.start)} a {date(period.end)} ·{' '}
+              {presentationOptions
+                .filter(
+                  (option) =>
+                    presentationSelection.has(option.key) &&
+                    availablePresentationOptions.some((available) => available.key === option.key),
+                )
+                .map((option) => option.label)
+                .join(' · ')}
+            </p>
+          </section>
           <section className="si-print-summary" aria-label="Escopo e critérios do relatório">
             <h2>Escopo e critérios</h2>
             <p>
@@ -1138,15 +1229,92 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 ? `${date(period.start)} a ${date(period.end)} · filtros exclusivos desta página · comparação com ${date(past.start)} a ${date(past.end)}`
                 : 'Informe um intervalo válido de até 366 dias.'}
             </p>
-            <IndicatorSettings
-              settings={settings}
-              revision={store.settingsRevision}
-              ready={store.settingsReady && !manualDirty}
-              busy={store.busy}
-              save={store.save}
-            />
+            {!presentationMode && (
+              <IndicatorSettings
+                settings={settings}
+                revision={store.settingsRevision}
+                ready={store.settingsReady && !manualDirty}
+                busy={store.busy}
+                save={store.save}
+              />
+            )}
           </section>
-          {valid && (
+          {presentationMode && (
+            <section
+              className="si-panel si-presentation-controls"
+              aria-label="Selecionar conteúdo da apresentação"
+            >
+              <div className="si-presentation-controls-heading">
+                <div>
+                  <h2>Conteúdo da apresentação</h2>
+                  <p>
+                    Escolha os blocos visuais. Cada bloco reúne seus gráficos e tabelas
+                    relacionados.
+                  </p>
+                </div>
+                <div className="si-presentation-selection-actions">
+                  <div
+                    className="si-presentation-style"
+                    role="group"
+                    aria-label="Estilo da apresentação"
+                  >
+                    <button
+                      type="button"
+                      aria-pressed={presentationStyle === 'compact'}
+                      onClick={() => setPresentationStyle('compact')}
+                    >
+                      Compacto
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={presentationStyle === 'editorial'}
+                      onClick={() => setPresentationStyle('editorial')}
+                    >
+                      Editorial
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPresentationSelection(
+                        new Set(availablePresentationOptions.map((option) => option.key)),
+                      )
+                    }
+                  >
+                    Selecionar tudo
+                  </button>
+                  <button type="button" onClick={() => setPresentationSelection(new Set())}>
+                    Limpar seleção
+                  </button>
+                </div>
+              </div>
+              <div className="si-presentation-options">
+                {availablePresentationOptions.map((option) => (
+                  <label key={option.key}>
+                    <input
+                      type="checkbox"
+                      checked={presentationSelection.has(option.key)}
+                      onChange={(event) =>
+                        setPresentationSelection((current) => {
+                          const next = new Set(current);
+                          if (event.target.checked) next.add(option.key);
+                          else next.delete(option.key);
+                          return next;
+                        })
+                      }
+                    />
+                    <span>{option.label}</span>
+                  </label>
+                ))}
+              </div>
+              {!selectedPresentationCount && (
+                <p className="si-presentation-empty">
+                  Selecione pelo menos um bloco para visualizar ou imprimir.
+                </p>
+              )}
+            </section>
+          )}
+          {valid && (!presentationMode || presentationSelection.has('summary')) && (
             <IndicatorCards
               settings={settings}
               values={values}
@@ -1155,9 +1323,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               weekly={weekly}
               manualMetric={manualMetric}
               comparisonAvailable={comparisonAvailable}
+              presentationMode={presentationMode}
             />
           )}
-          {viewMode === 'editorial' && valid && (
+          {viewMode === 'editorial' && valid && !presentationMode && (
             <section className="si-editorial-lead" aria-label="Leitura do período">
               <div className="si-editorial-lead-heading">
                 <span>LEITURA DO PERÍODO</span>
@@ -1466,9 +1635,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <div className="si-sections">
                 {storyOrder.map((storyKey) => {
                   const story = stories[storyKey];
-                  const groupSections = settings.sections.filter(
-                    (key) => sectionStories[key] === storyKey,
-                  );
+                  const groupSections = settings.sections
+                    .filter((key) => sectionStories[key] === storyKey)
+                    .filter((key) => !presentationMode || presentationSelection.has(key));
+                  if (presentationMode && !groupSections.length) return null;
                   return (
                     <section className="si-panel si-story" data-story={storyKey} key={storyKey}>
                       <header className="si-story-heading">
@@ -1480,20 +1650,34 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                       <div className="si-story-sections">
                         {groupSections.map((key) => (
                           <section className="si-story-section" data-section={key} key={key}>
-                            <h3>
-                              {sections[key]}{' '}
-                              <InfoNote label={`Regras de ${sections[key]}`}>
-                                {key === 'agents'
-                                  ? 'Atendimentos OS por linha. Criados/fechados usam o período; pendentes e espera são a carteira atual, sem filtro temporal. Em espera já está incluído nos pendentes.'
-                                  : key === 'subjects'
-                                    ? 'Categorias atuais do Zoho nos chamados atualmente fechados. Catálogo confirmado inclui zero. Cada chamado conta pelo último agente que o fechou; categorias não são inferidas pelo título.'
-                                    : key === 'evolution'
-                                      ? 'Datas próprias da fonte; dias sem dados não representam ausência de trabalho.'
-                                      : key === 'types'
-                                        ? 'Serviço combina Tipo de Serviço e Motivo da OS. Agenda usa a data marcada; execução efetiva usa a data de atendimento. As etapas são contadas separadamente.'
-                                        : 'Lançamentos manuais por data e agente; campos vazios não são zero e não são somados ao mesmo indicador automático.'}
-                              </InfoNote>
-                            </h3>
+                            <div
+                              className={`si-story-section-heading${key === 'types' ? ' si-story-section-heading-action' : ''}`}
+                            >
+                              <h3>
+                                {sections[key]}{' '}
+                                <InfoNote label={`Regras de ${sections[key]}`}>
+                                  {key === 'agents'
+                                    ? 'Atendimentos OS por linha. Criados/fechados usam o período; pendentes e espera são a carteira atual, sem filtro temporal. Em espera já está incluído nos pendentes. Eventos é a soma de criações e fechamentos confirmados; não representa chamados distintos.'
+                                    : key === 'subjects'
+                                      ? 'Categorias atuais do Zoho nos chamados atualmente fechados. Catálogo confirmado inclui zero. Cada chamado conta pelo último agente que o fechou; categorias não são inferidas pelo título.'
+                                      : key === 'evolution'
+                                        ? 'Datas próprias da fonte; dias sem dados não representam ausência de trabalho.'
+                                        : key === 'types'
+                                          ? 'Serviço combina Tipo de Serviço e Motivo da OS. Agenda usa a data marcada; execução efetiva usa a data de atendimento. As etapas são contadas separadamente.'
+                                          : 'Lançamentos manuais por data e agente; campos vazios não são zero e não são somados ao mesmo indicador automático.'}
+                                </InfoNote>
+                              </h3>
+                              {key === 'types' && (
+                                <button
+                                  type="button"
+                                  className="si-section-expand"
+                                  onClick={() => setServiceChartOpen(true)}
+                                  aria-label="Ampliar a seção Serviços e clientes"
+                                >
+                                  Ampliar seção
+                                </button>
+                              )}
+                            </div>
                             {key === 'agents' && (
                               <>
                                 <div className="si-chart-grid">
@@ -1542,7 +1726,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   </div>
                                 </div>
                                 <Table
-                                  numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+                                  numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                                   headers={[
                                     'Agente',
                                     'Agendados · OS',
@@ -1553,12 +1737,31 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     'Pendentes agora · Zoho',
                                     'Em espera agora · Zoho',
                                     'Fechados · Zoho',
+                                    'Eventos · criados + fechados',
                                     'Tempo · Zoho',
                                     'Equipamentos · manual',
                                     'Atividades · manual',
                                   ]}
                                   rows={agentRows}
                                 />
+                                <details
+                                  className="si-report-expandable si-agent-service-breakdown"
+                                  open={presentationMode}
+                                >
+                                  <summary>
+                                    Agendados e executados por tipo de serviço e agente
+                                  </summary>
+                                  <Table
+                                    headers={[
+                                      'Agente',
+                                      'Tipo de serviço · OS',
+                                      'Agendados',
+                                      'Executados efetivos',
+                                    ]}
+                                    rows={agentServiceRows}
+                                    numericColumns={[2, 3]}
+                                  />
+                                </details>
                               </>
                             )}
                             {key === 'evolution' && (
@@ -1653,7 +1856,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                             )}
                             {key === 'types' && (
                               <>
-                                {viewMode === 'editorial' && (
+                                {contentViewMode === 'editorial' && (
                                   <p className="si-story-lead">
                                     Primeiro, o mix de serviços efetivamente executados; em seguida,
                                     onde esse trabalho se concentrou. O agendamento aparece à parte
@@ -1662,20 +1865,11 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                 )}
                                 <div className="si-chart-grid">
                                   <div>
-                                    <div className="si-chart-subheading">
-                                      <h4>
-                                        {viewMode === 'editorial'
-                                          ? '1 · O que foi executado?'
-                                          : 'Serviços executados · OS'}
-                                      </h4>
-                                      <button
-                                        type="button"
-                                        className="si-chart-expand"
-                                        onClick={() => setServiceChartOpen(true)}
-                                      >
-                                        Ampliar gráfico
-                                      </button>
-                                    </div>
+                                    <h4>
+                                      {contentViewMode === 'editorial'
+                                        ? '1 · O que foi executado?'
+                                        : 'Serviços executados · OS'}
+                                    </h4>
                                     <Chart
                                       compact
                                       title="Execuções efetivas por serviço · OS"
@@ -1699,7 +1893,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   </div>
                                   <div>
                                     <h4>
-                                      {viewMode === 'editorial'
+                                      {contentViewMode === 'editorial'
                                         ? '2 · Onde o trabalho se concentrou?'
                                         : 'Clientes atendidos · OS'}
                                     </h4>
@@ -1713,8 +1907,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               .slice(0, 5)
                                               .map((d) => ({
                                                 label: d.label,
+                                                displayLabel: d.label.split(' · ')[0],
                                                 value: d.executed,
-                                                caption: `${number(d.scheduled)} agendados`,
+                                                valueCaption: `Agenda ${number(d.scheduled)}`,
                                               }))
                                           : []
                                       }
@@ -1722,6 +1917,29 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     <small>Top 5 por execuções; agenda como referência.</small>
                                   </div>
                                 </div>
+                                <details
+                                  className="si-report-expandable si-service-type-summary"
+                                  open={presentationMode}
+                                >
+                                  <summary>Resumo por tipo de serviço</summary>
+                                  <Table
+                                    headers={[
+                                      'Tipo de serviço · OS',
+                                      'Executados efetivos',
+                                      'Participação',
+                                      'Agendamentos',
+                                    ]}
+                                    rows={(orders?.serviceTypes || []).map((service) => [
+                                      service.label,
+                                      service.executed,
+                                      service.share == null
+                                        ? '—'
+                                        : `${(service.share * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`,
+                                      service.scheduled,
+                                    ])}
+                                    numericColumns={[1, 2, 3]}
+                                  />
+                                </details>
                                 <div className="si-client-service-table">
                                   <Table
                                     headers={[
@@ -1733,19 +1951,25 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     rows={
                                       hasOrders
                                         ? orders.clients
-                                            .slice(0, viewMode === 'compact' ? 8 : undefined)
+                                            .slice(0, contentViewMode === 'compact' ? 8 : undefined)
                                             .map((d) => [
                                               d.label,
                                               d.scheduled,
                                               d.executed,
-                                              <ServiceList value={d.services} />,
+                                              <ServiceList
+                                                value={d.services}
+                                                chips={contentViewMode === 'compact'}
+                                              />,
                                             ])
                                         : []
                                     }
                                   />
                                   <small>Em cada serviço: execuções efetivas / agendamentos.</small>
-                                  {viewMode === 'compact' && orders?.clients.length > 8 && (
-                                    <details className="si-report-expandable si-client-reasons">
+                                  {contentViewMode === 'compact' && orders?.clients.length > 8 && (
+                                    <details
+                                      className="si-report-expandable si-client-reasons"
+                                      open={presentationMode}
+                                    >
                                       <summary>
                                         Ver todos os clientes ({orders.clients.length})
                                       </summary>
@@ -1760,7 +1984,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                           d.label,
                                           d.scheduled,
                                           d.executed,
-                                          <ServiceList value={d.services} />,
+                                          <ServiceList
+                                            value={d.services}
+                                            chips={contentViewMode === 'compact'}
+                                          />,
                                         ])}
                                       />
                                     </details>
@@ -1787,7 +2014,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       )
                                     }
                                   />
-                                  <details className="si-report-expandable">
+                                  <details
+                                    className="si-report-expandable si-category-summary"
+                                    open={presentationMode}
+                                  >
                                     <summary>Tabela por categoria</summary>
                                     <Table
                                       headers={[
@@ -1797,7 +2027,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       rows={zoho.categories.map((r) => [r.label, r.value])}
                                     />
                                   </details>
-                                  <details className="si-report-expandable">
+                                  <details
+                                    className="si-report-expandable si-category-by-agent"
+                                    open={presentationMode}
+                                  >
                                     <summary>Distribuição por agente e categoria</summary>
                                     <Table
                                       headers={[
@@ -1844,6 +2077,17 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       manual?.totals[`subject_${key}`] ?? null,
                                     ])}
                                   />
+                                  <details
+                                    className="si-report-expandable si-manual-subject-breakdown"
+                                    open={presentationMode}
+                                  >
+                                    <summary>Assuntos informados por agente</summary>
+                                    <Table
+                                      headers={['Agente', 'Assunto', 'Quantidade informada']}
+                                      rows={manualSubjectRows}
+                                      numericColumns={[2]}
+                                    />
+                                  </details>
                                 </>
                               ))}
                             {key === 'manual' && (
@@ -1864,27 +2108,52 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     .slice(10)
                                     .map(([key, label]) => [label, manual?.totals[key] ?? null])}
                                 />
-                                <details>
+                                <details
+                                  className="si-report-expandable si-manual-agent-breakdown"
+                                  open={presentationMode}
+                                >
+                                  <summary>Equipamentos e atividades manuais por agente</summary>
+                                  <Table
+                                    headers={[
+                                      'Agente',
+                                      'Rastreadores',
+                                      'Coletoras',
+                                      'Identificadores',
+                                      'Bloqueadores',
+                                      'Total solicitado',
+                                    ]}
+                                    rows={manualEquipmentRows}
+                                    numericColumns={[1, 2, 3, 4, 5]}
+                                  />
+                                  <Table
+                                    headers={[
+                                      'Agente',
+                                      'Materiais em vídeo',
+                                      'Cadastros de técnicos',
+                                      'POPs',
+                                      'Total de atividades',
+                                    ]}
+                                    rows={manualActivityRows}
+                                    numericColumns={[1, 2, 3, 4]}
+                                  />
+                                </details>
+                                <details
+                                  className="si-report-expandable si-manual-entry-log"
+                                  open={presentationMode}
+                                >
                                   <summary>Lançamentos, observações e origem</summary>
                                   <Table
                                     headers={[
                                       'Data',
                                       'Agente',
-                                      'Campos informados',
                                       'Observações',
-                                      'Algo novo?',
-                                      'Revisão',
-                                      'Salvo em',
+                                      'Algo novo? · explicação',
                                     ]}
                                     rows={(manual?.entries || []).map((r) => [
                                       date(r.value.date),
                                       agents.find((a) => a.id === r.value.agentId)?.name,
-                                      Object.values(r.value.values).filter((n) => n !== null)
-                                        .length,
                                       r.value.note,
                                       r.value.novelty,
-                                      r.revision,
-                                      new Date(r.updatedAt).toLocaleString('pt-BR'),
                                     ])}
                                   />
                                 </details>

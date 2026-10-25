@@ -1,3 +1,11 @@
+## 0.69.28 — 25/10/2026
+
+- Adiciona modo Apresentação aos Indicadores Suporte, com seleção dos blocos visuais e estilos Compacto ou Editorial.
+- Imprime somente os blocos selecionados, com período e agente no cabeçalho e sem painéis operacionais de consulta e diagnóstico.
+- Completa a cobertura semanal: categorias Zoho por agente; agenda/execução por agente e tipo; participação por tipo; equipamentos e atividades manuais por agente.
+- Reorganiza Serviços e Clientes: agenda em legenda dos totais, alturas alinhadas e opção de ampliar a seção; serviços por cliente ficam em linha no modo compacto.
+- No tema Claro, troca o realce verde pelo azul vibrante de Grafite e Azul, mantendo texto e gráficos com contraste adequado.
+
 ## 0.69.27 — 25/10/2026
 
 - Atualiza o modo compacto global com superfícies, hierarquia tipográfica e tabelas mais consistentes entre os módulos.

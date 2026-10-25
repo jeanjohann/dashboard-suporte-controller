@@ -218,7 +218,14 @@ export function Chart({
                     type="button"
                     className="bar-name bar-select"
                     title={item.label}
-                    aria-label={`${item.label} · ${format(item.value)} · Conferir registros`}
+                    aria-label={[
+                      item.label,
+                      format(item.value),
+                      item.valueCaption,
+                      'Conferir registros',
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
                     onClick={() => onItemClick(item)}
                   >
                     <span className="bar-label">{item.displayLabel || item.label}</span>
@@ -242,7 +249,12 @@ export function Chart({
                     }}
                   />
                 </div>
-                <strong>{format(item.value)}</strong>
+                <span className="bar-value">
+                  <strong>{format(item.value)}</strong>
+                  {item.valueCaption && (
+                    <small className="bar-value-caption">{item.valueCaption}</small>
+                  )}
+                </span>
               </div>
             );
           })}

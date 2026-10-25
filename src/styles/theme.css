@@ -16,12 +16,12 @@
   --ui-button-bg: #344044;
   --ui-button-text: #ffffff;
   --ui-button-hover: #49565a;
-  --ui-accent: #326d62;
-  --ui-on-accent: #ffffff;
-  --ui-accent-hover: #285a51;
-  --ui-accent-ink: #2e645a;
-  --ui-accent-soft: #e3efea;
-  --ui-accent-border: #a6c8bc;
+  --ui-accent: #3a8dff;
+  --ui-on-accent: #06172b;
+  --ui-accent-hover: #5aa2ff;
+  --ui-accent-ink: #0868c5;
+  --ui-accent-soft: #e5f1ff;
+  --ui-accent-border: #99c7f9;
   --ui-coral: #bb573c;
   --ui-link: #315f70;
   --ui-success-bg: #e6f4ec;
@@ -35,7 +35,7 @@
   --ui-info-ink: #35659b;
   --ui-violet-bg: #f1eafa;
   --ui-violet-ink: #7951a2;
-  --chart-primary: #19786f;
+  --chart-primary: #0868c5;
   --chart-blue: #3d6fa1;
   --chart-teal: #238779;
   --chart-purple: #77589d;

@@ -60,6 +60,8 @@ export function ordersSummary(data, period, agentId = '') {
     agents: agents.map((a) => ({ ...a, executed: 0, scheduled: 0, unproductive: 0 })),
     daily: new Map(),
     services: new Map(),
+    serviceTypes: new Map(),
+    agentServiceTypes: new Map(agents.map((a) => [a.id, new Map()])),
     clients: new Map(),
     clientServices: new Map(),
     rows: [],
@@ -102,6 +104,21 @@ export function ordersSummary(data, period, agentId = '') {
       const serviceType = text(row, 'Tipo de Serviço') || 'Tipo não informado';
       const motive = text(row, 'Motivo');
       service ??= motive ? `${serviceType} · ${motive}` : serviceType;
+      const typeCounts = result.serviceTypes.get(serviceType) || {
+        label: serviceType,
+        executed: 0,
+        scheduled: 0,
+      };
+      typeCounts[key]++;
+      result.serviceTypes.set(serviceType, typeCounts);
+      const agentTypes = result.agentServiceTypes.get(owner);
+      const agentCounts = agentTypes.get(serviceType) || {
+        label: serviceType,
+        executed: 0,
+        scheduled: 0,
+      };
+      agentCounts[key]++;
+      agentTypes.set(serviceType, agentCounts);
       result[key]++;
       const agent = result.agents.find((a) => a.id === owner);
       if (agent) agent[key]++;
@@ -140,6 +157,22 @@ export function ordersSummary(data, period, agentId = '') {
         ? a.label.localeCompare(b.label)
         : b.executed - a.executed || a.label.localeCompare(b.label),
     );
+  const serviceTypeLabels = [...result.serviceTypes.keys()];
+  result.serviceTypes = [...result.serviceTypes.values()]
+    .map((service) => ({
+      ...service,
+      share: result.executed ? service.executed / result.executed : null,
+    }))
+    .sort((a, b) => b.executed - a.executed || a.label.localeCompare(b.label));
+  result.agentServices = result.agents.flatMap((agent) =>
+    serviceTypeLabels.map((label) => ({
+      agent: agent.name,
+      agentId: agent.id,
+      label,
+      ...(result.agentServiceTypes.get(agent.id).get(label) || { executed: 0, scheduled: 0 }),
+    })),
+  );
+  delete result.agentServiceTypes;
   result.clients = result.clients.map((client) => ({
     ...client,
     services: [...(result.clientServices.get(client.label) || new Map())]
