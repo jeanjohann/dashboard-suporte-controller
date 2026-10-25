@@ -6,6 +6,7 @@ import { OperationalLinksTable } from './OperationalLinksTable.jsx';
 import { ReviewPanel } from '../../../components/ReviewPanel.jsx';
 import { TableScroll } from '../../../components/TableScroll.jsx';
 import { PermissionButton } from '../../../shared/security/Access.jsx';
+import { SourceStatus } from '../../../components/SourceStatus.jsx';
 import {
   authorizeAction,
   accessUser,
@@ -528,10 +529,28 @@ export function OperationalPage({
                     </ViewState>
                   ) : (
                     <>
-                      <div className="source">
-                        <strong>{source.filename}</strong>
-                        <span>Aba Equipamentos · somente leitura</span>
-                        <span>OS: {orders?.filename || 'não importada'}</span>
+                      <div
+                        className="source-status-list"
+                        aria-label="Fontes da análise operacional"
+                      >
+                        <SourceStatus
+                          name="Operacional"
+                          state="ready"
+                          label="Planilha carregada · somente leitura"
+                          detail={`${source.filename} · aba Equipamentos`}
+                        />
+                        <SourceStatus
+                          name="Ordens de Serviço"
+                          state={orders?.filename ? 'ready' : 'pending'}
+                          label={
+                            orders?.filename ? 'Histórico carregado' : 'Histórico não carregado'
+                          }
+                          detail={
+                            orders?.filename
+                              ? orders.filename
+                              : 'A conferência de histórico depende desta fonte.'
+                          }
+                        />
                       </div>
                       <details className="analysis-context-details">
                         <summary>Origem, histórico e leitura da planilha</summary>

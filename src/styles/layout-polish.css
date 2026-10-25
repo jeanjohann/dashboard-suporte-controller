@@ -268,8 +268,10 @@
 .saved-sources-status small {
   color: var(--ui-muted);
 }
-.monitoring-saved-status > span {
+.monitoring-saved-status > .source-status-list {
   flex: 1 1 360px;
+  margin: 0;
+  border: 0;
 }
 .monitoring-saved-status > p {
   flex-basis: 100%;

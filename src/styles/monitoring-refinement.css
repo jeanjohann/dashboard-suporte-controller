@@ -427,7 +427,7 @@
   font-size: 10px;
   line-height: 1.35;
 }
-.monitoring-page .monitoring-saved-status > span {
+.monitoring-page .monitoring-saved-status > .source-status-list {
   flex-basis: 280px;
 }
 .monitoring-page .monitoring-saved-status button {

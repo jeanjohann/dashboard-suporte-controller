@@ -6,7 +6,7 @@ import { RetainedContent } from '../components/RetainedContent.jsx';
 import { PageActivityProvider } from '../shared/layout/PageActivity.jsx';
 
 /** Mantém o menu disponível durante o carregamento ou uma falha isolada do módulo. */
-function PageStatus({ page, onPage, failed = false }) {
+function PageStatus({ page, onPage, failed = false, onRetry }) {
   return (
     <SidePanelProvider>
       <div className="app module-loading-page">
@@ -26,10 +26,15 @@ function PageStatus({ page, onPage, failed = false }) {
             </p>
             {failed && (
               <>
-                <button onClick={() => window.location.reload()}>Recarregar sistema</button>
+                <div className="module-error-actions">
+                  <button onClick={onRetry}>Tentar abrir este módulo novamente</button>
+                  <button className="secondary" onClick={() => window.location.reload()}>
+                    Recarregar página
+                  </button>
+                </div>
                 <p className="scope">
-                  Ao recarregar, importe novamente as planilhas da sessão. O histórico de consumo
-                  salvo neste navegador permanece.
+                  A recarga pode limpar fontes carregadas somente nesta sessão. Bases gravadas no
+                  banco do sistema podem ser carregadas novamente após abrir a página.
                 </p>
               </>
             )}
@@ -42,15 +47,16 @@ function PageStatus({ page, onPage, failed = false }) {
 
 /** Falha de download/renderização de uma página não desmonta as outras bases e páginas da sessão. */
 class PageBoundary extends Component {
-  state = { failed: false };
+  state = { failed: false, attempt: 0 };
   static getDerivedStateFromError() {
     return { failed: true };
   }
+  retry = () => this.setState((state) => ({ failed: false, attempt: state.attempt + 1 }));
   render() {
     return this.state.failed ? (
-      <PageStatus page={this.props.page} onPage={this.props.onPage} failed />
+      <PageStatus page={this.props.page} onPage={this.props.onPage} failed onRetry={this.retry} />
     ) : (
-      this.props.children
+      <React.Fragment key={this.state.attempt}>{this.props.children}</React.Fragment>
     );
   }
 }

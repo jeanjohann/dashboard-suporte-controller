@@ -1,5 +1,6 @@
 /** Período, campos, seleções e origem reunidos no quadro da categoria atual de OS. */
 import React from 'react';
+import { SourceStatus } from '../../../components/SourceStatus.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { PeriodFilter } from '../../../components/PeriodFilter.jsx';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
@@ -107,17 +108,23 @@ export function OrdersFiltersPanel({
         )
       }
       source={
-        <div className="source">
-          <span className="dot" />
-          <strong>{filename}</strong>
-          <span>Aba {data.sheetName || 'OS 2025'}</span>
-          <span>Somente leitura</span>
-          <span title={customerGroupingRule(data)}>
-            Clientes: {customerGroupingLabel(data)}
-            {data.customerGrouping === 'consolidated' && data.consolidateIdenticalNames
-              ? ' · nomes idênticos habilitados'
-              : ''}
-          </span>
+        <div className="source-status-list" aria-label="Fontes desta análise">
+          <SourceStatus
+            name="Ordens de Serviço"
+            state="ready"
+            label="Planilha carregada · somente leitura"
+            detail={`${filename} · aba ${data.sheetName || 'OS 2025'}`}
+          />
+          <SourceStatus
+            name="Identificação de clientes"
+            state="ready"
+            label={customerGroupingLabel(data)}
+            detail={
+              data.customerGrouping === 'consolidated' && data.consolidateIdenticalNames
+                ? 'Razões sociais idênticas consolidadas; sem equivalência segura, mantém CNPJ separado.'
+                : customerGroupingRule(data)
+            }
+          />
         </div>
       }
     >

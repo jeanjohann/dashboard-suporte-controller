@@ -11,6 +11,7 @@ import { loadZohoBacklog } from '../data/zohoBacklogClient.js';
 import { supportPeriod } from '../../orders/domain/supportPerformance.js';
 import { todaySaoPaulo } from '../../orders/domain/lifecycle.js';
 import { Chart } from '../../../components/Chart.jsx';
+import { SourceStatus } from '../../../components/SourceStatus.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { supportClosureBasis, zohoDay } from '../../../shared/data/zohoActivity.js';
 import { attendanceExtent } from '../../../shared/data/filters.js';
@@ -203,15 +204,60 @@ function ClosedTicketDetails({ rows }) {
     </details>
   );
 }
+function unavailableMetric(key, { ordersData, orders, zohoData, zoho, storeReady, periodValid }) {
+  if (!periodValid)
+    return ['Período inválido', 'Corrija o intervalo para calcular este indicador.'];
+  if (['executed', 'scheduled', 'unproductive'].includes(key)) {
+    if (!ordersData) return ['Pendente', 'Carregue a planilha de Ordens de Serviço.'];
+    if (!orders) return ['Aguardando cálculo', 'Ajuste o período selecionado.'];
+    if (orders?.unavailable)
+      return ['Indisponível', `Colunas ausentes: ${orders.unavailable.join(', ')}.`];
+  }
+  if (key === 'created') {
+    if (zohoData && zoho?.creationUnknown)
+      return ['Em conferência', 'A autoria das aberturas não foi confirmada no histórico do Zoho.'];
+    if (!zohoData && !storeReady)
+      return [
+        'Pendente',
+        'Zoho ainda não foi consultado e o banco de lançamentos manuais não está disponível.',
+      ];
+    if (!storeReady)
+      return [
+        'Indisponível',
+        'A abertura não veio da consulta; o banco de lançamentos manuais está indisponível.',
+      ];
+    return [
+      'Não informado',
+      zohoData
+        ? 'Não há abertura automática confirmada nem lançamento manual neste recorte.'
+        : 'Zoho não consultado e sem lançamento manual neste recorte.',
+    ];
+  }
+  if (['closed', 'seconds'].includes(key)) {
+    if (!zohoData) return ['Pendente', 'Consulte o Zoho para carregar esta métrica.'];
+    if (!zoho)
+      return ['Cobertura parcial', 'A consulta atual não cobre todo o período selecionado.'];
+    if (key === 'closed' && zohoData.closureReview?.length)
+      return [
+        'Em conferência',
+        'O histórico não confirmou a situação de fechamento de todos os chamados.',
+      ];
+    return ['Indisponível', 'A fonte não forneceu um valor válido para este recorte.'];
+  }
+  if (!storeReady) return ['Indisponível', 'Os lançamentos manuais ainda não foram carregados.'];
+  return ['Não informado', 'Nenhum valor manual foi lançado neste recorte.'];
+}
 function IndicatorCards({
   settings,
   values,
   oldValues,
+  zoho,
   zohoData,
   weekly,
   manualMetric,
   comparisonAvailable,
   presentationMode = false,
+  emptyContext,
 }) {
   const cardKeys = presentationMode
     ? [
@@ -221,61 +267,71 @@ function IndicatorCards({
     : settings.cards;
   return (
     <div className="si-cards">
-      {cardKeys.map((key) => (
-        <article className={`si-card si-card-${key}`} key={key}>
-          <span className="si-card-label">
-            {metricLabels[key]}
-            <InfoNote label={`Regras de ${metricLabels[key]}`}>
-              {key === 'executed'
-                ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
-                : key === 'scheduled'
-                  ? 'Uma linha com data de Agendamento e responsável válidos; exclui canceladas e pode incluir improdutivas.'
-                  : key === 'unproductive'
-                    ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
-                    : key === 'closed'
-                      ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
-                      : key === 'seconds'
-                        ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
-                        : key === 'created'
-                          ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
-                          : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
-              Comparação exige dados dos dois períodos e não soma indicadores manuais aos
-              automáticos.
-            </InfoNote>
-          </span>
-          <strong>
-            {key === 'closed' && values[key] == null && zohoData?.closureReview?.length
-              ? 'Em conferência'
-              : format(key, values[key])}
-          </strong>
-          {key === 'closed' && zohoData?.closureReview?.length > 0 && (
-            <small>
-              Histórico pendente: {zohoData.closureReview.map((row) => row.number).join(', ')}. Isso
-              não significa zero fechamentos.
+      {cardKeys.map((key) => {
+        const empty = values[key] == null ? unavailableMetric(key, emptyContext) : null;
+        return (
+          <article className={`si-card si-card-${key}`} key={key}>
+            <span className="si-card-label">
+              {metricLabels[key]}
+              <InfoNote label={`Regras de ${metricLabels[key]}`}>
+                {key === 'executed'
+                  ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
+                  : key === 'scheduled'
+                    ? 'Uma linha com data de Agendamento e responsável válidos; exclui canceladas e pode incluir improdutivas.'
+                    : key === 'unproductive'
+                      ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
+                      : key === 'closed'
+                        ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
+                        : key === 'seconds'
+                          ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
+                          : key === 'created'
+                            ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
+                            : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
+                Comparação exige dados dos dois períodos e não soma indicadores manuais aos
+                automáticos.
+              </InfoNote>
+            </span>
+            {values[key] == null ? (
+              <div className="si-card-empty" role="status">
+                <strong>{empty[0]}</strong>
+                <small>{empty[1]}</small>
+              </div>
+            ) : (
+              <strong>{format(key, values[key])}</strong>
+            )}
+            {key === 'closed' && zohoData?.closureReview?.length > 0 && (
+              <small>
+                Histórico pendente: {zohoData.closureReview.map((row) => row.number).join(', ')}.
+                Isso não significa zero fechamentos.
+              </small>
+            )}
+            <small className="si-card-origin">
+              {key === 'created' && zoho?.created != null
+                ? 'Zoho · autoria confirmada'
+                : manualMetric(key)
+                  ? values[key] == null
+                    ? 'Manual · sem valor lançado'
+                    : 'Manual · total informado'
+                  : key === 'seconds' || key === 'closed' || key === 'created'
+                    ? key === 'closed'
+                      ? 'Zoho · fechados atuais'
+                      : 'Zoho · eventos do período'
+                    : 'OS · linhas da base'}
             </small>
-          )}
-          <small className="si-card-origin">
-            {manualMetric(key)
-              ? 'Manual · total informado'
-              : key === 'seconds' || key === 'closed' || key === 'created'
-                ? key === 'closed'
-                  ? 'Zoho · fechados atuais'
-                  : 'Zoho · eventos do período'
-                : 'OS · linhas da base'}
-          </small>
-          {comparisonAvailable(key) && values[key] != null && oldValues[key] != null && (
-            <MetricComparison metric={key} current={values[key]} previous={oldValues[key]} />
-          )}
-          {weekly && settings.weeklyGoals[key] != null && (
-            <small>
-              Meta semanal:{' '}
-              {key === 'seconds'
-                ? duration(settings.weeklyGoals[key] * 60)
-                : number(settings.weeklyGoals[key])}
-            </small>
-          )}
-        </article>
-      ))}
+            {comparisonAvailable(key) && values[key] != null && oldValues[key] != null && (
+              <MetricComparison metric={key} current={values[key]} previous={oldValues[key]} />
+            )}
+            {weekly && settings.weeklyGoals[key] != null && (
+              <small>
+                Meta semanal:{' '}
+                {key === 'seconds'
+                  ? duration(settings.weeklyGoals[key] * 60)
+                  : number(settings.weeklyGoals[key])}
+              </small>
+            )}
+          </article>
+        );
+      })}
     </div>
   );
 }
@@ -741,7 +797,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     return false;
   };
   const shownAgents = agents.filter((a) => !agentId || a.id === agentId);
-  const storyOrder = [...new Set(settings.sections.map((key) => sectionStories[key]))];
+  const storyOrder = ['team', 'service-flow', 'support-profile'].filter((storyKey) =>
+    settings.sections.some((key) => sectionStories[key] === storyKey),
+  );
   const availablePresentationOptions = presentationOptions.filter(
     (option) => option.key === 'summary' || settings.sections.includes(option.key),
   );
@@ -1652,11 +1710,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               settings={settings}
               values={values}
               oldValues={oldValues}
+              zoho={zoho}
               zohoData={zohoData}
               weekly={weekly}
               manualMetric={manualMetric}
               comparisonAvailable={comparisonAvailable}
               presentationMode={presentationMode}
+              emptyContext={{
+                ordersData,
+                orders,
+                zohoData,
+                zoho,
+                storeReady: store.ready,
+                periodValid: valid,
+              }}
             />
           )}
           {viewMode === 'editorial' && valid && !presentationMode && (
@@ -1744,15 +1811,57 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             valid={valid}
           />
           <section className="si-panel si-sources" aria-label="Fontes e atualização">
-            <div className="si-source-status">
-              <strong>OS</strong>
-              <small>{sources.orders?.value?.filename || 'Carregue a base em Importação.'}</small>
-              <strong>Zoho</strong>
-              <small>
-                {zoho
-                  ? `Consulta de ${date(zohoData.period.start)} a ${date(zohoData.period.end)} · ${new Date(zohoData.readAt).toLocaleString('pt-BR')}`
-                  : 'Sem consulta que cubra todo o período.'}
-              </small>
+            <div className="source-status-list" aria-label="Estado das fontes dos indicadores">
+              <SourceStatus
+                name="Ordens de Serviço"
+                state={ordersData ? (orders?.unavailable ? 'partial' : 'ready') : 'pending'}
+                label={
+                  !ordersData
+                    ? 'Planilha não carregada'
+                    : orders?.unavailable
+                      ? 'Colunas necessárias ausentes'
+                      : 'Planilha carregada'
+                }
+                detail={
+                  ordersData
+                    ? `${sources.orders?.value?.filename || 'Arquivo disponível'} · ${number(ordersData.rows.length)} linhas`
+                    : 'Carregue a base em Importação para habilitar os indicadores de OS.'
+                }
+              />
+              <SourceStatus
+                name="Zoho Desk"
+                state={zoho ? 'ready' : zohoData ? 'partial' : busy ? 'loading' : 'pending'}
+                label={
+                  zoho
+                    ? 'Consulta cobre todo o período'
+                    : zohoData
+                      ? 'A consulta não cobre todo o período'
+                      : busy
+                        ? 'Consulta em andamento'
+                        : 'Período ainda não consultado'
+                }
+                detail={
+                  zohoData?.period
+                    ? `Consulta de ${date(zohoData.period.start)} a ${date(zohoData.period.end)}${zohoData.readAt ? ` · atualizada em ${timestamp(zohoData.readAt)}` : ''}`
+                    : 'Consulte o Zoho para obter os indicadores automáticos.'
+                }
+              />
+              <SourceStatus
+                name="Lançamentos manuais"
+                state={store.loading ? 'loading' : store.ready ? 'ready' : 'error'}
+                label={
+                  store.loading
+                    ? 'Carregando lançamentos'
+                    : store.ready
+                      ? 'Banco disponível'
+                      : 'Lançamentos indisponíveis'
+                }
+                detail={
+                  store.ready
+                    ? `${number(manual?.entries.length || 0)} lançamentos no período · ${number(manual?.filled || 0)} campos preenchidos`
+                    : 'Os valores manuais não são presumidos como zero.'
+                }
+              />
             </div>
             <div className="si-toolbar">
               <button
@@ -1954,6 +2063,17 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 </p>
               )}
               <div className="si-sections">
+                {!presentationMode && storyOrder.length > 1 && (
+                  <nav className="si-story-path" aria-label="Sequência sugerida da análise">
+                    <strong>Leitura sugerida</strong>
+                    {storyOrder.map((storyKey, index) => (
+                      <React.Fragment key={storyKey}>
+                        {index > 0 && <span aria-hidden="true">→</span>}
+                        <a href={`#si-story-${storyKey}`}>{stories[storyKey].title}</a>
+                      </React.Fragment>
+                    ))}
+                  </nav>
+                )}
                 {storyOrder.map((storyKey) => {
                   const story = stories[storyKey];
                   const groupSections = settings.sections
@@ -1961,7 +2081,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     .filter((key) => !presentationMode || presentationSelection.has(key));
                   if (presentationMode && !groupSections.length) return null;
                   return (
-                    <section className="si-panel si-story" data-story={storyKey} key={storyKey}>
+                    <section
+                      className="si-panel si-story"
+                      data-story={storyKey}
+                      id={`si-story-${storyKey}`}
+                      key={storyKey}
+                      tabIndex={-1}
+                    >
                       <header className="si-story-heading">
                         <div>
                           <h2>{story.title}</h2>
@@ -2018,6 +2144,16 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               }))
                                           : []
                                       }
+                                      emptyTitle={
+                                        ordersData
+                                          ? 'Nenhuma execução neste recorte'
+                                          : 'Planilha OS não carregada'
+                                      }
+                                      emptyDescription={
+                                        ordersData
+                                          ? 'A fonte foi lida, mas não há execuções efetivas para os filtros selecionados.'
+                                          : 'Carregue a planilha de Ordens de Serviço para comparar a equipe.'
+                                      }
                                       onItemClick={(item) =>
                                         showOrderDetails(
                                           `Execuções efetivas · ${item.label}`,
@@ -2037,6 +2173,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         value: a.seconds,
                                       }))}
                                       format={duration}
+                                      emptyTitle={
+                                        !zohoData
+                                          ? 'Zoho ainda não consultado'
+                                          : !zoho
+                                            ? 'Consulta sem cobertura completa'
+                                            : 'Nenhum apontamento neste recorte'
+                                      }
+                                      emptyDescription={
+                                        !zohoData
+                                          ? 'Consulte o Zoho para visualizar o tempo apontado por agente.'
+                                          : !zoho
+                                            ? 'Atualize a consulta para cobrir todo o período selecionado.'
+                                            : 'A consulta cobre o período, mas não encontrou apontamentos válidos.'
+                                      }
                                       onItemClick={(item) =>
                                         showZohoTimeDetails(
                                           `Tempo apontado · ${item.label}`,
@@ -2095,6 +2245,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     showDrilldownHint={false}
                                     title="Serviços efetivos por dia"
                                     type="line"
+                                    emptyTitle={
+                                      !ordersData
+                                        ? 'Planilha OS não carregada'
+                                        : orders?.unavailable
+                                          ? 'Colunas necessárias ausentes'
+                                          : 'Nenhuma execução neste recorte'
+                                    }
+                                    emptyDescription={
+                                      !ordersData
+                                        ? 'Carregue a planilha de Ordens de Serviço para ver a evolução diária.'
+                                        : orders?.unavailable
+                                          ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                          : 'A planilha foi lida, mas não há execuções efetivas no período e nos filtros atuais.'
+                                    }
                                     items={
                                       hasOrders
                                         ? orders.daily.map((d) => ({
@@ -2123,6 +2287,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     showDrilldownHint={false}
                                     title="Agendamentos por dia"
                                     type="line"
+                                    emptyTitle={
+                                      !ordersData
+                                        ? 'Planilha OS não carregada'
+                                        : orders?.unavailable
+                                          ? 'Colunas necessárias ausentes'
+                                          : 'Nenhum agendamento neste recorte'
+                                    }
+                                    emptyDescription={
+                                      !ordersData
+                                        ? 'Carregue a planilha de Ordens de Serviço para ver os agendamentos.'
+                                        : orders?.unavailable
+                                          ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                          : 'A planilha foi lida, mas não há agendamentos no período e nos filtros atuais.'
+                                    }
                                     items={
                                       hasOrders
                                         ? orders.daily.map((d) => ({
@@ -2154,6 +2332,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     showDrilldownHint={false}
                                     title="Tempo apontado por dia"
                                     type="line"
+                                    emptyTitle={
+                                      !zohoData
+                                        ? 'Zoho ainda não consultado'
+                                        : !zoho
+                                          ? 'Consulta sem cobertura completa'
+                                          : 'Nenhum apontamento neste recorte'
+                                    }
+                                    emptyDescription={
+                                      !zohoData
+                                        ? 'Consulte o Zoho para visualizar a evolução do tempo apontado.'
+                                        : !zoho
+                                          ? 'Atualize a consulta para cobrir todo o período selecionado.'
+                                          : 'A consulta cobre o período, mas não encontrou apontamentos válidos.'
+                                    }
                                     items={(zoho?.daily || []).map((d) => ({
                                       label: date(d.label),
                                       detailKey: d.label,
@@ -2194,6 +2386,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     <Chart
                                       compact
                                       title="Execuções efetivas por serviço · OS"
+                                      emptyTitle={
+                                        !ordersData
+                                          ? 'Planilha OS não carregada'
+                                          : orders?.unavailable
+                                            ? 'Colunas necessárias ausentes'
+                                            : 'Nenhuma execução por serviço neste recorte'
+                                      }
+                                      emptyDescription={
+                                        !ordersData
+                                          ? 'Carregue a planilha de Ordens de Serviço para ver os serviços realizados.'
+                                          : orders?.unavailable
+                                            ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                            : 'Não há execuções efetivas por serviço no período e nos filtros atuais.'
+                                      }
                                       items={
                                         hasOrders
                                           ? orders.services
@@ -2221,6 +2427,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     <Chart
                                       compact
                                       title="Execuções efetivas por cliente · OS"
+                                      emptyTitle={
+                                        !ordersData
+                                          ? 'Planilha OS não carregada'
+                                          : orders?.unavailable
+                                            ? 'Colunas necessárias ausentes'
+                                            : 'Nenhum cliente com execução neste recorte'
+                                      }
+                                      emptyDescription={
+                                        !ordersData
+                                          ? 'Carregue a planilha de Ordens de Serviço para comparar clientes.'
+                                          : orders?.unavailable
+                                            ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                            : 'Não há execuções efetivas por cliente no período e nos filtros atuais.'
+                                      }
                                       items={
                                         hasOrders
                                           ? orders.clients
@@ -2327,6 +2547,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   <Chart
                                     compact
                                     title="Categorias dos chamados fechados"
+                                    emptyTitle={
+                                      !zohoData
+                                        ? 'Zoho ainda não consultado'
+                                        : !zoho
+                                          ? 'Consulta sem cobertura completa'
+                                          : 'Nenhuma categoria neste recorte'
+                                    }
+                                    emptyDescription={
+                                      !zohoData
+                                        ? 'Consulte o Zoho para analisar as categorias dos chamados fechados.'
+                                        : !zoho
+                                          ? 'Atualize a consulta para cobrir todo o período selecionado.'
+                                          : 'Nenhuma categoria foi identificada nos chamados fechados deste período.'
+                                    }
                                     items={zoho.categories}
                                     onItemClick={(item) =>
                                       showClosedTicketDetails(
@@ -2380,6 +2614,16 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   <Chart
                                     compact
                                     title="Assuntos informados"
+                                    emptyTitle={
+                                      !store.ready
+                                        ? 'Lançamentos manuais indisponíveis'
+                                        : 'Nenhum assunto lançado neste recorte'
+                                    }
+                                    emptyDescription={
+                                      !store.ready
+                                        ? 'Confira a conexão com o banco de lançamentos manuais.'
+                                        : 'Não há valores manuais de assunto informados no período e nos filtros atuais.'
+                                    }
                                     items={subjects
                                       .filter(([key]) => manual?.totals[`subject_${key}`] != null)
                                       .map(([key, label]) => ({

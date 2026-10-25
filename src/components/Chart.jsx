@@ -96,6 +96,8 @@ export function Chart({
   onItemClick,
   height,
   showDrilldownHint = true,
+  emptyTitle = 'Sem dados para este gráfico',
+  emptyDescription = 'Confira a fonte, o período e os filtros desta análise.',
 }) {
   const clientNames = /cliente|base|razão social/i.test(title || '');
   const items = clientNames
@@ -167,8 +169,8 @@ export function Chart({
   const total = circular ? items.reduce((sum, item) => sum + item.value, 0) : 0;
   if (!items.length)
     return (
-      <ViewState compact title="Sem dados para este gráfico">
-        Confira a fonte, o período e os filtros desta análise.
+      <ViewState compact title={emptyTitle}>
+        {emptyDescription}
       </ViewState>
     );
   if (circular && reason)

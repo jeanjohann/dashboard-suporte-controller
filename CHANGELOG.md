@@ -1,3 +1,10 @@
+## 0.69.33 — 25/10/2026
+
+- Padroniza estados de origem e última leitura entre OS, Operacional, Indicadores Suporte e Monitoramento.
+- Distingue dados pendentes, cobertura parcial, fonte indisponível, ausência de lançamento e recortes válidos sem resultados.
+- Organiza os Indicadores Suporte em uma sequência sugerida de leitura e oferece novas mensagens específicas para gráficos vazios.
+- Permite tentar abrir novamente um módulo com falha antes de recarregar o sistema, explicando o impacto sobre fontes apenas da sessão.
+
 ## 0.69.32 — 25/10/2026
 
 - Compacta a faixa de filtros das análises e recolhe fontes, contagem e controles avançados em opções secundárias.

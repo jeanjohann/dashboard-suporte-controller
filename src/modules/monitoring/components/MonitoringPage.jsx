@@ -16,6 +16,7 @@ import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { PermissionButton, useAccess } from '../../../shared/security/Access.jsx';
 import { allowsPage } from '../../../shared/security/permissions.js';
 import { MultiFilter } from '../../../components/MultiFilter.jsx';
+import { SourceStatus } from '../../../components/SourceStatus.jsx';
 import { Section, PrintContext } from '../../../components/Section.jsx';
 import { download } from '../../../shared/export/exports.js';
 import { MonitoringQueue } from './MonitoringQueue.jsx';
@@ -363,22 +364,54 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                 </button>
               </div>
             </header>
-            {savedMode && (
+            {(savedMode || snapshot || error) && (
               <div className="monitoring-saved-status">
-                <span>
-                  {savedAt
-                    ? `Última base salva: ${monitoringDate(savedAt)}`
-                    : 'Ainda não há uma coleta salva. Faça a primeira atualização ou aguarde o próximo horário.'}{' '}
-                  · Coletas às 9h, 12h, 15h e 18h (São Paulo). Histórico de 30 dias.
-                </span>
-                <button onClick={reloadSaved} disabled={busy || loadingSaved}>
-                  {loadingSaved ? 'Carregando base salva…' : 'Carregar base salva'}
-                </button>
-                {lastAttempt?.status === 'failed' && (
-                  <p role="status">
-                    A última tentativa de coleta falhou. A base anterior foi preservada; confira sua
-                    data.
-                  </p>
+                <div className="source-status-list" aria-label="Estado da fonte de monitoramento">
+                  <SourceStatus
+                    name="Monitoramento ativo"
+                    state={
+                      loadingSaved
+                        ? 'loading'
+                        : error && !snapshot
+                          ? 'error'
+                          : snapshot
+                            ? 'ready'
+                            : 'pending'
+                    }
+                    label={
+                      loadingSaved
+                        ? 'Carregando base salva'
+                        : error && !snapshot
+                          ? 'Falha ao consultar a fonte'
+                          : snapshot
+                            ? `Última leitura: ${monitoringDate(snapshot.referenceAt)}`
+                            : 'Aguardando primeira coleta'
+                    }
+                    detail={
+                      savedMode
+                        ? 'Coletas às 9h, 12h, 15h e 18h · histórico de 30 dias.'
+                        : snapshot
+                          ? 'Consulta manual · a data da leitura identifica este retrato.'
+                          : 'Use Consultar integração para iniciar uma leitura.'
+                    }
+                  />
+                  {lastAttempt?.status === 'failed' && (
+                    <SourceStatus
+                      name="Última tentativa"
+                      state="error"
+                      label="Coleta não concluída"
+                      detail={
+                        snapshot
+                          ? 'A base anterior foi preservada; confira a data antes de usar os dados.'
+                          : 'Tente consultar novamente. Ainda não há uma base válida para esta sessão.'
+                      }
+                    />
+                  )}
+                </div>
+                {savedMode && (
+                  <button onClick={reloadSaved} disabled={busy || loadingSaved}>
+                    {loadingSaved ? 'Carregando base salva…' : 'Carregar base salva'}
+                  </button>
                 )}
               </div>
             )}
@@ -402,13 +435,19 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                   />
                 )}
                 <section className="panel monitoring-preparation">
-                  <h2>Conexão com o sistema de rastreamento</h2>
+                  <h2>
+                    {error
+                      ? 'A consulta não foi concluída'
+                      : savedMode
+                        ? 'Aguardando a primeira coleta'
+                        : 'Consulta ainda não realizada'}
+                  </h2>
                   <p>
-                    Use Consultar integração para carregar o diagnóstico do sistema legado Addlog. O
-                    acesso é configurado pelo administrador no servidor.{' '}
-                    {savedMode
-                      ? 'No piloto, a última coleta válida fica salva e as próximas são agendadas às 9h, 12h, 15h e 18h (São Paulo).'
-                      : 'A coleta salva está disponível apenas para o administrador principal durante o piloto.'}
+                    {error
+                      ? 'A conexão ou a leitura da base falhou. Confira a mensagem acima e tente consultar novamente; a consulta não será tratada como uma frota vazia.'
+                      : savedMode
+                        ? 'Ainda não existe um retrato válido salvo. Faça a primeira coleta; depois, as próximas serão agendadas às 9h, 12h, 15h e 18h (São Paulo).'
+                        : 'A conexão com o sistema legado Addlog é configurada pelo administrador no servidor. Consulte a integração para obter o retrato atual.'}
                   </p>
                 </section>
               </>
