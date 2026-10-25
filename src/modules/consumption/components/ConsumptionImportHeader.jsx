@@ -33,7 +33,14 @@ export function ConsumptionImportHeader({
             Importar extratos
           </PermissionButton>
         )}
-        <PageSettingsButton available={settingsAvailable} />
+        <PageSettingsButton
+          available={settingsAvailable}
+          help={
+            operator
+              ? `${operator} tem importação, filtros e histórico separados da outra operadora. O sistema não presume ciclo de consumo nem franquia individual; confira a referência do arquivo ou da API.`
+              : 'KORE e Arqia mantêm fontes e consumos separados. A página de acompanhamento e os relatórios combinados permitem comparar as operadoras sem somar linhas ou ciclos incompatíveis.'
+          }
+        />
       </div>
       <input hidden ref={input} type="file" accept=".csv,text/csv" multiple onChange={load} />
       <input

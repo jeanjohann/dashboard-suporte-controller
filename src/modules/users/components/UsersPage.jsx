@@ -4,6 +4,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
+import { PageConfigurationButton } from '../../../components/PageConfigurationButton.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { api } from '../../../shared/security/accessClient.js';
@@ -75,15 +76,43 @@ export function UsersPage({ onPage }) {
               <h1>Usuários e permissões</h1>
               <p>Defina páginas e ações disponíveis para cada pessoa.</p>
             </div>
-            <button
-              onClick={() => {
-                setDraft(blank());
-                setMessage('');
-                setError('');
-              }}
-            >
-              Novo usuário
-            </button>
+            <div className="page-header-actions">
+              <PageConfigurationButton
+                scope="Usuários e permissões"
+                description="Regras de acesso do aplicativo e etapas administrativas relacionadas."
+              >
+                <section>
+                  <h3>Permissões internas</h3>
+                  <p>
+                    O cadastro controla páginas e ações disponíveis dentro do sistema. Perfis de
+                    administrador acessam todas as ferramentas e podem gerir usuários.
+                  </p>
+                </section>
+                <section>
+                  <h3>Acesso à conta</h3>
+                  <p>
+                    A liberação para entrar no site também depende da política do Cloudflare Access.
+                    Salvar aqui não envia convites nem altera essa política externa.
+                  </p>
+                </section>
+                <section>
+                  <h3>Exportação e privacidade</h3>
+                  <p>
+                    Bloquear exportação desativa os comandos de exportar e imprimir do sistema, mas
+                    não impede copiar informações que já estejam visíveis na tela.
+                  </p>
+                </section>
+              </PageConfigurationButton>
+              <button
+                onClick={() => {
+                  setDraft(blank());
+                  setMessage('');
+                  setError('');
+                }}
+              >
+                Novo usuário
+              </button>
+            </div>
           </header>
           {error && (
             <p role="alert" className="error">
@@ -295,11 +324,6 @@ export function UsersPage({ onPage }) {
               </table>
             </div>
           </section>
-          <p className="scope">
-            O cadastro não envia e-mails nem modifica a política do Cloudflare. Planilhas continuam
-            locais. Bloquear exportação limita comandos do sistema; não impede copiar informações já
-            exibidas.
-          </p>
         </main>
       </div>
     </SidePanelProvider>

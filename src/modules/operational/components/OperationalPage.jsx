@@ -412,7 +412,16 @@ export function OperationalPage({
                           {busy ? 'Lendo…' : 'Importar operacional'}
                         </PermissionButton>
                       )}
-                      <PageSettingsButton available={logisticsView ? !!logistics?.data : !!data} />
+                      <PageSettingsButton
+                        available={logisticsView ? !!logistics?.data : !!data}
+                        help={
+                          logisticsView
+                            ? 'Envios e devoluções são lidos em sua categoria própria; as datas de envio e recebimento seguem campos distintos.'
+                            : analysis
+                              ? 'O Parque mostra o retrato da base operacional e pode ser cruzado com o histórico de OS. Divergências sinalizam revisão; a base original não é corrigida automaticamente.'
+                              : 'A página preserva os dados originais da planilha. Os alertas indicam registros para conferência manual e não corrigem cadastros.'
+                        }
+                      />
                     </div>
                     <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
                   </header>

@@ -1,3 +1,9 @@
+## 0.69.30 — 25/10/2026
+
+- Padroniza as configurações e informações secundárias em modais acessíveis nas páginas principais, mantendo filtros e ações frequentes à vista.
+- Clareia o tema Claro para superfícies brancas e fundo neutro suave; ações primárias ficam azuis com texto branco.
+- Move orientações extensas da página de Importação e os critérios de fonte do Monitoramento para seus modais.
+
 ## 0.69.29 — 25/10/2026
 
 - Reúne período, agente, fontes, cobertura, diagnósticos, pendências e critérios do Indicadores Suporte em um modal de configurações.

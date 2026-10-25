@@ -11,6 +11,7 @@ import { monitoringThresholds, monitoringPeriodLabel } from '../domain/monitorin
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { usePublishDashboardSource } from '../../my-dashboard/hooks/DashboardSources.jsx';
 import { Navigation } from '../../../app/Navigation.jsx';
+import { PageConfigurationButton } from '../../../components/PageConfigurationButton.jsx';
 import { SidePanelProvider, SidebarContent } from '../../../app/SidePanel.jsx';
 import { PermissionButton, useAccess } from '../../../shared/security/Access.jsx';
 import { allowsPage } from '../../../shared/security/permissions.js';
@@ -275,25 +276,6 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
       </span>
     </>
   );
-  const modeNotice = snapshot && (
-    <details className="monitoring-source-note">
-      <summary>Fonte, atualização e limites desta leitura</summary>
-      <p>
-        {savedMode
-          ? 'Base salva, com coleta agendada e atualização manual opcional'
-          : 'Consulta manual'}
-        ; classificação recalculada a cada minuto, sem nova chamada à API. Anotações somente nesta
-        sessão, sem sincronização entre usuários.
-      </p>
-      {snapshot.source === 'addlog-legacy' && (
-        <p>
-          Fonte: sistema legado Addlog · Posições são registros de comunicação, sem equivalência em
-          MB. Geração informada: {snapshot.sourceGeneratedAt} (fuso não confirmado). A documentação
-          do diagnóstico integrado não disponibiliza telefone, ICCID, operadora ou consumo de dados.
-        </p>
-      )}
-    </details>
-  );
   return (
     <SidePanelProvider>
       <div className="app monitoring-page">
@@ -338,6 +320,36 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                 <p>Comunicação, prioridades e acompanhamento do suporte.</p>
               </div>
               <div className="monitoring-actions">
+                <PageConfigurationButton
+                  scope="Monitoramento ativo"
+                  description="Fonte, agenda de coleta e limites dos dados desta página."
+                >
+                  <section>
+                    <h3>Atualização dos dados</h3>
+                    <p>
+                      {savedMode
+                        ? 'A base é salva com coletas agendadas às 9h, 12h, 15h e 18h (São Paulo). A atualização manual permanece disponível.'
+                        : 'A leitura atual é uma consulta manual à integração.'}{' '}
+                      A classificação da fila é recalculada localmente a cada minuto, sem nova
+                      chamada à API.
+                    </p>
+                  </section>
+                  <section>
+                    <h3>Limites da fonte</h3>
+                    <p>
+                      {snapshot?.source === 'addlog-legacy'
+                        ? `A fonte é o sistema legado Addlog. Posições são registros de comunicação e não equivalem a megabytes. Geração informada: ${snapshot.sourceGeneratedAt} (fuso não confirmado). A API atual não disponibiliza telefone, ICCID, operadora ou consumo de dados.`
+                        : 'A origem e o escopo da leitura aparecem no status da coleta. Campos não fornecidos pela API não são estimados.'}
+                    </p>
+                  </section>
+                  <section>
+                    <h3>Anotações e filtros</h3>
+                    <p>
+                      Os filtros da análise e da fila permanecem visíveis na página. Anotações de
+                      acompanhamento são temporárias nesta sessão e não sincronizam entre usuários.
+                    </p>
+                  </section>
+                </PageConfigurationButton>
                 <button disabled={busy || loadingSaved || cooldown > 0} onClick={refresh}>
                   {loadingSaved
                     ? 'Carregando base salva…'
@@ -663,7 +675,6 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                 {['registry', 'reports'].includes(category) && (
                   <MonitoringApiCoverage source={source} />
                 )}
-                {modeNotice}
               </>
             )}
           </main>

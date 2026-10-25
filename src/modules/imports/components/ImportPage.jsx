@@ -11,6 +11,7 @@ import {
 import { allowsSource } from '../../../shared/security/permissions.js';
 import React, { useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
+import { PageConfigurationButton } from '../../../components/PageConfigurationButton.jsx';
 import { SavedSourcesPanel } from '../../../shared/persistence/SavedSourcesPanel.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
 import { inspectImportFile, assembleImportBatch, importTypeLabels } from '../domain/bulkImport.js';
@@ -99,18 +100,63 @@ export function ImportPage({ onPage, onApply, orders, operational, logistics, sa
                 KORE e Arqia.
               </p>
             </div>
-            <PermissionButton action="import" disabled={busy} onClick={() => input.current.click()}>
-              {busy ? 'Processando…' : 'Selecionar arquivos'}
-            </PermissionButton>
+            <div className="page-header-actions">
+              <PageConfigurationButton
+                scope="Central de arquivos"
+                description="Formatos aceitos e como os lotes são aplicados."
+              >
+                <section>
+                  <h3>Arquivos reconhecidos</h3>
+                  <p>
+                    Excel: abas OS 2025_26 ou OS 2025, Equipamentos, ou Envios + Devoluções. CSV:
+                    formatos de consumo suportados nas páginas KORE e Arqia.
+                  </p>
+                </section>
+                <section>
+                  <h3>Conferência e aplicação</h3>
+                  <p>
+                    Selecione as bases que deseja importar, confira o resumo de cada arquivo e então
+                    aplique o lote. Bases de consumo são carregadas nas páginas das operadoras.
+                  </p>
+                </section>
+                <section>
+                  <h3>Armazenamento das bases</h3>
+                  <p>
+                    OS e Operacional substituem apenas a referência atual de seus módulos; não são
+                    corrigidos nem misturados com outras versões. Extratos de consumo ficam no
+                    histórico local deste navegador; arquivos idênticos não são somados novamente.
+                    Lotes conflitantes não são aplicados. Nenhum arquivo é enviado ao GitHub.
+                  </p>
+                </section>
+                <section>
+                  <h3>Abrir módulo</h3>
+                  <div className="report-downloads">
+                    <button type="button" onClick={() => onPage('orders')}>
+                      Ordens de Serviço
+                    </button>
+                    <button type="button" onClick={() => onPage('operational')}>
+                      Operacional
+                    </button>
+                    <button type="button" onClick={() => onPage('operational-analysis')}>
+                      Parque e Manutenção
+                    </button>
+                    <button type="button" onClick={() => onPage('lines')}>
+                      Consumo M2M
+                    </button>
+                  </div>
+                </section>
+              </PageConfigurationButton>
+              <PermissionButton
+                action="import"
+                disabled={busy}
+                onClick={() => input.current.click()}
+              >
+                {busy ? 'Processando…' : 'Selecionar arquivos'}
+              </PermissionButton>
+            </div>
             <input hidden ref={input} type="file" accept=".xlsx,.xls" multiple onChange={inspect} />
           </header>
           <SavedSourcesPanel storage={savedSources} />
-          <div className="notice">
-            Excel é identificado pelas abas OS 2025_26 ou OS 2025, Equipamentos ou Envios +
-            Devoluções; CSV usa os formatos de consumo já suportados. Selecione uma OS, um
-            operacional, uma logística e quantos extratos de consumo precisar. Confira o lote abaixo
-            antes de aplicar.
-          </div>
           {error && (
             <p className="error" role="alert">
               {error}
@@ -207,29 +253,6 @@ export function ImportPage({ onPage, onApply, orders, operational, logistics, sa
               </div>
             </section>
           )}
-          <section className="panel import-preview">
-            <h2>Como os arquivos são tratados</h2>
-            <p>
-              OS e operacional substituem apenas a referência atual de seus módulos; não são
-              corrigidos nem misturados com outras versões.
-            </p>
-            <p>
-              Extratos de consumo são salvos no histórico local deste navegador. Arquivos idênticos
-              não são somados novamente. Novas versões seguem as regras existentes de arquivamento;
-              versões conflitantes no mesmo lote impedem sua aplicação.
-            </p>
-            <p>
-              Quando o lote contém consumo e operacional, essa referência operacional também
-              acompanha o histórico de consumo. OS e operacional continuam disponíveis para análise
-              durante a sessão. Nenhum arquivo é enviado ao GitHub.
-            </p>
-            <div className="report-downloads">
-              <button onClick={() => onPage('orders')}>Ordens de Serviço</button>
-              <button onClick={() => onPage('operational')}>Operacional</button>
-              <button onClick={() => onPage('operational-analysis')}>Parque e Manutenção</button>
-              <button onClick={() => onPage('lines')}>Consumo M2M</button>
-            </div>
-          </section>
         </main>
       </div>
     </SidePanelProvider>

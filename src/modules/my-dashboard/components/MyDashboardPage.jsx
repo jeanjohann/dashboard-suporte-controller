@@ -5,6 +5,7 @@ import { dashboardRepository } from '../data/dashboardRepository.js';
 import { emptyDashboardDocument } from '../domain/layout.js';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
+import { PageConfigurationButton } from '../../../components/PageConfigurationButton.jsx';
 import { Icon } from '../../../components/Icon.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { useDashboardSources } from '../hooks/DashboardSources.jsx';
@@ -162,6 +163,33 @@ export function MyDashboardPage({ onPage, repository, active = true }) {
               <p>As informações que você precisa, do seu jeito.</p>
             </div>
             <div className="md-page-actions">
+              <PageConfigurationButton
+                scope="Meu Dashboard"
+                description="Orientações sobre organização, salvamento e atualização das fontes."
+              >
+                <section>
+                  <h3>Organizar o painel</h3>
+                  <p>
+                    Use Organizar painel para mover ou redimensionar os blocos. Adicionar indicador
+                    abre o catálogo; os filtros de cada bloco continuam independentes.
+                  </p>
+                </section>
+                <section>
+                  <h3>Salvar e compartilhar</h3>
+                  <p>
+                    Salve o painel para guardar sua disposição no armazenamento do sistema. Os
+                    arquivos de origem são atualizados nos módulos correspondentes; o painel não
+                    substitui essas fontes.
+                  </p>
+                </section>
+                <section>
+                  <h3>Backup e apresentação</h3>
+                  <p>
+                    Use as ferramentas do painel para exportar ou restaurar configurações. O modo
+                    Apresentar abre uma tela limpa para exibição e impressão.
+                  </p>
+                </section>
+              </PageConfigurationButton>
               <button
                 className={organizing ? 'md-primary' : ''}
                 onClick={() => {

@@ -12,6 +12,75 @@
 .page-header-actions .header-import-action:hover {
   background: var(--ui-accent-hover);
 }
+.page-configuration-trigger {
+  white-space: nowrap;
+  background: #0868c5;
+  color: #ffffff;
+  border-color: #0868c5;
+}
+.page-configuration-trigger:hover {
+  background: #07539c;
+  color: #ffffff;
+  border-color: #07539c;
+}
+.page-configuration-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ui-accent-ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.page-configuration-content {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+.page-configuration-content > section,
+.page-configuration-content > article {
+  padding: 14px 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-soft);
+}
+.page-configuration-content h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+.page-configuration-content p,
+.page-configuration-content ul {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.monitoring-page > main header .page-configuration-dialog > header p,
+.monitoring-page > main header .page-configuration-content p {
+  display: block;
+}
+.page-configuration-content ul {
+  padding-left: 18px;
+}
+.page-configuration-dialog > header > button {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 60px;
+  padding: 6px 10px;
+  white-space: nowrap;
+  background: #0868c5;
+  color: #ffffff;
+  border-color: #0868c5;
+}
+.page-configuration-dialog > header > button:hover {
+  background: #07539c;
+  color: #ffffff;
+  border-color: #07539c;
+}
+.page-configuration-dialog > footer > span {
+  color: var(--ui-muted);
+  font-size: 11px;
+}
 button.page-settings-trigger {
   display: inline-flex;
   flex: 0 0 36px;
@@ -21,19 +90,19 @@ button.page-settings-trigger {
   align-items: center;
   justify-content: center;
   padding: 7px;
-  border: 1px solid transparent;
+  border: 1px solid #0868c5;
   border-radius: 7px;
-  background: transparent;
-  color: var(--ui-muted);
+  background: #0868c5;
+  color: #ffffff;
 }
 button.page-settings-trigger .ui-icon {
   width: 20px;
   height: 20px;
 }
 button.page-settings-trigger:hover {
-  background: var(--ui-soft);
-  color: var(--ui-ink);
-  border-color: var(--ui-border);
+  background: #07539c;
+  color: #ffffff;
+  border-color: #07539c;
 }
 .page-settings-dialog {
   width: min(620px, calc(100vw - 28px));
@@ -94,6 +163,16 @@ button.page-settings-trigger:hover {
   min-height: 30px;
   width: 30px;
   flex: 0 0 30px;
+}
+.page-settings-dialog.page-configuration-dialog > header > button {
+  background: #0868c5;
+  color: #ffffff;
+  border-color: #0868c5;
+}
+.page-settings-dialog.page-configuration-dialog > header > button:hover {
+  background: #07539c;
+  color: #ffffff;
+  border-color: #07539c;
 }
 .page-settings-body {
   padding: 16px 20px;

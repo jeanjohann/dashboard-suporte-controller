@@ -5,7 +5,7 @@ import { Icon } from './Icon.jsx';
 import { useLayoutContext } from '../shared/layout/PageLayout.jsx';
 import { availableLayoutMode } from '../shared/layout/pageLayout.js';
 
-export function PageSettingsButton({ available = true }) {
+export function PageSettingsButton({ available = true, help = '' }) {
   const id = useId();
   const context = useLayoutContext();
   const dialog = useRef(),
@@ -35,12 +35,12 @@ export function PageSettingsButton({ available = true }) {
     const timer = setTimeout(() => setFeedback(''), 5000);
     return () => clearTimeout(timer);
   }, [feedback]);
-  if (!context || !available) return null;
+  if (!context || (!available && !help)) return null;
   const { layout, definitions, activeIds, capabilities } = context;
   const items = definitions.filter(
     (item) => activeIds.includes(item.id) && Object.hasOwn(capabilities, item.title),
   );
-  if (!items.length) return null;
+  if (!items.length && !help) return null;
   function show() {
     setDraft(
       Object.fromEntries(
@@ -77,8 +77,8 @@ export function PageSettingsButton({ available = true }) {
         ref={trigger}
         className="page-settings-trigger"
         type="button"
-        title="Personalizar página"
-        aria-label="Personalizar página"
+        title="Configurações da página"
+        aria-label="Configurações da página"
         aria-haspopup="dialog"
         onClick={show}
       >
@@ -112,7 +112,7 @@ export function PageSettingsButton({ available = true }) {
           <header>
             <div>
               <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>
-                Personalizar página
+                Configurações da página
               </h2>
               <p>{scope}</p>
             </div>
@@ -122,42 +122,51 @@ export function PageSettingsButton({ available = true }) {
           </header>
           <div className="page-settings-body">
             <p id={`${id}-description`}>
-              Escolha os relatórios desta categoria e como devem abrir. As preferências ficam neste
-              navegador. As alterações são confirmadas em Salvar preferências. Relatórios agrupados
-              aparecem no seletor Visualização do painel; cada opção mantém sua própria
-              apresentação.
+              {items.length
+                ? 'Escolha os relatórios desta categoria e como devem abrir. As preferências ficam neste navegador. As alterações são confirmadas em Salvar preferências. Relatórios agrupados aparecem no seletor Visualização do painel; cada opção mantém sua própria apresentação.'
+                : `Informações e critérios de ${scope || 'uso'} desta página.`}
             </p>
-            <div className="page-settings-columns" aria-hidden="true">
-              <span>Relatórios exibidos</span>
-              <span>Apresentação inicial</span>
-            </div>
-            {items.map((item) => (
-              <div className="page-settings-row" key={item.id}>
-                <label className="page-settings-choice">
-                  <input
-                    type="checkbox"
-                    checked={draft[item.id]?.visible !== false}
-                    onChange={(event) => edit(item.id, 'visible', event.target.checked)}
-                  />
-                  <span>{item.label || item.title}</span>
-                </label>
-                <select
-                  aria-label={`Apresentação de ${item.label || item.title}`}
-                  disabled={draft[item.id]?.visible === false}
-                  value={draft[item.id]?.mode || 'default'}
-                  onChange={(event) => edit(item.id, 'mode', event.target.value)}
-                >
-                  <option value="default">Padrão do relatório</option>
-                  <option value="complete">Completo</option>
-                  {capabilities[item.title] && <option value="summary">Resumido</option>}
-                  <option value="collapsed">Recolhido</option>
-                </select>
-              </div>
-            ))}
-            <p className="page-settings-note">
-              “Padrão do relatório” conserva a apresentação original de cada seção. Resumido aparece
-              somente onde há resumo disponível. Filtros e cálculos continuam os mesmos.
-            </p>
+            {help && (
+              <section className="page-settings-help">
+                <h3>Sobre esta página</h3>
+                <p>{help}</p>
+              </section>
+            )}
+            {!!items.length && (
+              <>
+                <div className="page-settings-columns" aria-hidden="true">
+                  <span>Relatórios exibidos</span>
+                  <span>Apresentação inicial</span>
+                </div>
+                {items.map((item) => (
+                  <div className="page-settings-row" key={item.id}>
+                    <label className="page-settings-choice">
+                      <input
+                        type="checkbox"
+                        checked={draft[item.id]?.visible !== false}
+                        onChange={(event) => edit(item.id, 'visible', event.target.checked)}
+                      />
+                      <span>{item.label || item.title}</span>
+                    </label>
+                    <select
+                      aria-label={`Apresentação de ${item.label || item.title}`}
+                      disabled={draft[item.id]?.visible === false}
+                      value={draft[item.id]?.mode || 'default'}
+                      onChange={(event) => edit(item.id, 'mode', event.target.value)}
+                    >
+                      <option value="default">Padrão do relatório</option>
+                      <option value="complete">Completo</option>
+                      {capabilities[item.title] && <option value="summary">Resumido</option>}
+                      <option value="collapsed">Recolhido</option>
+                    </select>
+                  </div>
+                ))}
+                <p className="page-settings-note">
+                  “Padrão do relatório” conserva a apresentação original de cada seção. Resumido
+                  aparece somente onde há resumo disponível. Filtros e cálculos continuam os mesmos.
+                </p>
+              </>
+            )}
             {message && (
               <p role="alert" className="notice">
                 {message}
@@ -165,28 +174,36 @@ export function PageSettingsButton({ available = true }) {
             )}
           </div>
           <footer>
-            <button
-              type="button"
-              className="page-settings-reset"
-              onClick={() => {
-                setDraft(
-                  Object.fromEntries(
-                    items.map((item) => [item.id, { visible: true, mode: 'default' }]),
-                  ),
-                );
-                setMessage('Padrão preparado. Clique em Salvar preferências para confirmar.');
-              }}
-            >
-              Restaurar padrão
-            </button>
-            <div>
-              <button type="button" onClick={() => setOpen(false)}>
-                Cancelar
+            {items.length ? (
+              <>
+                <button
+                  type="button"
+                  className="page-settings-reset"
+                  onClick={() => {
+                    setDraft(
+                      Object.fromEntries(
+                        items.map((item) => [item.id, { visible: true, mode: 'default' }]),
+                      ),
+                    );
+                    setMessage('Padrão preparado. Clique em Salvar preferências para confirmar.');
+                  }}
+                >
+                  Restaurar padrão
+                </button>
+                <div>
+                  <button type="button" onClick={() => setOpen(false)}>
+                    Cancelar
+                  </button>
+                  <button type="button" className="page-settings-save" onClick={save}>
+                    Salvar preferências
+                  </button>
+                </div>
+              </>
+            ) : (
+              <button type="button" className="page-settings-save" onClick={() => setOpen(false)}>
+                Concluído
               </button>
-              <button type="button" className="page-settings-save" onClick={save}>
-                Salvar preferências
-              </button>
-            </div>
+            )}
           </footer>
         </dialog>,
         document.body,

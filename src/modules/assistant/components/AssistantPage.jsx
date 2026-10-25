@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
+import { PageConfigurationButton } from '../../../components/PageConfigurationButton.jsx';
 import { canOpenAssistantPreview } from '../domain/previewAccess.js';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { queryLocalAssistant } from '../data/assistantClient.js';
@@ -129,13 +130,32 @@ function Consultation({ result }) {
       <QueryTable value={result.details} title="Registros da consulta" />
       <details>
         <summary>Fonte, critérios e limitações</summary>
-        {(result.sources || [result.source]).map((source) => (
-          <p key={source.filename}>
-            {source.filename} · aba {source.sheets.join(', ')} ·{' '}
-            {source.records != null ? `${source.records} registros · ` : ''}modificado em{' '}
-            {new Date(source.modifiedAt).toLocaleString('pt-BR')}
-            <br />
-            SHA-256: <code className="assistant-hash">{source.sha256}</code>
+        {(result.sources || [result.source]).filter(Boolean).map((source, index) => (
+          <p key={source.filename || source.kind || index}>
+            {source.filename ? (
+              <>
+                {source.filename} · aba {source.sheets?.join(', ') || '—'} ·{' '}
+                {source.records != null ? `${source.records} registros · ` : ''}modificado em{' '}
+                {source.modifiedAt ? new Date(source.modifiedAt).toLocaleString('pt-BR') : '—'}
+                {source.sha256 && (
+                  <>
+                    <br />
+                    SHA-256: <code className="assistant-hash">{source.sha256}</code>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                Base{' '}
+                {source.kind === 'orders'
+                  ? 'OS'
+                  : source.kind === 'operational'
+                    ? 'Operacional'
+                    : source.kind}{' '}
+                · {source.rows ?? 0} linhas · versão {source.revision ?? '—'} · salva em{' '}
+                {source.savedAt ? new Date(source.savedAt).toLocaleString('pt-BR') : '—'}
+              </>
+            )}
           </p>
         ))}
         <p>Consulta em {new Date(result.generatedAt).toLocaleString('pt-BR')}</p>
@@ -185,43 +205,67 @@ export function AssistantPage({ onPage }) {
               <h1>Assistente de suporte</h1>
               <p>Faça perguntas ao agente e confira as fontes utilizadas na resposta.</p>
             </div>
-            <button type="button" onClick={() => onPage('orders')}>
-              Voltar ao sistema
-            </button>
+            <div className="page-header-actions">
+              <PageConfigurationButton
+                scope="Assistente de suporte"
+                description="Condições do piloto, fonte de dados e escopo da consulta."
+              >
+                <section>
+                  <h3>Estado do piloto</h3>
+                  <p>
+                    O laboratório depende deste computador e do fluxo local do n8n ligados. O
+                    assistente ainda não responde pela versão publicada do site.
+                  </p>
+                </section>
+                <section>
+                  <h3>Fontes e escopo</h3>
+                  <p>
+                    A ferramenta lê as versões publicadas de OS e Operacional no banco do sistema.
+                    Pode consultar nomes de agentes e métricas agregadas por agente; clientes,
+                    placas, seriais e linhas individuais ficam fora dos resultados. Datas relativas
+                    usam a última data válida de atendimento da OS publicada.
+                  </p>
+                </section>
+                <section>
+                  <h3>Privacidade da consulta</h3>
+                  <p>
+                    A pergunta e os resultados agregados são enviados ao Gemini. Evite inserir
+                    identificadores de clientes, veículos ou equipamentos. Cada consulta é
+                    independente e não mantém memória de conversa.
+                  </p>
+                </section>
+                <section>
+                  <h3>Ferramentas do laboratório</h3>
+                  <p>
+                    <a
+                      href="http://localhost:5678/workflow/labAssistantAgent01"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Abrir fluxo atual do agente no n8n
+                    </a>
+                  </p>
+                </section>
+              </PageConfigurationButton>
+              <button type="button" onClick={() => onPage('orders')}>
+                Voltar ao sistema
+              </button>
+            </div>
           </header>
-          <div className="assistant-development" role="status">
-            <strong>Piloto local · administrador principal</strong>
-            <span>
-              Mantenha este computador e o laboratório ligados. A consulta lê a pasta import,
-              independentemente dos arquivos e filtros abertos nas outras páginas do sistema.
-            </span>
-          </div>
           <section className="panel assistant-query" aria-labelledby="assistant-query-title">
             <div className="assistant-heading">
               <h2 id="assistant-query-title">Pergunte ao agente de suporte</h2>
-              <span className="assistant-badge">Amostras fictícias · somente leitura</span>
+              <span className="assistant-badge">
+                Banco do sistema · agregados por equipe e agente
+              </span>
             </div>
-            <p className="scope">
-              <a
-                href="http://localhost:5678/workflow/labAssistantAgent01"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Abrir fluxo atual do agente no n8n
-              </a>
-            </p>
-            <p className="scope">
-              Acervo de teste: 1.000 linhas de OS e 1.000 equipamentos fictícios. Consulte períodos,
-              responsáveis, clientes, placas, custos, trocas e parque. Datas relativas usam a última
-              data realizada do arquivo, informada no resultado.
-            </p>
             <div className="assistant-suggestions">
               {[
                 'Quantos atendimentos efetivos, improdutivos e chamados distintos temos no último mês disponível?',
-                'Liste os atendimentos executados pelo Jean na semana anterior.',
-                'Quais clientes tiveram mais visitas e atendimentos em todo o histórico?',
-                'Quais placas tiveram mais trocas em todo o histórico e quais foram elas?',
-                'Quantos equipamentos ativos não têm OS efetiva nesta amostra? Agrupe por modelo.',
+                'Compare os atendimentos efetivos por agente na semana anterior.',
+                'Qual é a média de tempo entre trocas confirmadas de rastreador no histórico?',
+                'Quantos equipamentos estão ativos e quantos estão cancelados na última Operacional?',
+                'Como o parque atual se distribui por modelo?',
               ].map((text) => (
                 <button key={text} type="button" disabled={busy} onClick={() => setQuestion(text)}>
                   {text}
@@ -240,9 +284,10 @@ export function AssistantPage({ onPage }) {
             />
             <div className="assistant-query-footer">
               <span id="assistant-query-status" className="scope">
-                Sua pergunta e os resultados solicitados são enviados ao Gemini. Neste piloto, as
-                ferramentas ampliadas usam somente as amostras fictícias. Não inclua dados reais
-                sensíveis na pergunta. Cada pergunta é independente, sem memória de conversa.
+                A pergunta digitada e os resultados agregados são enviados ao Gemini. Evite incluir
+                nomes de clientes, placas, seriais ou outros identificadores. As ferramentas leem as
+                versões publicadas de OS e Operacional e não retornam linhas individuais. Cada
+                pergunta é independente, sem memória de conversa.
               </span>
               <button type="button" onClick={consult} disabled={busy || question.trim().length < 3}>
                 {busy ? 'Consultando agente…' : 'Enviar pergunta'}

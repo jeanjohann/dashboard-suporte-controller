@@ -45,7 +45,10 @@ export function OrdersImportPanel({
           >
             {busy ? 'Lendo arquivo…' : '↑ Importar planilha'}
           </PermissionButton>
-          <PageSettingsButton available={!!data} />
+          <PageSettingsButton
+            available={!!data}
+            help="Uma linha representa um registro de atendimento. Filtros e critérios se aplicam apenas à análise de Ordens de Serviço; revisar um registro não altera a planilha original."
+          />
         </div>
         <input ref={input} type="file" accept=".xlsx,.xls" hidden onChange={load} />
       </header>
