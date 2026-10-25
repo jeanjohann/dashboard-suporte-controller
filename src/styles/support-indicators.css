@@ -2,6 +2,23 @@
   min-width: 0;
   color: var(--ui-ink);
 }
+.si-mobile-summary-cards {
+  display: none;
+}
+.si-mobile-profile-toggle > summary {
+  list-style: none;
+}
+.si-mobile-profile-toggle > summary::-webkit-details-marker {
+  display: none;
+}
+.support-indicators-page .si-story-content {
+  display: contents;
+}
+@media screen and (min-width: 601px) {
+  .si-mobile-profile-toggle > summary {
+    cursor: default;
+  }
+}
 .support-indicators-page.si-configured-layout > main > .si-filters,
 .support-indicators-page.si-configured-layout > main > .si-coverage,
 .support-indicators-page.si-configured-layout > main > .si-sources,
@@ -1436,6 +1453,9 @@
 .si-compact-mode [data-section='agents'] > .si-table {
   display: block;
 }
+.si-compact-mode [data-section='agents'] .si-desktop-summary-table .si-table {
+  display: block;
+}
 .si-compact-mode .si-story-sections {
   gap: 8px;
 }
@@ -1745,6 +1765,11 @@
   .support-indicators-page.si-compact-mode .si-story {
     display: contents;
   }
+  .support-indicators-page.si-compact-mode .si-mobile-profile-toggle {
+    display: block;
+    grid-column: 1 / -1;
+    width: 100%;
+  }
   .support-indicators-page.si-compact-mode .si-story-heading {
     grid-column: 1 / -1;
     margin: 6px 0 0;
@@ -1906,6 +1931,84 @@
   }
 }
 @media screen and (max-width: 600px) {
+  .support-indicators-page.si-compact-mode
+    .si-story-section[data-section='evolution']
+    .recharts-responsive-container {
+    height: 200px !important;
+  }
+  .si-mobile-profile-toggle > summary {
+    cursor: pointer;
+  }
+  .si-mobile-profile-toggle:not([open]) > summary {
+    margin-bottom: 0;
+  }
+  .si-mobile-profile-toggle > summary::after {
+    content: '＋';
+    margin-left: auto;
+    color: var(--ui-accent-ink);
+    font-size: 14px;
+  }
+  .si-mobile-profile-toggle[open] > summary::after {
+    content: '−';
+  }
+  .si-mobile-summary-cards {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .si-mobile-summary-card {
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid var(--ui-border);
+    border-radius: 9px;
+    background: var(--ui-surface);
+  }
+  .si-mobile-summary-card h4 {
+    margin: 0 0 8px;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .si-mobile-summary-card dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 10px;
+    margin: 0;
+  }
+  .si-mobile-summary-card dl > div {
+    min-width: 0;
+  }
+  .si-mobile-summary-card dt {
+    color: var(--ui-muted);
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  .si-mobile-summary-card dd {
+    margin: 2px 0 0;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+  .si-mobile-summary-card > details {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px solid var(--ui-line);
+  }
+  .si-mobile-summary-card > details > summary {
+    color: var(--ui-accent-ink);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .si-mobile-summary-card .si-mobile-summary-details {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px solid var(--ui-line);
+  }
+  .si-desktop-summary-table {
+    display: none;
+  }
   .si-service-chart-dialog {
     width: calc(100vw - 16px);
     max-height: calc(100vh - 16px);

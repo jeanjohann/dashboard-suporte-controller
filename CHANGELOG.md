@@ -1,3 +1,8 @@
+## 0.69.35 — 25/10/2026
+
+- Adiciona os temas Arctic Frost, Sunset Boulevard e Tech Innovation com paletas próprias para interface, estados e gráficos.
+- Adapta tabelas de resumo e perfil do suporte a telas menores e inclui atalhos contextuais na visão geral do Operacional.
+
 ## 0.69.34 — 25/10/2026
 
 - Reposiciona os ícones de ajuda junto aos títulos dos painéis e libera espaço para os botões de ação, evitando sobreposição e corte em telas menores.

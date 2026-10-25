@@ -12,7 +12,7 @@ import {
   accessUser,
   accessManaged,
 } from '../../../shared/security/accessClient.js';
-import { allowsSource } from '../../../shared/security/permissions.js';
+import { allowsPage, allowsSource } from '../../../shared/security/permissions.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
@@ -602,6 +602,30 @@ export function OperationalPage({
                             typeof value === 'number' ? value.toLocaleString('pt-BR') : value,
                           ])}
                         />
+                        {!analysis && (
+                          <nav className="operational-overview-actions" aria-label="Ações rápidas">
+                            <button type="button" onClick={() => selectMenu('records')}>
+                              Abrir registros
+                            </button>
+                            <button type="button" onClick={() => selectMenu('review')}>
+                              Revisar cadastros
+                            </button>
+                            {allowsPage(accessUser(), 'operational-analysis') && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setMenuSelections((previous) => ({
+                                    ...previous,
+                                    'operational-analysis': 'links',
+                                  }));
+                                  onPage('operational-analysis');
+                                }}
+                              >
+                                Cruzar com histórico de OS
+                              </button>
+                            )}
+                          </nav>
+                        )}
                       </div>
                       {analysis ? (
                         <ReportStories groups={parkStories}>

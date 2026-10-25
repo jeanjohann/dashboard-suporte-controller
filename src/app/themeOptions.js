@@ -7,6 +7,9 @@ export const themes = [
   { id: 'modern', label: 'Modern Minimalist' },
   { id: 'forest', label: 'Forest Canopy' },
   { id: 'botanical', label: 'Botanical Garden' },
+  { id: 'arctic', label: 'Arctic Frost' },
+  { id: 'sunset', label: 'Sunset Boulevard' },
+  { id: 'tech', label: 'Tech Innovation' },
 ];
 export const defaultTheme = 'light';
 const legacyThemes = {
