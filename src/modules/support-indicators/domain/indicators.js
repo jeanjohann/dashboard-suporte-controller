@@ -61,6 +61,7 @@ export function ordersSummary(data, period, agentId = '') {
     daily: new Map(),
     types: new Map(),
     clients: new Map(),
+    clientTypes: new Map(),
     rows: [],
   };
   const add = (map, label, key) => {
@@ -81,6 +82,8 @@ export function ordersSummary(data, period, agentId = '') {
     if ((effective && within(executedAt) && !executor) || (within(scheduledAt) && !scheduler))
       result.unmapped++;
     const unproductive = isUnproductive(data, row);
+    let clientLabel;
+    let serviceType;
     const performed = effective && within(executedAt) && selected(executor);
     const execution = performed && !unproductive;
     if (performed && unproductive) {
@@ -95,16 +98,19 @@ export function ordersSummary(data, period, agentId = '') {
       [scheduling, 'scheduled', scheduler, scheduledAt],
     ]) {
       if (!yes) continue;
+      clientLabel ??= customerAnalysisIdentity(data, row).label.toLocaleUpperCase('pt-BR');
+      serviceType ??= text(row, 'Tipo de Serviço') || 'Não informado';
       result[key]++;
       const agent = result.agents.find((a) => a.id === owner);
       if (agent) agent[key]++;
       add(result.daily, date, key);
-      add(result.types, text(row, 'Tipo de Serviço') || 'Não informado', key);
-      add(
-        result.clients,
-        customerAnalysisIdentity(data, row).label.toLocaleUpperCase('pt-BR'),
-        key,
-      );
+      add(result.types, serviceType, key);
+      add(result.clients, clientLabel, key);
+      const byType = result.clientTypes.get(clientLabel) || new Map();
+      const counts = byType.get(serviceType) || { scheduled: 0, executed: 0 };
+      counts[key]++;
+      byType.set(serviceType, counts);
+      result.clientTypes.set(clientLabel, byType);
     }
     if (performed || scheduling)
       result.rows.push({
@@ -129,6 +135,19 @@ export function ordersSummary(data, period, agentId = '') {
         ? a.label.localeCompare(b.label)
         : b.executed - a.executed || a.label.localeCompare(b.label),
     );
+  result.clients = result.clients.map((client) => ({
+    ...client,
+    serviceTypes: [...(result.clientTypes.get(client.label) || new Map())]
+      .sort(
+        ([labelA, a], [labelB, b]) =>
+          b.executed + b.scheduled - (a.executed + a.scheduled) || labelA.localeCompare(labelB),
+      )
+      .map(
+        ([label, counts]) =>
+          `${label}: ${counts.executed} execução(ões) · ${counts.scheduled} agendamento(s)`,
+      )
+      .join('; '),
+  }));
   return result;
 }
 /** Só usa uma consulta completa que cubra o período inteiro. Filtra por data do evento, nunca pelo responsável atual. */

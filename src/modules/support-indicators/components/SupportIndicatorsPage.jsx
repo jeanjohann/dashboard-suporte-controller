@@ -1383,6 +1383,34 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   </small>
                                 </div>
                                 <div>
+                                  <h4>Agendamentos por dia · OS</h4>
+                                  <Chart
+                                    compact
+                                    title="Agendamentos por dia"
+                                    type="line"
+                                    items={
+                                      hasOrders
+                                        ? orders.daily.map((d) => ({
+                                            label: date(d.label),
+                                            detailKey: d.label,
+                                            value: d.scheduled,
+                                          }))
+                                        : []
+                                    }
+                                    onItemClick={(item) =>
+                                      showOrderDetails(
+                                        `Agendamentos · ${item.label}`,
+                                        (row) => row.scheduling && row.scheduledAt === item.detailKey,
+                                        'scheduling',
+                                      )
+                                    }
+                                  />
+                                  <small>
+                                    Usa a data marcada na agenda; não representa conversão das mesmas
+                                    OS em execução.
+                                  </small>
+                                </div>
+                                <div>
                                   <h4>Tempo apontado por dia · Zoho</h4>
                                   <Chart
                                     compact
@@ -1448,18 +1476,68 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                 </div>
                                 <div>
                                   <h4>Clientes · OS</h4>
-                                  <Table
-                                    headers={['Cliente', 'Agendados', 'Executados efetivos']}
-                                    rows={
+                                  <Chart
+                                    compact
+                                    ranking
+                                    title="Execuções efetivas por cliente · OS"
+                                    items={
                                       hasOrders
-                                        ? orders.clients.map((d) => [
-                                            d.label,
-                                            d.scheduled,
-                                            d.executed,
-                                          ])
+                                        ? orders.clients
+                                            .filter((d) => d.executed > 0)
+                                            .map((d) => ({
+                                              label: d.label,
+                                              value: d.executed,
+                                              caption: `${number(d.scheduled)} agendados`,
+                                            }))
                                         : []
                                     }
                                   />
+                                  <small>
+                                    Ranking por execuções efetivas; os agendamentos são mostrados
+                                    como referência.
+                                  </small>
+                                  {viewMode === 'compact' ? (
+                                    <details className="si-report-expandable si-client-types">
+                                      <summary>Ver clientes e tipos de atendimento</summary>
+                                      <Table
+                                        headers={[
+                                          'Cliente',
+                                          'Agendados',
+                                          'Executados efetivos',
+                                          'Tipos de atendimento',
+                                        ]}
+                                        rows={
+                                          hasOrders
+                                            ? orders.clients.map((d) => [
+                                                d.label,
+                                                d.scheduled,
+                                                d.executed,
+                                                d.serviceTypes,
+                                              ])
+                                            : []
+                                        }
+                                      />
+                                    </details>
+                                  ) : (
+                                    <Table
+                                      headers={[
+                                        'Cliente',
+                                        'Agendados',
+                                        'Executados efetivos',
+                                        'Tipos de atendimento',
+                                      ]}
+                                      rows={
+                                        hasOrders
+                                          ? orders.clients.map((d) => [
+                                              d.label,
+                                              d.scheduled,
+                                              d.executed,
+                                              d.serviceTypes,
+                                            ])
+                                          : []
+                                      }
+                                    />
+                                  )}
                                 </div>
                               </div>
                             )}

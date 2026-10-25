@@ -294,6 +294,14 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px 26px;
 }
+.si-editorial-mode .si-story-section[data-section='evolution'],
+.si-editorial-mode .si-story-section[data-section='types'] {
+  grid-column: 1 / -1;
+}
+.si-editorial-mode .si-story-section[data-section='evolution'] .si-chart-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
 .si-editorial-mode .si-story-section {
   min-width: 0;
 }
@@ -301,12 +309,12 @@
   grid-column: 1 / -1;
 }
 .si-editorial-mode .si-story-section[data-section='types'] .si-chart-grid {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: 24px;
 }
 .si-editorial-mode .si-story-section[data-section='types'] .si-chart-grid > div + div {
-  padding-top: 14px;
-  border-top: 1px solid var(--ui-line);
+  padding-left: 18px;
+  border-left: 1px solid var(--ui-line);
 }
 .si-editorial-mode .si-story-section[data-section='types'] .si-table {
   max-height: none;
@@ -427,6 +435,16 @@
 }
 .si-compact-mode .si-story-section details.chart-drilldown-picker {
   display: block;
+}
+.si-compact-mode .si-story-section details.si-client-types {
+  display: block;
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid var(--ui-line);
+}
+.si-compact-mode .si-story-section details.si-client-types > .si-table {
+  display: block;
+  max-height: 220px;
 }
 .si-compact-mode [data-section='agents'] > .si-table {
   display: block;
@@ -807,6 +825,20 @@
   }
   .support-indicators-page.si-editorial-mode .si-story-section[data-section='agents'] {
     grid-column: auto;
+  }
+  .support-indicators-page.si-editorial-mode .si-story-section[data-section='evolution'],
+  .support-indicators-page.si-editorial-mode .si-story-section[data-section='types'] {
+    grid-column: auto;
+  }
+  .support-indicators-page.si-editorial-mode .si-story-section[data-section='evolution'] .si-chart-grid,
+  .support-indicators-page.si-editorial-mode .si-story-section[data-section='types'] .si-chart-grid {
+    grid-template-columns: 1fr;
+  }
+  .support-indicators-page.si-editorial-mode .si-story-section[data-section='types'] .si-chart-grid > div + div {
+    padding-top: 14px;
+    padding-left: 0;
+    border-top: 1px solid var(--ui-line);
+    border-left: 0;
   }
   .support-indicators-page.si-compact-mode .si-sections {
     grid-template-columns: 1fr;
