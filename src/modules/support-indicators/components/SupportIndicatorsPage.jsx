@@ -123,7 +123,7 @@ function Table({ headers, rows, numericColumns = [] }) {
     </div>
   );
 }
-function ServiceList({ value }) {
+function ServiceList({ value, chips = false }) {
   const services = String(value || '')
     .split('; ')
     .filter(Boolean)
@@ -134,7 +134,10 @@ function ServiceList({ value }) {
         : { label: entry, executed: null, scheduled: null };
     });
   return (
-    <ul className="si-client-service-list" aria-label="Serviços por cliente">
+    <ul
+      className={`si-client-service-list${chips ? ' si-client-service-chips' : ''}`}
+      aria-label="Serviços por cliente"
+    >
       {services.map((service) => (
         <li key={service.label}>
           <span>{service.label}</span>
@@ -403,7 +406,55 @@ function DrilldownDialog({ detail, onClose }) {
     </dialog>
   );
 }
-function ServiceChartDialog({ open, onClose, services, clients, period }) {
+function MiniTrend({ items, variant = 'line', label }) {
+  const values = (items || []).filter((item) => Number.isFinite(item.value));
+  if (!values.length) return <span className="si-mini-trend-empty">Sem dados</span>;
+  const width = 156;
+  const height = 48;
+  const inset = 5;
+  const max = Math.max(1, ...values.map((item) => item.value));
+  const points = values.map((item, index) => ({
+    x:
+      values.length === 1 ? width / 2 : inset + (index * (width - inset * 2)) / (values.length - 1),
+    y: height - inset - (Math.max(0, item.value) / max) * (height - inset * 2),
+  }));
+  const barGap = 3;
+  const barWidth = Math.max(2, (width - inset * 2 - barGap * (values.length - 1)) / values.length);
+  return (
+    <svg
+      className={`si-mini-trend si-mini-trend-${variant}`}
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-label={label}
+      preserveAspectRatio="none"
+    >
+      {variant === 'bars' ? (
+        values.map((item, index) => {
+          const barHeight = (Math.max(0, item.value) / max) * (height - inset * 2);
+          return (
+            <rect
+              key={`${item.label}-${index}`}
+              x={inset + index * (barWidth + barGap)}
+              y={height - inset - barHeight}
+              width={barWidth}
+              height={Math.max(1, barHeight)}
+              rx="2"
+            />
+          );
+        })
+      ) : (
+        <>
+          <polyline points={points.map((point) => `${point.x},${point.y}`).join(' ')} />
+          {points.map((point, index) => (
+            <circle key={`${values[index].label}-${index}`} cx={point.x} cy={point.y} r="2.5" />
+          ))}
+        </>
+      )}
+    </svg>
+  );
+}
+
+function ServiceChartDialog({ open, onClose, services, clients, daily, zohoDaily, period }) {
   const dialog = useRef(null);
   useEffect(() => {
     if (open && dialog.current && !dialog.current.open) dialog.current.showModal();
@@ -445,14 +496,16 @@ function ServiceChartDialog({ open, onClose, services, clients, period }) {
     >
       <header>
         <div>
-          <span className="si-dialog-kicker">Gráfico detalhado · OS</span>
-          <h2 id="si-service-chart-title">Serviços e clientes atendidos</h2>
-          <p>
-            {date(period.start)} a {date(period.end)} · execução efetiva, agenda e composição por
-            cliente
-          </p>
+          <span className="si-dialog-kicker">Análise operacional · OS</span>
+          <h2 id="si-service-chart-title">Ritmo dos atendimentos</h2>
         </div>
         <div className="si-service-chart-actions">
+          <span className="si-preview-period">
+            <small>Período selecionado</small>
+            <strong>
+              {date(period.start)} a {date(period.end)}
+            </strong>
+          </span>
           <button
             type="button"
             onClick={async () => {
@@ -469,48 +522,62 @@ function ServiceChartDialog({ open, onClose, services, clients, period }) {
           </button>
         </div>
       </header>
+      <div className="si-service-preview-metrics">
+        <article className="si-service-preview-card">
+          <div>
+            <h3>Serviços efetivos por dia</h3>
+            <small>Execuções concluídas</small>
+          </div>
+          <MiniTrend
+            items={(daily || []).map((item) => ({ label: item.label, value: item.executed }))}
+            label="Tendência diária de serviços efetivos"
+          />
+        </article>
+        <article className="si-service-preview-card si-service-preview-bars">
+          <div>
+            <h3>Agendamentos por dia</h3>
+            <small>Volume previsto</small>
+          </div>
+          <MiniTrend
+            variant="bars"
+            items={(daily || []).map((item) => ({ label: item.label, value: item.scheduled }))}
+            label="Volume diário de agendamentos"
+          />
+        </article>
+        <article className="si-service-preview-card si-service-preview-time">
+          <div>
+            <h3>Tempo apontado · Zoho</h3>
+            <small>Apontamentos registrados</small>
+          </div>
+          <MiniTrend
+            items={(zohoDaily || []).map((item) => ({ label: item.label, value: item.value }))}
+            label="Tendência diária de tempo apontado no Zoho"
+          />
+        </article>
+      </div>
       <div className="si-service-chart-content">
-        <section>
-          <h3>Execuções efetivas por serviço e motivo</h3>
-          <Chart
-            compact
-            title="Execuções efetivas por serviço e motivo"
-            items={(services || [])
-              .filter((service) => service.executed > 0)
-              .map((service) => ({ label: service.label, value: service.executed }))}
-          />
-        </section>
-        <section>
-          <h3>Clientes atendidos · top 5</h3>
-          <Chart
-            compact
-            title="Execuções efetivas por cliente · OS"
-            items={(clients || [])
-              .filter((client) => client.executed > 0)
-              .slice(0, 5)
-              .map((client) => ({
-                label: client.label,
-                value: client.executed,
-                caption: `${number(client.scheduled)} agendados`,
-              }))}
-          />
-          <small>Ranking por execuções efetivas; agendamentos aparecem como referência.</small>
-        </section>
         <section className="si-service-client-breakdown">
-          <h3>Serviços por cliente</h3>
+          <div className="si-service-preview-table-heading">
+            <div>
+              <h3>Clientes e serviços executados</h3>
+              <small>
+                Serviço e motivo em cada cliente · fonte compacta para leitura da carteira
+              </small>
+            </div>
+          </div>
           <Table
-            headers={['Cliente', 'Agendamentos', 'Execuções efetivas', 'Serviços (exec. / agend.)']}
+            headers={['Cliente', 'Agend.', 'Exec.', 'Serviço · motivo (exec. / agend.)']}
             rows={(clients || []).map((client) => [
               client.label,
               client.scheduled,
               client.executed,
-              <ServiceList value={client.services} />,
+              <ServiceList value={client.services} chips />,
             ])}
             numericColumns={[1, 2]}
           />
           <small>
-            Cada serviço combina Tipo de Serviço e Motivo. Visitas improdutivas aparecem na agenda e
-            ficam fora das execuções efetivas.
+            <span className="si-legend-dot si-legend-execution" /> Execução efetiva
+            <span className="si-legend-dot si-legend-schedule" /> Agendamento sem execução efetiva
           </small>
         </section>
       </div>
@@ -1606,7 +1673,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         className="si-chart-expand"
                                         onClick={() => setServiceChartOpen(true)}
                                       >
-                                        Ampliar seção
+                                        Ampliar gráfico
                                       </button>
                                     </div>
                                     <Chart
@@ -1868,6 +1935,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
           onClose={() => setServiceChartOpen(false)}
           services={hasOrders ? orders.services : []}
           clients={hasOrders ? orders.clients : []}
+          daily={hasOrders ? orders.daily : []}
+          zohoDaily={zoho?.daily || []}
           period={period}
         />
       </div>

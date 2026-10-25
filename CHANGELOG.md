@@ -1,3 +1,9 @@
+## 0.69.27 — 25/10/2026
+
+- Atualiza o modo compacto global com superfícies, hierarquia tipográfica e tabelas mais consistentes entre os módulos.
+- Recompõe a ampliação de Serviços e Clientes com três tendências compactas e a tabela completa em primeiro plano.
+- Mantém a identidade de cor do tema selecionado e os controles de impressão e exportação.
+
 ## 0.69.26 — 25/10/2026
 
 - Desmonta o conteúdo pesado de relatórios recolhidos ou de páginas inativas, reduzindo elementos e gráficos mantidos no DOM durante a navegação.

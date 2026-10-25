@@ -439,10 +439,10 @@
   white-space: nowrap;
 }
 .si-service-chart-dialog {
-  width: min(1280px, calc(100vw - 32px));
+  width: min(1280px, calc(100vw - 28px));
   max-width: 1280px;
-  max-height: min(88vh, 900px);
-  padding: 17px;
+  max-height: min(94vh, 980px);
+  padding: 19px;
   overflow: auto;
   color: var(--ui-ink);
   background: var(--ui-surface);
@@ -455,15 +455,15 @@
 }
 .si-service-chart-dialog > header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 12px;
+  gap: 18px;
+  padding-bottom: 13px;
   border-bottom: 1px solid var(--ui-line);
 }
 .si-service-chart-dialog h2 {
-  margin: 2px 0 4px;
-  font-size: 18px;
+  margin: 3px 0 0;
+  font-size: 20px;
 }
 .si-service-chart-dialog header p,
 .si-service-chart-dialog section > small {
@@ -482,9 +482,10 @@
 }
 .si-service-chart-actions {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 7px;
 }
 .si-service-chart-actions button {
   min-height: 30px !important;
@@ -492,41 +493,175 @@
   font-size: 10px !important;
 }
 .si-service-chart-content {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  padding-top: 14px;
+  display: block;
+  padding-top: 12px;
 }
 .si-service-chart-content > section {
   min-width: 0;
 }
 .si-service-chart-content h3 {
-  margin-bottom: 8px;
-  font-size: 12px;
+  margin: 0;
+  font-size: 14px;
+}
+.si-preview-period {
+  display: grid;
+  gap: 2px;
+  margin-right: 8px;
+  color: var(--ui-muted);
+  text-align: right;
+}
+.si-preview-period small {
+  font-size: 9px;
+}
+.si-preview-period strong {
+  color: var(--ui-ink);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.si-service-preview-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding-top: 12px;
+}
+.si-service-preview-card {
+  --si-metric-color: var(--chart-blue);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(88px, 45%);
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 82px;
+  padding: 11px 12px;
+  background: var(--ui-soft);
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+}
+.si-service-preview-card.si-service-preview-bars {
+  --si-metric-color: var(--chart-purple);
+}
+.si-service-preview-card.si-service-preview-time {
+  --si-metric-color: var(--chart-teal);
+}
+.si-service-preview-card h3 {
+  margin: 0 0 4px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.si-service-preview-card small {
+  color: var(--ui-muted);
+  font-size: 9px;
+}
+.si-mini-trend {
+  display: block;
+  width: 100%;
+  height: 48px;
+  overflow: visible;
+  color: var(--si-metric-color);
+}
+.si-mini-trend polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.si-mini-trend circle {
+  fill: var(--ui-surface);
+  stroke: currentColor;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.si-mini-trend rect {
+  fill: currentColor;
+}
+.si-mini-trend-empty {
+  color: var(--ui-muted);
+  font-size: 9px;
+  text-align: right;
+}
+.si-service-preview-table-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 7px;
+  padding: 1px 0 7px;
+  border-bottom: 1px solid var(--ui-line);
+}
+.si-service-preview-table-heading small {
+  display: block;
+  margin-top: 3px;
+  color: var(--ui-muted);
+  font-size: 9px;
 }
 .si-service-chart-dialog .si-table {
   max-height: none;
-  margin-top: 0;
+  margin: 0;
   overflow: visible;
-}
-.si-service-chart-content .si-service-client-breakdown {
-  grid-column: 1 / -1;
 }
 .si-service-chart-dialog .si-table table {
   table-layout: fixed;
 }
 .si-service-chart-dialog .si-table th,
 .si-service-chart-dialog .si-table td {
-  padding: 6px 7px;
+  padding: 6px 8px;
   color: var(--ui-ink);
-  font-size: 10px;
+  font-size: 9px;
+  line-height: 1.3;
 }
 .si-service-chart-dialog .si-table th:first-child {
-  width: 68%;
+  width: 25%;
+}
+.si-service-chart-dialog .si-table th:nth-child(2),
+.si-service-chart-dialog .si-table th:nth-child(3) {
+  width: 7%;
+}
+.si-service-chart-dialog .si-table th:nth-child(4) {
+  width: 61%;
 }
 .si-service-chart-dialog section > small {
   display: block;
-  margin-top: 8px;
+  margin-top: 6px;
+}
+.si-service-chart-dialog .si-client-service-chips {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.si-service-chart-dialog .si-client-service-chips li {
+  display: inline-flex;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 3px 5px;
+  color: var(--ui-ink);
+  background: var(--ui-soft);
+  border: 1px solid var(--ui-border);
+  border-radius: 5px;
+  font-size: 9px;
+  line-height: 1.2;
+}
+.si-service-chart-dialog .si-client-service-chips strong {
+  color: var(--chart-blue);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.si-legend-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 4px 0 9px;
+  border-radius: 50%;
+  vertical-align: 1px;
+}
+.si-legend-execution {
+  background: var(--ui-success-ink);
+}
+.si-legend-schedule {
+  background: var(--chart-amber);
 }
 .si-editorial-mode .si-story-section[data-section='evolution'] small,
 .si-editorial-mode .si-story-section[data-section='types'] small {
@@ -1116,6 +1251,9 @@
   .si-service-chart-content {
     grid-template-columns: 1fr;
   }
+  .si-service-preview-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .si-service-chart-dialog > header {
     flex-wrap: wrap;
   }
@@ -1176,6 +1314,30 @@
   .support-indicators-page.si-compact-mode .si-shortcuts {
     grid-column: 1 / -1;
     flex-wrap: wrap;
+  }
+}
+@media screen and (max-width: 600px) {
+  .si-service-chart-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px);
+    padding: 12px;
+  }
+  .si-service-preview-metrics {
+    grid-template-columns: 1fr;
+  }
+  .si-service-chart-actions {
+    justify-content: flex-start;
+  }
+  .si-preview-period {
+    width: 100%;
+    margin: 0 0 4px;
+    text-align: left;
+  }
+  .si-service-chart-dialog .si-table {
+    overflow-x: auto;
+  }
+  .si-service-chart-dialog .si-table table {
+    min-width: 650px;
   }
 }
 @media screen and (max-width: 480px) {

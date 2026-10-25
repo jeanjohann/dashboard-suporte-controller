@@ -203,6 +203,80 @@ html[data-density='compact'] .app > main .table-scroll thead th {
   }
 }
 
+/* Padrão visual compacto: superfícies claras por tema, bordas suaves e dados em primeiro plano. */
+html[data-density='compact'] .app > main .workspace-section,
+html[data-density='compact'] .app > main .chart-panel,
+html[data-density='compact'] .app > main .summary-card,
+html[data-density='compact'] .app > main .dashboard-widget,
+html[data-density='compact'] .app > main .life-group-summary {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  box-shadow: none;
+}
+html[data-density='compact'] .app > main .report-heading {
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: transparent;
+  border-radius: 9px 9px 0 0;
+}
+html[data-density='compact'] .app > main .report-heading h2 {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+html[data-density='compact'] .app > main .section-body {
+  padding: 11px 12px;
+}
+html[data-density='compact'] .app > main .cards article,
+html[data-density='compact'] .app > main .executive-cards article {
+  min-width: 0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-top: 2px solid var(--chart-main);
+  border-radius: 9px;
+  box-shadow: none;
+}
+html[data-density='compact'] .app > main .cards article > span,
+html[data-density='compact'] .app > main .summary-card > span {
+  color: var(--ui-muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+html[data-density='compact'] .app > main .chart-panel h2,
+html[data-density='compact'] .app > main .chart-panel h3 {
+  font-size: 12px;
+  line-height: 1.35;
+}
+html[data-density='compact'] .app > main .chart-tools > summary,
+html[data-density='compact'] .app > main .scope,
+html[data-density='compact'] .app > main .source {
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+html[data-density='compact'] .app > main .table-scroll {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-radius: 7px;
+}
+html[data-density='compact'] .app > main .table-scroll th,
+html[data-density='compact'] .app > main .table-scroll td {
+  padding: 6px 8px;
+  font-size: 10px;
+  line-height: 1.3;
+}
+html[data-density='compact'] .app > main .readable-bar-row {
+  gap: 8px 10px;
+  margin: 5px 0;
+  padding: 5px 0;
+}
+html[data-density='compact'] .app > main .readable-bar-row .bar-name,
+html[data-density='compact'] .app > main .readable-bar-row strong {
+  font-size: 10px;
+  line-height: 1.3;
+}
+
 /* Editorial: mais respiro para apresentações, mantendo conteúdo e escalas de dados intactos. */
 html[data-density='editorial'] .app > main {
   padding: 32px clamp(24px, 3vw, 44px);
