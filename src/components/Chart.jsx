@@ -34,6 +34,8 @@ export function Chart({
   exportNote,
   compact = false,
   onItemClick,
+  height,
+  showDrilldownHint = true,
 }) {
   const clientNames = /cliente|base|razão social/i.test(title || '');
   const items = clientNames
@@ -202,7 +204,7 @@ export function Chart({
             ? compact
               ? 240
               : 340
-            : Math.max(300, Math.min(650, items.length * 32)),
+            : height || Math.max(300, Math.min(650, items.length * 32)),
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
@@ -257,9 +259,11 @@ export function Chart({
       </div>
       {compact && type === 'line' && onItemClick && (
         <>
-          <small className="chart-drilldown-hint">
-            Clique em um ponto da linha ou escolha uma data para conferir os registros.
-          </small>
+          {showDrilldownHint && (
+            <small className="chart-drilldown-hint">
+              Clique em um ponto da linha ou escolha uma data para conferir os registros.
+            </small>
+          )}
           <details className="chart-drilldown-picker">
             <summary>Conferir registros por data</summary>
             <div>

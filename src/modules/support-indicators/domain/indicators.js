@@ -59,9 +59,9 @@ export function ordersSummary(data, period, agentId = '') {
     unmapped: 0,
     agents: agents.map((a) => ({ ...a, executed: 0, scheduled: 0, unproductive: 0 })),
     daily: new Map(),
-    types: new Map(),
+    services: new Map(),
     clients: new Map(),
-    clientTypes: new Map(),
+    clientServices: new Map(),
     rows: [],
   };
   const add = (map, label, key) => {
@@ -83,7 +83,7 @@ export function ordersSummary(data, period, agentId = '') {
       result.unmapped++;
     const unproductive = isUnproductive(data, row);
     let clientLabel;
-    let serviceType;
+    let service;
     const performed = effective && within(executedAt) && selected(executor);
     const execution = performed && !unproductive;
     if (performed && unproductive) {
@@ -99,18 +99,20 @@ export function ordersSummary(data, period, agentId = '') {
     ]) {
       if (!yes) continue;
       clientLabel ??= customerAnalysisIdentity(data, row).label.toLocaleUpperCase('pt-BR');
-      serviceType ??= text(row, 'Tipo de Serviço') || 'Não informado';
+      const serviceType = text(row, 'Tipo de Serviço') || 'Tipo não informado';
+      const motive = text(row, 'Motivo');
+      service ??= motive ? `${serviceType} · ${motive}` : serviceType;
       result[key]++;
       const agent = result.agents.find((a) => a.id === owner);
       if (agent) agent[key]++;
       add(result.daily, date, key);
-      add(result.types, serviceType, key);
+      add(result.services, service, key);
       add(result.clients, clientLabel, key);
-      const byType = result.clientTypes.get(clientLabel) || new Map();
-      const counts = byType.get(serviceType) || { scheduled: 0, executed: 0 };
+      const byService = result.clientServices.get(clientLabel) || new Map();
+      const counts = byService.get(service) || { scheduled: 0, executed: 0 };
       counts[key]++;
-      byType.set(serviceType, counts);
-      result.clientTypes.set(clientLabel, byType);
+      byService.set(service, counts);
+      result.clientServices.set(clientLabel, byService);
     }
     if (performed || scheduling)
       result.rows.push({
@@ -126,10 +128,13 @@ export function ordersSummary(data, period, agentId = '') {
         scheduling: Boolean(scheduling),
         unproductive,
         status,
-        type: text(row, 'Tipo de Serviço'),
+        service: [text(row, 'Tipo de Serviço') || 'Tipo não informado', text(row, 'Motivo')]
+          .filter(Boolean)
+          .join(' · '),
+        motive: text(row, 'Motivo') || 'Motivo não informado',
       });
   }
-  for (const key of ['daily', 'types', 'clients'])
+  for (const key of ['daily', 'services', 'clients'])
     result[key] = [...result[key].values()].sort((a, b) =>
       key === 'daily'
         ? a.label.localeCompare(b.label)
@@ -137,15 +142,12 @@ export function ordersSummary(data, period, agentId = '') {
     );
   result.clients = result.clients.map((client) => ({
     ...client,
-    serviceTypes: [...(result.clientTypes.get(client.label) || new Map())]
+    services: [...(result.clientServices.get(client.label) || new Map())]
       .sort(
         ([labelA, a], [labelB, b]) =>
           b.executed + b.scheduled - (a.executed + a.scheduled) || labelA.localeCompare(labelB),
       )
-      .map(
-        ([label, counts]) =>
-          `${label}: ${counts.executed} execução(ões) · ${counts.scheduled} agendamento(s)`,
-      )
+      .map(([label, counts]) => `${label}: ${counts.executed}/${counts.scheduled}`)
       .join('; '),
   }));
   return result;

@@ -515,7 +515,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         row.os || 'Sem OS informada',
         row.sourceRow,
         date(scheduled ? row.scheduledAt : row.executedAt),
-        row.type || 'Não informado',
+        row.service || 'Serviço não informado',
         scheduled ? (row.unproductive ? 'Visita improdutiva' : 'Agendamento') : 'Execução efetiva',
         scheduled ? row.schedulerName : row.executorName,
       ];
@@ -523,7 +523,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     setDrilldown({
       title,
       source: 'OS · linhas da base',
-      headers: ['OS', 'Linha na planilha', 'Data', 'Tipo de serviço', 'Etapa', 'Responsável'],
+      headers: ['OS', 'Linha na planilha', 'Data', 'Serviço executado', 'Etapa', 'Responsável'],
       rows,
     });
   }
@@ -954,7 +954,11 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             <section className="si-editorial-lead" aria-label="Leitura do período">
               <div className="si-editorial-lead-heading">
                 <span>LEITURA DO PERÍODO</span>
-                <h2>{agentId ? agents.find((agent) => agent.id === agentId)?.name : 'Resumo da equipe'}</h2>
+                <h2>
+                  {agentId
+                    ? agents.find((agent) => agent.id === agentId)?.name
+                    : 'Resumo da equipe'}
+                </h2>
                 <p>
                   {date(period.start)} a {date(period.end)} · OS e Zoho são apresentados em medidas
                   separadas.
@@ -1259,11 +1263,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     (key) => sectionStories[key] === storyKey,
                   );
                   return (
-                    <section
-                      className="si-panel si-story"
-                      data-story={storyKey}
-                      key={storyKey}
-                    >
+                    <section className="si-panel si-story" data-story={storyKey} key={storyKey}>
                       <header className="si-story-heading">
                         <div>
                           <h2>{story.title}</h2>
@@ -1283,7 +1283,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     : key === 'evolution'
                                       ? 'Datas próprias da fonte; dias sem dados não representam ausência de trabalho.'
                                       : key === 'types'
-                                        ? 'Linhas elegíveis de OS, com agenda e execução em bases distintas.'
+                                        ? 'Serviço combina Tipo de Serviço e Motivo da OS. Agenda usa a data marcada; execução efetiva usa a data de atendimento. As etapas são contadas separadamente.'
                                         : 'Lançamentos manuais por data e agente; campos vazios não são zero e não são somados ao mesmo indicador automático.'}
                               </InfoNote>
                             </h3>
@@ -1360,6 +1360,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   <h4>Serviços efetivos por dia · OS</h4>
                                   <Chart
                                     compact
+                                    height={250}
+                                    showDrilldownHint={false}
                                     title="Serviços efetivos por dia"
                                     type="line"
                                     items={
@@ -1379,13 +1381,15 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     }
                                   />
                                   <small>
-                                    Somente datas com registros nas etapas de agenda ou execução.
+                                    Pela data de atendimento; improdutivas ficam fora das execuções.
                                   </small>
                                 </div>
                                 <div>
                                   <h4>Agendamentos por dia · OS</h4>
                                   <Chart
                                     compact
+                                    height={250}
+                                    showDrilldownHint={false}
                                     title="Agendamentos por dia"
                                     type="line"
                                     items={
@@ -1400,20 +1404,23 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     onItemClick={(item) =>
                                       showOrderDetails(
                                         `Agendamentos · ${item.label}`,
-                                        (row) => row.scheduling && row.scheduledAt === item.detailKey,
+                                        (row) =>
+                                          row.scheduling && row.scheduledAt === item.detailKey,
                                         'scheduling',
                                       )
                                     }
                                   />
                                   <small>
-                                    Usa a data marcada na agenda; não representa conversão das mesmas
-                                    OS em execução.
+                                    Usa a data marcada na agenda; não representa conversão das
+                                    mesmas OS em execução.
                                   </small>
                                 </div>
                                 <div>
                                   <h4>Tempo apontado por dia · Zoho</h4>
                                   <Chart
                                     compact
+                                    height={250}
+                                    showDrilldownHint={false}
                                     title="Tempo apontado por dia"
                                     type="line"
                                     items={(zoho?.daily || []).map((d) => ({
@@ -1438,108 +1445,112 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                               </div>
                             )}
                             {key === 'types' && (
-                              <div className="si-chart-grid">
-                                <div>
-                                  <h4>Tipos de serviço · OS</h4>
-                                  <Chart
-                                    compact
-                                    title="Execuções por tipo de serviço"
-                                    items={
-                                      hasOrders
-                                        ? orders.types.map((d) => ({
-                                            label: d.label,
-                                            value: d.executed,
-                                          }))
-                                        : []
-                                    }
-                                    onItemClick={(item) =>
-                                      showOrderDetails(
-                                        `Execuções efetivas · ${item.label}`,
-                                        (row) =>
-                                          row.execution &&
-                                          (row.type || 'Não informado') === item.label,
-                                      )
-                                    }
-                                  />
+                              <>
+                                {viewMode === 'editorial' && (
+                                  <p className="si-story-lead">
+                                    Primeiro, o mix de serviços efetivamente executados; em seguida,
+                                    onde esse trabalho se concentrou. O agendamento aparece à parte
+                                    para não sugerir conversão automática.
+                                  </p>
+                                )}
+                                <div className="si-chart-grid">
+                                  <div>
+                                    <h4>
+                                      {viewMode === 'editorial'
+                                        ? '1 · O que foi executado?'
+                                        : 'Serviços executados · OS'}
+                                    </h4>
+                                    <Chart
+                                      compact
+                                      title="Execuções efetivas por serviço · OS"
+                                      items={
+                                        hasOrders
+                                          ? orders.services
+                                              .filter((d) => d.executed > 0)
+                                              .map((d) => ({ label: d.label, value: d.executed }))
+                                          : []
+                                      }
+                                      onItemClick={(item) =>
+                                        showOrderDetails(
+                                          `Execuções efetivas · ${item.label}`,
+                                          (row) => row.execution && row.service === item.label,
+                                        )
+                                      }
+                                    />
+                                    <small>
+                                      Tipo de Serviço + Motivo; somente execuções efetivas.
+                                    </small>
+                                  </div>
+                                  <div>
+                                    <h4>
+                                      {viewMode === 'editorial'
+                                        ? '2 · Onde o trabalho se concentrou?'
+                                        : 'Clientes atendidos · OS'}
+                                    </h4>
+                                    <Chart
+                                      compact
+                                      title="Execuções efetivas por cliente · OS"
+                                      items={
+                                        hasOrders
+                                          ? orders.clients
+                                              .filter((d) => d.executed > 0)
+                                              .slice(0, 5)
+                                              .map((d) => ({
+                                                label: d.label,
+                                                value: d.executed,
+                                                caption: `${number(d.scheduled)} agendados`,
+                                              }))
+                                          : []
+                                      }
+                                    />
+                                    <small>Top 5 por execuções; agenda como referência.</small>
+                                  </div>
+                                </div>
+                                <div className="si-client-service-table">
                                   <Table
-                                    headers={['Tipo', 'Agendados', 'Executados efetivos']}
+                                    headers={[
+                                      'Cliente',
+                                      'Agendados',
+                                      'Executados',
+                                      'Serviços (exec. / agend.)',
+                                    ]}
                                     rows={
                                       hasOrders
-                                        ? orders.types.map((d) => [
-                                            d.label,
-                                            d.scheduled,
-                                            d.executed,
-                                          ])
-                                        : []
-                                    }
-                                  />
-                                </div>
-                                <div>
-                                  <h4>Clientes · OS</h4>
-                                  <Chart
-                                    compact
-                                    ranking
-                                    title="Execuções efetivas por cliente · OS"
-                                    items={
-                                      hasOrders
                                         ? orders.clients
-                                            .filter((d) => d.executed > 0)
-                                            .map((d) => ({
-                                              label: d.label,
-                                              value: d.executed,
-                                              caption: `${number(d.scheduled)} agendados`,
-                                            }))
+                                            .slice(0, viewMode === 'compact' ? 8 : undefined)
+                                            .map((d) => [
+                                              d.label,
+                                              d.scheduled,
+                                              d.executed,
+                                              d.services,
+                                            ])
                                         : []
                                     }
                                   />
-                                  <small>
-                                    Ranking por execuções efetivas; os agendamentos são mostrados
-                                    como referência.
-                                  </small>
-                                  {viewMode === 'compact' ? (
-                                    <details className="si-report-expandable si-client-types">
-                                      <summary>Ver clientes e tipos de atendimento</summary>
+                                  <small>Em cada serviço: execuções efetivas / agendamentos.</small>
+                                  {viewMode === 'compact' && orders?.clients.length > 8 && (
+                                    <details className="si-report-expandable si-client-reasons">
+                                      <summary>
+                                        Ver todos os clientes ({orders.clients.length})
+                                      </summary>
                                       <Table
                                         headers={[
                                           'Cliente',
                                           'Agendados',
-                                          'Executados efetivos',
-                                          'Tipos de atendimento',
+                                          'Executados',
+                                          'Serviços (exec. / agend.)',
                                         ]}
-                                        rows={
-                                          hasOrders
-                                            ? orders.clients.map((d) => [
-                                                d.label,
-                                                d.scheduled,
-                                                d.executed,
-                                                d.serviceTypes,
-                                              ])
-                                            : []
-                                        }
+                                        rows={orders.clients.map((d) => [
+                                          d.label,
+                                          d.scheduled,
+                                          d.executed,
+                                          d.services,
+                                        ])}
                                       />
                                     </details>
-                                  ) : (
-                                    <Table
-                                      headers={[
-                                        'Cliente',
-                                        'Agendados',
-                                        'Executados efetivos',
-                                        'Tipos de atendimento',
-                                      ]}
-                                      rows={
-                                        hasOrders
-                                          ? orders.clients.map((d) => [
-                                              d.label,
-                                              d.scheduled,
-                                              d.executed,
-                                              d.serviceTypes,
-                                            ])
-                                          : []
-                                      }
-                                    />
                                   )}
                                 </div>
-                              </div>
+                              </>
                             )}
                             {key === 'subjects' &&
                               (zoho?.categories != null ? (
@@ -1684,7 +1695,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     'Chamado',
                     'Atendimento',
                     'Agendamento',
-                    'Tipo',
+                    'Serviço executado',
                     'Execução no período',
                     'Agenda no período',
                   ]}
@@ -1693,7 +1704,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     r.os,
                     date(r.executedAt),
                     date(r.scheduledAt),
-                    r.type,
+                    r.service,
                     r.unproductive ? 'Não · improdutiva' : r.execution ? 'Efetiva' : '—',
                     r.scheduling ? 'Sim' : '—',
                   ])}

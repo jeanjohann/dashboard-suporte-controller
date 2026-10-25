@@ -127,6 +127,29 @@ test('OS separa datas e papéis, improdutivas e canceladas, sem aproximar nome d
   assert.equal(unproductiveRow.scheduling, true);
   assert.equal(all.missingExecutionDate, 1);
   assert.equal(all.unmapped, 1);
+  assert.ok(
+    all.services.some(
+      (service) =>
+        service.label === 'Implementação · Instalação' &&
+        service.executed === 1 &&
+        service.scheduled === 0,
+    ),
+  );
+  assert.ok(
+    all.services.some(
+      (service) =>
+        service.label === 'Assistência Técnica · Revisão' &&
+        service.executed === 0 &&
+        service.scheduled === 1,
+    ),
+  );
+  assert.equal(
+    all.clients
+      .find((client) => client.label === 'CLIENTE A')
+      .services.includes('Implementação · Instalação: 1/0'),
+    true,
+  );
+  assert.equal(all.rows.find((row) => row.execution).service, 'Implementação · Instalação');
   const jean = ordersSummary(data, period, agents[1].id);
   assert.equal(jean.executed, 1);
   assert.equal(jean.scheduled, 1);
