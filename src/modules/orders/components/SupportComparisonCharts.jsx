@@ -164,9 +164,13 @@ export function SupportComparisonEvolution({ items }) {
           </PermissionButton>
           <div className="dashboard-plot">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={items} margin={{ left: 0, right: 20, bottom: 12 }}>
-                <CartesianGrid stroke="var(--ui-line)" strokeDasharray="3 3" />
-                <XAxis dataKey="label" tick={{ fill: 'var(--ui-muted)', fontSize: 11 }} />
+              <LineChart accessibilityLayer data={items} margin={{ left: 0, right: 20, bottom: 4 }}>
+                <CartesianGrid vertical={false} stroke="var(--ui-line)" strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="label"
+                  minTickGap={16}
+                  tick={{ fill: 'var(--ui-muted)', fontSize: 11 }}
+                />
                 <YAxis
                   allowDecimals={false}
                   width={36}
@@ -182,6 +186,8 @@ export function SupportComparisonEvolution({ items }) {
                     name={label}
                     stroke={color(key)}
                     strokeWidth={2}
+                    dot={items.length <= 24 ? { r: 2.5 } : false}
+                    activeDot={{ r: 4 }}
                     connectNulls={false}
                   />
                 ))}

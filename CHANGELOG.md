@@ -1,3 +1,10 @@
+## 0.69.23 — 25/10/2026
+
+- Aproveita melhor a área dos gráficos temporais, com eixos menores, datas horizontais e menos marcadores em séries extensas.
+- Adapta o raio de pizzas e roscas ao espaço disponível e oferece valores completos e CSV nas ferramentas do gráfico compartilhado.
+- Pagina rankings extensos sem rolagem interna, preservando a escala e o recorte completo na exportação e impressão.
+- Corrige acesso aos itens finais das tabelas do Meu Dashboard e isola a impressão do modal de serviços sem afetar os demais relatórios.
+
 ## 0.69.22 — 25/10/2026
 
 - Abre o gráfico de serviços em modal com detalhamento, impressão e exportação CSV e SVG.

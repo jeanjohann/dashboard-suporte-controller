@@ -438,7 +438,12 @@ function ServiceChartDialog({ open, onClose, services, period }) {
           </p>
         </div>
         <div className="si-service-chart-actions">
-          <button type="button" onClick={() => window.print()}>
+          <button
+            type="button"
+            onClick={async () => {
+              if (await authorizeAction('export')) window.print();
+            }}
+          >
             Imprimir
           </button>
           <button type="button" onClick={exportCsv}>

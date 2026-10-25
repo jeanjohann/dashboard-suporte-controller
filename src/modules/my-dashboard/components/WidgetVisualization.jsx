@@ -20,6 +20,7 @@ import { compareSeries, donutSeries } from '../domain/presentation.js';
 import { VOLUME_SCALE } from '../../consumption/domain/lineConsumption.js';
 import { categoricalColors } from '../../../shared/charts/palette.js';
 import { usePrintMode } from '../../../shared/charts/usePrintMode.js';
+import { valueAxisWidth } from '../../../shared/charts/chartLayout.js';
 
 const colors = categoricalColors;
 export function ValuesTable({ rows, unit, titles, pageSize = 5 }) {
@@ -52,7 +53,7 @@ export function ValuesTable({ rows, unit, titles, pageSize = 5 }) {
           {printing && <tbody className="md-print-rows">{body(rows)}</tbody>}
         </table>
       </div>
-      {rows.length > 10 && (
+      {last > 0 && (
         <div className="md-pagination">
           <button type="button" disabled={!current} onClick={() => setPage(current - 1)}>
             Anterior
@@ -151,6 +152,10 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
       ? rows
       : rows.slice(0, Math.min(expanded ? 40 : 20, Math.max(1, capacity)));
   const axisWidth = Math.max(65, Math.min(170, size.width * 0.29));
+  const numericAxisWidth = valueAxisWidth(
+    rows.flatMap((row) => [{ value: row.value }, { value: row.comparison }]),
+    (value) => compact(value, result.unit),
+  );
   const chartProps = {
     data: visible,
     margin: { top: 8, right: 20, bottom: 8, left: 5 },
@@ -200,12 +205,12 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
             dataKey="label"
             interval={widget.kind === 'line' || widget.kind === 'area' ? 'preserveStartEnd' : 0}
             minTickGap={24}
-            height={46}
+            height={36}
             tick={{ fontSize: 11, fill: 'var(--md-muted)' }}
             tickFormatter={(v) => (String(v).length > 13 ? String(v).slice(0, 12) + '…' : v)}
           />
           <YAxis
-            width={65}
+            width={numericAxisWidth}
             allowDecimals={result.unit !== 'count'}
             tickFormatter={(v) => compact(v, result.unit)}
             tick={{ fill: 'var(--md-muted)' }}
@@ -264,7 +269,8 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
                 type="linear"
                 stroke="var(--md-accent)"
                 strokeWidth={2.5}
-                dot={{ r: 3 }}
+                dot={rows.length <= 24 ? { r: 2.5 } : false}
+                activeDot={{ r: 4 }}
                 connectNulls={false}
                 isAnimationActive={false}
               />
@@ -274,7 +280,8 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
                   type="linear"
                   stroke="var(--md-compare)"
                   strokeWidth={2.5}
-                  dot={{ r: 3 }}
+                  dot={rows.length <= 24 ? { r: 2.5 } : false}
+                  activeDot={{ r: 4 }}
                   connectNulls={false}
                   isAnimationActive={false}
                 />

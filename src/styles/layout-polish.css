@@ -99,6 +99,71 @@
 .chart-tools[open] > summary {
   margin-bottom: 8px;
 }
+/* A página reserva espaço aos dados; ações e valores completos só abrem sob demanda. */
+.chart-shared .chart-heading:empty {
+  display: none;
+}
+.chart-shared .readable-bars {
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+.chart-shared .chart-plot {
+  min-width: 0;
+}
+.chart-actions,
+.chart-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.chart-pagination {
+  justify-content: flex-end;
+  margin-top: 8px;
+  color: var(--ui-ink);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.chart-pagination button {
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 10px;
+}
+.chart-values-table {
+  width: 100%;
+  margin-top: 8px;
+  table-layout: fixed;
+  color: var(--ui-ink);
+  font-size: 11px;
+}
+.chart-values-table caption {
+  text-align: left;
+  padding-bottom: 5px;
+}
+.chart-values-table th,
+.chart-values-table td {
+  padding: 5px 7px;
+  overflow-wrap: anywhere;
+}
+.chart-values-table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.chart-values-table th:last-child {
+  width: 30%;
+  text-align: right;
+}
+@media print {
+  .chart-shared .chart-tools,
+  .chart-shared .chart-pagination {
+    display: none !important;
+  }
+  .chart-shared .readable-bars {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
 .overview-links {
   align-items: center;
   gap: 8px;

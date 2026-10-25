@@ -1256,14 +1256,20 @@
   .si-cards {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-  body * {
+  body:has(.si-service-chart-dialog[open]) * {
     visibility: hidden !important;
   }
-  .si-service-chart-dialog[open],
-  .si-service-chart-dialog[open] * {
+  body .si-service-chart-dialog[open],
+  body .si-service-chart-dialog[open] * {
     visibility: visible !important;
   }
   .si-service-chart-dialog[open] {
+    --ui-ink: #111;
+    --ui-muted: #444;
+    --ui-surface: #fff;
+    --ui-line: #ddd;
+    --ui-border: #ccc;
+    --chart-main: #19786f;
     display: block !important;
     position: absolute;
     inset: 0;

@@ -62,13 +62,13 @@ test('SVG materializa cores do tema para continuar legível fora do sistema', ()
     subtitle: 'Fonte',
     format: String,
   });
-  assert.ok(output.includes('fill="#8b62c0"'));
+  assert.ok(output.includes('fill="#77589d"'));
   assert.ok(!output.includes('var('));
   const negative = chartSvg([{ label: 'Diferença', value: -3 }], {
     title: 'Teste',
     subtitle: 'Fonte',
     format: String,
   });
-  assert.ok(negative.includes('fill="#b75470"'));
+  assert.ok(negative.includes('fill="#ac4058"'));
   assert.ok(negative.includes('>-3</text>'));
 });

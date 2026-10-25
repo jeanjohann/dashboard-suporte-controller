@@ -192,6 +192,7 @@ export function ZohoActivitySummary({ summary, compact = false, onReview }) {
             >
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
+                  accessibilityLayer
                   data={items}
                   layout="vertical"
                   margin={{ left: 0, right: 16, top: 8, bottom: 0 }}

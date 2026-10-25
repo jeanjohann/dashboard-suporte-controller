@@ -31,9 +31,9 @@ function MultiChart({ items, series }) {
   return items.length ? (
     <div className="dashboard-plot">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={items} margin={{ left: 0, right: 12, bottom: 16 }}>
-          <CartesianGrid vertical={false} stroke="#edf1f4" />
-          <XAxis dataKey="label" tickMargin={10} axisLine={false} tickLine={false} />
+        <BarChart accessibilityLayer data={items} margin={{ left: 0, right: 12, bottom: 8 }}>
+          <CartesianGrid vertical={false} stroke="var(--ui-line)" />
+          <XAxis dataKey="label" minTickGap={16} tickMargin={8} axisLine={false} tickLine={false} />
           <YAxis allowDecimals={false} width={42} axisLine={false} tickLine={false} />
           <Tooltip />
           <Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} />
