@@ -3,6 +3,7 @@
   "version": "0.69.29",
   "private": true,
   "type": "module",
+  "packageManager": "npm@11.12.1",
   "scripts": {
     "architecture:build": "node scripts/architecture/build-map.mjs && node scripts/architecture/package-site.mjs",
     "architecture:deploy": "npm run architecture:build && wrangler deploy --config wrangler.architecture.jsonc --keep-vars",
