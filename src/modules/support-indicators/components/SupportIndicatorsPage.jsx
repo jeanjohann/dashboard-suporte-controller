@@ -2,6 +2,7 @@ import { WorkspaceQueryPanel } from '../../../shared/persistence/WorkspaceQueryP
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
+import { useTheme } from '../../../app/Theme.jsx';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { authorizeAction, api } from '../../../shared/security/accessClient.js';
 import { useDashboardSources } from '../../my-dashboard/hooks/DashboardSources.jsx';
@@ -378,6 +379,7 @@ function DrilldownDialog({ detail, onClose }) {
   );
 }
 export function SupportIndicatorsPage({ onPage, active = true }) {
+  const { density, selectDensity } = useTheme();
   const { user, managed } = useAccess(),
     { sources } = useDashboardSources(),
     today = todaySaoPaulo(),
@@ -386,10 +388,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [agentId, setAgent] = useState(''),
     [ownZoho, setOwnZoho] = useState(null),
     [drilldown, setDrilldown] = useState(null),
-    [compactView, setCompactView] = useState(false),
     [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(0),
     [error, setError] = useState('');
+  const viewMode = density;
   const pending = useRef(null);
   const backlogRequest = useRef(null);
   const [ownBacklog, setOwnBacklog] = useState(null),
@@ -817,7 +819,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     !agentId;
   return (
     <SidePanelProvider>
-      <div className={`app support-indicators-page${compactView ? ' si-compact-mode' : ''}`}>
+      <div className={`app support-indicators-page si-${viewMode}-mode`}>
         <Navigation page="support-indicators" onPage={onPage} />
         <main>
           <header className="si-heading">
@@ -826,13 +828,22 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <p>Atendimentos, serviços e atividades da equipe.</p>
             </div>
             <div className="si-toolbar">
-              <button
-                type="button"
-                aria-pressed={compactView}
-                onClick={() => setCompactView((value) => !value)}
-              >
-                {compactView ? 'Modo completo' : 'Modo compacto'}
-              </button>
+              <div className="si-view-modes" role="group" aria-label="Modo de visualização">
+                <button
+                  type="button"
+                  aria-pressed={viewMode === 'compact'}
+                  onClick={() => selectDensity('compact')}
+                >
+                  Compacto
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={viewMode === 'editorial'}
+                  onClick={() => selectDensity('editorial')}
+                >
+                  Editorial
+                </button>
+              </div>
               <button
                 disabled={!valid || busy || backlogBusy || store.loading}
                 onClick={exportReport}
@@ -938,6 +949,76 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               manualMetric={manualMetric}
               comparisonAvailable={comparisonAvailable}
             />
+          )}
+          {viewMode === 'editorial' && valid && (
+            <section className="si-editorial-lead" aria-label="Leitura do período">
+              <div className="si-editorial-lead-heading">
+                <span>LEITURA DO PERÍODO</span>
+                <h2>{agentId ? agents.find((agent) => agent.id === agentId)?.name : 'Resumo da equipe'}</h2>
+                <p>
+                  {date(period.start)} a {date(period.end)} · OS e Zoho são apresentados em medidas
+                  separadas.
+                </p>
+              </div>
+              <div className="si-editorial-facts">
+                <article>
+                  <span>Ordens de serviço</span>
+                  {hasOrders ? (
+                    <>
+                      <p>
+                        <strong>{number(orders.executed)}</strong> execuções efetivas e{' '}
+                        <strong>{number(orders.unproductive)}</strong> linhas reconhecidas como
+                        visita improdutiva. Improdutivas permanecem fora das execuções.
+                      </p>
+                      {comparisonAvailable('executed') && (
+                        <MetricComparison
+                          metric="executed"
+                          current={orders.executed}
+                          previous={oldOrders.executed}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <p>Sem cobertura suficiente da base de OS para resumir este período.</p>
+                  )}
+                </article>
+                <article>
+                  <span>Zoho Desk</span>
+                  {zoho ? (
+                    <>
+                      <p>
+                        {zoho.closed == null ? (
+                          'Chamados fechados não disponíveis para este recorte. '
+                        ) : (
+                          <>
+                            <strong>{number(zoho.closed)}</strong> chamados fechados
+                          </>
+                        )}{' '}
+                        {zoho.seconds == null ? (
+                          'Tempo apontado não disponível.'
+                        ) : (
+                          <>
+                            com <strong>{duration(zoho.seconds)}</strong> de tempo apontado.
+                          </>
+                        )}
+                      </p>
+                      {comparisonAvailable('closed') && (
+                        <MetricComparison
+                          metric="closed"
+                          current={zoho.closed}
+                          previous={oldZoho.closed}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <p>
+                      Consulte o Zoho com cobertura para todo o período. Os dados da OS não
+                      substituem essa fonte.
+                    </p>
+                  )}
+                </article>
+              </div>
+            </section>
           )}
           <SourceCoverage
             ordersData={ordersData}
@@ -1178,7 +1259,11 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     (key) => sectionStories[key] === storyKey,
                   );
                   return (
-                    <section className="si-panel si-story" key={storyKey}>
+                    <section
+                      className="si-panel si-story"
+                      data-story={storyKey}
+                      key={storyKey}
+                    >
                       <header className="si-story-heading">
                         <div>
                           <h2>{story.title}</h2>

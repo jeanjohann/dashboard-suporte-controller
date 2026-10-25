@@ -10,7 +10,12 @@ import React, {
 } from 'react';
 
 import { themes, defaultTheme, restoredTheme } from './themeOptions.js';
-const ThemeContext = createContext({ theme: defaultTheme, selectTheme: () => {} });
+const ThemeContext = createContext({
+  theme: defaultTheme,
+  density: 'compact',
+  selectTheme: () => {},
+  selectDensity: () => {},
+});
 const storageKey = 'addlog-theme-v1';
 // A nova versão da preferência define Compacto como padrão para todos os navegadores já usados.
 const densityStorageKey = 'addlog-density-v3';
@@ -25,7 +30,7 @@ export function ThemeProvider({ children }) {
   const [density, setDensity] = useState(() => {
     try {
       const savedDensity = localStorage.getItem(densityStorageKey);
-      return savedDensity === 'comfortable' ? 'comfortable' : 'compact';
+      return savedDensity === 'editorial' ? 'editorial' : 'compact';
     } catch {
       return 'compact';
     }
@@ -49,8 +54,9 @@ export function ThemeProvider({ children }) {
       selectTheme: (next) => {
         if (themes.some((entry) => entry.id === next)) setTheme(next);
       },
-      toggleDensity: () =>
-        setDensity((current) => (current === 'compact' ? 'comfortable' : 'compact')),
+      selectDensity: (next) => {
+        if (['compact', 'editorial'].includes(next)) setDensity(next);
+      },
     }),
     [density, theme],
   );
@@ -58,9 +64,14 @@ export function ThemeProvider({ children }) {
 }
 export const useTheme = () => useContext(ThemeContext);
 
+const densityOptions = [
+  { id: 'compact', label: 'Compacto' },
+  { id: 'editorial', label: 'Editorial (Lupi)' },
+];
+
 /** Seletor acessível, fechado por escolha, clique externo ou Escape; não muda a preferência ao apenas abrir. */
 export function ThemeToggle() {
-  const { theme, selectTheme, density, toggleDensity } = useTheme();
+  const { theme, selectTheme, density, selectDensity } = useTheme();
   const picker = useRef(null);
   useEffect(() => {
     const closeOutside = (event) => {
@@ -109,14 +120,17 @@ export function ThemeToggle() {
           </button>
         ))}
         <strong className="theme-options-section">Espaçamento</strong>
-        <button
-          type="button"
-          className="theme-choice"
-          aria-pressed={density === 'compact'}
-          onClick={toggleDensity}
-        >
-          <span>{density === 'compact' ? 'Compacto' : 'Confortável'}</span>
-        </button>
+        {densityOptions.map((entry) => (
+          <button
+            type="button"
+            key={entry.id}
+            className="theme-choice"
+            aria-pressed={density === entry.id}
+            onClick={() => selectDensity(entry.id)}
+          >
+            <span>{entry.label}</span>
+          </button>
+        ))}
         <small>Salvo neste navegador.</small>
       </div>
     </details>
