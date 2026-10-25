@@ -1,3 +1,11 @@
+## 0.69.18 — 24/10/2026
+
+- Carrega do banco somente as bases necessárias à página aberta, preservando a troca atômica de cada lote solicitado.
+- Processa importações de OS e Operacional e validação de integridade das bases salvas em Web Workers para reduzir bloqueios da interface.
+- Mantém paginação nas tabelas existentes e evita acrescentar virtualização sem necessidade comprovada.
+- Torna mais vibrantes os realces secundários e as séries de dados do tema Grafite e Azul.
+- Define o modo compacto como padrão também para navegadores com preferência anterior, mantendo a escolha editável em Aparência.
+
 ## 0.69.17 — 24/10/2026
 
 - Evita refazer filtros, estatísticas, rankings e grupos de cliente do Consumo ao alterar estado visual que não muda os dados.

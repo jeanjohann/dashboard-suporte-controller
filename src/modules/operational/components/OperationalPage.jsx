@@ -15,7 +15,8 @@ import { allowsSource } from '../../../shared/security/permissions.js';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
-import { importOperational, linkOperational } from '../domain/operational.js';
+import { linkOperational } from '../domain/operational.js';
+import { importOperationalInWorker } from '../../../shared/workers/importProcessing.js';
 import {
   Section as BaseSection,
   PrintContext,
@@ -165,7 +166,7 @@ export function OperationalPage({
     try {
       if (accessManaged() && !allowsSource(accessUser(), 'operational'))
         throw Error('Importação operacional não autorizada.');
-      const data = importOperational(await file.arrayBuffer());
+      const data = await importOperationalInWorker(await file.arrayBuffer());
       await setSource({ data, filename: file.name });
       setOffset(0);
       setDetail(null);

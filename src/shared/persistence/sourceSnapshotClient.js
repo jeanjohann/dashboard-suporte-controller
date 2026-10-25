@@ -1,13 +1,8 @@
-/** Só aplica bases depois da confirmação da publicação; nenhuma carga parcial substitui a sessão. */
+/** Confere a integridade de cada base antes de entregar o lote solicitado à sessão. */
 import { api } from '../security/accessClient.js';
 import { fetchSourceResponse, readSourceResponse } from './sourceDownloadClient.js';
-import {
-  prepareSnapshot,
-  sha256,
-  validateStoredSource,
-  snapshotMaxParts,
-  snapshotMaxBytes,
-} from './snapshotPayload.js';
+import { validateSourceInWorker } from '../workers/importProcessing.js';
+import { prepareSnapshot, snapshotMaxParts, snapshotMaxBytes } from './snapshotPayload.js';
 const post = (request, path, body) =>
   request(path, {
     method: 'POST',
@@ -41,9 +36,7 @@ export function createSourceSnapshotClient(request = api, download = fetchSource
         signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
       });
       const text = await readSourceResponse(response, head, { onProgress });
-      if ((await sha256(text)) !== head.hash) throw Error('Integridade da base inválida.');
-      const source = JSON.parse(text);
-      validateStoredSource(kind, source);
+      const source = await validateSourceInWorker(kind, text, head.hash);
       return { ...source, cloud: head };
     },
     async save(batch, catalog) {
@@ -94,7 +87,7 @@ export function createSourceSnapshotClient(request = api, download = fetchSource
   };
 }
 
-/** As leituras são independentes; a aplicação das três bases continua indivisível. */
+/** As leituras são paralelas; o lote solicitado só é aplicado quando todas terminam bem. */
 export async function readSourceCatalog(client, catalog, options = {}) {
   const results = await Promise.allSettled(
     Object.entries(catalog).map(async ([kind, head]) => [

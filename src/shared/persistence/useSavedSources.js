@@ -1,111 +1,225 @@
-/** Bases completas do piloto: carregamento inicial e confirmação do servidor antes da troca da sessão. */
+/** Carrega bases salvas sob demanda e só aplica cada conjunto após confirmar sua integridade. */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createSourceSnapshotClient, readSourceCatalog } from './sourceSnapshotClient.js';
-export function useSavedSources({ user, managed, onApply }) {
+
+const sourceKinds = ['orders', 'operational', 'logistics'];
+
+export function useSavedSources({ user, managed, onApply, requiredKinds = [] }) {
   const client = useMemo(() => createSourceSnapshotClient(), [user?.email]);
   const [state, setState] = useState({
     loading: managed,
     busy: false,
     error: '',
     enabled: false,
+    initialized: !managed,
     catalog: {},
     message: '',
     progress: 0,
   });
-  const current = useRef(null),
+  const current = useRef(client),
     catalog = useRef({}),
     ready = useRef(!managed),
-    loadGeneration = useRef(0),
-    locked = useRef(false),
+    enabled = useRef(false),
+    initialization = useRef(null),
     loadingRequest = useRef(null),
+    loadGeneration = useRef(0),
+    loadQueue = useRef(Promise.resolve()),
+    loadedKinds = useRef(new Set()),
+    locked = useRef(false),
     apply = useRef(onApply);
   apply.current = onApply;
   current.current = client;
-  async function reload() {
-    if (!managed || locked.current) return;
-    const target = client,
-      run = ++loadGeneration.current;
-    loadingRequest.current?.abort();
-    const controller = new AbortController();
-    loadingRequest.current = controller;
-    ready.current = false;
+
+  async function initialize() {
+    if (!managed) return false;
+    if (ready.current) return enabled.current;
+    if (initialization.current) return initialization.current;
+    const target = client;
     setState((s) => ({ ...s, loading: true, error: '', progress: 0 }));
-    try {
+    const task = (async () => {
       const status = await client.status();
       if (status.version !== 1 || typeof status.permitted !== 'boolean')
         throw Error('Configuração das bases incompatível.');
-      if (current.current !== target || loadGeneration.current !== run) return;
+      if (current.current !== target) return false;
       if (!status.permitted) {
+        catalog.current = {};
+        enabled.current = false;
         ready.current = true;
         setState({
           loading: false,
           busy: false,
-          enabled: false,
           error: '',
+          enabled: false,
+          initialized: true,
           catalog: {},
           message: '',
+          progress: 0,
         });
-        return;
+        return false;
       }
-      const next = await client.catalog(),
-        totalBytes = Object.values(next).reduce((sum, head) => sum + (head?.bytes || 0), 0),
-        received = {},
-        sources = await readSourceCatalog(client, next, {
-          signal: controller.signal,
-          onProgress: (kind, bytes) => {
-            if (current.current !== target || loadGeneration.current !== run) return;
-            received[kind] = bytes;
-            const progress = totalBytes
-              ? Math.min(
-                  99,
-                  Math.floor(
-                    (Object.values(received).reduce((sum, value) => sum + value, 0) / totalBytes) *
-                      100,
-                  ),
-                )
-              : 0;
-            setState((s) => (s.progress === progress ? s : { ...s, progress }));
-          },
-        });
-      if (current.current !== target || loadGeneration.current !== run) return;
+      const next = await client.catalog();
+      if (current.current !== target) return false;
       catalog.current = next;
+      enabled.current = true;
       ready.current = true;
-      apply.current(sources);
-      setState({
+      setState((s) => ({
+        ...s,
         loading: false,
         busy: false,
-        enabled: true,
         error: '',
+        enabled: true,
+        initialized: true,
         catalog: next,
-        message: '',
-        progress: 100,
+        progress: 0,
+      }));
+      return true;
+    })();
+    initialization.current = task;
+    try {
+      return await task;
+    } catch (error) {
+      if (current.current === target) {
+        ready.current = false;
+        initialization.current = null;
+        setState((s) => ({
+          ...s,
+          loading: false,
+          initialized: false,
+          error: error.message || 'Não foi possível conferir as bases salvas.',
+        }));
+      }
+      throw error;
+    }
+  }
+
+  async function loadKindsNow(kinds) {
+    if (!(await initialize())) return;
+    if (!ready.current || !enabled.current || current.current !== client) return;
+    const requested = [...new Set(kinds)].filter((kind) => sourceKinds.includes(kind));
+    const missing = requested.filter((kind) => !loadedKinds.current.has(kind));
+    if (!missing.length) return;
+    const heads = Object.fromEntries(
+      missing.filter((kind) => catalog.current[kind]).map((kind) => [kind, catalog.current[kind]]),
+    );
+    if (!Object.keys(heads).length) {
+      missing.forEach((kind) => loadedKinds.current.add(kind));
+      return;
+    }
+    if (locked.current) throw Error('Aguarde a gravação das bases antes de carregá-las.');
+
+    const target = client,
+      run = loadGeneration.current,
+      totalBytes = Object.values(heads).reduce((sum, head) => sum + (head?.bytes || 0), 0),
+      received = {};
+    const controller = new AbortController();
+    loadingRequest.current = controller;
+    setState((s) => ({ ...s, loading: true, error: '', progress: 0 }));
+    try {
+      const sources = await readSourceCatalog(client, heads, {
+        signal: controller.signal,
+        onProgress: (kind, bytes) => {
+          if (current.current !== target || loadGeneration.current !== run) return;
+          received[kind] = bytes;
+          const progress = totalBytes
+            ? Math.min(
+                99,
+                Math.floor(
+                  (Object.values(received).reduce((sum, value) => sum + value, 0) / totalBytes) *
+                    100,
+                ),
+              )
+            : 0;
+          setState((s) => (s.progress === progress ? s : { ...s, progress }));
+        },
       });
+      if (current.current !== target || loadGeneration.current !== run) return;
+      missing.forEach((kind) => loadedKinds.current.add(kind));
+      apply.current(sources);
+      setState((s) => ({ ...s, loading: false, error: '', progress: 100 }));
     } catch (error) {
       if (current.current === target && loadGeneration.current === run)
         setState((s) => ({
           ...s,
           loading: false,
-          error: error.message || 'Não foi possível carregar as bases salvas.',
+          error: error.message || 'Não foi possível carregar as bases solicitadas.',
         }));
+      throw error;
     } finally {
       if (loadingRequest.current === controller) loadingRequest.current = null;
     }
   }
+
+  function loadKinds(kinds) {
+    const task = loadQueue.current.catch(() => {}).then(() => loadKindsNow(kinds));
+    loadQueue.current = task.catch(() => {});
+    return task;
+  }
+
+  async function reload() {
+    if (!managed || locked.current) return;
+    loadGeneration.current++;
+    loadingRequest.current?.abort();
+    loadingRequest.current = null;
+    loadQueue.current = Promise.resolve();
+    loadedKinds.current.clear();
+    catalog.current = {};
+    enabled.current = false;
+    ready.current = false;
+    initialization.current = null;
+    apply.current({ orders: null, operational: null, logistics: null });
+    setState((s) => ({
+      ...s,
+      loading: true,
+      error: '',
+      initialized: false,
+      catalog: {},
+      progress: 0,
+    }));
+    try {
+      if (await initialize()) await loadKinds(sourceKinds);
+    } catch {}
+  }
+
   useEffect(() => {
     current.current = client;
+    loadedKinds.current = new Set();
+    catalog.current = {};
+    enabled.current = false;
     ready.current = !managed;
+    initialization.current = null;
+    loadQueue.current = Promise.resolve();
     apply.current({ orders: null, operational: null, logistics: null });
-    reload();
+    if (managed) initialize().catch(() => {});
+    else
+      setState({
+        loading: false,
+        busy: false,
+        error: '',
+        enabled: false,
+        initialized: true,
+        catalog: {},
+        message: '',
+        progress: 0,
+      });
     return () => {
       current.current = null;
       loadingRequest.current?.abort();
       loadGeneration.current++;
     };
   }, [client, managed]);
+
+  const requiredKey = requiredKinds.join('|');
+  useEffect(() => {
+    if (managed && state.initialized && state.enabled) loadKinds(requiredKinds).catch(() => {});
+  }, [managed, state.initialized, state.enabled, requiredKey]);
+
   async function save(sources) {
-    if (!ready.current || state.error)
-      throw Error('Confira o carregamento das bases salvas antes de importar.');
-    if (!state.enabled) {
+    if (!ready.current) {
+      await initialize();
+      if (!ready.current) throw Error('Confira o carregamento das bases salvas antes de importar.');
+    }
+    if (state.error) throw Error('Confira o carregamento das bases salvas antes de importar.');
+    if (!enabled.current) {
       apply.current(sources);
       return;
     }
@@ -117,6 +231,7 @@ export function useSavedSources({ user, managed, onApply }) {
       const result = await client.save(sources, catalog.current);
       if (current.current !== target) return;
       catalog.current = result.catalog;
+      for (const kind of Object.keys(result.sources)) loadedKinds.current.add(kind);
       apply.current(result.sources);
       setState((s) => ({
         ...s,
@@ -132,5 +247,5 @@ export function useSavedSources({ user, managed, onApply }) {
       locked.current = false;
     }
   }
-  return { ...state, reload, save };
+  return { ...state, reload, loadKinds, save };
 }

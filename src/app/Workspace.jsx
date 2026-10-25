@@ -67,6 +67,21 @@ const SupportIndicatorsPage = lazy(() =>
     default: module.SupportIndicatorsPage,
   })),
 );
+
+const savedSourcesByPage = {
+  orders: ['orders'],
+  'support-indicators': ['orders'],
+  operational: ['orders', 'operational'],
+  'operational-analysis': ['orders', 'operational', 'logistics'],
+  monitoring: ['operational'],
+  lines: ['operational'],
+  kore: ['operational'],
+  arqia: ['operational'],
+  'consumption-followup': ['operational'],
+  'my-dashboard': ['orders', 'operational', 'logistics'],
+  imports: ['orders', 'operational', 'logistics'],
+};
+
 /** Mantém as bases da sessão e coordena páginas autorizadas e importações conjuntas. */
 export function Workspace() {
   return (
@@ -86,9 +101,23 @@ function WorkspaceContent() {
     [orders, setOrders] = useState(null),
     [operational, setOperational] = useState(null),
     [logistics, setLogistics] = useState(null);
+  const current = allowed(page)
+    ? page
+    : [
+        'my-dashboard',
+        'orders',
+        'operational',
+        'lines',
+        'operational-analysis',
+        'monitoring',
+        'users',
+        'imports',
+      ].find(allowed);
+  const requiredSources = current ? savedSourcesByPage[current] || [] : [];
   const savedSources = useSavedSources({
     user,
     managed,
+    requiredKinds: requiredSources,
     onApply: (batch) => {
       if (Object.hasOwn(batch, 'orders')) setOrders(batch.orders);
       if (Object.hasOwn(batch, 'operational')) setOperational(batch.operational);
@@ -131,18 +160,6 @@ function WorkspaceContent() {
     );
     if (Object.keys(sources).length) await savedSources.save(sources);
   }
-  const current = allowed(page)
-    ? page
-    : [
-        'my-dashboard',
-        'orders',
-        'operational',
-        'lines',
-        'operational-analysis',
-        'monitoring',
-        'users',
-        'imports',
-      ].find(allowed);
   if (!current)
     return (
       <main className="access-status">

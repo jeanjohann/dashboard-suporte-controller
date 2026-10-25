@@ -1,7 +1,7 @@
 /** Estado da base de OS: importação autorizada, filtros, busca/paginação, referência e resultados. */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { authorizeAction } from '../../../shared/security/accessClient.js';
-import { importWorkbook } from '../data/import.js';
+import { importWorkbookInWorker } from '../../../shared/workers/importProcessing.js';
 import { summarize, finance } from '../domain/analysis.js';
 import { applyFilters, attendanceExtent, monthlyCompleted } from '../../../shared/data/filters.js';
 import { equipment } from '../domain/equipment.js';
@@ -60,7 +60,7 @@ export function useOrdersSession({ source, onImport, scope = 'overview' }) {
     setBusy(true);
     setError('');
     try {
-      const result = importWorkbook(await file.arrayBuffer());
+      const result = await importWorkbookInWorker(await file.arrayBuffer());
       setPage(0);
       setSearch('');
       setView('records');

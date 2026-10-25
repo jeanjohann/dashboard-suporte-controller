@@ -12,7 +12,8 @@ import React, {
 import { themes, defaultTheme, restoredTheme } from './themeOptions.js';
 const ThemeContext = createContext({ theme: defaultTheme, selectTheme: () => {} });
 const storageKey = 'addlog-theme-v1';
-const densityStorageKey = 'addlog-density-v2';
+// A nova versão da preferência define Compacto como padrão para todos os navegadores já usados.
+const densityStorageKey = 'addlog-density-v3';
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
