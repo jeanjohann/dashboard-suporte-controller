@@ -16,7 +16,8 @@ import { OrdersFiltersPanel } from './OrdersFiltersPanel.jsx';
 import { OrdersCategories } from './OrdersReportMenu.jsx';
 import { useGoogleOrders } from '../hooks/useGoogleOrders.js';
 import { OrdersGooglePanel } from './OrdersGooglePanel.jsx';
-import { ZohoSessionProvider, useZohoSession } from '../hooks/ZohoSession.jsx';
+import { ZohoSessionProvider } from '../hooks/ZohoSession.jsx';
+import { useAccess } from '../../../shared/security/Access.jsx';
 import { customerGroupingLabel, customerGroupingRule } from '../domain/customerIdentity.js';
 import { defaultOrderAttention } from '../domain/orderAttention.js';
 // Identidade estável para conservar o estado dos relatórios após a primeira importação.
@@ -36,8 +37,8 @@ export function OrdersPage({ onPage, onImport, operational, source, active = tru
   );
 }
 function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
+  const { user, managed } = useAccess();
   const [expansion, setExpansion] = useState(null);
-  const { open: zohoOpen, setOpen: setZohoOpen } = useZohoSession();
   const [category, setCategory] = useState('overview');
   const [presentations, setPresentations] = useState({});
   const [attentionLimits, setAttentionLimits] = useState(defaultOrderAttention);
@@ -70,18 +71,21 @@ function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
   const changeCategory = (key) => {
     setCategory(key);
     setExpansion(null);
-    if (key === 'support') setZohoOpen(true);
   };
-  const zohoPanel =
-    category === 'support' ? (
-      <Suspense fallback={<p role="status">Preparando Zoho Desk…</p>}>
-        <SupportZohoPanel
-          active={active && category === 'support' && zohoOpen}
-          onClose={() => setZohoOpen(false)}
-          ordersData={data}
-        />
-      </Suspense>
-    ) : null;
+  const canReadZoho = Boolean(managed && user?.active && user.role === 'admin');
+  const settingsContent =
+    google.allowed || canReadZoho
+      ? ({ open }) => (
+          <>
+            <OrdersGooglePanel google={google} manualBusy={busy} inSettings />
+            {category === 'support' && canReadZoho && (
+              <Suspense fallback={<p role="status">Preparando Zoho Desk…</p>}>
+                <SupportZohoPanel active={active && open} ordersData={data} />
+              </Suspense>
+            )}
+          </>
+        )
+      : null;
   return (
     <SidePanelProvider>
       <PageLayoutProvider
@@ -146,15 +150,8 @@ function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
                   data={data}
                   load={load}
                   google={google}
-                  zohoOpen={category === 'support' && zohoOpen}
-                  onToggleZoho={() =>
-                    category === 'support'
-                      ? setZohoOpen((open) => !open)
-                      : changeCategory('support')
-                  }
+                  settingsContent={settingsContent}
                 />
-                <OrdersGooglePanel google={google} manualBusy={busy} />
-                {!data && zohoPanel}
                 {data && (
                   <>
                     <OrdersCategories
@@ -184,7 +181,6 @@ function OrdersWorkspace({ onPage, onImport, operational, source, active }) {
                       setPage={setPage}
                       setExpansion={setExpansion}
                     />
-                    {zohoPanel}
                     <Suspense
                       fallback={
                         <section className="panel" role="status">

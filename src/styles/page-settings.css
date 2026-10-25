@@ -121,6 +121,27 @@ button.page-settings-trigger:hover {
   font-family: inherit;
   font-size: 13px;
 }
+.page-settings-dialog-wide {
+  width: min(1040px, calc(100vw - 28px));
+}
+.page-settings-integrations {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+.page-settings-integrations > h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.page-settings-integrations .orders-google-panel,
+.page-settings-integrations .zoho-connection {
+  margin: 0;
+}
+.page-settings-integrations .zoho-connection {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
 .page-settings-dialog:not([open]) {
   display: none;
 }

@@ -5,7 +5,7 @@ import { Icon } from './Icon.jsx';
 import { useLayoutContext } from '../shared/layout/PageLayout.jsx';
 import { availableLayoutMode } from '../shared/layout/pageLayout.js';
 
-export function PageSettingsButton({ available = true, help = '' }) {
+export function PageSettingsButton({ available = true, help = '', children }) {
   const id = useId();
   const context = useLayoutContext();
   const dialog = useRef(),
@@ -35,12 +35,12 @@ export function PageSettingsButton({ available = true, help = '' }) {
     const timer = setTimeout(() => setFeedback(''), 5000);
     return () => clearTimeout(timer);
   }, [feedback]);
-  if (!context || (!available && !help)) return null;
+  if (!context || (!available && !help && !children)) return null;
   const { layout, definitions, activeIds, capabilities } = context;
   const items = definitions.filter(
     (item) => activeIds.includes(item.id) && Object.hasOwn(capabilities, item.title),
   );
-  if (!items.length && !help) return null;
+  if (!items.length && !help && !children) return null;
   function show() {
     setDraft(
       Object.fromEntries(
@@ -93,7 +93,7 @@ export function PageSettingsButton({ available = true, help = '' }) {
       {createPortal(
         <dialog
           ref={dialog}
-          className="page-settings-dialog page-configuration-dialog"
+          className={`page-settings-dialog page-configuration-dialog${children ? ' page-settings-dialog-wide' : ''}`}
           aria-labelledby={`${id}-title`}
           aria-describedby={`${id}-description`}
           onCancel={() => setOpen(false)}
@@ -132,6 +132,12 @@ export function PageSettingsButton({ available = true, help = '' }) {
               <section className="page-settings-help">
                 <h3>Sobre esta página</h3>
                 <p>{help}</p>
+              </section>
+            )}
+            {open && children && (
+              <section className="page-settings-integrations">
+                <h3>Fontes e atualização dos dados</h3>
+                {typeof children === 'function' ? children({ open }) : children}
               </section>
             )}
             {!!items.length && (

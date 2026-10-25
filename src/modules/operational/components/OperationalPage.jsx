@@ -397,11 +397,6 @@ export function OperationalPage({
                       </p>
                     </div>
                     <div className="page-header-actions">
-                      {page === 'operational' && google.allowed && (
-                        <button type="button" onClick={() => google.setOpen((open) => !open)}>
-                          Google Sheets
-                        </button>
-                      )}
                       {!logisticsView && (
                         <PermissionButton
                           className="header-import-action"
@@ -421,13 +416,19 @@ export function OperationalPage({
                               ? 'O Parque mostra o retrato da base operacional e pode ser cruzado com o histórico de OS. Divergências sinalizam revisão; a base original não é corrigida automaticamente.'
                               : 'A página preserva os dados originais da planilha. Os alertas indicam registros para conferência manual e não corrigem cadastros.'
                         }
-                      />
+                      >
+                        {page === 'operational' && google.allowed && (
+                          <OrdersGooglePanel
+                            google={google}
+                            manualBusy={busy}
+                            operational
+                            inSettings
+                          />
+                        )}
+                      </PageSettingsButton>
                     </div>
                     <input hidden ref={input} type="file" accept=".xlsx,.xls" onChange={load} />
                   </header>
-                  {page === 'operational' && (
-                    <OrdersGooglePanel google={google} manualBusy={busy} operational />
-                  )}
                   {!logisticsView && data && (analysis || menuCategory !== 'overview') && (
                     <PagePersonalization
                       scope={scopeLabel}

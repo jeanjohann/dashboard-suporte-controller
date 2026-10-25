@@ -1,7 +1,8 @@
 /* Estrutura comum; cada módulo continua responsável por selecionar seus próprios registros. */
 .filter-workspace {
+  display: block;
   min-width: 0;
-  padding: 12px 14px;
+  padding: 7px 10px;
   margin: 0 0 16px;
   border: 1px solid var(--ui-border);
   border-radius: 10px;
@@ -21,41 +22,112 @@
 }
 .filter-workspace-heading {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  justify-content: space-between;
-  margin-bottom: 8px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
 }
 .filter-workspace-title {
-  grid-column: 1;
-  grid-row: 1;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  white-space: nowrap;
 }
 .filter-workspace-heading > .info-note {
-  grid-column: 2;
-  grid-row: 1;
+  display: none;
 }
 .filter-workspace-period {
-  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
 }
 .filter-workspace-title > span {
   color: var(--ui-muted);
 }
 .filter-workspace .period-filter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 6px;
   border: 0;
   padding: 0;
-  margin: 0 0 8px;
+  margin: 0;
   border-radius: 0;
   background: transparent;
+  white-space: nowrap;
 }
-.filter-workspace-editor.compact-filters {
+.filter-workspace .period-filter > strong {
+  margin-right: 2px;
+}
+.filter-workspace .period-filter label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+.filter-workspace .period-filter input {
+  width: 122px;
+  min-height: 30px;
+  padding: 4px 6px;
+  font-size: 11px;
+}
+.filter-options-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: #0868c5;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.filter-options-trigger:hover {
+  background: #07539c;
+  color: #ffffff;
+}
+.filter-options-trigger span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: #ffffff2b;
+  font-size: 10px;
+}
+.filter-options-dialog {
+  width: min(900px, calc(100vw - 28px));
+  max-height: min(88dvh, 820px);
+}
+.filter-options-body {
+  display: grid;
+  gap: 10px;
+}
+.filter-options-body .saved-views {
+  margin: 0;
+  padding: 0 0 8px;
+  border-top: 0;
+  border-bottom: 1px solid var(--ui-line);
+}
+.filter-options-body .filter-workspace-editor.compact-filters {
   padding: 0;
   margin: 0;
 }
-.filter-workspace-editor > summary {
+.filter-options-body .filter-workspace-editor > summary {
   cursor: pointer;
   font-size: 12px;
-  padding: 6px 0;
+  padding: 7px 0;
 }
-.filter-workspace-fields {
+.filter-options-body .filter-workspace-fields {
   padding: 8px 0 4px;
 }
 .customer-grouping-controls {
@@ -99,43 +171,36 @@
   padding: 5px 8px;
   font-size: 11px;
 }
-.filter-workspace-summary {
+.filter-options-body .filter-workspace-summary {
   border-top: 1px solid var(--ui-line);
   padding-top: 9px;
   margin-top: 5px;
   justify-content: space-between;
 }
-.filter-workspace-status {
+.filter-options-body .filter-workspace-status {
   flex: 1 1 190px;
 }
 @media (min-width: 1300px) {
-  .filter-workspace-heading:has(.filter-workspace-period) {
-    grid-template-columns: minmax(0, 1fr) auto 22px;
-  }
   .filter-workspace-heading > .filter-workspace-period {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .filter-workspace-heading:has(.filter-workspace-period) > .info-note {
-    grid-column: 3;
+    min-width: 0;
   }
   .filter-workspace-heading .period-filter {
     margin: 0;
   }
 }
-.filter-workspace-status > span {
+.filter-options-body .filter-workspace-status > span {
   color: var(--ui-muted);
 }
-.filter-workspace-actions {
+.filter-options-body .filter-workspace-actions {
   margin-left: auto;
 }
-.filter-workspace-actions button {
+.filter-options-body .filter-workspace-actions button {
   padding: 6px 8px;
   font-size: 11px;
   background: var(--ui-soft);
   color: var(--ui-ink);
 }
-.filter-workspace button.filter-chip {
+.filter-options-body button.filter-chip {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -155,12 +220,12 @@
 .filter-chip > span:last-child {
   font-size: 15px;
 }
-.filter-workspace-notice {
+.filter-options-body .filter-workspace-notice {
   margin-top: 8px;
   color: var(--ui-muted);
   font-size: 11px;
 }
-.filter-workspace-source {
+.filter-options-body .filter-workspace-source {
   border-top: 1px solid var(--ui-line);
   margin-top: 9px;
   padding-top: 8px;
@@ -168,7 +233,7 @@
   font-size: 11px;
   overflow-wrap: anywhere;
 }
-.filter-workspace-source .source {
+.filter-options-body .filter-workspace-source .source {
   margin: 0;
   padding: 0;
 }
@@ -196,6 +261,25 @@
   .filter-workspace-actions {
     margin-left: 0;
     width: 100%;
+  }
+  .filter-workspace-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .filter-workspace-title > span,
+  .filter-workspace-heading > .info-note {
+    display: none;
+  }
+  .filter-workspace-period {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+  .filter-workspace .period-filter {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .filter-workspace .period-filter input {
+    width: 118px;
   }
   .filter-chip > span:first-child {
     max-width: min(245px, 65vw);

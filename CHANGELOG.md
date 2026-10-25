@@ -1,3 +1,8 @@
+## 0.69.32 — 25/10/2026
+
+- Compacta a faixa de filtros das análises e recolhe fontes, contagem e controles avançados em opções secundárias.
+- Leva as conexões Google Sheets e Zoho Desk da página de Ordens de Serviço para Configurações, mantendo importação rápida disponível.
+
 ## 0.69.31 — 25/10/2026
 
 - Padroniza o acesso às configurações com botão azul identificado por texto, em vez de ícone isolado.

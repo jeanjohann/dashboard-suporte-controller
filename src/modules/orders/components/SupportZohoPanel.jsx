@@ -21,14 +21,6 @@ export function SupportZohoPanel({ active, onClose, ordersData }) {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const pending = useRef(null);
-  const section = useRef(null);
-  useEffect(() => {
-    if (active && allowed)
-      section.current?.scrollIntoView({
-        block: 'start',
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      });
-  }, [active, allowed]);
   useEffect(() => {
     setBusy(false);
     return () => {
@@ -73,7 +65,6 @@ export function SupportZohoPanel({ active, onClose, ordersData }) {
   return (
     <section
       id="zoho-desk"
-      ref={section}
       className="orders-google-panel zoho-connection"
       aria-label="Zoho Desk · atividades e tempos"
     >

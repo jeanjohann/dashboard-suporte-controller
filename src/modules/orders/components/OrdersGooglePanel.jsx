@@ -2,19 +2,21 @@
 import React from 'react';
 import { Icon } from '../../../components/Icon.jsx';
 
-export function OrdersGooglePanel({ google, manualBusy, operational = false }) {
-  if (!google.allowed || !google.open) return null;
+export function OrdersGooglePanel({ google, manualBusy, operational = false, inSettings = false }) {
+  if (!google.allowed || (!google.open && !inSettings)) return null;
   return (
     <section className="orders-google-panel" aria-label="Conexão Google Sheets">
       <div className="orders-google-heading">
         <strong>Google Sheets · piloto {operational ? 'do Operacional' : 'de OS'}</strong>
-        <button
-          type="button"
-          aria-label="Fechar conexão Google Sheets"
-          onClick={() => google.setOpen(false)}
-        >
-          <Icon name="close" />
-        </button>
+        {!inSettings && (
+          <button
+            type="button"
+            aria-label="Fechar conexão Google Sheets"
+            onClick={() => google.setOpen(false)}
+          >
+            <Icon name="close" />
+          </button>
+        )}
       </div>
       <p>
         {google.status?.configured
