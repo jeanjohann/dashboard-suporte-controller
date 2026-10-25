@@ -29,7 +29,9 @@ export function FilterPanel({
       </div>
       <SavedViews config={savedView} />
       <details className="filter-workspace-editor compact-filters" key={scope}>
-        <summary>Filtros da página</summary>
+        <summary>
+          Filtros da página · {chips.length ? `${chips.length} ativo(s)` : 'nenhum adicional'}
+        </summary>
         <div className="filter-workspace-fields">{children}</div>
       </details>
       <div className="filter-workspace-summary">

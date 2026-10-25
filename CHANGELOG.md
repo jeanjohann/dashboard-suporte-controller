@@ -1,3 +1,9 @@
+## 0.69.16 — 24/10/2026
+
+- Uniformiza filtros recolhíveis e mostra quantos recortes estão ativos nas categorias que usam o painel compartilhado.
+- Padroniza espaçamentos e tamanhos dos grupos de ações no modo compacto e mantém os cabeçalhos das tabelas visíveis durante a rolagem.
+- Ajusta o ritmo de filtros, resumos e tabelas sem ocultar colunas nem reduzir a legibilidade dos valores.
+
 ## 0.69.15 — 24/10/2026
 
 - Define o espaçamento compacto como padrão em todos os módulos do sistema, aproximando o conteúdo e liberando mais área útil.

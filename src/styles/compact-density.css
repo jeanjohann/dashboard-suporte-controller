@@ -120,3 +120,72 @@ html[data-density='compact'] .my-dashboard-page .md-widget {
     grid-column: 1 / -1;
   }
 }
+/* Organização global compacta: padrões consistentes para filtros, ações e tabelas. */
+html[data-density='compact'] .app > main .filter-workspace {
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+html[data-density='compact'] .app > main .filter-workspace-editor > summary,
+html[data-density='compact'] .app > main details > summary {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  line-height: 1.4;
+}
+html[data-density='compact'] .app > main .filter-workspace-fields {
+  padding-top: 6px;
+  padding-bottom: 2px;
+}
+html[data-density='compact'] .app > main .filter-workspace-summary {
+  padding-top: 7px;
+  margin-top: 3px;
+  gap: 6px 10px;
+}
+html[data-density='compact'] .app > main .page-header-actions,
+html[data-density='compact'] .app > main .section-actions,
+html[data-density='compact'] .app > main .report-downloads,
+html[data-density='compact'] .app > main .toolbar {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+html[data-density='compact'] .app > main .report-downloads {
+  margin: 10px 0;
+}
+html[data-density='compact'] .app > main .toolbar button,
+html[data-density='compact'] .app > main .page-header-actions button,
+html[data-density='compact'] .app > main .section-actions button,
+html[data-density='compact'] .app > main .report-downloads button {
+  min-height: 30px;
+  padding: 6px 9px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+html[data-density='compact'] .app > main .toolbar input:not([type='checkbox']),
+html[data-density='compact'] .app > main .toolbar select,
+html[data-density='compact'] .app > main .page-header-actions input,
+html[data-density='compact'] .app > main .page-header-actions select {
+  min-height: 32px;
+  padding: 6px 8px;
+}
+html[data-density='compact'] .app > main .table-scroll th,
+html[data-density='compact'] .app > main .table-scroll td {
+  padding: 7px 9px;
+}
+html[data-density='compact'] .app > main .table-scroll th {
+  line-height: 1.35;
+}
+html[data-density='compact'] .app > main .table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--ui-soft);
+  box-shadow: inset 0 -1px var(--ui-border);
+}
+@media (max-width: 600px) {
+  html[data-density='compact'] .app > main .toolbar button,
+  html[data-density='compact'] .app > main .page-header-actions button,
+  html[data-density='compact'] .app > main .section-actions button,
+  html[data-density='compact'] .app > main .report-downloads button {
+    min-height: 38px;
+  }
+}
