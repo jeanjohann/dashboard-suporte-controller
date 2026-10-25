@@ -403,23 +403,37 @@ function DrilldownDialog({ detail, onClose }) {
     </dialog>
   );
 }
-function ServiceChartDialog({ open, onClose, services, period }) {
+function ServiceChartDialog({ open, onClose, services, clients, period }) {
   const dialog = useRef(null);
   useEffect(() => {
     if (open && dialog.current && !dialog.current.open) dialog.current.showModal();
   }, [open]);
   if (!open) return null;
-  const rows = (services || []).map((service) => [
+  const serviceRows = (services || []).map((service) => [
+    'Serviço',
+    '',
     service.label,
     service.executed,
     service.scheduled,
   ]);
+  const clientRows = (clients || []).map((client) => [
+    'Cliente',
+    client.label,
+    client.services || '',
+    client.executed,
+    client.scheduled,
+  ]);
+  const exportRows = [
+    ['Visão', 'Cliente', 'Serviço · motivo', 'Execuções efetivas', 'Agendamentos'],
+    ...serviceRows,
+    ...clientRows,
+  ];
   async function exportCsv() {
     if (!(await authorizeAction('export'))) return;
     await download(
-      csv([['Serviço · motivo', 'Execuções efetivas', 'Agendamentos'], ...rows]),
+      csv(exportRows),
       'text/csv;charset=utf-8',
-      'indicadores-suporte-servicos.csv',
+      'indicadores-suporte-servicos-e-clientes.csv',
     );
   }
   return (
@@ -432,9 +446,10 @@ function ServiceChartDialog({ open, onClose, services, period }) {
       <header>
         <div>
           <span className="si-dialog-kicker">Gráfico detalhado · OS</span>
-          <h2 id="si-service-chart-title">Execuções por serviço</h2>
+          <h2 id="si-service-chart-title">Serviços e clientes atendidos</h2>
           <p>
-            {date(period.start)} a {date(period.end)} · Tipo de Serviço e Motivo
+            {date(period.start)} a {date(period.end)} · execução efetiva, agenda e composição por
+            cliente
           </p>
         </div>
         <div className="si-service-chart-actions">
@@ -466,15 +481,36 @@ function ServiceChartDialog({ open, onClose, services, period }) {
           />
         </section>
         <section>
-          <h3>Execuções e agendamentos</h3>
+          <h3>Clientes atendidos · top 5</h3>
+          <Chart
+            compact
+            title="Execuções efetivas por cliente · OS"
+            items={(clients || [])
+              .filter((client) => client.executed > 0)
+              .slice(0, 5)
+              .map((client) => ({
+                label: client.label,
+                value: client.executed,
+                caption: `${number(client.scheduled)} agendados`,
+              }))}
+          />
+          <small>Ranking por execuções efetivas; agendamentos aparecem como referência.</small>
+        </section>
+        <section className="si-service-client-breakdown">
+          <h3>Serviços por cliente</h3>
           <Table
-            headers={['Serviço · motivo', 'Execuções', 'Agendamentos']}
-            rows={rows}
+            headers={['Cliente', 'Agendamentos', 'Execuções efetivas', 'Serviços (exec. / agend.)']}
+            rows={(clients || []).map((client) => [
+              client.label,
+              client.scheduled,
+              client.executed,
+              <ServiceList value={client.services} />,
+            ])}
             numericColumns={[1, 2]}
           />
           <small>
-            Improdutivas aparecem na agenda; não contam como execução efetiva. Linhas correspondem
-            aos registros elegíveis deste recorte.
+            Cada serviço combina Tipo de Serviço e Motivo. Visitas improdutivas aparecem na agenda e
+            ficam fora das execuções efetivas.
           </small>
         </section>
       </div>
@@ -1570,7 +1606,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         className="si-chart-expand"
                                         onClick={() => setServiceChartOpen(true)}
                                       >
-                                        Ampliar gráfico
+                                        Ampliar seção
                                       </button>
                                     </div>
                                     <Chart
@@ -1831,6 +1867,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
           open={serviceChartOpen}
           onClose={() => setServiceChartOpen(false)}
           services={hasOrders ? orders.services : []}
+          clients={hasOrders ? orders.clients : []}
           period={period}
         />
       </div>

@@ -1,3 +1,9 @@
+## 0.69.26 — 25/10/2026
+
+- Desmonta o conteúdo pesado de relatórios recolhidos ou de páginas inativas, reduzindo elementos e gráficos mantidos no DOM durante a navegação.
+- Alinha as grades de serviços executados e clientes atendidos no Indicadores do Suporte.
+- Amplia a visualização detalhada para incluir rankings de serviços e clientes e a composição dos serviços por cliente.
+
 ## 0.69.25 — 25/10/2026
 
 - Aperfeiçoa a densidade compacta global, com controles menores em telas amplas e alvos adequados em dispositivos móveis.

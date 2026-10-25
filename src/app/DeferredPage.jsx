@@ -3,6 +3,7 @@ import React, { Component, Suspense, useEffect, useState } from 'react';
 import { Navigation } from './Navigation.jsx';
 import { SidePanelProvider } from './SidePanel.jsx';
 import { RetainedContent } from '../components/RetainedContent.jsx';
+import { PageActivityProvider } from '../shared/layout/PageActivity.jsx';
 
 /** Mantém o menu disponível durante o carregamento ou uma falha isolada do módulo. */
 function PageStatus({ page, onPage, failed = false }) {
@@ -71,11 +72,13 @@ export function DeferredPage({
   if (!allowed || (!active && (!keepMounted || !visited))) return null;
   return (
     <div hidden={!active}>
-      <PageBoundary page={page} onPage={onPage}>
-        <Suspense fallback={<PageStatus page={page} onPage={onPage} />}>
-          <RetainedContent active={active || backgroundActive}>{children}</RetainedContent>
-        </Suspense>
-      </PageBoundary>
+      <PageActivityProvider active={active}>
+        <PageBoundary page={page} onPage={onPage}>
+          <Suspense fallback={<PageStatus page={page} onPage={onPage} />}>
+            <RetainedContent active={active || backgroundActive}>{children}</RetainedContent>
+          </Suspense>
+        </PageBoundary>
+      </PageActivityProvider>
     </div>
   );
 }

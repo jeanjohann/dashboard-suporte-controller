@@ -6,7 +6,6 @@ import { PermissionButton } from '../shared/security/Access.jsx';
 import { authorizeAction } from '../shared/security/accessClient.js';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { InfoNote } from './InfoNote.jsx';
-import { RetainedContent } from './RetainedContent.jsx';
 import { usePrintMode, PrintPreparationContext } from '../shared/charts/usePrintMode.js';
 import { flushSync } from 'react-dom';
 import { alignHelp, helpChildren } from './HelpLayout.jsx';
@@ -16,6 +15,7 @@ import { availableLayoutMode } from '../shared/layout/pageLayout.js';
 import { useReportStory, StoryPortal, StoryViewControl } from '../shared/layout/ReportStories.jsx';
 import { reportPrintStyles } from '../shared/export/reportPrintStyles.js';
 import { printContextEntries } from '../shared/export/printContext.js';
+import { usePageActivity } from '../shared/layout/PageActivity.jsx';
 export const PrintContext = createContext({});
 export const HiddenSectionsContext = createContext([]);
 export const ExpansionContext = createContext(null);
@@ -37,7 +37,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
     setCompact(mode === 'summary');
   }, [preference, hasSummary, defaultOpen]);
   const expansion = useContext(ExpansionContext);
-  // Conteúdo permanece montado ao recolher: gráficos, filtros e seleção não são reiniciados.
+  // A apresentação da seção permanece; o conteúdo pesado só existe enquanto está disponível.
   useEffect(() => {
     if (expansion && typeof expansion.open === 'boolean') {
       setOpen(expansion.open);
@@ -47,6 +47,7 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
   const section = useRef(),
     context = useContext(PrintContext);
   const hiddenSections = useContext(HiddenSectionsContext);
+  const pageActive = usePageActivity();
   const available = visible && !hiddenSections.includes(title) && preference?.visible !== false;
   const recordPresentation = layout?.recordPresentation;
   useEffect(() => {
@@ -56,6 +57,15 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
     );
   }, [recordPresentation, title, open, compact, hasSummary]);
   const story = useReportStory(title, available);
+  const contentActive = Boolean(
+    printing ||
+    preparingPrint ||
+    (pageActive &&
+      available &&
+      open &&
+      !(hasSummary && compact) &&
+      (!story || story.active === title)),
+  );
   // Escolher uma visualização é uma abertura explícita; o modo inicial salvo continua valendo ao entrar.
   useEffect(() => {
     if (story?.revision && story.active === title) setOpen(true);
@@ -197,17 +207,8 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
         <div className="section-body" hidden={!open || (hasSummary && compact)}>
           <div className="section-content" ref={section}>
             {description && <span className="info-print">{description}</span>}
-            <PrintPreparationContext.Provider value={printing || preparingPrint}>
-              <RetainedContent
-                active={
-                  printing ||
-                  preparingPrint ||
-                  (available &&
-                    open &&
-                    !(hasSummary && compact) &&
-                    (!story || story.active === title))
-                }
-              >
+            {contentActive && (
+              <PrintPreparationContext.Provider value={printing || preparingPrint}>
                 {content.map((child, index) =>
                   notes.includes(child) ? (
                     <span key={`note-${index}`} className="info-print">
@@ -217,8 +218,8 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
                     alignHelp(child)
                   ),
                 )}
-              </RetainedContent>
-            </PrintPreparationContext.Provider>
+              </PrintPreparationContext.Provider>
+            )}
           </div>
         </div>
       </section>
