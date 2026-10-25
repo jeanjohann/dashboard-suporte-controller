@@ -1,3 +1,8 @@
+## 0.69.22 — 25/10/2026
+
+- Abre o gráfico de serviços em modal com detalhamento, impressão e exportação CSV e SVG.
+- Amplia a coluna de serviços e apresenta cada serviço do cliente em linha própria, com fonte de 9 px e mais espaçamento.
+
 ## 0.69.21 — 25/10/2026
 
 - Adiciona Ocean Depths, Modern Minimalist, Forest Canopy e Botanical Garden como opções de aparência.

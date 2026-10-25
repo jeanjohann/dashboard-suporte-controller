@@ -123,6 +123,31 @@ function Table({ headers, rows, numericColumns = [] }) {
     </div>
   );
 }
+function ServiceList({ value }) {
+  const services = String(value || '')
+    .split('; ')
+    .filter(Boolean)
+    .map((entry) => {
+      const match = entry.match(/^(.*): (\d+)\/(\d+)$/);
+      return match
+        ? { label: match[1], executed: Number(match[2]), scheduled: Number(match[3]) }
+        : { label: entry, executed: null, scheduled: null };
+    });
+  return (
+    <ul className="si-client-service-list" aria-label="Serviços por cliente">
+      {services.map((service) => (
+        <li key={service.label}>
+          <span>{service.label}</span>
+          {service.executed != null && (
+            <strong title="Execuções efetivas / agendamentos">
+              {service.executed}/{service.scheduled}
+            </strong>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
 function ClosedTicketDetails({ rows }) {
   const [page, setPage] = useState(0);
   const last = Math.max(0, Math.ceil(rows.length / 25) - 1),
@@ -378,6 +403,79 @@ function DrilldownDialog({ detail, onClose }) {
     </dialog>
   );
 }
+function ServiceChartDialog({ open, onClose, services, period }) {
+  const dialog = useRef(null);
+  useEffect(() => {
+    if (open && dialog.current && !dialog.current.open) dialog.current.showModal();
+  }, [open]);
+  if (!open) return null;
+  const rows = (services || []).map((service) => [
+    service.label,
+    service.executed,
+    service.scheduled,
+  ]);
+  async function exportCsv() {
+    if (!(await authorizeAction('export'))) return;
+    await download(
+      csv([['Serviço · motivo', 'Execuções efetivas', 'Agendamentos'], ...rows]),
+      'text/csv;charset=utf-8',
+      'indicadores-suporte-servicos.csv',
+    );
+  }
+  return (
+    <dialog
+      ref={dialog}
+      className="si-service-chart-dialog"
+      aria-labelledby="si-service-chart-title"
+      onClose={onClose}
+    >
+      <header>
+        <div>
+          <span className="si-dialog-kicker">Gráfico detalhado · OS</span>
+          <h2 id="si-service-chart-title">Execuções por serviço</h2>
+          <p>
+            {date(period.start)} a {date(period.end)} · Tipo de Serviço e Motivo
+          </p>
+        </div>
+        <div className="si-service-chart-actions">
+          <button type="button" onClick={() => window.print()}>
+            Imprimir
+          </button>
+          <button type="button" onClick={exportCsv}>
+            Exportar CSV
+          </button>
+          <button type="button" onClick={() => dialog.current?.close()}>
+            Fechar
+          </button>
+        </div>
+      </header>
+      <div className="si-service-chart-content">
+        <section>
+          <h3>Execuções efetivas por serviço e motivo</h3>
+          <Chart
+            compact
+            title="Execuções efetivas por serviço e motivo"
+            items={(services || [])
+              .filter((service) => service.executed > 0)
+              .map((service) => ({ label: service.label, value: service.executed }))}
+          />
+        </section>
+        <section>
+          <h3>Execuções e agendamentos</h3>
+          <Table
+            headers={['Serviço · motivo', 'Execuções', 'Agendamentos']}
+            rows={rows}
+            numericColumns={[1, 2]}
+          />
+          <small>
+            Improdutivas aparecem na agenda; não contam como execução efetiva. Linhas correspondem
+            aos registros elegíveis deste recorte.
+          </small>
+        </section>
+      </div>
+    </dialog>
+  );
+}
 export function SupportIndicatorsPage({ onPage, active = true }) {
   const { density, selectDensity } = useTheme();
   const { user, managed } = useAccess(),
@@ -388,6 +486,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [agentId, setAgent] = useState(''),
     [ownZoho, setOwnZoho] = useState(null),
     [drilldown, setDrilldown] = useState(null),
+    [serviceChartOpen, setServiceChartOpen] = useState(false),
     [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(0),
     [error, setError] = useState('');
@@ -1455,11 +1554,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                 )}
                                 <div className="si-chart-grid">
                                   <div>
-                                    <h4>
-                                      {viewMode === 'editorial'
-                                        ? '1 · O que foi executado?'
-                                        : 'Serviços executados · OS'}
-                                    </h4>
+                                    <div className="si-chart-subheading">
+                                      <h4>
+                                        {viewMode === 'editorial'
+                                          ? '1 · O que foi executado?'
+                                          : 'Serviços executados · OS'}
+                                      </h4>
+                                      <button
+                                        type="button"
+                                        className="si-chart-expand"
+                                        onClick={() => setServiceChartOpen(true)}
+                                      >
+                                        Ampliar gráfico
+                                      </button>
+                                    </div>
                                     <Chart
                                       compact
                                       title="Execuções efetivas por serviço · OS"
@@ -1522,7 +1630,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               d.label,
                                               d.scheduled,
                                               d.executed,
-                                              d.services,
+                                              <ServiceList value={d.services} />,
                                             ])
                                         : []
                                     }
@@ -1544,7 +1652,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                           d.label,
                                           d.scheduled,
                                           d.executed,
-                                          d.services,
+                                          <ServiceList value={d.services} />,
                                         ])}
                                       />
                                     </details>
@@ -1714,6 +1822,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
           )}
         </main>
         <DrilldownDialog detail={drilldown} onClose={() => setDrilldown(null)} />
+        <ServiceChartDialog
+          open={serviceChartOpen}
+          onClose={() => setServiceChartOpen(false)}
+          services={hasOrders ? orders.services : []}
+          period={period}
+        />
       </div>
     </SidePanelProvider>
   );
