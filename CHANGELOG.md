@@ -1,3 +1,7 @@
+## 0.69.34 — 25/10/2026
+
+- Reposiciona os ícones de ajuda junto aos títulos dos painéis e libera espaço para os botões de ação, evitando sobreposição e corte em telas menores.
+
 ## 0.69.33 — 25/10/2026
 
 - Padroniza estados de origem e última leitura entre OS, Operacional, Indicadores Suporte e Monitoramento.

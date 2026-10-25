@@ -187,7 +187,7 @@ summary:focus-visible {
 .report-heading {
   position: relative;
   align-items: center;
-  padding-right: 60px;
+  padding-right: 22px;
 }
 .report-heading-actions {
   display: flex;
@@ -195,19 +195,13 @@ summary:focus-visible {
   gap: 6px;
   margin-left: auto;
 }
-.report-heading-actions > .info-note {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 16px;
+.report-title > .info-note {
+  flex: 0 0 auto;
   margin: 0;
 }
 @media (max-width: 760px) {
   .report-heading {
-    padding-right: 50px;
-  }
-  .report-heading-actions > .info-note {
-    right: 10px;
+    padding-right: 14px;
   }
 }
 .table-scroll {

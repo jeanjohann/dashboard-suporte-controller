@@ -158,6 +158,14 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
           <div className="report-title">
             <h2>{story?.title || title}</h2>
             {story && <StoryViewControl story={story} title={title} />}
+            {(description || notes.length > 0) && (
+              <InfoNote label={`Regras de ${title}`}>
+                {description && <p>{description}</p>}
+                {notes.map((note, index) => (
+                  <p key={index}>{note.props.children}</p>
+                ))}
+              </InfoNote>
+            )}
           </div>
           <div className="report-heading-actions">
             {hasSummary && (
@@ -180,14 +188,6 @@ export function Section({ title, visible = true, defaultOpen = true, summary, he
             >
               {open ? 'Recolher' : 'Abrir'}
             </button>
-            {(description || notes.length > 0) && (
-              <InfoNote label={`Regras de ${title}`}>
-                {description && <p>{description}</p>}
-                {notes.map((note, index) => (
-                  <p key={index}>{note.props.children}</p>
-                ))}
-              </InfoNote>
-            )}
             <PermissionButton action="export" onClick={print}>
               Imprimir / Salvar PDF
             </PermissionButton>
