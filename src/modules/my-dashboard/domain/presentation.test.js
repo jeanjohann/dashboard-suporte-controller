@@ -44,6 +44,7 @@ test('formatos respeitam a natureza do indicador; roscas não somam agentes sobr
     'chart',
     'columns',
     'line',
+    'area',
     'table',
   ]);
   assert(metricKinds(dashboardMetric('orders.types')).includes('donut'));

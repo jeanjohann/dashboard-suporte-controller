@@ -1,3 +1,8 @@
+## 0.69.20 — 24/10/2026
+
+- Adiciona gráfico de área para séries mensais no Meu Dashboard, com suporte a comparação de períodos compatíveis.
+- Mantém ausências como lacunas visuais e limita a opção a dados temporais, sem aplicá-la a rankings categóricos.
+
 ## 0.69.19 — 24/10/2026
 
 - Compacta o Meu Dashboard em telas amplas: quatro cartões ou três gráficos médios por linha, com controles e margens menores.

@@ -6,6 +6,7 @@ export const kindLabels = {
   chart: 'Barras horizontais',
   columns: 'Colunas',
   line: 'Linhas',
+  area: 'Área',
   donut: 'Rosca',
   table: 'Tabela',
 };
@@ -27,7 +28,7 @@ export function metricKinds(metric, query) {
       : [
           'chart',
           'columns',
-          ...(q.group === 'month' ? ['line'] : []),
+          ...(q.group === 'month' ? ['line', 'area'] : []),
           ...(q.measure === 'rows' ? ['donut'] : []),
           'table',
         ];
@@ -36,7 +37,7 @@ export function metricKinds(metric, query) {
   return [
     'chart',
     'columns',
-    ...(metric.id === 'orders.months' ? ['line'] : []),
+    ...(metric.id === 'orders.months' ? ['line', 'area'] : []),
     ...(partitions.has(metric.id) ? ['donut'] : []),
     'table',
   ];

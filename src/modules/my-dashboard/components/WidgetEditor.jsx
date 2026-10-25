@@ -185,7 +185,7 @@ export function WidgetEditor({
                     ...rest,
                     kind,
                     ...(kind === 'card' && companions ? { companions } : {}),
-                    ...(['chart', 'columns', 'line', 'table'].includes(kind) && comparison
+                    ...(['chart', 'columns', 'line', 'area', 'table'].includes(kind) && comparison
                       ? { comparison }
                       : {}),
                   });
@@ -440,7 +440,7 @@ export function WidgetEditor({
           </fieldset>
         )}
         {!nested &&
-          ['chart', 'columns', 'line', 'table'].includes(draft.kind) &&
+          ['chart', 'columns', 'line', 'area', 'table'].includes(draft.kind) &&
           metric.kinds.includes('chart') && (
             <fieldset>
               <legend>Comparar duas séries</legend>

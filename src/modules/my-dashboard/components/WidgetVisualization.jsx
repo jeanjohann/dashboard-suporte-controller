@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
   BarChart,
   Bar,
+  AreaChart,
+  Area,
   LineChart,
   Line,
   PieChart,
@@ -145,7 +147,7 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
       ? Math.max(1, Math.floor((size.height - 34) / (comparison ? 40 : 27)))
       : Math.max(1, Math.floor((size.width - 90) / 110));
   const visible =
-    widget.kind === 'line'
+    widget.kind === 'line' || widget.kind === 'area'
       ? rows
       : rows.slice(0, Math.min(expanded ? 40 : 20, Math.max(1, capacity)));
   const axisWidth = Math.max(65, Math.min(170, size.width * 0.29));
@@ -196,7 +198,7 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
         <>
           <XAxis
             dataKey="label"
-            interval={widget.kind === 'line' ? 'preserveStartEnd' : 0}
+            interval={widget.kind === 'line' || widget.kind === 'area' ? 'preserveStartEnd' : 0}
             minTickGap={24}
             height={46}
             tick={{ fontSize: 11, fill: 'var(--md-muted)' }}
@@ -278,6 +280,32 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
                 />
               )}
             </LineChart>
+          ) : widget.kind === 'area' ? (
+            <AreaChart {...chartProps}>
+              {axes}
+              <Area
+                dataKey="value"
+                type="monotone"
+                stroke="var(--md-accent)"
+                strokeWidth={2}
+                fill="var(--md-accent)"
+                fillOpacity={0.2}
+                connectNulls={false}
+                isAnimationActive={false}
+              />
+              {comparison && (
+                <Area
+                  dataKey="comparison"
+                  type="monotone"
+                  stroke="var(--md-compare)"
+                  strokeWidth={2}
+                  fill="var(--md-compare)"
+                  fillOpacity={0.12}
+                  connectNulls={false}
+                  isAnimationActive={false}
+                />
+              )}
+            </AreaChart>
           ) : (
             <BarChart {...chartProps} layout={widget.kind === 'chart' ? 'vertical' : 'horizontal'}>
               {axes}

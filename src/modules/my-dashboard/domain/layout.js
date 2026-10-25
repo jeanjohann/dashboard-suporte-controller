@@ -126,7 +126,7 @@ function checkWidget(widget, nested = false) {
   if (widget.comparison !== undefined) {
     checkWidget(widget.comparison, true);
     if (
-      !['chart', 'columns', 'line', 'table'].includes(widget.kind) ||
+      !['chart', 'columns', 'line', 'area', 'table'].includes(widget.kind) ||
       !canCompare(widget, widget.comparison) ||
       widget.id === widget.comparison.id
     )
