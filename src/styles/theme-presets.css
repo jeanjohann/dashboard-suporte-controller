@@ -1,4 +1,4 @@
-/* Claro, Grafite e Azul, Lima e Grafite; contraste e semântica preservados. */
+/* Temas do sistema e paletas Theme Factory; contraste e semântica preservados. */
 /* Somente tela: impressão mantém os tokens próprios definidos em theme.css. */
 @media screen {
   :root[data-theme='light'] {
@@ -139,6 +139,194 @@
     --chart-rose: #efacd3;
     --chart-other: #a9c6a0;
     --chart-negative: #f49cab;
+  }
+
+  :root[data-theme='ocean'] {
+    color-scheme: dark;
+    --brand-logo-url: url('/brand/addlog-dark.svg');
+    --brand-symbol-url: url('/brand/addlog-symbol-white.svg');
+    --brand-surface: transparent;
+    --ui-background: #14212c;
+    --ui-surface: #1a2a38;
+    --ui-soft: #253847;
+    --ui-ink: #f1f7f6;
+    --ui-muted: #b5c7ce;
+    --ui-border: #3b5665;
+    --ui-line: #304754;
+    --ui-shadow: #07131c55;
+    --ui-button-bg: #304857;
+    --ui-button-text: #f4fbfa;
+    --ui-button-hover: #3d5d6d;
+    --ui-accent: #43aaa5;
+    --ui-on-accent: #092b2b;
+    --ui-accent-hover: #60c3bd;
+    --ui-accent-ink: #91ded9;
+    --ui-accent-soft: #203d49;
+    --ui-accent-border: #397d80;
+    --ui-link: #a8dadc;
+    --ui-coral: #f2a17d;
+    --ui-success-bg: #183c38;
+    --ui-success-ink: #8ce0c3;
+    --ui-success-border: #367e6d;
+    --ui-warning-bg: #453a24;
+    --ui-warning-ink: #f0cf87;
+    --ui-error-bg: #482b35;
+    --ui-error-ink: #ffb0bd;
+    --ui-info-bg: #203c54;
+    --ui-info-ink: #b6d9f2;
+    --ui-violet-bg: #352d4c;
+    --ui-violet-ink: #d1b5f4;
+    --chart-primary: #45b8b0;
+    --chart-blue: #75b9ed;
+    --chart-teal: #8adbd3;
+    --chart-purple: #c09ce8;
+    --chart-coral: #f19a79;
+    --chart-slate: #a9c3d0;
+    --chart-amber: #e9c66c;
+    --chart-rose: #ee91b7;
+    --chart-other: #abd58a;
+    --chart-negative: #ff8295;
+  }
+
+  :root[data-theme='modern'] {
+    color-scheme: light;
+    --brand-logo-url: url('/brand/addlog.svg');
+    --brand-symbol-url: url('/brand/addlog-symbol.svg');
+    --brand-surface: transparent;
+    --ui-background: #eef1f2;
+    --ui-surface: #ffffff;
+    --ui-soft: #f2f4f5;
+    --ui-ink: #29343b;
+    --ui-muted: #64737c;
+    --ui-border: #d5dde1;
+    --ui-line: #e5e9eb;
+    --ui-shadow: #293b3310;
+    --ui-button-bg: #36454f;
+    --ui-button-text: #ffffff;
+    --ui-button-hover: #4b5e69;
+    --ui-accent: #4a6474;
+    --ui-on-accent: #ffffff;
+    --ui-accent-hover: #3d5666;
+    --ui-accent-ink: #3d596b;
+    --ui-accent-soft: #e6ecef;
+    --ui-accent-border: #b8c7ce;
+    --ui-link: #3d647c;
+    --ui-coral: #9f6655;
+    --ui-success-bg: #e8f1ec;
+    --ui-success-ink: #31654b;
+    --ui-success-border: #b2cdbd;
+    --ui-warning-bg: #f6efdf;
+    --ui-warning-ink: #785a20;
+    --ui-error-bg: #f8eaec;
+    --ui-error-ink: #9c4053;
+    --ui-info-bg: #e8f1f8;
+    --ui-info-ink: #345d7b;
+    --ui-violet-bg: #eeebf5;
+    --ui-violet-ink: #6e568e;
+    --chart-primary: #36454f;
+    --chart-blue: #4b7390;
+    --chart-teal: #4b8279;
+    --chart-purple: #786a91;
+    --chart-coral: #a36550;
+    --chart-slate: #708090;
+    --chart-amber: #927439;
+    --chart-rose: #9b6178;
+    --chart-other: #66794e;
+    --chart-negative: #a64a56;
+  }
+
+  :root[data-theme='forest'] {
+    color-scheme: light;
+    --brand-logo-url: url('/brand/addlog.svg');
+    --brand-symbol-url: url('/brand/addlog-symbol.svg');
+    --brand-surface: transparent;
+    --ui-background: #f0f1e9;
+    --ui-surface: #fbfaf6;
+    --ui-soft: #ebeee4;
+    --ui-ink: #2c382e;
+    --ui-muted: #647064;
+    --ui-border: #d3dacd;
+    --ui-line: #e4e8de;
+    --ui-shadow: #26352212;
+    --ui-button-bg: #3d5940;
+    --ui-button-text: #ffffff;
+    --ui-button-hover: #4b6b4e;
+    --ui-accent: #55794e;
+    --ui-on-accent: #ffffff;
+    --ui-accent-hover: #466a43;
+    --ui-accent-ink: #476b43;
+    --ui-accent-soft: #e4ebdd;
+    --ui-accent-border: #aebfa3;
+    --ui-link: #43674d;
+    --ui-coral: #a96950;
+    --ui-success-bg: #e8f0e5;
+    --ui-success-ink: #38613a;
+    --ui-success-border: #b9cdb2;
+    --ui-warning-bg: #f3eedf;
+    --ui-warning-ink: #765e2b;
+    --ui-error-bg: #f7e9e6;
+    --ui-error-ink: #994b41;
+    --ui-info-bg: #e8eff0;
+    --ui-info-ink: #466875;
+    --ui-violet-bg: #efebf0;
+    --ui-violet-ink: #705b76;
+    --chart-primary: #315c39;
+    --chart-blue: #4b7892;
+    --chart-teal: #4c8274;
+    --chart-purple: #786c87;
+    --chart-coral: #a85f47;
+    --chart-slate: #66766e;
+    --chart-amber: #927638;
+    --chart-rose: #9e6274;
+    --chart-other: #758d4b;
+    --chart-negative: #a34e4e;
+  }
+
+  :root[data-theme='botanical'] {
+    color-scheme: light;
+    --brand-logo-url: url('/brand/addlog.svg');
+    --brand-symbol-url: url('/brand/addlog-symbol.svg');
+    --brand-surface: transparent;
+    --ui-background: #f4f1ea;
+    --ui-surface: #fffdf8;
+    --ui-soft: #f0ede5;
+    --ui-ink: #332f29;
+    --ui-muted: #756e63;
+    --ui-border: #ded7ca;
+    --ui-line: #ebe5db;
+    --ui-shadow: #44382b12;
+    --ui-button-bg: #3e6349;
+    --ui-button-text: #ffffff;
+    --ui-button-hover: #4e795a;
+    --ui-accent: #4a7c59;
+    --ui-on-accent: #ffffff;
+    --ui-accent-hover: #3d6c4b;
+    --ui-accent-ink: #3e704d;
+    --ui-accent-soft: #e8efe5;
+    --ui-accent-border: #b5cbb4;
+    --ui-link: #3c6e63;
+    --ui-coral: #a94d37;
+    --ui-success-bg: #e7f0e6;
+    --ui-success-ink: #356747;
+    --ui-success-border: #b6ceb5;
+    --ui-warning-bg: #fbf0d9;
+    --ui-warning-ink: #795915;
+    --ui-error-bg: #f7e8e4;
+    --ui-error-ink: #a04435;
+    --ui-info-bg: #e8f0f3;
+    --ui-info-ink: #3f6676;
+    --ui-violet-bg: #f0eaf1;
+    --ui-violet-ink: #76577c;
+    --chart-primary: #4a7c59;
+    --chart-blue: #477b91;
+    --chart-teal: #4c8b7a;
+    --chart-purple: #806b91;
+    --chart-coral: #b7472a;
+    --chart-slate: #6c7f78;
+    --chart-amber: #c28318;
+    --chart-rose: #a65376;
+    --chart-other: #7b8f45;
+    --chart-negative: #a83f45;
   }
 }
 .theme-options {

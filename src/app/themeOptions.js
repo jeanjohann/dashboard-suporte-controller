@@ -3,6 +3,10 @@ export const themes = [
   { id: 'light', label: 'Claro' },
   { id: 'dark', label: 'Grafite e Azul' },
   { id: 'lime', label: 'Lima e Grafite' },
+  { id: 'ocean', label: 'Ocean Depths' },
+  { id: 'modern', label: 'Modern Minimalist' },
+  { id: 'forest', label: 'Forest Canopy' },
+  { id: 'botanical', label: 'Botanical Garden' },
 ];
 export const defaultTheme = 'light';
 const legacyThemes = {

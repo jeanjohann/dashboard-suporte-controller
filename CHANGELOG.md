@@ -1,3 +1,8 @@
+## 0.69.21 — 25/10/2026
+
+- Adiciona Ocean Depths, Modern Minimalist, Forest Canopy e Botanical Garden como opções de aparência.
+- Harmoniza superfícies, estados e cores de gráficos em cada paleta, preservando Claro, Grafite e Azul e Lima e Grafite.
+
 ## 0.69.20 — 24/10/2026
 
 - Adiciona gráfico de área para séries mensais no Meu Dashboard, com suporte a comparação de períodos compatíveis.
