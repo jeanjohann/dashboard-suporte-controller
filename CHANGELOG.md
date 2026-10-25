@@ -1,3 +1,8 @@
+## 0.69.14 — 24/10/2026
+
+- Compacta a interface do Meu Dashboard, reduzindo margens, controles, botões e espaços entre ferramentas.
+- Amplia a área útil para montar painéis e tabelas sem diminuir a tipografia dos dados exibidos.
+
 ## 0.69.13 — 24/10/2026
 
 - Reduz o espaço ocupado por filtros, cartões de prioridade, lembretes e indicadores do Monitoramento Ativo.

@@ -1124,6 +1124,118 @@
   color: inherit;
   font: inherit;
 }
+/* Densidade do Meu Dashboard: mais espaço de trabalho, sem reduzir a leitura dos dados. */
+.my-dashboard-page main {
+  padding: 24px 26px 20px;
+}
+.my-dashboard-page .md-page-header {
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.my-dashboard-page .md-page-header h1 {
+  font-size: 26px;
+  letter-spacing: -0.6px;
+  margin: 4px 0;
+}
+.my-dashboard-page .md-page-header p {
+  margin: 3px 0 0;
+  line-height: 1.4;
+}
+.my-dashboard-page .md-page-actions,
+.my-dashboard-page .md-backup-actions {
+  gap: 6px;
+}
+.my-dashboard-page .md-page-actions > button,
+.my-dashboard-page .md-backup-actions > button,
+.my-dashboard-page .md-board-buttons > button,
+.my-dashboard-page .md-panel-filter-fields > button {
+  min-height: 30px;
+  padding: 6px 9px;
+  font-size: 11px;
+  line-height: 1.25;
+}
+.my-dashboard-page .md-add-button {
+  min-height: 30px;
+  padding: 6px 10px;
+}
+.my-dashboard-page .md-board-controls {
+  gap: 8px 10px;
+  padding: 10px 12px;
+  border-radius: 9px;
+}
+.my-dashboard-page .md-board-name {
+  flex: 1 1 180px;
+}
+.my-dashboard-page .md-board-controls label {
+  gap: 4px;
+  font-size: 10px;
+}
+.my-dashboard-page .md-board-controls input,
+.my-dashboard-page .md-board-controls select {
+  min-height: 32px;
+  padding: 6px 9px;
+}
+.my-dashboard-page .md-board-name input {
+  font-size: 14px;
+}
+.my-dashboard-page .md-board-buttons {
+  gap: 5px;
+}
+.my-dashboard-page .md-saved-select {
+  flex: 0 1 210px;
+}
+.my-dashboard-page .md-save-status {
+  margin-top: 3px;
+}
+.my-dashboard-page .md-backup-actions {
+  margin: 7px 0;
+}
+.my-dashboard-page .md-panel-filters {
+  padding: 9px 12px;
+  margin: 8px 0;
+}
+.my-dashboard-page .md-panel-filter-fields {
+  gap: 8px;
+  margin-top: 9px;
+}
+.my-dashboard-page .md-panel-filter-fields input {
+  min-height: 32px;
+  padding: 6px 8px;
+}
+.my-dashboard-page .md-panel-filters > p {
+  margin-top: 8px;
+  line-height: 1.45;
+}
+.my-dashboard-page .md-context {
+  gap: 4px 14px;
+  margin: 9px 0;
+}
+.my-dashboard-page .md-grid {
+  gap: 12px;
+}
+.my-dashboard-page .md-widget {
+  padding: 14px;
+  border-radius: 10px;
+}
+.my-dashboard-page .md-arrangement-help {
+  padding: 8px 10px;
+  margin: 8px 0;
+  line-height: 1.45;
+}
+@media (max-width: 700px) {
+  .my-dashboard-page main {
+    padding: 16px 12px;
+  }
+  .my-dashboard-page .md-page-header h1 {
+    font-size: 23px;
+  }
+  .my-dashboard-page .md-board-controls {
+    padding: 9px;
+  }
+  .my-dashboard-page .md-board-buttons > button {
+    flex: 1 1 auto;
+  }
+}
 .md-template-list {
   display: grid;
   gap: 12px;
