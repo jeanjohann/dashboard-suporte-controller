@@ -46,6 +46,18 @@
 .si-config-dialog-heading {
   border-bottom: 1px solid var(--ui-border);
 }
+.support-indicators-page main .si-config-dialog-heading > button,
+.support-indicators-page main .si-config-dialog-footer > button {
+  border-color: #0868c5;
+  background: #0868c5;
+  color: #ffffff;
+}
+.support-indicators-page main .si-config-dialog-heading > button:hover,
+.support-indicators-page main .si-config-dialog-footer > button:hover {
+  border-color: #07539c;
+  background: #07539c;
+  color: #ffffff;
+}
 .si-config-dialog-heading > div > span {
   color: var(--ui-accent);
   font-size: 10px;
@@ -570,6 +582,16 @@
 .support-indicators-page main .si-primary {
   background: var(--ui-button-bg);
   color: var(--ui-button-text);
+}
+.support-indicators-page main button.si-config-trigger {
+  border-color: #0868c5;
+  background: #0868c5;
+  color: #ffffff;
+}
+.support-indicators-page main button.si-config-trigger:hover {
+  border-color: #07539c;
+  background: #07539c;
+  color: #ffffff;
 }
 .support-indicators-page input:not([type='checkbox']),
 .support-indicators-page select,

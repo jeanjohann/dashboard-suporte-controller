@@ -75,7 +75,7 @@ export function PageSettingsButton({ available = true, help = '' }) {
     <>
       <button
         ref={trigger}
-        className="page-settings-trigger"
+        className="page-settings-trigger page-configuration-trigger"
         type="button"
         title="Configurações da página"
         aria-label="Configurações da página"
@@ -83,6 +83,7 @@ export function PageSettingsButton({ available = true, help = '' }) {
         onClick={show}
       >
         <Icon name="settings" size={18} />
+        <span>Configurações</span>
       </button>
       {feedback && (
         <div className="page-settings-feedback" role="status">
@@ -92,7 +93,7 @@ export function PageSettingsButton({ available = true, help = '' }) {
       {createPortal(
         <dialog
           ref={dialog}
-          className="page-settings-dialog"
+          className="page-settings-dialog page-configuration-dialog"
           aria-labelledby={`${id}-title`}
           aria-describedby={`${id}-description`}
           onCancel={() => setOpen(false)}
@@ -111,13 +112,14 @@ export function PageSettingsButton({ available = true, help = '' }) {
         >
           <header>
             <div>
+              <span className="page-configuration-eyebrow">{scope || 'Página'}</span>
               <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>
-                Configurações da página
+                Configurações e informações
               </h2>
-              <p>{scope}</p>
+              <p>Preferências de exibição, informações e critérios desta página.</p>
             </div>
-            <button type="button" aria-label="Fechar configuração" onClick={() => setOpen(false)}>
-              <Icon name="close" size={18} />
+            <button type="button" aria-label="Fechar configurações" onClick={() => setOpen(false)}>
+              Fechar
             </button>
           </header>
           <div className="page-settings-body">

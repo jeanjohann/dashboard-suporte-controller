@@ -83,21 +83,23 @@
 }
 button.page-settings-trigger {
   display: inline-flex;
-  flex: 0 0 36px;
-  width: 36px;
-  height: 36px;
-  min-height: 36px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  min-height: 34px;
   align-items: center;
   justify-content: center;
-  padding: 7px;
+  gap: 7px;
+  padding: 7px 11px;
   border: 1px solid #0868c5;
   border-radius: 7px;
   background: #0868c5;
   color: #ffffff;
+  font-size: 12px;
 }
 button.page-settings-trigger .ui-icon {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 button.page-settings-trigger:hover {
   background: #07539c;

@@ -1170,22 +1170,6 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <p>Atendimentos, serviços e atividades da equipe.</p>
             </div>
             <div className="si-toolbar">
-              <div className="si-view-modes" role="group" aria-label="Modo de visualização">
-                <button
-                  type="button"
-                  aria-pressed={viewMode === 'compact'}
-                  onClick={() => selectDensity('compact')}
-                >
-                  Compacto
-                </button>
-                <button
-                  type="button"
-                  aria-pressed={viewMode === 'editorial'}
-                  onClick={() => selectDensity('editorial')}
-                >
-                  Editorial
-                </button>
-              </div>
               <button
                 disabled={!valid || busy || backlogBusy || store.loading}
                 onClick={exportReport}
@@ -1193,6 +1177,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 Exportar CSV
               </button>
               <button
+                className="si-config-trigger"
                 onClick={() => {
                   setPresentationMode(false);
                   setConfigurationOpen(true);
@@ -1301,6 +1286,30 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                       busy={store.busy}
                       save={store.save}
                     />
+                  </section>
+                  <section className="si-config-section" aria-label="Visualização da página">
+                    <div className="si-config-section-heading">
+                      <div>
+                        <h3>Visualização da página</h3>
+                        <p>Escolha como os gráficos e tabelas são organizados nesta tela.</p>
+                      </div>
+                      <div className="si-view-modes" role="group" aria-label="Modo de visualização">
+                        <button
+                          type="button"
+                          aria-pressed={viewMode === 'compact'}
+                          onClick={() => selectDensity('compact')}
+                        >
+                          Compacto
+                        </button>
+                        <button
+                          type="button"
+                          aria-pressed={viewMode === 'editorial'}
+                          onClick={() => selectDensity('editorial')}
+                        >
+                          Editorial
+                        </button>
+                      </div>
+                    </div>
                   </section>
                   <section className="si-config-section" aria-label="Configuração da apresentação">
                     <div className="si-config-section-heading">

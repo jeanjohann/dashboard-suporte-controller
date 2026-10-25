@@ -1,3 +1,8 @@
+## 0.69.31 — 25/10/2026
+
+- Padroniza o acesso às configurações com botão azul identificado por texto, em vez de ícone isolado.
+- Move a escolha de visualização Compacto/Editorial dos Indicadores Suporte para o modal e corrige o contraste do botão.
+
 ## 0.69.30 — 25/10/2026
 
 - Padroniza as configurações e informações secundárias em modais acessíveis nas páginas principais, mantendo filtros e ações frequentes à vista.
