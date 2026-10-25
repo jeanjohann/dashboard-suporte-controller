@@ -12,7 +12,7 @@ import React, {
 import { themes, defaultTheme, restoredTheme } from './themeOptions.js';
 const ThemeContext = createContext({ theme: defaultTheme, selectTheme: () => {} });
 const storageKey = 'addlog-theme-v1';
-const densityStorageKey = 'addlog-density-v1';
+const densityStorageKey = 'addlog-density-v2';
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
@@ -23,9 +23,10 @@ export function ThemeProvider({ children }) {
   });
   const [density, setDensity] = useState(() => {
     try {
-      return localStorage.getItem(densityStorageKey) === 'compact' ? 'compact' : 'comfortable';
+      const savedDensity = localStorage.getItem(densityStorageKey);
+      return savedDensity === 'comfortable' ? 'comfortable' : 'compact';
     } catch {
-      return 'comfortable';
+      return 'compact';
     }
   });
   useLayoutEffect(() => {

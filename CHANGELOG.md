@@ -1,3 +1,8 @@
+## 0.69.15 — 24/10/2026
+
+- Define o espaçamento compacto como padrão em todos os módulos do sistema, aproximando o conteúdo e liberando mais área útil.
+- Mantém a opção de espaçamento confortável disponível em Aparência para quem preferir mais respiro.
+
 ## 0.69.14 — 24/10/2026
 
 - Compacta a interface do Meu Dashboard, reduzindo margens, controles, botões e espaços entre ferramentas.
