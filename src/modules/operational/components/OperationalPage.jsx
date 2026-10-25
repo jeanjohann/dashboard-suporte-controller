@@ -214,15 +214,43 @@ export function OperationalPage({
       ),
     [linked],
   );
-  const selected = useMemo(() => new Set(rows.map((row) => row.sourceRow)), [rows]),
-    issues =
+  const selected = useMemo(() => new Set(rows.map((row) => row.sourceRow)), [rows]);
+  const issues = useMemo(
+    () =>
       data?.issues.filter(
         (issue) => selected.has(issue.row) && (!category || issue.category === category),
-      ) || [];
-  const withHistory = rows.filter((row) => row.state === 'Com histórico disponível'),
-    withoutHistory = rows.filter((row) => row.state === 'Sem atendimento no histórico disponível'),
-    ambiguous = rows.filter((row) => row.state === 'Vínculo operacional ambíguo'),
-    invalid = rows.filter((row) => row.state === 'Identificação incompleta ou incompatível');
+      ) || [],
+    [data?.issues, selected, category],
+  );
+  const withHistory = useMemo(
+      () => rows.filter((row) => row.state === 'Com histórico disponível'),
+      [rows],
+    ),
+    withoutHistory = useMemo(
+      () => rows.filter((row) => row.state === 'Sem atendimento no histórico disponível'),
+      [rows],
+    ),
+    ambiguous = useMemo(
+      () => rows.filter((row) => row.state === 'Vínculo operacional ambíguo'),
+      [rows],
+    ),
+    invalid = useMemo(
+      () => rows.filter((row) => row.state === 'Identificação incompleta ou incompatível'),
+      [rows],
+    );
+  const financialStats = useMemo(
+    () =>
+      Object.fromEntries(
+        ['monthly', 'charge'].map((key) => [
+          key,
+          {
+            totalCents: rows.reduce((sum, row) => sum + (row[key + 'Cents'] ?? 0), 0),
+            missing: rows.filter((row) => row[key + 'Cents'] == null).length,
+          },
+        ]),
+      ),
+    [rows],
+  );
   const canLink =
     orders &&
     ['ID Rastreador', 'Placa'].every((label) => orders.data.columns.some((c) => c.label === label));
@@ -605,14 +633,10 @@ export function OperationalPage({
                                   <span>
                                     {key === 'monthly' ? 'Mensalidade lançada' : 'Cobrança lançada'}
                                   </span>
-                                  <strong>
-                                    {money(
-                                      rows.reduce((sum, r) => sum + (r[key + 'Cents'] ?? 0), 0),
-                                    )}
-                                  </strong>
+                                  <strong>{money(financialStats[key].totalCents)}</strong>
                                   <small>
-                                    {rows.filter((r) => r[key + 'Cents'] == null).length} valores
-                                    ausentes/incompatíveis excluídos
+                                    {financialStats[key].missing} valores ausentes/incompatíveis
+                                    excluídos
                                   </small>
                                 </article>
                               ))}

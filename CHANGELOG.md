@@ -1,3 +1,8 @@
+## 0.69.17 — 24/10/2026
+
+- Evita refazer filtros, estatísticas, rankings e grupos de cliente do Consumo ao alterar estado visual que não muda os dados.
+- Reutiliza listas de revisão e totais financeiros da Operacional enquanto o recorte de registros permanecer igual.
+
 ## 0.69.16 — 24/10/2026
 
 - Uniformiza filtros recolhíveis e mostra quantos recortes estão ativos nas categorias que usam o painel compartilhado.

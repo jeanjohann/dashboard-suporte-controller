@@ -1,6 +1,6 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.69.16",
+  "version": "0.69.17",
   "private": true,
   "type": "module",
   "scripts": {

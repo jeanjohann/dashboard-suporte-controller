@@ -165,16 +165,25 @@ export function LinesPage({
     setTracked(key);
     setDetail(null);
   }
-  const operators = [...new Set(statements.map((statement) => statement.operator))].sort();
-  const periods = consumptionPeriods(statements, filters),
+  const operators = useMemo(
+    () => [...new Set(statements.map((statement) => statement.operator))].sort(),
+    [statements],
+  );
+  const periods = useMemo(() => consumptionPeriods(statements, filters), [statements, filters]),
     fields = consumptionFilterFields;
-  const selected = selectConsumptionRows(allRows, periods, filters, search);
-  const summary = consumptionSummary(selected),
+  const selected = useMemo(
+    () => selectConsumptionRows(allRows, periods, filters, search),
+    [allRows, periods, filters, search],
+  );
+  const summary = useMemo(() => consumptionSummary(selected), [selected]),
     eligible = summary.eligible,
-    attention = eligible.filter((row) => row.attention),
+    attention = useMemo(() => eligible.filter((row) => row.attention), [eligible]),
     visibleSections = categories.find(([key]) => key === category)[2],
     shown = (label) => visibleSections.includes(label);
-  const selectedDetail = selected.find((row) => row.id === detail);
+  const selectedDetail = useMemo(
+    () => selected.find((row) => row.id === detail),
+    [selected, detail],
+  );
   const highlights = useMemo(
     () => consumptionAttention(allRows, selected, attentionLimits),
     [allRows, selected, attentionLimits],
@@ -250,70 +259,101 @@ export function LinesPage({
   function rowsTable(records) {
     return <LineRecordsTable records={records} onView={viewRow} onExport={exportRecords} />;
   }
-  const ranked = [...eligible].sort((a, b) =>
-    rankMeasure === 'daily' ? b.ticks / b.days - a.ticks / a.days : b.ticks - a.ticks,
-  );
-  const rankItems = ranked.map((row) => ({
-    label: `${row.operator} · ${row.number} · ICCID ${row.iccid}${row.link?.client ? ' · ' + row.link.client : ''}`,
-    displayLabel: `${row.operator} · ${row.number}`,
-    caption: row.link?.client || 'Cliente não vinculado',
-    value: row.ticks / VOLUME_SCALE / (rankMeasure === 'daily' ? row.days : 1),
-    id: row.id,
-  }));
-  const ranges = [
-    { label: 'Zero MB', value: 0 },
-    { label: 'Mais de 0 até 10 MB', value: 0 },
-    { label: 'Mais de 10 até 20 MB', value: 0 },
-    { label: 'Mais de 20 até 50 MB', value: 0 },
-    { label: 'Mais de 50 MB', value: 0 },
-  ];
-  for (const row of eligible)
-    ranges[
-      row.ticks === 0
-        ? 0
-        : row.ticks <= 10 * VOLUME_SCALE
-          ? 1
-          : row.ticks <= 20 * VOLUME_SCALE
-            ? 2
-            : row.ticks <= 50 * VOLUME_SCALE
-              ? 3
-              : 4
-    ].value++;
-  const providerStats = operators
-    .filter((operator) => !filters.operator?.length || filters.operator.includes(operator))
-    .map((operator) => ({
-      operator,
-      ...consumptionSummary(selected.filter((row) => row.operator === operator)),
-      period: periodOptions(statements, operator).find(
-        (period) => period.key === periods[operator],
+  const ranked = useMemo(
+    () =>
+      [...eligible].sort((a, b) =>
+        rankMeasure === 'daily' ? b.ticks / b.days - a.ticks / a.days : b.ticks - a.ticks,
       ),
-    }));
-  const clientGroups = new Map();
-  for (const row of eligible) {
-    const label = row.link?.client || 'Não vinculado';
-    if (!clientGroups.has(label)) clientGroups.set(label, { label, ticks: 0, rows: 0 });
-    const group = clientGroups.get(label);
-    group.ticks += row.ticks;
-    group.rows++;
-  }
-  const chartNote =
-    'Apurações: ' +
-    providerStats.map((item) => item.operator + ' ' + (item.period?.label || '—')).join(' / ') +
-    '. Dados móveis; SMS e frete separados. Vínculos usam Operacional e, quando disponível, conferência atual do chip na API.';
-  const selectedIDs = new Set(
-    selected.map((row) => JSON.stringify([row.operator, row.iccid, row.start, row.end])),
+    [eligible, rankMeasure],
   );
-  const invoiceRows = allRows.filter(
-    (row) =>
-      periodKey(row) === periods[row.operator] &&
-      selectedIDs.has(JSON.stringify([row.operator, row.iccid, row.start, row.end])) &&
-      !row.duplicate,
+  const rankItems = useMemo(
+    () =>
+      ranked.map((row) => ({
+        label: `${row.operator} · ${row.number} · ICCID ${row.iccid}${row.link?.client ? ' · ' + row.link.client : ''}`,
+        displayLabel: `${row.operator} · ${row.number}`,
+        caption: row.link?.client || 'Cliente não vinculado',
+        value: row.ticks / VOLUME_SCALE / (rankMeasure === 'daily' ? row.days : 1),
+        id: row.id,
+      })),
+    [ranked, rankMeasure],
   );
-  const fees = allRows.filter(
-    (row) =>
-      (!filters.operator?.length || filters.operator.includes(row.operator)) &&
-      periodKey(row) === periods[row.operator] &&
-      !['dados', 'sms'].includes(row.service),
+  const ranges = useMemo(() => {
+    const result = [
+      { label: 'Zero MB', value: 0 },
+      { label: 'Mais de 0 até 10 MB', value: 0 },
+      { label: 'Mais de 10 até 20 MB', value: 0 },
+      { label: 'Mais de 20 até 50 MB', value: 0 },
+      { label: 'Mais de 50 MB', value: 0 },
+    ];
+    for (const row of eligible)
+      result[
+        row.ticks === 0
+          ? 0
+          : row.ticks <= 10 * VOLUME_SCALE
+            ? 1
+            : row.ticks <= 20 * VOLUME_SCALE
+              ? 2
+              : row.ticks <= 50 * VOLUME_SCALE
+                ? 3
+                : 4
+      ].value++;
+    return result;
+  }, [eligible]);
+  const providerStats = useMemo(
+    () =>
+      operators
+        .filter((provider) => !filters.operator?.length || filters.operator.includes(provider))
+        .map((provider) => ({
+          operator: provider,
+          ...consumptionSummary(selected.filter((row) => row.operator === provider)),
+          period: periodOptions(statements, provider).find(
+            (period) => period.key === periods[provider],
+          ),
+        })),
+    [operators, filters.operator, selected, statements, periods],
+  );
+  const clientGroups = useMemo(() => {
+    const groups = new Map();
+    for (const row of eligible) {
+      const label = row.link?.client || 'Não vinculado';
+      if (!groups.has(label)) groups.set(label, { label, ticks: 0, rows: 0 });
+      const group = groups.get(label);
+      group.ticks += row.ticks;
+      group.rows++;
+    }
+    return groups;
+  }, [eligible]);
+  const chartNote = useMemo(
+    () =>
+      'Apurações: ' +
+      providerStats.map((item) => item.operator + ' ' + (item.period?.label || '—')).join(' / ') +
+      '. Dados móveis; SMS e frete separados. Vínculos usam Operacional e, quando disponível, conferência atual do chip na API.',
+    [providerStats],
+  );
+  const selectedIDs = useMemo(
+    () =>
+      new Set(selected.map((row) => JSON.stringify([row.operator, row.iccid, row.start, row.end]))),
+    [selected],
+  );
+  const invoiceRows = useMemo(
+    () =>
+      allRows.filter(
+        (row) =>
+          periodKey(row) === periods[row.operator] &&
+          selectedIDs.has(JSON.stringify([row.operator, row.iccid, row.start, row.end])) &&
+          !row.duplicate,
+      ),
+    [allRows, periods, selectedIDs],
+  );
+  const fees = useMemo(
+    () =>
+      allRows.filter(
+        (row) =>
+          (!filters.operator?.length || filters.operator.includes(row.operator)) &&
+          periodKey(row) === periods[row.operator] &&
+          !['dados', 'sms'].includes(row.service),
+      ),
+    [allRows, filters.operator, periods],
   );
 
   return (
