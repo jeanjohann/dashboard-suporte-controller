@@ -1,3 +1,9 @@
+## 0.69.19 — 24/10/2026
+
+- Compacta o Meu Dashboard em telas amplas: quatro cartões ou três gráficos médios por linha, com controles e margens menores.
+- Reduz a altura padrão de gráficos e tabelas; tabelas mostram cinco linhas por página e mantêm paginação, ampliação e impressão completa.
+- Preserva dimensões personalizadas dos blocos e mantém a composição anterior em telas menores.
+
 ## 0.69.18 — 24/10/2026
 
 - Carrega do banco somente as bases necessárias à página aberta, preservando a troca atômica de cada lote solicitado.

@@ -20,10 +20,10 @@ import { categoricalColors } from '../../../shared/charts/palette.js';
 import { usePrintMode } from '../../../shared/charts/usePrintMode.js';
 
 const colors = categoricalColors;
-export function ValuesTable({ rows, unit, titles }) {
+export function ValuesTable({ rows, unit, titles, pageSize = 5 }) {
   const printing = usePrintMode();
   const [page, setPage] = useState(0),
-    last = Math.max(0, Math.ceil(rows.length / 10) - 1),
+    last = Math.max(0, Math.ceil(rows.length / pageSize) - 1),
     current = Math.min(page, last);
   const body = (values) =>
     values.map((row, index) => (
@@ -45,7 +45,7 @@ export function ValuesTable({ rows, unit, titles }) {
             </tr>
           </thead>
           <tbody className="md-screen-rows">
-            {body(rows.slice(current * 10, current * 10 + 10))}
+            {body(rows.slice(current * pageSize, current * pageSize + pageSize))}
           </tbody>
           {printing && <tbody className="md-print-rows">{body(rows)}</tbody>}
         </table>
@@ -124,7 +124,9 @@ export const WidgetVisualization = React.memo(function WidgetVisualization({
   if (!rows.length)
     return <p className="md-widget-empty">Nenhum registro corresponde a este recorte.</p>;
   if (widget.kind === 'table' || asTable)
-    return <ValuesTable rows={rows} unit={result.unit} titles={titles} />;
+    return (
+      <ValuesTable rows={rows} unit={result.unit} titles={titles} pageSize={expanded ? 10 : 5} />
+    );
   const isDonut = widget.kind === 'donut';
   const slices = isDonut ? donutSeries(rows) : null;
   if (isDonut && (!slices || !slices.length))
