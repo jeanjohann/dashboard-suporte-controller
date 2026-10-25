@@ -2,6 +2,190 @@
   min-width: 0;
   color: var(--ui-ink);
 }
+.support-indicators-page.si-configured-layout > main > .si-filters,
+.support-indicators-page.si-configured-layout > main > .si-coverage,
+.support-indicators-page.si-configured-layout > main > .si-sources,
+.support-indicators-page.si-configured-layout > main > .si-backlog,
+.support-indicators-page.si-configured-layout > main > .si-rule-summary,
+.support-indicators-page.si-configured-layout > main > .si-review,
+.support-indicators-page.si-configured-layout > main > .si-coverage-period,
+.support-indicators-page.si-configured-layout > main > .si-presentation-controls {
+  display: none !important;
+}
+.si-config-backdrop {
+  position: fixed;
+  z-index: 1100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(9 15 22 / 58%);
+  backdrop-filter: blur(3px);
+}
+.si-config-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(1060px, 100%);
+  max-height: min(88dvh, 980px);
+  overflow: hidden;
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgb(0 0 0 / 28%);
+}
+.si-config-dialog-heading,
+.si-config-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--ui-surface);
+}
+.si-config-dialog-heading {
+  border-bottom: 1px solid var(--ui-border);
+}
+.si-config-dialog-heading > div > span {
+  color: var(--ui-accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.si-config-dialog-heading h2 {
+  margin: 4px 0;
+  font-size: 20px;
+}
+.si-config-dialog-heading p,
+.si-config-section-heading p,
+.si-config-backlog p {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 12px;
+}
+.si-config-dialog-content {
+  display: grid;
+  gap: 12px;
+  padding: 14px 18px;
+  overflow: auto;
+}
+.si-config-section {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+  background: var(--ui-background, var(--ui-soft));
+}
+.si-config-section h3 {
+  margin: 0;
+}
+.si-config-dialog .si-config-section .si-coverage {
+  display: grid !important;
+  margin: 0;
+}
+.si-config-dialog .si-config-section .si-coverage-period {
+  display: block !important;
+}
+.si-config-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(140px, 1fr)) auto;
+  align-items: end;
+}
+.si-config-section-heading,
+.si-config-actions,
+.si-config-source-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+.si-config-source-status {
+  align-items: stretch;
+}
+.si-config-source-status > div {
+  display: grid;
+  flex: 1 1 180px;
+  gap: 3px;
+  padding: 9px 11px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+  background: var(--ui-surface);
+  font-size: 12px;
+}
+.si-config-source-status small,
+.si-config-dialog-footer > span,
+.si-config-backlog > small {
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.si-config-dialog-footer {
+  border-top: 1px solid var(--ui-border);
+}
+.si-config-dialog .si-presentation-options {
+  gap: 6px;
+}
+.si-config-dialog .si-presentation-options label {
+  min-height: 30px;
+  padding: 4px 8px;
+}
+.si-config-dialog .si-source-details {
+  margin-top: 0;
+}
+.si-presentation-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+}
+.si-presentation-toolbar > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.si-presentation-toolbar h1 {
+  margin: 3px 0;
+  font-size: 21px;
+}
+.si-presentation-toolbar p {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.si-presentation-eyebrow {
+  color: var(--ui-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.support-indicators-page.si-presenting {
+  display: block;
+  background: var(--ui-background);
+}
+.si-presenting:fullscreen {
+  height: 100dvh;
+  overflow: auto;
+}
+.app.si-presenting > aside.app-navigation {
+  display: none;
+}
+.support-indicators-page.si-presenting > main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 18px 24px;
+}
+.si-presenting > main > .si-heading,
+.si-presenting > main > .si-presentation-print-title,
+.si-presenting > main > .si-config-backdrop {
+  display: none !important;
+}
 .support-indicators-page h1 {
   font-size: 24px;
   margin: 0 0 6px;
@@ -1709,6 +1893,10 @@
   }
 }
 @media print {
+  .support-indicators-page .si-presentation-toolbar,
+  .support-indicators-page .si-config-backdrop {
+    display: none !important;
+  }
   .support-indicators-page .si-filters,
   .support-indicators-page .si-sources .si-toolbar,
   .support-indicators-page .si-heading button,
@@ -1978,5 +2166,29 @@
   .si-service-chart-dialog .si-table {
     max-height: none;
     overflow: visible;
+  }
+}
+@media (max-width: 760px) {
+  .si-config-backdrop {
+    padding: 8px;
+  }
+  .si-config-dialog {
+    max-height: 96dvh;
+  }
+  .si-config-dialog-heading,
+  .si-config-dialog-footer,
+  .si-config-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .si-config-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .si-config-filters .si-shortcuts {
+    grid-column: 1 / -1;
+  }
+  .si-presentation-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

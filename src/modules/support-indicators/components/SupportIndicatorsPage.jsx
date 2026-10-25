@@ -33,6 +33,7 @@ import {
 import { useIndicatorRecords } from '../hooks/useIndicatorRecords.js';
 import { ManualIndicatorForm } from './ManualIndicatorForm.jsx';
 import { IndicatorSettings } from './IndicatorSettings.jsx';
+import { useDashboardPresentation } from '../../my-dashboard/hooks/useDashboardPresentation.js';
 
 const number = (n) => (n == null ? 'Sem dados' : n.toLocaleString('pt-BR'));
 const date = (d) => (d ? d.split('-').reverse().join('/') : '—');
@@ -601,6 +602,8 @@ function ServiceChartDialog({ open, onClose, services, clients, daily, zohoDaily
 }
 export function SupportIndicatorsPage({ onPage, active = true }) {
   const { density, selectDensity } = useTheme();
+  const presentationRoot = useRef(null);
+  const presentation = useDashboardPresentation(presentationRoot);
   const { user, managed } = useAccess(),
     { sources } = useDashboardSources(),
     today = todaySaoPaulo(),
@@ -610,6 +613,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [ownZoho, setOwnZoho] = useState(null),
     [drilldown, setDrilldown] = useState(null),
     [serviceChartOpen, setServiceChartOpen] = useState(false),
+    [configurationOpen, setConfigurationOpen] = useState(false),
     [presentationMode, setPresentationMode] = useState(false),
     [presentationStyle, setPresentationStyle] = useState(
       density === 'editorial' ? 'editorial' : 'compact',
@@ -622,6 +626,23 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     [error, setError] = useState('');
   const viewMode = density;
   const contentViewMode = presentationMode ? presentationStyle : viewMode;
+  const wasPresenting = useRef(false);
+  useEffect(() => {
+    if (wasPresenting.current && !presentation.presenting && presentationMode)
+      setConfigurationOpen(true);
+    wasPresenting.current = presentation.presenting;
+  }, [presentation.presenting, presentationMode]);
+  useEffect(() => {
+    if (!configurationOpen) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') {
+        setConfigurationOpen(false);
+        setPresentationMode(false);
+      }
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [configurationOpen]);
   const pending = useRef(null);
   const backlogRequest = useRef(null);
   const [ownBacklog, setOwnBacklog] = useState(null),
@@ -1089,10 +1110,60 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
   return (
     <SidePanelProvider>
       <div
-        className={`app support-indicators-page ${presentationMode ? `si-presentation-mode si-presentation-${presentationStyle} si-${presentationStyle}-mode` : `si-${viewMode}-mode`}`}
+        ref={presentationRoot}
+        className={`app support-indicators-page si-configured-layout ${presentationMode ? `si-presentation-mode si-presentation-${presentationStyle} si-${presentationStyle}-mode` : `si-${viewMode}-mode`} ${presentation.presenting ? 'si-presenting' : ''}`}
       >
         <Navigation page="support-indicators" onPage={onPage} />
         <main>
+          {presentation.presenting && (
+            <header className="si-presentation-toolbar">
+              <div>
+                <span className="si-presentation-eyebrow">INDICADORES SUPORTE · APRESENTAÇÃO</span>
+                <h1>
+                  {agentId
+                    ? agents.find((agent) => agent.id === agentId)?.name
+                    : 'Resumo da equipe'}
+                </h1>
+                <p>
+                  {date(period.start)} a {date(period.end)} ·{' '}
+                  {presentationStyle === 'editorial' ? 'Editorial' : 'Compacto'} · Esc para sair
+                </p>
+              </div>
+              <div>
+                <button type="button" onClick={presentation.fullscreen}>
+                  Tela cheia
+                </button>
+                <button
+                  type="button"
+                  disabled={!selectedPresentationCount}
+                  onClick={async () => {
+                    if (selectedPresentationCount && (await authorizeAction('export')))
+                      window.print();
+                  }}
+                >
+                  Imprimir / Salvar PDF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    presentation.exit();
+                    setConfigurationOpen(true);
+                  }}
+                >
+                  Voltar à seleção
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    presentation.exit();
+                    setPresentationMode(false);
+                  }}
+                >
+                  Sair da apresentação
+                </button>
+              </div>
+            </header>
+          )}
           <header className="si-heading">
             <div>
               <h1>Indicadores Suporte</h1>
@@ -1122,24 +1193,361 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 Exportar CSV
               </button>
               <button
-                aria-pressed={presentationMode}
-                onClick={() => setPresentationMode((current) => !current)}
+                onClick={() => {
+                  setPresentationMode(false);
+                  setConfigurationOpen(true);
+                }}
               >
-                {presentationMode ? 'Sair da apresentação' : 'Apresentação'}
+                Configurações
               </button>
-              {presentationMode && (
-                <button
-                  onClick={async () => {
-                    if (selectedPresentationCount && (await authorizeAction('export')))
-                      window.print();
-                  }}
-                  disabled={!selectedPresentationCount}
-                >
-                  Imprimir apresentação
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  setPresentationMode(true);
+                  setConfigurationOpen(true);
+                }}
+              >
+                Apresentação
+              </button>
             </div>
           </header>
+          {configurationOpen && !presentation.presenting && (
+            <div
+              className="si-config-backdrop"
+              role="presentation"
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget) {
+                  setConfigurationOpen(false);
+                  setPresentationMode(false);
+                }
+              }}
+            >
+              <section
+                className="si-config-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="si-config-title"
+              >
+                <header className="si-config-dialog-heading">
+                  <div>
+                    <span>INDICADORES SUPORTE</span>
+                    <h2 id="si-config-title">Configurações e fontes</h2>
+                    <p>Filtros, apresentação, atualizações e critérios da análise.</p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="Fechar configurações"
+                    onClick={() => {
+                      setConfigurationOpen(false);
+                      setPresentationMode(false);
+                    }}
+                  >
+                    Fechar
+                  </button>
+                </header>
+                <div className="si-config-dialog-content">
+                  <section className="si-config-section" aria-label="Filtros da análise">
+                    <h3>Período e equipe</h3>
+                    <div className="si-toolbar si-config-filters">
+                      <label>
+                        De
+                        <input
+                          type="date"
+                          value={period.start}
+                          disabled={busy}
+                          onChange={(e) => setPeriod({ ...period, start: e.target.value })}
+                        />
+                      </label>
+                      <label>
+                        Até
+                        <input
+                          type="date"
+                          value={period.end}
+                          disabled={busy}
+                          onChange={(e) => setPeriod({ ...period, end: e.target.value })}
+                        />
+                      </label>
+                      <label>
+                        Agente
+                        <select value={agentId} onChange={(e) => setAgent(e.target.value)}>
+                          <option value="">Toda a equipe</option>
+                          {agents.map((a) => (
+                            <option key={a.id} value={a.id}>
+                              {a.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <div className="si-shortcuts">
+                        {[
+                          ['currentWeek', 'Semana atual'],
+                          ['previousWeek', 'Semana anterior'],
+                          ['month', 'Mês atual'],
+                        ].map(([key, label]) => (
+                          <button key={key} disabled={busy} onClick={() => preset(key)}>
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="scope">
+                      {valid
+                        ? `${date(period.start)} a ${date(period.end)} · comparação com ${date(past.start)} a ${date(past.end)}`
+                        : 'Informe um intervalo válido de até 366 dias.'}
+                    </p>
+                    <IndicatorSettings
+                      settings={settings}
+                      revision={store.settingsRevision}
+                      ready={store.settingsReady && !manualDirty}
+                      busy={store.busy}
+                      save={store.save}
+                    />
+                  </section>
+                  <section className="si-config-section" aria-label="Configuração da apresentação">
+                    <div className="si-config-section-heading">
+                      <div>
+                        <h3>Apresentação</h3>
+                        <p>
+                          Selecione os blocos e o estilo. Inicie para abrir a tela limpa de
+                          apresentação.
+                        </p>
+                      </div>
+                      <div
+                        className="si-presentation-style"
+                        role="group"
+                        aria-label="Estilo da apresentação"
+                      >
+                        <button
+                          type="button"
+                          aria-pressed={presentationStyle === 'compact'}
+                          onClick={() => setPresentationStyle('compact')}
+                        >
+                          Compacto
+                        </button>
+                        <button
+                          type="button"
+                          aria-pressed={presentationStyle === 'editorial'}
+                          onClick={() => setPresentationStyle('editorial')}
+                        >
+                          Editorial
+                        </button>
+                      </div>
+                    </div>
+                    <div className="si-presentation-options">
+                      {availablePresentationOptions.map((option) => (
+                        <label key={option.key}>
+                          <input
+                            type="checkbox"
+                            checked={presentationSelection.has(option.key)}
+                            onChange={(event) =>
+                              setPresentationSelection((current) => {
+                                const next = new Set(current);
+                                if (event.target.checked) next.add(option.key);
+                                else next.delete(option.key);
+                                return next;
+                              })
+                            }
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <div className="si-config-actions">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPresentationSelection(
+                            new Set(availablePresentationOptions.map((option) => option.key)),
+                          )
+                        }
+                      >
+                        Selecionar tudo
+                      </button>
+                      <button type="button" onClick={() => setPresentationSelection(new Set())}>
+                        Limpar seleção
+                      </button>
+                      <button
+                        type="button"
+                        className="si-presentation-start"
+                        disabled={!selectedPresentationCount}
+                        onClick={() => {
+                          setPresentationMode(true);
+                          setConfigurationOpen(false);
+                          presentation.enter();
+                        }}
+                      >
+                        Iniciar apresentação
+                      </button>
+                    </div>
+                  </section>
+                  <section className="si-config-section" aria-label="Cobertura e fontes">
+                    <h3>Fontes e cobertura</h3>
+                    <SourceCoverage
+                      ordersData={ordersData}
+                      orders={orders}
+                      zohoData={zohoData}
+                      zoho={zoho}
+                      manual={manual}
+                      store={store}
+                      period={period}
+                      valid={valid}
+                    />
+                    <div className="si-config-source-status">
+                      <div>
+                        <strong>OS</strong>
+                        <span>{sources.orders?.value?.filename || 'Base não carregada'}</span>
+                        {ordersData && (
+                          <small>{number(ordersData.rows.length)} linhas disponíveis</small>
+                        )}
+                      </div>
+                      <div>
+                        <strong>Zoho Desk</strong>
+                        <span>
+                          {zoho
+                            ? `Consulta ${date(zohoData.period.start)} a ${date(zohoData.period.end)}`
+                            : 'Sem consulta completa para o período'}
+                        </span>
+                        {zohoData?.readAt && (
+                          <small>Atualizado em {timestamp(zohoData.readAt)}</small>
+                        )}
+                      </div>
+                      <div>
+                        <strong>Manual</strong>
+                        <span>
+                          {store.loading
+                            ? 'Carregando banco'
+                            : store.ready
+                              ? `${number(manual?.entries.length || 0)} lançamentos no recorte`
+                              : 'Sem dados carregados'}
+                        </span>
+                        <small>Campos vazios não equivalem a zero.</small>
+                      </div>
+                    </div>
+                    <WorkspaceQueryPanel
+                      kind="zoho-indicators"
+                      value={ownZoho ? { data: ownZoho } : null}
+                      disabled={busy || backlogBusy || manualDirty}
+                      onLoad={(saved) => setOwnZoho(saved.data)}
+                    />
+                    <WorkspaceQueryPanel
+                      kind="zoho-backlog"
+                      value={ownBacklog ? { data: ownBacklog } : null}
+                      disabled={busy || backlogBusy}
+                      onLoad={(saved) => setOwnBacklog(saved.data)}
+                    />
+                    <div className="si-config-actions">
+                      <button
+                        disabled={
+                          !valid ||
+                          busy ||
+                          backlogBusy ||
+                          periodDaysSafe(period) > 31 ||
+                          period.start > today
+                        }
+                        onClick={loadZoho}
+                      >
+                        {busy
+                          ? `Consultando ${progress} chamados…`
+                          : 'Consultar Zoho neste período'}
+                      </button>
+                      {busy && <button onClick={() => pending.current?.abort()}>Cancelar</button>}
+                      <button disabled={store.loading || store.busy} onClick={store.reload}>
+                        Recarregar lançamentos
+                      </button>
+                    </div>
+                    <details className="si-source-details">
+                      <summary>Ajuda, fontes e diagnósticos</summary>
+                      <p className="scope">
+                        Zoho: até 31 dias por consulta. Tempo é a soma dos apontamentos nos
+                        chamados, não tempo conectado. Aberturas exigem autoria confirmada no
+                        histórico. Assuntos usam a categoria atual dos chamados fechados. Sem
+                        consulta completa, os lançamentos manuais são apresentados separadamente
+                        como alternativa.
+                      </p>
+                      <p className="scope">
+                        Agenda e execução são etapas distintas. Execuções efetivas: Concluída/Pago,
+                        sem Visita Improdutiva. Improdutivas contam somente na agenda. Campos
+                        manuais vazios não representam zero.
+                      </p>
+                      <details>
+                        <summary>Validar autoria de abertura e assuntos no Zoho</summary>
+                        <p className="scope">
+                          Amostra recente para conferir autoria de abertura e categorias, sem
+                          alterar os indicadores.
+                        </p>
+                        <button
+                          disabled={profileBusy || busy || backlogBusy}
+                          onClick={inspectProfile}
+                        >
+                          {profileBusy
+                            ? 'Conferindo amostra…'
+                            : 'Consultar amostra de autoria e categorias'}
+                        </button>
+                        {profile?.coverage && <p className="scope">{profile.coverage}</p>}
+                      </details>
+                    </details>
+                    {(error || store.error) && (
+                      <p className="error" role="alert">
+                        {error || store.error}
+                      </p>
+                    )}
+                  </section>
+                  <section
+                    className="si-config-section si-config-backlog"
+                    aria-label="Pendências atuais no Zoho"
+                  >
+                    <div>
+                      <h3>Pendências atuais · Zoho</h3>
+                      <p>
+                        Chamados atribuídos e não encerrados, inclusive os em espera. Não usa o
+                        filtro de período.
+                      </p>
+                    </div>
+                    <div className="si-config-actions">
+                      {backlog && (
+                        <strong>
+                          {number(backlog.total)} pendentes · {number(backlog.onHold)} em espera
+                        </strong>
+                      )}
+                      <button disabled={backlogBusy || busy} onClick={loadBacklog}>
+                        {backlogBusy
+                          ? `Conferindo ${backlogProgress} chamados…`
+                          : 'Consultar pendências atuais'}
+                      </button>
+                      {backlogBusy && (
+                        <button onClick={() => backlogRequest.current?.abort()}>Cancelar</button>
+                      )}
+                    </div>
+                    <small>
+                      {backlog
+                        ? `Consultado em ${timestamp(backlog.readAt)} · carteira pode mudar após a leitura.`
+                        : 'Consulta da carteira atual pendente.'}
+                    </small>
+                    {backlogError && (
+                      <p className="error" role="alert">
+                        {backlogError}
+                      </p>
+                    )}
+                  </section>
+                </div>
+                <footer className="si-config-dialog-footer">
+                  <span>
+                    {valid
+                      ? `${date(period.start)} a ${date(period.end)} · ${selectedPresentationCount} blocos selecionados`
+                      : 'Período inválido'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setConfigurationOpen(false);
+                      setPresentationMode(false);
+                    }}
+                  >
+                    Concluído
+                  </button>
+                </footer>
+              </section>
+            </div>
+          )}
           <section className="si-presentation-print-title" aria-hidden="true">
             <span>INDICADORES SUPORTE</span>
             <h1>
@@ -1229,91 +1637,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                 ? `${date(period.start)} a ${date(period.end)} · filtros exclusivos desta página · comparação com ${date(past.start)} a ${date(past.end)}`
                 : 'Informe um intervalo válido de até 366 dias.'}
             </p>
-            {!presentationMode && (
-              <IndicatorSettings
-                settings={settings}
-                revision={store.settingsRevision}
-                ready={store.settingsReady && !manualDirty}
-                busy={store.busy}
-                save={store.save}
-              />
-            )}
           </section>
-          {presentationMode && (
-            <section
-              className="si-panel si-presentation-controls"
-              aria-label="Selecionar conteúdo da apresentação"
-            >
-              <div className="si-presentation-controls-heading">
-                <div>
-                  <h2>Conteúdo da apresentação</h2>
-                  <p>
-                    Escolha os blocos visuais. Cada bloco reúne seus gráficos e tabelas
-                    relacionados.
-                  </p>
-                </div>
-                <div className="si-presentation-selection-actions">
-                  <div
-                    className="si-presentation-style"
-                    role="group"
-                    aria-label="Estilo da apresentação"
-                  >
-                    <button
-                      type="button"
-                      aria-pressed={presentationStyle === 'compact'}
-                      onClick={() => setPresentationStyle('compact')}
-                    >
-                      Compacto
-                    </button>
-                    <button
-                      type="button"
-                      aria-pressed={presentationStyle === 'editorial'}
-                      onClick={() => setPresentationStyle('editorial')}
-                    >
-                      Editorial
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPresentationSelection(
-                        new Set(availablePresentationOptions.map((option) => option.key)),
-                      )
-                    }
-                  >
-                    Selecionar tudo
-                  </button>
-                  <button type="button" onClick={() => setPresentationSelection(new Set())}>
-                    Limpar seleção
-                  </button>
-                </div>
-              </div>
-              <div className="si-presentation-options">
-                {availablePresentationOptions.map((option) => (
-                  <label key={option.key}>
-                    <input
-                      type="checkbox"
-                      checked={presentationSelection.has(option.key)}
-                      onChange={(event) =>
-                        setPresentationSelection((current) => {
-                          const next = new Set(current);
-                          if (event.target.checked) next.add(option.key);
-                          else next.delete(option.key);
-                          return next;
-                        })
-                      }
-                    />
-                    <span>{option.label}</span>
-                  </label>
-                ))}
-              </div>
-              {!selectedPresentationCount && (
-                <p className="si-presentation-empty">
-                  Selecione pelo menos um bloco para visualizar ou imprimir.
-                </p>
-              )}
-            </section>
-          )}
           {valid && (!presentationMode || presentationSelection.has('summary')) && (
             <IndicatorCards
               settings={settings}
@@ -1411,18 +1735,6 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             valid={valid}
           />
           <section className="si-panel si-sources" aria-label="Fontes e atualização">
-            <WorkspaceQueryPanel
-              kind="zoho-indicators"
-              value={ownZoho ? { data: ownZoho } : null}
-              disabled={busy || backlogBusy || manualDirty}
-              onLoad={(saved) => setOwnZoho(saved.data)}
-            />
-            <WorkspaceQueryPanel
-              kind="zoho-backlog"
-              value={ownBacklog ? { data: ownBacklog } : null}
-              disabled={busy || backlogBusy}
-              onLoad={(saved) => setOwnBacklog(saved.data)}
-            />
             <div className="si-source-status">
               <strong>OS</strong>
               <small>{sources.orders?.value?.filename || 'Carregue a base em Importação.'}</small>

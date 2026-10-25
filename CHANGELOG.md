@@ -1,3 +1,9 @@
+## 0.69.29 — 25/10/2026
+
+- Reúne período, agente, fontes, cobertura, diagnósticos, pendências e critérios do Indicadores Suporte em um modal de configurações.
+- Leva seleção dos blocos e estilo Compacto/Editorial para a configuração da apresentação.
+- Abre a apresentação em uma tela limpa, com tela cheia, impressão/PDF e retorno à seleção; Esc também retorna à configuração.
+
 ## 0.69.28 — 25/10/2026
 
 - Adiciona modo Apresentação aos Indicadores Suporte, com seleção dos blocos visuais e estilos Compacto ou Editorial.
