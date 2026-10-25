@@ -300,6 +300,22 @@
 .si-editorial-mode .si-story-section[data-section='agents'] {
   grid-column: 1 / -1;
 }
+.si-editorial-mode .si-story-section[data-section='types'] .si-chart-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+.si-editorial-mode .si-story-section[data-section='types'] .si-chart-grid > div + div {
+  padding-top: 14px;
+  border-top: 1px solid var(--ui-line);
+}
+.si-editorial-mode .si-story-section[data-section='types'] .si-table {
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+.si-editorial-mode .si-story-section[data-section='types'] .si-table table {
+  table-layout: fixed;
+}
 .si-editorial-mode .si-story-section + .si-story-section {
   padding-top: 0;
   border-top: 0;
