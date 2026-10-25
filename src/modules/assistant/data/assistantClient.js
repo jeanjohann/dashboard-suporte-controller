@@ -1,5 +1,9 @@
 /** A asserção Access permanece na memória e só segue para o serviço loopback fixo. */
-export async function queryLocalAssistant(question, fetcher = fetch) {
+export async function queryLocalAssistant(
+  question,
+  fetcher = fetch,
+  hostname = globalThis.location?.hostname,
+) {
   if (typeof question !== 'string' || question.trim().length < 3 || question.length > 1000)
     throw new Error('Escreva uma pergunta entre 3 e 1.000 caracteres.');
   const session = await fetcher('/api/assistant/local-session', {
@@ -8,8 +12,13 @@ export async function queryLocalAssistant(question, fetcher = fetch) {
     cache: 'no-store',
     signal: AbortSignal.timeout(15000),
   });
-  if (!session.headers.get('Content-Type')?.includes('application/json'))
-    throw new Error('Entre novamente pelo Cloudflare Access para consultar o laboratório.');
+  if (!session.headers.get('Content-Type')?.includes('application/json')) {
+    if (hostname === 'localhost' || hostname === '127.0.0.1')
+      throw new Error(
+        'A versão local não recebe a sessão do Cloudflare Access. Abra o sistema autenticado para consultar o laboratório.',
+      );
+    throw new Error('Sua sessão do Cloudflare Access expirou. Entre novamente no sistema.');
+  }
   const auth = await session.json();
   if (!session.ok || !auth.assertion) throw new Error(auth.error || 'Sessão não autorizada.');
   let response;

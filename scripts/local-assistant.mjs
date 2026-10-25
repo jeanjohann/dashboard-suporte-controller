@@ -216,19 +216,18 @@ export function createAssistantSession({
         try {
           const result = active.snapshot.queryDemo(parameters);
           active.results.push(result);
+          active.tools.push(`addlog_consultar_${parameters.tipo || 'atendimentos'}`);
           const { source, sources, generatedAt, ...payload } = result;
           return payload;
         } catch (error) {
           return { error: error.message, consulted: false };
         }
       }
-      if (
-        Object.keys(parameters).some((key) => key !== 'tipo' || parameters.tipo !== 'atendimentos')
-      )
-        return { error: 'Filtros ampliados exigem as duas amostras fictícias.', consulted: false };
-      const { period, metrics, criteria, completedWithoutValidDate } = active.snapshot;
-      active.results.push({ legacy: true });
-      return { source: 'Acervo local de OS', period, metrics, criteria, completedWithoutValidDate };
+      return {
+        error:
+          'As ferramentas do agente estão disponíveis somente com o perfil de amostras fictícias.',
+        consulted: false,
+      };
     },
     async run(question) {
       if (busy || Date.now() - lastStarted < cooldown) {
@@ -249,7 +248,7 @@ export function createAssistantSession({
           error.assistantCode = 'ACERVO_READ';
           throw error;
         }
-        active = { question, snapshot, toolCalls: 0, results: [] };
+        active = { question, snapshot, toolCalls: 0, results: [], tools: [] };
         const answer = await query();
         const consulted = active.results.length > 0;
         const display = snapshot.queryDemo ? active.results.at(-1) : snapshot;
@@ -259,7 +258,7 @@ export function createAssistantSession({
           consulted,
           ...(consulted ? display : {}),
           ...(snapshot.queryDemo && consulted
-            ? { consultations: active.results, toolName: 'consultar_acervo' }
+            ? { consultations: active.results, toolName: [...new Set(active.tools)].join(', ') }
             : {}),
         };
       } finally {

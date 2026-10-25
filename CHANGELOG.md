@@ -1,3 +1,10 @@
+## 0.69.24 — 25/10/2026
+
+- Integra o Assistente local ao MCP com ferramentas somente de leitura para atendimentos, trocas e parque, limitadas às amostras fictícias.
+- Vincula consultas MCP à sessão temporária da página, preservando indicadores, período, fontes e filtros no resultado.
+- Expira sessões MCP inativas, restringe origens/Host e melhora mensagens para falhas de autenticação no endereço local.
+- Adiciona teste ponta a ponta do n8n/Gemini/MCP e instruções de backup e restauração do fluxo local.
+
 ## 0.69.23 — 25/10/2026
 
 - Aproveita melhor a área dos gráficos temporais, com eixos menores, datas horizontais e menos marcadores em séries extensas.

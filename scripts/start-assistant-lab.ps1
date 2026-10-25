@@ -1,6 +1,7 @@
-# Inicia os dois serviços de consulta local. O n8n mantém suas próprias credenciais.
+# Inicia os serviços locais de consulta e o MCP de demonstração. O n8n mantém suas próprias credenciais.
 $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'start-local-acervo.ps1')
+& (Join-Path $PSScriptRoot 'start-assistant-mcp.ps1')
 $assistantRuntime = Join-Path $env:LOCALAPPDATA 'Addlog\n8n-lab'
 $assistantEntry = Join-Path $PSScriptRoot 'local-assistant.mjs'
 try {

@@ -1,6 +1,6 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.69.23",
+  "version": "0.69.24",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,6 +9,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build && node scripts/bundle-report.mjs",
     "test": "node --test",
+    "test:assistant-e2e": "node scripts/run-assistant-e2e.mjs",
     "benchmark:monitoring": "node scripts/benchmark-monitoring.mjs",
     "check:imports": "node scripts/check-imports.mjs",
     "format": "prettier --write src server scripts docs README.md CHANGELOG.md index.html package.json wrangler.jsonc vite.config.js .prettierrc.json",
@@ -18,15 +19,23 @@
     "benchmark:dashboard": "node scripts/benchmark-dashboard.mjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "express": "^5.3.0",
     "jose": "^6.2.12",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^3.10.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "prettier": "3.9.10",
     "vite": "^6.0.0",
     "wrangler": "^4.149.0"
+  },
+  "overrides": {
+    "miniflare": {
+      "undici": "7.30.1"
+    }
   }
 }

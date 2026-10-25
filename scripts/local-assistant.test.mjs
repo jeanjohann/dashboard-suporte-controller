@@ -213,7 +213,7 @@ test('diagnósticos são específicos e não devolvem chave, pergunta ou erro br
   );
 });
 
-test('contexto só existe durante a pergunta e ferramenta usa snapshot único sem fonte identificável', async () => {
+test('contexto efêmero não expõe o perfil real para a ferramenta do agente', async () => {
   let reads = 0;
   let session;
   session = createAssistantSession({
@@ -232,11 +232,9 @@ test('contexto só existe durante a pergunta e ferramenta usa snapshot único se
       assert.equal(session.input().question, 'Quantos atendimentos?');
       assert.throws(() => session.tool('shell'));
       const result = session.tool('atendimentos');
-      assert.equal(JSON.stringify(result).includes('PRIVADO'), false);
-      assert.equal(result.metrics.completed, 20);
-      session.tool('atendimentos');
-      assert.throws(() => session.tool('atendimentos'));
-      return { answer: '20 atendimentos' };
+      assert.equal(result.consulted, false);
+      assert.match(result.error, /somente com o perfil de amostras fictícias/);
+      return { answer: 'Não há consulta fictícia disponível para este perfil.' };
     },
   });
   assert.throws(() => session.input());
@@ -244,8 +242,8 @@ test('contexto só existe durante a pergunta e ferramenta usa snapshot único se
   assert.equal(session.authorized('errado'), false);
   const result = await session.run('Quantos atendimentos?');
   assert.equal(reads, 1);
-  assert.equal(result.consulted, true);
-  assert.equal(result.source.filename, 'PRIVADO');
+  assert.equal(result.consulted, false);
+  assert.equal(result.metrics, undefined);
   assert.throws(() => session.input());
   assert.throws(() => session.tool('atendimentos'));
 });
@@ -269,8 +267,11 @@ test('perguntas inválidas não viram parâmetros e agente sem ferramenta não r
   assert.equal(result.metrics, undefined);
   const workflow = assistantAgentWorkflow({ id: 'g', name: 'Gemini' }, { id: 'a', name: 'Acervo' });
   assert.equal(workflow.nodes.filter((node) => node.type.endsWith('.agent')).length, 1);
-  assert.equal(workflow.nodes.filter((node) => node.type.endsWith('httpRequestTool')).length, 1);
-  assert.equal(workflow.connections.consultar_acervo.ai_tool[0][0].node, 'Agente de suporte');
+  assert.equal(workflow.nodes.filter((node) => node.type.endsWith('mcpClientTool')).length, 1);
+  assert.equal(
+    workflow.connections['Ferramentas analíticas MCP'].ai_tool[0][0].node,
+    'Agente de suporte',
+  );
 });
 
 test('amostras exibem o recorte efetivamente consultado e erros não criam indicadores', async () => {
@@ -305,7 +306,7 @@ test('amostras exibem o recorte efetivamente consultado e erros não criam indic
   assert.equal(result.metrics.total, 7);
   assert.equal(result.source.filename, 'LOCAL');
   assert.equal(result.consultations.length, 1);
-  assert.equal(result.toolName, 'consultar_acervo');
+  assert.equal(result.toolName, 'addlog_consultar_parque');
   session = createAssistantSession({
     token: 'q'.repeat(48),
     readSnapshot: async () => ({
@@ -321,4 +322,34 @@ test('amostras exibem o recorte efetivamente consultado e erros não criam indic
   const invalid = await session.run('Consulta inválida');
   assert.equal(invalid.consulted, false);
   assert.equal(invalid.metrics, undefined);
+});
+
+test('ponte retorna métricas de cada ferramenta MCP e identifica as ferramentas consultadas', async () => {
+  let session;
+  session = createAssistantSession({
+    token: 'r'.repeat(48),
+    cooldown: 0,
+    readSnapshot: async () => ({
+      catalog: { profile: 'demo' },
+      queryDemo: (parameters) => ({
+        profile: 'demo',
+        source: { filename: `DEMO-${parameters.tipo}.xlsx` },
+        metrics: { count: parameters.tipo === 'trocas' ? 2 : 9 },
+        period: { start: '2026-10-01', end: '2026-10-25' },
+      }),
+    }),
+    query: async () => {
+      session.tool('atendimentos', { tipo: 'trocas' });
+      session.tool('atendimentos', { tipo: 'parque' });
+      return { answer: 'As ferramentas de trocas e parque foram consultadas.' };
+    },
+  });
+  const result = await session.run('Consulte trocas e parque.');
+  assert.equal(result.consulted, true);
+  assert.equal(result.toolName, 'addlog_consultar_trocas, addlog_consultar_parque');
+  assert.equal(result.consultations.length, 2);
+  assert.deepEqual(
+    result.consultations.map((item) => item.metrics.count),
+    [2, 9],
+  );
 });

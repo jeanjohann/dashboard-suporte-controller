@@ -28,3 +28,24 @@ test('cliente mantém sessão em memória e envia asserção somente ao loopback
   );
   assert.equal(count, 1);
 });
+
+test('cliente explica por que a página local não autentica via Cloudflare Access', async () => {
+  await assert.rejects(
+    () =>
+      queryLocalAssistant(
+        'Quais os totais?',
+        async () => new Response('<!doctype html>', { headers: { 'Content-Type': 'text/html' } }),
+        '127.0.0.1',
+      ),
+    /versão local não recebe a sessão do Cloudflare Access/,
+  );
+  await assert.rejects(
+    () =>
+      queryLocalAssistant(
+        'Quais os totais?',
+        async () => new Response('<!doctype html>', { headers: { 'Content-Type': 'text/html' } }),
+        'dashboard-suporte-controller.jean-johann.workers.dev',
+      ),
+    /sessão do Cloudflare Access expirou/,
+  );
+});
