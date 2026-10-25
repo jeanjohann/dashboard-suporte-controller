@@ -1,3 +1,8 @@
+## 0.69.25 — 25/10/2026
+
+- Aperfeiçoa a densidade compacta global, com controles menores em telas amplas e alvos adequados em dispositivos móveis.
+- Distingue a leitura do retrato salvo da consulta ativa à integração no Monitoramento.
+
 ## 0.69.24 — 25/10/2026
 
 - Integra o Assistente local ao MCP com ferramentas somente de leitura para atendimentos, trocas e parque, limitadas às amostras fictícias.

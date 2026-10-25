@@ -55,6 +55,7 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
     snapshot,
     source,
     busy,
+    loadingSaved,
     cooldown,
     error,
     refresh,
@@ -337,14 +338,16 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                 <p>Comunicação, prioridades e acompanhamento do suporte.</p>
               </div>
               <div className="monitoring-actions">
-                <button disabled={busy || cooldown > 0} onClick={refresh}>
-                  {busy
-                    ? 'Consultando integração…'
-                    : cooldown > 0
-                      ? `Aguarde ${cooldown} s`
-                      : snapshot && !demo
-                        ? 'Atualizar dados'
-                        : 'Consultar integração'}
+                <button disabled={busy || loadingSaved || cooldown > 0} onClick={refresh}>
+                  {loadingSaved
+                    ? 'Carregando base salva…'
+                    : busy
+                      ? 'Consultando integração…'
+                      : cooldown > 0
+                        ? `Aguarde ${cooldown} s`
+                        : snapshot && !demo
+                          ? 'Atualizar dados'
+                          : 'Consultar integração'}
                 </button>
               </div>
             </header>
@@ -356,8 +359,8 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     : 'Ainda não há uma coleta salva. Faça a primeira atualização ou aguarde o próximo horário.'}{' '}
                   · Coletas às 9h, 12h, 15h e 18h (São Paulo). Histórico de 30 dias.
                 </span>
-                <button onClick={reloadSaved} disabled={busy}>
-                  Carregar base salva
+                <button onClick={reloadSaved} disabled={busy || loadingSaved}>
+                  {loadingSaved ? 'Carregando base salva…' : 'Carregar base salva'}
                 </button>
                 {lastAttempt?.status === 'failed' && (
                   <p role="status">

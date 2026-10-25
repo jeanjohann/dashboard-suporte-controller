@@ -12,6 +12,7 @@ export function useMonitoringSource(active = true) {
   const [savedAt, setSavedAt] = useState(null),
     [savedMode, setSavedMode] = useState(false),
     [lastAttempt, setLastAttempt] = useState(null);
+  const [loadingSaved, setLoadingSaved] = useState(managed);
   const [source, setSource] = useState(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState('');
@@ -34,7 +35,7 @@ export function useMonitoringSource(active = true) {
     setSavedAt(null);
     setSavedMode(false);
     setLastAttempt(null);
-    setBusy(true);
+    setLoadingSaved(true);
     async function load() {
       try {
         const status = await api('/api/sources/status', { signal: controller.signal });
@@ -56,7 +57,7 @@ export function useMonitoringSource(active = true) {
       } catch (error) {
         if (live) setError(error.message);
       } finally {
-        if (live) setBusy(false);
+        if (live) setLoadingSaved(false);
       }
     }
     load();
@@ -70,6 +71,7 @@ export function useMonitoringSource(active = true) {
     const controller = new AbortController(),
       run = generation.current;
     request.current = controller;
+    setLoadingSaved(true);
     try {
       const data = await fetchSavedMonitoring({ signal: controller.signal });
       if (generation.current !== run) return;
@@ -82,6 +84,7 @@ export function useMonitoringSource(active = true) {
       if (generation.current === run) setError(error.message);
     } finally {
       if (request.current === controller) request.current = null;
+      if (generation.current === run) setLoadingSaved(false);
     }
   }
   useEffect(() => {
@@ -183,6 +186,7 @@ export function useMonitoringSource(active = true) {
     snapshot,
     source,
     busy,
+    loadingSaved,
     cooldown,
     error,
     refresh,
