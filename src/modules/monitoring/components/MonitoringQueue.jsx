@@ -2,7 +2,6 @@ import { clientDisplay } from '../../../shared/data/clientDisplay.js';
 /** Tabela prioritária e histórico manual de tratamento, sem confundir situação administrativa com comunicação. */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Section } from '../../../components/Section.jsx';
-import { Icon } from '../../../components/Icon.jsx';
 import { MonitoringReminderEditor } from './MonitoringReminderEditor.jsx';
 import { reminderOverdue } from '../domain/monitoringReminders.js';
 import {
@@ -40,6 +39,16 @@ const columns = [
   ['stage', 'Acompanhamento'],
 ];
 
+const stageTones = {
+  'Não iniciado': 'error',
+  'Em análise': 'info',
+  'Aguardando contato': 'warning',
+  'Manutenção agendada': 'violet',
+  'Acompanhamento encerrado': 'success',
+};
+
+const stageTone = (status) => stageTones[status] || 'info';
+
 export function MonitoringQueue({
   result,
   notes,
@@ -57,12 +66,12 @@ export function MonitoringQueue({
 }) {
   const detail = result.rows.find((row) => row.key === selected);
   const saved = detail ? notes[detail.key] : null;
-  const historyPanel = useRef();
   const [draft, setDraft] = useState({ status: monitoringStages[0], owner: '', text: '' });
   const [message, setMessage] = useState('');
   const [confirmTreatmentDelete, setConfirmTreatmentDelete] = useState(false);
   const [confirmEntryDelete, setConfirmEntryDelete] = useState(null);
   const [sort, setSort] = useState(null);
+  const dialogRef = useRef(null);
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const defaults = columns
       .map(([key]) => key)
@@ -104,14 +113,36 @@ export function MonitoringQueue({
     setMessage('');
     setConfirmTreatmentDelete(false);
     setConfirmEntryDelete(null);
-    if (selected)
-      historyPanel.current?.scrollIntoView({
-        block: 'nearest',
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-          ? 'instant'
-          : 'smooth',
-      });
   }, [selected]);
+  useEffect(() => {
+    if (!selected) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialogRef.current?.focus();
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') onSelect(null);
+      if (event.key === 'Tab' && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll(
+          'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]',
+        );
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      window.removeEventListener('keydown', closeOnEscape);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selected, onSelect]);
   const change = (key, value) => {
     setDraft((previous) => ({ ...previous, [key]: value }));
     setMessage('');
@@ -226,6 +257,7 @@ export function MonitoringQueue({
             {orderedRows.slice(page * pageSize, page * pageSize + pageSize).map((row) => {
               const signal = monitoringIndicator(row);
               const reminder = reminders.records.find((record) => record.key === row.key);
+              const stage = notes[row.key]?.status || monitoringStages[0];
               return (
                 <tr key={row.key} data-signal={signal.tone}>
                   {columns
@@ -276,19 +308,18 @@ export function MonitoringQueue({
                         ) : key === 'state' ? (
                           monitoringStates[row.state]
                         ) : (
-                          <>
+                          <div className="monitoring-stage-actions">
+                            <span className="monitoring-stage-label" data-stage={stageTone(stage)}>
+                              <i aria-hidden="true" />
+                              {stage}
+                            </span>
                             <button
                               type="button"
-                              className="monitoring-followup-button"
-                              aria-label={`Histórico de ${row.plate} · ${row.clientName}`}
-                              aria-expanded={selected === row.key}
-                              aria-controls={
-                                selected === row.key ? 'monitoring-selected-history' : undefined
-                              }
-                              onClick={() => onSelect(selected === row.key ? null : row.key)}
+                              className="monitoring-open-equipment"
+                              aria-label={`Abrir detalhes do equipamento ${row.plate || ''}`}
+                              onClick={() => onSelect(row.key)}
                             >
-                              {notes[row.key]?.status || monitoringStages[0]}
-                              <Icon name={selected === row.key ? 'up' : 'down'} size={12} />
+                              Abrir
                             </button>
                             {reminder?.status === 'scheduled' && (
                               <small
@@ -302,7 +333,7 @@ export function MonitoringQueue({
                                 {monitoringDate(reminder.dueAt)}
                               </small>
                             )}
-                          </>
+                          </div>
                         )}
                       </td>
                     ))}
@@ -371,207 +402,321 @@ export function MonitoringQueue({
         </button>
       </div>
       {detail && (
-        <section
-          id="monitoring-selected-history"
-          ref={historyPanel}
-          className="monitoring-detail"
-          aria-label="Histórico e tratamento selecionado"
+        <div
+          className="monitoring-modal-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) onSelect(null);
+          }}
         >
-          <div className="monitoring-actions">
-            <h3>
-              {detail.plate} · {clientDisplay(detail.clientName)}
-            </h3>
-            <button onClick={() => onSelect(null)}>Fechar histórico</button>
-          </div>
-          <MonitoringReminderEditor
-            key={detail.key}
-            vehicle={detail}
-            record={reminders.records.find((record) => record.key === detail.key)}
-            reminders={reminders}
-          />
-          <p className="scope">
-            Rastreador: {detail.trackerId} · Veículo: {detail.vehicleId} · Coleta:{' '}
-            {monitoringDate(detail.collectionAt)} · Alimentação:{' '}
-            {monitoringVoltage(detail.supplyVoltageV)} · Perfil:{' '}
-            {detail.profile == null || detail.profile === ''
-              ? 'Não informado'
-              : String(detail.profile)}
-          </p>
-          <p className="scope">
-            Identificador: {detail.identifier ?? 'Não informado'} · Modelo:{' '}
-            {detail.deviceModel || 'Não informado'} · Posições em 24 h:{' '}
-            {detail.positions24h ?? 'Não informado'} · Falha de alimentação externa:{' '}
-            {detail.externalPowerFailure == null
-              ? 'Não informado'
-              : detail.externalPowerFailure
-                ? 'Sim'
-                : 'Não'}{' '}
-            · Bateria interna: {monitoringBatteryState(detail.batteryState)} · Carga:{' '}
-            {detail.batteryPercent == null ? 'Não informado' : `${detail.batteryPercent}%`}. A
-            tensão pode representar a bateria interna quando há falha externa nos MXT-130/160;
-            posições não representam consumo de dados dos chips.
-          </p>
-          <div className="monitoring-treatment-grid">
-            <div className="monitoring-treatment-form" data-no-print>
-              <h4>Registrar tratamento</h4>
-              <div className="monitoring-fields">
-                <label>
-                  Status de acompanhamento
-                  <select
-                    aria-label="Status de acompanhamento"
-                    value={draft.status}
-                    onChange={(e) => change('status', e.target.value)}
-                  >
-                    {monitoringStages.map((stage) => (
-                      <option key={stage}>{stage}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Responsável pelo tratamento
-                  <input value={draft.owner} onChange={(e) => change('owner', e.target.value)} />
-                </label>
-                <label>
-                  O que foi tratado
-                  <textarea value={draft.text} onChange={(e) => change('text', e.target.value)} />
-                </label>
+          <section
+            id="monitoring-selected-history"
+            className="monitoring-detail monitoring-equipment-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="monitoring-equipment-title"
+            tabIndex={-1}
+            ref={dialogRef}
+          >
+            <div className="monitoring-modal-heading">
+              <div>
+                <p className="monitoring-modal-eyebrow">DETALHES DO EQUIPAMENTO</p>
+                <h2 id="monitoring-equipment-title">
+                  {detail.plate || 'Veículo sem placa'} ·{' '}
+                  {clientDisplay(detail.clientName || detail.clientId)}
+                </h2>
               </div>
               <button
                 type="button"
-                disabled={treatment.loading || Boolean(treatment.error) || treatment.saving}
-                onClick={register}
+                className="monitoring-modal-close"
+                onClick={() => onSelect(null)}
               >
-                {treatment.saving ? 'Salvando…' : 'Salvar atualização'}
+                Fechar
               </button>
-              {message && (
-                <p className="scope" role="status">
-                  {message}
-                </p>
-              )}
-              {treatment.canDelete && saved && !saved.deleted && (
-                <div className="monitoring-reminder-delete monitoring-treatment-delete">
-                  {!confirmTreatmentDelete ? (
-                    <button
-                      type="button"
-                      className="secondary"
-                      disabled={treatment.loading || Boolean(treatment.error) || treatment.saving}
-                      onClick={() => setConfirmTreatmentDelete(true)}
-                    >
-                      Excluir acompanhamento
-                    </button>
-                  ) : (
-                    <div role="group" aria-label="Confirmar exclusão do acompanhamento">
-                      <p>
-                        Excluir o status e todo o histórico de tratamento deste veículo? A ação
-                        ficará fora da consulta e não poderá ser desfeita pela tela. Os lembretes
-                        serão preservados.
-                      </p>
-                      <div className="monitoring-actions">
-                        <button
-                          type="button"
-                          disabled={
-                            treatment.loading || Boolean(treatment.error) || treatment.saving
-                          }
-                          onClick={removeTreatment}
-                        >
-                          {treatment.saving ? 'Excluindo…' : 'Confirmar exclusão'}
-                        </button>
-                        <button
-                          type="button"
-                          className="secondary"
-                          disabled={treatment.saving}
-                          onClick={() => setConfirmTreatmentDelete(false)}
-                        >
-                          Manter acompanhamento
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
-            <div className="monitoring-history">
-              <h4>Histórico de tratamento · {history.length}</h4>
-              {treatment.loading ? (
-                <p className="scope">Carregando histórico salvo…</p>
-              ) : treatment.error ? (
-                <p className="notice" role="alert">
-                  {treatment.error} O botão de gravação fica bloqueado até a leitura ser confirmada.
-                  <button type="button" onClick={treatment.reload}>
-                    Tentar novamente
-                  </button>
-                </p>
-              ) : saved?.deleted ? (
-                <p className="scope">Acompanhamento e histórico excluídos pelo administrador.</p>
-              ) : !history.length ? (
-                <p className="scope">Nenhuma atualização registrada para este veículo.</p>
-              ) : (
-                <ol>
-                  {history.map(({ entry, index }) => (
-                    <li key={`${entry.at}-${index}`}>
-                      {treatment.canDelete && (
-                        <button
-                          type="button"
-                          className="monitoring-history-delete"
-                          aria-label={`Excluir nota de ${monitoringDate(entry.at)}`}
-                          title="Excluir esta nota"
-                          disabled={
-                            treatment.loading || Boolean(treatment.error) || treatment.saving
-                          }
-                          onClick={() => setConfirmEntryDelete(index)}
-                          data-no-print
-                        >
-                          ×
-                        </button>
-                      )}
-                      <div>
-                        <strong>{entry.status}</strong>
-                        <time dateTime={entry.at}>{monitoringDate(entry.at)}</time>
-                      </div>
-                      <small>Responsável: {entry.owner || 'Não informado'}</small>
-                      <p>
-                        {entry.text || 'Alteração de status/responsável sem observação adicional.'}
-                      </p>
-                      {confirmEntryDelete === index && (
-                        <div
-                          className="monitoring-history-confirm"
-                          role="group"
-                          aria-label="Confirmar exclusão da nota"
-                          data-no-print
-                        >
-                          <span>
-                            Excluir esta nota? Se for a última, o acompanhamento também será
-                            encerrado.
-                          </span>
+            <div className="monitoring-equipment-facts" aria-label="Dados do equipamento">
+              <div>
+                <span>Placa</span>
+                <strong>{detail.plate || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>Cliente / base</span>
+                <strong>{clientDisplay(detail.clientName || detail.clientId)}</strong>
+              </div>
+              <div>
+                <span>ID cliente / base</span>
+                <strong>{detail.clientId || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>Prefixo</span>
+                <strong>{detail.prefix || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>ID rastreador</span>
+                <strong>{detail.trackerId || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>Modelo</span>
+                <strong>{detail.deviceModel || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>Identificador</span>
+                <strong>{detail.identifier || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>ICCID</span>
+                <strong>{detail.iccid || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>MSISDN</span>
+                <strong>{detail.msisdn || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>Veículo</span>
+                <strong>{detail.vehicleId || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>Última atualização</span>
+                <strong>{monitoringDate(detail.lastRecordAt)}</strong>
+              </div>
+              <div>
+                <span>Coleta recebida</span>
+                <strong>{monitoringDate(detail.collectionAt)}</strong>
+              </div>
+              <div>
+                <span>Tempo sem atualização</span>
+                <strong>{monitoringDuration(detail.hours)}</strong>
+              </div>
+              <div>
+                <span>Situação técnica</span>
+                <strong>{monitoringStates[detail.state] || 'Não informado'}</strong>
+              </div>
+              <div>
+                <span>Status de acompanhamento</span>
+                <strong>{saved?.status || monitoringStages[0]}</strong>
+              </div>
+              <div>
+                <span>Alimentação</span>
+                <strong>{monitoringVoltage(detail.supplyVoltageV)}</strong>
+              </div>
+              <div>
+                <span>Falha alimentação externa</span>
+                <strong>
+                  {detail.externalPowerFailure == null
+                    ? 'Não informado'
+                    : detail.externalPowerFailure
+                      ? 'Sim'
+                      : 'Não'}
+                </strong>
+              </div>
+              <div>
+                <span>Bateria interna</span>
+                <strong>{monitoringBatteryState(detail.batteryState)}</strong>
+              </div>
+              <div>
+                <span>Carga da bateria</span>
+                <strong>
+                  {detail.batteryPercent == null ? 'Não informado' : `${detail.batteryPercent}%`}
+                </strong>
+              </div>
+              <div>
+                <span>Posições · 24 h</span>
+                <strong>
+                  {detail.positions24h == null
+                    ? 'Não informado'
+                    : detail.positions24h.toLocaleString('pt-BR')}
+                </strong>
+              </div>
+              <div>
+                <span>Perfil</span>
+                <strong>
+                  {detail.profile == null || detail.profile === ''
+                    ? 'Não informado'
+                    : String(detail.profile)}
+                </strong>
+              </div>
+            </div>
+            <p className="scope monitoring-equipment-note">
+              A tensão pode representar a bateria interna quando há falha externa nos MXT-130/160;
+              posições não representam consumo de dados dos chips.
+            </p>
+            <MonitoringReminderEditor
+              key={detail.key}
+              vehicle={detail}
+              record={reminders.records.find((record) => record.key === detail.key)}
+              reminders={reminders}
+            />
+            <div className="monitoring-treatment-grid">
+              <div className="monitoring-treatment-form" data-no-print>
+                <h4>Registrar tratamento</h4>
+                <div className="monitoring-fields">
+                  <label>
+                    Status de acompanhamento
+                    <select
+                      aria-label="Status de acompanhamento"
+                      value={draft.status}
+                      onChange={(e) => change('status', e.target.value)}
+                    >
+                      {monitoringStages.map((stage) => (
+                        <option key={stage}>{stage}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    Responsável pelo tratamento
+                    <input value={draft.owner} onChange={(e) => change('owner', e.target.value)} />
+                  </label>
+                  <label>
+                    O que foi tratado
+                    <textarea value={draft.text} onChange={(e) => change('text', e.target.value)} />
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  disabled={treatment.loading || Boolean(treatment.error) || treatment.saving}
+                  onClick={register}
+                >
+                  {treatment.saving ? 'Salvando…' : 'Salvar atualização'}
+                </button>
+                {message && (
+                  <p className="scope" role="status">
+                    {message}
+                  </p>
+                )}
+                {treatment.canDelete && saved && !saved.deleted && (
+                  <div className="monitoring-reminder-delete monitoring-treatment-delete">
+                    {!confirmTreatmentDelete ? (
+                      <button
+                        type="button"
+                        className="secondary"
+                        disabled={treatment.loading || Boolean(treatment.error) || treatment.saving}
+                        onClick={() => setConfirmTreatmentDelete(true)}
+                      >
+                        Excluir acompanhamento
+                      </button>
+                    ) : (
+                      <div role="group" aria-label="Confirmar exclusão do acompanhamento">
+                        <p>
+                          Excluir o status e todo o histórico de tratamento deste veículo? A ação
+                          ficará fora da consulta e não poderá ser desfeita pela tela. Os lembretes
+                          serão preservados.
+                        </p>
+                        <div className="monitoring-actions">
                           <button
                             type="button"
-                            disabled={treatment.saving}
-                            onClick={() => removeHistoryEntry(index)}
+                            disabled={
+                              treatment.loading || Boolean(treatment.error) || treatment.saving
+                            }
+                            onClick={removeTreatment}
                           >
-                            {treatment.saving ? 'Excluindo…' : 'Confirmar'}
+                            {treatment.saving ? 'Excluindo…' : 'Confirmar exclusão'}
                           </button>
                           <button
                             type="button"
                             className="secondary"
                             disabled={treatment.saving}
-                            onClick={() => setConfirmEntryDelete(null)}
+                            onClick={() => setConfirmTreatmentDelete(false)}
                           >
-                            Cancelar
+                            Manter acompanhamento
                           </button>
                         </div>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="monitoring-history">
+                <h4>Histórico de tratamento · {history.length}</h4>
+                {treatment.loading ? (
+                  <p className="scope">Carregando histórico salvo…</p>
+                ) : treatment.error ? (
+                  <p className="notice" role="alert">
+                    {treatment.error} O botão de gravação fica bloqueado até a leitura ser
+                    confirmada.
+                    <button type="button" onClick={treatment.reload}>
+                      Tentar novamente
+                    </button>
+                  </p>
+                ) : saved?.deleted ? (
+                  <p className="scope">Acompanhamento e histórico excluídos pelo administrador.</p>
+                ) : !history.length ? (
+                  <p className="scope">Nenhuma atualização registrada para este veículo.</p>
+                ) : (
+                  <ol>
+                    {history.map(({ entry, index }) => (
+                      <li key={`${entry.at}-${index}`}>
+                        {treatment.canDelete && (
+                          <button
+                            type="button"
+                            className="monitoring-history-delete"
+                            aria-label={`Excluir nota de ${monitoringDate(entry.at)}`}
+                            title="Excluir esta nota"
+                            disabled={
+                              treatment.loading || Boolean(treatment.error) || treatment.saving
+                            }
+                            onClick={() => setConfirmEntryDelete(index)}
+                            data-no-print
+                          >
+                            ×
+                          </button>
+                        )}
+                        <div>
+                          <strong
+                            className="monitoring-stage-label"
+                            data-stage={stageTone(entry.status)}
+                          >
+                            <i aria-hidden="true" />
+                            {entry.status}
+                          </strong>
+                          <time dateTime={entry.at}>{monitoringDate(entry.at)}</time>
+                        </div>
+                        <small>Responsável: {entry.owner || 'Não informado'}</small>
+                        <p>
+                          {entry.text ||
+                            'Alteração de status/responsável sem observação adicional.'}
+                        </p>
+                        {confirmEntryDelete === index && (
+                          <div
+                            className="monitoring-history-confirm"
+                            role="group"
+                            aria-label="Confirmar exclusão da nota"
+                            data-no-print
+                          >
+                            <span>
+                              Excluir esta nota? Se for a última, o acompanhamento também será
+                              encerrado.
+                            </span>
+                            <button
+                              type="button"
+                              disabled={treatment.saving}
+                              onClick={() => removeHistoryEntry(index)}
+                            >
+                              {treatment.saving ? 'Excluindo…' : 'Confirmar'}
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary"
+                              disabled={treatment.saving}
+                              onClick={() => setConfirmEntryDelete(null)}
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </div>
             </div>
-          </div>
-          <p className="scope">
-            Histórico administrativo. Encerrar acompanhamento não confirma recuperação da
-            comunicação.{' '}
-            {treatment.mode === 'remote' ? 'Salvo no banco do sistema.' : 'Salvo neste navegador.'}
-          </p>
-        </section>
+            <p className="scope">
+              Histórico administrativo. Encerrar acompanhamento não confirma recuperação da
+              comunicação.{' '}
+              {treatment.mode === 'remote'
+                ? 'Salvo no banco do sistema.'
+                : 'Salvo neste navegador.'}
+            </p>
+          </section>
+        </div>
       )}
     </Section>
   );
