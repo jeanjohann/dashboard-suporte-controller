@@ -159,17 +159,21 @@
 .overview-presentation-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: start;
+  align-items: stretch;
   gap: 18px;
   margin-top: 18px;
 }
 .overview-inline-panel--operations {
   grid-column: span 2;
+  display: flex;
+  min-height: 0;
 }
 .overview-operation-widgets {
   display: grid;
+  flex: 1;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
+  align-items: stretch;
+  min-width: 0;
   gap: 18px;
 }
 .overview-inline-panel--support,
@@ -180,6 +184,7 @@
 .overview-presentation-grid .workspace-section {
   margin: 0;
   min-width: 0;
+  height: 100%;
 }
 .overview-presentation-grid .report-heading {
   gap: 10px;
@@ -201,37 +206,30 @@
 }
 .overview-comparison-body {
   min-width: 0;
+  height: 100%;
 }
 @media screen and (min-width: 801px) {
   .overview-inline-panel--operations .workspace-section:not([hidden]),
   .overview-inline-panel--clients .workspace-section:not([hidden]) {
     display: flex;
     flex-direction: column;
-  }
-  .overview-inline-panel--operations .workspace-section:has(> .section-body:not([hidden])),
-  .overview-inline-panel--clients .workspace-section:has(> .section-body:not([hidden])) {
-    height: clamp(500px, 75vh, 720px);
+    height: auto;
   }
   .overview-inline-panel--operations .section-body:not([hidden]),
   .overview-inline-panel--clients .section-body:not([hidden]) {
-    display: flex;
-    flex: 1;
+    display: block;
+    flex: initial;
     min-height: 0;
   }
   .overview-inline-panel--operations .section-content,
   .overview-inline-panel--clients .section-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    display: block;
+    flex: initial;
     min-width: 0;
-    min-height: 0;
   }
   .overview-comparison-body {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
-    scrollbar-gutter: stable;
-    padding-right: 6px;
+    overflow: visible;
+    padding-right: 0;
   }
   .overview-comparison-body:focus-visible {
     outline: 2px solid var(--ui-accent);
@@ -286,6 +284,93 @@
 .overview-park-metrics {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-bottom: 18px;
+}
+/* A densidade troca o ritmo de leitura sem mudar filtros, métricas ou critérios. */
+html[data-density='compact'] .overview-presentation-grid {
+  gap: 12px;
+  margin-top: 12px;
+}
+html[data-density='compact'] .overview-operation-widgets {
+  gap: 12px;
+}
+html[data-density='compact'] .overview-presentation-grid .report-heading,
+html[data-density='compact'] .overview-presentation-grid .section-body {
+  padding: 10px;
+}
+html[data-density='compact'] .overview-presentation-grid .readable-bar-row {
+  min-height: 34px;
+  padding: 6px 0;
+  gap: 8px;
+}
+html[data-density='compact'] .overview-inline-chart {
+  padding: 10px;
+}
+html[data-density='compact'] .overview-inline-chart .chart-plot {
+  height: 200px !important;
+}
+html[data-density='compact'] .overview-inline-panel--support .support-metric-grid,
+html[data-density='compact'] .overview-inline-panel--support .support-extra-metrics {
+  gap: 8px;
+}
+html[data-density='compact'] .overview-inline-panel--support .support-metric {
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+html[data-density='compact'] .overview-inline-panel--support .support-metric-heading {
+  min-height: 22px;
+  font-size: 10px;
+}
+html[data-density='compact'] .overview-inline-panel--support .support-metric-values {
+  gap: 8px;
+  margin-top: 5px;
+}
+html[data-density='compact'] .overview-inline-panel--support .support-metric-values strong {
+  font-size: 21px;
+  line-height: 1.15;
+}
+html[data-density='compact'] .overview-inline-panel--support .support-delta {
+  margin-top: 4px;
+  font-size: 9px;
+}
+html[data-density='editorial'] .overview-presentation-grid {
+  gap: 22px;
+  margin-top: 22px;
+}
+html[data-density='editorial'] .overview-operation-widgets {
+  gap: 22px;
+}
+html[data-density='editorial'] .overview-presentation-grid .report-heading,
+html[data-density='editorial'] .overview-presentation-grid .section-body {
+  padding: 20px;
+}
+html[data-density='editorial'] .overview-presentation-grid .report-title h2 {
+  font-size: 16px;
+}
+html[data-density='editorial'] .overview-presentation-grid .readable-bar-row {
+  min-height: 48px;
+  padding: 12px 0;
+}
+html[data-density='editorial'] .overview-inline-chart {
+  padding: 18px;
+}
+html[data-density='editorial'] .overview-inline-chart .chart-plot {
+  height: 300px !important;
+}
+html[data-density='editorial'] .overview-comparison-body > .scope,
+html[data-density='editorial'] .overview-inline-panel > .scope {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.overview-presentation-grid .workspace-section:has(> .section-body:not([hidden])) {
+  display: flex;
+  flex-direction: column;
+}
+.overview-presentation-grid .section-body:not([hidden]) {
+  flex: 1;
+}
+.overview-presentation-grid .section-content {
+  flex: 1;
+  min-height: 0;
 }
 .overview-inline-category {
   display: flex;

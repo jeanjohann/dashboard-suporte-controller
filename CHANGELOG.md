@@ -1,3 +1,8 @@
+## 0.69.36 — 25/10/2026
+
+- Separa o modo Compacto do Editorial na Visão geral: compacta indicadores e espaçamentos sem perder dados, e dá mais presença aos textos e gráficos editoriais.
+- Alinha os cards de gráficos na mesma linha e remove rolagem interna dos resumos.
+
 ## 0.69.35 — 25/10/2026
 
 - Adiciona os temas Arctic Frost, Sunset Boulevard e Tech Innovation com paletas próprias para interface, estados e gráficos.
