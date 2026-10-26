@@ -1398,6 +1398,11 @@
 .si-compact-mode .si-story-section details.chart-drilldown-picker {
   display: block;
 }
+@media screen {
+  .si-compact-mode .si-story-section details.si-manual-form {
+    display: block;
+  }
+}
 .si-compact-mode .si-story-section details.si-client-reasons,
 .si-compact-mode .si-story-section details.si-motive-details {
   display: block;
