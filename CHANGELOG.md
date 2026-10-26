@@ -1,3 +1,7 @@
+## 0.69.39 — 26/10/2026
+
+- Corrige as referências do estado de persistência que impediam abrir o Monitoramento Ativo.
+
 ## 0.69.38 — 26/10/2026
 
 - Persiste o histórico manual de acompanhamento dos veículos no D1 do piloto, com revisão concorrente e acesso restrito ao administrador principal.

@@ -629,15 +629,15 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     {result.issues.length}.
                   </p>
                 )}
-                {category === 'queue' && treatment.loading && (
+                {category === 'queue' && treatments.loading && (
                   <p className="scope" role="status">
                     Carregando histórico de tratamento salvo…
                   </p>
                 )}
-                {category === 'queue' && treatment.error && (
+                {category === 'queue' && treatments.error && (
                   <p className="notice" role="alert">
-                    {treatment.error} O status e o histórico não foram presumidos.
-                    <button type="button" onClick={treatment.reload}>
+                    {treatments.error} O status e o histórico não foram presumidos.
+                    <button type="button" onClick={treatments.reload}>
                       Tentar novamente
                     </button>
                   </p>
