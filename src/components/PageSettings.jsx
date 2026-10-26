@@ -4,15 +4,20 @@ import { createPortal } from 'react-dom';
 import { Icon } from './Icon.jsx';
 import { useLayoutContext } from '../shared/layout/PageLayout.jsx';
 import { availableLayoutMode } from '../shared/layout/pageLayout.js';
+import { useTheme } from '../app/Theme.jsx';
+import { DisplayModeControl } from './DisplayModeControl.jsx';
 
 export function PageSettingsButton({ available = true, help = '', children }) {
   const id = useId();
   const context = useLayoutContext();
+  const { density, selectDensity } = useTheme();
   const dialog = useRef(),
     trigger = useRef(),
     heading = useRef();
   const [open, setOpen] = useState(false),
     [draft, setDraft] = useState({}),
+    [draftDensity, setDraftDensity] = useState(density),
+    [sourcesOpen, setSourcesOpen] = useState(false),
     [message, setMessage] = useState(''),
     [feedback, setFeedback] = useState('');
   const scope = context?.scope;
@@ -42,6 +47,8 @@ export function PageSettingsButton({ available = true, help = '', children }) {
   );
   if (!items.length && !help && !children) return null;
   function show() {
+    setDraftDensity(density);
+    setSourcesOpen(false);
     setDraft(
       Object.fromEntries(
         items.map((item) => [
@@ -64,6 +71,7 @@ export function PageSettingsButton({ available = true, help = '', children }) {
       items.map((item) => [item.id, draft[item.id] || { visible: true, mode: 'default' }]),
     );
     if (layout.save(patch)) {
+      selectDensity(draftDensity);
       setOpen(false);
       setFeedback('Preferências da página salvas neste navegador.');
     } else
@@ -123,6 +131,7 @@ export function PageSettingsButton({ available = true, help = '', children }) {
             </button>
           </header>
           <div className="page-settings-body">
+            <DisplayModeControl value={draftDensity} onChange={setDraftDensity} deferred />
             <p id={`${id}-description`}>
               {items.length
                 ? 'Escolha os relatórios desta categoria e como devem abrir. As preferências ficam neste navegador. As alterações são confirmadas em Salvar preferências. Relatórios agrupados aparecem no seletor Visualização do painel; cada opção mantém sua própria apresentação.'
@@ -132,12 +141,6 @@ export function PageSettingsButton({ available = true, help = '', children }) {
               <section className="page-settings-help">
                 <h3>Sobre esta página</h3>
                 <p>{help}</p>
-              </section>
-            )}
-            {open && children && (
-              <section className="page-settings-integrations">
-                <h3>Fontes e atualização dos dados</h3>
-                {typeof children === 'function' ? children({ open }) : children}
               </section>
             )}
             {!!items.length && (
@@ -175,6 +178,18 @@ export function PageSettingsButton({ available = true, help = '', children }) {
                 </p>
               </>
             )}
+            {open && children && (
+              <details
+                className="page-settings-integrations"
+                open={sourcesOpen}
+                onToggle={(event) => setSourcesOpen(event.currentTarget.open)}
+              >
+                <summary>Fontes e atualização dos dados</summary>
+                {sourcesOpen && (
+                  <div>{typeof children === 'function' ? children({ open }) : children}</div>
+                )}
+              </details>
+            )}
             {message && (
               <p role="alert" className="notice">
                 {message}
@@ -188,6 +203,7 @@ export function PageSettingsButton({ available = true, help = '', children }) {
                   type="button"
                   className="page-settings-reset"
                   onClick={() => {
+                    setDraftDensity('compact');
                     setDraft(
                       Object.fromEntries(
                         items.map((item) => [item.id, { visible: true, mode: 'default' }]),
@@ -208,8 +224,8 @@ export function PageSettingsButton({ available = true, help = '', children }) {
                 </div>
               </>
             ) : (
-              <button type="button" className="page-settings-save" onClick={() => setOpen(false)}>
-                Concluído
+              <button type="button" className="page-settings-save" onClick={save}>
+                Salvar preferências
               </button>
             )}
           </footer>

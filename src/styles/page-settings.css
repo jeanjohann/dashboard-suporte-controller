@@ -133,6 +133,55 @@ button.page-settings-trigger:hover {
   margin: 0;
   font-size: 14px;
 }
+.page-settings-integrations > summary {
+  cursor: pointer;
+  padding: 10px 0;
+  border-top: 1px solid var(--ui-border);
+  color: var(--ui-ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+.page-settings-integrations > div {
+  display: grid;
+  gap: 12px;
+  padding-top: 8px;
+}
+.page-display-mode {
+  min-width: 0;
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+.page-display-mode legend {
+  padding: 0 5px;
+  color: var(--ui-ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+.page-display-mode > div {
+  display: flex;
+  gap: 6px;
+}
+.page-display-mode button {
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid var(--ui-border);
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  font-size: 12px;
+}
+.page-display-mode button[aria-pressed='true'] {
+  border-color: #0868c5;
+  background: #0868c5;
+  color: #ffffff;
+}
+.page-settings-body .page-display-mode p {
+  margin: 8px 0 0;
+  color: var(--ui-muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
 .page-settings-integrations .orders-google-panel,
 .page-settings-integrations .zoho-connection {
   margin: 0;
@@ -285,8 +334,14 @@ button.page-settings-trigger:hover {
   background: var(--ui-soft);
 }
 .page-settings-dialog .page-settings-save {
-  color: var(--ui-on-accent);
-  background: var(--ui-accent);
+  color: #ffffff;
+  background: #0868c5;
+  border-color: #0868c5;
+}
+.page-settings-dialog .page-settings-save:hover {
+  color: #ffffff;
+  background: #07539c;
+  border-color: #07539c;
 }
 .page-settings-feedback {
   position: fixed;

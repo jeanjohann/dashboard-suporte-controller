@@ -1,3 +1,8 @@
+## 0.69.37 — 25/10/2026
+
+- Disponibiliza Compacto e Editorial no topo dos modais de configuração, preservando salvar, cancelar e restaurar padrão nas preferências.
+- Recolhe fontes e consultas sob demanda abaixo das opções de relatório e corrige o contraste do botão Salvar preferências.
+
 ## 0.69.36 — 25/10/2026
 
 - Separa o modo Compacto do Editorial na Visão geral: compacta indicadores e espaçamentos sem perder dados, e dá mais presença aos textos e gráficos editoriais.

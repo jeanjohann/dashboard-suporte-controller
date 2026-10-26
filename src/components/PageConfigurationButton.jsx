@@ -1,7 +1,10 @@
 import React, { useId, useRef } from 'react';
+import { useTheme } from '../app/Theme.jsx';
+import { DisplayModeControl } from './DisplayModeControl.jsx';
 
 /** Ajuda e informações menos frequentes em um modal acessível, sem esconder os filtros de uso diário. */
 export function PageConfigurationButton({ scope, description, children }) {
+  const { density, selectDensity } = useTheme();
   const id = useId();
   const dialog = useRef(null);
   const trigger = useRef(null);
@@ -49,7 +52,10 @@ export function PageConfigurationButton({ scope, description, children }) {
             Fechar
           </button>
         </header>
-        <div className="page-settings-body page-configuration-content">{children}</div>
+        <div className="page-settings-body page-configuration-content">
+          <DisplayModeControl value={density} onChange={selectDensity} />
+          {children}
+        </div>
         <footer>
           <span>Filtros e indicadores principais permanecem na página.</span>
           <button type="button" className="page-settings-save" onClick={close}>
