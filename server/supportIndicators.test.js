@@ -16,6 +16,94 @@ const req = (path, body, origin = 'https://app.example') =>
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
 const value = () => blankEntry('2026-10-19', agents[0].id);
+
+test('exclusão exige revisão atual, retira o lançamento dos totais e permite novo registro no mesmo dia', async (t) => {
+  const { database } = snapshotTestDatabase(t),
+    env = { BUSINESS_DB: database };
+  const first = value();
+  first.values.trackers = 1;
+  first.values.collectors = 3;
+  first.values.videos = 2;
+  const record = (
+    await (
+      await supportIndicatorsResponse(
+        req('entries', { value: first, expectedRevision: 0 }),
+        env,
+        user,
+        owner,
+      )
+    ).json()
+  ).record;
+  const deletion = (revision = record.revision, origin = 'https://app.example', id = record.id) =>
+    new Request('https://app.example/api/support-indicators/entries', {
+      method: 'DELETE',
+      headers: { Origin: origin, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, expectedRevision: revision }),
+    });
+  assert.equal(
+    (await supportIndicatorsResponse(deletion(1, 'https://evil.example'), env, user, owner)).status,
+    403,
+  );
+  assert.equal(
+    (
+      await supportIndicatorsResponse(
+        deletion(),
+        env,
+        { ...user, email: 'other@example.invalid' },
+        owner,
+      )
+    ).status,
+    403,
+  );
+  assert.equal((await supportIndicatorsResponse(deletion(0), env, user, owner)).status, 400);
+  assert.equal(
+    (
+      await supportIndicatorsResponse(
+        deletion(1, 'https://app.example', '2026-10-19.999'),
+        env,
+        user,
+        owner,
+      )
+    ).status,
+    400,
+  );
+  first.values.collectors = 1;
+  await supportIndicatorsResponse(
+    req('entries', { value: first, expectedRevision: 1 }),
+    env,
+    user,
+    owner,
+  );
+  assert.equal((await supportIndicatorsResponse(deletion(1), env, user, owner)).status, 409);
+  const deleted = await supportIndicatorsResponse(deletion(2), env, user, owner);
+  assert.equal(deleted.status, 200);
+  const tombstone = (await deleted.json()).record;
+  assert.equal(tombstone.deleted, true);
+  assert.equal(tombstone.actor, owner);
+  assert.equal(tombstone.revision, 3);
+  const list = await (
+    await supportIndicatorsResponse(
+      req('entries?start=2026-10-19&end=2026-10-25'),
+      env,
+      user,
+      owner,
+    )
+  ).json();
+  assert.equal(list.records.length, 0);
+  assert.equal(list.deletedRecords[0].revision, 3);
+  const recreated = await supportIndicatorsResponse(
+    req('entries', { value: first, expectedRevision: 3 }),
+    env,
+    user,
+    owner,
+  );
+  assert.equal(recreated.status, 200);
+  assert.equal((await recreated.json()).record.value.values.collectors, 1);
+  const settingsDeletion = new Request('https://app.example/api/support-indicators/settings', {
+    method: 'DELETE',
+  });
+  assert.equal((await supportIndicatorsResponse(settingsDeletion, env, user, owner)).status, 405);
+});
 test('D1 atualiza o mesmo dia/agente por CAS, preserva vazio/zero e registra ator do servidor', async (t) => {
   const { database, sql } = snapshotTestDatabase(t),
     env = { BUSINESS_DB: database };

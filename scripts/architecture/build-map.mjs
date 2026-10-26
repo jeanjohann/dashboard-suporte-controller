@@ -471,6 +471,16 @@ const byName = {
     'Detecta concentração descritiva de trocas por cliente/placa e improdutivas por cliente, com critérios e origem.',
   'server/zohoActivity.js':
     'Coleta páginas de atividade Zoho com limites, normaliza apontamentos/respostas e preserva autoria e pendências.',
+  'prepare-assistant-workflow.mjs':
+    'Prepara o workflow local de demonstração do assistente usando referências de credenciais de um backup validado.',
+  'run-assistant-e2e.mjs':
+    'Executa a verificação integrada da ponte local e do serviço MCP do assistente em loopback.',
+  'start-assistant-mcp.ps1':
+    'Inicia o MCP local do assistente em segundo plano, com token do acervo e verificação de disponibilidade.',
+  'PageActivity.jsx':
+    'Compartilha o estado ativo da página para coordenar componentes preservados durante a navegação.',
+  'compact-density.css':
+    'Ajusta espaçamentos e dimensões dos componentes para a apresentação compacta das páginas.',
 };
 
 const folderRoles = {

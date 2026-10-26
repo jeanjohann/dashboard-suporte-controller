@@ -16,6 +16,8 @@ Página independente no menu principal, com filtros próprios por data e agente.
 
 ## Uso
 
+Em **Atividades e lançamentos**, a lista **Lançamentos salvos no período** permite localizar cada data/agente e abrir **Editar**, carregando todos os campos salvos. **Salvar alterações** atualiza o mesmo registro. Para retirar apenas uma quantidade incorreta, deixe esse campo vazio e salve; zero significa quantidade confirmada. **Excluir** pede confirmação e remove o registro diário inteiro, incluindo atividades e observações. A exclusão é lógica, com autoria e revisão no banco; o conteúdo é retirado dos indicadores. A revisão da exclusão é carregada para permitir novo lançamento na mesma data/agente, inclusive depois de recarregar a página. Conflitos entre sessões preservam os dados e exigem recarga antes de salvar ou excluir.
+
 ### Ajustes da versão 0.65.0
 
 - **Improdutivas:** os totais já excluíam Visita Improdutiva da execução efetiva. A relação de linhas agora segue exatamente a mesma regra e mostra “Não · improdutiva”. A linha pode contar na agenda, pela data Agendamento e pelo Resp. Agendamento; isso não transfere o crédito ao Resp. Execução nem inventa uma data ausente. O indicador diagnóstico de improdutivas continua separado.

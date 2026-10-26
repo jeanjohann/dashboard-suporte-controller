@@ -279,6 +279,11 @@
 
 # Histórico de versões
 
+## 0.69.43 — 26/10/2026
+
+- Indicadores Suporte mostra os lançamentos manuais salvos no período com ações Editar e Excluir por data/agente. A edição carrega os campos existentes e atualiza o mesmo registro, sem duplicar contagens.
+- Exclusão confirmada retira o registro diário completo dos indicadores, com revisão e autoria no banco. Preserva proteção contra alterações concorrentes e permite novo lançamento na mesma data após exclusão e recarga.
+
 ## 0.65.0 — 24/10/2026
 
 - Alinha o detalhamento dos Indicadores Suporte aos totais: visita improdutiva nunca é execução efetiva; conta na agenda somente pela data e pelo responsável de agendamento válidos.

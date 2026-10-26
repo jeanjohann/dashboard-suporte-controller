@@ -2741,11 +2741,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                 <>
                                   <ManualIndicatorForm
                                     key={period.start + period.end}
-                                    records={store.records}
+                                    records={store.entryRecords}
                                     period={period}
                                     busy={store.busy}
                                     ready={store.ready}
                                     save={store.save}
+                                    remove={store.remove}
                                     today={today}
                                     onDirty={setManualDirty}
                                   />

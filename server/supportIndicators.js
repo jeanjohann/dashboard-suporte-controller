@@ -5,6 +5,7 @@ import {
   validateEntry,
   validateSettings,
   entryId,
+  blankEntry,
   periodDays,
 } from '../src/modules/support-indicators/domain/contracts.js';
 
@@ -24,7 +25,7 @@ export async function supportIndicatorsResponse(request, env, user, owner) {
     settings = url.pathname === '/api/support-indicators/settings';
   if (!settings && url.pathname !== '/api/support-indicators/entries')
     return reply({ error: 'Rota inválida.' }, 404);
-  if (!['GET', 'POST'].includes(request.method))
+  if (!['GET', 'POST', ...(!settings ? ['DELETE'] : [])].includes(request.method))
     return reply({ error: 'Método não permitido.' }, 405);
   const repo = createDocumentRepository({
     adapter: createD1DocumentAdapter(env.BUSINESS_DB),
@@ -56,7 +57,7 @@ export async function supportIndicatorsResponse(request, env, user, owner) {
         return reply({ error: 'Cursor inválido.' }, 400);
       // A consulta SQL fica limitada ao intervalo e à coleção, sem varrer todo o histórico.
       const rows = await env.BUSINESS_DB.prepare(
-        'SELECT record_id FROM business_documents WHERE workspace_id = ? AND resource = ? AND deleted = 0 AND record_id > ? AND record_id < ? ORDER BY record_id LIMIT 101',
+        'SELECT record_id FROM business_documents WHERE workspace_id = ? AND resource = ? AND record_id > ? AND record_id < ? ORDER BY record_id LIMIT 101',
       )
         .bind('addlog', 'support-indicator-entries', after || start, end + '.z')
         .all();
@@ -67,7 +68,8 @@ export async function supportIndicatorsResponse(request, env, user, owner) {
       );
       return reply({
         version: 1,
-        records,
+        records: records.filter((record) => !record.deleted),
+        deletedRecords: records.filter((record) => record.deleted),
         next: rows.results.length > 100 ? records.at(-1).id : null,
       });
     }
@@ -98,25 +100,36 @@ export async function supportIndicatorsResponse(request, env, user, owner) {
         offset += chunk.length;
       }
       body = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+      const removing = request.method === 'DELETE';
       if (
         !body ||
-        Object.keys(body).sort().join(',') !== 'expectedRevision,value' ||
+        Object.keys(body).sort().join(',') !==
+          (removing ? 'expectedRevision,id' : 'expectedRevision,value') ||
         !Number.isSafeInteger(body.expectedRevision) ||
         body.expectedRevision < 0
       )
         throw Error();
-      (settings ? validateSettings : validateEntry)(body.value);
+      if (removing) {
+        const [date, agentId] = typeof body.id === 'string' ? body.id.split('.') : [];
+        const value = blankEntry(date, agentId);
+        validateEntry(value);
+        if (entryId(value) !== body.id || body.expectedRevision < 1) throw Error();
+      } else (settings ? validateSettings : validateEntry)(body.value);
     } catch {
       return reply({ error: 'Dados inválidos. Confira os campos e tente novamente.' }, 400);
     }
-    const id = settings ? 'settings' : entryId(body.value);
-    const saved = await repo.put(id, body.value, { expectedRevision: body.expectedRevision });
+    const id = settings ? 'settings' : request.method === 'DELETE' ? body.id : entryId(body.value);
+    const saved =
+      request.method === 'DELETE'
+        ? await repo.remove(id, { expectedRevision: body.expectedRevision })
+        : await repo.put(id, body.value, { expectedRevision: body.expectedRevision });
     return reply({ version: 1, record: saved });
   } catch (error) {
     return error.code === 'STORAGE_CONFLICT'
       ? reply(
           {
-            error: 'Alterado em outra sessão. Recarregue os lançamentos antes de salvar.',
+            error:
+              'Alterado em outra sessão. Recarregue os lançamentos antes de salvar ou excluir.',
             code: 'CONFLICT',
           },
           409,
