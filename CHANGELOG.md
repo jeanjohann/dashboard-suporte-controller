@@ -1,3 +1,8 @@
+## 0.69.38 — 26/10/2026
+
+- Persiste o histórico manual de acompanhamento dos veículos no D1 do piloto, com revisão concorrente e acesso restrito ao administrador principal.
+- Nos demais escopos, salva o histórico localmente por usuário/navegador e distingue falha do banco de ausência de registros.
+
 ## 0.69.37 — 25/10/2026
 
 - Disponibiliza Compacto e Editorial no topo dos modais de configuração, preservando salvar, cancelar e restaurar padrão nas preferências.

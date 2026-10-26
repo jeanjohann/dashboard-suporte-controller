@@ -13,6 +13,7 @@ import { businessSourcesResponse } from './businessSources.js';
 import { workspaceStorageResponse } from './workspaceStorage.js';
 import { supportIndicatorsResponse } from './supportIndicators.js';
 import { storedMonitoringResponse, scheduledMonitoring } from './monitoringStorage.js';
+import { monitoringTreatmentsResponse } from './monitoringTreatments.js';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import {
   normalizeEmail,
@@ -110,6 +111,8 @@ export function createHandler(authenticate = authenticatedEmail) {
         return supportIndicatorsResponse(request, env, user, owner);
       if (url.pathname.startsWith('/api/sources/'))
         return businessSourcesResponse(request, env, user, owner);
+      if (url.pathname === '/api/monitoring/treatments')
+        return monitoringTreatmentsResponse(request, env, user, owner);
       if (
         [
           '/api/monitoring/saved',

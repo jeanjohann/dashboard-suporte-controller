@@ -23,6 +23,7 @@ import { MonitoringQueue } from './MonitoringQueue.jsx';
 import { MonitoringAnalytics } from './MonitoringAnalytics.jsx';
 import { MonitoringReminders } from './MonitoringReminders.jsx';
 import { useMonitoringReminders } from '../hooks/useMonitoringReminders.js';
+import { useMonitoringTreatments } from '../hooks/useMonitoringTreatments.js';
 import { useMonitoringSource } from '../hooks/useMonitoringSource.js';
 import {
   monitorSnapshot,
@@ -76,8 +77,7 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
     category,
     initialFilters,
   );
-  const [notes, setNotes] = useState({}),
-    [eventTarget, setEventTarget] = useState(null),
+  const [eventTarget, setEventTarget] = useState(null),
     [selected, setSelected] = useState(null),
     [page, setPage] = useState(0),
     [pageSize, setPageSize] = useState(10),
@@ -85,6 +85,8 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
     [registryFilter, setRegistryFilter] = useState('all');
   const demo = snapshot?.demonstration === true;
   const reminders = useMonitoringReminders(demo, active);
+  const treatments = useMonitoringTreatments(demo, active);
+  const notes = treatments.records;
   const analysisSnapshot = useRetainedValue(snapshot, active);
   const result = useMemo(
     () => (analysisSnapshot ? monitorSnapshot(analysisSnapshot, filters) : null),
@@ -129,9 +131,8 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
     );
     return result.scoped.filter((row) => keys.has(row.key)).length;
   }, [result, reminders.records, reminders.now]);
-  // Identidades da demonstração nunca compartilham anotações com veículos reais.
+  // Identidades da demonstração nunca compartilham tratamento com veículos reais.
   useEffect(() => {
-    setNotes({});
     setSelected(null);
     setPage(0);
     resetSelections();
@@ -628,6 +629,19 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     {result.issues.length}.
                   </p>
                 )}
+                {category === 'queue' && treatment.loading && (
+                  <p className="scope" role="status">
+                    Carregando histórico de tratamento salvo…
+                  </p>
+                )}
+                {category === 'queue' && treatment.error && (
+                  <p className="notice" role="alert">
+                    {treatment.error} O status e o histórico não foram presumidos.
+                    <button type="button" onClick={treatment.reload}>
+                      Tentar novamente
+                    </button>
+                  </p>
+                )}
                 <RetainedContent active={active && category === 'queue'}>
                   <MonitoringQueue
                     visible={category === 'queue'}
@@ -635,9 +649,10 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                     result={queue}
                     notes={notes}
                     reminders={reminders}
-                    onRecord={(key, value) =>
-                      setNotes((previous) => ({ ...previous, [key]: value }))
+                    onRecord={(vehicle, draft, revision) =>
+                      treatments.change(vehicle, draft, revision)
                     }
+                    treatment={treatments}
                     selected={selected}
                     onSelect={setSelected}
                     page={page}
@@ -677,7 +692,7 @@ export function MonitoringPage({ onPage, operational, active = true, sourceActiv
                 <div hidden={category !== 'reports'}>
                   <Section
                     title="Relatório de acompanhamento"
-                    help={`Exporta todos os veículos do recorte da fila, independentemente da paginação, incluindo busca, situação, status e recorte selecionados. Inclui referência, critérios, dados recebidos, indicadores analíticos das bases, histórico de tratamento e lembretes salvos dos veículos do recorte. Rascunhos não são exportados. Resumo por base e indicadores abrangem todas as situações das bases selecionadas. Tratamento permanece somente nesta sessão; ${reminders.mode === 'remote' ? 'lembretes usam o banco do sistema conforme acesso do piloto' : 'lembretes ficam neste navegador, sem armazenamento compartilhado'}. O CSV do painel Lembretes inclui todo seu histórico confirmado, independentemente da fila.`}
+                    help={`Exporta todos os veículos do recorte da fila, independentemente da paginação, incluindo busca, situação, status e recorte selecionados. Inclui referência, critérios, dados recebidos, indicadores analíticos das bases, histórico de tratamento e lembretes salvos dos veículos do recorte. Rascunhos não são exportados. Resumo por base e indicadores abrangem todas as situações das bases selecionadas. ${treatments.mode === 'remote' ? 'Tratamentos e lembretes usam o banco do sistema conforme acesso do piloto.' : 'Tratamentos e lembretes ficam neste navegador.'} O CSV do painel Lembretes inclui todo seu histórico confirmado, independentemente da fila.`}
                   >
                     <p>
                       {queue.rows.length} veículos · Referência{' '}

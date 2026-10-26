@@ -1,12 +1,14 @@
 # Monitoramento: acompanhamento e cadastros — 0.53.0
 
-**Atualização 0.58.0:** agenda e histórico de lembretes passam a ter integração D1 no piloto do administrador principal, com migração explícita e cópia local preservada. Tratamento e telemetria seguem na sessão. [Ativação e limites](BANCO-CLOUDFLARE.md). A descrição abaixo registra a entrega 0.53.0.
+**Atualização 0.69.38:** o histórico manual de tratamento usa documentos versionados no D1 para o administrador do piloto. Os demais escopos salvam no navegador, separados por usuário e modo real/demonstração. Erro na leitura do D1 bloqueia a gravação e não troca silenciosamente para o armazenamento local. Eventos automáticos de coleta e lembretes continuam em recursos distintos.
+
+**Atualização 0.58.0:** agenda e histórico de lembretes passam a ter integração D1 no piloto do administrador principal, com migração explícita e cópia local preservada. Telemetria observada permanece no histórico próprio das coletas. [Ativação e limites](BANCO-CLOUDFLARE.md). A descrição abaixo registra a entrega 0.53.0.
 
 ## Área de trabalho
 
 Filtros e lembretes aparecem antes da fila, com apresentação compacta. Quando fechados, filtros e visões favoritas compartilham uma linha; abrir os filtros mantém cada título acima de seu campo. O resumo dos recortes continua visível. Lembretes pendentes são destacados no resumo, mesmo com a lista recolhida; falha de leitura tem aviso explícito e opção de tentar novamente ao abrir. Não há mudança na persistência local dos lembretes ou das anotações.
 
-A grade começa pelos campos de identificação, comunicação, situação e acompanhamento. A opção **Exibir alimentação, perfil e posições na grade** revela os campos técnicos. A coluna Acompanhamento permanece acessível na rolagem horizontal. CSV e XLSX incluem os campos completos independentemente dessa escolha visual. Os indicadores de duração ficaram maiores e mais vivos, com legendas textuais e estado neutro para coleta/data sem classificação utilizável.
+A grade começa pelos campos de identificação, comunicação, situação e acompanhamento. A opção **Exibir alimentação, perfil e posições na grade** revela os campos técnicos. A coluna Acompanhamento permanece acessível na rolagem horizontal. CSV e XLSX incluem os campos completos independentemente dessa escolha visual. Os indicadores de duração ficaram maiores e mais vivos, com legendas textuais e estado neutro para coleta/data sem classificação utilizável. O formulário **Registrar tratamento** acrescenta histórico durável por veículo; encerrar acompanhamento não confirma recuperação da comunicação.
 
 A demonstração foi retirada da interface e do carregamento de fontes. O conjunto fictício e as funções de domínio continuam disponíveis exclusivamente para testes de desenvolvimento; o contrato da API continua recusando demonstrações como leitura real.
 

@@ -13,7 +13,6 @@ import {
   monitoringVoltage,
   monitoringBatteryState,
   monitoringStages,
-  recordMonitoringUpdate,
   sortMonitoringRows,
 } from '../domain/monitoring.js';
 
@@ -45,6 +44,7 @@ export function MonitoringQueue({
   result,
   notes,
   reminders,
+  treatment,
   onRecord,
   selected,
   onSelect,
@@ -112,12 +112,15 @@ export function MonitoringQueue({
     setDraft((previous) => ({ ...previous, [key]: value }));
     setMessage('');
   };
-  function register() {
+  async function register() {
     try {
-      const next = recordMonitoringUpdate(saved, draft);
-      onRecord(detail.key, next);
+      await onRecord(detail, draft, saved?.revision || 0);
       setDraft((previous) => ({ ...previous, text: '' }));
-      setMessage('Atualização registrada nesta sessão. Exporte o histórico antes de sair.');
+      setMessage(
+        treatment.mode === 'remote'
+          ? 'Atualização salva no banco do sistema.'
+          : 'Atualização salva neste navegador.',
+      );
     } catch (error) {
       setMessage(error.message);
     }
@@ -127,7 +130,7 @@ export function MonitoringQueue({
     <Section
       title="Fila de acompanhamento"
       visible={visible}
-      help="Uma linha por veículo/base, em ordem inicial de maior duração conhecida. Placa, ID rastreador, cliente/base, última atualização, alimentação em volts e perfil são apresentados sem inferir defeito elétrico ou configuração. Os sinais usam faixas fixas de 2/3/4/30/60/90 dias, independentemente do limite de atenção selecionado. Coleta desatualizada, data inválida/futura e ausência de registro recebem sinal neutro. Abaixo de 2 dias não confirma que está online neste instante. O status de acompanhamento é administrativo; clique nele para consultar o histórico e registre atualizações explicitamente. Busca, situação, status e recorte filtram a fila inteira antes da ordenação e paginação. Tratamento permanece somente nesta sessão; lembretes e seu histórico ficam salvos neste navegador, separados por usuário e modo real/demonstração. A impressão inclui a página exibida e o histórico selecionado; CSV/XLSX incluem todo o recorte."
+      help={`Uma linha por veículo/base, em ordem inicial de maior duração conhecida. Placa, ID rastreador, cliente/base, última atualização, alimentação em volts e perfil são apresentados sem inferir defeito elétrico ou configuração. Os sinais usam faixas fixas de 2/3/4/30/60/90 dias, independentemente do limite de atenção selecionado. Coleta desatualizada, data inválida/futura e ausência de registro recebem sinal neutro. Abaixo de 2 dias não confirma que está online neste instante. O status de acompanhamento é administrativo; clique nele para consultar e registrar o histórico. ${treatment.mode === 'remote' ? 'No piloto, o tratamento fica salvo no banco do sistema.' : 'No modo local, o tratamento fica salvo neste navegador.'} Lembretes e históricos de conferência são registros separados. A impressão inclui a página exibida e o histórico selecionado; CSV/XLSX incluem todo o recorte.`}
     >
       {actions && (
         <div className="monitoring-queue-actions" data-no-print>
@@ -409,8 +412,12 @@ export function MonitoringQueue({
                   <textarea value={draft.text} onChange={(e) => change('text', e.target.value)} />
                 </label>
               </div>
-              <button type="button" onClick={register}>
-                Salvar atualização
+              <button
+                type="button"
+                disabled={treatment.loading || Boolean(treatment.error) || treatment.saving}
+                onClick={register}
+              >
+                {treatment.saving ? 'Salvando…' : 'Salvar atualização'}
               </button>
               {message && (
                 <p className="scope" role="status">
@@ -420,8 +427,17 @@ export function MonitoringQueue({
             </div>
             <div className="monitoring-history">
               <h4>Histórico de tratamento · {history.length}</h4>
-              {!history.length ? (
-                <p className="scope">Nenhuma atualização registrada nesta sessão.</p>
+              {treatment.loading ? (
+                <p className="scope">Carregando histórico salvo…</p>
+              ) : treatment.error ? (
+                <p className="notice" role="alert">
+                  {treatment.error} O botão de gravação fica bloqueado até a leitura ser confirmada.
+                  <button type="button" onClick={treatment.reload}>
+                    Tentar novamente
+                  </button>
+                </p>
+              ) : !history.length ? (
+                <p className="scope">Nenhuma atualização registrada para este veículo.</p>
               ) : (
                 <ol>
                   {history.map((entry, index) => (
@@ -441,8 +457,9 @@ export function MonitoringQueue({
             </div>
           </div>
           <p className="scope">
-            Histórico manual desta sessão. Encerrar acompanhamento não confirma recuperação da
-            comunicação. A persistência compartilhada ainda não está ativada.
+            Histórico administrativo. Encerrar acompanhamento não confirma recuperação da
+            comunicação.{' '}
+            {treatment.mode === 'remote' ? 'Salvo no banco do sistema.' : 'Salvo neste navegador.'}
           </p>
         </section>
       )}
