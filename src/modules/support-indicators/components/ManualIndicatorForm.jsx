@@ -9,6 +9,7 @@ export function ManualIndicatorForm({
   remove,
   today,
   onDirty,
+  readOnly = false,
 }) {
   const formDetails = useRef(null);
   const [date, setDate] = useState(
@@ -78,8 +79,9 @@ export function ManualIndicatorForm({
           <strong>Lançamentos salvos no período</strong>
         </p>
         <p className="scope">
-          Edite as quantidades ou exclua o registro diário completo. Para retirar só um equipamento,
-          edite o campo e deixe-o vazio.
+          {readOnly
+            ? 'Visualização dos registros diários salvos pela administração.'
+            : 'Edite as quantidades ou exclua o registro diário completo. Para retirar só um equipamento, edite o campo e deixe-o vazio.'}
         </p>
         {records.some((record) => !record.deleted) ? (
           <div className="si-manual-records-scroll">
@@ -89,7 +91,7 @@ export function ManualIndicatorForm({
                   <th>Data</th>
                   <th>Agente</th>
                   <th>Quantidades informadas</th>
-                  <th>Ações</th>
+                  {!readOnly && <th>Ações</th>}
                 </tr>
               </thead>
               <tbody>
@@ -105,24 +107,26 @@ export function ManualIndicatorForm({
                           .map(([key, label]) => `${label}: ${record.value.values[key]}`)
                           .join(' · ') || 'Somente observações'}
                       </td>
-                      <td>
-                        <div className="si-toolbar">
-                          <button
-                            type="button"
-                            disabled={busy || !ready}
-                            onClick={() => editRecord(record)}
-                          >
-                            Editar
-                          </button>
-                          <button
-                            type="button"
-                            disabled={busy || !ready}
-                            onClick={() => deleteRecord(record)}
-                          >
-                            Excluir
-                          </button>
-                        </div>
-                      </td>
+                      {!readOnly && (
+                        <td>
+                          <div className="si-toolbar">
+                            <button
+                              type="button"
+                              disabled={busy || !ready}
+                              onClick={() => editRecord(record)}
+                            >
+                              Editar
+                            </button>
+                            <button
+                              type="button"
+                              disabled={busy || !ready}
+                              onClick={() => deleteRecord(record)}
+                            >
+                              Excluir
+                            </button>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   ))}
               </tbody>
@@ -136,144 +140,146 @@ export function ManualIndicatorForm({
           </p>
         )}
       </div>
-      <details className="si-manual-form" ref={formDetails}>
-        <summary>Adicionar ou editar lançamento manual</summary>
-        <form onSubmit={submit}>
-          <div className="si-toolbar">
-            <label>
-              Data do registro
-              <input
-                type="date"
-                value={date}
-                min={period.start}
-                max={period.end}
-                disabled={busy}
-                onChange={(e) => select(() => setDate(e.target.value))}
-              />
-            </label>
-            <label>
-              Agente
-              <select
-                value={agentId}
-                disabled={busy}
-                onChange={(e) => select(() => setAgent(e.target.value))}
-              >
-                {agents.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.name}
-                  </option>
+      {!readOnly && (
+        <details className="si-manual-form" ref={formDetails}>
+          <summary>Adicionar ou editar lançamento manual</summary>
+          <form onSubmit={submit}>
+            <div className="si-toolbar">
+              <label>
+                Data do registro
+                <input
+                  type="date"
+                  value={date}
+                  min={period.start}
+                  max={period.end}
+                  disabled={busy}
+                  onChange={(e) => select(() => setDate(e.target.value))}
+                />
+              </label>
+              <label>
+                Agente
+                <select
+                  value={agentId}
+                  disabled={busy}
+                  onChange={(e) => select(() => setAgent(e.target.value))}
+                >
+                  {agents.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <small>
+                {stored && !stored.deleted
+                  ? 'Editando o registro salvo · revisão ' + stored.revision
+                  : 'Novo registro diário'}
+              </small>
+            </div>
+            <p className="scope">
+              Informe as quantidades ocorridas nesta data. Vazio significa não informado; zero é uma
+              quantidade confirmada. Assuntos contam chamados atendidos por categoria e não devem
+              ser somados aos chamados criados ou fechados.
+            </p>
+            {!inside && <p role="alert">Selecione uma data dentro do período atual.</p>}
+            <fieldset disabled={busy || !ready || !inside}>
+              <legend>Chamados abertos pelo próprio suporte e assuntos · manual</legend>
+              <div className="si-input-grid">
+                {manualFields.slice(0, 10).map(([key, label]) => (
+                  <label key={key}>
+                    {label}
+                    <input
+                      type="number"
+                      min="0"
+                      max="1000000"
+                      step="1"
+                      value={draft.values[key] ?? ''}
+                      onChange={(e) =>
+                        update({
+                          ...draft,
+                          values: {
+                            ...draft.values,
+                            [key]: e.target.value === '' ? null : Number(e.target.value),
+                          },
+                        })
+                      }
+                    />
+                  </label>
                 ))}
-              </select>
-            </label>
-            <small>
-              {stored && !stored.deleted
-                ? 'Editando o registro salvo · revisão ' + stored.revision
-                : 'Novo registro diário'}
-            </small>
-          </div>
-          <p className="scope">
-            Informe as quantidades ocorridas nesta data. Vazio significa não informado; zero é uma
-            quantidade confirmada. Assuntos contam chamados atendidos por categoria e não devem ser
-            somados aos chamados criados ou fechados.
-          </p>
-          {!inside && <p role="alert">Selecione uma data dentro do período atual.</p>}
-          <fieldset disabled={busy || !ready || !inside}>
-            <legend>Chamados abertos pelo próprio suporte e assuntos · manual</legend>
-            <div className="si-input-grid">
-              {manualFields.slice(0, 10).map(([key, label]) => (
-                <label key={key}>
-                  {label}
-                  <input
-                    type="number"
-                    min="0"
-                    max="1000000"
-                    step="1"
-                    value={draft.values[key] ?? ''}
-                    onChange={(e) =>
-                      update({
-                        ...draft,
-                        values: {
-                          ...draft.values,
-                          [key]: e.target.value === '' ? null : Number(e.target.value),
-                        },
-                      })
-                    }
+              </div>
+            </fieldset>
+            <fieldset disabled={busy || !ready || !inside}>
+              <legend>Equipamentos e atividades · manual</legend>
+              <div className="si-input-grid">
+                {manualFields.slice(10).map(([key, label]) => (
+                  <label key={key}>
+                    {label}
+                    <input
+                      type="number"
+                      min="0"
+                      max="1000000"
+                      step="1"
+                      value={draft.values[key] ?? ''}
+                      onChange={(e) =>
+                        update({
+                          ...draft,
+                          values: {
+                            ...draft.values,
+                            [key]: e.target.value === '' ? null : Number(e.target.value),
+                          },
+                        })
+                      }
+                    />
+                  </label>
+                ))}
+              </div>
+              <div className="si-input-grid">
+                <label>
+                  Atividades e observações
+                  <textarea
+                    maxLength={2000}
+                    value={draft.note}
+                    onChange={(e) => update({ ...draft, note: e.target.value })}
                   />
                 </label>
-              ))}
-            </div>
-          </fieldset>
-          <fieldset disabled={busy || !ready || !inside}>
-            <legend>Equipamentos e atividades · manual</legend>
-            <div className="si-input-grid">
-              {manualFields.slice(10).map(([key, label]) => (
-                <label key={key}>
-                  {label}
-                  <input
-                    type="number"
-                    min="0"
-                    max="1000000"
-                    step="1"
-                    value={draft.values[key] ?? ''}
-                    onChange={(e) =>
-                      update({
-                        ...draft,
-                        values: {
-                          ...draft.values,
-                          [key]: e.target.value === '' ? null : Number(e.target.value),
-                        },
-                      })
-                    }
+                <label>
+                  Algo novo? Explique
+                  <textarea
+                    maxLength={2000}
+                    value={draft.novelty}
+                    onChange={(e) => update({ ...draft, novelty: e.target.value })}
                   />
                 </label>
-              ))}
-            </div>
-            <div className="si-input-grid">
-              <label>
-                Atividades e observações
-                <textarea
-                  maxLength={2000}
-                  value={draft.note}
-                  onChange={(e) => update({ ...draft, note: e.target.value })}
-                />
-              </label>
-              <label>
-                Algo novo? Explique
-                <textarea
-                  maxLength={2000}
-                  value={draft.novelty}
-                  onChange={(e) => update({ ...draft, novelty: e.target.value })}
-                />
-              </label>
-            </div>
-          </fieldset>
-          <div className="si-toolbar">
-            <button className="si-primary" disabled={busy || !ready || !inside}>
-              {busy
-                ? 'Processando…'
-                : stored && !stored.deleted
-                  ? 'Salvar alterações'
-                  : 'Salvar lançamento'}
-            </button>
-            {editing && (
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => {
-                  setEditing(null);
-                  setMessage('');
-                }}
-              >
-                Descartar edição
+              </div>
+            </fieldset>
+            <div className="si-toolbar">
+              <button className="si-primary" disabled={busy || !ready || !inside}>
+                {busy
+                  ? 'Processando…'
+                  : stored && !stored.deleted
+                    ? 'Salvar alterações'
+                    : 'Salvar lançamento'}
               </button>
-            )}
-          </div>
-          <small>
-            Identificação: {entryId(draft)}. Salvar novamente atualiza este registro; não acrescenta
-            outra contagem.
-          </small>
-        </form>
-      </details>
+              {editing && (
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => {
+                    setEditing(null);
+                    setMessage('');
+                  }}
+                >
+                  Descartar edição
+                </button>
+              )}
+            </div>
+            <small>
+              Identificação: {entryId(draft)}. Salvar novamente atualiza este registro; não
+              acrescenta outra contagem.
+            </small>
+          </form>
+        </details>
+      )}
       {message && <p role="status">{message}</p>}
     </div>
   );

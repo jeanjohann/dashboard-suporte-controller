@@ -12,12 +12,19 @@ const revision = (v) => Number.isSafeInteger(v) && v >= 0 && v < Number.MAX_SAFE
 export async function workspaceStorageResponse(request, env, user, owner) {
   const url = new URL(request.url),
     permitted = user.active === true && user.role === 'admin' && user.email === owner;
+  const readKinds = user.active === true ? ['zoho-indicators', 'zoho-backlog'] : [];
   if (url.pathname === '/api/workspace/status') {
     if (request.method !== 'GET' || url.search) return reply({ error: 'Consulta inválida.' }, 405);
     if (permitted && !env.BUSINESS_DB) return reply({ error: 'Banco indisponível.' }, 503);
-    return reply({ version: 1, permitted, kinds: permitted ? workspaceKinds : [] });
+    return reply({ version: 1, permitted, kinds: permitted ? workspaceKinds : [], readKinds });
   }
-  if (!permitted)
+  if (
+    !permitted &&
+    !(
+      request.method === 'GET' &&
+      readKinds.some((kind) => url.pathname === '/api/workspace/' + kind)
+    )
+  )
     return reply({ error: 'Armazenamento restrito ao administrador principal no piloto.' }, 403);
   if (!env.BUSINESS_DB) return reply({ error: 'Banco indisponível.' }, 503);
   const match = url.pathname.match(

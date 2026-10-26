@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.69.43 · referência 90e8274 · cópia da entrega · 2026-10-26 · **574 arquivos / 117 arquivos de teste / 73 pastas**.
+Addlog 0.69.44 · referência 7a18fef · cópia da entrega · 2026-10-26 · **574 arquivos / 117 arquivos de teste / 73 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -1651,7 +1651,7 @@ Importado por: [server/businessSources.js](../../server/businessSources.js).
 
 ### server/persistence/snapshotDownload.test.js
 
-**API Cloudflare · Teste** — Verifica snapshot Download no contexto de API Cloudflare. Exemplos: base grande é transferida por uma requisição, preservando unicode, zeros e integridade; download incompleto ou corrompido é recusado; somente o proprietário recebe a base; catálogo inicia as três leituras em paralelo e não devolve lote parcial se uma falhar.
+**API Cloudflare · Teste** — Verifica snapshot Download no contexto de API Cloudflare. Exemplos: base grande é transferida por uma requisição, preservando unicode, zeros e integridade; base publicada é legível por usuários ativos; conteúdo incompleto ou corrompido é recusado; catálogo inicia as três leituras em paralelo e não devolve lote parcial se uma falhar.
 
 [Abrir fonte](../../server/persistence/snapshotDownload.test.js) · Preparação / contrato
 
@@ -5931,7 +5931,7 @@ Dependências externas: `react`.
 
 Exporta: `SupportIndicatorsPage`.
 
-Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/app/Theme.jsx](../../src/app/Theme.jsx), [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/InfoNote.jsx](../../src/components/InfoNote.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/components/SourceStatus.jsx](../../src/components/SourceStatus.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/my-dashboard/hooks/useDashboardPresentation.js](../../src/modules/my-dashboard/hooks/useDashboardPresentation.js), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/domain/lifecycle.js](../../src/modules/orders/domain/lifecycle.js), [src/modules/orders/domain/supportPerformance.js](../../src/modules/orders/domain/supportPerformance.js), [src/modules/support-indicators/components/IndicatorSettings.jsx](../../src/modules/support-indicators/components/IndicatorSettings.jsx), [src/modules/support-indicators/components/ManualIndicatorForm.jsx](../../src/modules/support-indicators/components/ManualIndicatorForm.jsx), [src/modules/support-indicators/data/zohoBacklogClient.js](../../src/modules/support-indicators/data/zohoBacklogClient.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/persistence/WorkspaceQueryPanel.jsx](../../src/shared/persistence/WorkspaceQueryPanel.jsx), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
+Importa arquivos locais: [src/app/Navigation.jsx](../../src/app/Navigation.jsx), [src/app/SidePanel.jsx](../../src/app/SidePanel.jsx), [src/app/Theme.jsx](../../src/app/Theme.jsx), [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/InfoNote.jsx](../../src/components/InfoNote.jsx), [src/components/SortableTable.jsx](../../src/components/SortableTable.jsx), [src/components/SourceStatus.jsx](../../src/components/SourceStatus.jsx), [src/modules/my-dashboard/hooks/DashboardSources.jsx](../../src/modules/my-dashboard/hooks/DashboardSources.jsx), [src/modules/my-dashboard/hooks/useDashboardPresentation.js](../../src/modules/my-dashboard/hooks/useDashboardPresentation.js), [src/modules/orders/data/zohoActivityClient.js](../../src/modules/orders/data/zohoActivityClient.js), [src/modules/orders/domain/lifecycle.js](../../src/modules/orders/domain/lifecycle.js), [src/modules/orders/domain/supportPerformance.js](../../src/modules/orders/domain/supportPerformance.js), [src/modules/support-indicators/components/IndicatorSettings.jsx](../../src/modules/support-indicators/components/IndicatorSettings.jsx), [src/modules/support-indicators/components/ManualIndicatorForm.jsx](../../src/modules/support-indicators/components/ManualIndicatorForm.jsx), [src/modules/support-indicators/data/zohoBacklogClient.js](../../src/modules/support-indicators/data/zohoBacklogClient.js), [src/modules/support-indicators/domain/indicators.js](../../src/modules/support-indicators/domain/indicators.js), [src/modules/support-indicators/hooks/useIndicatorRecords.js](../../src/modules/support-indicators/hooks/useIndicatorRecords.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js), [src/shared/export/exports.js](../../src/shared/export/exports.js), [src/shared/persistence/WorkspaceQueryPanel.jsx](../../src/shared/persistence/WorkspaceQueryPanel.jsx), [src/shared/persistence/workspaceClient.js](../../src/shared/persistence/workspaceClient.js), [src/shared/security/Access.jsx](../../src/shared/security/Access.jsx), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
 
 Importado por: [src/app/Workspace.jsx](../../src/app/Workspace.jsx).
 
@@ -6675,7 +6675,7 @@ Exporta: `createPilotRepository`, `createWorkspaceClient`.
 
 Importa arquivos locais: [src/shared/persistence/workspacePayload.js](../../src/shared/persistence/workspacePayload.js), [src/shared/security/accessClient.js](../../src/shared/security/accessClient.js).
 
-Importado por: [server/workspaceStorage.test.js](../../server/workspaceStorage.test.js), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/shared/persistence/WorkspaceQueryPanel.jsx](../../src/shared/persistence/WorkspaceQueryPanel.jsx).
+Importado por: [server/workspaceStorage.test.js](../../server/workspaceStorage.test.js), [src/modules/consumption/components/LinesPage.jsx](../../src/modules/consumption/components/LinesPage.jsx), [src/modules/my-dashboard/components/MyDashboardPage.jsx](../../src/modules/my-dashboard/components/MyDashboardPage.jsx), [src/modules/support-indicators/components/SupportIndicatorsPage.jsx](../../src/modules/support-indicators/components/SupportIndicatorsPage.jsx), [src/shared/persistence/WorkspaceQueryPanel.jsx](../../src/shared/persistence/WorkspaceQueryPanel.jsx).
 
 ### src/shared/persistence/workspacePayload.js
 
@@ -6729,7 +6729,7 @@ Importado por: [server/worker.js](../../server/worker.js), [src/app/Navigation.j
 
 ### src/shared/security/permissions.test.js
 
-**Compartilhado · Teste** — Verifica permissions no contexto de Compartilhado. Exemplos: acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas.
+**Compartilhado · Teste** — Verifica permissions no contexto de Compartilhado. Exemplos: Indicadores Suporte permite visualização a usuários ativos sem conceder outras páginas ou ações; acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas.
 
 [Abrir fonte](../../src/shared/security/permissions.test.js) · Código ou documentação do ponto de referência
 

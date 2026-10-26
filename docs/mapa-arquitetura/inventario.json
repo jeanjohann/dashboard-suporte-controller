@@ -1,6 +1,6 @@
 {
-  "version": "0.69.43",
-  "base": "90e8274 · cópia da entrega",
+  "version": "0.69.44",
+  "base": "7a18fef · cópia da entrega",
   "date": "2026-10-26",
   "total": 574,
   "tests": 117,
@@ -457,8 +457,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 117562,
-      "sha256": "d06d9d72c17f8e7de6f9b4bf94e9d724a30658fc02f78ab30689d10709afc81b",
+      "bytes": 118008,
+      "sha256": "877c9f0d68d4ec20351e0d52b255c5ce985aadb38c6ac64c28ce77794334694a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -807,8 +807,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 19592,
-      "sha256": "455b23d490b6d377930216874e3376b5d18396ff412e992929581e736074b60f",
+      "bytes": 20239,
+      "sha256": "ac8dd7cc86b522a4e4f7372e7c6ab37ad4769e3cb94b9e168c82e51b368fdbcc",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1480,7 +1480,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 148961,
-      "sha256": "0ab88a75a4fd91b037e05600fc12576f76473dbb45ecea532be0a0b1e53a1f47",
+      "sha256": "d0246602348401a2e8a07cafd70a022266ac9c6c89a74975572732557d36bf9f",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1494,7 +1494,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1732,
-      "sha256": "3418a94b4c09a989cc3d249dd41417a9d3303fa4a4e06743dc0368cde544bfd9",
+      "sha256": "ddafa703b8c9990cff5c40a69c2d4ca78eb4d36cb188f55f55d13b8d67657524",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2434,8 +2434,8 @@
         "server/worker.js",
         "server/workspaceStorage.js"
       ],
-      "bytes": 7357,
-      "sha256": "ee851d0883043200ac9cc4138f83ba872319bd4750abeaf674948f6267402253",
+      "bytes": 8077,
+      "sha256": "2a45d5a542fb447acfd3e376247e53668d98af263ad05bec163a94196eadefd8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2827,7 +2827,7 @@
       "folder": "server/persistence",
       "module": "API Cloudflare",
       "layer": "Teste",
-      "description": "Verifica snapshot Download no contexto de API Cloudflare. Exemplos: base grande é transferida por uma requisição, preservando unicode, zeros e integridade; download incompleto ou corrompido é recusado; somente o proprietário recebe a base; catálogo inicia as três leituras em paralelo e não devolve lote parcial se uma falhar.",
+      "description": "Verifica snapshot Download no contexto de API Cloudflare. Exemplos: base grande é transferida por uma requisição, preservando unicode, zeros e integridade; base publicada é legível por usuários ativos; conteúdo incompleto ou corrompido é recusado; catálogo inicia as três leituras em paralelo e não devolve lote parcial se uma falhar.",
       "exports": [],
       "imports": [
         "server/businessSources.js",
@@ -2840,8 +2840,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 3890,
-      "sha256": "3c01e1d414f16bcba9fceaf0ed0e10de93bdcf79a8f6e47df4f7d606787a154e",
+      "bytes": 4669,
+      "sha256": "17506e2a2041ac0b3d359e640538b01480f59621ab78f45caf5300d2cb6d87d7",
       "status": "Preparação / contrato"
     },
     {
@@ -2891,8 +2891,8 @@
         "xlsx"
       ],
       "importedBy": [],
-      "bytes": 10685,
-      "sha256": "8c615df442b28e5bde22a2eed04dc3c9047120c73127110a1e9030ce2767a21b",
+      "bytes": 10430,
+      "sha256": "ce438ab2dbbfe3d8070b2a0cb1fb7504d1e259fa53722752a380242eb4732e56",
       "status": "Preparação / contrato"
     },
     {
@@ -2957,8 +2957,8 @@
         "server/supportIndicators.test.js",
         "server/worker.js"
       ],
-      "bytes": 5871,
-      "sha256": "2e85426a0f49ca69a0cac963455274b086d0ff56b0fb5989db1865bce3dd3662",
+      "bytes": 5957,
+      "sha256": "cddd36dc2da4f5a3246e90cea0c661c489503c25e4fde7b446260d48a87ac6b5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2978,8 +2978,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 9110,
-      "sha256": "d3aa6f3264a93a2d7932f842bab40389ed18e50388609daa462239419ddaf22c",
+      "bytes": 10114,
+      "sha256": "ef59ef5c65fb3d2bbf04ca4d9a9f4c2d53ff79fe0c390eb94a6b07145874e823",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3058,8 +3058,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 17232,
-      "sha256": "85a983135cc0804e6c30939574632432ba2c896a234eeb2dfc32ab1a3fb4c996",
+      "bytes": 16800,
+      "sha256": "1a12b4a56934c33dd6db8d9bfb0e5ced1dd0cc3463308259aefd1552f18870f6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3081,8 +3081,8 @@
         "server/worker.js",
         "server/workspaceStorage.test.js"
       ],
-      "bytes": 10037,
-      "sha256": "affec82734d3fe0106898374499eed69bcefbfe7fa65a129677bbb57c925c3d2",
+      "bytes": 10065,
+      "sha256": "ca6e5e016318764720987dce2f2d09076c1d925c8c6c99115b3edf51c3577046",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3106,8 +3106,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 12204,
-      "sha256": "f93b90790ed806719745fbc89e83ed6d6df664824c9f286a831285e4ea130400",
+      "bytes": 12682,
+      "sha256": "e7561031404f98749d000dc5c12e2b30fc15eb3a41063ee21da81fa5d3f6fb28",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11544,8 +11544,8 @@
       "importedBy": [
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 10046,
-      "sha256": "0ca00495f2766a44848d90d1d6158226abc7e164bdb32c3581694eb2c75cbab4",
+      "bytes": 10587,
+      "sha256": "47731062b975e1b15b5b96c49b97fb9271e95366bcf6a4e994990896a0a77399",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11579,6 +11579,7 @@
         "src/shared/data/zohoActivity.js",
         "src/shared/export/exports.js",
         "src/shared/persistence/WorkspaceQueryPanel.jsx",
+        "src/shared/persistence/workspaceClient.js",
         "src/shared/security/Access.jsx",
         "src/shared/security/accessClient.js"
       ],
@@ -11588,8 +11589,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 129204,
-      "sha256": "061453cf8b7eff1b0f370eba7498264bc54edfd06a1354e254075d0071dcdccd",
+      "bytes": 130896,
+      "sha256": "0312d3935113cdcc9da679ed16afab6776f7aa2a331dbaceb4b98f309ae7d5ce",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11735,8 +11736,8 @@
       "importedBy": [
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 4480,
-      "sha256": "584a004aec0079b7026dccc7a6d45a55bc941a713dbd81de1343d15724c63f8e",
+      "bytes": 4616,
+      "sha256": "1b1d851c6a72dd39de9c4c95d1f0bf384f9f1e49836687168816337676f63de5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11762,8 +11763,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 13072,
-      "sha256": "17638e84c9c298db91feca4f663b305e96fbf075976fc8bd05e4d82e92ec8463",
+      "bytes": 12842,
+      "sha256": "b75a939000c5288910f625866171f04d3d2d903fb6433ee330abd7143282d111",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -12857,8 +12858,8 @@
         "src/modules/orders/components/ZohoPresencePanel.jsx",
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 4574,
-      "sha256": "b73e9dae48e273428dffe6be0f3f04eb02c8b7e387cca47fe93295625aebab5b",
+      "bytes": 4579,
+      "sha256": "192db305d49ea579f5e0cc511ae273fae6343f4e098a55a58a671d3f4f4454ab",
       "status": "Preparação / contrato"
     },
     {
@@ -13072,6 +13073,7 @@
         "server/workspaceStorage.test.js",
         "src/modules/consumption/components/LinesPage.jsx",
         "src/modules/my-dashboard/components/MyDashboardPage.jsx",
+        "src/modules/support-indicators/components/SupportIndicatorsPage.jsx",
         "src/shared/persistence/WorkspaceQueryPanel.jsx"
       ],
       "bytes": 5283,
@@ -13283,8 +13285,8 @@
         "src/shared/security/accessClient.js",
         "src/shared/security/permissions.test.js"
       ],
-      "bytes": 4355,
-      "sha256": "164ee89c9292863606365317a7988aedbdbf8491558741fd4aee28ef0cfd5caf",
+      "bytes": 4301,
+      "sha256": "0d99baa3b30dff8145b5a61976fd072fd4671562c6855a08bb7b334dd266ab07",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13292,7 +13294,7 @@
       "folder": "src/shared/security",
       "module": "Compartilhado",
       "layer": "Teste",
-      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas; cadastro normaliza endereço, rejeita páginas desconhecidas e não aceita dados de planilhas.",
+      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: Indicadores Suporte permite visualização a usuários ativos sem conceder outras páginas ou ações; acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas.",
       "exports": [],
       "imports": [
         "src/shared/security/permissions.js"
@@ -13302,8 +13304,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 3355,
-      "sha256": "86855d650965ca5780660792275c47f643ed89a75849ab1b6d6dbe8757d991d1",
+      "bytes": 3791,
+      "sha256": "0537b05a40c3a315e06997763ce0b49cfceb5c058c0ee6967e64a73c96d1a2d5",
       "status": "Código ou documentação do ponto de referência"
     },
     {

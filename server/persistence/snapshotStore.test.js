@@ -14,7 +14,7 @@ import { importLogistics } from '../../src/modules/logistics/domain/logistics.js
 import { createSourceSnapshotClient } from '../../src/shared/persistence/sourceSnapshotClient.js';
 import { businessSourcesResponse } from '../businessSources.js';
 const owner = 'owner@example.invalid',
-  user = { email: owner, role: 'admin', canImport: true };
+  user = { email: owner, role: 'admin', active: true, canImport: true };
 const orders = (label = 'sample') => ({
   filename: label + '.xlsx',
   data: importOrdersSheet(
@@ -219,7 +219,7 @@ test('cliente ponta a ponta restaura a versão ativa, reimporta sem somar linhas
         owner,
       )
     ).status,
-    403,
+    200,
   );
   assert.equal(
     (

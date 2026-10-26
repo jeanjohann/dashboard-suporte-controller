@@ -8,7 +8,7 @@ import {
   readSourceCatalog,
 } from '../../src/shared/persistence/sourceSnapshotClient.js';
 const owner = 'owner@example.invalid',
-  user = { role: 'admin', email: owner, canImport: true };
+  user = { role: 'admin', email: owner, active: true, canImport: true };
 const source = (large = false) => ({
   filename: 'ficticia.xlsx',
   data: {
@@ -52,7 +52,7 @@ test('base grande é transferida por uma requisição, preservando unicode, zero
   assert.ok(stats.queries - before < 10);
   assert.ok(catalog.orders.partCount > 32);
 });
-test('download incompleto ou corrompido é recusado; somente o proprietário recebe a base', async (t) => {
+test('base publicada é legível por usuários ativos; conteúdo incompleto ou corrompido é recusado', async (t) => {
   const { sql, env, id, send, request } = await setup(t),
     client = createSourceSnapshotClient(request, send),
     head = (await client.catalog()).orders;
@@ -62,8 +62,35 @@ test('download incompleto ou corrompido é recusado; somente o proprietário rec
     { ...user, email: 'other@example.invalid' },
     owner,
   );
-  assert.equal(foreign.status, 403);
+  assert.equal(foreign.status, 200);
   assert.equal(foreign.headers.get('Cache-Control'), 'no-store');
+  const reader = { ...user, email: 'reader@example.invalid', role: 'user', canImport: false };
+  const read = (path, options) =>
+    businessSourcesResponse(
+      new Request('https://app.example/api/sources/' + path, options),
+      env,
+      reader,
+      owner,
+    );
+  assert.deepEqual(Object.keys((await (await read('catalog')).json()).catalog), ['orders']);
+  for (const path of [
+    'operational/manifest?id=' + id,
+    'orders/versions',
+    'orders/download?id=' + 'f'.repeat(64),
+  ])
+    assert.equal((await read(path)).status, 403);
+  assert.equal((await read('publish', { method: 'POST' })).status, 403);
+  assert.equal(
+    (
+      await businessSourcesResponse(
+        new Request('https://app.example/api/sources/catalog'),
+        env,
+        { ...reader, active: false },
+        owner,
+      )
+    ).status,
+    403,
+  );
   sql
     .prepare(
       "UPDATE business_snapshot_parts SET payload_text=replace(payload_text,'ficticia','ficticib') WHERE snapshot_id=?",

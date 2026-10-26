@@ -162,11 +162,7 @@ test('piloto recusa usuário comum, outro administrador, inativo, origem externa
   const { database } = snapshotTestDatabase(t),
     env = { BUSINESS_DB: database },
     input = { value: value(), expectedRevision: 0 };
-  for (const denied of [
-    { ...user, role: 'user' },
-    { ...user, email: 'other@example.invalid' },
-    { ...user, active: false },
-  ])
+  for (const denied of [{ ...user, active: false }])
     assert.equal(
       (
         await supportIndicatorsResponse(
@@ -223,6 +219,40 @@ test('piloto recusa usuário comum, outro administrador, inativo, origem externa
     400,
   );
   assert.equal((await supportIndicatorsResponse(req('entries'), {}, user, owner)).status, 503);
+});
+
+test('usuários ativos leem indicadores e configurações, mas não criam, editam ou excluem registros', async (t) => {
+  const { database } = snapshotTestDatabase(t),
+    env = { BUSINESS_DB: database };
+  const reader = { email: 'reader@example.invalid', role: 'user', active: true };
+  for (const path of ['entries?start=2026-10-19&end=2026-10-25', 'settings']) {
+    const response = await supportIndicatorsResponse(req(path), env, reader, owner);
+    assert.equal(response.status, 200);
+    if (path === 'settings') assert.equal((await response.json()).writable, false);
+  }
+  for (const method of ['POST', 'DELETE'])
+    assert.equal(
+      (
+        await supportIndicatorsResponse(
+          new Request('https://app.example/api/support-indicators/entries', { method }),
+          env,
+          reader,
+          owner,
+        )
+      ).status,
+      403,
+    );
+  assert.equal(
+    (
+      await supportIndicatorsResponse(
+        req('settings', { value: defaultSettings, expectedRevision: 0 }),
+        env,
+        reader,
+        owner,
+      )
+    ).status,
+    403,
+  );
 });
 test('consulta por período pagina sem omitir o primeiro/último dia e isola outras coleções', async (t) => {
   const { database } = snapshotTestDatabase(t),

@@ -150,7 +150,7 @@ test('bases e coletas salvas exigem identidade ativa e restringem o piloto ao pr
       assert.equal((await forbidden(request('GET', null, path), e)).status, 401);
       assert.equal(
         (await createHandler(async () => input.email)(request('GET', null, path), e)).status,
-        403,
+        path.startsWith('/api/sources/') ? 503 : 403,
       );
       assert.equal((await admin(request('GET', null, path), e)).status, 503);
     }

@@ -279,6 +279,11 @@
 
 # Histórico de versões
 
+## 0.69.44 — 26/10/2026
+
+- Indicadores Suporte fica visível para todos os usuários ativos, em modo de visualização. Carrega lançamentos, configurações, base de OS publicada e consultas Zoho de indicadores e pendências já salvas.
+- Servidor mantém criação, edição, exclusão, publicação de bases e novas consultas ao Zoho restritas ao administrador principal. Não libera outras bases, versões históricas ou acervos privados.
+
 ## 0.69.43 — 26/10/2026
 
 - Indicadores Suporte mostra os lançamentos manuais salvos no período com ações Editar e Excluir por data/agente. A edição carrega os campos existentes e atualiza o mesmo registro, sem duplicar contagens.

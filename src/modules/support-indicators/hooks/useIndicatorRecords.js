@@ -34,6 +34,7 @@ export function useIndicatorRecords(period, enabled) {
     [error, setError] = useState(''),
     [settingsRecord, setSettingsRecord] = useState(null),
     [settingsReady, setSettingsReady] = useState(false);
+  const [writable, setWritable] = useState(false);
   useEffect(() => {
     if (!enabled) return;
     const c = new AbortController();
@@ -63,10 +64,12 @@ export function useIndicatorRecords(period, enabled) {
     if (!enabled) return;
     const c = new AbortController();
     setSettingsReady(false);
+    setWritable(false);
     api('/api/support-indicators/settings', { signal: c.signal })
       .then((data) => {
         if (!c.signal.aborted) {
           setSettingsRecord(data.record);
+          setWritable(data.writable === true);
           setSettingsReady(true);
         }
       })
@@ -120,6 +123,7 @@ export function useIndicatorRecords(period, enabled) {
     error,
     ready,
     settingsReady,
+    writable,
     settings: settingsRecord?.value || defaultSettings,
     settingsRevision: settingsRecord?.revision || 0,
     save,

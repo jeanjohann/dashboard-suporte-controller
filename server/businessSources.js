@@ -48,17 +48,26 @@ const publicHead = (h) =>
 export async function businessSourcesResponse(request, env, user, owner) {
   const url = new URL(request.url),
     root = url.pathname === '/api/sources/status';
-  const permitted = user.role === 'admin' && user.email === owner;
+  const writable = user.active === true && user.role === 'admin' && user.email === owner;
+  const permitted = user.active === true;
   if (root) {
     if (request.method !== 'GET') return businessReply({ error: 'Método não permitido.' }, 405);
     if (permitted && !env.BUSINESS_DB) return businessReply({ error: 'Banco indisponível.' }, 503);
-    return businessReply({ version: 1, permitted });
+    return businessReply({ version: 1, permitted, writable });
   }
   if (!permitted)
     return businessReply(
       { error: 'As bases salvas estão restritas ao administrador principal no piloto.' },
       403,
     );
+  if (!writable && request.method !== 'GET')
+    return businessReply({ error: 'Alteração de bases não autorizada.' }, 403);
+  if (
+    !writable &&
+    url.pathname !== '/api/sources/catalog' &&
+    !/^\/api\/sources\/orders\/(manifest|parts|download)$/.test(url.pathname)
+  )
+    return businessReply({ error: 'Fonte não autorizada para visualização dos indicadores.' }, 403);
   if (!env.BUSINESS_DB) return businessReply({ error: 'Banco indisponível.' }, 503);
   if (!['GET', 'POST'].includes(request.method))
     return businessReply({ error: 'Método não permitido.' }, 405);
@@ -70,7 +79,8 @@ export async function businessSourcesResponse(request, env, user, owner) {
   try {
     if (url.pathname === '/api/sources/catalog' && request.method === 'GET' && !url.search) {
       const catalog = {};
-      for (const kind of sourceKinds) catalog[kind] = publicHead(await store.head(kind));
+      for (const kind of writable ? sourceKinds : ['orders'])
+        catalog[kind] = publicHead(await store.head(kind));
       return businessReply({ version: 1, catalog });
     }
     if (url.pathname === '/api/sources/publish' && request.method === 'POST') {
@@ -95,6 +105,11 @@ export async function businessSourcesResponse(request, env, user, owner) {
     );
     if (!match) return businessReply({ error: 'Rota não encontrada.' }, 404);
     const [, kind, action] = match;
+    if (!writable && (kind !== 'orders' || !['manifest', 'parts', 'download'].includes(action)))
+      return businessReply(
+        { error: 'Fonte não autorizada para visualização dos indicadores.' },
+        403,
+      );
     if (request.method === 'GET') {
       if (action === 'versions' && !url.search) {
         const versions = await store.rows(
@@ -104,6 +119,8 @@ export async function businessSourcesResponse(request, env, user, owner) {
         return businessReply({ version: 1, versions });
       }
       const id = url.searchParams.get('id');
+      if (!writable && id !== (await store.head('orders'))?.snapshot_id)
+        return businessReply({ error: 'Somente a base publicada pode ser visualizada.' }, 403);
       if (!/^[a-f0-9]{64}$/.test(id || '')) throw Error('Identificação inválida.');
       const manifest = await store.manifest(id);
       if (!manifest || manifest.kind !== kind || manifest.state !== 'complete')

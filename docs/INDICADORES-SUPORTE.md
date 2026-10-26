@@ -16,6 +16,8 @@ Página independente no menu principal, com filtros próprios por data e agente.
 
 ## Uso
 
+A partir da versão 0.69.44, todos os usuários ativos podem abrir a página em modo de visualização. A leitura usa a base de OS atualmente publicada, os registros manuais e as consultas Zoho de indicadores/pendências salvas pelo administrador principal; abrir a página não consulta o fornecedor. O período salvo do Zoho precisa cobrir o período escolhido. Alterar lançamentos, excluir registros, mudar configurações compartilhadas, publicar bases ou executar novas consultas continua restrito ao administrador principal. As APIs recusam essas operações para os demais usuários. Outras bases e acervos privados não foram liberados.
+
 Em **Atividades e lançamentos**, a lista **Lançamentos salvos no período** permite localizar cada data/agente e abrir **Editar**, carregando todos os campos salvos. **Salvar alterações** atualiza o mesmo registro. Para retirar apenas uma quantidade incorreta, deixe esse campo vazio e salve; zero significa quantidade confirmada. **Excluir** pede confirmação e remove o registro diário inteiro, incluindo atividades e observações. A exclusão é lógica, com autoria e revisão no banco; o conteúdo é retirado dos indicadores. A revisão da exclusão é carregada para permitir novo lançamento na mesma data/agente, inclusive depois de recarregar a página. Conflitos entre sessões preservam os dados e exigem recarga antes de salvar ou excluir.
 
 ### Ajustes da versão 0.65.0

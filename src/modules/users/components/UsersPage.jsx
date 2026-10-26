@@ -214,8 +214,9 @@ export function UsersPage({ onPage }) {
                     <tr>
                       <td>Indicadores Suporte</td>
                       <td>
-                        Página administrativa. Lançamentos no D1 e consulta Zoho restritos ao
-                        administrador principal no piloto.
+                        Visualização disponível aos usuários ativos, com a base de OS publicada,
+                        lançamentos e consultas Zoho salvas. Alterações e novas consultas restritas
+                        ao administrador principal.
                       </td>
                     </tr>
                     <tr>

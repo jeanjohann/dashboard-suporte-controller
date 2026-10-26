@@ -267,6 +267,22 @@ test('consultas Zoho e sessões mantêm datas, identificadores e relatórios rec
   const client = createWorkspaceClient('zoho-indicators', read);
   await client.write({ data }, 0);
   assert.deepEqual((await client.read()).value, { data });
+  const reader = request(env, { email: 'reader@example.invalid', role: 'user', active: true });
+  const readerClient = createWorkspaceClient('zoho-indicators', reader);
+  assert.deepEqual((await readerClient.read()).value, { data });
+  assert.deepEqual((await reader('/api/workspace/status')).readKinds, [
+    'zoho-indicators',
+    'zoho-backlog',
+  ]);
+  await assert.rejects(readerClient.write({ data }, 1), (error) => error.status === 403);
+  for (const kind of ['consumption', 'dashboards', 'zoho-support', 'zoho-presence'])
+    await assert.rejects(reader('/api/workspace/' + kind), (error) => error.status === 403);
+  await assert.rejects(
+    request(env, { email: 'reader@example.invalid', role: 'user', active: false })(
+      '/api/workspace/zoho-indicators',
+    ),
+    (error) => error.status === 403,
+  );
   const support = createWorkspaceClient('zoho-support', read);
   await support.write(
     {

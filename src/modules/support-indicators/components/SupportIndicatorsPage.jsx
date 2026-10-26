@@ -1,4 +1,5 @@
 import { WorkspaceQueryPanel } from '../../../shared/persistence/WorkspaceQueryPanel.jsx';
+import { createWorkspaceClient } from '../../../shared/persistence/workspaceClient.js';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
 import { SidePanelProvider } from '../../../app/SidePanel.jsx';
@@ -791,6 +792,26 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
   const store = useIndicatorRecords(period, managed && valid),
     rawOrders = sources.orders?.value?.data,
     zohoData = ownZoho || sources.zoho?.value?.data;
+  useEffect(() => {
+    if (!managed || !active || !store.settingsReady || store.writable) return;
+    let live = true;
+    Promise.allSettled(
+      ['zoho-indicators', 'zoho-backlog'].map((kind) => createWorkspaceClient(kind).read()),
+    ).then((results) => {
+      if (!live) return;
+      if (results[0].status === 'fulfilled' && results[0].value.value)
+        setOwnZoho(results[0].value.value.data);
+      if (results[1].status === 'fulfilled' && results[1].value.value)
+        setOwnBacklog(results[1].value.value.data);
+      if (results.some((result) => result.status === 'rejected'))
+        setError(
+          'Não foi possível carregar uma consulta Zoho salva. Recarregue a página para tentar novamente.',
+        );
+    });
+    return () => {
+      live = false;
+    };
+  }, [managed, active, store.settingsReady, store.writable]);
   const ordersData = useMemo(
     () =>
       rawOrders
@@ -1276,6 +1297,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             <div>
               <h1>Indicadores Suporte</h1>
               <p>Atendimentos, serviços e atividades da equipe.</p>
+              {managed && store.settingsReady && !store.writable && (
+                <p className="scope">
+                  Somente visualização · bases e consultas salvas pela administração. Novas
+                  consultas e alterações são restritas ao administrador principal.
+                </p>
+              )}
             </div>
             <div className="si-toolbar">
               <button
@@ -1387,13 +1414,15 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                         ? `${date(period.start)} a ${date(period.end)} · comparação com ${date(past.start)} a ${date(past.end)}`
                         : 'Informe um intervalo válido de até 366 dias.'}
                     </p>
-                    <IndicatorSettings
-                      settings={settings}
-                      revision={store.settingsRevision}
-                      ready={store.settingsReady && !manualDirty}
-                      busy={store.busy}
-                      save={store.save}
-                    />
+                    {store.writable && (
+                      <IndicatorSettings
+                        settings={settings}
+                        revision={store.settingsRevision}
+                        ready={store.settingsReady && !manualDirty}
+                        busy={store.busy}
+                        save={store.save}
+                      />
+                    )}
                   </section>
                   <section className="si-config-section" aria-label="Visualização da página">
                     <div className="si-config-section-heading">
@@ -1554,6 +1583,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     <div className="si-config-actions">
                       <button
                         disabled={
+                          !store.writable ||
                           !valid ||
                           busy ||
                           backlogBusy ||
@@ -1592,7 +1622,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                           alterar os indicadores.
                         </p>
                         <button
-                          disabled={profileBusy || busy || backlogBusy}
+                          disabled={!store.writable || profileBusy || busy || backlogBusy}
                           onClick={inspectProfile}
                         >
                           {profileBusy
@@ -1625,7 +1655,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                           {number(backlog.total)} pendentes · {number(backlog.onHold)} em espera
                         </strong>
                       )}
-                      <button disabled={backlogBusy || busy} onClick={loadBacklog}>
+                      <button
+                        disabled={!store.writable || backlogBusy || busy}
+                        onClick={loadBacklog}
+                      >
                         {backlogBusy
                           ? `Conferindo ${backlogProgress} chamados…`
                           : 'Consultar pendências atuais'}
@@ -1916,6 +1949,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             <div className="si-toolbar">
               <button
                 disabled={
+                  !store.writable ||
                   !valid ||
                   busy ||
                   backlogBusy ||
@@ -1955,7 +1989,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                   filtro de período. Importações e aberturas por clientes não contam como abertura
                   pelo suporte.
                 </p>
-                <button disabled={profileBusy || busy || backlogBusy} onClick={inspectProfile}>
+                <button
+                  disabled={!store.writable || profileBusy || busy || backlogBusy}
+                  onClick={inspectProfile}
+                >
                   {profileBusy
                     ? 'Conferindo amostra…'
                     : 'Consultar amostra de autoria e categorias'}
@@ -2026,7 +2063,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                     <small>· {number(backlog.onHold)} em espera</small>
                   </strong>
                 )}
-                <button disabled={backlogBusy || busy} onClick={loadBacklog}>
+                <button disabled={!store.writable || backlogBusy || busy} onClick={loadBacklog}>
                   {backlogBusy
                     ? `Conferindo ${backlogProgress} chamados…`
                     : 'Consultar pendências atuais'}
@@ -2749,6 +2786,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     remove={store.remove}
                                     today={today}
                                     onDirty={setManualDirty}
+                                    readOnly={!store.writable}
                                   />
                                   <Table
                                     headers={['Indicador manual', 'Quantidade informada']}

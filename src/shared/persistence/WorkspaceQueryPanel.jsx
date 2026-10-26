@@ -46,7 +46,7 @@ export function WorkspaceQueryPanel({ kind, value, onLoad, disabled = false }) {
         const status = await api('/api/workspace/status');
         if (status.version !== 1 || typeof status.permitted !== 'boolean')
           throw Error('Configuração inválida.');
-        if (!status.permitted) {
+        if (!status.permitted && !status.readKinds?.includes(kind)) {
           if (live) setState((s) => ({ ...s, loading: false }));
           return;
         }
@@ -58,6 +58,7 @@ export function WorkspaceQueryPanel({ kind, value, onLoad, disabled = false }) {
         setState({
           loading: false,
           permitted: true,
+          readOnly: !status.permitted,
           loaded: true,
           revision: saved.revision,
           at: saved.updatedAt,
@@ -112,13 +113,15 @@ export function WorkspaceQueryPanel({ kind, value, onLoad, disabled = false }) {
       )}
       {state.permitted && (
         <>
-          <button
-            type="button"
-            disabled={disabled || state.loading || !state.loaded || value === null}
-            onClick={() => action(false)}
-          >
-            Salvar consulta no banco
-          </button>
+          {!state.readOnly && (
+            <button
+              type="button"
+              disabled={disabled || state.loading || !state.loaded || value === null}
+              onClick={() => action(false)}
+            >
+              Salvar consulta no banco
+            </button>
+          )}
           <button type="button" disabled={disabled || state.loading} onClick={() => action(true)}>
             Carregar consulta salva
           </button>

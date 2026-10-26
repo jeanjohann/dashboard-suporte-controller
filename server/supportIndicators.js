@@ -15,9 +15,10 @@ const reply = (data, status = 200) =>
     headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' },
   });
 export async function supportIndicatorsResponse(request, env, user, owner) {
-  if (!user?.active || user.role !== 'admin' || user.email !== owner)
+  const writable = user?.active && user.role === 'admin' && user.email === owner;
+  if (!user?.active || (request.method !== 'GET' && !writable))
     return reply(
-      { error: 'Indicadores Suporte está restrito ao administrador principal no piloto.' },
+      { error: 'A alteração dos indicadores está restrita ao administrador principal.' },
       403,
     );
   if (!env.BUSINESS_DB) return reply({ error: 'Banco de negócio não configurado.' }, 503);
@@ -38,7 +39,7 @@ export async function supportIndicatorsResponse(request, env, user, owner) {
     if (request.method === 'GET') {
       if (settings) {
         if (url.search) return reply({ error: 'Parâmetros inválidos.' }, 400);
-        return reply({ version: 1, record: await repo.read('settings') });
+        return reply({ version: 1, writable, record: await repo.read('settings') });
       }
       const start = url.searchParams.get('start'),
         end = url.searchParams.get('end');
