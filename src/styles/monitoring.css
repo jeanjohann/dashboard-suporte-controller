@@ -313,18 +313,20 @@
   place-items: center;
   width: 22px;
   min-width: 22px;
+  min-height: 22px;
   height: 22px;
   padding: 0;
-  border: 1px solid var(--ui-border);
-  border-radius: 50%;
+  border: 0;
+  border-radius: 0;
   background: transparent;
-  color: var(--ui-muted);
+  color: var(--ui-error-ink);
   font-size: 16px;
+  font-weight: 650;
   line-height: 1;
 }
 .monitoring-page .monitoring-history-delete:hover:not(:disabled) {
-  border-color: var(--ui-danger, #d44848);
-  color: var(--ui-danger, #d44848);
+  background: transparent;
+  color: var(--ui-error-ink);
 }
 .monitoring-history-confirm {
   display: flex;

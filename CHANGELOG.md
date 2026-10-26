@@ -1,3 +1,7 @@
+## 0.69.42 — 26/10/2026
+
+- Simplifica a ação de excluir nota no Monitoramento: ícone × vermelho sem fundo nem contorno.
+
 ## 0.69.41 — 26/10/2026
 
 - Adiciona exclusão administrativa de notas individuais no histórico de tratamento, com confirmação, controle de revisão e preservação dos lembretes.
