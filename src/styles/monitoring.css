@@ -297,12 +297,42 @@
   overflow: auto;
 }
 .monitoring-history li {
+  position: relative;
   border-left: 2px solid var(--ui-accent);
-  padding: 8px 10px;
+  padding: 8px 34px 8px 10px;
   margin: 0 0 8px;
   background: var(--ui-soft);
   border-radius: 0 6px 6px 0;
   overflow-wrap: anywhere;
+}
+.monitoring-page .monitoring-history-delete {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ui-muted);
+  font-size: 16px;
+  line-height: 1;
+}
+.monitoring-page .monitoring-history-delete:hover:not(:disabled) {
+  border-color: var(--ui-danger, #d44848);
+  color: var(--ui-danger, #d44848);
+}
+.monitoring-history-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 10px;
 }
 .monitoring-history li > div {
   display: flex;

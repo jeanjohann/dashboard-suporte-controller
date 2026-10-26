@@ -61,6 +61,7 @@ export function MonitoringQueue({
   const [draft, setDraft] = useState({ status: monitoringStages[0], owner: '', text: '' });
   const [message, setMessage] = useState('');
   const [confirmTreatmentDelete, setConfirmTreatmentDelete] = useState(false);
+  const [confirmEntryDelete, setConfirmEntryDelete] = useState(null);
   const [sort, setSort] = useState(null);
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const defaults = columns
@@ -102,6 +103,7 @@ export function MonitoringQueue({
     setDraft({ status: saved?.status || monitoringStages[0], owner: saved?.owner || '', text: '' });
     setMessage('');
     setConfirmTreatmentDelete(false);
+    setConfirmEntryDelete(null);
     if (selected)
       historyPanel.current?.scrollIntoView({
         block: 'nearest',
@@ -136,7 +138,18 @@ export function MonitoringQueue({
       setMessage(error.message);
     }
   }
-  const history = [...(saved?.history || [])].sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+  async function removeHistoryEntry(entryIndex) {
+    try {
+      await treatment.removeEntry(detail, entryIndex, saved.revision);
+      setConfirmEntryDelete(null);
+      setMessage('Nota excluída do histórico.');
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+  const history = (saved?.history || [])
+    .map((entry, index) => ({ entry, index }))
+    .sort((a, b) => Date.parse(b.entry.at) - Date.parse(a.entry.at));
   return (
     <Section
       title="Fila de acompanhamento"
@@ -494,8 +507,23 @@ export function MonitoringQueue({
                 <p className="scope">Nenhuma atualização registrada para este veículo.</p>
               ) : (
                 <ol>
-                  {history.map((entry, index) => (
-                    <li key={index}>
+                  {history.map(({ entry, index }) => (
+                    <li key={`${entry.at}-${index}`}>
+                      {treatment.canDelete && (
+                        <button
+                          type="button"
+                          className="monitoring-history-delete"
+                          aria-label={`Excluir nota de ${monitoringDate(entry.at)}`}
+                          title="Excluir esta nota"
+                          disabled={
+                            treatment.loading || Boolean(treatment.error) || treatment.saving
+                          }
+                          onClick={() => setConfirmEntryDelete(index)}
+                          data-no-print
+                        >
+                          ×
+                        </button>
+                      )}
                       <div>
                         <strong>{entry.status}</strong>
                         <time dateTime={entry.at}>{monitoringDate(entry.at)}</time>
@@ -504,6 +532,34 @@ export function MonitoringQueue({
                       <p>
                         {entry.text || 'Alteração de status/responsável sem observação adicional.'}
                       </p>
+                      {confirmEntryDelete === index && (
+                        <div
+                          className="monitoring-history-confirm"
+                          role="group"
+                          aria-label="Confirmar exclusão da nota"
+                          data-no-print
+                        >
+                          <span>
+                            Excluir esta nota? Se for a última, o acompanhamento também será
+                            encerrado.
+                          </span>
+                          <button
+                            type="button"
+                            disabled={treatment.saving}
+                            onClick={() => removeHistoryEntry(index)}
+                          >
+                            {treatment.saving ? 'Excluindo…' : 'Confirmar'}
+                          </button>
+                          <button
+                            type="button"
+                            className="secondary"
+                            disabled={treatment.saving}
+                            onClick={() => setConfirmEntryDelete(null)}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      )}
                     </li>
                   ))}
                 </ol>

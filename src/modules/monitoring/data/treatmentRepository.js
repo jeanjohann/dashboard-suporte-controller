@@ -95,5 +95,28 @@ export function createLocalTreatmentRepository(scope, storage = globalThis.local
       storage.setItem(storageKey, JSON.stringify({ version: 1, records: updated }));
       return updated;
     },
+    async removeEntry(vehicle, entryIndex, expectedRevision) {
+      const records = read();
+      const key = vehicleKey(vehicle);
+      const previous = records.find((record) => record.key === key);
+      if (!previous || previous.deleted)
+        throw Error('Este acompanhamento já foi excluído ou não existe.');
+      if (previous.revision !== expectedRevision)
+        throw Error('O acompanhamento mudou em outra aba. Recarregue antes de excluir a nota.');
+      if (
+        !Number.isSafeInteger(entryIndex) ||
+        entryIndex < 0 ||
+        entryIndex >= previous.history.length
+      )
+        throw Error('A nota selecionada não existe mais no histórico. Recarregue a página.');
+      const history = previous.history.filter((_, index) => index !== entryIndex);
+      const next = history.length
+        ? { ...history.at(-1), history, revision: expectedRevision + 1, key }
+        : { key, deleted: true, revision: expectedRevision + 1 };
+      const record = validateRecord(next);
+      const updated = [...records.filter((item) => item.key !== key), record];
+      storage.setItem(storageKey, JSON.stringify({ version: 1, records: updated }));
+      return updated;
+    },
   };
 }

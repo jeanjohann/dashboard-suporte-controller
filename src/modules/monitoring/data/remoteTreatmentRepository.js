@@ -96,6 +96,19 @@ export function createConfiguredTreatmentRepository({ scope, managed, demo, requ
       const records = await repository.read();
       return [...records.filter((record) => record.key !== data.record.key), data.record];
     },
+    async removeEntry(vehicle, entryIndex, expectedRevision) {
+      await repository.configure();
+      if (!remote) return local.removeEntry(vehicle, entryIndex, expectedRevision);
+      const data = await request('/api/monitoring/treatments', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: vehicleKey(vehicle), expectedRevision, entryIndex }),
+      });
+      if (data.version !== 1 || !data.record)
+        throw Error('O banco não confirmou a exclusão da nota.');
+      const records = await repository.read();
+      return [...records.filter((record) => record.key !== data.record.key), data.record];
+    },
   };
   return repository;
 }

@@ -112,6 +112,30 @@ export function useMonitoringTreatments(demo, active = true) {
     }
   }
 
+  async function removeEntry(vehicle, entryIndex, expectedRevision) {
+    if (!canDelete) throw Error('Somente um administrador pode excluir notas do histórico.');
+    if (!available || state.loading || state.error || saving)
+      throw Error('Aguarde a leitura do acompanhamento ou carregue-o novamente.');
+    const target = repository;
+    setSaving(true);
+    try {
+      const records = await target.removeEntry(vehicle, entryIndex, expectedRevision);
+      if (current.current === target) {
+        setState({ repository: target, records: byKey(records), loading: false, error: '' });
+        try {
+          const channel = new BroadcastChannel('addlog-monitoring-treatments');
+          channel.postMessage(scope);
+          channel.close();
+        } catch {}
+      }
+    } catch (error) {
+      await reload();
+      throw error;
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return {
     records: available ? state.records : {},
     loading: !available || state.loading,
@@ -121,6 +145,7 @@ export function useMonitoringTreatments(demo, active = true) {
     canDelete,
     change,
     remove,
+    removeEntry,
     reload,
   };
 }

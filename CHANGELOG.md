@@ -1,3 +1,7 @@
+## 0.69.41 — 26/10/2026
+
+- Adiciona exclusão administrativa de notas individuais no histórico de tratamento, com confirmação, controle de revisão e preservação dos lembretes.
+
 ## 0.69.40 — 26/10/2026
 
 - Adiciona exclusão administrativa do acompanhamento manual, com confirmação e revisão concorrente.

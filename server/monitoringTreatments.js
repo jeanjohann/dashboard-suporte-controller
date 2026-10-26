@@ -105,7 +105,7 @@ export async function monitoringTreatmentsResponse(request, env, user, owner) {
       { error: 'Banco do acompanhamento indisponível. Nenhuma alteração foi salva.' },
       503,
     );
-  if (!['GET', 'POST', 'DELETE'].includes(request.method))
+  if (!['GET', 'POST', 'PATCH', 'DELETE'].includes(request.method))
     return reply({ error: 'Método não permitido.' }, 405);
   if (request.method !== 'GET' && (url.search || request.headers.get('Origin') !== url.origin))
     return reply({ error: 'Origem ou parâmetros não permitidos.' }, 403);
@@ -155,6 +155,17 @@ export async function monitoringTreatmentsResponse(request, env, user, owner) {
         body.draft.text.length > 2000
       )
         throw Error();
+    } else if (request.method === 'PATCH') {
+      if (
+        !exact(body, ['key', 'expectedRevision', 'entryIndex']) ||
+        typeof body.key !== 'string' ||
+        body.key.length > 500 ||
+        !validRevision ||
+        !Number.isSafeInteger(body.entryIndex) ||
+        body.entryIndex < 0 ||
+        body.entryIndex >= 500
+      )
+        throw Error();
     } else if (
       !exact(body, ['key', 'expectedRevision']) ||
       typeof body.key !== 'string' ||
@@ -190,6 +201,19 @@ export async function monitoringTreatmentsResponse(request, env, user, owner) {
         { key: body.key, deleted: true },
         { expectedRevision: body.expectedRevision },
       );
+      return reply({ version: 1, record: { ...saved.value, revision: saved.revision } });
+    }
+    if (request.method === 'PATCH') {
+      if (!previous || previous.value?.deleted)
+        return reply({ error: 'Este acompanhamento já foi excluído ou não existe.' }, 404);
+      if (body.entryIndex >= previous.value.history.length)
+        return reply({ error: 'A nota selecionada não existe mais no histórico.' }, 409);
+      const history = previous.value.history.filter((_, index) => index !== body.entryIndex);
+      const value = history.length
+        ? { key: body.key, ...history.at(-1), history }
+        : { key: body.key, deleted: true };
+      validateTreatment(value);
+      const saved = await repo.put(id, value, { expectedRevision: body.expectedRevision });
       return reply({ version: 1, record: { ...saved.value, revision: saved.revision } });
     }
     const next = recordMonitoringUpdate(
