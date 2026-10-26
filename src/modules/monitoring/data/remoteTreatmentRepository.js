@@ -14,19 +14,21 @@ function validateRecords(data) {
         typeof record.key !== 'string' ||
         !Number.isSafeInteger(record.revision) ||
         record.revision < 1 ||
-        !monitoringStages.includes(record.status) ||
-        !Array.isArray(record.history) ||
-        !record.history.length ||
-        typeof record.owner !== 'string' ||
-        typeof record.text !== 'string' ||
-        monitoringInstant(record.at) == null ||
-        record.history.some(
-          (entry) =>
-            !monitoringStages.includes(entry.status) ||
-            typeof entry.owner !== 'string' ||
-            typeof entry.text !== 'string' ||
-            monitoringInstant(entry.at) == null,
-        ),
+        (record.deleted === true
+          ? Object.keys(record).some((key) => !['key', 'deleted', 'revision'].includes(key))
+          : !monitoringStages.includes(record.status) ||
+            !Array.isArray(record.history) ||
+            !record.history.length ||
+            typeof record.owner !== 'string' ||
+            typeof record.text !== 'string' ||
+            monitoringInstant(record.at) == null ||
+            record.history.some(
+              (entry) =>
+                !monitoringStages.includes(entry.status) ||
+                typeof entry.owner !== 'string' ||
+                typeof entry.text !== 'string' ||
+                monitoringInstant(entry.at) == null,
+            )),
     ) ||
     new Set(data.records.map((record) => record.key)).size !== data.records.length
   )
@@ -78,6 +80,19 @@ export function createConfiguredTreatmentRepository({ scope, managed, demo, requ
       });
       if (data.version !== 1 || !data.record)
         throw Error('O banco não confirmou o acompanhamento.');
+      const records = await repository.read();
+      return [...records.filter((record) => record.key !== data.record.key), data.record];
+    },
+    async remove(vehicle, expectedRevision) {
+      await repository.configure();
+      if (!remote) return local.remove(vehicle, expectedRevision);
+      const data = await request('/api/monitoring/treatments', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: vehicleKey(vehicle), expectedRevision }),
+      });
+      if (data.version !== 1 || !data.record?.deleted)
+        throw Error('O banco não confirmou a exclusão do acompanhamento.');
       const records = await repository.read();
       return [...records.filter((record) => record.key !== data.record.key), data.record];
     },

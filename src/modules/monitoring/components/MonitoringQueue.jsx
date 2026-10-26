@@ -60,6 +60,7 @@ export function MonitoringQueue({
   const historyPanel = useRef();
   const [draft, setDraft] = useState({ status: monitoringStages[0], owner: '', text: '' });
   const [message, setMessage] = useState('');
+  const [confirmTreatmentDelete, setConfirmTreatmentDelete] = useState(false);
   const [sort, setSort] = useState(null);
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const defaults = columns
@@ -100,6 +101,7 @@ export function MonitoringQueue({
   useEffect(() => {
     setDraft({ status: saved?.status || monitoringStages[0], owner: saved?.owner || '', text: '' });
     setMessage('');
+    setConfirmTreatmentDelete(false);
     if (selected)
       historyPanel.current?.scrollIntoView({
         block: 'nearest',
@@ -121,6 +123,15 @@ export function MonitoringQueue({
           ? 'Atualização salva no banco do sistema.'
           : 'Atualização salva neste navegador.',
       );
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+  async function removeTreatment() {
+    try {
+      await treatment.remove(detail, saved.revision);
+      setConfirmTreatmentDelete(false);
+      setMessage('Acompanhamento e histórico excluídos. O lembrete do veículo foi preservado.');
     } catch (error) {
       setMessage(error.message);
     }
@@ -424,6 +435,47 @@ export function MonitoringQueue({
                   {message}
                 </p>
               )}
+              {treatment.canDelete && saved && !saved.deleted && (
+                <div className="monitoring-reminder-delete monitoring-treatment-delete">
+                  {!confirmTreatmentDelete ? (
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={treatment.loading || Boolean(treatment.error) || treatment.saving}
+                      onClick={() => setConfirmTreatmentDelete(true)}
+                    >
+                      Excluir acompanhamento
+                    </button>
+                  ) : (
+                    <div role="group" aria-label="Confirmar exclusão do acompanhamento">
+                      <p>
+                        Excluir o status e todo o histórico de tratamento deste veículo? A ação
+                        ficará fora da consulta e não poderá ser desfeita pela tela. Os lembretes
+                        serão preservados.
+                      </p>
+                      <div className="monitoring-actions">
+                        <button
+                          type="button"
+                          disabled={
+                            treatment.loading || Boolean(treatment.error) || treatment.saving
+                          }
+                          onClick={removeTreatment}
+                        >
+                          {treatment.saving ? 'Excluindo…' : 'Confirmar exclusão'}
+                        </button>
+                        <button
+                          type="button"
+                          className="secondary"
+                          disabled={treatment.saving}
+                          onClick={() => setConfirmTreatmentDelete(false)}
+                        >
+                          Manter acompanhamento
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             <div className="monitoring-history">
               <h4>Histórico de tratamento · {history.length}</h4>
@@ -436,6 +488,8 @@ export function MonitoringQueue({
                     Tentar novamente
                   </button>
                 </p>
+              ) : saved?.deleted ? (
+                <p className="scope">Acompanhamento e histórico excluídos pelo administrador.</p>
               ) : !history.length ? (
                 <p className="scope">Nenhuma atualização registrada para este veículo.</p>
               ) : (

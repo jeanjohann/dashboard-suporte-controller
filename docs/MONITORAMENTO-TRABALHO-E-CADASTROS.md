@@ -1,5 +1,7 @@
 # Monitoramento: acompanhamento e cadastros — 0.53.0
 
+**Atualização 0.69.40:** o administrador pode excluir o acompanhamento manual e seu histórico; a exclusão é confirmada na interface, respeita revisões e preserva os lembretes. A última página principal também é restaurada após atualização, por usuário e sempre validando as permissões atuais.
+
 **Atualização 0.69.38:** o histórico manual de tratamento usa documentos versionados no D1 para o administrador do piloto. Os demais escopos salvam no navegador, separados por usuário e modo real/demonstração. Erro na leitura do D1 bloqueia a gravação e não troca silenciosamente para o armazenamento local. Eventos automáticos de coleta e lembretes continuam em recursos distintos.
 
 **Atualização 0.58.0:** agenda e histórico de lembretes passam a ter integração D1 no piloto do administrador principal, com migração explícita e cópia local preservada. Telemetria observada permanece no histórico próprio das coletas. [Ativação e limites](BANCO-CLOUDFLARE.md). A descrição abaixo registra a entrega 0.53.0.

@@ -1,3 +1,8 @@
+## 0.69.40 — 26/10/2026
+
+- Adiciona exclusão administrativa do acompanhamento manual, com confirmação e revisão concorrente.
+- Restaura a última página principal acessada após atualização, por usuário e respeitando permissões.
+
 ## 0.69.39 — 26/10/2026
 
 - Corrige as referências do estado de persistência que impediam abrir o Monitoramento Ativo.

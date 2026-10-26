@@ -22,6 +22,14 @@ const exact = (value, keys) =>
   Object.keys(value).every((key) => keys.includes(key));
 
 export function validateTreatment(value) {
+  if (
+    exact(value, ['key', 'deleted']) &&
+    typeof value.key === 'string' &&
+    value.key.length > 0 &&
+    value.key.length <= 500 &&
+    value.deleted === true
+  )
+    return true;
   const entryFields = ['at', 'status', 'owner', 'text'];
   if (
     !exact(value, ['key', 'status', 'owner', 'text', 'at', 'history']) ||
@@ -97,9 +105,9 @@ export async function monitoringTreatmentsResponse(request, env, user, owner) {
       { error: 'Banco do acompanhamento indisponível. Nenhuma alteração foi salva.' },
       503,
     );
-  if (!['GET', 'POST'].includes(request.method))
+  if (!['GET', 'POST', 'DELETE'].includes(request.method))
     return reply({ error: 'Método não permitido.' }, 405);
-  if (request.method === 'POST' && (url.search || request.headers.get('Origin') !== url.origin))
+  if (request.method !== 'GET' && (url.search || request.headers.get('Origin') !== url.origin))
     return reply({ error: 'Origem ou parâmetros não permitidos.' }, 403);
 
   const repo = createDocumentRepository({
@@ -131,18 +139,27 @@ export async function monitoringTreatmentsResponse(request, env, user, owner) {
   let body;
   try {
     body = await bodyOf(request);
-    if (
-      !exact(body, ['key', 'expectedRevision', 'draft']) ||
+    const validRevision =
+      Number.isSafeInteger(body?.expectedRevision) && body.expectedRevision >= 0;
+    if (request.method === 'POST') {
+      if (
+        !exact(body, ['key', 'expectedRevision', 'draft']) ||
+        typeof body.key !== 'string' ||
+        body.key.length > 500 ||
+        !validRevision ||
+        !exact(body.draft, ['status', 'owner', 'text']) ||
+        !monitoringStages.includes(body.draft.status) ||
+        typeof body.draft.owner !== 'string' ||
+        body.draft.owner.length > 200 ||
+        typeof body.draft.text !== 'string' ||
+        body.draft.text.length > 2000
+      )
+        throw Error();
+    } else if (
+      !exact(body, ['key', 'expectedRevision']) ||
       typeof body.key !== 'string' ||
       body.key.length > 500 ||
-      !Number.isSafeInteger(body.expectedRevision) ||
-      body.expectedRevision < 0 ||
-      !exact(body.draft, ['status', 'owner', 'text']) ||
-      !monitoringStages.includes(body.draft.status) ||
-      typeof body.draft.owner !== 'string' ||
-      body.draft.owner.length > 200 ||
-      typeof body.draft.text !== 'string' ||
-      body.draft.text.length > 2000
+      !validRevision
     )
       throw Error();
     const parsedKey = JSON.parse(body.key);
@@ -165,8 +182,18 @@ export async function monitoringTreatmentsResponse(request, env, user, owner) {
         { error: 'O acompanhamento mudou. Recarregue antes de salvar.', code: 'CONFLICT' },
         409,
       );
+    if (request.method === 'DELETE') {
+      if (!previous || previous.value?.deleted)
+        return reply({ error: 'Este acompanhamento já foi excluído ou não existe.' }, 404);
+      const saved = await repo.put(
+        id,
+        { key: body.key, deleted: true },
+        { expectedRevision: body.expectedRevision },
+      );
+      return reply({ version: 1, record: { ...saved.value, revision: saved.revision } });
+    }
     const next = recordMonitoringUpdate(
-      previous?.value || {},
+      previous?.value && !previous.value.deleted ? previous.value : {},
       body.draft,
       new Date().toISOString(),
     );

@@ -14,6 +14,14 @@ export function treatmentScope(user, managed, demo) {
 
 function validateRecord(record) {
   if (
+    record?.deleted === true &&
+    typeof record.key === 'string' &&
+    Number.isSafeInteger(record.revision) &&
+    record.revision > 0 &&
+    Object.keys(record).every((key) => ['key', 'deleted', 'revision'].includes(key))
+  )
+    return record;
+  if (
     !record ||
     typeof record !== 'object' ||
     typeof record.key !== 'string' ||
@@ -64,13 +72,26 @@ export function createLocalTreatmentRepository(scope, storage = globalThis.local
       if ((previous?.revision || 0) !== expectedRevision)
         throw Error('O acompanhamento mudou em outra aba. Recarregue antes de salvar.');
       const next = recordMonitoringUpdate(
-        previous
+        previous && !previous.deleted
           ? Object.fromEntries(Object.entries(previous).filter(([name]) => name !== 'revision'))
           : {},
         draft,
       );
       const record = validateRecord({ key, ...next, revision: expectedRevision + 1 });
       const updated = [...records.filter((item) => item.key !== key), record];
+      storage.setItem(storageKey, JSON.stringify({ version: 1, records: updated }));
+      return updated;
+    },
+    async remove(vehicle, expectedRevision) {
+      const records = read();
+      const key = vehicleKey(vehicle);
+      const previous = records.find((record) => record.key === key);
+      if (!previous || previous.deleted)
+        throw Error('Este acompanhamento já foi excluído ou não existe.');
+      if (previous.revision !== expectedRevision)
+        throw Error('O acompanhamento mudou em outra aba. Recarregue antes de excluir.');
+      const tombstone = validateRecord({ key, deleted: true, revision: expectedRevision + 1 });
+      const updated = [...records.filter((item) => item.key !== key), tombstone];
       storage.setItem(storageKey, JSON.stringify({ version: 1, records: updated }));
       return updated;
     },

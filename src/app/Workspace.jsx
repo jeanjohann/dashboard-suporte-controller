@@ -95,10 +95,19 @@ function WorkspaceContent() {
   const { user, managed } = useAccess();
   const allowed = (key) =>
     key === 'assistant-lab' ? canOpenAssistantPreview(user) : allowsPage(user, key);
-  const [page, setPage] = useState(() =>
-      requestsAssistantPreview(user, window.location.hash) ? 'assistant-lab' : 'orders',
-    ),
-    [orders, setOrders] = useState(null),
+  const pagePreferenceScope = managed ? user?.email?.trim().toLowerCase() : 'local';
+  const pagePreferenceKey = pagePreferenceScope
+    ? `addlog-active-page-v1:${pagePreferenceScope}`
+    : null;
+  const [page, setPage] = useState(() => {
+    if (requestsAssistantPreview(user, window.location.hash)) return 'assistant-lab';
+    try {
+      const saved = pagePreferenceKey && localStorage.getItem(pagePreferenceKey);
+      if (saved && allowed(saved)) return saved;
+    } catch {}
+    return 'orders';
+  });
+  const [orders, setOrders] = useState(null),
     [operational, setOperational] = useState(null),
     [logistics, setLogistics] = useState(null);
   const current = allowed(page)
@@ -113,6 +122,12 @@ function WorkspaceContent() {
         'users',
         'imports',
       ].find(allowed);
+  useEffect(() => {
+    if (!pagePreferenceKey || current === 'assistant-lab') return;
+    try {
+      localStorage.setItem(pagePreferenceKey, current);
+    } catch {}
+  }, [pagePreferenceKey, current]);
   const requiredSources = current ? savedSourcesByPage[current] || [] : [];
   const savedSources = useSavedSources({
     user,

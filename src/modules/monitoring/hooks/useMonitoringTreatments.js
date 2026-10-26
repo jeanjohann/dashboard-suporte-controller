@@ -10,6 +10,7 @@ function byKey(records) {
 
 export function useMonitoringTreatments(demo, active = true) {
   const { user, managed } = useAccess();
+  const canDelete = user?.role === 'admin';
   const scope = treatmentScope(user, managed, demo);
   const repository = useMemo(
     () => createConfiguredTreatmentRepository({ scope, managed, demo }),
@@ -87,13 +88,39 @@ export function useMonitoringTreatments(demo, active = true) {
     }
   }
 
+  async function remove(vehicle, expectedRevision) {
+    if (!canDelete) throw Error('Somente um administrador pode excluir o acompanhamento.');
+    if (!available || state.loading || state.error || saving)
+      throw Error('Aguarde a leitura do acompanhamento ou carregue-o novamente.');
+    const target = repository;
+    setSaving(true);
+    try {
+      const records = await target.remove(vehicle, expectedRevision);
+      if (current.current === target) {
+        setState({ repository: target, records: byKey(records), loading: false, error: '' });
+        try {
+          const channel = new BroadcastChannel('addlog-monitoring-treatments');
+          channel.postMessage(scope);
+          channel.close();
+        } catch {}
+      }
+    } catch (error) {
+      await reload();
+      throw error;
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return {
     records: available ? state.records : {},
     loading: !available || state.loading,
     error: available ? state.error : '',
     saving,
     mode: repository.mode,
+    canDelete,
     change,
+    remove,
     reload,
   };
 }
