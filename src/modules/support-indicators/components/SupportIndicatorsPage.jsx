@@ -36,6 +36,7 @@ import {
 } from '../domain/indicators.js';
 import { useIndicatorRecords } from '../hooks/useIndicatorRecords.js';
 import { ManualIndicatorForm } from './ManualIndicatorForm.jsx';
+import { PreparedEquipmentPanel } from './PreparedEquipmentPanel.jsx';
 import { IndicatorSettings } from './IndicatorSettings.jsx';
 import { useDashboardPresentation } from '../../my-dashboard/hooks/useDashboardPresentation.js';
 
@@ -2798,6 +2799,11 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                 ))}
                               {key === 'manual' && (
                                 <>
+                                  <PreparedEquipmentPanel
+                                    summary={preparedEquipment}
+                                    agentId={agentId}
+                                    period={period}
+                                  />
                                   <ManualIndicatorForm
                                     key={period.start + period.end}
                                     records={store.entryRecords}

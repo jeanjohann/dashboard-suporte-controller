@@ -71,6 +71,18 @@ Campo manual vazio é `null`, diferente de zero confirmado. Totais manuais somam
 
 A comparação usa o intervalo imediatamente anterior de mesma duração, calculado com a mesma base atual de OS e os lançamentos salvos. Não representa uma fotografia histórica imutável. Zoho só compara quando a consulta disponível cobre os dois períodos. As limitações da coleta existente continuam: chamados acessíveis modificados desde o início do período até a referência da leitura, limite de 500 chamados, indexação e permissões do fornecedor. A página mantém a cobertura explícita e não dispara uma segunda consulta silenciosa para o período anterior.
 
+## Equipamentos preparados em Atividades e lançamentos
+
+O resumo automático por agente fica visível também no modo Compacto, acima dos lançamentos
+manuais. Usa a base de Logística salva no banco, a coluna `Responsável Suporte` da aba
+`Enviados` (normalizadas para `Responsável pela preparação` e `Envios`) e a data de envio
+no período selecionado. Cada linha com equipamento e agente reconhecido conta uma preparação.
+O total acompanha o filtro de agente. Ausência de base ou coluna é informada e não vira zero.
+Os equipamentos solicitados manualmente continuam separados dos preparados na Logística.
+
+Exemplo: registros enviados em 20 e 22/10/2026 aparecem na semana de 19 a 25/10/2026,
+mesmo que a planilha tenha sido importada no dia 27/10/2026.
+
 ## Banco e segurança
 
 - Piloto restrito ao administrador principal autenticado, conferido pelo Worker em cada requisição. Usuários comuns não recebem esta página como nova permissão; não foi ampliado o acesso às bases.

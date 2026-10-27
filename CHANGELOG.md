@@ -1,3 +1,9 @@
+## 0.69.55 — 27/10/2026
+
+- Mantém o resumo automático de equipamentos preparados por agente visível no modo Compacto, acima dos lançamentos manuais.
+- Mostra o período e a data de envio usada na contagem, com total do agente selecionado e aviso para base ou coluna ausente.
+- Cobre a leitura de Enviados/Responsável Suporte, limites do período, vínculos de agentes e distinção entre ausência e zero nos testes.
+
 ## 0.69.54 — 27/10/2026
 
 - Carrega a base salva de Logística ao abrir Indicadores de Suporte, habilitando a nova coluna de equipamentos preparados.

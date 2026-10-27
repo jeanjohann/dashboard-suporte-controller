@@ -1395,6 +1395,23 @@
 .si-compact-mode .si-story-section .si-manual-form {
   display: none;
 }
+.si-compact-mode .si-story-section .si-prepared-equipment .si-table {
+  display: block;
+}
+.si-prepared-equipment {
+  margin-bottom: 12px;
+}
+.si-prepared-equipment h4 {
+  margin: 0 0 6px;
+}
+.si-prepared-equipment .si-table {
+  margin-bottom: 6px;
+}
+.si-prepared-equipment tfoot th,
+.si-prepared-equipment tfoot td {
+  border-top: 1px solid var(--ui-line);
+  font-weight: 600;
+}
 .si-compact-mode .si-story-section details.chart-drilldown-picker {
   display: block;
 }
