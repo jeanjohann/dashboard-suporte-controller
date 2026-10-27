@@ -108,8 +108,8 @@ export function ImportPage({ onPage, onApply, orders, operational, logistics, sa
                 <section>
                   <h3>Arquivos reconhecidos</h3>
                   <p>
-                    Excel: abas OS 2025_26 ou OS 2025, Equipamentos, ou Envios + Devoluções. CSV:
-                    formatos de consumo suportados nas páginas KORE e Arqia.
+                    Excel: abas OS 2025_26 ou OS 2025, Equipamentos, Envios + Devoluções ou Enviados
+                    + Recebidos. CSV: formatos de consumo suportados nas páginas KORE e Arqia.
                   </p>
                 </section>
                 <section>

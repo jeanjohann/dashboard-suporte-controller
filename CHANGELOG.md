@@ -1,3 +1,7 @@
+## 0.69.52 — 27/10/2026
+
+- Reconhece Enviados/Recebidos na etapa Conferir arquivos e orienta o formato na página de importação.
+
 ## 0.69.51 — 27/10/2026
 
 - Permite importar a planilha de logística com as abas Enviados/Recebidos e converte os cabeçalhos Data Rec., Placa/Prefixo e Obs para os campos logísticos correspondentes.

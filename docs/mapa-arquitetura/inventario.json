@@ -1,6 +1,6 @@
 {
-  "version": "0.69.51",
-  "base": "3fad552 · cópia da entrega",
+  "version": "0.69.52",
+  "base": "30b51f3 · cópia da entrega",
   "date": "2026-10-27",
   "total": 576,
   "tests": 117,
@@ -457,8 +457,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 120045,
-      "sha256": "990cba3b90599e05d7f510f6d36384132b6e92d5910e5965eabfc499bea616c6",
+      "bytes": 120179,
+      "sha256": "9663a2bf7f757542e068535f030e83419ad0b592934c80a66357a0ed91b1fd4b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1494,7 +1494,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 148961,
-      "sha256": "f293a1989909a79e89c9579b5859aa895307483abaca3b120f6480d357ab410f",
+      "sha256": "0e155944e4ccbacdfe10c526066cf692c54a31be07e4f672acd3e10bde99a432",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1508,7 +1508,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1690,
-      "sha256": "4e0938351090b5e2e7326db1da955060fabee708652a9eee384ec3a85d227d39",
+      "sha256": "7aaf5f60049647fe1017df90285851f22e90e097d7507aee7f724ec279215a82",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -5989,8 +5989,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 10430,
-      "sha256": "941f7d7bcad286c1525ae300b09ef145f8711032ad6e93684ae8488564c032fe",
+      "bytes": 10191,
+      "sha256": "0ab1e292fdea7ce57b5ee0d0c6cc2bf7e63650bb255c45a9b084e1368a62be7a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6019,8 +6019,8 @@
         "src/modules/imports/components/ImportPage.jsx",
         "src/modules/imports/domain/bulkImport.test.js"
       ],
-      "bytes": 4010,
-      "sha256": "1fcd6bbe0efc66e625e7b92054092523ee4d3258a82df7514fc2198acf752a38",
+      "bytes": 3971,
+      "sha256": "16e437abf34952fcb2ff969eeaa9a19781ed6ac9e59f70fa05ab1d9690721567",
       "status": "Código ou documentação do ponto de referência"
     },
     {

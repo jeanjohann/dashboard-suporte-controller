@@ -52,13 +52,15 @@ export async function inspectImportFile(file) {
     types.push('operational');
     result.operational = { filename: name, data: importOperational(buffer), savedAt: importedAt };
   }
-  if (book.SheetNames.includes('Envios') || book.SheetNames.includes('Devoluções')) {
+  if (
+    ['Envios', 'Enviados', 'Devoluções', 'Recebidos'].some((name) => book.SheetNames.includes(name))
+  ) {
     types.push('logistics');
     result.logistics = { filename: name, data: importLogistics(buffer), savedAt: importedAt };
   }
   if (!types.length)
     throw new Error(
-      'Nenhuma aba reconhecida: esperado OS 2025_26 ou OS 2025, Equipamentos ou Envios + Devoluções.',
+      'Nenhuma aba reconhecida: esperado OS 2025_26 ou OS 2025, Equipamentos ou Envios/Devoluções (também Enviados/Recebidos).',
     );
   return {
     ...result,
