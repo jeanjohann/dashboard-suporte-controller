@@ -1,3 +1,7 @@
+## 0.69.47 — 27/10/2026
+
+- Alinha os cabeçalhos e grades da Visão Analítica do Monitoramento e deixa explícita a ação para abrir a tabela completa em modal.
+
 ## 0.69.46 — 27/10/2026
 
 - Mantém a grade essencial da Visão Analítica compacta e abre a visão completa das tabelas em um modal com seleção de colunas e paginação própria.

@@ -202,6 +202,7 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
           </div>
           <div className="monitoring-analytics-table-panel">
             <MonitoringSummaryTable
+              title="Bases com alertas"
               label="bases com alertas"
               rows={result.groups.map((group) => ({ ...group, id: group.clientId }))}
               columns={[

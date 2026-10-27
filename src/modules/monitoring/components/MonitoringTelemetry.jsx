@@ -155,6 +155,7 @@ export function MonitoringTelemetry({ result, onQueue }) {
           </div>
           <div className="monitoring-analytics-table-panel">
             <MonitoringSummaryTable
+              title="Posições por base · 24 h"
               label="bases"
               rows={data.bases}
               columns={[
@@ -245,6 +246,7 @@ export function MonitoringTelemetry({ result, onQueue }) {
           </div>
           <div className="monitoring-analytics-table-panel">
             <MonitoringSummaryTable
+              title="Veículos por modelo"
               label="modelos"
               rows={data.models}
               columns={[

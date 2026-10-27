@@ -91,7 +91,7 @@ function SummaryGrid({ label, columns, rows, sort, onSort, page, onPage, classNa
 }
 
 /** Grade essencial compacta com acesso às colunas completas em um modal próprio. */
-export function MonitoringSummaryTable({ label, rows, columns }) {
+export function MonitoringSummaryTable({ label, rows, columns, title }) {
   const [custom, setCustom] = useState(null);
   const [inlineSort, setInlineSort] = useState(null);
   const [modalSort, setModalSort] = useState(null);
@@ -121,14 +121,15 @@ export function MonitoringSummaryTable({ label, rows, columns }) {
 
   return (
     <div className="monitoring-summary-table">
-      <div className="monitoring-table-controls">
+      <div className="monitoring-summary-table-heading">
+        <h3>{title || `Resumo · ${label}`}</h3>
         <button ref={trigger} type="button" aria-haspopup="dialog" onClick={openCompleteView}>
-          Completa
+          Abrir tabela completa
         </button>
-        <span className="scope">
-          {rows.length} {label} · {essentialColumns.length} colunas essenciais
-        </span>
       </div>
+      <p className="monitoring-summary-table-meta scope">
+        {rows.length} {label} · {essentialColumns.length} colunas essenciais
+      </p>
       <SummaryGrid
         label={label}
         columns={essentialColumns}

@@ -123,12 +123,40 @@
   min-width: 0;
 }
 
-.monitoring-analytics-table-panel .monitoring-summary-table {
-  gap: 6px;
+.monitoring-page .monitoring-analytics .monitoring-analytics-table-panel .monitoring-summary-table {
+  gap: 0;
+  clear: none;
+  margin-top: 0;
 }
 
-.monitoring-analytics-table-panel .monitoring-table-controls {
-  gap: 6px 8px;
+.monitoring-analytics .monitoring-summary-table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  margin-bottom: 4px;
+}
+
+.monitoring-analytics .monitoring-summary-table-heading h3 {
+  min-width: 0;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.monitoring-analytics .monitoring-summary-table-heading button {
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 5px 9px;
+  font-size: 10px;
+}
+
+.monitoring-analytics .monitoring-summary-table-meta {
+  min-height: 12px;
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.4;
 }
 
 .monitoring-analytics-table-panel .monitoring-summary-table .table-scroll {
