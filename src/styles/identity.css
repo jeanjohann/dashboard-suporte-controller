@@ -121,7 +121,7 @@ small {
 }
 .app > main > header > button {
   background: var(--ui-accent);
-  color: var(--ui-ink);
+  color: var(--ui-on-accent);
   flex: 0 0 auto;
 }
 .app > main > header > button:hover {

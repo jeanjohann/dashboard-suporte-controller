@@ -1,15 +1,8 @@
 /** Temas disponíveis; preferências antigas são migradas sem invalidar a sessão. */
 export const themes = [
-  { id: 'light', label: 'Claro' },
-  { id: 'dark', label: 'Grafite e Azul' },
-  { id: 'lime', label: 'Lima e Grafite' },
-  { id: 'ocean', label: 'Ocean Depths' },
-  { id: 'modern', label: 'Modern Minimalist' },
-  { id: 'forest', label: 'Forest Canopy' },
-  { id: 'botanical', label: 'Botanical Garden' },
-  { id: 'arctic', label: 'Arctic Frost' },
-  { id: 'sunset', label: 'Sunset Boulevard' },
-  { id: 'tech', label: 'Tech Innovation' },
+  { id: 'light', label: 'Porcelana' },
+  { id: 'dark', label: 'Grafite Elétrico' },
+  { id: 'lime', label: 'Lima Noturno' },
 ];
 export const defaultTheme = 'light';
 const legacyThemes = {

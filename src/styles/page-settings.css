@@ -14,14 +14,14 @@
 }
 .page-configuration-trigger {
   white-space: nowrap;
-  background: #0868c5;
-  color: #ffffff;
-  border-color: #0868c5;
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
+  border-color: var(--ui-accent);
 }
 .page-configuration-trigger:hover {
-  background: #07539c;
-  color: #ffffff;
-  border-color: #07539c;
+  background: var(--ui-accent-hover);
+  color: var(--ui-on-accent);
+  border-color: var(--ui-accent-hover);
 }
 .page-configuration-eyebrow {
   display: block;
@@ -68,14 +68,14 @@
   min-width: 60px;
   padding: 6px 10px;
   white-space: nowrap;
-  background: #0868c5;
-  color: #ffffff;
-  border-color: #0868c5;
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
+  border-color: var(--ui-accent);
 }
 .page-configuration-dialog > header > button:hover {
-  background: #07539c;
-  color: #ffffff;
-  border-color: #07539c;
+  background: var(--ui-accent-hover);
+  color: var(--ui-on-accent);
+  border-color: var(--ui-accent-hover);
 }
 .page-configuration-dialog > footer > span {
   color: var(--ui-muted);
@@ -91,10 +91,10 @@ button.page-settings-trigger {
   justify-content: center;
   gap: 7px;
   padding: 7px 11px;
-  border: 1px solid #0868c5;
+  border: 1px solid var(--ui-accent);
   border-radius: 7px;
-  background: #0868c5;
-  color: #ffffff;
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
   font-size: 12px;
 }
 button.page-settings-trigger .ui-icon {
@@ -102,9 +102,9 @@ button.page-settings-trigger .ui-icon {
   height: 16px;
 }
 button.page-settings-trigger:hover {
-  background: #07539c;
-  color: #ffffff;
-  border-color: #07539c;
+  background: var(--ui-accent-hover);
+  color: var(--ui-on-accent);
+  border-color: var(--ui-accent-hover);
 }
 .page-settings-dialog {
   width: min(620px, calc(100vw - 28px));
@@ -172,9 +172,9 @@ button.page-settings-trigger:hover {
   font-size: 12px;
 }
 .page-display-mode button[aria-pressed='true'] {
-  border-color: #0868c5;
-  background: #0868c5;
-  color: #ffffff;
+  border-color: var(--ui-accent);
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
 }
 .page-settings-body .page-display-mode p {
   margin: 8px 0 0;
@@ -237,14 +237,14 @@ button.page-settings-trigger:hover {
   flex: 0 0 30px;
 }
 .page-settings-dialog.page-configuration-dialog > header > button {
-  background: #0868c5;
-  color: #ffffff;
-  border-color: #0868c5;
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
+  border-color: var(--ui-accent);
 }
 .page-settings-dialog.page-configuration-dialog > header > button:hover {
-  background: #07539c;
-  color: #ffffff;
-  border-color: #07539c;
+  background: var(--ui-accent-hover);
+  color: var(--ui-on-accent);
+  border-color: var(--ui-accent-hover);
 }
 .page-settings-body {
   padding: 16px 20px;
@@ -334,14 +334,14 @@ button.page-settings-trigger:hover {
   background: var(--ui-soft);
 }
 .page-settings-dialog .page-settings-save {
-  color: #ffffff;
-  background: #0868c5;
-  border-color: #0868c5;
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
 }
 .page-settings-dialog .page-settings-save:hover {
-  color: #ffffff;
-  background: #07539c;
-  border-color: #07539c;
+  color: var(--ui-on-accent);
+  background: var(--ui-accent-hover);
+  border-color: var(--ui-accent-hover);
 }
 .page-settings-feedback {
   position: fixed;

@@ -83,15 +83,15 @@
   padding: 5px 10px;
   border: 1px solid var(--ui-border);
   border-radius: 6px;
-  background: #0868c5;
-  color: #ffffff;
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
   cursor: pointer;
   font-size: 11px;
   white-space: nowrap;
 }
 .filter-options-trigger:hover {
-  background: #07539c;
-  color: #ffffff;
+  background: var(--ui-accent-hover);
+  color: var(--ui-on-accent);
 }
 .filter-options-trigger span {
   display: inline-flex;

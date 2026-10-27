@@ -65,15 +65,15 @@
 }
 .support-indicators-page main .si-config-dialog-heading > button,
 .support-indicators-page main .si-config-dialog-footer > button {
-  border-color: #0868c5;
-  background: #0868c5;
-  color: #ffffff;
+  border-color: var(--ui-accent);
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
 }
 .support-indicators-page main .si-config-dialog-heading > button:hover,
 .support-indicators-page main .si-config-dialog-footer > button:hover {
-  border-color: #07539c;
-  background: #07539c;
-  color: #ffffff;
+  border-color: var(--ui-accent-hover);
+  background: var(--ui-accent-hover);
+  color: var(--ui-on-accent);
 }
 .si-config-dialog-heading > div > span {
   color: var(--ui-accent);
@@ -601,14 +601,14 @@
   color: var(--ui-button-text);
 }
 .support-indicators-page main button.si-config-trigger {
-  border-color: #0868c5;
-  background: #0868c5;
-  color: #ffffff;
+  border-color: var(--ui-accent);
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
 }
 .support-indicators-page main button.si-config-trigger:hover {
-  border-color: #07539c;
-  background: #07539c;
-  color: #ffffff;
+  border-color: var(--ui-accent-hover);
+  background: var(--ui-accent-hover);
+  color: var(--ui-on-accent);
 }
 .support-indicators-page input:not([type='checkbox']),
 .support-indicators-page select,
