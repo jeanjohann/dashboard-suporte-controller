@@ -115,6 +115,7 @@ function WorkspaceContent() {
     : [
         'my-dashboard',
         'orders',
+        'support-indicators',
         'operational',
         'lines',
         'operational-analysis',

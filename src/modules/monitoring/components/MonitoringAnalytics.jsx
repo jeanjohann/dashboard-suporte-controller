@@ -120,13 +120,15 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
         <div className="cards monitoring-cards">
           {cards.map(([label, value, note, focus]) => (
             <button
-              className="summary-card monitoring-metric-card"
+              className={`summary-card monitoring-metric-card${typeof value === 'string' ? ' monitoring-metric-duration' : ''}`}
               key={label}
+              data-focus={focus}
+              title={note}
               onClick={() => onQueue(focus)}
               aria-label={`${label}: ${value}. Abrir acompanhamento`}
             >
               <span>{label}</span>
-              <strong>{value}</strong>
+              <strong>{typeof value === 'number' ? value.toLocaleString('pt-BR') : value}</strong>
               <small>{note}</small>
             </button>
           ))}

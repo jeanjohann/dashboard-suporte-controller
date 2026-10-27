@@ -24,35 +24,198 @@
   padding: 11px 13px;
 }
 
-.monitoring-page .monitoring-analytics .monitoring-cards {
+html[data-density='compact'] .monitoring-page .monitoring-analytics .cards.monitoring-cards {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   margin: 8px 0;
 }
 
-.monitoring-analytics .monitoring-cards > .summary-card {
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  .monitoring-cards
+  > .summary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   min-width: 0;
   min-height: 84px;
   gap: 4px;
-  padding: 9px 10px;
+  margin: 0;
+  padding: 9px 11px;
+  border-top: 2px solid var(--monitoring-metric-tone, var(--chart-blue));
+  border-radius: 7px;
+  text-align: left;
 }
 
-.monitoring-analytics .monitoring-cards > .summary-card > span {
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  .monitoring-cards
+  > .summary-card
+  > span {
   min-height: 0;
   font-size: 10px;
   line-height: 1.3;
+  color: var(--ui-ink);
 }
 
-.monitoring-analytics .monitoring-cards > .summary-card > strong {
-  margin-top: 1px;
-  font-size: 20px;
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  .monitoring-cards
+  > .summary-card
+  > strong {
+  margin: 0;
+  font-size: clamp(20px, 1.8vw, 26px);
   line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: normal;
 }
 
-.monitoring-analytics .monitoring-cards > .summary-card > small {
-  margin-top: 2px;
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  .monitoring-cards
+  > .summary-card
+  > small {
+  margin: 0;
   font-size: 9px;
   line-height: 1.25;
+  font-weight: 400;
+  color: var(--ui-muted);
+}
+
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  .monitoring-cards
+  > .monitoring-metric-duration
+  > strong {
+  font-size: clamp(16px, 1.4vw, 21px);
+}
+
+.monitoring-page
+  .monitoring-analytics
+  .monitoring-metric-card:is(
+    [data-focus='alerts'],
+    [data-focus='critical'],
+    [data-focus='days30'],
+    [data-focus='days60'],
+    [data-focus='days90'],
+    [data-focus='contact']
+  ) {
+  --monitoring-metric-tone: var(--ui-warning-ink);
+}
+
+.monitoring-page
+  .monitoring-analytics
+  .monitoring-metric-card:is(
+    [data-focus='missing'],
+    [data-focus='unknown'],
+    [data-focus='scheduled']
+  ) {
+  --monitoring-metric-tone: var(--chart-purple);
+}
+
+.monitoring-page .monitoring-analytics .monitoring-metric-card[data-focus='unstarted'] {
+  --monitoring-metric-tone: var(--ui-error-ink);
+}
+
+.monitoring-page .monitoring-analytics .monitoring-metric-card[data-focus='closed'] {
+  --monitoring-metric-tone: var(--chart-teal);
+}
+
+/* As medidas aprovadas prevalecem sobre a densidade compartilhada, apenas neste módulo. */
+html[data-density='compact'] .monitoring-page .monitoring-analytics .report-block {
+  margin: 0;
+  padding: 0;
+}
+
+html[data-density='compact'] .monitoring-page .monitoring-analytics > .report-block:first-child {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+html[data-density='compact'] .monitoring-page .monitoring-analytics .report-heading {
+  min-height: 34px;
+  padding: 6px 9px;
+}
+
+html[data-density='compact'] .monitoring-page .monitoring-analytics .report-heading h2 {
+  margin: 0;
+  font-size: 12px;
+}
+
+html[data-density='compact'] .monitoring-page .monitoring-analytics .section-body {
+  padding: 9px 11px;
+}
+
+html[data-density='compact'] .monitoring-page .monitoring-analytics .bar-chart {
+  margin: 0;
+  padding: 0;
+}
+
+html[data-density='compact'] .monitoring-page .monitoring-analytics .readable-bars {
+  margin: 0;
+}
+
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  > .report-block:first-child
+  > .report-heading {
+  padding: 0 0 7px;
+}
+
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  .report-heading-actions
+  > button {
+  min-height: 26px;
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  > .report-block:first-child
+  > .section-body {
+  padding: 0;
+}
+
+html[data-density='compact']
+  .monitoring-page
+  .monitoring-analytics
+  > .report-block:first-child
+  .scope {
+  margin: 6px 0 0;
+  font-size: 9px;
+}
+
+html[data-density='compact'] .monitoring-page .monitoring-analytics .readable-bar-row {
+  min-height: 28px;
+  margin: 0;
+  padding: 5px 0;
+}
+
+@media (pointer: coarse) {
+  html[data-density='compact']
+    .monitoring-page
+    .monitoring-analytics
+    .readable-bar-row[role='button'],
+  html[data-density='compact']
+    .monitoring-page
+    .monitoring-analytics
+    .report-heading-actions
+    > button {
+    min-height: 44px;
+  }
 }
 
 .monitoring-analytics > .report-block:first-child .scope,
@@ -276,13 +439,13 @@
 }
 
 @media (max-width: 1280px) {
-  .monitoring-page .monitoring-analytics .monitoring-cards {
+  html[data-density='compact'] .monitoring-page .monitoring-analytics .cards.monitoring-cards {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 1050px) {
-  .monitoring-page .monitoring-analytics .monitoring-cards {
+  html[data-density='compact'] .monitoring-page .monitoring-analytics .cards.monitoring-cards {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -301,7 +464,7 @@
 }
 
 @media (max-width: 760px) {
-  .monitoring-page .monitoring-analytics .monitoring-cards,
+  html[data-density='compact'] .monitoring-page .monitoring-analytics .cards.monitoring-cards,
   .monitoring-page .monitoring-analytics-telemetry > .report-block:first-child .monitoring-cards,
   .monitoring-page .monitoring-analytics-telemetry > .report-block:nth-child(2) .monitoring-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));

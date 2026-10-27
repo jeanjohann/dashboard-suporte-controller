@@ -1,3 +1,10 @@
+## 0.69.49 — 27/10/2026
+
+- Aplica à Visão Analítica do Monitoramento o conceito compacto aprovado de Indicadores do suporte: cards de 84 px, valores proporcionais e espaçamentos menores.
+- Remove margens e preenchimentos sobrepostos nos gráficos, preservando o modo Editorial e os demais módulos.
+- Registra o padrão visual compacto como referência para as próximas melhorias.
+- Corrige a página inicial para usuários com apenas Indicadores do suporte liberado.
+
 ## 0.69.48 — 27/10/2026
 
 - Mantém os menus de seleção de bases e modelos na camada do modal de filtros do Monitoramento.
