@@ -38,6 +38,38 @@ export function awaitingScheduleCount(data) {
     return !status?.issue && String(status?.raw ?? '').trim() === 'Agendar';
   }).length;
 }
+/** Equipamentos enviados no período, atribuídos a Eduardo/Jean pela coluna do preparador. */
+export function preparedEquipmentSummary(data, period, agentId = '') {
+  if (!data) return null;
+  const hasResponsible = data.sheets?.some((sheet) =>
+    sheet.columns.some((column) => column.label === 'Responsável pela preparação'),
+  );
+  if (!hasResponsible) return { unavailable: 'Responsável pela preparação' };
+  const within = (day) => day && day >= period.start && day <= period.end;
+  const counts = new Map(agents.map((agent) => [agent.id, 0]));
+  let review = 0;
+  for (const row of data.rows) {
+    if (row.type !== 'Envio' || !within(row.sentAt) || !row.equipment) continue;
+    const owner = agents.find((agent) =>
+      orderAgentNames[agent.id].includes(normalized(row.preparedBy)),
+    );
+    if (!owner) {
+      review++;
+      continue;
+    }
+    counts.set(owner.id, counts.get(owner.id) + 1);
+  }
+  return {
+    total: agentId
+      ? (counts.get(agentId) ?? 0)
+      : [...counts.values()].reduce((sum, value) => sum + value, 0),
+    review,
+    agents: agents.map((agent) => ({
+      ...agent,
+      value: counts.get(agent.id),
+    })),
+  };
+}
 export function ordersSummary(data, period, agentId = '') {
   if (!data) return null;
   const required = [

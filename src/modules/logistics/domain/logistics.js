@@ -18,6 +18,14 @@ const layouts = [
       'Cidade',
       'A/C',
     ],
+    columnAliases: {
+      'Responsável pela preparação': [
+        'Responsável pela preparação',
+        'Responsável Suporte',
+        'Preparado por',
+        'Responsável',
+      ],
+    },
   },
   {
     sheet: 'Devoluções',
@@ -159,6 +167,7 @@ export function importLogistics(buffer) {
         condition: 'Situação',
       }))
         row[key] = text(get(label)?.raw);
+      row.preparedBy = text(get('Responsável pela preparação')?.raw);
       const idCell = get('ID');
       if (!missing(row.id) && !/^\d+$/.test(row.id))
         flag(

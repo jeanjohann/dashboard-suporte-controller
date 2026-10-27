@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.69.52 · referência 30b51f3 · cópia da entrega · 2026-10-27 · **576 arquivos / 117 arquivos de teste / 73 pastas**.
+Addlog 0.69.53 · referência 85702d2 · cópia da entrega · 2026-10-27 · **576 arquivos / 117 arquivos de teste / 73 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -5987,7 +5987,7 @@ Importado por: [server/supportIndicators.js](../../server/supportIndicators.js),
 
 [Abrir fonte](../../src/modules/support-indicators/domain/indicators.js) · Código ou documentação do ponto de referência
 
-Exporta: `agents`, `awaitingScheduleCount`, `backlogSummary`, `blankEntry`, `currentSettings`, `defaultSettings`, `duration`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `orderAgentNames`, `ordersSummary`, `periodDays`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`, `zohoSummary`.
+Exporta: `agents`, `awaitingScheduleCount`, `backlogSummary`, `blankEntry`, `currentSettings`, `defaultSettings`, `duration`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `orderAgentNames`, `ordersSummary`, `periodDays`, `preparedEquipmentSummary`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`, `zohoSummary`.
 
 Importa arquivos locais: [src/modules/orders/domain/attendanceKind.js](../../src/modules/orders/domain/attendanceKind.js), [src/modules/orders/domain/customerIdentity.js](../../src/modules/orders/domain/customerIdentity.js), [src/modules/support-indicators/domain/contracts.js](../../src/modules/support-indicators/domain/contracts.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
 

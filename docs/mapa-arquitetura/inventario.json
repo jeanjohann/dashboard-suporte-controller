@@ -1,6 +1,6 @@
 {
-  "version": "0.69.52",
-  "base": "30b51f3 · cópia da entrega",
+  "version": "0.69.53",
+  "base": "85702d2 · cópia da entrega",
   "date": "2026-10-27",
   "total": 576,
   "tests": 117,
@@ -457,8 +457,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 120179,
-      "sha256": "9663a2bf7f757542e068535f030e83419ad0b592934c80a66357a0ed91b1fd4b",
+      "bytes": 120362,
+      "sha256": "2d980b423f9a323621bf43aa1144c114c6d37dbbaf2ff979d3b7de61d5b4c75d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -807,8 +807,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 20613,
-      "sha256": "576a0bdf08a24ff9f248a4407886088c7f5ee1e7528069aef717ae351ce22276",
+      "bytes": 21351,
+      "sha256": "556195e1d4678132598f69029251f5b2d3468197c5c77b4021ce2a26a58ea3aa",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1494,7 +1494,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 148961,
-      "sha256": "0e155944e4ccbacdfe10c526066cf692c54a31be07e4f672acd3e10bde99a432",
+      "sha256": "10a8ac248bf0f80cab2aa5bcd2134bcb699a79147c0a44ab26272e69b18b80f4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1508,7 +1508,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1690,
-      "sha256": "7aaf5f60049647fe1017df90285851f22e90e097d7507aee7f724ec279215a82",
+      "sha256": "37d7ac5b523daaa1ff6fdb8dd0b2738f546ac56bd03ba1d037b6a08f3f6dc0cb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6102,8 +6102,8 @@
         "src/modules/my-dashboard/domain/evaluate.test.js",
         "src/modules/operational/config/operationalMenus.js"
       ],
-      "bytes": 9940,
-      "sha256": "e184f171181cd36de813aaf85429f1e6349c51b4f6ba68961cb75de4d54857a3",
+      "bytes": 10215,
+      "sha256": "cf8f609830dbfbe52e9a2639e4f55286747246de5fe6d304161c7ce615142f8e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11621,8 +11621,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 131995,
-      "sha256": "7b1acde7a1ba6d548d937ab4886eb02f721ae6c9a67bb49fcd7f095982af932b",
+      "bytes": 133675,
+      "sha256": "c6892bbc5b4ec89d2ef4eb0027556512b3a1bf6ada0bd5b7a927782e9e851b52",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11679,8 +11679,8 @@
         "server/supportIndicators.test.js",
         "src/modules/support-indicators/domain/indicators.js"
       ],
-      "bytes": 5919,
-      "sha256": "8e21f3baa2ed6124eeb7a277c347353bd76fd10653cab9eadf2193bc9ccde45d",
+      "bytes": 5935,
+      "sha256": "9f4647ea7d179cb3caca336ae1785dac03fbbda3c7a881457e54685a45504def",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11704,6 +11704,7 @@
         "orderAgentNames",
         "ordersSummary",
         "periodDays",
+        "preparedEquipmentSummary",
         "previousPeriod",
         "sections",
         "subjects",
@@ -11729,8 +11730,8 @@
         "src/modules/support-indicators/domain/indicators.test.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js"
       ],
-      "bytes": 14758,
-      "sha256": "741d85934250b06d2f572c100e74a75818f769fba950822d3498d3b38fa864d4",
+      "bytes": 15929,
+      "sha256": "a241e064ab74da909525db3a0edf381c2506586327018ccc56f818b33a4975c6",
       "status": "Código ou documentação do ponto de referência"
     },
     {

@@ -1,6 +1,6 @@
-# Mapa técnico Addlog 0.69.52
+# Mapa técnico Addlog 0.69.53
 
-Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.69.52 (30b51f3 · cópia da entrega, 2026-10-27). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
+Fluxos gerais preservados da referência anterior. Guia e catálogo descrevem a versão 0.69.53 (85702d2 · cópia da entrega, 2026-10-27). Os detalhes recentes estão no guia e no catálogo; o acesso compartilhado é um site documental independente.
 
 ## Arquitetura geral
 

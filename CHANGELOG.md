@@ -1,3 +1,7 @@
+## 0.69.53 — 27/10/2026
+
+- Integra a contagem de equipamentos enviados por agente à grade existente de equipamentos em Atividades e lançamentos; mantém os apontamentos manuais.
+
 ## 0.69.52 — 27/10/2026
 
 - Reconhece Enviados/Recebidos na etapa Conferir arquivos e orienta o formato na página de importação.

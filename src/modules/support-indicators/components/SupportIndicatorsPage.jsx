@@ -29,6 +29,7 @@ import {
   manualSummary,
   ordersSummary,
   awaitingScheduleCount,
+  preparedEquipmentSummary,
   zohoSummary,
   backlogSummary,
   duration,
@@ -800,6 +801,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
   }
   const store = useIndicatorRecords(period, managed && valid),
     rawOrders = sources.orders?.value?.data,
+    logisticsData = sources.logistics?.value?.data,
     zohoData = ownZoho || sources.zoho?.value?.data;
   useEffect(() => {
     if (!managed || !active || !store.settingsReady || store.writable) return;
@@ -853,9 +855,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     () => (store.ready && past ? manualSummary(store.previous, past, agentId) : null),
     [store.ready, store.previous, past, agentId],
   );
+  const preparedEquipment = useMemo(
+    () => (valid ? preparedEquipmentSummary(logisticsData, period) : null),
+    [logisticsData, period, valid],
+  );
   const awaitingSchedule = useMemo(() => awaitingScheduleCount(ordersData), [ordersData]);
   const values = { ...valuesOf(orders, zoho, manual), awaitingSchedule },
-    oldValues = valuesOf(oldOrders, oldZoho, oldManual),
+    oldValues = { ...valuesOf(oldOrders, oldZoho, oldManual), awaitingSchedule },
     settings = store.settings,
     hasOrders = orders && !orders.unavailable;
   const manualMetric = (key) =>
@@ -919,6 +925,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       summary?.totals.identifiers ?? null,
       summary?.totals.blockers ?? null,
       summary?.requests ?? null,
+      preparedEquipment?.unavailable
+        ? null
+        : (preparedEquipment?.agents.find((row) => row.id === agent.id)?.value ?? null),
     ];
   });
   const manualActivityRows = shownAgents.map((agent) => {
@@ -2820,10 +2829,28 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         'Identificadores',
                                         'Bloqueadores',
                                         'Total solicitado',
+                                        'Preparados · Logística',
                                       ]}
                                       rows={manualEquipmentRows}
-                                      numericColumns={[1, 2, 3, 4, 5]}
+                                      numericColumns={[1, 2, 3, 4, 5, 6]}
                                     />
+                                    {!logisticsData ? (
+                                      <small className="scope">
+                                        Importe a planilha de Logística para preencher a coluna de
+                                        equipamentos preparados.
+                                      </small>
+                                    ) : preparedEquipment?.unavailable ? (
+                                      <small className="scope">
+                                        Adicione “Responsável Suporte” à aba Enviados e importe a
+                                        planilha novamente.
+                                      </small>
+                                    ) : preparedEquipment?.review > 0 ? (
+                                      <small className="scope">
+                                        {number(preparedEquipment.review)} linhas de envio no
+                                        período estão sem responsável reconhecido; confira a coluna
+                                        “Responsável Suporte”.
+                                      </small>
+                                    ) : null}
                                     <Table
                                       headers={[
                                         'Agente',
