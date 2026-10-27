@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../../../shared/security/accessClient.js';
-import { previousPeriod, defaultSettings } from '../domain/indicators.js';
+import { previousPeriod, defaultSettings, currentSettings } from '../domain/indicators.js';
 
 async function readEntries(period, signal) {
   const records = [],
@@ -124,7 +124,7 @@ export function useIndicatorRecords(period, enabled) {
     ready,
     settingsReady,
     writable,
-    settings: settingsRecord?.value || defaultSettings,
+    settings: currentSettings(settingsRecord?.value || defaultSettings),
     settingsRevision: settingsRecord?.revision || 0,
     save,
     remove: (id, revision) => save(id, revision, false, true),

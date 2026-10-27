@@ -6,6 +6,8 @@ import {
   validateEntry,
   validateSettings,
   defaultSettings,
+  currentSettings,
+  awaitingScheduleCount,
   periodDays,
   previousPeriod,
   manualSummary,
@@ -121,10 +123,10 @@ test('OS separa datas e papéis, improdutivas e canceladas, sem aproximar nome d
     all = ordersSummary(data, period);
   assert.equal(all.executed, 1);
   assert.equal(all.unproductive, 1);
-  assert.equal(all.scheduled, 2);
+  assert.equal(all.scheduled, 1);
   const unproductiveRow = all.rows.find((r) => r.unproductive);
   assert.equal(unproductiveRow.execution, false);
-  assert.equal(unproductiveRow.scheduling, true);
+  assert.equal(unproductiveRow.scheduling, false);
   assert.equal(all.missingExecutionDate, 1);
   assert.equal(all.unmapped, 1);
   assert.ok(
@@ -152,7 +154,7 @@ test('OS separa datas e papéis, improdutivas e canceladas, sem aproximar nome d
   assert.equal(all.rows.find((row) => row.execution).service, 'Implementação · Instalação');
   const jean = ordersSummary(data, period, agents[1].id);
   assert.equal(jean.executed, 1);
-  assert.equal(jean.scheduled, 1);
+  assert.equal(jean.scheduled, 0);
   assert.equal(jean.unproductive, 0);
   assert.equal(jean.clients[0].label, 'CLIENTE A');
   const eduardo = ordersSummary(data, period, agents[0].id);
@@ -163,10 +165,83 @@ test('OS separa datas e papéis, improdutivas e canceladas, sem aproximar nome d
   assert.ok(ordersSummary({ columns: [], rows: [] }, period).unavailable.includes('Status'));
 });
 
+test('agenda exige status Agendado, data no período e responsável identificado em todos os recortes', () => {
+  const data = orders();
+  const base = data.rows[2];
+  const variants = [
+    ['Agendado', serial(period.start), 'Eduardo'],
+    ['Agendado', serial(period.end), 'Jean'],
+    ...['Agendar', 'Concluída', 'Pago', 'Cancelado', 'Cancelada', '', 'Outro'].map((status) => [
+      status,
+      serial('2026-10-22'),
+      'Eduardo',
+    ]),
+    ['Agendado', serial('2026-10-18'), 'Eduardo'],
+    ['Agendado', serial('2026-10-26'), 'Eduardo'],
+    ['Agendado', null, 'Eduardo'],
+    ['Agendado', 'data inválida', 'Eduardo'],
+    ['Agendado', serial('2026-10-22'), ''],
+    ['Agendado', serial('2026-10-22'), 'Jean Silva'],
+  ];
+  data.rows = variants.map(([status, date, owner], index) => {
+    const cells = base.cells.map((cell) => ({ ...cell }));
+    cells[0].raw = status;
+    cells[2].raw = date;
+    cells[4].raw = owner;
+    return { ...base, cells, os: String(index + 1), sourceRow: index + 2 };
+  });
+  const all = ordersSummary(data, period);
+  assert.equal(all.scheduled, 2);
+  assert.deepEqual(
+    all.agents.map((agent) => agent.scheduled),
+    [1, 1],
+  );
+  for (const key of ['daily', 'services', 'serviceTypes', 'agentServices', 'clients'])
+    assert.equal(
+      all[key].reduce((sum, row) => sum + row.scheduled, 0),
+      2,
+      key,
+    );
+  assert.deepEqual(
+    all.rows.map((row) => row.os),
+    ['1', '2'],
+  );
+  assert.equal(all.missingScheduleDate, 1);
+  assert.equal(all.unmapped, 2);
+  for (const agent of agents) assert.equal(ordersSummary(data, period, agent.id).scheduled, 1);
+  assert.equal(ordersSummary(data, previousPeriod(period)).scheduled, 1);
+});
+
+test('Agendar conta toda a pendência atual, inclusive sem data ou responsável, e mantém ausência distinta de zero', () => {
+  const data = {
+    columns: [{ label: 'Status' }],
+    rows: ['Agendar', 'Agendar', 'Agendado', 'Concluída', 'Pago', 'Cancelado', ''].map((raw) => ({
+      cells: [{ raw }],
+    })),
+  };
+  data.rows.push({ cells: [{ raw: 'Agendar', issue: 'inválido' }] });
+  assert.equal(awaitingScheduleCount(data), 2);
+  assert.equal(awaitingScheduleCount({ ...data, rows: [] }), 0);
+  assert.equal(awaitingScheduleCount({ columns: [], rows: [] }), null);
+  assert.equal(awaitingScheduleCount(null), null);
+});
+
+test('preferências antigas recebem o card Agendar uma vez, sem reativar cards ocultos', () => {
+  const old = { ...defaultSettings, version: 1, cards: ['executed', 'scheduled'] };
+  const current = currentSettings(old);
+  assert.deepEqual(current.cards, ['executed', 'scheduled', 'awaitingSchedule']);
+  assert.deepEqual(old.cards, ['executed', 'scheduled']);
+  assert.equal(validateSettings(old), true);
+  assert.equal(validateSettings(current), true);
+  assert.deepEqual(currentSettings(current), current);
+  const hidden = { ...current, cards: ['executed', 'scheduled'] };
+  assert.deepEqual(currentSettings(hidden).cards, hidden.cards);
+});
+
 test('improdutiva não inventa agendamento quando faltam data ou responsável, nem vira execução', () => {
   const data = orders();
   const row = data.rows[1];
-  const schedule = data.columns.find((c) => c.label === 'Agendamento').index;
+  const schedule = data.columns.findIndex((c) => c.label === 'Agendamento');
   row.cells[schedule] = { raw: null, display: '' };
   const result = ordersSummary(data, period, agents[0].id);
   assert.equal(result.executed, 0);

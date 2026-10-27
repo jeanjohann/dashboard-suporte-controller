@@ -98,24 +98,26 @@ export function IndicatorSettings({ settings, revision, ready, busy, save }) {
             proporcionadas em outros intervalos. Tempo em minutos.
           </p>
           <div className="si-input-grid">
-            {Object.entries(metricLabels).map(([key, label]) => (
-              <label key={key}>
-                {label}
-                <input
-                  type="number"
-                  min="0"
-                  max="1000000"
-                  step="1"
-                  value={current.weeklyGoals[key] ?? ''}
-                  onChange={(e) => {
-                    const next = { ...current.weeklyGoals };
-                    if (e.target.value === '') delete next[key];
-                    else next[key] = Number(e.target.value);
-                    edit({ ...current, weeklyGoals: next });
-                  }}
-                />
-              </label>
-            ))}
+            {Object.entries(metricLabels)
+              .filter(([key]) => key !== 'awaitingSchedule')
+              .map(([key, label]) => (
+                <label key={key}>
+                  {label}
+                  <input
+                    type="number"
+                    min="0"
+                    max="1000000"
+                    step="1"
+                    value={current.weeklyGoals[key] ?? ''}
+                    onChange={(e) => {
+                      const next = { ...current.weeklyGoals };
+                      if (e.target.value === '') delete next[key];
+                      else next[key] = Number(e.target.value);
+                      edit({ ...current, weeklyGoals: next });
+                    }}
+                  />
+                </label>
+              ))}
           </div>
         </fieldset>
         <button disabled={busy || !ready || !draft}>Salvar configuração</button>

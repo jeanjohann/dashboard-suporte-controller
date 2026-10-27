@@ -1,3 +1,9 @@
+## 0.69.50 — 27/10/2026
+
+- Corrige Serviços na agenda para contar somente OS com status Agendado, data de agendamento no período e responsável válido.
+- Adiciona o card Aguardando agendamento: todas as OS com status Agendar na base atual, inclusive sem data ou responsável e sem filtro de período/agente, preservando o layout existente.
+- Aplica a mesma regra aos totais por agente, gráficos, detalhes, exportações e comparação com o período anterior; atualiza as explicações e a documentação.
+
 ## 0.69.49 — 27/10/2026
 
 - Aplica à Visão Analítica do Monitoramento o conceito compacto aprovado de Indicadores do suporte: cards de 84 px, valores proporcionais e espaçamentos menores.

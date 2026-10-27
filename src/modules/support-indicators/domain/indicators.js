@@ -12,6 +12,7 @@ export {
   metricLabels,
   sections,
   defaultSettings,
+  currentSettings,
   periodDays,
   previousPeriod,
   entryId,
@@ -29,6 +30,14 @@ export const orderAgentNames = {
   103932000029960050: ['eduardo', 'eduardo oliveira'],
   '103932000027400001': ['jean', 'jean johann'],
 };
+/** Pendência atual de toda a base: não depende do período, data ou responsável. */
+export function awaitingScheduleCount(data) {
+  if (!data || !data.columns.some((column) => column.label === 'Status')) return null;
+  return data.rows.filter((row) => {
+    const status = field(data, row, 'Status');
+    return !status?.issue && String(status?.raw ?? '').trim() === 'Agendar';
+  }).length;
+}
 export function ordersSummary(data, period, agentId = '') {
   if (!data) return null;
   const required = [
@@ -74,14 +83,18 @@ export function ordersSummary(data, period, agentId = '') {
   for (const row of data.rows) {
     const status = text(row, 'Status'),
       effective = ['Concluída', 'Pago'].includes(status),
+      scheduled = status === 'Agendado',
       executedAt = attendanceDate(data, row),
       scheduledAt = attendanceDate(data, row, 'Agendamento'),
       executor = ownerOf(row, 'Resp. Execução'),
       scheduler = ownerOf(row, 'Resp. Agendamento');
     if (effective && !executedAt && selected(executor)) result.missingExecutionDate++;
-    if (text(row, 'Agendamento') && !scheduledAt && selected(scheduler))
+    if (scheduled && text(row, 'Agendamento') && !scheduledAt && selected(scheduler))
       result.missingScheduleDate++;
-    if ((effective && within(executedAt) && !executor) || (within(scheduledAt) && !scheduler))
+    if (
+      (effective && within(executedAt) && !executor) ||
+      (scheduled && within(scheduledAt) && !scheduler)
+    )
       result.unmapped++;
     const unproductive = isUnproductive(data, row);
     let clientLabel;
@@ -92,9 +105,8 @@ export function ordersSummary(data, period, agentId = '') {
       result.unproductive++;
       result.agents.find((a) => a.id === executor).unproductive++;
     }
-    // Agenda conta linhas com data agendada, inclusive as já realizadas, excluindo canceladas.
-    const scheduling =
-      within(scheduledAt) && !['Cancelado', 'Cancelada'].includes(status) && selected(scheduler);
+    // Agenda usa o status atual Agendado e a data marcada, não o histórico da ação de agendar.
+    const scheduling = scheduled && within(scheduledAt) && selected(scheduler);
     for (const [yes, key, owner, date] of [
       [execution, 'executed', executor, executedAt],
       [scheduling, 'scheduled', scheduler, scheduledAt],

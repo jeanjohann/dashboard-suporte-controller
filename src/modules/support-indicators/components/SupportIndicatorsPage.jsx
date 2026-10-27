@@ -28,6 +28,7 @@ import {
   previousPeriod,
   manualSummary,
   ordersSummary,
+  awaitingScheduleCount,
   zohoSummary,
   backlogSummary,
   duration,
@@ -245,6 +246,10 @@ function ClosedTicketDetails({ rows }) {
   );
 }
 function unavailableMetric(key, { ordersData, orders, zohoData, zoho, storeReady, periodValid }) {
+  if (key === 'awaitingSchedule')
+    return ordersData
+      ? ['Indisponível', 'A coluna Status não foi encontrada na base de OS.']
+      : ['Pendente', 'Carregue a planilha de Ordens de Serviço.'];
   if (!periodValid)
     return ['Período inválido', 'Corrija o intervalo para calcular este indicador.'];
   if (['executed', 'scheduled', 'unproductive'].includes(key)) {
@@ -314,21 +319,23 @@ function IndicatorCards({
             <span className="si-card-label">
               {metricLabels[key]}
               <InfoNote label={`Regras de ${metricLabels[key]}`}>
-                {key === 'executed'
-                  ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
-                  : key === 'scheduled'
-                    ? 'Uma linha com data de Agendamento e responsável válidos; exclui canceladas e pode incluir improdutivas.'
-                    : key === 'unproductive'
-                      ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
-                      : key === 'closed'
-                        ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
-                        : key === 'seconds'
-                          ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
-                          : key === 'created'
-                            ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
-                            : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
-                Comparação exige dados dos dois períodos e não soma indicadores manuais aos
-                automáticos.
+                {key === 'awaitingSchedule'
+                  ? 'Todas as linhas com status atual Agendar, inclusive sem data ou responsável. Não usa os filtros de período ou agente; não representa histórico.'
+                  : key === 'executed'
+                    ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
+                    : key === 'scheduled'
+                      ? 'Uma linha com status Agendado, data de Agendamento no período e responsável de agendamento válido. Agendar, Concluída, Pago e demais status não entram.'
+                      : key === 'unproductive'
+                        ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
+                        : key === 'closed'
+                          ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
+                          : key === 'seconds'
+                            ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
+                            : key === 'created'
+                              ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
+                              : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
+                {key !== 'awaitingSchedule' &&
+                  'Comparação exige dados dos dois períodos e não soma indicadores manuais aos automáticos.'}
               </InfoNote>
             </span>
             {values[key] == null ? (
@@ -346,22 +353,24 @@ function IndicatorCards({
               </small>
             )}
             <small className="si-card-origin">
-              {key === 'created' && zoho?.created != null
-                ? 'Zoho · autoria confirmada'
-                : manualMetric(key)
-                  ? values[key] == null
-                    ? 'Manual · sem valor lançado'
-                    : 'Manual · total informado'
-                  : key === 'seconds' || key === 'closed' || key === 'created'
-                    ? key === 'closed'
-                      ? 'Zoho · fechados atuais'
-                      : 'Zoho · eventos do período'
-                    : 'OS · linhas da base'}
+              {key === 'awaitingSchedule'
+                ? 'OS · pendências atuais · toda a base'
+                : key === 'created' && zoho?.created != null
+                  ? 'Zoho · autoria confirmada'
+                  : manualMetric(key)
+                    ? values[key] == null
+                      ? 'Manual · sem valor lançado'
+                      : 'Manual · total informado'
+                    : key === 'seconds' || key === 'closed' || key === 'created'
+                      ? key === 'closed'
+                        ? 'Zoho · fechados atuais'
+                        : 'Zoho · eventos do período'
+                      : 'OS · linhas da base'}
             </small>
             {comparisonAvailable(key) && values[key] != null && oldValues[key] != null && (
               <MetricComparison metric={key} current={values[key]} previous={oldValues[key]} />
             )}
-            {weekly && settings.weeklyGoals[key] != null && (
+            {key !== 'awaitingSchedule' && weekly && settings.weeklyGoals[key] != null && (
               <small>
                 Meta semanal:{' '}
                 {key === 'seconds'
@@ -844,7 +853,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     () => (store.ready && past ? manualSummary(store.previous, past, agentId) : null),
     [store.ready, store.previous, past, agentId],
   );
-  const values = valuesOf(orders, zoho, manual),
+  const awaitingSchedule = useMemo(() => awaitingScheduleCount(ordersData), [ordersData]);
+  const values = { ...valuesOf(orders, zoho, manual), awaitingSchedule },
     oldValues = valuesOf(oldOrders, oldZoho, oldManual),
     settings = store.settings,
     hasOrders = orders && !orders.unavailable;
@@ -1107,7 +1117,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       ],
       [
         'Critério',
-        'OS em linhas, execução efetiva exclui visita improdutiva; agenda usa data Agendamento, exclui status cancelado. Não somar agenda e execução.',
+        'OS em linhas, execução efetiva exclui visita improdutiva; agenda exige status Agendado, data Agendamento no período e responsável válido. Não somar agenda e execução.',
       ],
       [
         'Manual',
@@ -1132,11 +1142,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         difference,
         percentage,
         key === 'seconds' ? 'segundos' : 'quantidade',
-        manualMetric(key)
-          ? 'Manual'
-          : key === 'seconds' || key === 'closed' || key === 'created'
-            ? 'Zoho'
-            : 'OS',
+        key === 'awaitingSchedule'
+          ? 'OS · pendências atuais de toda a base, sem filtro de período ou agente'
+          : manualMetric(key)
+            ? 'Manual'
+            : key === 'seconds' || key === 'closed' || key === 'created'
+              ? 'Zoho'
+              : 'OS',
       ]);
     });
     report.push(
@@ -1612,8 +1624,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                       </p>
                       <p className="scope">
                         Agenda e execução são etapas distintas. Execuções efetivas: Concluída/Pago,
-                        sem Visita Improdutiva. Improdutivas contam somente na agenda. Campos
-                        manuais vazios não representam zero.
+                        sem Visita Improdutiva. Agenda: status Agendado, data e responsável válidos.
+                        Campos manuais vazios não representam zero.
                       </p>
                       <details>
                         <summary>Validar autoria de abertura e assuntos no Zoho</summary>
@@ -1724,8 +1736,8 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
             <p>
               OS: {sources.orders?.value?.filename || 'base não carregada'} ·{' '}
               {ordersData ? `${ordersData.rows.length} linhas na base` : 'sem cobertura confirmada'}
-              . Execuções efetivas excluem visitas improdutivas; agendamentos usam a data marcada e
-              não devem ser somados às execuções.
+              . Execuções efetivas excluem visitas improdutivas; agendamentos exigem status
+              Agendado, data marcada no período e responsável válido.
             </p>
             <p>
               Zoho:{' '}
@@ -2091,11 +2103,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               <details className="si-rule-summary">
                 <summary>Critérios da OS e cobertura</summary>
                 <p className="scope si-rules">
-                  Agenda e execução são etapas diferentes e podem conter o mesmo serviço.
-                  Executados: Concluída/Pago, sem Visita Improdutiva. Improdutivas contam somente na
-                  agenda, pela data e responsável de agendamento, e nunca como execução. A agenda
-                  não é histórico da ação de agendar: usa a data marcada no arquivo. Ausência de
-                  registros na base não comprova ausência de trabalho.
+                  Executados: Concluída/Pago, sem Visita Improdutiva. Agenda: somente status
+                  Agendado, com data marcada no período e responsável de agendamento válido. Agendar
+                  e serviços já realizados não entram na agenda. Visitas improdutivas realizadas
+                  permanecem no indicador próprio. A agenda usa o status atual e a data marcada no
+                  arquivo; não é histórico da ação de agendar. Ausência de registros na base não
+                  comprova ausência de trabalho.
                 </p>
               </details>
               {hasOrders &&

@@ -1,6 +1,6 @@
 # Catálogo completo de arquivos
 
-Addlog 0.69.44 · referência 7a18fef · cópia da entrega · 2026-10-26 · **574 arquivos / 117 arquivos de teste / 73 pastas**.
+Addlog 0.69.50 · referência a144022 · cópia da entrega · 2026-10-27 · **576 arquivos / 117 arquivos de teste / 73 pastas**.
 
 Arquivos versionados e novos arquivos não ignorados, lidos da cópia da entrega. Os documentos gerados deste mapa ficam separados para evitar autorreferência. Dependências, planilhas privadas e artefatos locais não são enumerados. Imports são referências literais estáticas; ausência de importador não prova desuso.
 
@@ -11,7 +11,7 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 ## Pastas
 
 - **(raiz)** — Arquivos da configuração raiz. (13 arquivos diretos).
-- **docs** — Guias, critérios e histórico das implementações. (68 arquivos, incluindo subpastas).
+- **docs** — Guias, critérios e histórico das implementações. (69 arquivos, incluindo subpastas).
 - **docs/diagrams** — Diagramas anteriores do projeto, mantidos como documentação histórica. (4 arquivos, incluindo subpastas).
 - **migrations** — Migrações do banco ativo de usuários. (2 arquivos, incluindo subpastas).
 - **public** — Arquivos estáticos da distribuição. (10 arquivos, incluindo subpastas).
@@ -22,10 +22,10 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **server** — API Cloudflare e adaptadores privados de integrações. (50 arquivos, incluindo subpastas).
 - **server/persistence** — Adaptador D1 de negócio usado pela agenda remota, separado do banco de usuários, e testes de contrato. (9 arquivos, incluindo subpastas).
 - **server/persistence/migrations** — Migrações exclusivas do banco de negócio, separadas das migrações de usuários. (2 arquivos, incluindo subpastas).
-- **src** — Aplicação executada no navegador. (400 arquivos, incluindo subpastas).
+- **src** — Aplicação executada no navegador. (401 arquivos, incluindo subpastas).
 - **src/app** — Shell, navegação, tema e bases compartilhadas da sessão. (6 arquivos, incluindo subpastas).
 - **src/components** — Interface reutilizável: filtros, gráficos, tabelas, ajuda e impressão. (23 arquivos, incluindo subpastas).
-- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (284 arquivos, incluindo subpastas).
+- **src/modules** — Áreas funcionais; cada módulo concentra suas próprias regras e telas. (285 arquivos, incluindo subpastas).
 - **src/modules/assistant** — Módulo Assistente: interface, regras e integração de seus dados. (6 arquivos, incluindo subpastas).
 - **src/modules/assistant/components** — Página e painéis visuais de Assistente. (2 arquivos, incluindo subpastas).
 - **src/modules/assistant/data** — Leitura, contratos e transporte de dados de Assistente. (2 arquivos, incluindo subpastas).
@@ -43,8 +43,8 @@ Os imports indicam relações de módulos, não todas as chamadas de funções. 
 - **src/modules/logistics** — Módulo Logística: interface, regras e integração de seus dados. (3 arquivos, incluindo subpastas).
 - **src/modules/logistics/components** — Página e painéis visuais de Logística. (1 arquivos, incluindo subpastas).
 - **src/modules/logistics/domain** — Validação e cálculo das regras de negócio de Logística. (2 arquivos, incluindo subpastas).
-- **src/modules/monitoring** — Módulo Monitoramento Ativo: interface, regras e integração de seus dados. (41 arquivos, incluindo subpastas).
-- **src/modules/monitoring/components** — Página e painéis visuais de Monitoramento Ativo. (13 arquivos, incluindo subpastas).
+- **src/modules/monitoring** — Módulo Monitoramento Ativo: interface, regras e integração de seus dados. (42 arquivos, incluindo subpastas).
+- **src/modules/monitoring/components** — Página e painéis visuais de Monitoramento Ativo. (14 arquivos, incluindo subpastas).
 - **src/modules/monitoring/data** — Leitura, contratos e transporte de dados de Monitoramento Ativo. (10 arquivos, incluindo subpastas).
 - **src/modules/monitoring/domain** — Validação e cálculo das regras de negócio de Monitoramento Ativo. (15 arquivos, incluindo subpastas).
 - **src/modules/monitoring/hooks** — Estado, efeitos e coordenação da sessão de Monitoramento Ativo. (3 arquivos, incluindo subpastas).
@@ -562,6 +562,16 @@ Importado por: nenhuma referência estática identificada; pode ser entrada, scr
 **Documentação · Documentação** — Documento: Padrão de visualização analítica. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
 
 [Abrir fonte](../../docs/PADRAO-DE-VISUALIZACAO-ANALITICA.md) · Código ou documentação do ponto de referência
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: nenhuma referência estática identificada; pode ser entrada, script, asset ou documentação.
+
+### docs/PADRAO-VISUAL-COMPACTO.md
+
+**Documentação · Documentação** — Documento: Referência aprovada para o modo compacto. Consulte a data/versão de cada trecho; pode registrar etapas históricas.
+
+[Abrir fonte](../../docs/PADRAO-VISUAL-COMPACTO.md) · Código ou documentação do ponto de referência
 
 Importa arquivos locais: nenhum identificado.
 
@@ -3267,7 +3277,7 @@ Dependências externas: `node:assert/strict`, `node:test`, `xlsx`.
 
 Exporta: `MonitoringAnalytics`.
 
-Importa arquivos locais: [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/ReportSummary.jsx](../../src/components/ReportSummary.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/monitoring/components/MonitoringSummaryTable.jsx](../../src/modules/monitoring/components/MonitoringSummaryTable.jsx), [src/modules/monitoring/components/MonitoringTelemetry.jsx](../../src/modules/monitoring/components/MonitoringTelemetry.jsx), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringPeriods.js](../../src/modules/monitoring/domain/monitoringPeriods.js), [src/shared/data/clientDisplay.js](../../src/shared/data/clientDisplay.js).
+Importa arquivos locais: [src/components/Chart.jsx](../../src/components/Chart.jsx), [src/components/ReportSummary.jsx](../../src/components/ReportSummary.jsx), [src/components/Section.jsx](../../src/components/Section.jsx), [src/modules/monitoring/components/MonitoringSummaryTable.jsx](../../src/modules/monitoring/components/MonitoringSummaryTable.jsx), [src/modules/monitoring/components/MonitoringTelemetry.jsx](../../src/modules/monitoring/components/MonitoringTelemetry.jsx), [src/modules/monitoring/components/monitoring-analytics.css](../../src/modules/monitoring/components/monitoring-analytics.css), [src/modules/monitoring/domain/monitoring.js](../../src/modules/monitoring/domain/monitoring.js), [src/modules/monitoring/domain/monitoringAnalytics.js](../../src/modules/monitoring/domain/monitoringAnalytics.js), [src/modules/monitoring/domain/monitoringPeriods.js](../../src/modules/monitoring/domain/monitoringPeriods.js), [src/shared/data/clientDisplay.js](../../src/shared/data/clientDisplay.js).
 
 Importado por: [src/modules/monitoring/components/MonitoringPage.jsx](../../src/modules/monitoring/components/MonitoringPage.jsx).
 
@@ -3411,7 +3421,7 @@ Importa arquivos locais: [src/components/SortableTable.jsx](../../src/components
 
 Importado por: [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx), [src/modules/monitoring/components/MonitoringTelemetry.jsx](../../src/modules/monitoring/components/MonitoringTelemetry.jsx).
 
-Dependências externas: `react`.
+Dependências externas: `react`, `react-dom`.
 
 ### src/modules/monitoring/components/MonitoringTelemetry.jsx
 
@@ -3440,6 +3450,16 @@ Importa arquivos locais: [src/shared/security/Access.jsx](../../src/shared/secur
 Importado por: [src/modules/monitoring/components/MonitoringRegistry.jsx](../../src/modules/monitoring/components/MonitoringRegistry.jsx).
 
 Dependências externas: `react`.
+
+### src/modules/monitoring/components/monitoring-analytics.css
+
+**Monitoramento Ativo · Estilo** — Estilos compactos da Visão Analítica do Monitoramento: cards, gráficos, tabelas e modal de detalhes.
+
+[Abrir fonte](../../src/modules/monitoring/components/monitoring-analytics.css) · Diagnóstico legado / consulta manual
+
+Importa arquivos locais: nenhum identificado.
+
+Importado por: [src/modules/monitoring/components/MonitoringAnalytics.jsx](../../src/modules/monitoring/components/MonitoringAnalytics.jsx).
 
 ### src/modules/monitoring/data/demo.js
 
@@ -5955,7 +5975,7 @@ Importado por: [server/zohoBacklog.test.js](../../server/zohoBacklog.test.js), [
 
 [Abrir fonte](../../src/modules/support-indicators/domain/contracts.js) · Código ou documentação do ponto de referência
 
-Exporta: `agents`, `blankEntry`, `defaultSettings`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `periodDays`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`.
+Exporta: `agents`, `blankEntry`, `currentSettings`, `defaultSettings`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `periodDays`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`.
 
 Importa arquivos locais: [src/shared/data/isoDate.js](../../src/shared/data/isoDate.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
 
@@ -5967,7 +5987,7 @@ Importado por: [server/supportIndicators.js](../../server/supportIndicators.js),
 
 [Abrir fonte](../../src/modules/support-indicators/domain/indicators.js) · Código ou documentação do ponto de referência
 
-Exporta: `agents`, `backlogSummary`, `blankEntry`, `defaultSettings`, `duration`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `orderAgentNames`, `ordersSummary`, `periodDays`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`, `zohoSummary`.
+Exporta: `agents`, `awaitingScheduleCount`, `backlogSummary`, `blankEntry`, `currentSettings`, `defaultSettings`, `duration`, `entryId`, `manualFields`, `manualSummary`, `metricLabels`, `orderAgentNames`, `ordersSummary`, `periodDays`, `previousPeriod`, `sections`, `subjects`, `validateEntry`, `validateSettings`, `zohoSummary`.
 
 Importa arquivos locais: [src/modules/orders/domain/attendanceKind.js](../../src/modules/orders/domain/attendanceKind.js), [src/modules/orders/domain/customerIdentity.js](../../src/modules/orders/domain/customerIdentity.js), [src/modules/support-indicators/domain/contracts.js](../../src/modules/support-indicators/domain/contracts.js), [src/shared/data/filters.js](../../src/shared/data/filters.js), [src/shared/data/zohoActivity.js](../../src/shared/data/zohoActivity.js).
 
@@ -6729,7 +6749,7 @@ Importado por: [server/worker.js](../../server/worker.js), [src/app/Navigation.j
 
 ### src/shared/security/permissions.test.js
 
-**Compartilhado · Teste** — Verifica permissions no contexto de Compartilhado. Exemplos: Indicadores Suporte permite visualização a usuários ativos sem conceder outras páginas ou ações; acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas.
+**Compartilhado · Teste** — Verifica permissions no contexto de Compartilhado. Exemplos: Indicadores do suporte exige permissão própria sem conceder outras páginas ou ações; acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas.
 
 [Abrir fonte](../../src/shared/security/permissions.test.js) · Código ou documentação do ponto de referência
 

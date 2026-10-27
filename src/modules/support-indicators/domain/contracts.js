@@ -27,6 +27,7 @@ export const manualFields = [
 export const metricLabels = {
   executed: 'Serviços efetivos executados',
   scheduled: 'Serviços na agenda',
+  awaitingSchedule: 'Aguardando agendamento',
   unproductive: 'Visitas improdutivas',
   created: 'Chamados criados pelo suporte',
   closed: 'Chamados fechados',
@@ -42,11 +43,21 @@ export const sections = {
   manual: 'Atividades e lançamentos',
 };
 export const defaultSettings = {
-  version: 1,
+  version: 2,
   sections: Object.keys(sections),
   cards: Object.keys(metricLabels),
   weeklyGoals: {},
 };
+/** Acrescenta o novo card às preferências anteriores, preservando as demais escolhas. */
+export function currentSettings(value = defaultSettings) {
+  if (value.version !== 1) return value;
+  const cards = [...value.cards];
+  if (!cards.includes('awaitingSchedule')) {
+    const index = cards.indexOf('scheduled');
+    cards.splice(index < 0 ? cards.length : index + 1, 0, 'awaitingSchedule');
+  }
+  return { ...value, version: 2, cards };
+}
 const exact = (value, fields) =>
   value &&
   typeof value === 'object' &&
@@ -95,7 +106,10 @@ export function blankEntry(date, agentId = agents[0].id) {
   };
 }
 export function validateSettings(value) {
-  if (!exact(value, ['version', 'sections', 'cards', 'weeklyGoals']) || value.version !== 1)
+  if (
+    !exact(value, ['version', 'sections', 'cards', 'weeklyGoals']) ||
+    ![1, 2].includes(value.version)
+  )
     throw Error('Configuração inválida.');
   for (const [key, allowed] of [
     ['sections', sections],

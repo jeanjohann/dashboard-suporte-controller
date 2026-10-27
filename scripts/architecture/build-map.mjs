@@ -198,6 +198,8 @@ const descriptions = {
     'Mede classificação, telemetria, filtro, ordenação e relatório com 1.800 veículos fictícios, sem consultar a API real; gera resultados locais ignorados pelo Git.',
   'src/styles/monitoring-refinement.css':
     'Refina hierarquia e alinhamento das tabelas e cards do Monitoramento e formulário local de sessões, com responsividade e contexto de impressão.',
+  'src/modules/monitoring/components/monitoring-analytics.css':
+    'Estilos compactos da Visão Analítica do Monitoramento: cards, gráficos, tabelas e modal de detalhes.',
   'scripts/setup-monitoring.ps1':
     'Configura endereço e token do diagnóstico legado como segredos no Cloudflare por entrada local oculta, sem gravar credenciais em arquivo.',
   'scripts/architecture/diagrams.mjs':

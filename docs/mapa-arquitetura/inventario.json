@@ -1,8 +1,8 @@
 {
-  "version": "0.69.44",
-  "base": "7a18fef · cópia da entrega",
-  "date": "2026-10-26",
-  "total": 574,
+  "version": "0.69.50",
+  "base": "a144022 · cópia da entrega",
+  "date": "2026-10-27",
+  "total": 576,
   "tests": 117,
   "folders": [
     {
@@ -13,7 +13,7 @@
     {
       "path": "docs",
       "description": "Guias, critérios e histórico das implementações.",
-      "count": 68
+      "count": 69
     },
     {
       "path": "docs/diagrams",
@@ -68,7 +68,7 @@
     {
       "path": "src",
       "description": "Aplicação executada no navegador.",
-      "count": 400
+      "count": 401
     },
     {
       "path": "src/app",
@@ -83,7 +83,7 @@
     {
       "path": "src/modules",
       "description": "Áreas funcionais; cada módulo concentra suas próprias regras e telas.",
-      "count": 284
+      "count": 285
     },
     {
       "path": "src/modules/assistant",
@@ -173,12 +173,12 @@
     {
       "path": "src/modules/monitoring",
       "description": "Módulo Monitoramento Ativo: interface, regras e integração de seus dados.",
-      "count": 41
+      "count": 42
     },
     {
       "path": "src/modules/monitoring/components",
       "description": "Página e painéis visuais de Monitoramento Ativo.",
-      "count": 13
+      "count": 14
     },
     {
       "path": "src/modules/monitoring/data",
@@ -457,8 +457,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 118008,
-      "sha256": "877c9f0d68d4ec20351e0d52b255c5ce985aadb38c6ac64c28ce77794334694a",
+      "bytes": 119841,
+      "sha256": "e084d0714fd9b1c3f9c64fb5eb3ccb99f986d3a6735859acf25a483f0c690c28",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -807,8 +807,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 20239,
-      "sha256": "ac8dd7cc86b522a4e4f7372e7c6ab37ad4769e3cb94b9e168c82e51b368fdbcc",
+      "bytes": 20613,
+      "sha256": "576a0bdf08a24ff9f248a4407886088c7f5ee1e7528069aef717ae351ce22276",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -947,8 +947,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 48602,
-      "sha256": "92b47cfe58f715dad7764a33a563ee5b458b38554d099cfcb1f293a32d1c068c",
+      "bytes": 48380,
+      "sha256": "bcb6bbf2d38eb2fcfe6cc664ba549bd15b5fdf6346ed566c482c9e07dc7e6498",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -975,8 +975,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 13321,
-      "sha256": "f1615ad52c7f22e81675f0049070931d025dfbc43e2c43186ba87c3a1e45e314",
+      "bytes": 13244,
+      "sha256": "5d0854c365c5e0a1ea5346d5f5e6c5c65aaf1d3f159fe1033b1554a76a2e5444",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1047,6 +1047,20 @@
       "importedBy": [],
       "bytes": 12371,
       "sha256": "3606e760b5b1baa2d919d64301254fd8b073c1048a69649e22b8ab11e1d9da85",
+      "status": "Código ou documentação do ponto de referência"
+    },
+    {
+      "path": "docs/PADRAO-VISUAL-COMPACTO.md",
+      "folder": "docs",
+      "module": "Documentação",
+      "layer": "Documentação",
+      "description": "Documento: Referência aprovada para o modo compacto. Consulte a data/versão de cada trecho; pode registrar etapas históricas.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [],
+      "bytes": 1893,
+      "sha256": "e6f2f2baf8cca2f6464461e6f207933b5344b3ee55a68b7bf12ba4ffde195459",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1480,7 +1494,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 148961,
-      "sha256": "d0246602348401a2e8a07cafd70a022266ac9c6c89a74975572732557d36bf9f",
+      "sha256": "7ba8ba6a6adc2c78cfb47e5c7cfcf495be713533560243879304aa71eda206a8",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1493,8 +1507,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 1732,
-      "sha256": "ddafa703b8c9990cff5c40a69c2d4ca78eb4d36cb188f55f55d13b8d67657524",
+      "bytes": 1690,
+      "sha256": "b6c25abf4a171f41032ccdf41a70cd51a4ba6f69f3631f16f9d545956d5b6125",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1657,8 +1671,8 @@
         "rollup/parseAst"
       ],
       "importedBy": [],
-      "bytes": 54236,
-      "sha256": "c7a3f1ecf81922c3071526d5133c9c513a90cf17dbcc39d2ba647f54384a57ba",
+      "bytes": 54411,
+      "sha256": "e248b0a9052bccf9dbeee3bcfc698501d5cef74e9587a236e876f4b3a4129a6a",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2957,8 +2971,8 @@
         "server/supportIndicators.test.js",
         "server/worker.js"
       ],
-      "bytes": 5957,
-      "sha256": "cddd36dc2da4f5a3246e90cea0c661c489503c25e4fde7b446260d48a87ac6b5",
+      "bytes": 6208,
+      "sha256": "e517df317334b4bfbfb456111791fe5ee93fde167daf4edbddadc6534a8fb293",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -2978,8 +2992,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 10114,
-      "sha256": "ef59ef5c65fb3d2bbf04ca4d9a9f4c2d53ff79fe0c390eb94a6b07145874e823",
+      "bytes": 10704,
+      "sha256": "d80ee1d673b26db404b88a7bce55cafe9ed04745e8e4d6976174cf5afb32c468",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3553,8 +3567,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 12109,
-      "sha256": "faa0d77e5a562e93b7b0f981488de24368bbca83e1e180a0e53e9c660a26c013",
+      "bytes": 12140,
+      "sha256": "eb32db47dc4cfbd9dd9cde9ff77bef112aaae43918067314c236725ab954cf85",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3573,8 +3587,8 @@
       "importedBy": [
         "src/app/Theme.jsx"
       ],
-      "bytes": 961,
-      "sha256": "1fbcd651edde054a36f441fb19c823c528d5a62718269a181cace02d66bb2804",
+      "bytes": 641,
+      "sha256": "a2a7fb8ab64c60ea5992c801b35024edae5b854ec24f7e6080705fb77a4345b5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3874,8 +3888,8 @@
         "src/modules/operational/components/OperationalPage.jsx",
         "src/modules/orders/components/OrdersFiltersPanel.jsx"
       ],
-      "bytes": 5389,
-      "sha256": "d116d4b556559757186b35d4036e6f2c0d6c3750978cfc8c0cbc46ee001cf90d",
+      "bytes": 5424,
+      "sha256": "3a14ee5d1128edeed0273feef8b0507beb4748f4849d1d6d36c83dd24b369cf6",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -6127,6 +6141,7 @@
         "src/components/Section.jsx",
         "src/modules/monitoring/components/MonitoringSummaryTable.jsx",
         "src/modules/monitoring/components/MonitoringTelemetry.jsx",
+        "src/modules/monitoring/components/monitoring-analytics.css",
         "src/modules/monitoring/domain/monitoring.js",
         "src/modules/monitoring/domain/monitoringAnalytics.js",
         "src/modules/monitoring/domain/monitoringPeriods.js",
@@ -6138,8 +6153,8 @@
       "importedBy": [
         "src/modules/monitoring/components/MonitoringPage.jsx"
       ],
-      "bytes": 10876,
-      "sha256": "a61ce21703bf83b779a851329a2a1080756d59a664131a50ff366d24abe3b318",
+      "bytes": 11679,
+      "sha256": "c43bf1ac5f67600600c48e1d5b77c76fe3dc96e6a5fc7cddb62d240160fbc032",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -6412,14 +6427,15 @@
         "src/shared/data/sorting.js"
       ],
       "external": [
-        "react"
+        "react",
+        "react-dom"
       ],
       "importedBy": [
         "src/modules/monitoring/components/MonitoringAnalytics.jsx",
         "src/modules/monitoring/components/MonitoringTelemetry.jsx"
       ],
-      "bytes": 5126,
-      "sha256": "8664e31722ddaca7edc94b67f7d48d04c01db593ddb16d297f07ffdeec4c88c9",
+      "bytes": 7978,
+      "sha256": "82bec21238035fa4c40bb815f42f3e80abcba7549453f9d913e1dfe022bbfa55",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -6445,8 +6461,8 @@
       "importedBy": [
         "src/modules/monitoring/components/MonitoringAnalytics.jsx"
       ],
-      "bytes": 13203,
-      "sha256": "b59c420517fea2c03c2e2948bb819c2003456c8efe4865289e1939d4d7556b72",
+      "bytes": 14704,
+      "sha256": "7dca14b06b3499acaa138253f0e78ccc5565e6b1943963d11f52b9021d30e1be",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -6469,6 +6485,22 @@
       ],
       "bytes": 3225,
       "sha256": "6aa015d44c4524d575c0b996df111bcbdfcd15a5a5db7c58a41a5526a6dfcfaf",
+      "status": "Diagnóstico legado / consulta manual"
+    },
+    {
+      "path": "src/modules/monitoring/components/monitoring-analytics.css",
+      "folder": "src/modules/monitoring/components",
+      "module": "Monitoramento Ativo",
+      "layer": "Estilo",
+      "description": "Estilos compactos da Visão Analítica do Monitoramento: cards, gráficos, tabelas e modal de detalhes.",
+      "exports": [],
+      "imports": [],
+      "external": [],
+      "importedBy": [
+        "src/modules/monitoring/components/MonitoringAnalytics.jsx"
+      ],
+      "bytes": 11668,
+      "sha256": "8bd33e3326f83db73a84ce712d5f11939d5e0ad0b8ee0a8a65c58216c5a42d14",
       "status": "Diagnóstico legado / consulta manual"
     },
     {
@@ -11522,8 +11554,8 @@
       "importedBy": [
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 4512,
-      "sha256": "7ac395231762b9d1dc6004a4793ec4f69ca9e6178e630ea37d24ef8d9ef4fac0",
+      "bytes": 4496,
+      "sha256": "83f3572d326b52dc8cbb95ca1079d455b3d6abf91c051b3c4e9ba45fba692ce5",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11589,8 +11621,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 130896,
-      "sha256": "0312d3935113cdcc9da679ed16afab6776f7aa2a331dbaceb4b98f309ae7d5ce",
+      "bytes": 131995,
+      "sha256": "7b1acde7a1ba6d548d937ab4886eb02f721ae6c9a67bb49fcd7f095982af932b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11624,6 +11656,7 @@
       "exports": [
         "agents",
         "blankEntry",
+        "currentSettings",
         "defaultSettings",
         "entryId",
         "manualFields",
@@ -11646,8 +11679,8 @@
         "server/supportIndicators.test.js",
         "src/modules/support-indicators/domain/indicators.js"
       ],
-      "bytes": 5553,
-      "sha256": "bc59c875c01732d5d90df4dfa4ea40a4a8ba65ad1baa646946026712a751a8c6",
+      "bytes": 5919,
+      "sha256": "8e21f3baa2ed6124eeb7a277c347353bd76fd10653cab9eadf2193bc9ccde45d",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11658,8 +11691,10 @@
       "description": "Separa datas e papéis da OS e agrega eventos do Zoho somente quando a consulta cobre o período inteiro.",
       "exports": [
         "agents",
+        "awaitingScheduleCount",
         "backlogSummary",
         "blankEntry",
+        "currentSettings",
         "defaultSettings",
         "duration",
         "entryId",
@@ -11694,8 +11729,8 @@
         "src/modules/support-indicators/domain/indicators.test.js",
         "src/modules/support-indicators/hooks/useIndicatorRecords.js"
       ],
-      "bytes": 14655,
-      "sha256": "ace613902149be07f7e40d04a70725569c1215655045ec60a7719ed1cd87f7f1",
+      "bytes": 14758,
+      "sha256": "741d85934250b06d2f572c100e74a75818f769fba950822d3498d3b38fa864d4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11713,8 +11748,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 7273,
-      "sha256": "70beb66ec8ff648516645373b1a4768ab977af64fd2cf7e3b0fbad17f79455ed",
+      "bytes": 10083,
+      "sha256": "9fbb05604adf78935f241982df1a7979b87ef2d4fe82b61301f60bc1aa8cffff",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11736,8 +11771,8 @@
       "importedBy": [
         "src/modules/support-indicators/components/SupportIndicatorsPage.jsx"
       ],
-      "bytes": 4616,
-      "sha256": "1b1d851c6a72dd39de9c4c95d1f0bf384f9f1e49836687168816337676f63de5",
+      "bytes": 4650,
+      "sha256": "26d86f7806254334cc7cd60d54b0f8f25ce793f2de40a0dc0643193c325b9e20",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11763,8 +11798,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 12842,
-      "sha256": "b75a939000c5288910f625866171f04d3d2d903fb6433ee330abd7143282d111",
+      "bytes": 13164,
+      "sha256": "1114dd09024d30b10fc799b6652d219013d4b0466504e776d02f263460215c48",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13285,8 +13320,8 @@
         "src/shared/security/accessClient.js",
         "src/shared/security/permissions.test.js"
       ],
-      "bytes": 4301,
-      "sha256": "0d99baa3b30dff8145b5a61976fd072fd4671562c6855a08bb7b334dd266ab07",
+      "bytes": 4470,
+      "sha256": "36aa0f1f5ceab7d946433b91e8e4f272c32bc218ab94e8f0344b3ff7565830a4",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13294,7 +13329,7 @@
       "folder": "src/shared/security",
       "module": "Compartilhado",
       "layer": "Teste",
-      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: Indicadores Suporte permite visualização a usuários ativos sem conceder outras páginas ou ações; acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas.",
+      "description": "Verifica permissions no contexto de Compartilhado. Exemplos: Indicadores do suporte exige permissão própria sem conceder outras páginas ou ações; acompanhamento e operadoras herdam somente a permissão de Consumo; permissões recusam páginas, ações e bases não concedidas.",
       "exports": [],
       "imports": [
         "src/shared/security/permissions.js"
@@ -13304,8 +13339,8 @@
         "node:test"
       ],
       "importedBy": [],
-      "bytes": 3791,
-      "sha256": "0537b05a40c3a315e06997763ce0b49cfceb5c058c0ee6967e64a73c96d1a2d5",
+      "bytes": 4058,
+      "sha256": "3016478fc22337d8f78d9a3999ec379fb286ec54a0d081018d18d7b0a0ce5c13",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13428,8 +13463,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 9574,
-      "sha256": "1cf8dc50a79012baf12d168b02520a68e1f94c4db4b05fc92f9bb06190319d38",
+      "bytes": 9622,
+      "sha256": "477d244e7919851791a895f7e4f7d20fc761c9535033eb409509032ea73cb5eb",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13476,8 +13511,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 25961,
-      "sha256": "197f00bf9b4aedbab3d508495cd7fe2682201c2566f824f61fc88ba6dba6937c",
+      "bytes": 25967,
+      "sha256": "ac39b64eac0bd15b147562b687e551fcda07c15478e21cb89f2a7e902da4d54b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13604,8 +13639,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 8454,
-      "sha256": "0a8cc96059498987cae41522c72e92672782db504af93a6c0fed6c9deda3ddba",
+      "bytes": 8844,
+      "sha256": "4d8940967e4e81a1b1698cbf49df1379fb5e613c364a4c8026b680417d770f2b",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13668,8 +13703,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 26201,
-      "sha256": "5b942d4b5f9d5a258fced9737d6c3c0d0648a454b4db89d6a5ce8459cac4fad7",
+      "bytes": 26189,
+      "sha256": "3b3aaf7b56d9fed6b32d4766384d259bf3b308887b154d5c5922a92c1263b349",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13684,8 +13719,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 60695,
-      "sha256": "b5b308981d2cf0fcb3e38d357dd049ab0de4e5aca08931100e7132a0ff3baff1",
+      "bytes": 63234,
+      "sha256": "22b6bec9b96c0d57821d022ed91c9c9f27559358a414114d5ec33879c1637b7c",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -13749,7 +13784,7 @@
         "src/main.jsx"
       ],
       "bytes": 14203,
-      "sha256": "f767c59adadd8b860ec99c67df7101fae44ed32c079dd077a664e04eb95c81d4",
+      "sha256": "bb17c3873ba0fa41719bf4368473d01d99dd0857af899f17aa44cf441906ca51",
       "status": "Código ou documentação do ponto de referência"
     },
     {
