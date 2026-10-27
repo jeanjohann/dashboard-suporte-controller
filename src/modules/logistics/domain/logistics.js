@@ -1,10 +1,11 @@
-/** Leitura logística local. Uma linha é uma movimentação; não representa estoque ou quantidade de unidades. */
+/** Leitura logística local. Uma linha é uma movimentação; não representa estoque ou quantidade de unidades. Reconhece as abas Envios/Devoluções e Enviados/Recebidos. */
 import XLSX from 'xlsx';
 
 export const logisticsSections = ['Movimentações logísticas', 'Revisão da logística'];
 const layouts = [
   {
     sheet: 'Envios',
+    sheetAliases: ['Envios', 'Enviados'],
     type: 'Envio',
     required: [
       'Chamado',
@@ -20,8 +21,14 @@ const layouts = [
   },
   {
     sheet: 'Devoluções',
+    sheetAliases: ['Devoluções', 'Recebidos'],
     type: 'Devolução',
     required: ['Data Recebimento', 'Equipamento', 'ID', 'Cliente', 'Placa', 'Situação'],
+    columnAliases: {
+      'Data Recebimento': ['Data Recebimento', 'Data Rec.'],
+      Placa: ['Placa', 'Placa/Prefixo'],
+      Situação: ['Situação', 'Obs'],
+    },
   },
 ];
 const text = (value) => String(value ?? '').trim();
@@ -59,20 +66,31 @@ export function importLogistics(buffer) {
     type: 'array',
     cellNF: true,
     cellText: true,
-    sheets: layouts.map((layout) => layout.sheet),
   });
   const date1904 = Boolean(book.Workbook?.WBProps?.date1904),
     rows = [],
     issues = [],
     sheets = [];
   for (const layout of layouts) {
-    const sheet = book.Sheets[layout.sheet];
-    if (!sheet?.['!ref']) throw Error(`A aba “${layout.sheet}” não foi encontrada ou está vazia.`);
-    const range = XLSX.utils.decode_range(sheet['!ref']);
+    const matches = layout.sheetAliases.filter((name) => book.Sheets[name]?.['!ref']);
+    if (matches.length !== 1)
+      throw Error(
+        matches.length
+          ? `Mais de uma aba corresponde a ${layout.sheet}: ${matches.join(', ')}.`
+          : `A aba “${layout.sheet}” (${layout.sheetAliases.join(' ou ')}) não foi encontrada ou está vazia.`,
+      );
+    const sourceSheet = matches[0],
+      sheet = book.Sheets[sourceSheet],
+      range = XLSX.utils.decode_range(sheet['!ref']);
+    const canonicalHeader = (label) =>
+      Object.entries(layout.columnAliases || {}).find(([, aliases]) =>
+        aliases.includes(label),
+      )?.[0] || label;
     const columns = Array.from({ length: range.e.c + 1 }, (_, index) => ({
       index,
       letter: XLSX.utils.encode_col(index),
-      label: text(sheet[XLSX.utils.encode_cell({ r: 0, c: index })]?.v),
+      sourceLabel: text(sheet[XLSX.utils.encode_cell({ r: 0, c: index })]?.v),
+      label: canonicalHeader(text(sheet[XLSX.utils.encode_cell({ r: 0, c: index })]?.v)),
     })).filter((column) => column.label);
     if (
       layout.required.some(
@@ -80,7 +98,7 @@ export function importLogistics(buffer) {
       )
     )
       throw Error(
-        `Confira os cabeçalhos da primeira linha de ${layout.sheet}: ${layout.required.join(', ')}.`,
+        `Confira os cabeçalhos da primeira linha de ${sourceSheet}: ${layout.required.join(', ')}.`,
       );
     let emptyRows = 0;
     for (let r = 1; r <= range.e.r; r++) {
@@ -102,6 +120,7 @@ export function importLogistics(buffer) {
       const row = {
         key: `${layout.sheet}:${r + 1}`,
         sheet: layout.sheet,
+        sourceSheet,
         type: layout.type,
         sourceRow: r + 1,
         columns,
@@ -176,7 +195,7 @@ export function importLogistics(buffer) {
       row.receiptRecorded = Boolean(row.receivedAt && !inverted);
       rows.push(row);
     }
-    sheets.push({ name: layout.sheet, columns, emptyRows });
+    sheets.push({ name: layout.sheet, sourceName: sourceSheet, columns, emptyRows });
   }
   // Repetição é verificada no arquivo completo; filtros não apagam sua indicação.
   const groups = new Map();

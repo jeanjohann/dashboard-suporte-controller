@@ -1,3 +1,7 @@
+## 0.69.51 — 27/10/2026
+
+- Permite importar a planilha de logística com as abas Enviados/Recebidos e converte os cabeçalhos Data Rec., Placa/Prefixo e Obs para os campos logísticos correspondentes.
+
 ## 0.69.50 — 27/10/2026
 
 - Corrige Serviços na agenda para contar somente OS com status Agendado, data de agendamento no período e responsável válido.
