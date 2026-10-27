@@ -1,3 +1,7 @@
+## 0.69.46 — 27/10/2026
+
+- Mantém a grade essencial da Visão Analítica compacta e abre a visão completa das tabelas em um modal com seleção de colunas e paginação própria.
+
 ## 0.69.45 — 27/10/2026
 
 - Repagina a Visão Analítica do Monitoramento Ativo, alinhando gráficos, tabelas e indicadores em uma grade compacta e responsiva.
