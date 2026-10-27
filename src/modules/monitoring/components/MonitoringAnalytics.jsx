@@ -9,6 +9,7 @@ import { MonitoringSummaryTable } from './MonitoringSummaryTable.jsx';
 import { monitoringDuration, monitoringStages } from '../domain/monitoring.js';
 import { monitoringAnalytics } from '../domain/monitoringAnalytics.js';
 import { MonitoringTelemetry } from './MonitoringTelemetry.jsx';
+import './monitoring-analytics.css';
 
 const pct = (value) =>
   value == null ? '—' : `${(value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
@@ -100,7 +101,7 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
     ],
   ];
   return (
-    <div hidden={!visible}>
+    <div className="monitoring-analytics" hidden={!visible}>
       <Section
         title="Indicadores do monitoramento"
         summary={
@@ -186,61 +187,69 @@ export const MonitoringAnalytics = React.memo(function MonitoringAnalytics({
         }
         help="Quantidade de veículos acima do limite por base, com coleta utilizável. Percentuais usam todos os veículos identificados da base, incluindo os sem posição e os de coleta desatualizada. Compare quantidade e tamanho da frota ao interpretar percentuais. Não é taxa de defeitos nem disponibilidade histórica."
       >
-        <Chart
-          ranking
-          title={chartTitle('Alertas por base')}
-          exportNote={exportNote}
-          items={result.groups.map((group) => ({
-            label: group.label || group.clientId,
-            displayLabel: clientDisplay(group.label || group.clientId),
-            value: group.alerts,
-          }))}
-        />
-        <MonitoringSummaryTable
-          label="bases com alertas"
-          rows={result.groups.map((group) => ({ ...group, id: group.clientId }))}
-          columns={[
-            {
-              id: 'label',
-              label: 'Base',
-              required: true,
-              value: (row) => row.label || row.clientId,
-              render: (row) => clientDisplay(row.label || row.clientId),
-            },
-            {
-              id: 'fleet',
-              label: 'Veículos',
-              numeric: true,
-              essential: true,
-              value: (row) => row.total,
-            },
-            {
-              id: 'alerts',
-              label: 'Acima do limite',
-              numeric: true,
-              essential: true,
-              value: (row) => row.alerts,
-            },
-            {
-              id: 'percentage',
-              label: '% da frota',
-              numeric: true,
-              essential: true,
-              value: (row) => row.percentage,
-              render: (row) =>
-                row.percentage.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%',
-            },
-            {
-              id: 'action',
-              label: 'Conferência',
-              required: true,
-              value: (row) => row.label || row.clientId,
-              render: (row) => (
-                <button onClick={() => onQueue('alerts', row.clientId)}>Conferir veículos</button>
-              ),
-            },
-          ]}
-        />
+        <div className="monitoring-analytics-base-layout">
+          <div className="monitoring-analytics-chart-panel">
+            <Chart
+              ranking
+              title={chartTitle('Alertas por base')}
+              exportNote={exportNote}
+              items={result.groups.map((group) => ({
+                label: group.label || group.clientId,
+                displayLabel: clientDisplay(group.label || group.clientId),
+                value: group.alerts,
+              }))}
+            />
+          </div>
+          <div className="monitoring-analytics-table-panel">
+            <MonitoringSummaryTable
+              label="bases com alertas"
+              rows={result.groups.map((group) => ({ ...group, id: group.clientId }))}
+              columns={[
+                {
+                  id: 'label',
+                  label: 'Base',
+                  required: true,
+                  value: (row) => row.label || row.clientId,
+                  render: (row) => clientDisplay(row.label || row.clientId),
+                },
+                {
+                  id: 'fleet',
+                  label: 'Veículos',
+                  numeric: true,
+                  essential: true,
+                  value: (row) => row.total,
+                },
+                {
+                  id: 'alerts',
+                  label: 'Acima do limite',
+                  numeric: true,
+                  essential: true,
+                  value: (row) => row.alerts,
+                },
+                {
+                  id: 'percentage',
+                  label: '% da frota',
+                  numeric: true,
+                  essential: true,
+                  value: (row) => row.percentage,
+                  render: (row) =>
+                    row.percentage.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%',
+                },
+                {
+                  id: 'action',
+                  label: 'Conferência',
+                  required: true,
+                  value: (row) => row.label || row.clientId,
+                  render: (row) => (
+                    <button onClick={() => onQueue('alerts', row.clientId)}>
+                      Conferir veículos
+                    </button>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </div>
       </Section>
       <MonitoringTelemetry result={result} onQueue={onQueue} />
       <p className="scope">

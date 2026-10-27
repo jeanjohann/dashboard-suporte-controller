@@ -1,3 +1,7 @@
+## 0.69.45 — 27/10/2026
+
+- Repagina a Visão Analítica do Monitoramento Ativo, alinhando gráficos, tabelas e indicadores em uma grade compacta e responsiva.
+
 ## 0.69.42 — 26/10/2026
 
 - Simplifica a ação de excluir nota no Monitoramento: ícone × vermelho sem fundo nem contorno.
