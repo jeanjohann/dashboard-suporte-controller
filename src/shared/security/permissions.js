@@ -4,6 +4,7 @@
  */
 export const moduleLabels = {
   orders: 'Ordens de Serviço',
+  'support-indicators': 'Indicadores do suporte',
   operational: 'Operacional',
   lines: 'Consumo M2M',
   'operational-analysis': 'Parque e Manutenção',
@@ -23,7 +24,6 @@ export function validEmail(value) {
 /** Decide quais páginas o usuário ativo pode abrir; a administração fica restrita ao perfil administrador. */
 export function allowsPage(user, page) {
   if (!user?.active) return false;
-  if (page === 'support-indicators') return true;
   if (user.role === 'admin') return true;
   if (page === 'users') return false;
   if (['kore', 'arqia', 'consumption-followup'].includes(page))
@@ -49,7 +49,9 @@ export function allowsSource(user, type) {
     (type === 'consumption'
       ? allowsPage(user, 'lines')
       : type === 'orders'
-        ? allowsPage(user, 'orders') || allowsPage(user, 'operational-analysis')
+        ? allowsPage(user, 'orders') ||
+          allowsPage(user, 'operational-analysis') ||
+          allowsPage(user, 'support-indicators')
         : type === 'operational'
           ? allowsPage(user, 'operational') || allowsPage(user, 'operational-analysis')
           : type === 'logistics'

@@ -1,3 +1,9 @@
+## 0.69.48 — 27/10/2026
+
+- Mantém os menus de seleção de bases e modelos na camada do modal de filtros do Monitoramento.
+- Move “Abrir tabela completa” para a faixa de ações da seção na Visão Analítica.
+- Adiciona Indicadores do suporte às permissões individuais e exige essa permissão também na API de leitura.
+
 ## 0.69.47 — 27/10/2026
 
 - Alinha os cabeçalhos e grades da Visão Analítica do Monitoramento e deixa explícita a ação para abrir a tabela completa em modal.

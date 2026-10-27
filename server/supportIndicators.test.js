@@ -221,10 +221,15 @@ test('piloto recusa usuário comum, outro administrador, inativo, origem externa
   assert.equal((await supportIndicatorsResponse(req('entries'), {}, user, owner)).status, 503);
 });
 
-test('usuários ativos leem indicadores e configurações, mas não criam, editam ou excluem registros', async (t) => {
+test('usuários com permissão leem indicadores e configurações, mas não alteram os dados', async (t) => {
   const { database } = snapshotTestDatabase(t),
     env = { BUSINESS_DB: database };
-  const reader = { email: 'reader@example.invalid', role: 'user', active: true };
+  const reader = {
+    email: 'reader@example.invalid',
+    role: 'user',
+    active: true,
+    pages: ['support-indicators'],
+  };
   for (const path of ['entries?start=2026-10-19&end=2026-10-25', 'settings']) {
     const response = await supportIndicatorsResponse(req(path), env, reader, owner);
     assert.equal(response.status, 200);
@@ -253,6 +258,13 @@ test('usuários ativos leem indicadores e configurações, mas não criam, edita
     ).status,
     403,
   );
+  const denied = await supportIndicatorsResponse(
+    req('entries?start=2026-10-19&end=2026-10-25'),
+    env,
+    { ...reader, pages: [] },
+    owner,
+  );
+  assert.equal(denied.status, 403);
 });
 test('consulta por período pagina sem omitir o primeiro/último dia e isola outras coleções', async (t) => {
   const { database } = snapshotTestDatabase(t),

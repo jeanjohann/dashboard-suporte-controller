@@ -16,7 +16,9 @@ const reply = (data, status = 200) =>
   });
 export async function supportIndicatorsResponse(request, env, user, owner) {
   const writable = user?.active && user.role === 'admin' && user.email === owner;
-  if (!user?.active || (request.method !== 'GET' && !writable))
+  const readable =
+    user?.active && (user.role === 'admin' || user.pages?.includes('support-indicators'));
+  if (!readable || (request.method !== 'GET' && !writable))
     return reply(
       { error: 'A alteração dos indicadores está restrita ao administrador principal.' },
       403,

@@ -111,7 +111,7 @@ export function MultiFilter({ label, options, values, disabled, onChange }) {
                 {!visible.length && <p>Nenhuma opção encontrada.</p>}
               </div>
             </div>,
-            document.body,
+            root.current?.closest('dialog') || document.body,
           )}
       </details>
       {values.length > 0 && (

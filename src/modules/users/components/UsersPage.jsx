@@ -212,11 +212,11 @@ export function UsersPage({ onPage }) {
                       </td>
                     </tr>
                     <tr>
-                      <td>Indicadores Suporte</td>
+                      <td>Indicadores do suporte</td>
                       <td>
-                        Visualização disponível aos usuários ativos, com a base de OS publicada,
-                        lançamentos e consultas Zoho salvas. Alterações e novas consultas restritas
-                        ao administrador principal.
+                        Exige a permissão “Indicadores do suporte”. Leitura das bases publicadas;
+                        lançamentos, configurações e consultas Zoho seguem restritos ao administrador
+                        principal.
                       </td>
                     </tr>
                     <tr>

@@ -1,4 +1,5 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { SortableTable } from '../../../components/SortableTable.jsx';
 import { TableScroll } from '../../../components/TableScroll.jsx';
 import { compareValues } from '../../../shared/data/sorting.js';
@@ -97,6 +98,8 @@ export function MonitoringSummaryTable({ label, rows, columns, title }) {
   const [modalSort, setModalSort] = useState(null);
   const [inlinePage, setInlinePage] = useState(0);
   const [modalPage, setModalPage] = useState(0);
+  const [headingActions, setHeadingActions] = useState(null);
+  const tableRoot = useRef(null);
   const dialog = useRef(null);
   const trigger = useRef(null);
   const modalHeading = useRef(null);
@@ -105,6 +108,12 @@ export function MonitoringSummaryTable({ label, rows, columns, title }) {
   const modalColumns = columns.filter(
     (column) => column.required || (custom ? custom.includes(column.id) : true),
   );
+
+  useLayoutEffect(() => {
+    setHeadingActions(
+      tableRoot.current?.closest('.report-block')?.querySelector('.report-heading-actions') || null,
+    );
+  }, []);
 
   function openCompleteView() {
     if (dialog.current?.open) return;
@@ -120,13 +129,23 @@ export function MonitoringSummaryTable({ label, rows, columns, title }) {
   }
 
   return (
-    <div className="monitoring-summary-table">
+    <div className="monitoring-summary-table" ref={tableRoot}>
       <div className="monitoring-summary-table-heading">
         <h3>{title || `Resumo · ${label}`}</h3>
-        <button ref={trigger} type="button" aria-haspopup="dialog" onClick={openCompleteView}>
-          Abrir tabela completa
-        </button>
       </div>
+      {headingActions &&
+        createPortal(
+          <button
+            ref={trigger}
+            className="monitoring-open-complete-table"
+            type="button"
+            aria-haspopup="dialog"
+            onClick={openCompleteView}
+          >
+            Abrir tabela completa
+          </button>,
+          headingActions,
+        )}
       <p className="monitoring-summary-table-meta scope">
         {rows.length} {label} · {essentialColumns.length} colunas essenciais
       </p>

@@ -7,13 +7,18 @@ import assert from 'node:assert/strict';
 import { allowsPage, allowsSource, allowsAction, validateUser } from './permissions.js';
 const user = { role: 'user', active: true, pages: ['orders'], canImport: true, canExport: false };
 
-test('Indicadores Suporte permite visualização a usuários ativos sem conceder outras páginas ou ações', () => {
+test('Indicadores do suporte exige permissão própria sem conceder outras páginas ou ações', () => {
   const reader = { ...user, pages: [], canImport: false };
-  assert.equal(allowsPage(reader, 'support-indicators'), true);
+  assert.equal(allowsPage(reader, 'support-indicators'), false);
+  assert.equal(
+    allowsPage({ ...reader, pages: ['support-indicators'] }, 'support-indicators'),
+    true,
+  );
   assert.equal(allowsPage({ ...reader, active: false }, 'support-indicators'), false);
   assert.equal(allowsPage(reader, 'users'), false);
   assert.equal(allowsPage(reader, 'orders'), false);
   assert.equal(allowsAction(reader, 'import'), false);
+  assert.equal(allowsSource({ ...reader, pages: ['support-indicators'] }, 'orders'), false);
 });
 
 test('acompanhamento e operadoras herdam somente a permissão de Consumo', () => {
