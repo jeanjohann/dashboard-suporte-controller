@@ -1,3 +1,7 @@
+## 0.69.54 — 27/10/2026
+
+- Carrega a base salva de Logística ao abrir Indicadores de Suporte, habilitando a nova coluna de equipamentos preparados.
+
 ## 0.69.53 — 27/10/2026
 
 - Integra a contagem de equipamentos enviados por agente à grade existente de equipamentos em Atividades e lançamentos; mantém os apontamentos manuais.

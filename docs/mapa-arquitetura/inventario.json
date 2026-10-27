@@ -1,6 +1,6 @@
 {
-  "version": "0.69.53",
-  "base": "85702d2 · cópia da entrega",
+  "version": "0.69.54",
+  "base": "7c97bce · cópia da entrega",
   "date": "2026-10-27",
   "total": 576,
   "tests": 117,
@@ -457,8 +457,8 @@
       "imports": [],
       "external": [],
       "importedBy": [],
-      "bytes": 120362,
-      "sha256": "2d980b423f9a323621bf43aa1144c114c6d37dbbaf2ff979d3b7de61d5b4c75d",
+      "bytes": 120514,
+      "sha256": "a6f4c274f3d164e39664b1b4f28b22c86979fd12e4343abcc29c1f77e9a5b128",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1494,7 +1494,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 148961,
-      "sha256": "10a8ac248bf0f80cab2aa5bcd2134bcb699a79147c0a44ab26272e69b18b80f4",
+      "sha256": "fd0dd6d8e284cc2cdfd88ac4d44eecf04e36b7fd1aa1bb66999e86aad9ac1e68",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -1508,7 +1508,7 @@
       "external": [],
       "importedBy": [],
       "bytes": 1690,
-      "sha256": "37d7ac5b523daaa1ff6fdb8dd0b2738f546ac56bd03ba1d037b6a08f3f6dc0cb",
+      "sha256": "f4c7d0b51c6b7d361eb9c3720664bbda72c208d6d2c90e876b15da050c281862",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -3567,8 +3567,8 @@
       "importedBy": [
         "src/main.jsx"
       ],
-      "bytes": 12140,
-      "sha256": "eb32db47dc4cfbd9dd9cde9ff77bef112aaae43918067314c236725ab954cf85",
+      "bytes": 12153,
+      "sha256": "e286346f00536a7adfa851ca17ab17bb71ca0405eccf75c48d41aed1bdde4e26",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11621,8 +11621,8 @@
       "importedBy": [
         "src/app/Workspace.jsx"
       ],
-      "bytes": 133675,
-      "sha256": "c6892bbc5b4ec89d2ef4eb0027556512b3a1bf6ada0bd5b7a927782e9e851b52",
+      "bytes": 133644,
+      "sha256": "274ebb3123bd815f68faabb2d8dccce9ac007c53260fe75ca09c6ab9636d167e",
       "status": "Código ou documentação do ponto de referência"
     },
     {
@@ -11679,8 +11679,8 @@
         "server/supportIndicators.test.js",
         "src/modules/support-indicators/domain/indicators.js"
       ],
-      "bytes": 5935,
-      "sha256": "9f4647ea7d179cb3caca336ae1785dac03fbbda3c7a881457e54685a45504def",
+      "bytes": 5919,
+      "sha256": "8e21f3baa2ed6124eeb7a277c347353bd76fd10653cab9eadf2193bc9ccde45d",
       "status": "Código ou documentação do ponto de referência"
     },
     {

@@ -70,7 +70,7 @@ const SupportIndicatorsPage = lazy(() =>
 
 const savedSourcesByPage = {
   orders: ['orders'],
-  'support-indicators': ['orders'],
+  'support-indicators': ['orders', 'logistics'],
   operational: ['orders', 'operational'],
   'operational-analysis': ['orders', 'operational', 'logistics'],
   monitoring: ['operational'],

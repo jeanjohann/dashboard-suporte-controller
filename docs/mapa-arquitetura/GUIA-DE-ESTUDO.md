@@ -1,6 +1,6 @@
 # Mapa do sistema — guia de estudo
 
-**Addlog · Dashboard de Suporte | versão 0.69.53 | referência: 85702d2 · cópia da entrega | levantamento: 2026-10-27**
+**Addlog · Dashboard de Suporte | versão 0.69.54 | referência: 7c97bce · cópia da entrega | levantamento: 2026-10-27**
 
 Este mapa descreve o código do repositório nesse ponto de referência. Configurações privadas e o estado de serviços em execução não foram auditados: uma integração ter implementação não comprova que suas credenciais estejam válidas hoje. O [mapa interativo](index.html) contém o catálogo pesquisável; o [catálogo em Markdown](CATALOGO-DE-ARQUIVOS.md) permite consultar cada arquivo. Os diagramas têm versões SVG para apresentação e fontes Mermaid editáveis em [DIAGRAMAS.md](DIAGRAMAS.md).
 
