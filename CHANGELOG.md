@@ -1,3 +1,8 @@
+## 0.69.56 — 28/10/2026
+
+- Reorganiza as configurações dos Indicadores Suporte em seções de análise, apresentação, dados/fontes e pendências Zoho, preservando os controles e suas funções.
+- Centraliza a navegação em abas acessíveis por teclado e mantém os painéis alinhados à largura do modal.
+
 ## 0.69.55 — 27/10/2026
 
 - Mantém o resumo automático de equipamentos preparados por agente visível no modo Compacto, acima dos lançamentos manuais.
