@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAccess } from '../../../shared/security/Access.jsx';
 import { api } from '../../../shared/security/accessClient.js';
-import { importGoogleOrders } from '../data/googleOrders.js';
 
 export const googleRefreshInterval = 15 * 60 * 1000;
 
@@ -12,7 +11,7 @@ export function useGoogleOrders({
   active,
   manualBusy,
   endpoint = '/api/orders/google',
-  importer = importGoogleOrders,
+  importer = null,
 }) {
   const { user, managed } = useAccess();
   const allowed = managed && user?.active && user.role === 'admin';
@@ -61,7 +60,9 @@ export function useGoogleOrders({
     setError('');
     try {
       const snapshot = await api(`${endpoint}/snapshot`, { signal: controller.signal });
-      const next = importer(snapshot);
+      const next = importer
+        ? await importer(snapshot)
+        : (await import('../data/googleOrders.js')).importGoogleOrders(snapshot);
       const current = latest.current;
       if (
         request.current === controller &&

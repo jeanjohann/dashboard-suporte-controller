@@ -2,8 +2,6 @@
  * Utilitários compartilhados de seleção, datas e ordenação. Preservam valores e referências das linhas originais.
  * Consulte docs/ARQUITETURA.md para dependências e critérios de manutenção.
  */
-import XLSX from 'xlsx';
-
 export const filterFields = [
   'Status',
   'Razão Social',
@@ -30,10 +28,23 @@ export function field(data, row, label) {
 export function attendanceDate(data, row, dateField = 'Data de atendimento') {
   const cell = field(data, row, dateField);
   if (!cell || cell.issue || typeof cell.raw !== 'number') return null;
-  const parsed = XLSX.SSF.parse_date_code(cell.raw, { date1904: data.date1904 });
-  if (!parsed || parsed.y < 1900 || (parsed.y === 1900 && parsed.m === 2 && parsed.d === 29))
-    return null;
-  const date = `${String(parsed.y).padStart(4, '0')}-${String(parsed.m).padStart(2, '0')}-${String(parsed.d).padStart(2, '0')}`;
+  // A análise só precisa da parte de calendário do serial. Não carregar o XLSX (500 kB)
+  // na tela inicial por causa deste cálculo; a leitura do arquivo segue no Web Worker.
+  const serial = Number(cell.raw.toPrecision(16));
+  if (!Number.isFinite(serial) || serial < 0 || serial > 2958465) return null;
+  let day = Math.floor(serial);
+  const fraction = serial - day;
+  if (fraction > 86399.9999 / 86400) day++;
+  if (data.date1904) day += 1462;
+  // O sistema Excel de 1900 inclui o dia fictício 29/02/1900 (serial 60).
+  if (day === 0 || day === 60) return null;
+  if (day > 60) day--;
+  const parsed = new Date(Date.UTC(1900, 0, day));
+  const year = parsed.getUTCFullYear();
+  const month = parsed.getUTCMonth() + 1;
+  const dateOfMonth = parsed.getUTCDate();
+  if (year < 1900) return null;
+  const date = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(dateOfMonth).padStart(2, '0')}`;
   const instant = new Date(date + 'T00:00:00Z');
   return Number.isFinite(instant.getTime()) && instant.toISOString().slice(0, 10) === date
     ? date
