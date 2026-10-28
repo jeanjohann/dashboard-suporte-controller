@@ -1,3 +1,7 @@
+## 0.69.58 — 28/10/2026
+
+- Corrige o lockfile do Miniflare/Undici para que `npm ci` do Cloudflare Workers Build funcione com npm 10.9.2.
+
 ## 0.69.57 — 28/10/2026
 
 - Reorganiza visualmente as ações de consulta e atualização dentro das configurações dos Indicadores Suporte, com botões mais compactos e alinhados em desktop e telas estreitas.
