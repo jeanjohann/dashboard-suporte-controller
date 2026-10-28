@@ -175,6 +175,57 @@
   font-size: 11px;
   font-weight: 650;
 }
+.si-config-dialog .si-config-query-group .workspace-storage-status {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(0, 1.3fr) auto auto;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 7px;
+  background: var(--ui-surface);
+  font-size: 11px;
+}
+.si-config-dialog .si-config-query-group .workspace-storage-status > strong {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  min-width: 0;
+  color: var(--ui-ink);
+  font-size: 11px;
+}
+.si-config-dialog .si-config-query-group .workspace-storage-status > small:not([role='status']) {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  color: var(--ui-muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.si-config-dialog .si-config-query-group .workspace-storage-status > small[role='status'] {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  font-size: 10px;
+}
+.si-config-dialog .si-config-query-group .workspace-storage-status > button {
+  grid-row: 1 / span 2;
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.si-config-dialog .si-config-query-group .workspace-storage-status > button:nth-of-type(1) {
+  grid-column: 3;
+}
+.si-config-dialog .si-config-query-group .workspace-storage-status > button:nth-of-type(2) {
+  grid-column: 4;
+}
+.si-config-dialog .si-config-query-group .workspace-storage-status > p[role='alert'] {
+  grid-column: 2 / -1;
+  margin: 0;
+  font-size: 10px;
+}
 .si-config-dialog .si-config-section .si-coverage {
   display: grid !important;
   margin: 0;
@@ -195,6 +246,19 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
+}
+.si-config-dialog .si-config-data-actions {
+  justify-content: flex-start;
+  gap: 6px;
+}
+.si-config-dialog .si-config-data-actions > strong {
+  margin-right: 4px;
+  font-size: 12px;
+}
+.si-config-dialog .si-config-data-actions > button {
+  min-height: 30px;
+  padding: 5px 9px;
+  font-size: 11px;
 }
 .si-config-source-status {
   align-items: stretch;
@@ -2455,6 +2519,35 @@
   }
   .si-config-section {
     padding: 11px;
+  }
+  .si-config-dialog .si-config-query-group .workspace-storage-status {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 4px 6px;
+    padding: 8px;
+  }
+  .si-config-dialog .si-config-query-group .workspace-storage-status > strong,
+  .si-config-dialog .si-config-query-group .workspace-storage-status > small:not([role='status']),
+  .si-config-dialog .si-config-query-group .workspace-storage-status > small[role='status'] {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .si-config-dialog .si-config-query-group .workspace-storage-status > button {
+    grid-row: auto;
+  }
+  .si-config-dialog .si-config-query-group .workspace-storage-status > button:nth-of-type(1) {
+    grid-column: 2;
+  }
+  .si-config-dialog .si-config-query-group .workspace-storage-status > button:nth-of-type(2) {
+    grid-column: 3;
+  }
+  .si-config-dialog .si-config-query-group .workspace-storage-status > p[role='alert'] {
+    grid-column: 1 / -1;
+  }
+  .si-config-dialog .si-config-data-actions {
+    justify-content: flex-start;
+  }
+  .si-config-dialog .si-config-data-actions > strong {
+    flex-basis: 100%;
   }
   .si-presentation-toolbar {
     align-items: flex-start;

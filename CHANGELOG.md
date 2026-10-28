@@ -1,3 +1,8 @@
+## 0.69.57 — 28/10/2026
+
+- Reorganiza visualmente as ações de consulta e atualização dentro das configurações dos Indicadores Suporte, com botões mais compactos e alinhados em desktop e telas estreitas.
+- Mantém a estrutura isolada ao modal de configurações e preserva os comportamentos existentes.
+
 ## 0.69.56 — 28/10/2026
 
 - Reorganiza as configurações dos Indicadores Suporte em seções de análise, apresentação, dados/fontes e pendências Zoho, preservando os controles e suas funções.

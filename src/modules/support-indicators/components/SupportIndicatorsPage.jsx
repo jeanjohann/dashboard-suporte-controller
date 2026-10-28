@@ -1682,7 +1682,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                         onLoad={(saved) => setOwnBacklog(saved.data)}
                       />
                     </div>
-                    <div className="si-config-actions">
+                    <div className="si-config-actions si-config-data-actions">
                       <strong>Atualizar dados</strong>
                       <button
                         disabled={
