@@ -1,4 +1,3 @@
-import { WorkspaceQueryPanel } from '../../../shared/persistence/WorkspaceQueryPanel.jsx';
 import { createWorkspaceClient } from '../../../shared/persistence/workspaceClient.js';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigation } from '../../../app/Navigation.jsx';
@@ -15,8 +14,6 @@ import { Chart } from '../../../components/Chart.jsx';
 import { SourceStatus } from '../../../components/SourceStatus.jsx';
 import { InfoNote } from '../../../components/InfoNote.jsx';
 import { supportClosureBasis, zohoDay } from '../../../shared/data/zohoActivity.js';
-import { attendanceExtent } from '../../../shared/data/filters.js';
-import { SortableTable } from '../../../components/SortableTable.jsx';
 import { csv, download } from '../../../shared/export/exports.js';
 import {
   agents,
@@ -37,17 +34,24 @@ import {
 import { useIndicatorRecords } from '../hooks/useIndicatorRecords.js';
 import { ManualIndicatorForm } from './ManualIndicatorForm.jsx';
 import { PreparedEquipmentPanel } from './PreparedEquipmentPanel.jsx';
-import { IndicatorSettings } from './IndicatorSettings.jsx';
+import {
+  ClosedTicketDetails,
+  DrilldownDialog,
+  MetricComparison,
+  ResponsiveSummaryTable,
+  ServiceChartDialog,
+  ServiceList,
+  SourceCoverage,
+  Table,
+} from './SupportIndicatorViews.jsx';
+import { date, format, number, timestamp } from './supportIndicatorFormat.js';
+import { SupportIndicatorSettingsDialog } from './SupportIndicatorSettingsDialog.jsx';
 import { useDashboardPresentation } from '../../my-dashboard/hooks/useDashboardPresentation.js';
 
-const number = (n) => (n == null ? 'Sem dados' : n.toLocaleString('pt-BR'));
 const minutesPerClosure = (seconds) =>
   seconds == null
     ? 'Sem dados'
     : `${(seconds / 60).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} min`;
-const date = (d) => (d ? d.split('-').reverse().join('/') : '—');
-const timestamp = (value) =>
-  new Date(value).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 const valuesOf = (orders, zoho, manual) => ({
   executed: orders && !orders.unavailable ? orders.executed : null,
   scheduled: orders && !orders.unavailable ? orders.scheduled : null,
@@ -58,7 +62,6 @@ const valuesOf = (orders, zoho, manual) => ({
   requests: manual?.requests ?? null,
   activities: manual?.activities ?? null,
 });
-const format = (key, value) => (key === 'seconds' ? duration(value) : number(value));
 const sectionStories = {
   agents: 'team',
   evolution: 'service-flow',
@@ -94,169 +97,6 @@ const configurationSections = [
   ['sources', 'Dados e fontes', 'Cobertura, consultas e atualização'],
   ['backlog', 'Pendências Zoho', 'Carteira atual e em espera'],
 ];
-function MetricComparison({ metric, current, previous }) {
-  const difference = current - previous;
-  const percentage = previous === 0 ? null : Math.round((Math.abs(difference) / previous) * 100);
-  const change =
-    difference === 0
-      ? 'sem variação'
-      : `${difference > 0 ? '↑' : '↓'} ${format(metric, Math.abs(difference))} ${difference > 0 ? 'a mais' : 'a menos'}${percentage == null ? ' · base anterior zero' : ` · ${percentage}%`}`;
-  return (
-    <small
-      className="si-card-comparison"
-      title="Variação quantitativa em relação ao período equivalente anterior; aumento não significa melhora."
-    >
-      Anterior: {format(metric, previous)} · {change}
-    </small>
-  );
-}
-function Table({ headers, rows, numericColumns = [] }) {
-  const numeric = new Set([
-    ...numericColumns,
-    ...headers.map((_, index) => (rows.some((row) => typeof row[index] === 'number') ? index : -1)),
-  ]);
-  return (
-    <div className="si-table">
-      <SortableTable>
-        <thead>
-          <tr>
-            {headers.map((h) => (
-              <th key={h} className={numeric.has(headers.indexOf(h)) ? 'si-numeric' : undefined}>
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r, i) => (
-            <tr key={i}>
-              {r.map((v, j) => (
-                <td
-                  key={j}
-                  className={numeric.has(j) ? 'si-numeric' : undefined}
-                  data-sort={typeof v === 'number' ? v : undefined}
-                >
-                  {v ?? 'Sem dados'}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </SortableTable>
-      {!rows.length && <p className="scope">Nenhum registro neste recorte.</p>}
-    </div>
-  );
-}
-function ResponsiveSummaryTable({ headers, rows, primaryColumns, numericColumns = [] }) {
-  const primary = new Set([0, ...primaryColumns]);
-  return (
-    <>
-      <div className="si-mobile-summary-cards">
-        {rows.map((row, index) => (
-          <article className="si-mobile-summary-card" key={index}>
-            <h4>{row[0] ?? 'Sem identificação'}</h4>
-            <dl>
-              {primaryColumns.map((column) => (
-                <div key={column}>
-                  <dt>{headers[column]}</dt>
-                  <dd>{row[column] ?? 'Sem dados'}</dd>
-                </div>
-              ))}
-            </dl>
-            <details>
-              <summary>Ver todos os dados</summary>
-              <dl className="si-mobile-summary-details">
-                {headers.map((header, column) =>
-                  primary.has(column) ? null : (
-                    <div key={header}>
-                      <dt>{header}</dt>
-                      <dd>{row[column] ?? 'Sem dados'}</dd>
-                    </div>
-                  ),
-                )}
-              </dl>
-            </details>
-          </article>
-        ))}
-        {!rows.length && <p className="scope">Nenhum registro neste recorte.</p>}
-      </div>
-      <div className="si-desktop-summary-table">
-        <Table headers={headers} rows={rows} numericColumns={numericColumns} />
-      </div>
-    </>
-  );
-}
-function ServiceList({ value, chips = false }) {
-  const services = String(value || '')
-    .split('; ')
-    .filter(Boolean)
-    .map((entry) => {
-      const match = entry.match(/^(.*): (\d+)\/(\d+)$/);
-      return match
-        ? { label: match[1], executed: Number(match[2]), scheduled: Number(match[3]) }
-        : { label: entry, executed: null, scheduled: null };
-    });
-  return (
-    <ul
-      className={`si-client-service-list${chips ? ' si-client-service-chips' : ''}`}
-      aria-label="Serviços por cliente"
-    >
-      {services.map((service) => (
-        <li key={service.label}>
-          <span>{service.label}</span>
-          {service.executed != null && (
-            <strong title="Execuções efetivas / agendamentos">
-              {service.executed}/{service.scheduled}
-            </strong>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-}
-function ClosedTicketDetails({ rows }) {
-  const [page, setPage] = useState(0);
-  const last = Math.max(0, Math.ceil(rows.length / 25) - 1),
-    current = Math.min(page, last);
-  return (
-    <details className="si-closed-ticket-records">
-      <summary>Conferir {rows.length} chamados por agente e categoria</summary>
-      <Table
-        headers={[
-          'Chamado',
-          'Agente que fechou',
-          'Fechado em · São Paulo',
-          'Categoria atual',
-          'Subcategoria atual',
-          'Classificação atual',
-        ]}
-        rows={rows
-          .slice(current * 25, current * 25 + 25)
-          .map((r) => [
-            r.number,
-            r.agent,
-            timestamp(r.closedAt),
-            r.category,
-            r.subCategory,
-            r.classification,
-          ])}
-      />
-      {last > 0 && (
-        <div className="si-toolbar">
-          <button disabled={!current} onClick={() => setPage(current - 1)}>
-            Anterior
-          </button>
-          <span>
-            Página {current + 1} de {last + 1}
-          </span>
-          <button disabled={current === last} onClick={() => setPage(current + 1)}>
-            Próxima
-          </button>
-        </div>
-      )}
-    </details>
-  );
-}
 function unavailableMetric(key, { ordersData, orders, zohoData, zoho, storeReady, periodValid }) {
   if (key === 'awaitingSchedule')
     return ordersData
@@ -322,399 +162,83 @@ function IndicatorCards({
         ...settings.cards.filter((key) => key === 'seconds'),
       ]
     : settings.cards;
-  return (
-    <div className="si-cards">
-      {cardKeys.map((key) => {
-        const empty = values[key] == null ? unavailableMetric(key, emptyContext) : null;
-        return (
-          <article className={`si-card si-card-${key}`} key={key}>
-            <span className="si-card-label">
-              {metricLabels[key]}
-              <InfoNote label={`Regras de ${metricLabels[key]}`}>
-                {key === 'awaitingSchedule'
-                  ? 'Todas as linhas com status atual Agendar, inclusive sem data ou responsável. Não usa os filtros de período ou agente; não representa histórico.'
-                  : key === 'executed'
-                    ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
-                    : key === 'scheduled'
-                      ? 'Uma linha com status Agendado, data de Agendamento no período e responsável de agendamento válido. Agendar, Concluída, Pago e demais status não entram.'
-                      : key === 'unproductive'
-                        ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
-                        : key === 'closed'
-                          ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
-                          : key === 'seconds'
-                            ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
-                            : key === 'created'
-                              ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
-                              : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
-                {key !== 'awaitingSchedule' &&
-                  'Comparação exige dados dos dois períodos e não soma indicadores manuais aos automáticos.'}
-              </InfoNote>
-            </span>
-            {values[key] == null ? (
-              <div className="si-card-empty" role="status">
-                <strong>{empty[0]}</strong>
-                <small>{empty[1]}</small>
-              </div>
-            ) : (
-              <strong>{format(key, values[key])}</strong>
-            )}
-            {key === 'closed' && zohoData?.closureReview?.length > 0 && (
-              <small>
-                Histórico pendente: {zohoData.closureReview.map((row) => row.number).join(', ')}.
-                Isso não significa zero fechamentos.
-              </small>
-            )}
-            <small className="si-card-origin">
-              {key === 'awaitingSchedule'
-                ? 'OS · pendências atuais · toda a base'
-                : key === 'created' && zoho?.created != null
-                  ? 'Zoho · autoria confirmada'
-                  : manualMetric(key)
-                    ? values[key] == null
-                      ? 'Manual · sem valor lançado'
-                      : 'Manual · total informado'
-                    : key === 'seconds' || key === 'closed' || key === 'created'
-                      ? key === 'closed'
-                        ? 'Zoho · fechados atuais'
-                        : 'Zoho · eventos do período'
-                      : 'OS · linhas da base'}
-            </small>
-            {comparisonAvailable(key) && values[key] != null && oldValues[key] != null && (
-              <MetricComparison metric={key} current={values[key]} previous={oldValues[key]} />
-            )}
-            {key !== 'awaitingSchedule' && weekly && settings.weeklyGoals[key] != null && (
-              <small>
-                Meta semanal:{' '}
-                {key === 'seconds'
-                  ? duration(settings.weeklyGoals[key] * 60)
-                  : number(settings.weeklyGoals[key])}
-              </small>
-            )}
-          </article>
-        );
-      })}
-    </div>
-  );
-}
-function SourceCoverage({ ordersData, orders, zohoData, zoho, manual, store, period, valid }) {
-  const extent = useMemo(() => (ordersData ? attendanceExtent(ordersData) : null), [ordersData]);
-  const fullZoho = Boolean(zoho && zohoData);
-  const zohoRange = zohoData?.period;
-  const manualStatus = store.loading
-    ? 'Carregando os lançamentos manuais.'
-    : store.ready
-      ? `${manual?.entries.length || 0} lançamentos no recorte · ${manual?.filled || 0} campos preenchidos.`
-      : 'Lançamentos manuais indisponíveis.';
-  return (
-    <section className="si-coverage" aria-label="Cobertura das fontes no período">
-      <div>
-        <strong>OS</strong>
-        <span>
-          {!valid
-            ? 'Período inválido; ajuste o intervalo para conferir a cobertura.'
-            : !ordersData
-              ? 'Base ainda não carregada.'
-              : orders?.unavailable
-                ? `Indisponível · faltam ${orders.unavailable.join(', ')}.`
-                : `${ordersData.rows.length.toLocaleString('pt-BR')} linhas na base · ${orders?.rows.length || 0} linhas elegíveis no recorte.`}
+  const primaryCardKeys = ['executed', 'scheduled', 'closed', 'seconds'];
+  const primaryCards = cardKeys.filter((key) => primaryCardKeys.includes(key));
+  const secondaryCards = cardKeys.filter((key) => !primaryCardKeys.includes(key));
+  const renderCard = (key) => {
+    const empty = values[key] == null ? unavailableMetric(key, emptyContext) : null;
+    return (
+      <article className={`si-card si-card-${key}`} key={key}>
+        <span className="si-card-label">
+          {metricLabels[key]}
+          <InfoNote label={`Regras de ${metricLabels[key]}`}>
+            {key === 'awaitingSchedule'
+              ? 'Todas as linhas com status atual Agendar, inclusive sem data ou responsável. Não usa os filtros de período ou agente; não representa histórico.'
+              : key === 'executed'
+                ? 'Uma linha Concluída/Pago efetiva por responsável de execução; improdutivas não contam.'
+                : key === 'scheduled'
+                  ? 'Uma linha com status Agendado, data de Agendamento no período e responsável de agendamento válido. Agendar, Concluída, Pago e demais status não entram.'
+                  : key === 'unproductive'
+                    ? 'Visitas improdutivas separadas; não entram nas execuções efetivas do suporte.'
+                    : key === 'closed'
+                      ? 'Somente chamados atualmente fechados, atribuídos ao agente do último fechamento confirmado dentro do período. Reabertos ficam fora.'
+                      : key === 'seconds'
+                        ? 'Soma de apontamentos nos chamados; não representa tempo conectado.'
+                        : key === 'created'
+                          ? 'Autoria de criação confirmada no histórico; alternativa manual identificada quando indisponível.'
+                          : 'Quantidade informada manualmente; campos vazios não equivalem a zero.'}{' '}
+            {key !== 'awaitingSchedule' &&
+              'Comparação exige dados dos dois períodos e não soma indicadores manuais aos automáticos.'}
+          </InfoNote>
         </span>
-        {extent?.start && (
+        {values[key] == null ? (
+          <div className="si-card-empty" role="status">
+            <strong>{empty[0]}</strong>
+            <small>{empty[1]}</small>
+          </div>
+        ) : (
+          <strong>{format(key, values[key])}</strong>
+        )}
+        {key === 'closed' && zohoData?.closureReview?.length > 0 && (
           <small>
-            Datas de atendimento presentes: {date(extent.start)} a {date(extent.end)}
-            {extent.missing ? ` · ${extent.missing} sem data válida na base` : ''}
+            Histórico pendente: {zohoData.closureReview.map((row) => row.number).join(', ')}.
+            Isso não significa zero fechamentos.
           </small>
         )}
-        {orders &&
-          !orders.unavailable &&
-          (orders.missingExecutionDate > 0 || orders.missingScheduleDate > 0) && (
-            <small>
-              Fora dos totais por falta de data: {orders.missingExecutionDate} execuções e{' '}
-              {orders.missingScheduleDate} agendamentos.
-            </small>
-          )}
-      </div>
-      <div>
-        <strong>Zoho Desk</strong>
-        <span>
-          {!valid
-            ? 'A cobertura será conferida após corrigir o período.'
-            : fullZoho
-              ? `Consulta cobre todo o período · ${(zoho.timeEntries?.length || 0).toLocaleString('pt-BR')} apontamentos válidos.`
-              : zohoRange
-                ? `Consulta de ${date(zohoRange.start)} a ${date(zohoRange.end)} · não cobre todo o recorte.`
-                : 'Sem consulta que cubra todo o período.'}
-        </span>
-        {zohoData?.readAt && <small>Atualizado em {timestamp(zohoData.readAt)}.</small>}
-      </div>
-      <div>
-        <strong>Manual</strong>
-        <span>{manualStatus}</span>
-        <small>
-          Campos vazios não equivalem a zero; dados manuais permanecem separados dos automáticos.
+        <small className="si-card-origin">
+          {key === 'awaitingSchedule'
+            ? 'OS · pendências atuais · toda a base'
+            : key === 'created' && zoho?.created != null
+              ? 'Zoho · autoria confirmada'
+              : manualMetric(key)
+                ? values[key] == null
+                  ? 'Manual · sem valor lançado'
+                  : 'Manual · total informado'
+                : key === 'seconds' || key === 'closed' || key === 'created'
+                  ? key === 'closed'
+                    ? 'Zoho · fechados atuais'
+                    : 'Zoho · eventos do período'
+                  : 'OS · linhas da base'}
         </small>
-      </div>
-      <p className="si-coverage-period">
-        Recorte analisado: {date(period.start)} a {date(period.end)}. Linhas sem evidência
-        suficiente ficam fora dos totais, sem serem tratadas como zero.
-      </p>
-    </section>
-  );
-}
-function DrilldownDialog({ detail, onClose }) {
-  const dialog = useRef(null);
-  const [page, setPage] = useState(0);
-  useEffect(() => setPage(0), [detail]);
-  useEffect(() => {
-    if (detail && dialog.current && !dialog.current.open) dialog.current.showModal();
-  }, [detail]);
-  if (!detail) return null;
-  const pageSize = 25;
-  const lastPage = Math.max(0, Math.ceil(detail.rows.length / pageSize) - 1);
-  const selectedPage = Math.min(page, lastPage);
-  return (
-    <dialog
-      ref={dialog}
-      className="si-drilldown"
-      onClose={onClose}
-      aria-labelledby="si-drilldown-title"
-    >
-      <header>
-        <div>
-          <h2 id="si-drilldown-title">{detail.title}</h2>
-          <p>
-            {detail.source} · {detail.rows.length.toLocaleString('pt-BR')} registros
-          </p>
-        </div>
-        <div className="si-toolbar">
-          <button
-            type="button"
-            onClick={async () => {
-              if (!(await authorizeAction('export'))) return;
-              const filename = detail.title
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLocaleLowerCase('pt-BR')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-|-$/g, '');
-              await download(
-                csv([detail.headers, ...detail.rows]),
-                'text/csv;charset=utf-8',
-                `indicadores-suporte-${filename || 'detalhes'}.csv`,
-              );
-            }}
-          >
-            Exportar CSV
-          </button>
-          <button type="button" onClick={() => dialog.current?.close()}>
-            Fechar
-          </button>
-        </div>
-      </header>
-      {detail.rows.length ? (
-        <>
-          <Table
-            headers={detail.headers}
-            rows={detail.rows.slice(selectedPage * pageSize, selectedPage * pageSize + pageSize)}
-          />
-          {lastPage > 0 && (
-            <div className="si-toolbar">
-              <button disabled={!selectedPage} onClick={() => setPage(selectedPage - 1)}>
-                Anterior
-              </button>
-              <span>
-                Página {selectedPage + 1} de {lastPage + 1}
-              </span>
-              <button
-                disabled={selectedPage === lastPage}
-                onClick={() => setPage(selectedPage + 1)}
-              >
-                Próxima
-              </button>
-            </div>
-          )}
-        </>
-      ) : (
-        <p className="scope">Nenhum registro compõe este valor no recorte atual.</p>
-      )}
-    </dialog>
-  );
-}
-function MiniTrend({ items, variant = 'line', label }) {
-  const values = (items || []).filter((item) => Number.isFinite(item.value));
-  if (!values.length) return <span className="si-mini-trend-empty">Sem dados</span>;
-  const width = 156;
-  const height = 48;
-  const inset = 5;
-  const max = Math.max(1, ...values.map((item) => item.value));
-  const points = values.map((item, index) => ({
-    x:
-      values.length === 1 ? width / 2 : inset + (index * (width - inset * 2)) / (values.length - 1),
-    y: height - inset - (Math.max(0, item.value) / max) * (height - inset * 2),
-  }));
-  const barGap = 3;
-  const barWidth = Math.max(2, (width - inset * 2 - barGap * (values.length - 1)) / values.length);
-  return (
-    <svg
-      className={`si-mini-trend si-mini-trend-${variant}`}
-      viewBox={`0 0 ${width} ${height}`}
-      role="img"
-      aria-label={label}
-      preserveAspectRatio="none"
-    >
-      {variant === 'bars' ? (
-        values.map((item, index) => {
-          const barHeight = (Math.max(0, item.value) / max) * (height - inset * 2);
-          return (
-            <rect
-              key={`${item.label}-${index}`}
-              x={inset + index * (barWidth + barGap)}
-              y={height - inset - barHeight}
-              width={barWidth}
-              height={Math.max(1, barHeight)}
-              rx="2"
-            />
-          );
-        })
-      ) : (
-        <>
-          <polyline points={points.map((point) => `${point.x},${point.y}`).join(' ')} />
-          {points.map((point, index) => (
-            <circle key={`${values[index].label}-${index}`} cx={point.x} cy={point.y} r="2.5" />
-          ))}
-        </>
-      )}
-    </svg>
-  );
-}
-
-function ServiceChartDialog({ open, onClose, services, clients, daily, zohoDaily, period }) {
-  const dialog = useRef(null);
-  useEffect(() => {
-    if (open && dialog.current && !dialog.current.open) dialog.current.showModal();
-  }, [open]);
-  if (!open) return null;
-  const serviceRows = (services || []).map((service) => [
-    'Serviço',
-    '',
-    service.label,
-    service.executed,
-    service.scheduled,
-  ]);
-  const clientRows = (clients || []).map((client) => [
-    'Cliente',
-    client.label,
-    client.services || '',
-    client.executed,
-    client.scheduled,
-  ]);
-  const exportRows = [
-    ['Visão', 'Cliente', 'Serviço · motivo', 'Execuções efetivas', 'Agendamentos'],
-    ...serviceRows,
-    ...clientRows,
-  ];
-  async function exportCsv() {
-    if (!(await authorizeAction('export'))) return;
-    await download(
-      csv(exportRows),
-      'text/csv;charset=utf-8',
-      'indicadores-suporte-servicos-e-clientes.csv',
-    );
-  }
-  return (
-    <dialog
-      ref={dialog}
-      className="si-service-chart-dialog"
-      aria-labelledby="si-service-chart-title"
-      onClose={onClose}
-    >
-      <header>
-        <div>
-          <span className="si-dialog-kicker">Análise operacional · OS</span>
-          <h2 id="si-service-chart-title">Ritmo dos atendimentos</h2>
-        </div>
-        <div className="si-service-chart-actions">
-          <span className="si-preview-period">
-            <small>Período selecionado</small>
-            <strong>
-              {date(period.start)} a {date(period.end)}
-            </strong>
-          </span>
-          <button
-            type="button"
-            onClick={async () => {
-              if (await authorizeAction('export')) window.print();
-            }}
-          >
-            Imprimir
-          </button>
-          <button type="button" onClick={exportCsv}>
-            Exportar CSV
-          </button>
-          <button type="button" onClick={() => dialog.current?.close()}>
-            Fechar
-          </button>
-        </div>
-      </header>
-      <div className="si-service-preview-metrics">
-        <article className="si-service-preview-card">
-          <div>
-            <h3>Serviços efetivos por dia</h3>
-            <small>Execuções concluídas</small>
-          </div>
-          <MiniTrend
-            items={(daily || []).map((item) => ({ label: item.label, value: item.executed }))}
-            label="Tendência diária de serviços efetivos"
-          />
-        </article>
-        <article className="si-service-preview-card si-service-preview-bars">
-          <div>
-            <h3>Agendamentos por dia</h3>
-            <small>Volume previsto</small>
-          </div>
-          <MiniTrend
-            variant="bars"
-            items={(daily || []).map((item) => ({ label: item.label, value: item.scheduled }))}
-            label="Volume diário de agendamentos"
-          />
-        </article>
-        <article className="si-service-preview-card si-service-preview-time">
-          <div>
-            <h3>Tempo apontado · Zoho</h3>
-            <small>Apontamentos registrados</small>
-          </div>
-          <MiniTrend
-            items={(zohoDaily || []).map((item) => ({ label: item.label, value: item.value }))}
-            label="Tendência diária de tempo apontado no Zoho"
-          />
-        </article>
-      </div>
-      <div className="si-service-chart-content">
-        <section className="si-service-client-breakdown">
-          <div className="si-service-preview-table-heading">
-            <div>
-              <h3>Clientes e serviços executados</h3>
-              <small>
-                Serviço e motivo em cada cliente · fonte compacta para leitura da carteira
-              </small>
-            </div>
-          </div>
-          <Table
-            headers={['Cliente', 'Agend.', 'Exec.', 'Serviço · motivo (exec. / agend.)']}
-            rows={(clients || []).map((client) => [
-              client.label,
-              client.scheduled,
-              client.executed,
-              <ServiceList value={client.services} chips />,
-            ])}
-            numericColumns={[1, 2]}
-          />
+        {comparisonAvailable(key) && values[key] != null && oldValues[key] != null && (
+          <MetricComparison metric={key} current={values[key]} previous={oldValues[key]} />
+        )}
+        {key !== 'awaitingSchedule' && weekly && settings.weeklyGoals[key] != null && (
           <small>
-            <span className="si-legend-dot si-legend-execution" /> Execução efetiva
-            <span className="si-legend-dot si-legend-schedule" /> Agendamento sem execução efetiva
+            Meta semanal:{' '}
+            {key === 'seconds'
+              ? duration(settings.weeklyGoals[key] * 60)
+              : number(settings.weeklyGoals[key])}
           </small>
-        </section>
-      </div>
-    </dialog>
+        )}
+      </article>
+    );
+  };
+  return (
+    <div className="si-cards">
+      <div className="si-primary-metrics">{primaryCards.map(renderCard)}</div>
+      <div className="si-secondary-metrics">{secondaryCards.map(renderCard)}</div>
+    </div>
   );
 }
 export function SupportIndicatorsPage({ onPage, active = true }) {
@@ -896,12 +420,11 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     return false;
   };
   const shownAgents = agents.filter((a) => !agentId || a.id === agentId);
-  const storyOrder = (contentViewMode === 'compact'
-    ? ['service-flow', 'team', 'support-profile']
-    : ['team', 'service-flow', 'support-profile']
-  ).filter((storyKey) =>
-    settings.sections.some((key) => sectionStories[key] === storyKey),
-  );
+  const storyOrder = (
+    contentViewMode === 'compact'
+      ? ['service-flow', 'team', 'support-profile']
+      : ['team', 'service-flow', 'support-profile']
+  ).filter((storyKey) => settings.sections.some((key) => sectionStories[key] === storyKey));
   const availablePresentationOptions = presentationOptions.filter(
     (option) => option.key === 'summary' || settings.sections.includes(option.key),
   );
@@ -916,9 +439,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       a.name,
       os?.scheduled ?? null,
       os?.executed ?? null,
-      os && os.scheduled != null && os.executed != null
-        ? os.scheduled + os.executed
-        : null,
+      os && os.scheduled != null && os.executed != null ? os.scheduled + os.executed : null,
       z?.created ?? m?.totals.created ?? null,
       backlog?.agents.find((r) => r.id === a.id)?.pending ?? null,
       backlog?.agents.find((r) => r.id === a.id)?.onHold ?? null,
@@ -934,7 +455,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     ['Agendados · OS', ...agentRows.map((row) => row[1])],
     ['Executados efetivos · OS', ...agentRows.map((row) => row[2])],
     ['Etapas · agenda + execução', ...agentRows.map((row) => row[3])],
-    [zoho?.created != null ? 'Criados pelo agente · Zoho' : 'Criados · manual', ...agentRows.map((row) => row[4])],
+    [
+      zoho?.created != null ? 'Criados pelo agente · Zoho' : 'Criados · manual',
+      ...agentRows.map((row) => row[4]),
+    ],
     ['Pendentes agora · Zoho', ...agentRows.map((row) => row[5])],
     ['Em espera agora · Zoho', ...agentRows.map((row) => row[6])],
     ['Fechados · Zoho', ...agentRows.map((row) => row[7])],
@@ -984,7 +508,11 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       return summary?.totals['subject_' + key] ?? null;
     });
     const informed = values.filter((value) => value != null);
-    return [label, ...values, informed.length ? informed.reduce((sum, value) => sum + value, 0) : null];
+    return [
+      label,
+      ...values,
+      informed.length ? informed.reduce((sum, value) => sum + value, 0) : null,
+    ];
   });
   function showOrderDetails(title, predicate, stage = 'execution') {
     const rows = (orders?.rows || []).filter(predicate).map((row) => {
@@ -1393,451 +921,71 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
               </button>
             </div>
           </header>
-          {configurationOpen && !presentation.presenting && (
-            <div
-              className="si-config-backdrop"
-              role="presentation"
-              onMouseDown={(event) => {
-                if (event.target === event.currentTarget) {
-                  setConfigurationOpen(false);
-                  setPresentationMode(false);
-                }
-              }}
-            >
-              <section
-                className="si-config-dialog"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="si-config-title"
-              >
-                <header className="si-config-dialog-heading">
-                  <div>
-                    <span>INDICADORES SUPORTE</span>
-                    <h2 id="si-config-title">Configurações e fontes</h2>
-                    <p>Filtros, apresentação, atualizações e critérios da análise.</p>
-                  </div>
-                  <button
-                    type="button"
-                    aria-label="Fechar configurações"
-                    onClick={() => {
-                      setConfigurationOpen(false);
-                      setPresentationMode(false);
-                    }}
-                  >
-                    Fechar
-                  </button>
-                </header>
-                <nav className="si-config-tabs" role="tablist" aria-label="Seções de configuração">
-                  {configurationSections.map(([key, label, description]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      role="tab"
-                      id={`si-config-tab-${key}`}
-                      aria-controls={`si-config-panel-${key}`}
-                      aria-selected={configurationSection === key}
-                      tabIndex={configurationSection === key ? 0 : -1}
-                      onClick={() => setConfigurationSection(key)}
-                      onKeyDown={(event) => {
-                        const keys = configurationSections.map(([sectionKey]) => sectionKey);
-                        const focusedKey = event.currentTarget.id.replace('si-config-tab-', '');
-                        const currentIndex = keys.indexOf(focusedKey);
-                        const nextIndex =
-                          event.key === 'ArrowRight'
-                            ? (currentIndex + 1) % keys.length
-                            : event.key === 'ArrowLeft'
-                              ? (currentIndex - 1 + keys.length) % keys.length
-                              : event.key === 'Home'
-                                ? 0
-                                : event.key === 'End'
-                                  ? keys.length - 1
-                                  : currentIndex;
-                        if (nextIndex !== currentIndex) {
-                          event.preventDefault();
-                          setConfigurationSection(keys[nextIndex]);
-                          document.getElementById(`si-config-tab-${keys[nextIndex]}`)?.focus();
-                        }
-                      }}
-                    >
-                      <strong>{label}</strong>
-                      <small>{description}</small>
-                    </button>
-                  ))}
-                </nav>
-                <div className="si-config-dialog-content">
-                  <section
-                    className="si-config-section"
-                    id="si-config-panel-analysis"
-                    role="tabpanel"
-                    aria-labelledby="si-config-tab-analysis"
-                    hidden={configurationSection !== 'analysis'}
-                    aria-label="Filtros da análise"
-                  >
-                    <h3>Período e equipe</h3>
-                    <div className="si-toolbar si-config-filters">
-                      <label>
-                        De
-                        <input
-                          type="date"
-                          value={period.start}
-                          disabled={busy}
-                          onChange={(e) => setPeriod({ ...period, start: e.target.value })}
-                        />
-                      </label>
-                      <label>
-                        Até
-                        <input
-                          type="date"
-                          value={period.end}
-                          disabled={busy}
-                          onChange={(e) => setPeriod({ ...period, end: e.target.value })}
-                        />
-                      </label>
-                      <label>
-                        Agente
-                        <select value={agentId} onChange={(e) => setAgent(e.target.value)}>
-                          <option value="">Toda a equipe</option>
-                          {agents.map((a) => (
-                            <option key={a.id} value={a.id}>
-                              {a.name}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                      <div className="si-shortcuts">
-                        {[
-                          ['currentWeek', 'Semana atual'],
-                          ['previousWeek', 'Semana anterior'],
-                          ['month', 'Mês atual'],
-                        ].map(([key, label]) => (
-                          <button key={key} disabled={busy} onClick={() => preset(key)}>
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <p className="scope">
-                      {valid
-                        ? `${date(period.start)} a ${date(period.end)} · comparação com ${date(past.start)} a ${date(past.end)}`
-                        : 'Informe um intervalo válido de até 366 dias.'}
-                    </p>
-                    {store.writable && (
-                      <IndicatorSettings
-                        settings={settings}
-                        revision={store.settingsRevision}
-                        ready={store.settingsReady && !manualDirty}
-                        busy={store.busy}
-                        save={store.save}
-                      />
-                    )}
-                  </section>
-                  <div
-                    id="si-config-panel-presentation"
-                    role="tabpanel"
-                    aria-labelledby="si-config-tab-presentation"
-                    hidden={configurationSection !== 'presentation'}
-                    className="si-config-tab-panel"
-                  >
-                    <section className="si-config-section" aria-label="Visualização da página">
-                      <div className="si-config-section-heading">
-                        <div>
-                          <h3>Visualização da página</h3>
-                          <p>Escolha como os gráficos e tabelas são organizados nesta tela.</p>
-                        </div>
-                        <div
-                          className="si-view-modes"
-                          role="group"
-                          aria-label="Modo de visualização"
-                        >
-                          <button
-                            type="button"
-                            aria-pressed={viewMode === 'compact'}
-                            onClick={() => selectDensity('compact')}
-                          >
-                            Compacto
-                          </button>
-                          <button
-                            type="button"
-                            aria-pressed={viewMode === 'editorial'}
-                            onClick={() => selectDensity('editorial')}
-                          >
-                            Editorial
-                          </button>
-                        </div>
-                      </div>
-                    </section>
-                    <section
-                      className="si-config-section si-config-presentation"
-                      aria-label="Configuração da apresentação"
-                    >
-                      <div className="si-config-section-heading">
-                        <div>
-                          <h3>Apresentação</h3>
-                          <p>
-                            Selecione os blocos e o estilo. Inicie para abrir a tela limpa de
-                            apresentação.
-                          </p>
-                        </div>
-                        <div
-                          className="si-presentation-style"
-                          role="group"
-                          aria-label="Estilo da apresentação"
-                        >
-                          <button
-                            type="button"
-                            aria-pressed={presentationStyle === 'compact'}
-                            onClick={() => setPresentationStyle('compact')}
-                          >
-                            Compacto
-                          </button>
-                          <button
-                            type="button"
-                            aria-pressed={presentationStyle === 'editorial'}
-                            onClick={() => setPresentationStyle('editorial')}
-                          >
-                            Editorial
-                          </button>
-                        </div>
-                      </div>
-                      <div className="si-presentation-options">
-                        {availablePresentationOptions.map((option) => (
-                          <label key={option.key}>
-                            <input
-                              type="checkbox"
-                              checked={presentationSelection.has(option.key)}
-                              onChange={(event) =>
-                                setPresentationSelection((current) => {
-                                  const next = new Set(current);
-                                  if (event.target.checked) next.add(option.key);
-                                  else next.delete(option.key);
-                                  return next;
-                                })
-                              }
-                            />
-                            <span>{option.label}</span>
-                          </label>
-                        ))}
-                      </div>
-                      <div className="si-config-actions">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setPresentationSelection(
-                              new Set(availablePresentationOptions.map((option) => option.key)),
-                            )
-                          }
-                        >
-                          Selecionar tudo
-                        </button>
-                        <button type="button" onClick={() => setPresentationSelection(new Set())}>
-                          Limpar seleção
-                        </button>
-                        <button
-                          type="button"
-                          className="si-presentation-start"
-                          disabled={!selectedPresentationCount}
-                          onClick={() => {
-                            setPresentationMode(true);
-                            setConfigurationOpen(false);
-                            presentation.enter();
-                          }}
-                        >
-                          Iniciar apresentação
-                        </button>
-                      </div>
-                    </section>
-                  </div>
-                  <section
-                    className="si-config-section"
-                    id="si-config-panel-sources"
-                    role="tabpanel"
-                    aria-labelledby="si-config-tab-sources"
-                    hidden={configurationSection !== 'sources'}
-                    aria-label="Cobertura e fontes"
-                  >
-                    <h3>Dados usados na análise</h3>
-                    <SourceCoverage
-                      ordersData={ordersData}
-                      orders={orders}
-                      zohoData={zohoData}
-                      zoho={zoho}
-                      manual={manual}
-                      store={store}
-                      period={period}
-                      valid={valid}
-                    />
-                    <div className="si-config-source-group">
-                      <h4>Bases disponíveis</h4>
-                      <div className="si-config-source-status">
-                        <div>
-                          <strong>OS</strong>
-                          <span>{sources.orders?.value?.filename || 'Base não carregada'}</span>
-                          {ordersData && (
-                            <small>{number(ordersData.rows.length)} linhas disponíveis</small>
-                          )}
-                        </div>
-                        <div>
-                          <strong>Zoho Desk</strong>
-                          <span>
-                            {zoho
-                              ? `Consulta ${date(zohoData.period.start)} a ${date(zohoData.period.end)}`
-                              : 'Sem consulta completa para o período'}
-                          </span>
-                          {zohoData?.readAt && (
-                            <small>Atualizado em {timestamp(zohoData.readAt)}</small>
-                          )}
-                        </div>
-                        <div>
-                          <strong>Manual</strong>
-                          <span>
-                            {store.loading
-                              ? 'Carregando banco'
-                              : store.ready
-                                ? `${number(manual?.entries.length || 0)} lançamentos no recorte`
-                                : 'Sem dados carregados'}
-                          </span>
-                          <small>Campos vazios não equivalem a zero.</small>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="si-config-query-group">
-                      <h4>Consultas salvas</h4>
-                      <WorkspaceQueryPanel
-                        kind="zoho-indicators"
-                        value={ownZoho ? { data: ownZoho } : null}
-                        disabled={busy || backlogBusy || manualDirty}
-                        onLoad={(saved) => setOwnZoho(saved.data)}
-                      />
-                      <WorkspaceQueryPanel
-                        kind="zoho-backlog"
-                        value={ownBacklog ? { data: ownBacklog } : null}
-                        disabled={busy || backlogBusy}
-                        onLoad={(saved) => setOwnBacklog(saved.data)}
-                      />
-                    </div>
-                    <div className="si-config-actions si-config-data-actions">
-                      <strong>Atualizar dados</strong>
-                      <button
-                        disabled={
-                          !store.writable ||
-                          !valid ||
-                          busy ||
-                          backlogBusy ||
-                          periodDaysSafe(period) > 31 ||
-                          period.start > today
-                        }
-                        onClick={loadZoho}
-                      >
-                        {busy
-                          ? `Consultando ${progress} chamados…`
-                          : 'Consultar Zoho neste período'}
-                      </button>
-                      {busy && <button onClick={() => pending.current?.abort()}>Cancelar</button>}
-                      <button disabled={store.loading || store.busy} onClick={store.reload}>
-                        Recarregar lançamentos
-                      </button>
-                    </div>
-                    <details className="si-source-details">
-                      <summary>Diagnósticos, critérios e validações</summary>
-                      <p className="scope">
-                        Zoho: até 31 dias por consulta. Tempo é a soma dos apontamentos nos
-                        chamados, não tempo conectado. Aberturas exigem autoria confirmada no
-                        histórico. Assuntos usam a categoria atual dos chamados fechados. Sem
-                        consulta completa, os lançamentos manuais são apresentados separadamente
-                        como alternativa.
-                      </p>
-                      <p className="scope">
-                        Agenda e execução são etapas distintas. Execuções efetivas: Concluída/Pago,
-                        sem Visita Improdutiva. Agenda: status Agendado, data e responsável válidos.
-                        Campos manuais vazios não representam zero.
-                      </p>
-                      <details>
-                        <summary>Validar autoria de abertura e assuntos no Zoho</summary>
-                        <p className="scope">
-                          Amostra recente para conferir autoria de abertura e categorias, sem
-                          alterar os indicadores.
-                        </p>
-                        <button
-                          disabled={!store.writable || profileBusy || busy || backlogBusy}
-                          onClick={inspectProfile}
-                        >
-                          {profileBusy
-                            ? 'Conferindo amostra…'
-                            : 'Consultar amostra de autoria e categorias'}
-                        </button>
-                        {profile?.coverage && <p className="scope">{profile.coverage}</p>}
-                      </details>
-                    </details>
-                    {(error || store.error) && (
-                      <p className="error" role="alert">
-                        {error || store.error}
-                      </p>
-                    )}
-                  </section>
-                  <section
-                    className="si-config-section si-config-backlog"
-                    id="si-config-panel-backlog"
-                    role="tabpanel"
-                    aria-labelledby="si-config-tab-backlog"
-                    hidden={configurationSection !== 'backlog'}
-                    aria-label="Pendências atuais no Zoho"
-                  >
-                    <div>
-                      <h3>Pendências atuais · Zoho</h3>
-                      <p>
-                        Chamados atribuídos e não encerrados, inclusive os em espera. Não usa o
-                        filtro de período.
-                      </p>
-                    </div>
-                    <div className="si-config-actions">
-                      {backlog && (
-                        <strong>
-                          {number(backlog.total)} pendentes · {number(backlog.onHold)} em espera
-                        </strong>
-                      )}
-                      <button
-                        disabled={!store.writable || backlogBusy || busy}
-                        onClick={loadBacklog}
-                      >
-                        {backlogBusy
-                          ? `Conferindo ${backlogProgress} chamados…`
-                          : 'Consultar pendências atuais'}
-                      </button>
-                      {backlogBusy && (
-                        <button onClick={() => backlogRequest.current?.abort()}>Cancelar</button>
-                      )}
-                    </div>
-                    <small>
-                      {backlog
-                        ? `Consultado em ${timestamp(backlog.readAt)} · carteira pode mudar após a leitura.`
-                        : 'Consulta da carteira atual pendente.'}
-                    </small>
-                    {backlogError && (
-                      <p className="error" role="alert">
-                        {backlogError}
-                      </p>
-                    )}
-                  </section>
-                </div>
-                <footer className="si-config-dialog-footer">
-                  <span>
-                    {valid
-                      ? `${date(period.start)} a ${date(period.end)} · ${selectedPresentationCount} blocos selecionados`
-                      : 'Período inválido'}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setConfigurationOpen(false);
-                      setPresentationMode(false);
-                    }}
-                  >
-                    Concluído
-                  </button>
-                </footer>
-              </section>
-            </div>
-          )}
+          <SupportIndicatorSettingsDialog
+            open={configurationOpen && !presentation.presenting}
+            onClose={() => {
+              setConfigurationOpen(false);
+              setPresentationMode(false);
+            }}
+            onStartPresentation={() => {
+              setPresentationMode(true);
+              setConfigurationOpen(false);
+              presentation.enter();
+            }}
+            analysis={{
+              configurationSection,
+              setConfigurationSection,
+              period,
+              setPeriod,
+              busy,
+              agentId,
+              setAgent,
+              past,
+              valid,
+              preset,
+              today,
+              manualDirty,
+            }}
+            display={{
+              settings,
+              viewMode,
+              selectDensity,
+              presentationStyle,
+              setPresentationStyle,
+              availablePresentationOptions,
+              presentationSelection,
+              setPresentationSelection,
+              selectedPresentationCount,
+            }}
+            data={{
+              ordersData,
+              orders,
+              zohoData,
+              zoho,
+              manual,
+              store,
+              sources,
+              ownZoho,
+              setOwnZoho,
+              ownBacklog,
+              setOwnBacklog,
+              backlog,
+            }}
+            actions={{
+              loadZoho,
+              cancelZoho: () => pending.current?.abort(),
+              progress,
+              inspectProfile,
+              profileBusy,
+              profile,
+              error,
+              loadBacklog,
+              cancelBacklog: () => backlogRequest.current?.abort(),
+              backlogBusy,
+              backlogProgress,
+              backlogError,
+            }}
+          />
           <section className="si-presentation-print-title" aria-hidden="true">
             <span>INDICADORES SUPORTE</span>
             <h1>
@@ -2344,7 +1492,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                             </div>
                           </header>
                         )}
-                        <div className="si-story-sections">
+                        <div
+                          className={`si-story-sections${storyKey === 'support-profile' ? ' si-support-profile-stack' : ''}`}
+                        >
                           {groupSections.map((key) => (
                             <section className="si-story-section" data-section={key} key={key}>
                               <div
@@ -2445,57 +1595,57 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         }
                                       />
                                     </div>
-                                  {contentViewMode === 'compact' && (
-                                    <div className="si-agent-closed-rate">
-                                      <h4>
-                                        Tempo apontado ÷ chamados fechados · Zoho{' '}
-                                        <InfoNote label="Como interpretar este indicador">
-                                          Soma do tempo apontado pelo agente dividida pelos chamados
-                                          fechados por ele no período. É uma razão entre totais, não
-                                          a duração média de chamados individualizados; o tempo
-                                          apontado também pode incluir chamados que não foram
-                                          fechados no período.
-                                        </InfoNote>
-                                      </h4>
-                                      <Chart
-                                        compact
-                                        title="Tempo apontado por chamado fechado · Zoho"
-                                        items={(zoho?.agents || [])
-                                          .filter(
-                                            (agent) =>
-                                              Number.isFinite(agent.seconds) &&
-                                              Number.isFinite(agent.closed) &&
-                                              agent.closed > 0,
-                                          )
-                                          .map((agent) => ({
-                                            id: agent.id,
-                                            label: agent.name,
-                                            value: agent.seconds / agent.closed,
-                                            caption: `${number(agent.closed)} fechados`,
-                                          }))}
-                                        format={minutesPerClosure}
-                                        emptyTitle={
-                                          !zohoData
-                                            ? 'Zoho ainda não consultado'
-                                            : !zoho
-                                              ? 'Consulta sem cobertura completa'
-                                              : 'Sem base para esta comparação'
-                                        }
-                                        emptyDescription={
-                                          !zohoData
-                                            ? 'Consulte o Zoho para comparar tempo apontado e chamados fechados por agente.'
-                                            : !zoho
-                                              ? 'Atualize a consulta para cobrir todo o período selecionado.'
-                                              : 'É necessário haver chamados fechados no período para calcular a razão.'
-                                        }
-                                        exportNote="Razão entre o tempo total apontado e chamados fechados pelo agente no período. Não representa a duração média de chamados individualizados."
-                                      />
-                                      <small>
-                                        Tempo apontado total ÷ fechados no período; razão entre
-                                        totais.
-                                      </small>
-                                    </div>
-                                  )}
+                                    {contentViewMode === 'compact' && (
+                                      <div className="si-agent-closed-rate">
+                                        <h4>
+                                          Tempo apontado ÷ chamados fechados · Zoho{' '}
+                                          <InfoNote label="Como interpretar este indicador">
+                                            Soma do tempo apontado pelo agente dividida pelos
+                                            chamados fechados por ele no período. É uma razão entre
+                                            totais, não a duração média de chamados
+                                            individualizados; o tempo apontado também pode incluir
+                                            chamados que não foram fechados no período.
+                                          </InfoNote>
+                                        </h4>
+                                        <Chart
+                                          compact
+                                          title="Tempo apontado por chamado fechado · Zoho"
+                                          items={(zoho?.agents || [])
+                                            .filter(
+                                              (agent) =>
+                                                Number.isFinite(agent.seconds) &&
+                                                Number.isFinite(agent.closed) &&
+                                                agent.closed > 0,
+                                            )
+                                            .map((agent) => ({
+                                              id: agent.id,
+                                              label: agent.name,
+                                              value: agent.seconds / agent.closed,
+                                              caption: `${number(agent.closed)} fechados`,
+                                            }))}
+                                          format={minutesPerClosure}
+                                          emptyTitle={
+                                            !zohoData
+                                              ? 'Zoho ainda não consultado'
+                                              : !zoho
+                                                ? 'Consulta sem cobertura completa'
+                                                : 'Sem base para esta comparação'
+                                          }
+                                          emptyDescription={
+                                            !zohoData
+                                              ? 'Consulte o Zoho para comparar tempo apontado e chamados fechados por agente.'
+                                              : !zoho
+                                                ? 'Atualize a consulta para cobrir todo o período selecionado.'
+                                                : 'É necessário haver chamados fechados no período para calcular a razão.'
+                                          }
+                                          exportNote="Razão entre o tempo total apontado e chamados fechados pelo agente no período. Não representa a duração média de chamados individualizados."
+                                        />
+                                        <small>
+                                          Tempo apontado total ÷ fechados no período; razão entre
+                                          totais.
+                                        </small>
+                                      </div>
+                                    )}
                                   </div>
                                   {contentViewMode === 'compact' && !isNarrowViewport ? (
                                     <div className="si-agent-metric-table">
@@ -2547,156 +1697,174 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                               )}
                               {key === 'evolution' && (
                                 <>
-                                <div className="si-chart-grid">
-                                  <div>
-                                    <h4>Serviços efetivos por dia · OS</h4>
-                                    <Chart
-                                      compact
-                                      height={contentViewMode === 'compact' ? 155 : 205}
-                                      showDrilldownHint={false}
-                                      title="Serviços efetivos por dia"
-                                      type="line"
-                                      emptyTitle={
-                                        !ordersData
-                                          ? 'Planilha OS não carregada'
-                                          : orders?.unavailable
-                                            ? 'Colunas necessárias ausentes'
-                                            : 'Nenhuma execução neste recorte'
-                                      }
-                                      emptyDescription={
-                                        !ordersData
-                                          ? 'Carregue a planilha de Ordens de Serviço para ver a evolução diária.'
-                                          : orders?.unavailable
-                                            ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
-                                            : 'A planilha foi lida, mas não há execuções efetivas no período e nos filtros atuais.'
-                                      }
-                                      items={
-                                        hasOrders
-                                          ? orders.daily.map((d) => ({
-                                              label: date(d.label),
-                                              detailKey: d.label,
-                                              value: d.executed,
-                                            }))
-                                          : []
-                                      }
-                                      onItemClick={(item) =>
-                                        showOrderDetails(
-                                          `Execuções efetivas · ${item.label}`,
-                                          (row) =>
-                                            row.execution && row.executedAt === item.detailKey,
-                                        )
-                                      }
-                                    />
-                                    <small>
-                                      Pela data de atendimento; improdutivas ficam fora das
-                                      execuções.
-                                    </small>
-                                  </div>
-                                  <div>
-                                    <h4>Agendamentos por dia · OS</h4>
-                                    <Chart
-                                      compact
-                                      height={contentViewMode === 'compact' ? 155 : 205}
-                                      showDrilldownHint={false}
-                                      title="Agendamentos por dia"
-                                      type="line"
-                                      emptyTitle={
-                                        !ordersData
-                                          ? 'Planilha OS não carregada'
-                                          : orders?.unavailable
-                                            ? 'Colunas necessárias ausentes'
-                                            : 'Nenhum agendamento neste recorte'
-                                      }
-                                      emptyDescription={
-                                        !ordersData
-                                          ? 'Carregue a planilha de Ordens de Serviço para ver os agendamentos.'
-                                          : orders?.unavailable
-                                            ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
-                                            : 'A planilha foi lida, mas não há agendamentos no período e nos filtros atuais.'
-                                      }
-                                      items={
-                                        hasOrders
-                                          ? orders.daily.map((d) => ({
-                                              label: date(d.label),
-                                              detailKey: d.label,
-                                              value: d.scheduled,
-                                            }))
-                                          : []
-                                      }
-                                      onItemClick={(item) =>
-                                        showOrderDetails(
-                                          `Agendamentos · ${item.label}`,
-                                          (row) =>
-                                            row.scheduling && row.scheduledAt === item.detailKey,
-                                          'scheduling',
-                                        )
-                                      }
-                                    />
-                                    <small>
-                                      Usa a data marcada na agenda; não representa conversão das
-                                      mesmas OS em execução.
-                                    </small>
-                                  </div>
-                                  <div>
-                                    <h4>Tempo apontado por dia · Zoho</h4>
-                                    <Chart
-                                      compact
-                                      height={contentViewMode === 'compact' ? 155 : 205}
-                                      showDrilldownHint={false}
-                                      title="Tempo apontado por dia"
-                                      type="line"
-                                      emptyTitle={
-                                        !zohoData
-                                          ? 'Zoho ainda não consultado'
-                                          : !zoho
-                                            ? 'Consulta sem cobertura completa'
-                                            : 'Nenhum apontamento neste recorte'
-                                      }
-                                      emptyDescription={
-                                        !zohoData
-                                          ? 'Consulte o Zoho para visualizar a evolução do tempo apontado.'
-                                          : !zoho
-                                            ? 'Atualize a consulta para cobrir todo o período selecionado.'
-                                            : 'A consulta cobre o período, mas não encontrou apontamentos válidos.'
-                                      }
-                                      items={(zoho?.daily || []).map((d) => ({
-                                        label: date(d.label),
-                                        detailKey: d.label,
-                                        value: d.value / 3600,
-                                      }))}
-                                      format={(n) =>
-                                        `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}h`
-                                      }
-                                      onItemClick={(item) =>
-                                        showZohoTimeDetails(
-                                          `Tempo apontado · ${item.label}`,
-                                          (row) => zohoDay(row.executedTime) === item.detailKey,
-                                        )
-                                      }
-                                    />
-                                    <small>
-                                      Dias sem apontamentos não são preenchidos com tempo presumido.
-                                    </small>
-                                  </div>
-                                </div>
-                                {hasOrders && (
-                                  <>
-                                    <small className="si-stage-count-note">
-                                      Total no período: <strong>{number(orders.totalStages)} etapas</strong>
-                                      {' '}— agenda + execução; a mesma OS pode aparecer nas duas etapas.
-                                    </small>
-                                    <details className="si-report-expandable si-daily-stage-total" open={presentationMode}>
-                                      <summary>Etapas por dia · agenda + execução</summary>
-                                      <Table
-                                        headers={['Data', 'Agendados', 'Executados efetivos', 'Total de etapas']}
-                                        rows={orders.daily.map((day) => [date(day.label), day.scheduled, day.executed, day.scheduled + day.executed])}
-                                        numericColumns={[1, 2, 3]}
+                                  <div className="si-chart-grid">
+                                    <div>
+                                      <h4>Serviços efetivos por dia · OS</h4>
+                                      <Chart
+                                        compact
+                                        height={contentViewMode === 'compact' ? 155 : 205}
+                                        showDrilldownHint={false}
+                                        title="Serviços efetivos por dia"
+                                        type="line"
+                                        emptyTitle={
+                                          !ordersData
+                                            ? 'Planilha OS não carregada'
+                                            : orders?.unavailable
+                                              ? 'Colunas necessárias ausentes'
+                                              : 'Nenhuma execução neste recorte'
+                                        }
+                                        emptyDescription={
+                                          !ordersData
+                                            ? 'Carregue a planilha de Ordens de Serviço para ver a evolução diária.'
+                                            : orders?.unavailable
+                                              ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                              : 'A planilha foi lida, mas não há execuções efetivas no período e nos filtros atuais.'
+                                        }
+                                        items={
+                                          hasOrders
+                                            ? orders.daily.map((d) => ({
+                                                label: date(d.label),
+                                                detailKey: d.label,
+                                                value: d.executed,
+                                              }))
+                                            : []
+                                        }
+                                        onItemClick={(item) =>
+                                          showOrderDetails(
+                                            `Execuções efetivas · ${item.label}`,
+                                            (row) =>
+                                              row.execution && row.executedAt === item.detailKey,
+                                          )
+                                        }
                                       />
-                                      <small>Total de etapas não é contagem de OS únicas; a mesma OS pode aparecer na agenda e depois na execução.</small>
-                                    </details>
-                                  </>
-                                )}
-                              </>
+                                      <small>
+                                        Pela data de atendimento; improdutivas ficam fora das
+                                        execuções.
+                                      </small>
+                                    </div>
+                                    <div>
+                                      <h4>Agendamentos por dia · OS</h4>
+                                      <Chart
+                                        compact
+                                        height={contentViewMode === 'compact' ? 155 : 205}
+                                        showDrilldownHint={false}
+                                        title="Agendamentos por dia"
+                                        type="line"
+                                        emptyTitle={
+                                          !ordersData
+                                            ? 'Planilha OS não carregada'
+                                            : orders?.unavailable
+                                              ? 'Colunas necessárias ausentes'
+                                              : 'Nenhum agendamento neste recorte'
+                                        }
+                                        emptyDescription={
+                                          !ordersData
+                                            ? 'Carregue a planilha de Ordens de Serviço para ver os agendamentos.'
+                                            : orders?.unavailable
+                                              ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                              : 'A planilha foi lida, mas não há agendamentos no período e nos filtros atuais.'
+                                        }
+                                        items={
+                                          hasOrders
+                                            ? orders.daily.map((d) => ({
+                                                label: date(d.label),
+                                                detailKey: d.label,
+                                                value: d.scheduled,
+                                              }))
+                                            : []
+                                        }
+                                        onItemClick={(item) =>
+                                          showOrderDetails(
+                                            `Agendamentos · ${item.label}`,
+                                            (row) =>
+                                              row.scheduling && row.scheduledAt === item.detailKey,
+                                            'scheduling',
+                                          )
+                                        }
+                                      />
+                                      <small>
+                                        Usa a data marcada na agenda; não representa conversão das
+                                        mesmas OS em execução.
+                                      </small>
+                                    </div>
+                                    <div>
+                                      <h4>Tempo apontado por dia · Zoho</h4>
+                                      <Chart
+                                        compact
+                                        height={contentViewMode === 'compact' ? 155 : 205}
+                                        showDrilldownHint={false}
+                                        title="Tempo apontado por dia"
+                                        type="line"
+                                        emptyTitle={
+                                          !zohoData
+                                            ? 'Zoho ainda não consultado'
+                                            : !zoho
+                                              ? 'Consulta sem cobertura completa'
+                                              : 'Nenhum apontamento neste recorte'
+                                        }
+                                        emptyDescription={
+                                          !zohoData
+                                            ? 'Consulte o Zoho para visualizar a evolução do tempo apontado.'
+                                            : !zoho
+                                              ? 'Atualize a consulta para cobrir todo o período selecionado.'
+                                              : 'A consulta cobre o período, mas não encontrou apontamentos válidos.'
+                                        }
+                                        items={(zoho?.daily || []).map((d) => ({
+                                          label: date(d.label),
+                                          detailKey: d.label,
+                                          value: d.value / 3600,
+                                        }))}
+                                        format={(n) =>
+                                          `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}h`
+                                        }
+                                        onItemClick={(item) =>
+                                          showZohoTimeDetails(
+                                            `Tempo apontado · ${item.label}`,
+                                            (row) => zohoDay(row.executedTime) === item.detailKey,
+                                          )
+                                        }
+                                      />
+                                      <small>
+                                        Dias sem apontamentos não são preenchidos com tempo
+                                        presumido.
+                                      </small>
+                                    </div>
+                                  </div>
+                                  {hasOrders && (
+                                    <>
+                                      <small className="si-stage-count-note">
+                                        Total no período:{' '}
+                                        <strong>{number(orders.totalStages)} etapas</strong> —
+                                        agenda + execução; a mesma OS pode aparecer nas duas etapas.
+                                      </small>
+                                      <details
+                                        className="si-report-expandable si-daily-stage-total"
+                                        open={presentationMode}
+                                      >
+                                        <summary>Etapas por dia · agenda + execução</summary>
+                                        <Table
+                                          headers={[
+                                            'Data',
+                                            'Agendados',
+                                            'Executados efetivos',
+                                            'Total de etapas',
+                                          ]}
+                                          rows={orders.daily.map((day) => [
+                                            date(day.label),
+                                            day.scheduled,
+                                            day.executed,
+                                            day.scheduled + day.executed,
+                                          ])}
+                                          numericColumns={[1, 2, 3]}
+                                        />
+                                        <small>
+                                          Total de etapas não é contagem de OS únicas; a mesma OS
+                                          pode aparecer na agenda e depois na execução.
+                                        </small>
+                                      </details>
+                                    </>
+                                  )}
+                                </>
                               )}
                               {key === 'types' && (
                                 <>
@@ -2733,7 +1901,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               hasOrders
                                                 ? orders.serviceTypes
                                                     .filter((d) => d.executed > 0)
-                                                    .map((d) => ({ label: d.label, value: d.executed }))
+                                                    .map((d) => ({
+                                                      label: d.label,
+                                                      value: d.executed,
+                                                    }))
                                                 : []
                                             }
                                             onItemClick={(item) =>
@@ -2746,7 +1917,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               )
                                             }
                                           />
-                                          <small>Tipo de serviço; somente execuções efetivas.</small>
+                                          <small>
+                                            Tipo de serviço; somente execuções efetivas.
+                                          </small>
                                         </div>
                                         <div className="si-service-reason-chart">
                                           <h4>Serviços e motivos executados · OS</h4>
@@ -2773,17 +1946,57 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                             onItemClick={(item) =>
                                               showOrderDetails(
                                                 `Serviço executado · ${item.label}`,
-                                                (row) => row.execution && row.service === item.label,
+                                                (row) =>
+                                                  row.execution && row.service === item.label,
                                               )
                                             }
                                           />
-                                          <small>Tipo de serviço + motivo; somente execuções efetivas.</small>
+                                          <small>
+                                            Tipo de serviço + motivo; somente execuções efetivas.
+                                          </small>
+                                        </div>
+                                        <div>
+                                          <h4>Clientes atendidos · OS</h4>
+                                          <Chart
+                                            compact
+                                            title="Execuções efetivas por cliente · OS"
+                                            emptyTitle={
+                                              !ordersData
+                                                ? 'Planilha OS não carregada'
+                                                : orders?.unavailable
+                                                  ? 'Colunas necessárias ausentes'
+                                                  : 'Nenhum cliente com execução neste recorte'
+                                            }
+                                            emptyDescription={
+                                              !ordersData
+                                                ? 'Carregue a planilha de Ordens de Serviço para comparar clientes.'
+                                                : orders?.unavailable
+                                                  ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                                  : 'Não há execuções efetivas por cliente no período e nos filtros atuais.'
+                                            }
+                                            items={
+                                              hasOrders
+                                                ? orders.clients
+                                                    .filter((client) => client.executed > 0)
+                                                    .slice(0, 5)
+                                                    .map((client) => ({
+                                                      label: client.label,
+                                                      displayLabel: client.label.split(' · ')[0],
+                                                      value: client.executed,
+                                                      valueCaption: `Agenda ${number(client.scheduled)}`,
+                                                    }))
+                                                : []
+                                            }
+                                          />
+                                          <small>Top 5 por execuções; agenda como referência.</small>
                                         </div>
                                       </div>
                                       <div className="si-client-service-table si-compact-client-table">
                                         <div className="si-client-table-heading">
-                                          <h4>Clientes atendidos · OS</h4>
-                                          <small>Top 8 por execuções; agenda como referência.</small>
+                                          <h4>Detalhamento por cliente · OS</h4>
+                                          <small>
+                                            Top 8 por execuções; agenda como referência.
+                                          </small>
                                         </div>
                                         <ResponsiveSummaryTable
                                           primaryColumns={[1, 2]}
@@ -2795,19 +2008,25 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                           ]}
                                           rows={
                                             hasOrders
-                                              ? orders.clients.slice(0, 8).map((d) => [
-                                                  d.label,
-                                                  d.scheduled,
-                                                  d.executed,
-                                                  <ServiceList value={d.services} chips />,
-                                                ])
+                                              ? orders.clients
+                                                  .slice(0, 8)
+                                                  .map((d) => [
+                                                    d.label,
+                                                    d.scheduled,
+                                                    d.executed,
+                                                    <ServiceList value={d.services} chips />,
+                                                  ])
                                               : []
                                           }
                                         />
-                                        <small>Em cada serviço: execuções efetivas / agendamentos.</small>
+                                        <small>
+                                          Em cada serviço: execuções efetivas / agendamentos.
+                                        </small>
                                         {hasOrders && orders.clients.length > 8 && (
                                           <details className="si-report-expandable si-client-reasons">
-                                            <summary>Ver todos os clientes ({orders.clients.length})</summary>
+                                            <summary>
+                                              Ver todos os clientes ({orders.clients.length})
+                                            </summary>
                                             <Table
                                               headers={[
                                                 'Cliente',
@@ -2851,7 +2070,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                             hasOrders
                                               ? orders.serviceTypes
                                                   .filter((d) => d.executed > 0)
-                                                  .map((d) => ({ label: d.label, value: d.executed }))
+                                                  .map((d) => ({
+                                                    label: d.label,
+                                                    value: d.executed,
+                                                  }))
                                               : []
                                           }
                                           onItemClick={(item) =>
@@ -2923,7 +2145,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                             service.stages,
                                             service.stageShare == null
                                               ? '—'
-                                              : (service.stageShare * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%',
+                                              : (service.stageShare * 100).toLocaleString('pt-BR', {
+                                                  maximumFractionDigits: 1,
+                                                }) + '%',
                                             service.executed,
                                             service.scheduled,
                                           ])}
@@ -2948,7 +2172,14 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                                   d.executed,
                                                   <ServiceList
                                                     value={d.typeServices
-                                                      .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
+                                                      .map(
+                                                        (item) =>
+                                                          item.label +
+                                                          ': ' +
+                                                          item.executed +
+                                                          '/' +
+                                                          item.scheduled,
+                                                      )
                                                       .join('; ')}
                                                   />,
                                                   <ServiceList value={d.services} />,
@@ -2969,54 +2200,55 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   <>
                                     <div className="si-subject-comparison-grid">
                                       <div className="si-subject-zoho">
-                                    <p className="scope">
-                                      {zohoData?.categoryCatalog
-                                        ? 'Catálogo Zoho · inclui categorias zeradas.'
-                                        : 'Catálogo indisponível · somente categorias encontradas.'}
-                                    </p>
-                                    <Chart
-                                      compact
-                                      title="Categorias dos chamados fechados"
-                                      emptyTitle={
-                                        !zohoData
-                                          ? 'Zoho ainda não consultado'
-                                          : !zoho
-                                            ? 'Consulta sem cobertura completa'
-                                            : 'Nenhuma categoria neste recorte'
-                                      }
-                                      emptyDescription={
-                                        !zohoData
-                                          ? 'Consulte o Zoho para analisar as categorias dos chamados fechados.'
-                                          : !zoho
-                                            ? 'Atualize a consulta para cobrir todo o período selecionado.'
-                                            : 'Nenhuma categoria foi identificada nos chamados fechados deste período.'
-                                      }
-                                      items={zoho.categories}
-                                      onItemClick={(item) =>
-                                        showClosedTicketDetails(
-                                          `Chamados fechados · ${item.label}`,
-                                          (row) => row.category === item.label,
-                                        )
-                                      }
-                                    />
-                                    <details
-                                      className="si-report-expandable si-category-summary"
-                                      open={presentationMode}
-                                    >
-                                      <summary>Tabela por categoria</summary>
-                                      <Table
-                                        headers={[
-                                          'Categoria atual no Zoho',
-                                          'Chamados fechados distintos',
-                                        ]}
-                                        rows={zoho.categories.map((r) => [r.label, r.value])}
-                                      />
-                                    </details>
+                                        <p className="scope">
+                                          {zohoData?.categoryCatalog
+                                            ? 'Catálogo Zoho · inclui categorias zeradas.'
+                                            : 'Catálogo indisponível · somente categorias encontradas.'}
+                                        </p>
+                                        <Chart
+                                          compact
+                                          title="Categorias dos chamados fechados"
+                                          emptyTitle={
+                                            !zohoData
+                                              ? 'Zoho ainda não consultado'
+                                              : !zoho
+                                                ? 'Consulta sem cobertura completa'
+                                                : 'Nenhuma categoria neste recorte'
+                                          }
+                                          emptyDescription={
+                                            !zohoData
+                                              ? 'Consulte o Zoho para analisar as categorias dos chamados fechados.'
+                                              : !zoho
+                                                ? 'Atualize a consulta para cobrir todo o período selecionado.'
+                                                : 'Nenhuma categoria foi identificada nos chamados fechados deste período.'
+                                          }
+                                          items={zoho.categories}
+                                          onItemClick={(item) =>
+                                            showClosedTicketDetails(
+                                              `Chamados fechados · ${item.label}`,
+                                              (row) => row.category === item.label,
+                                            )
+                                          }
+                                        />
+                                        <details
+                                          className="si-report-expandable si-category-summary"
+                                          open={presentationMode}
+                                        >
+                                          <summary>Tabela por categoria</summary>
+                                          <Table
+                                            headers={[
+                                              'Categoria atual no Zoho',
+                                              'Chamados fechados distintos',
+                                            ]}
+                                            rows={zoho.categories.map((r) => [r.label, r.value])}
+                                          />
+                                        </details>
                                       </div>
                                       <section className="si-subject-manual">
                                         <h4>Assuntos do relatório semanal</h4>
                                         <p className="scope">
-                                          Lançamentos manuais por agente. Permanecem separados das categorias atuais do Zoho; não há equivalência presumida.
+                                          Lançamentos manuais por agente. Permanecem separados das
+                                          categorias atuais do Zoho; não há equivalência presumida.
                                         </p>
                                         <Table
                                           headers={[
@@ -3098,9 +2330,16 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     >
                                       <summary>Assuntos informados por agente</summary>
                                       <Table
-                                        headers={['Categoria do relatório', ...shownAgents.map((agent) => agent.name), 'Total informado']}
+                                        headers={[
+                                          'Categoria do relatório',
+                                          ...shownAgents.map((agent) => agent.name),
+                                          'Total informado',
+                                        ]}
                                         rows={manualSubjectMatrixRows}
-                                        numericColumns={[...shownAgents.map((_, index) => index + 1), shownAgents.length + 1]}
+                                        numericColumns={[
+                                          ...shownAgents.map((_, index) => index + 1),
+                                          shownAgents.length + 1,
+                                        ]}
                                       />
                                     </details>
                                   </>

@@ -1,3 +1,7 @@
+## 0.69.63 — 31/10/2026
+
+- No modo Compacto, alinha os quadros de serviços, motivos e clientes atendidos e mantém o detalhamento por cliente logo abaixo.
+
 ## 0.69.62 — 31/10/2026
 
 - Ao receber HTTP 530 do Zoho, informa a etapa e o host consultado e, quando fornecidos pela resposta, o código Cloudflare e o Ray ID.
