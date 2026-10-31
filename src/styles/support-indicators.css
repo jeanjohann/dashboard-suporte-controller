@@ -1134,7 +1134,9 @@
   border-top: 1px solid var(--ui-line);
 }
 .si-compact-mode .si-story-section[data-section='types'] .si-client-service-chips li > span {
-  white-space: nowrap;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .si-compact-mode .si-story-section[data-section='types'] .si-client-service-chips li > strong {
   color: var(--chart-blue);
@@ -2584,12 +2586,24 @@
   .support-indicators-page.si-compact-mode .si-stage-count-note { display:block; margin:2px 0 6px; color:var(--ui-muted); font-size:10px; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='agents'] .si-agent-service-breakdown .si-table,
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-service-type-summary .si-table { max-height:none; overflow:visible; }
+  .support-indicators-page.si-compact-mode .si-agent-metric-table .si-table,
+  .support-indicators-page.si-compact-mode .si-compact-client-table .si-table,
+  .support-indicators-page.si-compact-mode .si-client-service-table .si-table { max-height:none; overflow:visible; }
+  .support-indicators-page.si-compact-mode .si-agent-metric-table .si-table { margin-top:8px; }
+  .support-indicators-page.si-compact-mode .si-agent-metric-table table,
+  .support-indicators-page.si-compact-mode .si-compact-client-table .si-table table { width:100%; min-width:0; table-layout:fixed; }
+  .support-indicators-page.si-compact-mode .si-agent-metric-table th:first-child,
+  .support-indicators-page.si-compact-mode .si-agent-metric-table td:first-child { width:42%; }
+  .support-indicators-page.si-compact-mode .si-agent-metric-table th,
+  .support-indicators-page.si-compact-mode .si-agent-metric-table td { padding:4px 7px; font-size:10px; line-height:1.25; overflow-wrap:anywhere; }
+  .support-indicators-page.si-compact-mode .si-service-reason-chart { min-width:0; margin-top:10px; }
+  .support-indicators-page.si-compact-mode .si-service-reason-chart h4 { margin:8px 0 4px; }
+  .support-indicators-page.si-compact-mode .si-service-reason-chart .readable-bars { max-height:none; overflow:visible; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table .si-table table { width:100%; min-width:0; table-layout:fixed; }
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:first-child { width:18%; }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:first-child { width:22%; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:nth-child(2),
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:nth-child(3) { width:7%; }
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:nth-child(4) { width:25%; }
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:nth-child(5) { width:43%; }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:nth-child(3) { width:8%; }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:nth-child(4) { width:62%; }
   .support-indicators-page .si-subject-comparison-grid { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:12px; align-items:start; }
   .support-indicators-page .si-subject-manual .si-table { max-height:none; overflow:visible; }
   .support-indicators-page .si-subject-manual .si-table th,
@@ -2616,6 +2630,7 @@
   .support-indicators-page.si-compact-mode .si-story[data-story='support-profile'] .si-story-heading { display:none; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='agents'],
   .support-indicators-page.si-compact-mode .si-story-section[data-section='subjects'] { grid-column:auto; }
+  .support-indicators-page.si-compact-mode .si-sections { align-items:stretch; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='manual'] { grid-column:1 / -1; }
   .support-indicators-page.si-compact-mode .si-type-client-details-grid {
     display:grid;
@@ -2626,7 +2641,7 @@
   .support-indicators-page.si-compact-mode .si-type-client-details-grid > * { min-width:0; }
   .support-indicators-page.si-compact-mode .si-type-client-details-grid .si-service-type-summary { grid-column:1 / -1; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-types-compact-grid {
-    grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
     align-items:start;
   }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-types-compact-grid > div { height:auto; }
@@ -2643,6 +2658,10 @@
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table .si-table {
     max-height:none;
     overflow:visible;
+  }
+  .support-indicators-page.si-compact-mode .si-compact-client-table .si-client-service-chips li > span {
+    white-space:normal;
+    overflow-wrap:anywhere;
   }
 }
 @media screen and (min-width:901px) and (max-width:1100px) {

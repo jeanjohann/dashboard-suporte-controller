@@ -1,3 +1,8 @@
+## 0.69.60 — 31/10/2026
+
+- Ajusta o modo Compacto dos Indicadores Suporte para mostrar os indicadores por agente sem rolagem horizontal, alinhar serviços e clientes, e exibir serviço e motivo dos atendimentos em linhas completas.
+- Preserva o modo Editorial e as regras de negócio.
+
 ## 0.69.59 — 31/10/2026
 
 - Reorganiza o modo Compacto dos Indicadores Suporte: evolução primeiro, serviços e clientes lado a lado, e desempenho da equipe junto aos assuntos dos chamados.

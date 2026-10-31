@@ -925,6 +925,20 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       m?.activities ?? null,
     ];
   });
+  const agentMetricHeaders = ['Indicador', ...shownAgents.map((agent) => agent.name)];
+  const agentMetricRows = [
+    ['Agendados · OS', ...agentRows.map((row) => row[1])],
+    ['Executados efetivos · OS', ...agentRows.map((row) => row[2])],
+    ['Etapas · agenda + execução', ...agentRows.map((row) => row[3])],
+    [zoho?.created != null ? 'Criados pelo agente · Zoho' : 'Criados · manual', ...agentRows.map((row) => row[4])],
+    ['Pendentes agora · Zoho', ...agentRows.map((row) => row[5])],
+    ['Em espera agora · Zoho', ...agentRows.map((row) => row[6])],
+    ['Fechados · Zoho', ...agentRows.map((row) => row[7])],
+    ['Eventos · criados + fechados', ...agentRows.map((row) => row[8])],
+    ['Tempo apontado · Zoho', ...agentRows.map((row) => row[9])],
+    ['Equipamentos · manual', ...agentRows.map((row) => row[10])],
+    ['Atividades · manual', ...agentRows.map((row) => row[11])],
+  ];
   const agentServiceRows = hasOrders
     ? orders.agentServices
         .filter((row) => !agentId || row.agentId === agentId)
@@ -2428,27 +2442,33 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       />
                                     </div>
                                   </div>
-                                  <ResponsiveSummaryTable
-                                    numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 10, 11]}
-                                    primaryColumns={[1, 2, 3, 7, 9]}
-                                    headers={[
-                                      'Agente',
-                                      'Agendados · OS',
-                                      'Executados · OS',
-                                      'Etapas · agenda + execução',
-                                      zoho?.created != null
-                                        ? 'Criados pelo agente · Zoho'
-                                        : 'Criados · manual',
-                                      'Pendentes agora · Zoho',
-                                      'Em espera agora · Zoho',
-                                      'Fechados · Zoho',
-                                      'Eventos · criados + fechados',
-                                      'Tempo · Zoho',
-                                      'Equipamentos · manual',
-                                      'Atividades · manual',
-                                    ]}
-                                    rows={agentRows}
-                                  />
+                                  {contentViewMode === 'compact' && !isNarrowViewport ? (
+                                    <div className="si-agent-metric-table">
+                                      <Table headers={agentMetricHeaders} rows={agentMetricRows} />
+                                    </div>
+                                  ) : (
+                                    <ResponsiveSummaryTable
+                                      numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 10, 11]}
+                                      primaryColumns={[1, 2, 3, 7, 9]}
+                                      headers={[
+                                        'Agente',
+                                        'Agendados · OS',
+                                        'Executados · OS',
+                                        'Etapas · agenda + execução',
+                                        zoho?.created != null
+                                          ? 'Criados pelo agente · Zoho'
+                                          : 'Criados · manual',
+                                        'Pendentes agora · Zoho',
+                                        'Em espera agora · Zoho',
+                                        'Fechados · Zoho',
+                                        'Eventos · criados + fechados',
+                                        'Tempo · Zoho',
+                                        'Equipamentos · manual',
+                                        'Atividades · manual',
+                                      ]}
+                                      rows={agentRows}
+                                    />
+                                  )}
                                   <details
                                     className="si-report-expandable si-agent-service-breakdown"
                                     open={presentationMode || contentViewMode === 'compact'}
@@ -2674,6 +2694,38 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         }
                                       />
                                       <small>Tipo de serviço; somente execuções efetivas.</small>
+                                      {contentViewMode === 'compact' && (
+                                        <div className="si-service-reason-chart">
+                                          <h4>Serviços e motivos executados · OS</h4>
+                                          <Chart
+                                            compact
+                                            title="Serviços e motivos executados"
+                                            emptyTitle={
+                                              ordersData
+                                                ? 'Nenhum serviço executado neste recorte'
+                                                : 'Planilha OS não carregada'
+                                            }
+                                            emptyDescription="Os detalhes combinam tipo de serviço e motivo da OS; somente execuções efetivas."
+                                            items={
+                                              hasOrders
+                                                ? orders.services
+                                                    .filter((service) => service.executed > 0)
+                                                    .slice(0, 8)
+                                                    .map((service) => ({
+                                                      label: service.label,
+                                                      value: service.executed,
+                                                    }))
+                                                : []
+                                            }
+                                            onItemClick={(item) =>
+                                              showOrderDetails(
+                                                `Serviço executado · ${item.label}`,
+                                                (row) => row.execution && row.service === item.label,
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      )}
                                     </div>
                                     {contentViewMode === 'compact' ? (
                                       <div className="si-client-service-table si-compact-client-table">
@@ -2684,8 +2736,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                             'Cliente',
                                             'Agendados',
                                             'Executados',
-                                            'Tipo de serviço (exec. / agend.)',
-                                            'Serviço + motivo (exec. / agend.)',
+                                            'Serviço + motivo (execuções / agendamentos)',
                                           ]}
                                           rows={
                                             hasOrders
@@ -2693,12 +2744,6 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                                   d.label,
                                                   d.scheduled,
                                                   d.executed,
-                                                  <ServiceList
-                                                    value={d.typeServices
-                                                      .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
-                                                      .join('; ')}
-                                                    chips
-                                                  />,
                                                   <ServiceList value={d.services} chips />,
                                                 ])
                                               : []
@@ -2713,19 +2758,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                                 'Cliente',
                                                 'Agendados',
                                                 'Executados',
-                                                'Tipo de serviço (exec. / agend.)',
-                                                'Serviço + motivo (exec. / agend.)',
+                                              'Serviço + motivo (execuções / agendamentos)',
                                               ]}
                                               rows={orders.clients.map((d) => [
                                                 d.label,
                                                 d.scheduled,
                                                 d.executed,
-                                                <ServiceList
-                                                  value={d.typeServices
-                                                    .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
-                                                    .join('; ')}
-                                                  chips
-                                                />,
                                                 <ServiceList value={d.services} chips />,
                                               ])}
                                             />
