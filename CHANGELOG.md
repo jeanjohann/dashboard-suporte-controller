@@ -1,3 +1,7 @@
+## 0.69.65 — 31/10/2026
+
+- Corrige a abertura das configurações dos Indicadores Suporte para administradores.
+
 ## 0.69.64 — 31/10/2026
 
 - Adiciona Glance como quarta opção de tema, com paleta própria e navegação horizontal em telas desktop.

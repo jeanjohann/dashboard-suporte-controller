@@ -1,6 +1,6 @@
 import React from 'react';
 import { WorkspaceQueryPanel } from '../../../shared/persistence/WorkspaceQueryPanel.jsx';
-import { agents } from '../domain/indicators.js';
+import { agents, periodDays } from '../domain/indicators.js';
 import { SourceCoverage } from './SupportIndicatorViews.jsx';
 import { IndicatorSettings } from './IndicatorSettings.jsx';
 import { date, number, timestamp } from './supportIndicatorFormat.js';
@@ -392,7 +392,7 @@ export function SupportIndicatorSettingsDialog({
                   !valid ||
                   busy ||
                   backlogBusy ||
-                  periodDaysSafe(period) > 31 ||
+                  periodDays(period) > 31 ||
                   period.start > today
                 }
                 onClick={loadZoho}
