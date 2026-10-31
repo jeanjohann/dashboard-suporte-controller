@@ -1,3 +1,8 @@
+## 0.69.62 — 31/10/2026
+
+- Ao receber HTTP 530 do Zoho, informa a etapa e o host consultado e, quando fornecidos pela resposta, o código Cloudflare e o Ray ID.
+- Lê somente os primeiros 8 KB da resposta de erro para extrair esses metadados; não registra nem exibe o corpo bruto ou credenciais.
+
 ## 0.69.61 — 31/10/2026
 
 - Organiza no modo Compacto os gráficos de serviços e motivos junto à tabela de clientes, reduzindo espaços vazios e rolagem interna.

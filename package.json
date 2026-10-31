@@ -1,6 +1,6 @@
 {
   "name": "dashboard-suporte",
-  "version": "0.69.61",
+  "version": "0.69.62",
   "private": true,
   "type": "module",
   "packageManager": "npm@11.12.1",
