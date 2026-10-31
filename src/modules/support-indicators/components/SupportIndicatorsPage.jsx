@@ -41,6 +41,10 @@ import { IndicatorSettings } from './IndicatorSettings.jsx';
 import { useDashboardPresentation } from '../../my-dashboard/hooks/useDashboardPresentation.js';
 
 const number = (n) => (n == null ? 'Sem dados' : n.toLocaleString('pt-BR'));
+const minutesPerClosure = (seconds) =>
+  seconds == null
+    ? 'Sem dados'
+    : `${(seconds / 60).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} min`;
 const date = (d) => (d ? d.split('-').reverse().join('/') : '—');
 const timestamp = (value) =>
   new Date(value).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
@@ -2441,6 +2445,57 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         }
                                       />
                                     </div>
+                                  {contentViewMode === 'compact' && (
+                                    <div className="si-agent-closed-rate">
+                                      <h4>
+                                        Tempo apontado ÷ chamados fechados · Zoho{' '}
+                                        <InfoNote label="Como interpretar este indicador">
+                                          Soma do tempo apontado pelo agente dividida pelos chamados
+                                          fechados por ele no período. É uma razão entre totais, não
+                                          a duração média de chamados individualizados; o tempo
+                                          apontado também pode incluir chamados que não foram
+                                          fechados no período.
+                                        </InfoNote>
+                                      </h4>
+                                      <Chart
+                                        compact
+                                        title="Tempo apontado por chamado fechado · Zoho"
+                                        items={(zoho?.agents || [])
+                                          .filter(
+                                            (agent) =>
+                                              Number.isFinite(agent.seconds) &&
+                                              Number.isFinite(agent.closed) &&
+                                              agent.closed > 0,
+                                          )
+                                          .map((agent) => ({
+                                            id: agent.id,
+                                            label: agent.name,
+                                            value: agent.seconds / agent.closed,
+                                            caption: `${number(agent.closed)} fechados`,
+                                          }))}
+                                        format={minutesPerClosure}
+                                        emptyTitle={
+                                          !zohoData
+                                            ? 'Zoho ainda não consultado'
+                                            : !zoho
+                                              ? 'Consulta sem cobertura completa'
+                                              : 'Sem base para esta comparação'
+                                        }
+                                        emptyDescription={
+                                          !zohoData
+                                            ? 'Consulte o Zoho para comparar tempo apontado e chamados fechados por agente.'
+                                            : !zoho
+                                              ? 'Atualize a consulta para cobrir todo o período selecionado.'
+                                              : 'É necessário haver chamados fechados no período para calcular a razão.'
+                                        }
+                                        exportNote="Razão entre o tempo total apontado e chamados fechados pelo agente no período. Não representa a duração média de chamados individualizados."
+                                      />
+                                      <small>
+                                        Tempo apontado total ÷ fechados no período; razão entre
+                                        totais.
+                                      </small>
+                                    </div>
+                                  )}
                                   </div>
                                   {contentViewMode === 'compact' && !isNarrowViewport ? (
                                     <div className="si-agent-metric-table">
@@ -2652,49 +2707,47 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       aparece à parte para não sugerir conversão automática.
                                     </p>
                                   )}
-                                  <div className={`si-chart-grid${contentViewMode === 'compact' ? ' si-types-compact-grid' : ''}`}>
-                                    <div>
-                                      <h4>
-                                        {contentViewMode === 'editorial'
-                                          ? '1 · O que foi executado?'
-                                          : 'Serviços executados · OS'}
-                                      </h4>
-                                      <Chart
-                                        compact
-                                        title="Execuções efetivas por tipo de serviço · OS"
-                                        emptyTitle={
-                                          !ordersData
-                                            ? 'Planilha OS não carregada'
-                                            : orders?.unavailable
-                                              ? 'Colunas necessárias ausentes'
-                                              : 'Nenhuma execução por tipo neste recorte'
-                                        }
-                                        emptyDescription={
-                                          !ordersData
-                                            ? 'Carregue a planilha de Ordens de Serviço para ver os serviços realizados.'
-                                            : orders?.unavailable
-                                              ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
-                                              : 'Não há execuções efetivas por tipo no período e nos filtros atuais.'
-                                        }
-                                        items={
-                                          hasOrders
-                                            ? orders.serviceTypes
-                                                .filter((d) => d.executed > 0)
-                                                .map((d) => ({ label: d.label, value: d.executed }))
-                                            : []
-                                        }
-                                        onItemClick={(item) =>
-                                          showOrderDetails(
-                                            `Execuções efetivas · ${item.label}`,
-                                            (row) =>
-                                              row.execution &&
-                                              (row.service === item.label ||
-                                                row.service.startsWith(item.label + ' · ')),
-                                          )
-                                        }
-                                      />
-                                      <small>Tipo de serviço; somente execuções efetivas.</small>
-                                      {contentViewMode === 'compact' && (
+                                  {contentViewMode === 'compact' ? (
+                                    <div className="si-compact-services-clients">
+                                      <div className="si-compact-service-charts">
+                                        <div>
+                                          <h4>Serviços executados · OS</h4>
+                                          <Chart
+                                            compact
+                                            title="Execuções efetivas por tipo de serviço · OS"
+                                            emptyTitle={
+                                              !ordersData
+                                                ? 'Planilha OS não carregada'
+                                                : orders?.unavailable
+                                                  ? 'Colunas necessárias ausentes'
+                                                  : 'Nenhuma execução por tipo neste recorte'
+                                            }
+                                            emptyDescription={
+                                              !ordersData
+                                                ? 'Carregue a planilha de Ordens de Serviço para ver os serviços realizados.'
+                                                : orders?.unavailable
+                                                  ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                                  : 'Não há execuções efetivas por tipo no período e nos filtros atuais.'
+                                            }
+                                            items={
+                                              hasOrders
+                                                ? orders.serviceTypes
+                                                    .filter((d) => d.executed > 0)
+                                                    .map((d) => ({ label: d.label, value: d.executed }))
+                                                : []
+                                            }
+                                            onItemClick={(item) =>
+                                              showOrderDetails(
+                                                `Execuções efetivas · ${item.label}`,
+                                                (row) =>
+                                                  row.execution &&
+                                                  (row.service === item.label ||
+                                                    row.service.startsWith(item.label + ' · ')),
+                                              )
+                                            }
+                                          />
+                                          <small>Tipo de serviço; somente execuções efetivas.</small>
+                                        </div>
                                         <div className="si-service-reason-chart">
                                           <h4>Serviços e motivos executados · OS</h4>
                                           <Chart
@@ -2724,12 +2777,14 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               )
                                             }
                                           />
+                                          <small>Tipo de serviço + motivo; somente execuções efetivas.</small>
                                         </div>
-                                      )}
-                                    </div>
-                                    {contentViewMode === 'compact' ? (
+                                      </div>
                                       <div className="si-client-service-table si-compact-client-table">
-                                        <h4>Clientes atendidos · OS</h4>
+                                        <div className="si-client-table-heading">
+                                          <h4>Clientes atendidos · OS</h4>
+                                          <small>Top 8 por execuções; agenda como referência.</small>
+                                        </div>
                                         <ResponsiveSummaryTable
                                           primaryColumns={[1, 2]}
                                           headers={[
@@ -2749,7 +2804,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               : []
                                           }
                                         />
-                                        <small>Top 8 por execuções efetivas; agenda como referência. Em cada serviço: execuções / agendamentos.</small>
+                                        <small>Em cada serviço: execuções efetivas / agendamentos.</small>
                                         {hasOrders && orders.clients.length > 8 && (
                                           <details className="si-report-expandable si-client-reasons">
                                             <summary>Ver todos os clientes ({orders.clients.length})</summary>
@@ -2758,7 +2813,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                                 'Cliente',
                                                 'Agendados',
                                                 'Executados',
-                                              'Serviço + motivo (execuções / agendamentos)',
+                                                'Serviço + motivo (execuções / agendamentos)',
                                               ]}
                                               rows={orders.clients.map((d) => [
                                                 d.label,
@@ -2770,149 +2825,143 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                           </details>
                                         )}
                                       </div>
-                                    ) : (
-                                    <div>
-                                      <h4>
-                                        {contentViewMode === 'editorial'
-                                          ? '2 · Onde o trabalho se concentrou?'
-                                          : 'Clientes atendidos · OS'}
-                                      </h4>
-                                      <Chart
-                                        compact
-                                        title="Execuções efetivas por cliente · OS"
-                                        emptyTitle={
-                                          !ordersData
-                                            ? 'Planilha OS não carregada'
-                                            : orders?.unavailable
-                                              ? 'Colunas necessárias ausentes'
-                                              : 'Nenhum cliente com execução neste recorte'
-                                        }
-                                        emptyDescription={
-                                          !ordersData
-                                            ? 'Carregue a planilha de Ordens de Serviço para comparar clientes.'
-                                            : orders?.unavailable
-                                              ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
-                                              : 'Não há execuções efetivas por cliente no período e nos filtros atuais.'
-                                        }
-                                        items={
-                                          hasOrders
-                                            ? orders.clients
-                                                .filter((d) => d.executed > 0)
-                                                .slice(0, 5)
-                                                .map((d) => ({
-                                                  label: d.label,
-                                                  displayLabel: d.label.split(' · ')[0],
-                                                  value: d.executed,
-                                                  valueCaption: `Agenda ${number(d.scheduled)}`,
-                                                }))
-                                            : []
-                                        }
-                                      />
-                                      <small>Top 5 por execuções; agenda como referência.</small>
                                     </div>
-                                    )}
-                                  </div>
-                                  <div className="si-type-client-details-grid">
-                                  <details
-                                    className="si-report-expandable si-service-type-summary"
-                                    open={presentationMode || contentViewMode === 'editorial'}
-                                  >
-                                    <summary>Resumo por tipo de serviço</summary>
-                                    <Table
-                                      headers={[
-                                        'Tipo de serviço · OS',
-                                        'Etapas',
-                                        'Participação das etapas',
-                                        'Executados efetivos',
-                                        'Agendamentos',
-                                      ]}
-                                      rows={(orders?.serviceTypes || []).map((service) => [
-                                        service.label,
-                                        service.stages,
-                                        service.stageShare == null
-                                          ? '—'
-                                          : (service.stageShare * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%',
-                                        service.executed,
-                                        service.scheduled,
-                                      ])}
-                                      numericColumns={[1, 2, 3, 4]}
-                                    />
-                                  </details>
-                                  {contentViewMode !== 'compact' && <div className="si-client-service-table">
-                                    <ResponsiveSummaryTable
-                                      primaryColumns={[1, 2]}
-                                      headers={[
-                                        'Cliente',
-                                        'Agendados',
-                                        'Executados',
-                                        'Tipo de serviço (exec. / agend.)',
-                                        'Serviço + motivo (exec. / agend.)',
-                                      ]}
-                                      rows={
-                                        hasOrders
-                                          ? orders.clients
-                                              .slice(
-                                                0,
-                                                contentViewMode === 'compact' ? 8 : undefined,
-                                              )
-                                              .map((d) => [
-                                                d.label,
-                                                d.scheduled,
-                                                d.executed,
-                                                <ServiceList
-                                                  value={d.typeServices
-                                                    .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
-                                                    .join('; ')}
-                                                  chips={contentViewMode === 'compact'}
-                                                />,
-                                                <ServiceList
-                                                  value={d.services}
-                                                  chips={contentViewMode === 'compact'}
-                                                />,
-                                              ])
-                                          : []
-                                      }
-                                    />
-                                    <small>
-                                      Em cada serviço: execuções efetivas / agendamentos.
-                                    </small>
-                                    {contentViewMode === 'compact' &&
-                                      orders?.clients.length > 8 && (
-                                        <details
-                                          className="si-report-expandable si-client-reasons"
-                                          open={presentationMode}
-                                        >
-                                          <summary>
-                                            Ver todos os clientes ({orders.clients.length})
-                                          </summary>
-                                          <Table
-                                            headers={[
-                                              'Cliente',
-                                              'Agendados',
-                                              'Executados',
-                                              'Tipo de serviço (exec. / agend.)',
-                                        'Serviço + motivo (exec. / agend.)',
-                                            ]}
-                                            rows={orders.clients.map((d) => [
-                                              d.label,
-                                              d.scheduled,
-                                              d.executed,
-                                              <ServiceList
-                                                value={d.typeServices
-                                                  .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
-                                                  .join('; ')}
-                                                chips={contentViewMode === 'compact'}
-                                              />,
-                                              <ServiceList
-                                                value={d.services}
-                                                chips={contentViewMode === 'compact'}
-                                              />,
-                                            ])}
-                                          />
-                                        </details>
-                                      )}
-                                  </div>}
-                                  </div>
+                                  ) : (
+                                    <div className="si-chart-grid">
+                                      <div>
+                                        <h4>1 · O que foi executado?</h4>
+                                        <Chart
+                                          compact
+                                          title="Execuções efetivas por tipo de serviço · OS"
+                                          emptyTitle={
+                                            !ordersData
+                                              ? 'Planilha OS não carregada'
+                                              : orders?.unavailable
+                                                ? 'Colunas necessárias ausentes'
+                                                : 'Nenhuma execução por tipo neste recorte'
+                                          }
+                                          emptyDescription={
+                                            !ordersData
+                                              ? 'Carregue a planilha de Ordens de Serviço para ver os serviços realizados.'
+                                              : orders?.unavailable
+                                                ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                                : 'Não há execuções efetivas por tipo no período e nos filtros atuais.'
+                                          }
+                                          items={
+                                            hasOrders
+                                              ? orders.serviceTypes
+                                                  .filter((d) => d.executed > 0)
+                                                  .map((d) => ({ label: d.label, value: d.executed }))
+                                              : []
+                                          }
+                                          onItemClick={(item) =>
+                                            showOrderDetails(
+                                              `Execuções efetivas · ${item.label}`,
+                                              (row) =>
+                                                row.execution &&
+                                                (row.service === item.label ||
+                                                  row.service.startsWith(item.label + ' · ')),
+                                            )
+                                          }
+                                        />
+                                        <small>Tipo de serviço; somente execuções efetivas.</small>
+                                      </div>
+                                      <div>
+                                        <h4>2 · Onde o trabalho se concentrou?</h4>
+                                        <Chart
+                                          compact
+                                          title="Execuções efetivas por cliente · OS"
+                                          emptyTitle={
+                                            !ordersData
+                                              ? 'Planilha OS não carregada'
+                                              : orders?.unavailable
+                                                ? 'Colunas necessárias ausentes'
+                                                : 'Nenhum cliente com execução neste recorte'
+                                          }
+                                          emptyDescription={
+                                            !ordersData
+                                              ? 'Carregue a planilha de Ordens de Serviço para comparar clientes.'
+                                              : orders?.unavailable
+                                                ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
+                                                : 'Não há execuções efetivas por cliente no período e nos filtros atuais.'
+                                          }
+                                          items={
+                                            hasOrders
+                                              ? orders.clients
+                                                  .filter((d) => d.executed > 0)
+                                                  .slice(0, 5)
+                                                  .map((d) => ({
+                                                    label: d.label,
+                                                    displayLabel: d.label.split(' · ')[0],
+                                                    value: d.executed,
+                                                    valueCaption: `Agenda ${number(d.scheduled)}`,
+                                                  }))
+                                              : []
+                                          }
+                                        />
+                                        <small>Top 5 por execuções; agenda como referência.</small>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {contentViewMode !== 'compact' && (
+                                    <div className="si-type-client-details-grid">
+                                      <details
+                                        className="si-report-expandable si-service-type-summary"
+                                        open={presentationMode || contentViewMode === 'editorial'}
+                                      >
+                                        <summary>Resumo por tipo de serviço</summary>
+                                        <Table
+                                          headers={[
+                                            'Tipo de serviço · OS',
+                                            'Etapas',
+                                            'Participação das etapas',
+                                            'Executados efetivos',
+                                            'Agendamentos',
+                                          ]}
+                                          rows={(orders?.serviceTypes || []).map((service) => [
+                                            service.label,
+                                            service.stages,
+                                            service.stageShare == null
+                                              ? '—'
+                                              : (service.stageShare * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%',
+                                            service.executed,
+                                            service.scheduled,
+                                          ])}
+                                          numericColumns={[1, 2, 3, 4]}
+                                        />
+                                      </details>
+                                      <div className="si-client-service-table">
+                                        <ResponsiveSummaryTable
+                                          primaryColumns={[1, 2]}
+                                          headers={[
+                                            'Cliente',
+                                            'Agendados',
+                                            'Executados',
+                                            'Tipo de serviço (exec. / agend.)',
+                                            'Serviço + motivo (exec. / agend.)',
+                                          ]}
+                                          rows={
+                                            hasOrders
+                                              ? orders.clients.map((d) => [
+                                                  d.label,
+                                                  d.scheduled,
+                                                  d.executed,
+                                                  <ServiceList
+                                                    value={d.typeServices
+                                                      .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
+                                                      .join('; ')}
+                                                  />,
+                                                  <ServiceList value={d.services} />,
+                                                ])
+                                              : []
+                                          }
+                                        />
+                                        <small>
+                                          Em cada serviço: execuções efetivas / agendamentos.
+                                        </small>
+                                      </div>
+                                    </div>
+                                  )}
                                 </>
                               )}
                               {key === 'subjects' &&

@@ -2596,8 +2596,8 @@
   .support-indicators-page.si-compact-mode .si-agent-metric-table td:first-child { width:42%; }
   .support-indicators-page.si-compact-mode .si-agent-metric-table th,
   .support-indicators-page.si-compact-mode .si-agent-metric-table td { padding:4px 7px; font-size:10px; line-height:1.25; overflow-wrap:anywhere; }
-  .support-indicators-page.si-compact-mode .si-service-reason-chart { min-width:0; margin-top:10px; }
-  .support-indicators-page.si-compact-mode .si-service-reason-chart h4 { margin:8px 0 4px; }
+  .support-indicators-page.si-compact-mode .si-service-reason-chart { min-width:0; margin-top:0; }
+  .support-indicators-page.si-compact-mode .si-service-reason-chart h4 { margin:0 0 8px; }
   .support-indicators-page.si-compact-mode .si-service-reason-chart .readable-bars { max-height:none; overflow:visible; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table .si-table table { width:100%; min-width:0; table-layout:fixed; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table th:first-child { width:22%; }
@@ -2622,6 +2622,7 @@
 }
 @media screen and (max-width:900px) {
   .support-indicators-page .si-subject-comparison-grid { grid-template-columns:1fr; }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-service-charts { grid-template-columns:1fr; }
 }
 
 @media screen and (min-width:901px) {
@@ -2640,30 +2641,86 @@
   }
   .support-indicators-page.si-compact-mode .si-type-client-details-grid > * { min-width:0; }
   .support-indicators-page.si-compact-mode .si-type-client-details-grid .si-service-type-summary { grid-column:1 / -1; }
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-types-compact-grid {
-    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
-    align-items:start;
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-services-clients {
+    display:grid;
+    gap:12px;
+    min-width:0;
   }
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-types-compact-grid > div { height:auto; }
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-types-compact-grid .readable-bars {
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-service-charts {
+    display:grid;
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+    gap:16px;
+    align-items:start;
+    min-width:0;
+  }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-service-charts > div { min-width:0; }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-service-charts .readable-bars {
     flex:none;
     justify-content:flex-start;
     gap:4px;
   }
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-types-compact-grid .readable-bar-row {
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-service-charts .readable-bar-row {
     flex:none;
     min-height:24px;
+  }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='agents'] .si-agent-closed-rate {
+    grid-column:1 / -1;
+    min-width:0;
+    padding-top:8px;
+    border-top:1px solid var(--ui-line);
+  }
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate h4 { margin-bottom:3px; }
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate .readable-bars {
+    max-height:none;
+    overflow:visible;
+    padding:0;
+  }
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate .readable-bar-row {
+    grid-template-columns:minmax(130px,22%) minmax(80px,1fr) minmax(90px,auto);
+    gap:8px 10px;
+    min-height:28px;
+    padding:4px 0;
+  }
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate .readable-track { height:8px; }
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate .bar-name,
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate .bar-value strong {
+    font-size:10px;
+    line-height:1.25;
+  }
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate .bar-caption,
+  .support-indicators-page.si-compact-mode .si-agent-closed-rate > small {
+    font-size:9px;
+    line-height:1.3;
   }
   .support-indicators-page.si-compact-mode .si-compact-client-table .si-table { max-height:none; overflow:visible; }
   .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-service-table .si-table {
     max-height:none;
     overflow:visible;
   }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-table-heading {
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:4px 12px;
+    justify-content:space-between;
+    margin-bottom:5px;
+  }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-client-table-heading h4 { margin:0; }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-client-table { margin-top:0; min-width:0; }
+  .support-indicators-page.si-compact-mode .si-compact-client-table .si-table table { width:100%; min-width:0; table-layout:fixed; }
+  .support-indicators-page.si-compact-mode .si-compact-client-table th:first-child,
+  .support-indicators-page.si-compact-mode .si-compact-client-table td:first-child { width:22%; }
+  .support-indicators-page.si-compact-mode .si-compact-client-table th:nth-child(2),
+  .support-indicators-page.si-compact-mode .si-compact-client-table th:nth-child(3),
+  .support-indicators-page.si-compact-mode .si-compact-client-table td:nth-child(2),
+  .support-indicators-page.si-compact-mode .si-compact-client-table td:nth-child(3) { width:8%; }
+  .support-indicators-page.si-compact-mode .si-compact-client-table th:nth-child(4),
+  .support-indicators-page.si-compact-mode .si-compact-client-table td:nth-child(4) { width:62%; }
   .support-indicators-page.si-compact-mode .si-compact-client-table .si-client-service-chips li > span {
     white-space:normal;
     overflow-wrap:anywhere;
   }
 }
 @media screen and (min-width:901px) and (max-width:1100px) {
-  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-types-compact-grid { grid-template-columns:1fr; }
+  .support-indicators-page.si-compact-mode .si-story-section[data-section='types'] .si-compact-service-charts { grid-template-columns:1fr; }
 }

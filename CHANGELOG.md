@@ -1,3 +1,9 @@
+## 0.69.61 — 31/10/2026
+
+- Organiza no modo Compacto os gráficos de serviços e motivos junto à tabela de clientes, reduzindo espaços vazios e rolagem interna.
+- No modo Compacto dos Indicadores Suporte, acrescenta a razão entre tempo apontado e chamados fechados por agente no período, com explicação de que não é duração média por chamado.
+- Preserva os dados do Zoho e as regras existentes; o indicador requer uma consulta Zoho completa para o período.
+
 ## 0.69.60 — 31/10/2026
 
 - Ajusta o modo Compacto dos Indicadores Suporte para mostrar os indicadores por agente sem rolagem horizontal, alinhar serviços e clientes, e exibir serviço e motivo dos atendimentos em linhas completas.
