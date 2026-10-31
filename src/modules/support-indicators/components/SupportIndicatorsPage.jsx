@@ -892,7 +892,10 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
     return false;
   };
   const shownAgents = agents.filter((a) => !agentId || a.id === agentId);
-  const storyOrder = ['team', 'service-flow', 'support-profile'].filter((storyKey) =>
+  const storyOrder = (contentViewMode === 'compact'
+    ? ['service-flow', 'team', 'support-profile']
+    : ['team', 'service-flow', 'support-profile']
+  ).filter((storyKey) =>
     settings.sections.some((key) => sectionStories[key] === storyKey),
   );
   const availablePresentationOptions = presentationOptions.filter(
@@ -909,6 +912,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       a.name,
       os?.scheduled ?? null,
       os?.executed ?? null,
+      os && os.scheduled != null && os.executed != null
+        ? os.scheduled + os.executed
+        : null,
       z?.created ?? m?.totals.created ?? null,
       backlog?.agents.find((r) => r.id === a.id)?.pending ?? null,
       backlog?.agents.find((r) => r.id === a.id)?.onHold ?? null,
@@ -922,7 +928,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
   const agentServiceRows = hasOrders
     ? orders.agentServices
         .filter((row) => !agentId || row.agentId === agentId)
-        .map((row) => [row.agent, row.label, row.scheduled, row.executed])
+        .map((row) => [
+          row.agent,
+          row.label,
+          row.scheduled,
+          row.executed,
+          row.scheduled + row.executed,
+        ])
     : [];
   const manualEquipmentRows = shownAgents.map((agent) => {
     const summary = store.ready ? manualSummary(store.records, period, agent.id) : null;
@@ -948,12 +960,14 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
       summary?.activities ?? null,
     ];
   });
-  const manualSubjectRows = subjects.flatMap(([key, label]) =>
-    shownAgents.map((agent) => {
+  const manualSubjectMatrixRows = subjects.map(([key, label]) => {
+    const values = shownAgents.map((agent) => {
       const summary = store.ready ? manualSummary(store.records, period, agent.id) : null;
-      return [agent.name, label, summary?.totals[`subject_${key}`] ?? null];
-    }),
-  );
+      return summary?.totals['subject_' + key] ?? null;
+    });
+    const informed = values.filter((value) => value != null);
+    return [label, ...values, informed.length ? informed.reduce((sum, value) => sum + value, 0) : null];
+  });
   function showOrderDetails(title, predicate, stage = 'execution') {
     const rows = (orders?.rows || []).filter(predicate).map((row) => {
       const scheduled = stage === 'scheduling';
@@ -1174,6 +1188,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
         'Agente',
         'Agendados',
         'Executados efetivos',
+        'Etapas · agenda + execução',
         zoho?.created != null ? 'Criados pelo agente · Zoho' : 'Criados · manual',
         'Pendentes agora · Zoho',
         'Em espera agora · incluídos nos pendentes',
@@ -2414,12 +2429,13 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     </div>
                                   </div>
                                   <ResponsiveSummaryTable
-                                    numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                                    primaryColumns={[1, 2, 6, 8]}
+                                    numericColumns={[1, 2, 3, 4, 5, 6, 7, 8, 10, 11]}
+                                    primaryColumns={[1, 2, 3, 7, 9]}
                                     headers={[
                                       'Agente',
                                       'Agendados · OS',
                                       'Executados · OS',
+                                      'Etapas · agenda + execução',
                                       zoho?.created != null
                                         ? 'Criados pelo agente · Zoho'
                                         : 'Criados · manual',
@@ -2435,7 +2451,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                   />
                                   <details
                                     className="si-report-expandable si-agent-service-breakdown"
-                                    open={presentationMode}
+                                    open={presentationMode || contentViewMode === 'compact'}
                                   >
                                     <summary>
                                       Agendados e executados por tipo de serviço e agente
@@ -2446,20 +2462,22 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         'Tipo de serviço · OS',
                                         'Agendados',
                                         'Executados efetivos',
+                                        'Etapas · agenda + execução',
                                       ]}
                                       rows={agentServiceRows}
-                                      numericColumns={[2, 3]}
+                                      numericColumns={[2, 3, 4]}
                                     />
                                   </details>
                                 </>
                               )}
                               {key === 'evolution' && (
+                                <>
                                 <div className="si-chart-grid">
                                   <div>
                                     <h4>Serviços efetivos por dia · OS</h4>
                                     <Chart
                                       compact
-                                      height={250}
+                                      height={contentViewMode === 'compact' ? 155 : 205}
                                       showDrilldownHint={false}
                                       title="Serviços efetivos por dia"
                                       type="line"
@@ -2503,7 +2521,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     <h4>Agendamentos por dia · OS</h4>
                                     <Chart
                                       compact
-                                      height={250}
+                                      height={contentViewMode === 'compact' ? 155 : 205}
                                       showDrilldownHint={false}
                                       title="Agendamentos por dia"
                                       type="line"
@@ -2548,7 +2566,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     <h4>Tempo apontado por dia · Zoho</h4>
                                     <Chart
                                       compact
-                                      height={250}
+                                      height={contentViewMode === 'compact' ? 155 : 205}
                                       showDrilldownHint={false}
                                       title="Tempo apontado por dia"
                                       type="line"
@@ -2586,6 +2604,24 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     </small>
                                   </div>
                                 </div>
+                                {hasOrders && (
+                                  <>
+                                    <small className="si-stage-count-note">
+                                      Total no período: <strong>{number(orders.totalStages)} etapas</strong>
+                                      {' '}— agenda + execução; a mesma OS pode aparecer nas duas etapas.
+                                    </small>
+                                    <details className="si-report-expandable si-daily-stage-total" open={presentationMode}>
+                                      <summary>Etapas por dia · agenda + execução</summary>
+                                      <Table
+                                        headers={['Data', 'Agendados', 'Executados efetivos', 'Total de etapas']}
+                                        rows={orders.daily.map((day) => [date(day.label), day.scheduled, day.executed, day.scheduled + day.executed])}
+                                        numericColumns={[1, 2, 3]}
+                                      />
+                                      <small>Total de etapas não é contagem de OS únicas; a mesma OS pode aparecer na agenda e depois na execução.</small>
+                                    </details>
+                                  </>
+                                )}
+                              </>
                               )}
                               {key === 'types' && (
                                 <>
@@ -2596,7 +2632,7 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       aparece à parte para não sugerir conversão automática.
                                     </p>
                                   )}
-                                  <div className="si-chart-grid">
+                                  <div className={`si-chart-grid${contentViewMode === 'compact' ? ' si-types-compact-grid' : ''}`}>
                                     <div>
                                       <h4>
                                         {contentViewMode === 'editorial'
@@ -2605,24 +2641,24 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       </h4>
                                       <Chart
                                         compact
-                                        title="Execuções efetivas por serviço · OS"
+                                        title="Execuções efetivas por tipo de serviço · OS"
                                         emptyTitle={
                                           !ordersData
                                             ? 'Planilha OS não carregada'
                                             : orders?.unavailable
                                               ? 'Colunas necessárias ausentes'
-                                              : 'Nenhuma execução por serviço neste recorte'
+                                              : 'Nenhuma execução por tipo neste recorte'
                                         }
                                         emptyDescription={
                                           !ordersData
                                             ? 'Carregue a planilha de Ordens de Serviço para ver os serviços realizados.'
                                             : orders?.unavailable
                                               ? `Confira as colunas: ${orders.unavailable.join(', ')}.`
-                                              : 'Não há execuções efetivas por serviço no período e nos filtros atuais.'
+                                              : 'Não há execuções efetivas por tipo no período e nos filtros atuais.'
                                         }
                                         items={
                                           hasOrders
-                                            ? orders.services
+                                            ? orders.serviceTypes
                                                 .filter((d) => d.executed > 0)
                                                 .map((d) => ({ label: d.label, value: d.executed }))
                                             : []
@@ -2630,14 +2666,73 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         onItemClick={(item) =>
                                           showOrderDetails(
                                             `Execuções efetivas · ${item.label}`,
-                                            (row) => row.execution && row.service === item.label,
+                                            (row) =>
+                                              row.execution &&
+                                              (row.service === item.label ||
+                                                row.service.startsWith(item.label + ' · ')),
                                           )
                                         }
                                       />
-                                      <small>
-                                        Tipo de Serviço + Motivo; somente execuções efetivas.
-                                      </small>
+                                      <small>Tipo de serviço; somente execuções efetivas.</small>
                                     </div>
+                                    {contentViewMode === 'compact' ? (
+                                      <div className="si-client-service-table si-compact-client-table">
+                                        <h4>Clientes atendidos · OS</h4>
+                                        <ResponsiveSummaryTable
+                                          primaryColumns={[1, 2]}
+                                          headers={[
+                                            'Cliente',
+                                            'Agendados',
+                                            'Executados',
+                                            'Tipo de serviço (exec. / agend.)',
+                                            'Serviço + motivo (exec. / agend.)',
+                                          ]}
+                                          rows={
+                                            hasOrders
+                                              ? orders.clients.slice(0, 8).map((d) => [
+                                                  d.label,
+                                                  d.scheduled,
+                                                  d.executed,
+                                                  <ServiceList
+                                                    value={d.typeServices
+                                                      .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
+                                                      .join('; ')}
+                                                    chips
+                                                  />,
+                                                  <ServiceList value={d.services} chips />,
+                                                ])
+                                              : []
+                                          }
+                                        />
+                                        <small>Top 8 por execuções efetivas; agenda como referência. Em cada serviço: execuções / agendamentos.</small>
+                                        {hasOrders && orders.clients.length > 8 && (
+                                          <details className="si-report-expandable si-client-reasons">
+                                            <summary>Ver todos os clientes ({orders.clients.length})</summary>
+                                            <Table
+                                              headers={[
+                                                'Cliente',
+                                                'Agendados',
+                                                'Executados',
+                                                'Tipo de serviço (exec. / agend.)',
+                                                'Serviço + motivo (exec. / agend.)',
+                                              ]}
+                                              rows={orders.clients.map((d) => [
+                                                d.label,
+                                                d.scheduled,
+                                                d.executed,
+                                                <ServiceList
+                                                  value={d.typeServices
+                                                    .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
+                                                    .join('; ')}
+                                                  chips
+                                                />,
+                                                <ServiceList value={d.services} chips />,
+                                              ])}
+                                            />
+                                          </details>
+                                        )}
+                                      </div>
+                                    ) : (
                                     <div>
                                       <h4>
                                         {contentViewMode === 'editorial'
@@ -2677,38 +2772,43 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                       />
                                       <small>Top 5 por execuções; agenda como referência.</small>
                                     </div>
+                                    )}
                                   </div>
+                                  <div className="si-type-client-details-grid">
                                   <details
                                     className="si-report-expandable si-service-type-summary"
-                                    open={presentationMode}
+                                    open={presentationMode || contentViewMode === 'editorial'}
                                   >
                                     <summary>Resumo por tipo de serviço</summary>
                                     <Table
                                       headers={[
                                         'Tipo de serviço · OS',
+                                        'Etapas',
+                                        'Participação das etapas',
                                         'Executados efetivos',
-                                        'Participação',
                                         'Agendamentos',
                                       ]}
                                       rows={(orders?.serviceTypes || []).map((service) => [
                                         service.label,
-                                        service.executed,
-                                        service.share == null
+                                        service.stages,
+                                        service.stageShare == null
                                           ? '—'
-                                          : `${(service.share * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`,
+                                          : (service.stageShare * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%',
+                                        service.executed,
                                         service.scheduled,
                                       ])}
-                                      numericColumns={[1, 2, 3]}
+                                      numericColumns={[1, 2, 3, 4]}
                                     />
                                   </details>
-                                  <div className="si-client-service-table">
+                                  {contentViewMode !== 'compact' && <div className="si-client-service-table">
                                     <ResponsiveSummaryTable
                                       primaryColumns={[1, 2]}
                                       headers={[
                                         'Cliente',
                                         'Agendados',
                                         'Executados',
-                                        'Serviços (exec. / agend.)',
+                                        'Tipo de serviço (exec. / agend.)',
+                                        'Serviço + motivo (exec. / agend.)',
                                       ]}
                                       rows={
                                         hasOrders
@@ -2721,6 +2821,12 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                                 d.label,
                                                 d.scheduled,
                                                 d.executed,
+                                                <ServiceList
+                                                  value={d.typeServices
+                                                    .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
+                                                    .join('; ')}
+                                                  chips={contentViewMode === 'compact'}
+                                                />,
                                                 <ServiceList
                                                   value={d.services}
                                                   chips={contentViewMode === 'compact'}
@@ -2746,12 +2852,19 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                               'Cliente',
                                               'Agendados',
                                               'Executados',
-                                              'Serviços (exec. / agend.)',
+                                              'Tipo de serviço (exec. / agend.)',
+                                        'Serviço + motivo (exec. / agend.)',
                                             ]}
                                             rows={orders.clients.map((d) => [
                                               d.label,
                                               d.scheduled,
                                               d.executed,
+                                              <ServiceList
+                                                value={d.typeServices
+                                                  .map((item) => item.label + ': ' + item.executed + '/' + item.scheduled)
+                                                  .join('; ')}
+                                                chips={contentViewMode === 'compact'}
+                                              />,
                                               <ServiceList
                                                 value={d.services}
                                                 chips={contentViewMode === 'compact'}
@@ -2760,12 +2873,15 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                           />
                                         </details>
                                       )}
+                                  </div>}
                                   </div>
                                 </>
                               )}
                               {key === 'subjects' &&
                                 (zoho?.categories != null ? (
                                   <>
+                                    <div className="si-subject-comparison-grid">
+                                      <div className="si-subject-zoho">
                                     <p className="scope">
                                       {zohoData?.categoryCatalog
                                         ? 'Catálogo Zoho · inclui categorias zeradas.'
@@ -2809,6 +2925,26 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                         rows={zoho.categories.map((r) => [r.label, r.value])}
                                       />
                                     </details>
+                                      </div>
+                                      <section className="si-subject-manual">
+                                        <h4>Assuntos do relatório semanal</h4>
+                                        <p className="scope">
+                                          Lançamentos manuais por agente. Permanecem separados das categorias atuais do Zoho; não há equivalência presumida.
+                                        </p>
+                                        <Table
+                                          headers={[
+                                            'Categoria do relatório',
+                                            ...shownAgents.map((agent) => agent.name),
+                                            'Total informado',
+                                          ]}
+                                          rows={manualSubjectMatrixRows}
+                                          numericColumns={[
+                                            ...shownAgents.map((_, index) => index + 1),
+                                            shownAgents.length + 1,
+                                          ]}
+                                        />
+                                      </section>
+                                    </div>
                                     <details
                                       className="si-report-expandable si-category-by-agent"
                                       open={presentationMode}
@@ -2875,9 +3011,9 @@ export function SupportIndicatorsPage({ onPage, active = true }) {
                                     >
                                       <summary>Assuntos informados por agente</summary>
                                       <Table
-                                        headers={['Agente', 'Assunto', 'Quantidade informada']}
-                                        rows={manualSubjectRows}
-                                        numericColumns={[2]}
+                                        headers={['Categoria do relatório', ...shownAgents.map((agent) => agent.name), 'Total informado']}
+                                        rows={manualSubjectMatrixRows}
+                                        numericColumns={[...shownAgents.map((_, index) => index + 1), shownAgents.length + 1]}
                                       />
                                     </details>
                                   </>

@@ -102,6 +102,7 @@ export function ordersSummary(data, period, agentId = '') {
     daily: new Map(),
     services: new Map(),
     serviceTypes: new Map(),
+    clientServiceTypes: new Map(),
     agentServiceTypes: new Map(agents.map((a) => [a.id, new Map()])),
     clients: new Map(),
     clientServices: new Map(),
@@ -155,6 +156,15 @@ export function ordersSummary(data, period, agentId = '') {
       };
       typeCounts[key]++;
       result.serviceTypes.set(serviceType, typeCounts);
+      const clientTypes = result.clientServiceTypes.get(clientLabel) || new Map();
+      const clientTypeCounts = clientTypes.get(serviceType) || {
+        label: serviceType,
+        executed: 0,
+        scheduled: 0,
+      };
+      clientTypeCounts[key]++;
+      clientTypes.set(serviceType, clientTypeCounts);
+      result.clientServiceTypes.set(clientLabel, clientTypes);
       const agentTypes = result.agentServiceTypes.get(owner);
       const agentCounts = agentTypes.get(serviceType) || {
         label: serviceType,
@@ -201,11 +211,16 @@ export function ordersSummary(data, period, agentId = '') {
         ? a.label.localeCompare(b.label)
         : b.executed - a.executed || a.label.localeCompare(b.label),
     );
+  result.totalStages = result.executed + result.scheduled;
   const serviceTypeLabels = [...result.serviceTypes.keys()];
   result.serviceTypes = [...result.serviceTypes.values()]
     .map((service) => ({
       ...service,
+      stages: service.executed + service.scheduled,
       share: result.executed ? service.executed / result.executed : null,
+      stageShare: result.totalStages
+        ? (service.executed + service.scheduled) / result.totalStages
+        : null,
     }))
     .sort((a, b) => b.executed - a.executed || a.label.localeCompare(b.label));
   result.agentServices = result.agents.flatMap((agent) =>
@@ -227,6 +242,17 @@ export function ordersSummary(data, period, agentId = '') {
       .map(([label, counts]) => `${label}: ${counts.executed}/${counts.scheduled}`)
       .join('; '),
   }));
+  result.clients = result.clients.map((client) => ({
+    ...client,
+    typeServices: [...(result.clientServiceTypes.get(client.label) || new Map())]
+      .sort(([, a], [, b]) => b.executed + b.scheduled - (a.executed + a.scheduled))
+      .map(([label, counts]) => ({
+        label,
+        ...counts,
+        stages: counts.executed + counts.scheduled,
+      })),
+  }));
+  delete result.clientServiceTypes;
   return result;
 }
 /** Só usa uma consulta completa que cubra o período inteiro. Filtra por data do evento, nunca pelo responsável atual. */

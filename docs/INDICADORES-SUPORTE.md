@@ -1,3 +1,9 @@
+# Atualização 0.69.59 — 31/10/2026
+
+No modo **Compacto**, a leitura começa pela evolução diária. Serviços executados por tipo e clientes atendidos ficam juntos, com o gráfico à esquerda e a tabela dos oito principais clientes à direita; **Ver todos os clientes** expande o restante sem rolagem interna. A tabela separa Tipo de Serviço de Serviço + Motivo. Desempenho da equipe e assuntos dos chamados ficam lado a lado, e atividades manuais ocupam a largura da seção.
+
+O gráfico de serviços usa somente **Tipo de Serviço**. Os totais de etapas somam agendamentos e execuções como etapas independentes; a mesma OS pode aparecer nas duas. O modo **Editorial** mantém sua ordem narrativa. Nenhuma regra de elegibilidade dos indicadores foi alterada.
+
 # Apresentação 0.69.28 — 25/10/2026
 
 Na página **Indicadores Suporte**, abra **Apresentação** para preparar uma saída visual. Os filtros por período e agente continuam disponíveis antes da impressão. Selecione os blocos desejados — indicadores, resultados por agente, evolução diária, serviços e clientes, assuntos ou atividades complementares — e escolha **Compacto** para priorizar densidade ou **Editorial** para manter a narrativa dos grupos. **Imprimir apresentação** abre a impressão/PDF somente com os blocos selecionados e identificação do recorte; painéis operacionais e explicações de diagnóstico são omitidos. O modo revela a tabela por agente e tipo de serviço, participação por tipo, clientes e serviços, categorias Zoho por agente e solicitações/atividades manuais por agente. Seções desativadas em Configurações não aparecem como opções.

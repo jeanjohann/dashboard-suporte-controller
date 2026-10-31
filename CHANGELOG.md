@@ -1,3 +1,10 @@
+## 0.69.59 — 31/10/2026
+
+- Reorganiza o modo Compacto dos Indicadores Suporte: evolução primeiro, serviços e clientes lado a lado, e desempenho da equipe junto aos assuntos dos chamados.
+- Exibe até oito clientes sem rolagem interna, com opção de expandir a lista completa; mantém Tipo de Serviço separado de Serviço + Motivo.
+- Acrescenta o total e a participação das etapas (agendamento + execução) por dia, agente e tipo de serviço, sem tratar etapas como OS únicas.
+- Preserva o modo Editorial e as regras existentes dos indicadores.
+
 ## 0.69.58 — 28/10/2026
 
 - Corrige o lockfile do Miniflare/Undici para que `npm ci` do Cloudflare Workers Build funcione com npm 10.9.2.
