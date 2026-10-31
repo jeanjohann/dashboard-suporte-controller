@@ -3,6 +3,7 @@ export const themes = [
   { id: 'light', label: 'Porcelana' },
   { id: 'dark', label: 'Grafite Elétrico' },
   { id: 'lime', label: 'Lima Noturno' },
+  { id: 'glance', label: 'Glance' },
 ];
 export const defaultTheme = 'light';
 const legacyThemes = {

@@ -1,3 +1,7 @@
+## 0.69.64 — 31/10/2026
+
+- Adiciona Glance como quarta opção de tema, com paleta própria e navegação horizontal em telas desktop.
+
 ## 0.69.63 — 31/10/2026
 
 - No modo Compacto, alinha os quadros de serviços, motivos e clientes atendidos e mantém o detalhamento por cliente logo abaixo.
